@@ -1,0 +1,71 @@
+[alias]
+  publish = "!git push -u origin $(git rev-parse --abbrev-ref HEAD) #"
+  publish-no-verify = "!git push -u origin --no-verify $(git rev-parse --abbrev-ref HEAD) #"
+  unpublish = "!git branch -r --color=never | fzf | sed -En 's/origin\\/(.*)/\\1/p' | xargs -n 1 git push --delete origin"
+
+[apply]
+  whitespace = nowarn
+
+[branch]
+  autoSetupMerge = always
+  autoSetupRebase = always
+
+[checkout]
+  defaultRemote = origin
+
+[commit]
+  verbose = true
+
+[color]
+  ui = always
+
+[core]
+  editor = vim
+  eol = lf
+
+[diff]
+  tool = vimdiff
+
+[difftool]
+  prompt = false
+
+[fetch]
+  prune = true
+  pruneTags = true
+
+[help]
+  autoCorrect = 1
+
+[include]
+  path = ~/.config/git/config.local
+
+[log]
+  abbrevCommit = true
+  date = format:%Y-%m-%d %H:%M:%S (%a)
+  decorate = full
+
+[merge]
+  conflictstyle = diff3
+  ff = only
+  tool = vimdiff
+
+[mergetool]
+  keepBackup = false
+
+[push]
+  default = simple
+  followTags = true
+
+[rebase]
+  abbreviateCommands = true
+  autoSquash = true
+  stat = true
+
+[status]
+  branch = true
+
+[tag]
+  sort = version:refname
+
+[user]
+  useConfigOnly = true
