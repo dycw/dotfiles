@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 export EDITOR=vim
+export FLASK_DEBUG=1
 export MKL_NUM_THREADS=1
 export PATH="$HOME/.dotfiles/bin${PATH:+:${PATH}}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
