@@ -28,6 +28,11 @@ alias zshrc='$EDITOR ~/.zshrc'
 alias zshreload='source ~/.zshrc'
 alias set-dotfiles-to-ssh="cddf && gremset origin git@github.com:dycw/dotfiles.git"
 
+# dropbox
+if command -v "dropbox.py" > /dev/null 2>&1; then
+  dropbox.py start > /dev/null 2>&1
+fi
+
 # emacs mode
 bindkey -e
 
