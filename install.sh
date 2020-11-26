@@ -44,21 +44,21 @@ _ensure_apt tmux
 _ensure_apt vim
 _ensure_apt xclip
 
-if _is_missing_apt lyx; then
-  sudo add-apt-repository ppa:lyx-devel/release --yes
-  _install_apt lyx
-fi
+_ensure_apt_from_repository() {
+  if _is_missing_apt $1; then
+    sudo add-apt-repository $2 --yes
+    _install_apt $2
+  fi
+}
+
+_ensure_apt_from_repository lyx ppa:lyx-devel/release
+_ensure_apt_from_repository pdfarranger ppa:linuxuprising/apps
 
 if _is_missing_apt nordvpn; then
   filename="nordvpn-release_1.0.0_all.deb"
   wget https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/$filename -P /tmp
   sudo apt-get install /tmp/$filename
   _install_apt nordvpn
-fi
-
-if _is_missing_apt pdfarranger; then
-  sudo add-apt-repository ppa:linuxuprising/apps
-  _install_apt pdfarranger
 fi
 
 if _is_missing_apt speedtest; then
