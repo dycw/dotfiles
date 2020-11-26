@@ -93,12 +93,11 @@ _ensure_snap() {
 }
 
 _ensure_snap spotify
+_ensure_snap telegram-desktop
 
 if _is_missing_snap pycharm-professional; then
   _install_snap pycharm-professional --classic
 fi
-
-_ensure_snap telegram-desktop
 
 ################################################################################
 # local files
