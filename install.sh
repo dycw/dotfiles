@@ -4,72 +4,100 @@
 # apt-get
 ################################################################################
 
-_maybe_apt_get_install() {
-  if ! dpkg -s $1 > /dev/null 2>&1; then
-    sudo apt-get install $1 --yes
+_is_missing_apt() {
+  if dpkg -s $1 >/dev/null 2>&1; then
+    false
+  else
+    true
+  fi
+  return
+}
+
+_install_apt() {
+  sudo apt-get update
+  sudo apt-get install $1 --yes
+}
+
+_ensure_apt() {
+  if _is_missing_apt $1; then
+    _install_apt $1
   fi
 }
 
-_maybe_apt_get_install bat
-_maybe_apt_get_install curl
-_maybe_apt_get_install fd-find
-_maybe_apt_get_install fzf
-_maybe_apt_get_install g++  # ?
-_maybe_apt_get_install gcc  # ?
-_maybe_apt_get_install gfortran  # scipy
-_maybe_apt_get_install git
-_maybe_apt_get_install htop
-_maybe_apt_get_install i3
-_maybe_apt_get_install libatlas-base-dev  # scipy
-_maybe_apt_get_install libblas-dev  # scipy
-_maybe_apt_get_install libblas3  # scipy
-_maybe_apt_get_install liblapack-dev  # scipy
-_maybe_apt_get_install liblapack3  # scipy
-_maybe_apt_get_install tmux
-_maybe_apt_get_install vim
-_maybe_apt_get_install xclip
+_ensure_apt bat
+_ensure_apt curl
+_ensure_apt curl
+_ensure_apt fd-find
+_ensure_apt fzf
+_ensure_apt g++      # ?
+_ensure_apt gcc      # ?
+_ensure_apt gfortran # scipy
+_ensure_apt git
+_ensure_apt htop
+_ensure_apt i3
+_ensure_apt libatlas-base-dev # scipy
+_ensure_apt libblas-dev       # scipy
+_ensure_apt libblas3          # scipy
+_ensure_apt liblapack-dev     # scipy
+_ensure_apt liblapack3        # scipy
+_ensure_apt tmux
+_ensure_apt vim
+_ensure_apt xclip
 
-if ! dpkg -s lyx > /dev/null 2>&1; then
-  sudo add-apt-repository ppa:lyx-devel/release --yes
-  sudo apt-get install lyx --yes
-fi
+_ensure_apt_from_repository() {
+  if _is_missing_apt $1; then
+    sudo add-apt-repository $2 --yes
+    _install_apt $2
+  fi
+}
 
-if ! dpkg -s nordvpn > /dev/null 2>&1; then
+_ensure_apt_from_repository lyx ppa:lyx-devel/release
+_ensure_apt_from_repository pdfarranger ppa:linuxuprising/apps
+
+if _is_missing_apt nordvpn; then
   filename="nordvpn-release_1.0.0_all.deb"
   wget https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/$filename -P /tmp
   sudo apt-get install /tmp/$filename
-  sudo apt-get update
-  sudo apt-get install nordvpn --yes
+  _install_apt nordvpn
 fi
 
-if ! dpkg -s pdfarranger > /dev/null 2>&1; then
-  sudo add-apt-repository ppa:linuxuprising/apps
-  sudo apt-get update
-  sudo apt-get install pdfarranger --yes
-fi
-
-if ! dpkg -s speedtest > /dev/null 2>&1; then
+if _is_missing_apt speedtest; then
   sudo apt-get install gnupg1 apt-transport-https dirmngr
   export INSTALL_KEY=379CE192D401AB61
   sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys $INSTALL_KEY
   echo "deb https://ookla.bintray.com/debian generic main" | sudo tee /etc/apt/sources.list.d/speedtest.list
-  sudo apt-get update
-  sudo apt-get install speedtest --yes
+  _install_apt speedtest
 fi
 
 ###############################################################################
 # snap
 ###############################################################################
 
-_maybe_snap_install() {
-  if ! snap list | grep -q $1; then
-     sudo snap install $1
+_is_missing_snap() {
+  if snap list | grep -q $1; then
+    false
+  else
+    true
+  fi
+  return
+}
+
+_install_snap() {
+  sudo snap install "$@"
+}
+
+_ensure_snap() {
+  if _is_missing_snap $1; then
+    _install_snap $1
   fi
 }
 
-_maybe_snap_install pycharm-community
-_maybe_snap_install spotify
-_maybe_snap_install telegram-desktop
+_ensure_snap spotify
+_ensure_snap telegram-desktop
+
+if _is_missing_snap pycharm-professional; then
+  _install_snap pycharm-professional --classic
+fi
 
 ################################################################################
 # local files
@@ -83,7 +111,7 @@ _create_gitconfig_local() {
     printf "user.email = "
     read email
     mkdir -p "$(dirname $path)"
-    echo "[user]\n  name = $name\n  email = $email\n" >> $path
+    echo "[user]\n  name = $name\n  email = $email\n" >>$path
     echo "$(date '+%F %T'): $path created"
   fi
 }
@@ -110,8 +138,8 @@ _clone_dotfiles() {
   if ! [ -d $dotfiles ]; then
     echo "$(date '+%F %T'): $dotfiles does not exist; cloning..."
     while true; do
-      if command -v xclip > /dev/null 2>&1; then
-        xclip -sel clip < $key
+      if command -v xclip >/dev/null 2>&1; then
+        xclip -sel clip <$key
       else
         echo "$(date '+%F %T'): expected xclip to be found; aborting..."
         exit 1
@@ -122,7 +150,7 @@ _clone_dotfiles() {
         break
       fi
     done
-    if command -v git > /dev/null 2>&1; then
+    if command -v git >/dev/null 2>&1; then
       git clone git@github.com:dycw/dotfiles.git $dotfiles
     else
       echo "$(date '+%F %T'): expected git to be found; aborting..."
@@ -183,14 +211,16 @@ _process_all_symlinks
 # conda
 ################################################################################
 _install_conda() {
-  if ! command -v conda > /dev/null 2>&1; then
+  if ! command -v conda >/dev/null 2>&1; then
     echo "$(date '+%F %T'): conda not found; installing..."
     case $(uname) in
-      Linux*)
-        desc="Linux";;
-      *)
-        echo "$(date '+%F %T'): unrecognized uname = $(uname); exiting..."
-        exit 1;;
+    Linux*)
+      desc="Linux"
+      ;;
+    *)
+      echo "$(date '+%F %T'): unrecognized uname = $(uname); exiting..."
+      exit 1
+      ;;
     esac
     filename="Miniconda3-latest-$desc-x86_64.sh"
     wget https://repo.anaconda.com/miniconda/$filename -P /tmp
