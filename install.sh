@@ -40,6 +40,7 @@ _ensure_apt libblas-dev       # scipy
 _ensure_apt libblas3          # scipy
 _ensure_apt liblapack-dev     # scipy
 _ensure_apt liblapack3        # scipy
+_ensure_apt restic
 _ensure_apt tmux
 _ensure_apt vim
 _ensure_apt xclip
