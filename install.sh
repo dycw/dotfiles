@@ -29,9 +29,9 @@ _ensure_apt curl
 _ensure_apt curl
 _ensure_apt fd-find
 _ensure_apt fzf
-_ensure_apt g++      # ?
-_ensure_apt gcc      # ?
-_ensure_apt gfortran # scipy
+_ensure_apt g++               # ?
+_ensure_apt gcc               # ?
+_ensure_apt gfortran          # scipy
 _ensure_apt git
 _ensure_apt htop
 _ensure_apt i3
