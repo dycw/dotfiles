@@ -10,7 +10,7 @@ from logging import info
 from os import system
 from pathlib import Path
 from re import search
-from subprocess import check_output  # noqa: S404
+from subprocess import check_output
 from sys import stdout
 from typing import Iterator
 from typing import List
@@ -126,9 +126,9 @@ def _yield_args(
     hypothesis_seed: Optional[int] = None,
 ) -> Iterator[str]:
     parsed = _parse_extra(*args)
-    (root,) = check_output(  # noqa: S607
+    (root,) = check_output(
         "git rev-parse --show-toplevel",
-        shell=True,  # noqa: S602
+        shell=True,
         text=True,
     ).splitlines()
     yield f"PYTHONPATH={root}"
@@ -183,7 +183,7 @@ def pyt(
     if debug:
         info(full_command)
     else:
-        system(full_command)  # noqa: S605
+        system(full_command)
 
 
 if __name__ == "__main__":
