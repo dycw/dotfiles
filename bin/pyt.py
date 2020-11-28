@@ -10,12 +10,11 @@ from logging import info
 from os import system
 from pathlib import Path
 from re import search
+from subprocess import check_output  # noqa: S404
 from sys import stdout
 from typing import Iterator
 from typing import List
 from typing import Optional
-
-from git import Repo
 
 
 basicConfig(
@@ -127,9 +126,12 @@ def _yield_args(
     hypothesis_seed: Optional[int] = None,
 ) -> Iterator[str]:
     parsed = _parse_extra(*args)
-    yield "PYTHONPATH={}".format(
-        Repo(".", search_parent_directories=True).working_tree_dir,
-    )
+    (root,) = check_output(  # noqa: S607
+        "git rev-parse --show-toplevel",
+        shell=True,  # noqa: S602
+        text=True,
+    ).splitlines()
+    yield f"PYTHONPATH={root}"
     if nice:
         yield "nice"
     yield "pytest"
