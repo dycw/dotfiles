@@ -5,8 +5,11 @@ alias bp='bump2version patch --allow-dirty'
 alias bp-major='bump2version major --allow-dirty'
 alias bp-minor='bump2version minor --allow-dirty'
 
-# cat
+# bat
 alias cat=batcat
+tf() {
+  tail -f $1 | batcat --paging=never -l log
+}
 
 # cd
 alias ~='cd ~'
