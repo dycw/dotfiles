@@ -17,7 +17,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
-alias cddb='cd ~/Dropbox'
+alias cddb='cd $PATH_DROPBOX'
 alias cddf='cd ~/.dotfiles'
 alias cdw='cd ~/work'
 

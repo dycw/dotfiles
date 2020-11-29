@@ -33,6 +33,7 @@ _ensure_apt g++               # ?
 _ensure_apt gcc               # ?
 _ensure_apt gfortran          # scipy
 _ensure_apt git
+_ensure_apt gparted
 _ensure_apt htop
 _ensure_apt i3
 _ensure_apt libatlas-base-dev # scipy
@@ -42,6 +43,7 @@ _ensure_apt liblapack-dev     # scipy
 _ensure_apt liblapack3        # scipy
 _ensure_apt restic
 _ensure_apt tmux
+_ensure_apt transmission
 _ensure_apt vim
 _ensure_apt xclip
 
@@ -95,6 +97,7 @@ _ensure_snap() {
 
 _ensure_snap spotify
 _ensure_snap telegram-desktop
+_ensure_snap vlc
 
 if _is_missing_snap pycharm-professional; then
   _install_snap pycharm-professional --classic
