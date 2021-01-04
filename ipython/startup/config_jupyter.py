@@ -27,7 +27,7 @@ else:
                 chain(
                     [server["url"], "api/sessions"],
                     []
-                    if token == "" and not server["password"]
+                    if token == "" and not server["password"]  # noqa: S105
                     else [f"?token={token}"],
                 ),
             )

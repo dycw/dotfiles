@@ -25,22 +25,24 @@ _ensure_apt() {
 }
 
 _ensure_apt bat
+_ensure_apt chrome-gnome-shell # screenshot-locations
 _ensure_apt curl
 _ensure_apt curl
 _ensure_apt fd-find
 _ensure_apt fzf
-_ensure_apt g++               # ?
-_ensure_apt gcc               # ?
-_ensure_apt gfortran          # scipy
+_ensure_apt g++                # ?
+_ensure_apt gcc                # ?
+_ensure_apt gfortran           # scipy
 _ensure_apt git
+_ensure_apt gnome-tweaks       # screenshot-locations
 _ensure_apt gparted
 _ensure_apt htop
 _ensure_apt i3
-_ensure_apt libatlas-base-dev # scipy
-_ensure_apt libblas-dev       # scipy
-_ensure_apt libblas3          # scipy
-_ensure_apt liblapack-dev     # scipy
-_ensure_apt liblapack3        # scipy
+_ensure_apt libatlas-base-dev  # scipy
+_ensure_apt libblas-dev        # scipy
+_ensure_apt libblas3           # scipy
+_ensure_apt liblapack-dev      # scipy
+_ensure_apt liblapack3         # scipy
 _ensure_apt restic
 _ensure_apt tmux
 _ensure_apt transmission
