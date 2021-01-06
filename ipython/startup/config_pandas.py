@@ -61,7 +61,7 @@ else:
             last = cls._contexts.pop()
             last.__exit__(exc_type, exc_val, exc_tb)
 
-    class show(metaclass=_ShowMeta):
+    class show(metaclass=_ShowMeta):  # noqa:N801
         """Context manager which adjusts the display of NDFrames."""
 
         def __init__(

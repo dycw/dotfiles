@@ -18,7 +18,7 @@ else:
 
         return strategy.example()
 
-    class data:
+    class data:  # noqa:N801
         """Mimics instances of data()."""
 
         @classmethod

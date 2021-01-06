@@ -18,7 +18,7 @@ import multiprocessing
 import operator
 import os
 import pathlib
-import pickle  # noqa: S403
+import pickle  # noqa:S403
 import platform
 import random
 import re
@@ -26,7 +26,7 @@ import shutil
 import socket
 import stat
 import string
-import subprocess  # noqa: S404
+import subprocess  # noqa:S404
 import sys
 import tempfile
 import time
@@ -111,9 +111,6 @@ from os.path import expanduser
 from os.path import expandvars
 from pathlib import Path
 from platform import system
-from random import choice
-from random import sample
-from random import shuffle
 from re import escape
 from re import findall
 from re import fullmatch
@@ -131,13 +128,13 @@ from stat import S_IXUSR
 from string import ascii_letters
 from string import ascii_lowercase
 from string import ascii_uppercase
-from subprocess import CalledProcessError  # noqa: S404
-from subprocess import check_call  # noqa: S404
-from subprocess import check_output  # noqa: S404
-from subprocess import DEVNULL  # noqa: S404
-from subprocess import PIPE  # noqa: S404
-from subprocess import run  # noqa: S404
-from subprocess import STDOUT  # noqa: S404
+from subprocess import CalledProcessError  # noqa:S404
+from subprocess import check_call  # noqa:S404
+from subprocess import check_output  # noqa:S404
+from subprocess import DEVNULL  # noqa:S404
+from subprocess import PIPE  # noqa:S404
+from subprocess import run  # noqa:S404
+from subprocess import STDOUT  # noqa:S404
 from sys import stderr
 from sys import stdout
 from tempfile import gettempdir
@@ -670,10 +667,6 @@ __all__ = [
     "Path",
     # platform .................................................................
     "system",
-    # random ...................................................................
-    "choice",
-    "sample",
-    "shuffle",
     # re .......................................................................
     "escape",
     "findall",

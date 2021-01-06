@@ -27,11 +27,11 @@ else:
                 chain(
                     [server["url"], "api/sessions"],
                     []
-                    if token == "" and not server["password"]  # noqa: S105
+                    if token == "" and not server["password"]  # noqa:S105
                     else [f"?token={token}"],
                 ),
             )
-            response = urlopen(url)  # noqa: S310
+            response = urlopen(url)  # noqa:S310
             sessions = json.load(response)
             session_results = [
                 parse_session(session, notebook_dir) for session in sessions

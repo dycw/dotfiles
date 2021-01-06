@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from contextlib import suppress
 from pathlib import Path
 
 
@@ -8,11 +9,9 @@ with open(
 ) as file:
     for line in file:
         try:
-            code = compile(line.rstrip("\n"), "", "exec")
+            code = compile(line.rstrip("\n"), "", "exec")  # noqa:DUO110
         except SyntaxError:
             pass
         else:
-            try:
-                exec(code)  # noqa: S102
-            except ModuleNotFoundError:
-                pass
+            with suppress(ModuleNotFoundError):
+                exec(code)  # noqa:DUO105,S102

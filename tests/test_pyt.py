@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from re import search
+from pathlib import Path
 from typing import List
 from typing import Optional
 
 from pytest import param
 from pytest import raises
 
+from bin.pyt import _get_repo_root
 from bin.pyt import _parse_extra
 from bin.pyt import _yield_args
 from bin.pyt import Parsed
@@ -82,7 +83,10 @@ def test_yield_args(args: List[str], expected: Optional[List[str]]) -> None:
         with raises(RuntimeError):
             list(_yield_args(*args))
     else:
-        first, second, *rest = list(_yield_args(*args))
-        assert search(r"^PYTHONPATH=.+$", first)
-        assert second == "pytest"
+        first, *rest = list(_yield_args(*args))
+        assert first == "pytest"
         assert rest == expected
+
+
+def test_get_repo_root() -> None:
+    assert _get_repo_root() == Path(__file__).parent.parent

@@ -161,7 +161,7 @@ else:
             return self._make_plot(Explorer, ["kdim"])
 
         def _check_nlevels(self: DataFrameExplorer, n: int) -> None:
-            if not ((nlevels := self._index.nlevels) >= n):
+            if (nlevels := self._index.nlevels) < n:
                 raise ValueError(
                     f"Expected the index to have at least {n} levels; "
                     f"got {nlevels}",
@@ -169,7 +169,7 @@ else:
 
         def _make_plot(
             self: DataFrameExplorer,
-            Explorer: Type[Parameterized],
+            explorer: Type[Parameterized],
             kdims: List[str],
         ) -> Row:
             unique_values = {
@@ -187,7 +187,7 @@ else:
             data = self.data
 
             class Extended(
-                type("Explorer", (Explorer,), selectors),  # type: ignore
+                type("Explorer", (explorer,), selectors),  # type: ignore
             ):
                 @depends(*kdims_strs_plus_kdims)  # type: ignore
                 def load_data(self: Extended) -> Any:

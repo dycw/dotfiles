@@ -78,6 +78,46 @@ else:
         index_valid: Optional[Index] = None
         index_test: Optional[Index] = None
 
+        @property
+        def shape(self: TemporalSplit) -> Dict[str, Tuple[int, ...]]:
+            out = {}
+            for prefix, view in {"X": self.X, "y": self.y}.items():
+                out.update(
+                    {
+                        f"{prefix}_{k}": v.shape
+                        for k, v in view._asdict().items()
+                    },
+                )
+            return out
+
+        @property
+        def test(self: TemporalSplit[T]) -> _XYView:
+            return _XYView(X=self.X_test, y=self.y_test)
+
+        @property
+        def train(self: TemporalSplit[T]) -> _XYView:
+            return _XYView(X=self.X_train, y=self.y_train)
+
+        @property
+        def valid(self: TemporalSplit[T]) -> _XYView:
+            return _XYView(X=self.X_valid, y=self.y_valid)
+
+        @property
+        def X(self: TemporalSplit[T]) -> _TemporalView:
+            return _TemporalView(
+                train=self.X_train,
+                valid=self.X_valid,
+                test=self.X_test,
+            )
+
+        @property
+        def y(self: TemporalSplit[T]) -> _TemporalView:
+            return _TemporalView(
+                train=self.y_train,
+                valid=self.y_valid,
+                test=self.y_test,
+            )
+
         @classmethod
         def from_Xy(
             cls: Type[TemporalSplit],
@@ -119,7 +159,7 @@ else:
                 index_test=split.X_test.index,
             )
 
-        def map(  # noqa: A003
+        def map(  # noqa:A003
             self: TemporalSplit[T],
             func: Callable[[T], U],
         ) -> TemporalSplit[U]:
@@ -141,46 +181,6 @@ else:
             return replace(
                 self,
                 **{f"y_{k}": func(v) for k, v in self.y._asdict().items()},
-            )
-
-        @property
-        def shape(self: TemporalSplit) -> Dict[str, Tuple[int, ...]]:
-            out = {}
-            for prefix, view in {"X": self.X, "y": self.y}.items():
-                out.update(
-                    {
-                        f"{prefix}_{k}": v.shape
-                        for k, v in view._asdict().items()
-                    },
-                )
-            return out
-
-        @property
-        def test(self: TemporalSplit[T]) -> _XYView:
-            return _XYView(X=self.X_test, y=self.y_test)
-
-        @property
-        def train(self: TemporalSplit[T]) -> _XYView:
-            return _XYView(X=self.X_train, y=self.y_train)
-
-        @property
-        def valid(self: TemporalSplit[T]) -> _XYView:
-            return _XYView(X=self.X_valid, y=self.y_valid)
-
-        @property
-        def X(self: TemporalSplit[T]) -> _TemporalView:
-            return _TemporalView(
-                train=self.X_train,
-                valid=self.X_valid,
-                test=self.X_test,
-            )
-
-        @property
-        def y(self: TemporalSplit[T]) -> _TemporalView:
-            return _TemporalView(
-                train=self.y_train,
-                valid=self.y_valid,
-                test=self.y_test,
             )
 
     class _TemporalView(NamedTuple):

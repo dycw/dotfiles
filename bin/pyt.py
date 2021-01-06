@@ -7,10 +7,11 @@ from dataclasses import field
 from logging import basicConfig
 from logging import DEBUG
 from logging import info
-from os import system
+from os import environ
 from pathlib import Path
 from re import search
-from subprocess import check_output  # noqa: S404
+from subprocess import check_output  # noqa:S404
+from subprocess import run  # noqa:S404
 from sys import stdout
 from typing import Iterator
 from typing import List
@@ -125,16 +126,10 @@ def _yield_args(
     hypothesis_profile: Optional[str] = None,
     hypothesis_seed: Optional[int] = None,
 ) -> Iterator[str]:
-    parsed = _parse_extra(*args)
-    (root,) = check_output(  # noqa: S607
-        "git rev-parse --show-toplevel",
-        shell=True,  # noqa: S602
-        text=True,
-    ).splitlines()
-    yield f"PYTHONPATH={root}"
     if nice:
         yield "nice"
     yield "pytest"
+    parsed = _parse_extra(*args)
     for path in parsed.paths:
         yield repr(path)
     for k in parsed.k:
@@ -163,6 +158,14 @@ def _yield_args(
     yield from parsed.flags
 
 
+def _get_repo_root() -> Path:
+    (root,) = check_output(  # noqa:S603,S607
+        ["git", "rev-parse", "--show-toplevel"],
+        text=True,
+    ).splitlines()
+    return Path(root)
+
+
 def pyt(
     *args: str,
     nice: bool = False,
@@ -171,7 +174,7 @@ def pyt(
     hypothesis_seed: Optional[int] = None,
     debug: bool = False,
 ) -> None:
-    full_command = " ".join(
+    parts = list(
         _yield_args(
             *args,
             nice=nice,
@@ -180,10 +183,16 @@ def pyt(
             hypothesis_seed=hypothesis_seed,
         ),
     )
+    root = _get_repo_root()
     if debug:
-        info(full_command)
+        command = " ".join([f"PYTHONPATH={root}"] + parts)
+        info(command)
     else:
-        system(full_command)  # noqa: S605
+        run(  # noqa:S603
+            parts,
+            env={**environ, **{"PYTHONPATH": str(root)}},
+            text=True,
+        )
 
 
 if __name__ == "__main__":

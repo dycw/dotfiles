@@ -154,6 +154,7 @@ alias pc='pre-commit run --all-files'
 alias pcau='pre-commit autoupdate'
 alias pci='pre-commit install'
 alias pcui='pre-commit uninstall'
+alias pctr='pre-commit try-repo . --all-files'
 
 # python
 alias p='python'

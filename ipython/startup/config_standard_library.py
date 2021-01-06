@@ -10,6 +10,7 @@ from logging import Logger
 from logging import StreamHandler
 from os import devnull
 from pathlib import Path
+from random import SystemRandom
 from re import search
 from sys import stdout
 from tempfile import TemporaryDirectory
@@ -18,6 +19,12 @@ from typing import Any
 from typing import Iterator
 from typing import List
 from typing import Optional
+
+
+_SYSTEM_RANDOM = SystemRandom()
+choice = _SYSTEM_RANDOM.choice
+sample = _SYSTEM_RANDOM.sample
+shuffle = _SYSTEM_RANDOM.shuffle
 
 
 def _initialize_logger() -> Logger:
@@ -56,9 +63,9 @@ class _TimerCM:
 
     def __exit__(
         self: _TimerCM,
-        exc_type: Any,  # noqa: U100
-        exc_val: Any,  # noqa: U100
-        exc_tb: Any,  # noqa: U100
+        exc_type: Any,  # noqa:U100
+        exc_val: Any,  # noqa:U100
+        exc_tb: Any,  # noqa:U100
     ) -> None:
         elapsed = dt.timedelta(seconds=default_timer() - self._start)
         e_str = str(elapsed)
@@ -88,7 +95,7 @@ class _TimerMeta(type):
         last.__exit__(exc_type, exc_val, exc_tb)
 
 
-class timer(metaclass=_TimerMeta):
+class timer(metaclass=_TimerMeta):  # noqa:N801
     def __init__(self: timer, msg: str) -> None:
         self.msg = msg
 
