@@ -97,6 +97,7 @@ _ensure_snap() {
   fi
 }
 
+_ensure_snap insomnia-designer
 _ensure_snap spotify
 _ensure_snap telegram-desktop
 _ensure_snap vlc
