@@ -101,6 +101,7 @@ _ensure_snap insomnia-designer
 _ensure_snap spotify
 _ensure_snap telegram-desktop
 _ensure_snap vlc
+_ensure_snap walc
 
 if _is_missing_snap pycharm-professional; then
   _install_snap pycharm-professional --classic
