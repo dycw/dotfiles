@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from __future__ import annotations
-
 from argparse import ArgumentParser
 from dataclasses import dataclass
 from dataclasses import field

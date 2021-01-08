@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from functools import partial
 from pathlib import Path
 from typing import Any
@@ -42,7 +40,7 @@ else:
     class _ShowMeta(type):
         _contexts: List[option_context] = []
 
-        def __enter__(cls: _ShowMeta) -> None:
+        def __enter__(cls) -> None:
             new = option_context(
                 "display.min_rows",
                 100,
@@ -52,12 +50,7 @@ else:
             cls._contexts.append(new)
             new.__enter__()
 
-        def __exit__(
-            cls: _ShowMeta,
-            exc_type: Any,
-            exc_val: Any,
-            exc_tb: Any,
-        ) -> None:
+        def __exit__(cls, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
             last = cls._contexts.pop()
             last.__exit__(exc_type, exc_val, exc_tb)
 
@@ -65,7 +58,7 @@ else:
         """Context manager which adjusts the display of NDFrames."""
 
         def __init__(
-            self: show,
+            self,
             *,
             dp: Optional[int] = None,
             rows: Union[int, float] = _DEFAULT_MIN_MAX_ROWS,
@@ -91,15 +84,10 @@ else:
                 columns_use,
             )
 
-        def __enter__(self: show) -> None:
+        def __enter__(self) -> None:
             self._context.__enter__()
 
-        def __exit__(
-            self: show,
-            exc_type: Any,
-            exc_val: Any,
-            exc_tb: Any,
-        ) -> None:
+        def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
             self._context.__exit__(exc_type, exc_val, exc_tb)
 
     def accumulate_csv(path: Union[Path, str], data: Dict) -> None:

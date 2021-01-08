@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-from typing import Type
 from typing import TypeVar
 
 
@@ -22,7 +19,7 @@ else:
         """Mimics instances of data()."""
 
         @classmethod
-        def draw(cls: Type[data], strategy: SearchStrategy[T]) -> T:
+        def draw(cls, strategy: SearchStrategy[T]) -> T:
             """Draw an example from a strategy."""
 
             return draw(strategy)

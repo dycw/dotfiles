@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-
 try:
     from numpy import set_printoptions
 except ModuleNotFoundError:

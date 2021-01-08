@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from functools import reduce
 from itertools import chain
 from operator import add
@@ -30,10 +28,7 @@ else:
     BOKEH_RENDERER = renderer("bokeh")
 
     class DataFrameExplorer:
-        def __init__(
-            self: DataFrameExplorer,
-            data: Union[Series, DataFrame],
-        ) -> None:
+        def __init__(self, data: Union[Series, DataFrame]) -> None:
             self.data = data
             if isinstance(self.data, Series):
                 if not isinstance(name := self.data.name, str):
@@ -66,17 +61,17 @@ else:
             self._kdim_str_plus_kdims = list(chain(["kdim"], self.kdims))
 
             class _Explorer(Parameterized):
-                def _plot_series(self: _Explorer, series: Series) -> Any:
+                def _plot_series(self, series: Series) -> Any:
                     raise NotImplementedError("Please implement this method")
 
-                def _plot_series_opts(self: _Explorer, series: Series) -> Any:
+                def _plot_series_opts(self, series: Series) -> Any:
                     return self._plot_series(series).opts(
                         framewise=True,
                         tools=["hover"],
                     )
 
                 def _query_except(
-                    self: _Explorer,
+                    self,
                     dfe: DataFrameExplorer,
                     kdims: List[str],
                     series: Series,
@@ -93,7 +88,7 @@ else:
 
             self._Explorer = _Explorer
 
-        def heatmap(self: DataFrameExplorer) -> Row:
+        def heatmap(self) -> Row:
             self._check_nlevels(3)
             dfe = self
 
@@ -107,7 +102,7 @@ else:
                     objects=self.kdims,
                 )
 
-                def _plot_series(self: Explorer, series: Series) -> HeatMap:
+                def _plot_series(self, series: Series) -> HeatMap:
                     data, label = self._query_except(
                         dfe,
                         [self.kdim1, self.kdim2],
@@ -125,7 +120,7 @@ else:
             return self._make_plot(Explorer, ["kdim1", "kdim2"])
 
         def scatter(
-            self: DataFrameExplorer,
+            self,
             *,
             size: Optional[int] = None,
             fixed: bool = False,
@@ -136,7 +131,7 @@ else:
             class Explorer(self._Explorer):  # type: ignore
                 kdim = ObjectSelector(default=self.kdims[0], objects=self.kdims)
 
-                def _plot_series(self: Explorer, series: Series) -> Scatter:
+                def _plot_series(self, series: Series) -> Scatter:
                     data, label = self._query_except(dfe, [self.kdim], series)
                     vdim = series.name
                     label = f"{vdim} = f({self.kdim} | {label})"
@@ -160,7 +155,7 @@ else:
 
             return self._make_plot(Explorer, ["kdim"])
 
-        def _check_nlevels(self: DataFrameExplorer, n: int) -> None:
+        def _check_nlevels(self, n: int) -> None:
             if (nlevels := self._index.nlevels) < n:
                 raise ValueError(
                     f"Expected the index to have at least {n} levels; "
@@ -168,7 +163,7 @@ else:
                 )
 
         def _make_plot(
-            self: DataFrameExplorer,
+            self,
             explorer: Type[Parameterized],
             kdims: List[str],
         ) -> Row:
@@ -190,7 +185,7 @@ else:
                 type("Explorer", (explorer,), selectors),  # type: ignore
             ):
                 @depends(*kdims_strs_plus_kdims)  # type: ignore
-                def load_data(self: Extended) -> Any:
+                def load_data(self) -> Any:
                     if isinstance(data, Series):
                         return self._plot_series_opts(data)
                     elif isinstance(data, DataFrame):

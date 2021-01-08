@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from dataclasses import dataclass
 from dataclasses import replace
 from itertools import chain
@@ -10,7 +8,6 @@ from typing import Generic
 from typing import NamedTuple
 from typing import Optional
 from typing import Tuple
-from typing import Type
 from typing import TypeVar
 
 
@@ -79,7 +76,7 @@ else:
         index_test: Optional[Index] = None
 
         @property
-        def shape(self: TemporalSplit) -> Dict[str, Tuple[int, ...]]:
+        def shape(self) -> Dict[str, Tuple[int, ...]]:
             out = {}
             for prefix, view in {"X": self.X, "y": self.y}.items():
                 out.update(
@@ -91,19 +88,19 @@ else:
             return out
 
         @property
-        def test(self: TemporalSplit[T]) -> _XYView:
+        def test(self) -> "_XYView":
             return _XYView(X=self.X_test, y=self.y_test)
 
         @property
-        def train(self: TemporalSplit[T]) -> _XYView:
+        def train(self) -> "_XYView":
             return _XYView(X=self.X_train, y=self.y_train)
 
         @property
-        def valid(self: TemporalSplit[T]) -> _XYView:
+        def valid(self) -> "_XYView":
             return _XYView(X=self.X_valid, y=self.y_valid)
 
         @property
-        def X(self: TemporalSplit[T]) -> _TemporalView:
+        def X(self) -> "_TemporalView":
             return _TemporalView(
                 train=self.X_train,
                 valid=self.X_valid,
@@ -111,7 +108,7 @@ else:
             )
 
         @property
-        def y(self: TemporalSplit[T]) -> _TemporalView:
+        def y(self) -> "_TemporalView":
             return _TemporalView(
                 train=self.y_train,
                 valid=self.y_valid,
@@ -120,14 +117,14 @@ else:
 
         @classmethod
         def from_Xy(
-            cls: Type[TemporalSplit],
+            cls,
             X: ArrayLike,
             y: ArrayLike,
             *,
             train: float = _DEFAULT_FRAC_TRAIN,
             valid: float = _DEFAULT_FRAC_VALID,
             test: float = _DEFAULT_FRAC_TEST,
-        ) -> TemporalSplit[DataFrame]:
+        ) -> "TemporalSplit[DataFrame]":
             return TemporalSplit(
                 *temporal_3_way_split(
                     X,
@@ -140,7 +137,7 @@ else:
 
         @classmethod
         def from_df(
-            cls: Type[TemporalSplit],
+            cls,
             df: DataFrame,
             *,
             regex_x: str = _DEFAULT_REGEX_X,
@@ -148,7 +145,7 @@ else:
             train: float = _DEFAULT_FRAC_TRAIN,
             valid: float = _DEFAULT_FRAC_VALID,
             test: float = _DEFAULT_FRAC_TEST,
-        ) -> TemporalSplit[DataFrame]:
+        ) -> "TemporalSplit[DataFrame]":
             X = df.filter(regex=regex_x)
             y = df.filter(regex=regex_y)
             split = cls.from_Xy(X, y, train=train, valid=valid, test=test)
@@ -160,24 +157,21 @@ else:
             )
 
         def map(  # noqa:A003
-            self: TemporalSplit[T],
+            self,
             func: Callable[[T], U],
-        ) -> TemporalSplit[U]:
+        ) -> "TemporalSplit[U]":
             return self.map_x(func).map_y(func)  # type: ignore
 
-        def map_x(
-            self: TemporalSplit[T],
-            func: Callable[[T], T],
-        ) -> TemporalSplit[T]:
+        def map_x(self, func: Callable[[T], T]) -> "TemporalSplit[T]":
             return replace(
                 self,
                 **{f"X_{k}": func(v) for k, v in self.X._asdict().items()},
             )
 
         def map_y(
-            self: TemporalSplit[T],
+            self,
             func: Callable[[T], T],
-        ) -> TemporalSplit[T]:
+        ) -> "TemporalSplit[T]":
             return replace(
                 self,
                 **{f"y_{k}": func(v) for k, v in self.y._asdict().items()},

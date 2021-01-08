@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import Callable
 from typing import cast
 from typing import TypeVar
