@@ -58,6 +58,7 @@ _ensure_apt_from_repository() {
 
 _ensure_apt_from_repository lyx ppa:lyx-devel/release
 _ensure_apt_from_repository pdfarranger ppa:linuxuprising/apps
+_ensure_apt_from_repository sqlitebrowser ppa:linuxgndu/sqlitebrowser
 
 if _is_missing_apt nordvpn; then
   filename="nordvpn-release_1.0.0_all.deb"

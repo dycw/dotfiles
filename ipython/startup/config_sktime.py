@@ -156,10 +156,7 @@ else:
                 index_test=split.X_test.index,
             )
 
-        def map(  # noqa:A003
-            self,
-            func: Callable[[T], U],
-        ) -> "TemporalSplit[U]":
+        def map(self, func: Callable[[T], U]) -> "TemporalSplit[U]":
             return self.map_x(func).map_y(func)  # type: ignore
 
         def map_x(self, func: Callable[[T], T]) -> "TemporalSplit[T]":
