@@ -43,6 +43,7 @@ _ensure_apt libblas-dev        # scipy
 _ensure_apt libblas3           # scipy
 _ensure_apt liblapack-dev      # scipy
 _ensure_apt liblapack3         # scipy
+_ensure_apt npm
 _ensure_apt restic
 _ensure_apt tmux
 _ensure_apt transmission
@@ -59,6 +60,11 @@ _ensure_apt_from_repository() {
 _ensure_apt_from_repository lyx ppa:lyx-devel/release
 _ensure_apt_from_repository pdfarranger ppa:linuxuprising/apps
 _ensure_apt_from_repository sqlitebrowser ppa:linuxgndu/sqlitebrowser
+
+if _is_missing_apt nodejs; then
+  curl -sL https://deb.nodesource.com/setup_15.x | sudo -E bash -
+  sudo apt-get install -y nodejs
+fi
 
 if _is_missing_apt nordvpn; then
   filename="nordvpn-release_1.0.0_all.deb"
