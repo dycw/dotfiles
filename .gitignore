@@ -1,13 +1,10 @@
-# Node
-node_modules/
-
-# Python
-__pycache__/
-.cache/
-
 # PyCharm
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+
+# Python
+__pycache__/
+.cache/
