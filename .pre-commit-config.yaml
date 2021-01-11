@@ -39,21 +39,22 @@ repos:
             flake8-debugger,
             flake8-eradicate,
             flake8-executable,
-            flake8-fine-pytest,
             flake8-fixme,
             flake8-future-import,
             flake8-implicit-str-concat,
             flake8-mutable,
             flake8-print,
-            flake8-pytest-style,
             flake8-simplify,
             flake8-string-format,
             flake8-todo,
             flake8-typing-imports,
             flake8-unused-arguments,
             pep8-naming,
+            flake8-fine-pytest,
+            flake8-pytest-style,
           ]
-  - repo: git://github.com/detailyang/pre-commit-shell
+
+  - repo: http://github.com/detailyang/pre-commit-shell
     rev: v1.0.6
     hooks:
       - id: shell-lint
@@ -106,8 +107,6 @@ repos:
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: fix-byte-order-marker
-      - id: fix-encoding-pragma
-        args: [--remove]
       - id: mixed-line-ending
         args: [--fix=lf]
       - id: no-commit-to-branch
@@ -135,17 +134,17 @@ repos:
             flake8-debugger,
             flake8-eradicate,
             flake8-executable,
-            flake8-fine-pytest,
             flake8-fixme,
             flake8-future-import,
             flake8-implicit-str-concat,
             flake8-mutable,
             flake8-print,
-            flake8-pytest-style,
             flake8-simplify,
             flake8-string-format,
             flake8-todo,
             flake8-typing-imports,
             flake8-unused-arguments,
             pep8-naming,
+            flake8-fine-pytest,
+            flake8-pytest-style,
           ]
