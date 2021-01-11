@@ -6,7 +6,7 @@ _backup_dropbox() {
   export RESTIC_PASSWORD_FILE="/home/derek/.restic-password"
   export RESTIC_REPOSITORY="b2:dw-restic"
 
-  restic backup $PATH_DROPBOX
+  restic backup "$PATH_DROPBOX"
 }
 
 _backup_dropbox

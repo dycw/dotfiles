@@ -149,6 +149,11 @@ alias lh='ls -l --classify --color --directory --human-readable .*'
 alias lr='ls --classify --color --human-readable --recursive'
 alias lra='ls --almost-all --classify --color --recursive'
 
+# nvm
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh"  ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion"  ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
 # pre-commit
 alias pc='pre-commit run --all-files'
 alias pcau='pre-commit autoupdate'

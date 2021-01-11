@@ -5,7 +5,7 @@
 ################################################################################
 
 _is_missing_apt() {
-  if dpkg -s $1 >/dev/null 2>&1; then
+  if dpkg -s "$1" >/dev/null 2>&1; then
     false
   else
     true
@@ -15,12 +15,12 @@ _is_missing_apt() {
 
 _install_apt() {
   sudo apt-get update
-  sudo apt-get install $1 --yes
+  sudo apt-get install "$1" --yes
 }
 
 _ensure_apt() {
-  if _is_missing_apt $1; then
-    _install_apt $1
+  if _is_missing_apt "$1"; then
+    _install_apt "$1"
   fi
 }
 
@@ -45,15 +45,16 @@ _ensure_apt liblapack-dev      # scipy
 _ensure_apt liblapack3         # scipy
 _ensure_apt npm
 _ensure_apt restic
+_ensure_apt shellcheck
 _ensure_apt tmux
 _ensure_apt transmission
 _ensure_apt vim
 _ensure_apt xclip
 
 _ensure_apt_from_repository() {
-  if _is_missing_apt $1; then
-    sudo add-apt-repository $2 --yes
-    _install_apt $2
+  if _is_missing_apt "$1"; then
+    sudo add-apt-repository "$2" --yes
+    _install_apt "$2"
   fi
 }
 
@@ -86,7 +87,7 @@ fi
 ###############################################################################
 
 _is_missing_snap() {
-  if snap list | grep -q $1; then
+  if snap list | grep -q "$1"; then
     false
   else
     true
@@ -99,8 +100,8 @@ _install_snap() {
 }
 
 _ensure_snap() {
-  if _is_missing_snap $1; then
-    _install_snap $1
+  if _is_missing_snap "$1"; then
+    _install_snap "$1"
   fi
 }
 
@@ -115,6 +116,14 @@ if _is_missing_snap pycharm-professional; then
 fi
 
 ################################################################################
+# nvm
+################################################################################
+
+if command -v nvm >/dev/null 2>&1; then
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+fi
+
+################################################################################
 # local files
 ################################################################################
 _create_gitconfig_local() {
@@ -122,11 +131,11 @@ _create_gitconfig_local() {
   if ! [ -f $path ]; then
     echo "$(date '+%F %T'): $path does not exist; creating..."
     printf "user.name = "
-    read name
+    read -r name
     printf "user.email = "
-    read email
+    read -r email
     mkdir -p "$(dirname $path)"
-    echo "[user]\n  name = $name\n  email = $email\n" >>$path
+    printf "[user]\n  name = %s\n  email = %s\n" "$name" "$email" >>$path
     echo "$(date '+%F %T'): $path created"
   fi
 }
@@ -160,8 +169,8 @@ _clone_dotfiles() {
         exit 1
       fi
       echo "$(date '+%F %T'): $key copied; please head to https://github.com/settings/keys; enter 'y' when back"
-      read input
-      if [ $input = y ]; then
+      read -r input
+      if [ "$input" = y ]; then
         break
       fi
     done
@@ -183,23 +192,23 @@ _clone_dotfiles
 _create_one_symlink() {
   from=$1
   to=$2
-  mkdir -p "$(dirname $to)"
-  ln -s $from $to
+  mkdir -p "$(dirname "$to")"
+  ln -s "$from" "$to"
 }
 
 _process_one_symlink() {
   from=$1
   to=$2
-  if [ -L $to ]; then
-    target=$(readlink $to)
-    if ! [ $target = $from ]; then
+  if [ -L "$to" ]; then
+    target=$(readlink "$to")
+    if ! [ "$target" = "$from" ]; then
       echo "$(date '+%F %T'): Overwriting $to -> ($target -> $to)"
-      rm $to
-      _create_one_symlink $from $to
+      rm "$to"
+      _create_one_symlink "$from" "$to"
     fi
   else
     echo "$(date '+%F %T'): Symlinking $from -> $to..."
-    _create_one_symlink $from $to
+    _create_one_symlink "$from" "$to"
   fi
 }
 
@@ -216,7 +225,7 @@ _process_all_symlinks() {
   _process_one_symlink ~/.dotfiles/zsh/zshrc ~/.zshrc
 
   for filename in ~/.dotfiles/ipython/startup/*.py; do
-    _process_one_symlink "$filename" "$HOME/.ipython/profile_default/startup/$(basename $filename)"
+    _process_one_symlink "$filename" "$HOME/.ipython/profile_default/startup/$(basename "$filename")"
   done
 }
 
