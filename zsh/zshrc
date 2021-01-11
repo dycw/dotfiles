@@ -21,6 +21,9 @@ alias cddb='cd $PATH_DROPBOX'
 alias cddf='cd ~/.dotfiles'
 alias cdw='cd ~/work'
 
+# conda
+alias ceu='conda env update --prune'
+
 # dotfiles
 alias gitconfig='$EDITOR ~/.config/git/config'
 alias gitignore='$EDITOR ~/.config/git/ignore'
