@@ -158,7 +158,7 @@ export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/bash_completion"  ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # pre-commit
-alias pc='pre-commit run --all-files'
+alias pc='pre-commit run --all-files | grep -v "...Passed" | grep -v "(no files to check)Skipped"'
 alias pcau='pre-commit autoupdate'
 alias pci='pre-commit install'
 alias pcui='pre-commit uninstall'
