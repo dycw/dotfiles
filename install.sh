@@ -219,6 +219,7 @@ _process_all_symlinks() {
   _process_one_symlink ~/.dotfiles/i3 ~/.config/i3/config
   _process_one_symlink ~/.dotfiles/ipython/ipython_config.py ~/.ipython/profile_default/ipython_config.py
   _process_one_symlink ~/.dotfiles/jupyter_notebook_config.py ~/.jupyter/jupyter_notebook_config.py
+  _process_one_symlink ~/.dotfiles/npmrc ~/.npmrc
   _process_one_symlink ~/.dotfiles/tmux.conf ~/.tmux.conf
   _process_one_symlink ~/.dotfiles/vimrc ~/.vimrc
   _process_one_symlink ~/.dotfiles/zsh/zshenv ~/.zshenv
