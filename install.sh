@@ -54,18 +54,14 @@ _ensure_apt xclip
 _ensure_apt_from_repository() {
   if _is_missing_apt "$1"; then
     sudo add-apt-repository "$2" --yes
-    _install_apt "$2"
+    _install_apt "$1"
   fi
 }
 
+_ensure_apt_from_repository golang-go ppa:longsleep/golang-backports
 _ensure_apt_from_repository lyx ppa:lyx-devel/release
 _ensure_apt_from_repository pdfarranger ppa:linuxuprising/apps
 _ensure_apt_from_repository sqlitebrowser ppa:linuxgndu/sqlitebrowser
-
-if _is_missing_apt nodejs; then
-  curl -sL https://deb.nodesource.com/setup_15.x | sudo -E bash -
-  sudo apt-get install -y nodejs
-fi
 
 if _is_missing_apt nordvpn; then
   filename="nordvpn-release_1.0.0_all.deb"
