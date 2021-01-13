@@ -63,6 +63,12 @@ _ensure_apt_from_repository lyx ppa:lyx-devel/release
 _ensure_apt_from_repository pdfarranger ppa:linuxuprising/apps
 _ensure_apt_from_repository sqlitebrowser ppa:linuxgndu/sqlitebrowser
 
+if _is_missing_apt google-chrome-stable; then
+	wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+	sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+	_install_apt google-chrome-stable
+fi
+
 if _is_missing_apt nordvpn; then
 	filename="nordvpn-release_1.0.0_all.deb"
 	wget https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/$filename -P /tmp
