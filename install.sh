@@ -43,7 +43,6 @@ _ensure_apt libblas-dev       # scipy
 _ensure_apt libblas3          # scipy
 _ensure_apt liblapack-dev     # scipy
 _ensure_apt liblapack3        # scipy
-_ensure_apt npm
 _ensure_apt restic
 _ensure_apt shellcheck
 _ensure_apt tmux
@@ -114,9 +113,13 @@ _ensure_snap spotify
 _ensure_snap telegram-desktop
 _ensure_snap vlc
 
-if _is_missing_snap pycharm-professional; then
-	_install_snap pycharm-professional --classic
-fi
+_ensure_apt_classic() {
+	if _is_missing_snap "$1"; then
+		_install_snap "$1" --classic
+	fi
+}
+
+_ensure_apt_classic pycharm-professional
 
 ################################################################################
 # local files
@@ -251,6 +254,37 @@ _install_conda() {
 }
 
 _install_conda
+
+###############################################################################
+# elm
+###############################################################################
+_install_elm() {
+	if ! command -v elm >/dev/null 2>&1; then
+		echo "$(date '+%F %T'): elm not found; installing..."
+		full_filename="/tmp/elm.gz"
+		curl -L -o "$full_filename" https://github.com/elm/compiler/releases/download/0.19.1/binary-for-linux-64-bit.gz
+		gunzip "$full_filename"
+		full_binary="/tmp/elm"
+		chmod +x "$full_binary"
+		sudo mv "$full_binary" /usr/local/bin/
+	fi
+}
+
+_install_elm
+
+###############################################################################
+# nodejs
+###############################################################################
+_install_node_js() {
+
+	if ! command -v nodejs >/dev/null 2>&1; then
+		echo "$(date '+%F %T'): nodejs not found; installing..."
+		curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+		sudo apt-get install -y nodejs
+	fi
+}
+
+_install_node_js
 
 ###############################################################################
 # zsh
