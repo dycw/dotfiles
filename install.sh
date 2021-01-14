@@ -113,14 +113,6 @@ _ensure_snap spotify
 _ensure_snap telegram-desktop
 _ensure_snap vlc
 
-_ensure_apt_classic() {
-	if _is_missing_snap "$1"; then
-		_install_snap "$1" --classic
-	fi
-}
-
-_ensure_apt_classic pycharm-professional
-
 ################################################################################
 # local files
 ################################################################################
@@ -276,7 +268,6 @@ _install_elm
 # nodejs
 ###############################################################################
 _install_node_js() {
-
 	if ! command -v nodejs >/dev/null 2>&1; then
 		echo "$(date '+%F %T'): nodejs not found; installing..."
 		curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
