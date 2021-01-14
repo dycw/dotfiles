@@ -1,6 +1,8 @@
 # .dotfiles
 
-My [.dotfiles](https://github.com/dycw/dotfiles)
+My dotfiles
+
+## Installation
 
 ```
 rm -f install.sh

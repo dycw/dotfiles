@@ -107,6 +107,7 @@ _ensure_snap() {
 	fi
 }
 
+_ensure_snap code
 _ensure_snap insomnia-designer
 _ensure_snap shfmt
 _ensure_snap spotify
