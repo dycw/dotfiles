@@ -54,11 +54,8 @@ else:
                 return None
 
         server_results = [
-            parse_server(server)
-            for server in notebookapp.list_running_servers()
+            parse_server(server) for server in notebookapp.list_running_servers()
         ]
-        server_results = [
-            result for result in server_results if result is not None
-        ]
+        server_results = [result for result in server_results if result is not None]
         (server_result,) = server_results
         return server_result

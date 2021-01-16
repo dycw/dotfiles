@@ -107,7 +107,9 @@ alias gll='g pull'
 # git push
 alias gp='g push'
 alias gpf='gp --force'
-alias gpd='gp --dry-run'
+alias gpdo='gp --delete origin'
+alias gpdr='gp --dry-run'
+alias gpo='gp origin'
 # git rebase
 alias grb='git rebase'
 alias grba='grb --abort'
@@ -138,6 +140,8 @@ alias gstp='gst pop'
 alias gsmurr='git submodule update --recursive --remote'
 # git status
 alias gs='g status --short'
+# git tag
+gta() { git tag -a "$1" "$2" -m "$1"; }
 # git/custom
 alias gpb='g publish'
 alias gpbnv='g unpublish-no-verify'
@@ -169,11 +173,7 @@ alias lr='ls --classify --color --human-readable --recursive'
 alias lra='ls --almost-all --classify --color --recursive'
 
 # pre-commit
-alias pc='pre-commit run --all-files'
-alias pcau='pre-commit autoupdate'
-alias pci='pre-commit install'
-alias pcui='pre-commit uninstall'
-alias pctr='pre-commit try-repo . --all-files'
+alias pc='$(git rev-parse --show-toplevel)/.git/hooks/pre-commit'
 
 # python
 alias p='python'

@@ -168,9 +168,7 @@ else:
             kdims: List[str],
         ) -> Row:
             unique_values = {
-                kdim: self._index.get_level_values(kdim)
-                .drop_duplicates()
-                .sort_values()
+                kdim: self._index.get_level_values(kdim).drop_duplicates().sort_values()
                 for kdim in self.kdims
             }
             selectors = {
@@ -189,9 +187,7 @@ else:
                     if isinstance(data, Series):
                         return self._plot_series_opts(data)
                     elif isinstance(data, DataFrame):
-                        parts = [
-                            self._plot_series_opts(sr) for _, sr in data.items()
-                        ]
+                        parts = [self._plot_series_opts(sr) for _, sr in data.items()]
                         return reduce(add, parts).cols(1)
                     else:
                         raise TypeError(f"Invalid type: {type(data).__name__}")

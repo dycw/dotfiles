@@ -4,12 +4,12 @@ from typing import Optional
 
 from pytest import param
 from pytest import raises
+from tests import parametrize
 
 from bin.pyt import _get_repo_root
 from bin.pyt import _parse_extra
 from bin.pyt import _yield_args
 from bin.pyt import Parsed
-from tests import parametrize
 
 
 @parametrize(

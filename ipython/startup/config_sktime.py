@@ -80,10 +80,7 @@ else:
             out = {}
             for prefix, view in {"X": self.X, "y": self.y}.items():
                 out.update(
-                    {
-                        f"{prefix}_{k}": v.shape
-                        for k, v in view._asdict().items()
-                    },
+                    {f"{prefix}_{k}": v.shape for k, v in view._asdict().items()},
                 )
             return out
 

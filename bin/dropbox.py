@@ -19,6 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with nautilus-dropbox.  If not, see <http://www.gnu.org/licenses/>.
 #
+# flake8: noqa
 import _thread
 import errno
 import locale
@@ -655,9 +656,7 @@ else:
             write(save)
             flush()
         console_print(f"{INFO} {LINK}\n")
-        GPG_WARNING_MSG = (
-            ("\n%s" % GPG_WARNING) if not gpg and not gpgme else ""
-        )
+        GPG_WARNING_MSG = ("\n%s" % GPG_WARNING) if not gpg and not gpgme else ""
 
         if not yes_no_question(f"{WARNING}{GPG_WARNING_MSG}"):
             return
@@ -1050,9 +1049,10 @@ def filestatus(args):
                         )
                         return (path, path)
                     try:
-                        status = dc.icon_overlay_file_status(
-                            path=file_path,
-                        ).get("status", [None])[0]
+                        status = dc.icon_overlay_file_status(path=file_path).get(
+                            "status",
+                            [None],
+                        )[0]
                     except DropboxCommand.CommandError as e:
                         path = "{} ({})".format(os.path.basename(file_path), e)
                         return (path, path)
@@ -1170,8 +1170,7 @@ def filestatus(args):
                         continue
                     if not os.path.exists(fp):
                         console_print(
-                            "%-*s %s"
-                            % (indent, file + ":", "File doesn't exist"),
+                            "%-*s %s" % (indent, file + ":", "File doesn't exist"),
                         )
                         continue
 
@@ -1521,8 +1520,7 @@ def exclude(args):
             with closing(DropboxCommand()) as dc:
                 try:
                     lines = [
-                        relpath(path)
-                        for path in dc.get_ignore_set()["ignore_set"]
+                        relpath(path) for path in dc.get_ignore_set()["ignore_set"]
                     ]
                     lines.sort()
                     if len(lines) == 0:
@@ -1561,9 +1559,7 @@ def exclude(args):
                         result = dc.ignore_set_add(paths=absolute_paths)
                         if result["ignored"]:
                             console_print("Excluded: ")
-                            lines = [
-                                relpath(path) for path in result["ignored"]
-                            ]
+                            lines = [relpath(path) for path in result["ignored"]]
                             for line in lines:
                                 console_print(str(line))
                     except KeyError:
@@ -1592,9 +1588,7 @@ def exclude(args):
                         result = dc.ignore_set_remove(paths=absolute_paths)
                         if result["removed"]:
                             console_print("No longer excluded: ")
-                            lines = [
-                                relpath(path) for path in result["removed"]
-                            ]
+                            lines = [relpath(path) for path in result["removed"]]
                             for line in lines:
                                 console_print(str(line))
                     except KeyError:
