@@ -2,3 +2,6 @@
 	path = .pre-commit-hooks
 	url = git@github.com:dycw/pre-commit-hooks.git
 	branch = master
+[submodule "bash/pureline"]
+	path = bash/pureline
+	url = https://github.com/chris-marsh/pureline

@@ -482,9 +482,7 @@ from sktime.performance_metrics.forecasting import sMAPE
 from sktime.performance_metrics.forecasting import smape_loss
 from sktime.transformers.series_as_features.compose import RowTransformer
 from sktime.transformers.series_as_features.reduce import Tabularizer
-from sktime.transformers.series_as_features.segment import (
-    RandomIntervalSegmenter,
-)
+from sktime.transformers.series_as_features.segment import RandomIntervalSegmenter
 from sktime.transformers.single_series.detrend import Detrender
 from sktime.utils.plotting.forecasting import plot_ys
 from sktime.utils.time_series import time_series_slope

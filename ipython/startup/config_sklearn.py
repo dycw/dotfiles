@@ -16,44 +16,28 @@ else:
         if isinstance(x, ndarray):
             return scaler.transform(x)
         elif isinstance(x, Series):
-            return Series(
-                apply_transform(scaler, x.to_numpy()),
-                x.index,
-                name=x.name,
-            )
+            return Series(apply_transform(scaler, x.to_numpy()), x.index, name=x.name)
         elif isinstance(x, DataFrame):
-            return DataFrame(
-                apply_transform(scaler, x.to_numpy()),
-                x.index,
-                x.columns,
-            )
+            return DataFrame(apply_transform(scaler, x.to_numpy()), x.index, x.columns)
         else:
             raise TypeError(f"Invalid type: {type(x).__name__}")
 
-    def apply_inverse_transform(
-        scaler: TransformerMixin,
-        x: ArrayLike,
-    ) -> ArrayLike:
+    def apply_inverse_transform(scaler: TransformerMixin, x: ArrayLike) -> ArrayLike:
         if isinstance(x, ndarray):
             return scaler.inverse_transform(x)
         elif isinstance(x, Series):
             return Series(
-                apply_inverse_transform(scaler, x.to_numpy()),
-                x.index,
-                name=x.name,
+                apply_inverse_transform(scaler, x.to_numpy()), x.index, name=x.name,
             )
         elif isinstance(x, DataFrame):
             return DataFrame(
-                apply_inverse_transform(scaler, x.to_numpy()),
-                x.index,
-                x.columns,
+                apply_inverse_transform(scaler, x.to_numpy()), x.index, x.columns,
             )
         else:
             raise TypeError(f"Invalid type: {type(x).__name__}")
 
     def fit_transform_scaler(
-        scaler: TransformerMixin,
-        x: ArrayLike,
+        scaler: TransformerMixin, x: ArrayLike,
     ) -> Tuple[TransformerMixin, ArrayLike]:
         fitted = scaler.fit(x)
         return fitted, apply_transform(fitted, x)

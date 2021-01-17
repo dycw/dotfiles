@@ -1,4 +1,11 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
+
+installer_dir="$(dirname "$(readlink -f "$0")")"
+PATH="${PATH:+${PATH}:}$installer_dir"
+
+make_symlinks
+
+exit 0
 
 ################################################################################
 # apt-get
@@ -14,7 +21,7 @@ _is_missing_apt() {
 }
 
 _install_apt() {
-	sudo apt-get update
+	sudo apt-get updatef
 	sudo apt-get install "$1" --yes
 }
 
@@ -26,7 +33,6 @@ _ensure_apt() {
 
 _ensure_apt bat
 _ensure_apt chrome-gnome-shell # screenshot-locations
-_ensure_apt curl
 _ensure_apt curl
 _ensure_apt fd-find
 _ensure_apt fzf
@@ -178,49 +184,6 @@ _clone_dotfiles
 ################################################################################
 # symlinks
 ################################################################################
-
-_create_one_symlink() {
-	from=$1
-	to=$2
-	mkdir -p "$(dirname "$to")"
-	ln -s "$from" "$to"
-}
-
-_process_one_symlink() {
-	from=$1
-	to=$2
-	if [ -L "$to" ]; then
-		target=$(readlink "$to")
-		if ! [ "$target" = "$from" ]; then
-			echo "$(date '+%F %T'): Overwriting $to -> ($target -> $to)"
-			rm "$to"
-			_create_one_symlink "$from" "$to"
-		fi
-	else
-		echo "$(date '+%F %T'): Symlinking $from -> $to..."
-		_create_one_symlink "$from" "$to"
-	fi
-}
-
-_process_all_symlinks() {
-	_process_one_symlink ~/.dotfiles/condarc ~/.condarc
-	_process_one_symlink ~/.dotfiles/git/config ~/.config/git/config
-	_process_one_symlink ~/.dotfiles/git/ignore ~/.config/git/ignore
-	_process_one_symlink ~/.dotfiles/i3 ~/.config/i3/config
-	_process_one_symlink ~/.dotfiles/ipython/ipython_config.py ~/.ipython/profile_default/ipython_config.py
-	_process_one_symlink ~/.dotfiles/jupyter_notebook_config.py ~/.jupyter/jupyter_notebook_config.py
-	_process_one_symlink ~/.dotfiles/npmrc ~/.npmrc
-	_process_one_symlink ~/.dotfiles/tmux.conf ~/.tmux.conf
-	_process_one_symlink ~/.dotfiles/vimrc ~/.vimrc
-	_process_one_symlink ~/.dotfiles/zsh/zshenv ~/.zshenv
-	_process_one_symlink ~/.dotfiles/zsh/zshrc ~/.zshrc
-
-	for filename in ~/.dotfiles/ipython/startup/*.py; do
-		_process_one_symlink "$filename" "$HOME/.ipython/profile_default/startup/$(basename "$filename")"
-	done
-}
-
-_process_all_symlinks
 
 ################################################################################
 # conda

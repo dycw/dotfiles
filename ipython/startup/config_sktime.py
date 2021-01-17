@@ -42,23 +42,18 @@ else:
         test: float = _DEFAULT_FRAC_TEST,
     ) -> Tuple[ArrayLike, ...]:
         if not isclose(total := (train + valid + test), 1.0):
-            raise ValueError(
-                f"The fractions must add up to 1; they add up to {total}",
-            )
+            raise ValueError(f"The fractions must add up to 1; they add up to {total}")
         if isclose(train, 1.0):
             return tuple(chain(*[(arg, arg[:0], arg[:0]) for arg in args]))
         train_and_valid = train + valid
         if isclose(train_and_valid, 1.0):
             tmp = temporal_train_test_split(*args, train_size=train)
             all_train, all_valid = tmp[::2], tmp[1::2]
-            return tuple(
-                chain(*[(t, v, t[:0]) for t, v in zip(all_train, all_valid)]),
-            )
+            return tuple(chain(*[(t, v, t[:0]) for t, v in zip(all_train, all_valid)]))
         tmp = temporal_train_test_split(*args, train_size=train_and_valid)
         all_train_valid, all_test = tmp[::2], tmp[1::2]
         tmp = temporal_train_test_split(
-            *all_train_valid,
-            train_size=train / (train + valid),
+            *all_train_valid, train_size=train / (train + valid),
         )
         all_train, all_valid = tmp[::2], tmp[1::2]
         return tuple(roundrobin(all_train, all_valid, all_test))
@@ -99,17 +94,13 @@ else:
         @property
         def X(self) -> "_TemporalView":
             return _TemporalView(
-                train=self.X_train,
-                valid=self.X_valid,
-                test=self.X_test,
+                train=self.X_train, valid=self.X_valid, test=self.X_test,
             )
 
         @property
         def y(self) -> "_TemporalView":
             return _TemporalView(
-                train=self.y_train,
-                valid=self.y_valid,
-                test=self.y_test,
+                train=self.y_train, valid=self.y_valid, test=self.y_test,
             )
 
         @classmethod
@@ -123,13 +114,7 @@ else:
             test: float = _DEFAULT_FRAC_TEST,
         ) -> "TemporalSplit[DataFrame]":
             return TemporalSplit(
-                *temporal_3_way_split(
-                    X,
-                    y,
-                    train=train,
-                    valid=valid,
-                    test=test,
-                ),
+                *temporal_3_way_split(X, y, train=train, valid=valid, test=test),
             )
 
         @classmethod
@@ -158,17 +143,12 @@ else:
 
         def map_x(self, func: Callable[[T], T]) -> "TemporalSplit[T]":
             return replace(
-                self,
-                **{f"X_{k}": func(v) for k, v in self.X._asdict().items()},
+                self, **{f"X_{k}": func(v) for k, v in self.X._asdict().items()},
             )
 
-        def map_y(
-            self,
-            func: Callable[[T], T],
-        ) -> "TemporalSplit[T]":
+        def map_y(self, func: Callable[[T], T]) -> "TemporalSplit[T]":
             return replace(
-                self,
-                **{f"y_{k}": func(v) for k, v in self.y._asdict().items()},
+                self, **{f"y_{k}": func(v) for k, v in self.y._asdict().items()},
             )
 
     class _TemporalView(NamedTuple):

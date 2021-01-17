@@ -121,9 +121,7 @@ def yes_no_question(question):
         elif text.lower().startswith("n"):
             return False
         else:
-            console_print(
-                "Sorry, I didn't understand that. Please type yes or no.",
-            )
+            console_print("Sorry, I didn't understand that. Please type yes or no.")
 
 
 def plat():
@@ -233,27 +231,19 @@ class DownloadState:
         self.local_file = BytesIO()
 
     def copy_data(self):
-        return download_file_chunk(
-            DOWNLOAD_LOCATION_FMT % plat(),
-            self.local_file,
-        )
+        return download_file_chunk(DOWNLOAD_LOCATION_FMT % plat(), self.local_file)
 
     def unpack(self):
         # download signature
         signature = BytesIO()
-        for _ in download_file_chunk(
-            SIGNATURE_LOCATION_FMT % plat(),
-            signature,
-        ):
+        for _ in download_file_chunk(SIGNATURE_LOCATION_FMT % plat(), signature):
             pass
         signature.seek(0)
         self.local_file.seek(0)
 
         if gpg or gpgme:
             if not verify_signature(
-                BytesIO(DROPBOX_PUBLIC_KEY),
-                signature,
-                self.local_file,
+                BytesIO(DROPBOX_PUBLIC_KEY), signature, self.local_file,
             ):
                 raise SignatureVerifyError()
 
@@ -367,11 +357,7 @@ if GUI_AVAILABLE:
 
         class GeneratorTask:
             def __init__(
-                self,
-                generator,
-                loop_callback,
-                on_done=None,
-                on_exception=None,
+                self, generator, loop_callback, on_done=None, on_exception=None,
             ):
                 self.generator = generator
                 self.loop_callback = loop_callback
@@ -445,10 +431,7 @@ if GUI_AVAILABLE:
 
                 self.update_progress(DOWNLOADING, 0)
                 self.task = GeneratorTask(
-                    self.download.copy_data,
-                    download_progress,
-                    finished,
-                    error,
+                    self.download.copy_data, download_progress, finished, error,
                 ).start()
 
             def update_progress(self, text, fraction):
@@ -472,10 +455,7 @@ if GUI_AVAILABLE:
                         FatalVisibleError(ERROR_CONNECTING)
 
                 self.task = GeneratorTask(
-                    self.download.unpack,
-                    unpack_progress,
-                    finished,
-                    error,
+                    self.download.unpack, unpack_progress, finished, error,
                 ).start()
 
             def mouse_down(self, widget, event):
@@ -508,8 +488,7 @@ if GUI_AVAILABLE:
 
             def __init__(self):
                 super().__init__(
-                    parent=None,
-                    title="Dropbox Installation",
+                    parent=None, title="Dropbox Installation",
                 )
 
                 self.download = None
@@ -580,16 +559,12 @@ if GUI_AVAILABLE:
                             "_Don't show this again",
                         )
                         dont_show_again.connect(
-                            "toggled",
-                            self.handle_dont_show_toggle,
+                            "toggled", self.handle_dont_show_toggle,
                         )
                         dont_show_again.show()
 
                         self.dont_show_again_align = Gtk.Alignment(
-                            xalign=1.0,
-                            yalign=0.0,
-                            xscale=0.0,
-                            yscale=0.0,
+                            xalign=1.0, yalign=0.0, xscale=0.0, yscale=0.0,
                         )
                         self.dont_show_again_align.add(dont_show_again)
                         self.dont_show_again_align.show()
@@ -597,10 +572,7 @@ if GUI_AVAILABLE:
                         hbox = Gtk.HBox()
                         hbox.set_property("border-width", 10)
                         hbox.pack_start(
-                            self.dont_show_again_align,
-                            True,
-                            True,
-                            0,
+                            self.dont_show_again_align, True, True, 0,
                         )
                         hbox.show()
 
@@ -644,8 +616,7 @@ else:
                 write(erase_to_start)
                 write(unsave)
             console_print(
-                text % int(100 * frac),
-                linebreak=not sys.stdout.isatty(),
+                text % int(100 * frac), linebreak=not sys.stdout.isatty(),
             )
             if sys.stdout.isatty():
                 flush()
@@ -776,9 +747,7 @@ class DropboxCommand:
         try:
             ok = self.__readline() == "ok"
         except KeyboardInterrupt:
-            raise DropboxCommand.BadConnectionError(
-                "Keyboard interruption detected",
-            )
+            raise DropboxCommand.BadConnectionError("Keyboard interruption detected")
         finally:
             # Tell the ticker to stop.
             ticker_thread.stop()
@@ -976,10 +945,7 @@ def columnize(list, display_list=None, display_width=None):
         original_texts = texts[:]
         for col in range(len(texts)):
             texts[col] = texts[col].ljust(colwidths[col])
-            texts[col] = texts[col].replace(
-                original_texts[col],
-                display_texts[col],
-            )
+            texts[col] = texts[col].replace(original_texts[col], display_texts[col])
         line = "  ".join(texts)
         lines.append(line)
     for line in lines:
@@ -1044,14 +1010,11 @@ def filestatus(args):
                 # Gets a string representation for a path.
                 def path_to_string(file_path):
                     if not os.path.exists(file_path):
-                        path = "%s (File doesn't exist!)" % os.path.basename(
-                            file_path,
-                        )
+                        path = "%s (File doesn't exist!)" % os.path.basename(file_path)
                         return (path, path)
                     try:
                         status = dc.icon_overlay_file_status(path=file_path).get(
-                            "status",
-                            [None],
+                            "status", [None],
                         )[0]
                     except DropboxCommand.CommandError as e:
                         path = "{} ({})".format(os.path.basename(file_path), e)
@@ -1088,10 +1051,7 @@ def filestatus(args):
                 def print_directory(name):
                     clean_paths = []
                     formatted_paths = []
-                    for subname in sorted(
-                        os.listdir(name),
-                        key=methodcaller("lower"),
-                    ):
+                    for subname in sorted(os.listdir(name), key=methodcaller("lower")):
                         if type(subname) != str:
                             continue
 
@@ -1127,8 +1087,7 @@ def filestatus(args):
 
                         if nondir_clean_paths:
                             columnize(
-                                nondir_clean_paths,
-                                nondir_formatted_paths,
+                                nondir_clean_paths, nondir_formatted_paths,
                             )
 
                         if len(nondirs) == 0:
@@ -1149,10 +1108,7 @@ def filestatus(args):
                 if len(args) == 0:
                     args = [
                         name
-                        for name in sorted(
-                            os.listdir("."),
-                            key=methodcaller("lower"),
-                        )
+                        for name in sorted(os.listdir("."), key=methodcaller("lower"))
                         if type(name) == str
                     ]
                 if len(args) == 0:
@@ -1176,8 +1132,7 @@ def filestatus(args):
 
                     try:
                         status = dc.icon_overlay_file_status(path=fp).get(
-                            "status",
-                            ["unknown"],
+                            "status", ["unknown"],
                         )[0]
                         console_print("%-*s %s" % (indent, file + ":", status))
                     except DropboxCommand.CommandError as e:
@@ -1214,8 +1169,7 @@ def puburl(args):
             try:
                 console_print(
                     dc.get_public_link(path=os.path.abspath(args[0])).get(
-                        "link",
-                        ["No Link"],
+                        "link", ["No Link"],
                     )[0],
                 )
             except DropboxCommand.CommandError as e:
@@ -1530,9 +1484,7 @@ def exclude(args):
                         for line in lines:
                             console_print(str(line))
                 except KeyError:
-                    console_print(
-                        "Couldn't get ignore set: daemon isn't responding",
-                    )
+                    console_print("Couldn't get ignore set: daemon isn't responding")
                 except DropboxCommand.CommandError as e:
                     if e.args[0].startswith("No command exists by that name"):
                         console_print(
@@ -1567,9 +1519,7 @@ def exclude(args):
                             "Couldn't add ignore path: daemon isn't responding",
                         )
                     except DropboxCommand.CommandError as e:
-                        if e.args[0].startswith(
-                            "No command exists by that name",
-                        ):
+                        if e.args[0].startswith("No command exists by that name"):
                             console_print(
                                 "This version of the client does not support this command.",
                             )
@@ -1596,9 +1546,7 @@ def exclude(args):
                             "Couldn't remove ignore path: daemon isn't responding",
                         )
                     except DropboxCommand.CommandError as e:
-                        if e.args[0].startswith(
-                            "No command exists by that name",
-                        ):
+                        if e.args[0].startswith("No command exists by that name"):
                             console_print(
                                 "This version of the client does not support this command.",
                             )

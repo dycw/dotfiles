@@ -31,21 +31,13 @@ from bin.pyt import Parsed
             id="m, multiple",
         ),
         param(["-x"], Parsed(flags=["-x"]), id="flags, single-dash"),
-        param(
-            ["--maxfail=3"],
-            Parsed(flags=["--maxfail=3"]),
-            id="flags, double-dash",
-        ),
+        param(["--maxfail=3"], Parsed(flags=["--maxfail=3"]), id="flags, double-dash"),
         param(["1"], Parsed(n=1), id="n, int"),
         param(["-n1"], Parsed(n=1), id="n, dash"),
         param(["auto"], Parsed(n=0), id="n, auto"),
         param(["-nauto"], Parsed(n=0), id="n, dash auto"),
         param(["tests"], Parsed(paths=["tests"]), id="arg as path"),
-        param(
-            ["main_test"],
-            Parsed(k=["main_test"]),
-            id="arg as -k, test name",
-        ),
+        param(["main_test"], Parsed(k=["main_test"]), id="arg as -k, test name"),
         param(
             ["tests/test_foo.py::test_foo"],
             Parsed(paths=["tests/test_foo.py::test_foo"]),

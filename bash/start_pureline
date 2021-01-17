@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1090
+
+declare -a scripts=("pureline" "configs/powerline_full_256col.conf")
+for script in "${scripts[@]}"; do
+	path_script="$PATH_DOTFILES/bash/pureline/$script"
+	if [ -f "$path_script" ]; then
+		source "$path_script"
+	else
+		printf '%(%Y-%m-%d %H:%M:%S)T: unable to find %s\n' -1 "$path_script"
+	fi
+done

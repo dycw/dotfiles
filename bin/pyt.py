@@ -95,9 +95,7 @@ def _parse_extra(*args: str) -> Parsed:
                 if parsed.n is None:
                     parsed.n = n
                 else:
-                    raise RuntimeError(
-                        f"Multiple arguments for 'n': {parsed.n}, {n}",
-                    )
+                    raise RuntimeError(f"Multiple arguments for 'n': {parsed.n}, {n}")
 
     while True:
         try:
@@ -158,8 +156,7 @@ def _yield_args(
 
 def _get_repo_root() -> Path:
     (root,) = check_output(  # noqa:S603,S607
-        ["git", "rev-parse", "--show-toplevel"],
-        text=True,
+        ["git", "rev-parse", "--show-toplevel"], text=True,
     ).splitlines()
     return Path(root)
 
@@ -187,9 +184,7 @@ def pyt(
         info(command)
     else:
         run(  # noqa:S603
-            parts,
-            env={**environ, **{"PYTHONPATH": str(root)}},
-            text=True,
+            parts, env={**environ, **{"PYTHONPATH": str(root)}}, text=True,
         )
 
 

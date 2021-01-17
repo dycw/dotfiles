@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1090
+
+# some settings
+HISTCONTROL=ignoreboth
+shopt -s histappend
+HISTSIZE=1000
+HISTFILESIZE=200
+shopt -s checkwinsize
+#shopt -s globstar
+
+declare -a scripts=("bash/aliases" "bash/start_dropbox" "bash/start_pureline" "bash/ultimate_git_aliases" "conda/init" "fzf/fzf.bash")
+for script in "${scripts[@]}"; do
+	path_script="$PATH_DOTFILES/$script"
+	if [ -f "$path_script" ]; then
+		source "$path_script"
+	else
+		printf '%(%Y-%m-%d %H:%M:%S)T: unable to find %s\n' -1 "$path_script"
+	fi
+done

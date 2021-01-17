@@ -41,12 +41,7 @@ else:
         _contexts: List[option_context] = []
 
         def __enter__(cls) -> None:
-            new = option_context(
-                "display.min_rows",
-                100,
-                "display.max_rows",
-                100,
-            )
+            new = option_context("display.min_rows", 100, "display.max_rows", 100)
             cls._contexts.append(new)
             new.__enter__()
 

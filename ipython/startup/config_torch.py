@@ -46,9 +46,7 @@ else:
             )
         else:
             if (n_indices := len(indices)) != n_pairs:
-                raise ValueError(
-                    f"Expected {n_pairs} index/indices; got {n_indices}",
-                )
+                raise ValueError(f"Expected {n_pairs} index/indices; got {n_indices}")
             indices_use = indices
         if labels is None:
             labels_use: Sequence[Optional[str]] = list(repeat(None, n_pairs))
@@ -82,9 +80,7 @@ else:
                 view = paired.iloc[start:end]
             elif isinstance(length, DateOffset):
                 if index is None:
-                    raise ValueError(
-                        "Expected indices if the length is a DateOffset",
-                    )
+                    raise ValueError("Expected indices if the length is a DateOffset")
                 while True:
                     start = Timestamp(choice(index))
                     end = start + length

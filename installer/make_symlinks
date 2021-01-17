@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+make_link() {
+	from=$1
+	to=$2
+	mkdir -p "$(dirname "$to")"
+	ln -s "$from" "$to"
+}
+
+process_link() {
+	from=$1
+	to=$2
+	if [ -L "$to" ]; then
+		target=$(readlink "$to")
+		if ! [ "$target" = "$from" ]; then
+			echo "$(date '+%F %T'): Overwriting $to -> ($target -> $to)"
+			rm "$to"
+			make_link "$from" "$to"
+		fi
+	else
+		echo "$(date '+%F %T'): Symlinking $from -> $to..."
+		make_link "$from" "$to"
+	fi
+}
+
+process_link ~/.dotfiles/bash/bash_profile ~/.bash_profile
+process_link ~/.dotfiles/bash/bashrc ~/.bashrc
+process_link ~/.dotfiles/git/config ~/.config/git/config
+process_link ~/.dotfiles/git/ignore ~/.config/git/ignore
+process_link ~/.dotfiles/i3/config ~/.config/i3/config
+process_link ~/.dotfiles/input/inputrc ~/.inputrc
+process_link ~/.dotfiles/ipython/ipython_config.py ~/.ipython/profile_default/ipython_config.py
+process_link ~/.dotfiles/jupyter/jupyter_notebook_config.py ~/.jupyter/jupyter_notebook_config.py
+process_link ~/.dotfiles/npm/npmrc ~/.npmrc
+process_link ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
+process_link ~/.dotfiles/vim/vimrc ~/.vimrc
+
+for filename in ~/.dotfiles/ipython/startup/*.py; do
+	process_link "$filename" "$HOME/.ipython/profile_default/startup/$(basename "$filename")"
+done

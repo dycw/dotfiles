@@ -45,8 +45,7 @@ else:
                 return session_result
 
         def parse_session(
-            session: Dict[str, Any],
-            notebook_dir: str,
+            session: Dict[str, Any], notebook_dir: str,
         ) -> Optional[Path]:
             if session["kernel"]["id"] == kernel_id:
                 return Path(notebook_dir, session["notebook"]["path"])

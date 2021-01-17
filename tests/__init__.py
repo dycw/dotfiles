@@ -6,7 +6,4 @@ from pytest import mark
 
 
 TestLike = TypeVar("TestLike", bound=Callable[..., None])
-parametrize = cast(
-    Callable[..., Callable[[TestLike], TestLike]],
-    mark.parametrize,
-)
+parametrize = cast(Callable[..., Callable[[TestLike], TestLike]], mark.parametrize)

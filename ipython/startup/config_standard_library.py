@@ -27,9 +27,7 @@ shuffle = _SYSTEM_RANDOM.shuffle
 
 def _initialize_logger() -> Logger:
     formatter = Formatter(
-        fmt="{asctime} {message}",
-        datefmt="%Y-%m-%d %H:%M:%S",
-        style="{",
+        fmt="{asctime} {message}", datefmt="%Y-%m-%d %H:%M:%S", style="{",
     )
     handler = StreamHandler(stdout)
     handler.setLevel(INFO)
@@ -83,12 +81,7 @@ class _TimerMeta(type):
         cls._timers.append(timer)
         timer.__enter__()
 
-    def __exit__(
-        cls,
-        exc_type: Any,
-        exc_val: Any,
-        exc_tb: Any,
-    ) -> None:
+    def __exit__(cls, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         last = cls._timers.pop()
         last.__exit__(exc_type, exc_val, exc_tb)
 
@@ -101,12 +94,7 @@ class timer(metaclass=_TimerMeta):  # noqa:N801
         self._timer = _TimerCM(self.msg)
         self._timer.__enter__()
 
-    def __exit__(
-        self,
-        exc_type: Any,
-        exc_val: Any,
-        exc_tb: Any,
-    ) -> None:
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         self._timer.__exit__(exc_type, exc_val, exc_tb)
 
 

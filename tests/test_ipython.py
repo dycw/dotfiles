@@ -8,7 +8,7 @@ STARTUP_FILES = [
     path
     for path in Path(__file__)
     .resolve()
-    .parent.parent.joinpath("ipython/startup")
+    .parent.parent.joinpath("ipython", "startup")
     .iterdir()
     if path.is_file() and path.suffixes == [".py"]
 ]

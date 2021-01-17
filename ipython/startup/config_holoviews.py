@@ -66,15 +66,11 @@ else:
 
                 def _plot_series_opts(self, series: Series) -> Any:
                     return self._plot_series(series).opts(
-                        framewise=True,
-                        tools=["hover"],
+                        framewise=True, tools=["hover"],
                     )
 
                 def _query_except(
-                    self,
-                    dfe: DataFrameExplorer,
-                    kdims: List[str],
-                    series: Series,
+                    self, dfe: DataFrameExplorer, kdims: List[str], series: Series,
                 ) -> Tuple[Series, str]:
                     parts: List[str] = []
                     for kdim in dfe.kdims:
@@ -93,38 +89,22 @@ else:
             dfe = self
 
             class Explorer(self._Explorer):  # type: ignore
-                kdim1 = ObjectSelector(
-                    default=self.kdims[0],
-                    objects=self.kdims,
-                )
-                kdim2 = ObjectSelector(
-                    default=self.kdims[1],
-                    objects=self.kdims,
-                )
+                kdim1 = ObjectSelector(default=self.kdims[0], objects=self.kdims)
+                kdim2 = ObjectSelector(default=self.kdims[1], objects=self.kdims)
 
                 def _plot_series(self, series: Series) -> HeatMap:
                     data, label = self._query_except(
-                        dfe,
-                        [self.kdim1, self.kdim2],
-                        series,
+                        dfe, [self.kdim1, self.kdim2], series,
                     )
                     vdim = series.name
                     label = f"{vdim} = f({self.kdim1}, {self.kdim2} | {label})"
                     return HeatMap(
-                        data,
-                        kdims=[self.kdim1, self.kdim2],
-                        vdims=vdim,
-                        label=label,
+                        data, kdims=[self.kdim1, self.kdim2], vdims=vdim, label=label,
                     ).opts(colorbar=True)
 
             return self._make_plot(Explorer, ["kdim1", "kdim2"])
 
-        def scatter(
-            self,
-            *,
-            size: Optional[int] = None,
-            fixed: bool = False,
-        ) -> Row:
+        def scatter(self, *, size: Optional[int] = None, fixed: bool = False) -> Row:
             self._check_nlevels(2)
             dfe = self
 
@@ -136,18 +116,11 @@ else:
                     vdim = series.name
                     label = f"{vdim} = f({self.kdim} | {label})"
                     scatter = Scatter(
-                        data,
-                        kdims=self.kdim,
-                        vdims=vdim,
-                        label=label,
-                    ).opts(
-                        show_grid=True,
-                        **({} if size is None else {"size": size}),
-                    )
+                        data, kdims=self.kdim, vdims=vdim, label=label,
+                    ).opts(show_grid=True, **({} if size is None else {"size": size}))
                     if fixed:
                         new_vdim = Dimension(
-                            vdim,
-                            soft_range=(series.min(), series.max()),
+                            vdim, soft_range=(series.min(), series.max()),
                         )
                         return scatter.redim(**{vdim: new_vdim})
                     else:
@@ -162,11 +135,7 @@ else:
                     f"got {nlevels}",
                 )
 
-        def _make_plot(
-            self,
-            explorer: Type[Parameterized],
-            kdims: List[str],
-        ) -> Row:
+        def _make_plot(self, explorer: Type[Parameterized], kdims: List[str]) -> Row:
             unique_values = {
                 kdim: self._index.get_level_values(kdim).drop_duplicates().sort_values()
                 for kdim in self.kdims
@@ -194,7 +163,4 @@ else:
 
             extended = Extended()
             dmap = DynamicMap(extended.load_data)
-            return Row(
-                panel(extended.param, parameters=kdims_strs_plus_kdims),
-                dmap,
-            )
+            return Row(panel(extended.param, parameters=kdims_strs_plus_kdims), dmap)

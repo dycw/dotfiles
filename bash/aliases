@@ -18,7 +18,7 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias cddb='cd $PATH_DROPBOX'
-alias cddf='cd ~/.dotfiles'
+alias cddf='cd $PATH_DOTFILES'
 alias cddt='cd ~/Desktop'
 alias cdw='cd ~/work'
 
@@ -32,17 +32,9 @@ alias i3config='$EDITOR ~/.config/i3/config'
 alias tmuxconf='$EDITOR ~/.tmux.conf'
 alias vimrc='$EDITOR ~/.vimrc'
 alias zshenv='$EDITOR ~/.zshenv'
-alias zshrc='$EDITOR ~/.zshrc'
-alias zshreload='. ~/.zshrc'
+alias bashrc='$EDITOR ~/.bashrc'
+alias rebashrc='. ~/.zshrc'
 alias set-dotfiles-to-ssh="cddf && gremset origin git@github.com:dycw/dotfiles.git"
-
-# dropbox
-if command -v "dropbox.py" >/dev/null 2>&1; then
-	dropbox.py start >/dev/null 2>&1
-fi
-
-# emacs mode
-bindkey -e
 
 # evince
 alias ev='evince'
@@ -195,6 +187,3 @@ alias tb='tensorboard --logdir .'
 
 # vim
 alias v=vim
-
-# zsh
-HISTFILE=~/.cache/zsh/zsh_history
