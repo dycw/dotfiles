@@ -140,8 +140,8 @@ mode "application" {
   bindsym c exec code ;; mode "default"
   bindsym f exec firefox ;; mode "default"
   bindsym n exec nautilus ;; mode "default"
-  bindsym p exec pycharm-community ;; mode "default"
-  bindsym t exec telegram-desktop ;; mode "default"
+  bindsym i exec signal-desktop ;; mode "default"
+  bindsym p exec spotify ;; mode "default"
 
   bindsym Return mode "default"
   bindsym Escape mode "default"
