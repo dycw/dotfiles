@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 declare -a programs=()
-programs+=("autojump")
 programs+=("bat")
 programs+=("curl")
 programs+=("direnv")
