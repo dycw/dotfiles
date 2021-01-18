@@ -62,23 +62,6 @@ fi
 PATH="$REPO_ROOT/bin${PATH:+:${PATH}}"
 
 # Install components
-declare -a scripts=()
-scripts+=("install_apts")
-scripts+=("install_bash_it")
-scripts+=("install_conda")
-scripts+=("install_lyx")
-scripts+=("install_nodejs")
-scripts+=("install_nordvpn")
-scripts+=("install_pdfarranger")
-scripts+=("install_rust")
-scripts+=("install_screenshot_locations")
-scripts+=("install_snaps")
-scripts+=("make_symlinks")
-for script in "${scripts[@]}"; do
-	path_script="$REPO_ROOT/.installer/$script"
-	if [ -f "$path_script" ]; then
-		source "$path_script"
-	else
-		log "Unable to find %s\n" "$path_script"
-	fi
-done
+while read -r installer; do
+	source "$installer"
+done <<<"$(find "$REPO_ROOT/.installer" -type f)"

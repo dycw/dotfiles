@@ -29,6 +29,7 @@ if [ -f "$path" ]; then
 	declare -a plugins=()
 	plugins+=("alias-completion")
 	plugins+=("base")
+	plugins+=("direnv")
 	plugins+=("fzf")
 	plugins+=("history")
 	plugins+=("man")
