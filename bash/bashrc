@@ -20,15 +20,16 @@ shopt -s checkwinsize
 declare -a scripts=()
 scripts+=("bash/aliases")
 scripts+=("bash/configure_bash")
-scripts+=("bash/start_dropbox")
 scripts+=("bash/start_bash_it")
 scripts+=("bash/ultimate_git_aliases")
 scripts+=("conda/init")
+scripts+=("dropbox/init")
+scripts+=("rust/init")
 for script in "${scripts[@]}"; do
 	path_script="$PATH_DOTFILES/$script"
 	if [ -f "$path_script" ]; then
 		source "$path_script"
 	else
-		printf "%(%Y-%m-%d %H:%M:%S)T: Unable to find %s\n" -1 "$path_script"
+		timed_log "%Unable to find %s\n" "$path_script"
 	fi
 done
