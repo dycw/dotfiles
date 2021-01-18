@@ -15,7 +15,7 @@ if [ -f "$path" ]; then
 	aliases+=("tmux")
 	aliases+=("vim")
 	for alias_ in "${aliases[@]}"; do
-		bash-it enable alias "$alias_"
+		bash-it enable alias "$alias_" >/dev/null 2>&1
 	done
 
 	declare -a completions=()
@@ -23,7 +23,7 @@ if [ -f "$path" ]; then
 	completions+=("conda")
 	completions+=("git")
 	for completion in "${completions[@]}"; do
-		bash-it enable completion "$completion"
+		bash-it enable completion "$completion" >/dev/null 2>&1
 	done
 
 	declare -a plugins=()
@@ -32,12 +32,12 @@ if [ -f "$path" ]; then
 	plugins+=("fzf")
 	plugins+=("history")
 	plugins+=("man")
-	plugins+=("sudo")
+	# plugins+=("sudo")
 	plugins+=("tmux")
 	plugins+=("xterm")
 	for plugin in "${plugins[@]}"; do
-		bash-it enable plugin "$plugin"
+		bash-it enable plugin "$plugin" >/dev/null 2>&1
 	done
 else
-	printf "%(%Y-%m-%d %H:%M:%S)T: Unable to find %s\n" -1 "$path"
+	timed_log "Unable to find %s\n" "$path"
 fi

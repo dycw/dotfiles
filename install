@@ -8,9 +8,7 @@ log() {
 }
 
 path="$HOME/.config/git/config.local"
-if [ -f "$path" ]; then
-	log "%s already exists\n" "$path"
-else
+if ! [ -f "$path" ]; then
 	log "%s does not exist; creating...\n" "$path"
 	printf "[user]\n\tname = Derek Wan\n\temail = d.wan@icloud.com\n" >>"$path"
 	log "%s created\n" "$path"
@@ -18,9 +16,7 @@ fi
 
 private="$HOME/.ssh/id_rsa"
 public="$private.pub"
-if [ -f "$public" ]; then
-	log "%s already exists\n" "$public"
-else
+if ! [ -f "$public" ]; then
 	log "%s does not exist; creating...\n" "$public"
 	ssh-keygen -t rsa -b 4096 -C "d.wan@icloud.com"
 	ssh-agent -s
@@ -30,26 +26,22 @@ fi
 
 declare -a programs=("git" "xclip")
 for program in "${programs[@]}"; do
-	if dpkg -s "$program" >/dev/null 2>&1; then
-		log "%s is already installed\n" "$program"
-	else
+	if ! dpkg -s "$program" >/dev/null 2>&1; then
 		log "%s is not installed; installing...\n" "$program"
-		sudo apt-get install "$program"
+		sudo apt-get --yes install "$program"
 		log "%s installed\n" "$program"
 	fi
 done
 
 if [ -n "$PATH_DOTFILES" ]; then
-	log "\$PATH_DOTFILES=$PATH_DOTFILES is already set\n"
 	REPO_ROOT="$PATH_DOTFILES"
 else
 	log "\$PATH_DOTFILES is not set; please set...\n"
 	read -r REPO_ROOT
+	log "\$PATH_DOTFILES set\n"
 fi
 
-if [ -d "$REPO_ROOT" ]; then
-	log "%s already exists\n" "$REPO_ROOT"
-else
+if ! [ -d "$REPO_ROOT" ]; then
 	log "%s does not exist\n" "$REPO_ROOT"
 	while true; do
 		log "Is your SSH key already added to GitHub? (y/n) "
@@ -66,12 +58,21 @@ else
 	git clone --recurse-submodules git@github.com:dycw/dotfiles.git "$REPO_ROOT"
 fi
 
-# Set $REPO_ROOT
+# Add bin/ for utilities
+PATH="$REPO_ROOT/bin${PATH:+:${PATH}}"
+
+# Install components
 declare -a scripts=()
-scripts+=("make_symlinks")
-scripts+=("install_autojump")
+scripts+=("install_apts")
 scripts+=("install_bash_it")
-scripts+=("install_bat")
+scripts+=("install_conda")
+scripts+=("install_lyx")
+scripts+=("install_nodejs")
+scripts+=("install_nordvpn")
+scripts+=("install_pdfarranger")
+scripts+=("install_screenshot_locations")
+scripts+=("install_snaps")
+scripts+=("make_symlinks")
 for script in "${scripts[@]}"; do
 	path_script="$REPO_ROOT/.installer/$script"
 	if [ -f "$path_script" ]; then
@@ -80,203 +81,3 @@ for script in "${scripts[@]}"; do
 		log "Unable to find %s\n" "$path_script"
 	fi
 done
-
-# ################################################################################
-# # apt-get
-# ################################################################################
-
-# _is_missing_apt() {
-# 	if dpkg -s "$1" >/dev/null 2>&1; then
-# 		false
-# 	else
-# 		true
-# 	fi
-# 	return
-# }
-
-# _install_apt() {
-# 	sudo apt-get updatef
-# 	sudo apt-get install "$1" --yes
-# }
-
-# _ensure_apt() {
-# 	if _is_missing_apt "$1"; then
-# 		_install_apt "$1"
-# 	fi
-# }
-
-# _ensure_apt bat
-# _ensure_apt chrome-gnome-shell # screenshot-locations
-# _ensure_apt curl
-# _ensure_apt fd-find
-# _ensure_apt fzf
-# _ensure_apt g++      # ?
-# _ensure_apt gcc      # ?
-# _ensure_apt gfortran # scipy
-# _ensure_apt git
-# _ensure_apt gnome-tweaks # screenshot-locations
-# _ensure_apt gparted
-# _ensure_apt htop
-# _ensure_apt i3
-# _ensure_apt libatlas-base-dev # scipy
-# _ensure_apt libblas-dev       # scipy
-# _ensure_apt libblas3          # scipy
-# _ensure_apt liblapack-dev     # scipy
-# _ensure_apt liblapack3        # scipy
-# _ensure_apt restic
-# _ensure_apt shellcheck
-# _ensure_apt tmux
-# _ensure_apt transmission
-# _ensure_apt vim
-# _ensure_apt xclip
-
-# _ensure_apt_from_repository() {
-# 	if _is_missing_apt "$1"; then
-# 		sudo add-apt-repository "$2" --yes
-# 		_install_apt "$1"
-# 	fi
-# }
-
-# _ensure_apt_from_repository golang-go ppa:longsleep/golang-backports
-# _ensure_apt_from_repository lyx ppa:lyx-devel/release
-# _ensure_apt_from_repository pdfarranger ppa:linuxuprising/apps
-# _ensure_apt_from_repository sqlitebrowser ppa:linuxgndu/sqlitebrowser
-
-# if _is_missing_apt google-chrome-stable; then
-# 	wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-# 	sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-# 	_install_apt google-chrome-stable
-# fi
-
-# if _is_missing_apt nordvpn; then
-# 	filename="nordvpn-release_1.0.0_all.deb"
-# 	wget https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/$filename -P /tmp
-# 	sudo apt-get install /tmp/$filename
-# 	_install_apt nordvpn
-# fi
-
-# if _is_missing_apt speedtest; then
-# 	sudo apt-get install gnupg1 apt-transport-https dirmngr
-# 	export INSTALL_KEY=379CE192D401AB61
-# 	sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys $INSTALL_KEY
-# 	echo "deb https://ookla.bintray.com/debian generic main" | sudo tee /etc/apt/sources.list.d/speedtest.list
-# 	_install_apt speedtest
-# fi
-
-# ###############################################################################
-# # snap
-# ###############################################################################
-
-# _is_missing_snap() {
-# 	if snap list | grep -q "$1"; then
-# 		false
-# 	else
-# 		true
-# 	fi
-# 	return
-# }
-
-# _install_snap() {
-# 	sudo snap install "$@"
-# }
-
-# _ensure_snap() {
-# 	if _is_missing_snap "$1"; then
-# 		_install_snap "$1"
-# 	fi
-# }
-
-# _ensure_snap code
-# _ensure_snap insomnia-designer
-# _ensure_snap shfmt
-# _ensure_snap spotify
-# _ensure_snap telegram-desktop
-# _ensure_snap vlc
-
-# ################################################################################
-# # local files
-# ################################################################################
-
-# ################################################################################
-# # symlinks
-# ################################################################################
-
-# ################################################################################
-# # conda
-# ################################################################################
-# _install_conda() {
-# 	if ! command -v conda >/dev/null 2>&1; then
-# 		echo "$(date '+%F %T'): conda not found; installing..."
-# 		case $(uname) in
-# 		Linux*)
-# 			desc="Linux"
-# 			;;
-# 		*)
-# 			echo "$(date '+%F %T'): unrecognized uname = $(uname); exiting..."
-# 			exit 1
-# 			;;
-# 		esac
-# 		filename="Miniconda3-latest-$desc-x86_64.sh"
-# 		wget https://repo.anaconda.com/miniconda/$filename -P /tmp
-# 		full_filename=/tmp/$filename
-# 		chmod u+x $full_filename
-# 		$full_filename
-# 	fi
-# }
-
-# _install_conda
-
-# ###############################################################################
-# # elm
-# ###############################################################################
-# _install_elm() {
-# 	if ! command -v elm >/dev/null 2>&1; then
-# 		echo "$(date '+%F %T'): elm not found; installing..."
-# 		full_filename="/tmp/elm.gz"
-# 		curl -L -o "$full_filename" https://github.com/elm/compiler/releases/download/0.19.1/binary-for-linux-64-bit.gz
-# 		gunzip "$full_filename"
-# 		full_binary="/tmp/elm"
-# 		chmod +x "$full_binary"
-# 		sudo mv "$full_binary" /usr/local/bin/
-# 	fi
-# }
-
-# _install_elm
-
-# ###############################################################################
-# # nodejs
-# ###############################################################################
-# _install_node_js() {
-# 	if ! command -v nodejs >/dev/null 2>&1; then
-# 		echo "$(date '+%F %T'): nodejs not found; installing..."
-# 		curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-# 		sudo apt-get install -y nodejs
-# 	fi
-# }
-
-# _install_node_js
-
-# ###############################################################################
-# # zsh
-# ###############################################################################
-# _install_zsh() {
-# 	if ! command -v zsh >/dev/null 2>&1; then
-# 		_apt_get_install zsh
-# 		chsh -s /usr/bin/zsh
-# 		echo "$(date '+%F %T'): Exiting; please restart your system"
-# 		return
-# 	fi
-# }
-
-# _install_zsh
-
-# # zinit (after conda, zsh)
-# _install_zinit() {
-# 	if ! [ -d ~/.zinit ]; then
-# 		echo "$(date '+%F %T'): zinit not found; installing..."
-# 		sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
-# 		echo "$(date '+%F %T'): zinit installed"
-# 	fi
-# }
-
-# _install_zinit
