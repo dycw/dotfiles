@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if ! command -v fasd >/dev/null 2>&1; then
+	timed_log "fasd not found; installing...\n"
+	sudo add-apt-repository ppa:aacebedo/fasd
+	sudo apt-get update
+	sudo apt-get --yes install fasd
+	timed_log "fasd installed\n"
+fi

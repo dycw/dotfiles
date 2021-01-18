@@ -30,7 +30,7 @@ make_link() {
 
 declare -A mappings=()
 mappings["bash/bash_profile"]=".bash_profile"
-mappings["bash/bashrc"]="bashrc"
+mappings["bash/bashrc"]=".bashrc"
 mappings["git/config"]=".config/git/config"
 mappings["git/ignore"]=".config/git/ignore"
 mappings["i3/config"]=".config/i3/config"
