@@ -5,6 +5,7 @@ from logging import basicConfig
 from logging import DEBUG
 from logging import info
 from pathlib import Path
+from shutil import move
 from subprocess import check_output  # noqa:S404
 from sys import stdout
 from tempfile import TemporaryDirectory
@@ -23,7 +24,12 @@ def main(name: str) -> None:
     name = name.strip()
     info(f"Attempting to delete submodule {name!r}...")
 
+    # checks
     root = _get_repo_root()
+    if not (outer := root.joinpath(name)).exists():
+        raise FileNotFoundError(outer)
+    if not (inner := root.joinpath(".git", "modules", name)).exists():
+        raise FileNotFoundError(inner)
     old_git_config = root.joinpath(".git", "config")
     old_gitmodules = root.joinpath(".gitmodules")
     with TemporaryDirectory() as _temp:
@@ -32,7 +38,22 @@ def main(name: str) -> None:
         _write_config(old_git_config, new_git_config, name)
         new_gitmodules = temp.joinpath("gitsubmodules")
         _write_config(old_gitmodules, new_gitmodules, name)
-    check_output(["ls"])  # noqa:S603,S607
+
+        # action
+        info(f"Ready to delete submodule {name!r}...")
+        info(f"Deleting {outer!r}...")
+        check_output(["git", "rm", str(outer)])  # noqa:S603,S607
+
+        info(f"Deleting {inner!r}...")
+        check_output(["rm", "-rf", str(inner)])  # noqa:S603,S607
+
+        info(f"Removing {name!r} from {old_git_config}...")
+        move(new_git_config, old_git_config)
+
+        info(f"Removing {name!r} from {old_gitmodules}...")
+        move(new_gitmodules, old_gitmodules)
+
+    info(f"Finished deleting submodule {name!r}")
 
 
 def _get_repo_root() -> Path:
