@@ -22,17 +22,6 @@ alias cdw='cd ~/work'
 # conda
 alias ceu='conda env update --prune'
 
-# dotfiles
-alias gitconfig='$EDITOR ~/.config/git/config'
-alias gitignore='$EDITOR ~/.config/git/ignore'
-alias i3config='$EDITOR ~/.config/i3/config'
-alias tmuxconf='$EDITOR ~/.tmux.conf'
-alias vimrc='$EDITOR ~/.vimrc'
-alias zshenv='$EDITOR ~/.zshenv'
-alias bashrc='$EDITOR ~/.bashrc'
-alias rebashrc='. ~/.zshrc'
-alias set-dotfiles-to-ssh="cddf && gremset origin git@github.com:dycw/dotfiles.git"
-
 # evince
 alias ev='evince'
 
@@ -42,11 +31,6 @@ alias fdd='fd --type=directory'
 alias fde='fd --type=executable'
 alias fdf='fd --type=file'
 alias fds='fd --type=symlink'
-
-
-
-# grep
-alias grep='grep --color'
 
 # hypothesis
 alias hypothesis-ci='export HYPOTHESIS_PROFILE=ci'
@@ -60,15 +44,6 @@ alias ib-gateway=~/Jts/ibgateway/978/ibgateway
 # jupyter
 alias juplab='jupyter lab'
 alias jupnb='jupyter notebook'
-
-# ls
-alias l='ls -l --classify --color --human-readable --time-style=long-iso'
-alias la='ls -hl --almost-all --classify --color --time-style=long-iso'
-alias ld='ls -lt --classify --color --human-readable --reverse --time-style=long-iso'
-alias lda='ls -lt --almost-all --classify --color --human-readable --reverse --time-style=long-iso'
-alias lh='ls -l --classify --color --directory --human-readable .*'
-alias lr='ls --classify --color --human-readable --recursive'
-alias lra='ls --almost-all --classify --color --recursive'
 
 # pre-commit
 alias pc='$(git rev-parse --show-toplevel)/.git/hooks/pre-commit'

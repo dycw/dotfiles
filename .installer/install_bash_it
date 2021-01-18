@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1090
+
+path="$BASH_IT/bash_it.sh"
+if [ -f "$path" ]; then
+	source "$path"
+	declare -a aliases=()
+	aliases+=("apt")
+	aliases+=("bash-it")
+	aliases+=("clipboard")
+	aliases+=("curl")
+	aliases+=("general")
+	aliases+=("npm")
+	aliases+=("tmux")
+	aliases+=("vim")
+	for alias_ in "${aliases[@]}"; do
+		bash-it enable alias "$alias_"
+	done
+else
+	printf "%(%Y-%m-%d %H:%M:%S)T: unable to find %s\n" -1 "$path"
+fi
