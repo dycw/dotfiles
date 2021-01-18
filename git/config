@@ -42,6 +42,9 @@
   cpc = cp --continue
   cps = cp --skip
 
+  # clone
+  cl = clone --recurse-submodules
+
   # commit
   c = commit
   cm = !git c --message \"$1\" && :

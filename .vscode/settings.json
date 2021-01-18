@@ -1,3 +1,6 @@
 {
-  "python.pythonPath": "/home/derek/miniconda3/envs/.dotfiles/bin/python"
+  "python.pythonPath": "/home/derek/miniconda3/envs/.dotfiles/bin/python",
+  "files.exclude": {
+    "bash/bash_it": true
+  }
 }
