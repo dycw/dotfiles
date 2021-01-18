@@ -5,5 +5,5 @@ if [ -f "$path" ]; then
 	"$path" autostart yes
 	"$path" start >/dev/null 2>&1
 else
-	printf "%(%Y-%m-%d %H:%M:%S)T: unable to find %s\n" -1 "$path"
+	printf "%(%Y-%m-%d %H:%M:%S)T: Unable to find %s\n" -1 "$path"
 fi

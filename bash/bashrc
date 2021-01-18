@@ -29,6 +29,6 @@ for script in "${scripts[@]}"; do
 	if [ -f "$path_script" ]; then
 		source "$path_script"
 	else
-		printf '%(%Y-%m-%d %H:%M:%S)T: unable to find %s\n' -1 "$path_script"
+		printf "%(%Y-%m-%d %H:%M:%S)T: Unable to find %s\n" -1 "$path_script"
 	fi
 done

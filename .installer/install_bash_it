@@ -4,6 +4,7 @@
 path="$BASH_IT/bash_it.sh"
 if [ -f "$path" ]; then
 	source "$path"
+
 	declare -a aliases=()
 	aliases+=("apt")
 	aliases+=("bash-it")
@@ -38,5 +39,5 @@ if [ -f "$path" ]; then
 		bash-it enable plugin "$plugin"
 	done
 else
-	printf "%(%Y-%m-%d %H:%M:%S)T: unable to find %s\n" -1 "$path"
+	printf "%(%Y-%m-%d %H:%M:%S)T: Unable to find %s\n" -1 "$path"
 fi
