@@ -1,23 +1,85 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2059
+
+log() {
+	template=$(printf "%(%Y-%m-%d %H:%H:%S)T: %s" -1 "$1")
+	shift
+	printf "$template" "$@"
+}
+
+path="$HOME/.config/git/config.local"
+if [ -f "$path" ]; then
+	log "%s already exists\n" "$path"
+else
+	log "%s does not exist; creating...\n" "$path"
+	printf "[user]\n\tname = Derek Wan\n\temail = d.wan@icloud.com\n" >>"$path"
+	log "%s created\n" "$path"
+fi
+
+private="$HOME/.ssh/id_rsa"
+public="$private.pub"
+if [ -f "$public" ]; then
+	log "%s already exists\n" "$public"
+else
+	log "%s does not exist; creating...\n" "$public"
+	ssh-keygen -t rsa -b 4096 -C "d.wan@icloud.com"
+	ssh-agent -s
+	ssh-add -K "$private"
+	log "%s created\n" "$public"
+fi
+
+declare -a programs=("git" "xclip")
+for program in "${programs[@]}"; do
+	if dpkg -s "$program" >/dev/null 2>&1; then
+		log "%s is already installed\n" "$program"
+	else
+		log "%s is not installed; installing...\n" "$program"
+		sudo apt-get install "$program"
+		log "%s installed\n" "$program"
+	fi
+done
+
+if [ -n "$PATH_DOTFILES" ]; then
+	log "\$PATH_DOTFILES=$PATH_DOTFILES is already set\n"
+	REPO_ROOT="$PATH_DOTFILES"
+else
+	log "\$PATH_DOTFILES is not set; please set...\n"
+	read -r REPO_ROOT
+fi
+
+if [ -d "$REPO_ROOT" ]; then
+	log "%s already exists\n" "$REPO_ROOT"
+else
+	log "%s does not exist\n" "$REPO_ROOT"
+	while true; do
+		log "Is your SSH key already added to GitHub? (y/n) "
+		read -n1 -r input
+		if [ "$input" = y ]; then
+			break
+		fi
+		printf "\n"
+		log "Copying your SSH key to the clipboard; please add it to GitHub at:\n"
+		log "    https://github.com/settings/keys\n"
+		xclip -sel clip <"$public"
+	done
+	printf "\n"
+	git clone --recurse-submodules git@github.com:dycw/dotfiles.git "$REPO_ROOT"
+fi
 
 # Set $REPO_ROOT
-REPO_ROOT="$(dirname "$(readlink --canonicalize-existing "${BASH_SOURCE[0]}")")"
-
 declare -a scripts=()
 scripts+=("make_symlinks")
 scripts+=("install_autojump")
 scripts+=("install_bash_it")
+scripts+=("install_bat")
 for script in "${scripts[@]}"; do
 	path_script="$REPO_ROOT/.installer/$script"
 	if [ -f "$path_script" ]; then
 		source "$path_script"
 	else
-		printf "%(%Y-%m-%d %H:%M:%S)T: Unable to find %s\n" -1 "$path_script"
+		log "Unable to find %s\n" "$path_script"
 	fi
 done
-
-# exit 0
 
 # ################################################################################
 # # apt-get
@@ -134,64 +196,6 @@ done
 # ################################################################################
 # # local files
 # ################################################################################
-# _create_gitconfig_local() {
-# 	path=~/.config/git/config.local
-# 	if ! [ -f $path ]; then
-# 		echo "$(date '+%F %T'): $path does not exist; creating..."
-# 		printf "user.name = "
-# 		read -r name
-# 		printf "user.email = "
-# 		read -r email
-# 		mkdir -p "$(dirname $path)"
-# 		printf "[user]\n  name = %s\n  email = %s\n" "$name" "$email" >>$path
-# 		echo "$(date '+%F %T'): $path created"
-# 	fi
-# }
-
-# _create_gitconfig_local
-
-# _create_ssh_key() {
-# 	private=~/.ssh/id_rsa
-# 	public=$private.pub
-# 	if ! [ -f $public ]; then
-# 		echo "$(date '+%F %T'): $public does not exist; creating..."
-# 		ssh-keygen -t rsa -b 4096 -C "d.wan@icloud.com"
-# 		ssh-agent -s
-# 		ssh-add -K $private
-# 		echo "$(date '+%F %T'): $public created; copying..."
-# 	fi
-# }
-
-# _create_ssh_key
-
-# _clone_dotfiles() {
-# 	dotfiles=~/.dotfiles
-# 	key=~/.ssh/id_rsa.pub
-# 	if ! [ -d $dotfiles ]; then
-# 		echo "$(date '+%F %T'): $dotfiles does not exist; cloning..."
-# 		while true; do
-# 			if command -v xclip >/dev/null 2>&1; then
-# 				xclip -sel clip <$key
-# 			else
-# 				echo "$(date '+%F %T'): expected xclip to be found; aborting..."
-# 				exit 1
-# 			fi
-# 			echo "$(date '+%F %T'): $key copied; please head to https://github.com/settings/keys; enter 'y' when back"
-# 			read -r input
-# 			if [ "$input" = y ]; then
-# 				break
-# 			fi
-# 		done
-# 		if command -v git >/dev/null 2>&1; then
-# 			git clone git@github.com:dycw/dotfiles.git $dotfiles
-# 		else
-# 			echo "$(date '+%F %T'): expected git to be found; aborting..."
-# 			exit 1
-# 		fi
-# 	fi
-# }
-
-# _clone_dotfiles
 
 # ################################################################################
 # # symlinks

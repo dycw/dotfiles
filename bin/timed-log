@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2059
+
+template=$(printf "%(%Y-%m-%d %H:%H:%S)T: %s" -1 "$1")
+shift
+printf "$template" "$@"

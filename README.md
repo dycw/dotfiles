@@ -3,5 +3,7 @@
 ## Installation
 
 ```bash
-git clone --recurse-submodules git@github.com:dycw/dotfiles.git "$HOME/.dotfiles"
+wget https://raw.githubusercontent.com/dycw/dotfiles/master/install
+chmod u+x install
+./install
 ```
