@@ -1,10 +1,8 @@
 [submodule ".pre-commit-hooks"]
-	path = .pre-commit-hooks
-	url = git@github.com:dycw/pre-commit-hooks.git
-	branch = master
-[submodule "bash/pureline"]
-	path = bash/pureline
-	url = https://github.com/chris-marsh/pureline
+path = .pre-commit-hooks
+url = git@github.com:dycw/pre-commit-hooks.git
+branch = master
+
 [submodule "bash/bash_it"]
-	path = bash/bash_it
-	url = https://github.com/Bash-it/bash-it.git
+path = bash/bash_it
+url = https://github.com/Bash-it/bash-it.git

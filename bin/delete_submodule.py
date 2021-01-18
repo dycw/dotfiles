@@ -41,19 +41,22 @@ def main(name: str) -> None:
 
         # action
         info(f"Ready to delete submodule {name!r}...")
-        info(f"Deleting {outer!r}...")
+        info(f"1. Deleting {outer}...")
         check_output(["git", "rm", str(outer)])  # noqa:S603,S607
 
-        info(f"Deleting {inner!r}...")
+        info(f"2. Deleting {inner}...")
         check_output(["rm", "-rf", str(inner)])  # noqa:S603,S607
 
-        info(f"Removing {name!r} from {old_git_config}...")
+        info(f"3. Updating {old_git_config}...")
         move(new_git_config, old_git_config)
+        check_output(["git", "add", str(old_gitmodules)])  # noqa:S603,S607
 
-        info(f"Removing {name!r} from {old_gitmodules}...")
+        info(f"4. Updating {old_gitmodules}...")
         move(new_gitmodules, old_gitmodules)
 
-    info(f"Finished deleting submodule {name!r}")
+    info(
+        f"Finished deleting submodule {name!r}\nPlease remember to commit your changes",
+    )
 
 
 def _get_repo_root() -> Path:
