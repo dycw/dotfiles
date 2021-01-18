@@ -1,15 +1,31 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090
 
+# Set $PATH_DOTFILES
+PATH_DOTFILES="$(dirname "$(dirname "$(readlink --canonicalize-existing "${BASH_SOURCE[0]}")")")"
+export PATH_DOTFILES
+PATH="$PATH_DOTFILES/bin${PATH:+:${PATH}}"
+
+# If not running interactively, don't do anything
+case $- in
+*i*) ;;
+*) return ;;
+esac
+
 # some settings
-HISTCONTROL=ignoreboth
 shopt -s histappend
-HISTSIZE=1000
-HISTFILESIZE=200
 shopt -s checkwinsize
 #shopt -s globstar
 
-declare -a scripts=("bash/aliases" "bash/start_dropbox" "bash/start_pureline" "bash/ultimate_git_aliases" "conda/init" "fzf/fzf.bash")
+declare -a scripts=()
+scripts+=("bash/aliases")
+scripts+=("bash/configure_bash")
+scripts+=("bash/start_dropbox")
+scripts+=("bash/start_bash_it")
+# scripts+=("bash/start_pureline")
+scripts+=("bash/ultimate_git_aliases")
+scripts+=("conda/init")
+scripts+=("fzf/fzf.bash")
 for script in "${scripts[@]}"; do
 	path_script="$PATH_DOTFILES/$script"
 	if [ -f "$path_script" ]; then

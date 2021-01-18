@@ -1,7 +1,126 @@
 [alias]
-  publish = "!git push -u origin $(git rev-parse --abbrev-ref HEAD) #"
-  publish-no-verify = "!git push -u origin --no-verify $(git rev-parse --abbrev-ref HEAD) #"
-  unpublish = "!git branch -r --color=never | fzf | sed -En 's/origin\\/(.*)/\\1/p' | xargs -n 1 git push --delete origin"
+  # add
+  a = add
+  aa = add --all
+  ai = aa --interactive
+  aip = a --interactive --patch
+  ap = a --patch
+
+  # add + commit
+  aac = !git aa && git c && :
+  aacm = !git aa && git cm \"$1\" && :
+  ac = !git a \"$@\" && git c && :
+  acnv = !git a \"$@\" && git cnv && :
+  apc = !git ap \"$@\" && git c && :
+
+  # branch
+  b = branch --verbose
+  ba = b --all
+  bd = b --delete
+  bdd = gb -D
+  br = b --remote
+  bu = b -u
+
+  # branch + checkout
+  bdev = !git bdd dev && git cob dev && :
+
+  # checkout
+  co = checkout
+  cob = co -b
+  com = co master
+  cop = gco --patch
+
+  # checkout + pull
+  coml = !git com && git ll && :
+
+  # cherry-pick
+  cp = cherry-pick
+  cpa = cp --abort
+  cpc = cp --continue
+  cps = cp --skip
+
+  # commit
+  c = commit
+  cm = !git c --message \"$1\" && :
+  cnv = commit --no-verify
+  cnvm = !git cnv --message \"$1\" && :
+
+  # diff
+  d = diff
+  dc = d --cached
+
+  # fetch
+  f = fetch --all --prune
+
+  # log
+  l = log --oneline --decorate --graph
+
+  # merge
+  m = merge
+
+  # mv
+  mv = mv
+
+  # pull
+  ll = pull
+
+  # push
+  # p = push --set-upstream origin
+  p = push
+  pf = p --force
+  pdo = p --delete origin
+  pdr = p --dry-run
+  po = p origin
+  psuo = p --set-upstream origin
+
+  # rebase
+  rb = rebase
+  rba = rb --abort
+  rbc = rb --continue
+  rbi = rb --interactive
+  rbm = rb master
+  rbs = rb --skip
+
+  # remote
+  re =  remote
+  resu = re set-url
+  reu = re update
+
+  # reset
+  r = reset
+  rp = r --patch
+
+  # revert
+  rv = revert
+
+  # rm
+  rm = rm
+  rmc = rm --cached
+
+  # stash
+  st = stash
+  sta = st apply
+  stc = st clear
+  std = st drop
+  stl = st list
+  stp = st pop
+
+  # submodule
+  smurr = submodule update --recursive --remote
+
+  # status
+  s = status --short
+
+  # tag
+  ta = tag -a \"$1\" \"$2\" -m \"$1\" && :
+
+  # custom
+  current = rev-parse --abbrev-ref HEAD
+
+  # publish
+  # publish = !git p $(git rev-parse --abbrev-ref HEAD) #
+  pb = !git psuo $(git current) && :
+  unpb = "!git branch -r --color=never | fzf | sed -En 's/origin\\/(.*)/\\1/p' | xargs -n 1 git pdo"
 
 [apply]
   whitespace = nowarn
