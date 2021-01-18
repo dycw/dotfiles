@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
 
-HISTCONTROL=ignoreboth
 HISTFILE="$XDG_CACHE_HOME/bash/bash_history"
-HISTFILESIZE=200
 HISTSIZE=1000

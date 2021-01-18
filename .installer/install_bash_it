@@ -16,6 +16,27 @@ if [ -f "$path" ]; then
 	for alias_ in "${aliases[@]}"; do
 		bash-it enable alias "$alias_"
 	done
+
+	declare -a completions=()
+	completions+=("bash-it")
+	completions+=("conda")
+	completions+=("git")
+	for completion in "${completions[@]}"; do
+		bash-it enable completion "$completion"
+	done
+
+	declare -a plugins=()
+	plugins+=("alias-completion")
+	plugins+=("base")
+	plugins+=("fzf")
+	plugins+=("history")
+	plugins+=("man")
+	plugins+=("sudo")
+	plugins+=("tmux")
+	plugins+=("xterm")
+	for plugin in "${plugins[@]}"; do
+		bash-it enable plugin "$plugin"
+	done
 else
 	printf "%(%Y-%m-%d %H:%M:%S)T: unable to find %s\n" -1 "$path"
 fi
