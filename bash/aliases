@@ -7,9 +7,6 @@ alias bp-minor='bump2version minor --allow-dirty'
 
 # bat
 alias cat=batcat
-tf() {
-	tail -f "$1" | batcat --paging=never -l log
-}
 
 # cd
 alias ~='cd ~'
@@ -78,12 +75,6 @@ alias pc='$(git rev-parse --show-toplevel)/.git/hooks/pre-commit'
 
 # python
 alias p='python'
-
-# python clean
-pyclean() {
-	find . -type f -name "*.py[co]" -delete
-	find . -type d -name "__pycache__" -delete
-}
 
 # python install
 alias pyinstall='pip install hvplot jupyterlab pyinstrument-decorator seaborn'

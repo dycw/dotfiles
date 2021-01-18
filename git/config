@@ -17,7 +17,7 @@
   b = branch --verbose
   ba = b --all
   bd = b --delete
-  bdd = gb -D
+  bdd = b -D
   br = b --remote
   bu = b -u
 
@@ -43,7 +43,7 @@
   c = commit
   cm = !git c --message \"$1\" && :
   cnv = commit --no-verify
-  cnvm = !git cnv --message \"$1\" && :
+  cnvm = !git c --message --no-verify \"$1\" && :
 
   # diff
   d = diff
@@ -118,7 +118,6 @@
   current = rev-parse --abbrev-ref HEAD
 
   # publish
-  # publish = !git p $(git rev-parse --abbrev-ref HEAD) #
   pb = !git psuo $(git current) && :
   unpb = "!git branch -r --color=never | fzf | sed -En 's/origin\\/(.*)/\\1/p' | xargs -n 1 git pdo"
 
