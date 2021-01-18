@@ -22,11 +22,12 @@
   bu = b -u
 
   # branch + checkout
-  dev = !git bdd dev && git cob dev && :
+  dev = !(git bdd dev || true) && git cob dev && :
 
   # checkout
   co = checkout
   cob = co -b
+  cobmom = co -B master origin/master
   com = co master
   cop = gco --patch
 
