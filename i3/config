@@ -136,7 +136,7 @@ bar {
 }
 
 # Launcher mode
-mode "$mode_application" {
+mode "application" {
   bindsym c exec code ;; mode "default"
   bindsym f exec firefox ;; mode "default"
   bindsym n exec nautilus ;; mode "default"
@@ -147,4 +147,4 @@ mode "$mode_application" {
   bindsym Escape mode "default"
 }
 
-bindsym $mod+g mode "$mode_application"
+bindsym $mod+g mode "application"
