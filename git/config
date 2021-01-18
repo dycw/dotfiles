@@ -22,7 +22,7 @@
   bu = b -u
 
   # branch + checkout
-  bdev = !git bdd dev && git cob dev && :
+  dev = !git bdd dev && git cob dev && :
 
   # checkout
   co = checkout
@@ -32,6 +32,9 @@
 
   # checkout + pull
   coml = !git com && git ll && :
+
+  # checkout + pull + branch + checkout
+  redev = !git coml && git dev && :
 
   # cherry-pick
   cp = cherry-pick
