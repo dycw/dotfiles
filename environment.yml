@@ -1,7 +1,11 @@
 name: .dotfiles
 
+channels:
+  - conda-forge
+
 dependencies:
   - python = 3.9
-  - pip
-  - pip:
-      - --requirement=.pre-commit-hooks/python/requirements.txt
+  - bump2version
+  - pre-commit
+  - pytest
+  - pytest-xdist

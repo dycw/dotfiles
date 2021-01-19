@@ -243,7 +243,9 @@ class DownloadState:
 
         if gpg or gpgme:
             if not verify_signature(
-                BytesIO(DROPBOX_PUBLIC_KEY), signature, self.local_file,
+                BytesIO(DROPBOX_PUBLIC_KEY),
+                signature,
+                self.local_file,
             ):
                 raise SignatureVerifyError()
 
@@ -357,7 +359,11 @@ if GUI_AVAILABLE:
 
         class GeneratorTask:
             def __init__(
-                self, generator, loop_callback, on_done=None, on_exception=None,
+                self,
+                generator,
+                loop_callback,
+                on_done=None,
+                on_exception=None,
             ):
                 self.generator = generator
                 self.loop_callback = loop_callback
@@ -431,7 +437,10 @@ if GUI_AVAILABLE:
 
                 self.update_progress(DOWNLOADING, 0)
                 self.task = GeneratorTask(
-                    self.download.copy_data, download_progress, finished, error,
+                    self.download.copy_data,
+                    download_progress,
+                    finished,
+                    error,
                 ).start()
 
             def update_progress(self, text, fraction):
@@ -455,7 +464,10 @@ if GUI_AVAILABLE:
                         FatalVisibleError(ERROR_CONNECTING)
 
                 self.task = GeneratorTask(
-                    self.download.unpack, unpack_progress, finished, error,
+                    self.download.unpack,
+                    unpack_progress,
+                    finished,
+                    error,
                 ).start()
 
             def mouse_down(self, widget, event):
@@ -488,7 +500,8 @@ if GUI_AVAILABLE:
 
             def __init__(self):
                 super().__init__(
-                    parent=None, title="Dropbox Installation",
+                    parent=None,
+                    title="Dropbox Installation",
                 )
 
                 self.download = None
@@ -559,12 +572,16 @@ if GUI_AVAILABLE:
                             "_Don't show this again",
                         )
                         dont_show_again.connect(
-                            "toggled", self.handle_dont_show_toggle,
+                            "toggled",
+                            self.handle_dont_show_toggle,
                         )
                         dont_show_again.show()
 
                         self.dont_show_again_align = Gtk.Alignment(
-                            xalign=1.0, yalign=0.0, xscale=0.0, yscale=0.0,
+                            xalign=1.0,
+                            yalign=0.0,
+                            xscale=0.0,
+                            yscale=0.0,
                         )
                         self.dont_show_again_align.add(dont_show_again)
                         self.dont_show_again_align.show()
@@ -572,7 +589,10 @@ if GUI_AVAILABLE:
                         hbox = Gtk.HBox()
                         hbox.set_property("border-width", 10)
                         hbox.pack_start(
-                            self.dont_show_again_align, True, True, 0,
+                            self.dont_show_again_align,
+                            True,
+                            True,
+                            0,
                         )
                         hbox.show()
 
@@ -616,7 +636,8 @@ else:
                 write(erase_to_start)
                 write(unsave)
             console_print(
-                text % int(100 * frac), linebreak=not sys.stdout.isatty(),
+                text % int(100 * frac),
+                linebreak=not sys.stdout.isatty(),
             )
             if sys.stdout.isatty():
                 flush()
@@ -1014,7 +1035,8 @@ def filestatus(args):
                         return (path, path)
                     try:
                         status = dc.icon_overlay_file_status(path=file_path).get(
-                            "status", [None],
+                            "status",
+                            [None],
                         )[0]
                     except DropboxCommand.CommandError as e:
                         path = "{} ({})".format(os.path.basename(file_path), e)
@@ -1087,7 +1109,8 @@ def filestatus(args):
 
                         if nondir_clean_paths:
                             columnize(
-                                nondir_clean_paths, nondir_formatted_paths,
+                                nondir_clean_paths,
+                                nondir_formatted_paths,
                             )
 
                         if len(nondirs) == 0:
@@ -1132,7 +1155,8 @@ def filestatus(args):
 
                     try:
                         status = dc.icon_overlay_file_status(path=fp).get(
-                            "status", ["unknown"],
+                            "status",
+                            ["unknown"],
                         )[0]
                         console_print("%-*s %s" % (indent, file + ":", status))
                     except DropboxCommand.CommandError as e:
@@ -1169,7 +1193,8 @@ def puburl(args):
             try:
                 console_print(
                     dc.get_public_link(path=os.path.abspath(args[0])).get(
-                        "link", ["No Link"],
+                        "link",
+                        ["No Link"],
                     )[0],
                 )
             except DropboxCommand.CommandError as e:

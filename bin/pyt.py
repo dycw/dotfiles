@@ -156,7 +156,8 @@ def _yield_args(
 
 def _get_repo_root() -> Path:
     (root,) = check_output(  # noqa:S603,S607
-        ["git", "rev-parse", "--show-toplevel"], text=True,
+        ["git", "rev-parse", "--show-toplevel"],
+        text=True,
     ).splitlines()
     return Path(root)
 
@@ -184,7 +185,9 @@ def pyt(
         info(command)
     else:
         run(  # noqa:S603
-            parts, env={**environ, **{"PYTHONPATH": str(root)}}, text=True,
+            parts,
+            env={**environ, **{"PYTHONPATH": str(root)}},
+            text=True,
         )
 
 

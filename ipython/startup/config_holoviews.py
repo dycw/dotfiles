@@ -66,11 +66,15 @@ else:
 
                 def _plot_series_opts(self, series: Series) -> Any:
                     return self._plot_series(series).opts(
-                        framewise=True, tools=["hover"],
+                        framewise=True,
+                        tools=["hover"],
                     )
 
                 def _query_except(
-                    self, dfe: DataFrameExplorer, kdims: List[str], series: Series,
+                    self,
+                    dfe: DataFrameExplorer,
+                    kdims: List[str],
+                    series: Series,
                 ) -> Tuple[Series, str]:
                     parts: List[str] = []
                     for kdim in dfe.kdims:
@@ -94,12 +98,17 @@ else:
 
                 def _plot_series(self, series: Series) -> HeatMap:
                     data, label = self._query_except(
-                        dfe, [self.kdim1, self.kdim2], series,
+                        dfe,
+                        [self.kdim1, self.kdim2],
+                        series,
                     )
                     vdim = series.name
                     label = f"{vdim} = f({self.kdim1}, {self.kdim2} | {label})"
                     return HeatMap(
-                        data, kdims=[self.kdim1, self.kdim2], vdims=vdim, label=label,
+                        data,
+                        kdims=[self.kdim1, self.kdim2],
+                        vdims=vdim,
+                        label=label,
                     ).opts(colorbar=True)
 
             return self._make_plot(Explorer, ["kdim1", "kdim2"])
@@ -116,11 +125,15 @@ else:
                     vdim = series.name
                     label = f"{vdim} = f({self.kdim} | {label})"
                     scatter = Scatter(
-                        data, kdims=self.kdim, vdims=vdim, label=label,
+                        data,
+                        kdims=self.kdim,
+                        vdims=vdim,
+                        label=label,
                     ).opts(show_grid=True, **({} if size is None else {"size": size}))
                     if fixed:
                         new_vdim = Dimension(
-                            vdim, soft_range=(series.min(), series.max()),
+                            vdim,
+                            soft_range=(series.min(), series.max()),
                         )
                         return scatter.redim(**{vdim: new_vdim})
                     else:

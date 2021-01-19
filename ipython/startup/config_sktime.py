@@ -53,7 +53,8 @@ else:
         tmp = temporal_train_test_split(*args, train_size=train_and_valid)
         all_train_valid, all_test = tmp[::2], tmp[1::2]
         tmp = temporal_train_test_split(
-            *all_train_valid, train_size=train / (train + valid),
+            *all_train_valid,
+            train_size=train / (train + valid),
         )
         all_train, all_valid = tmp[::2], tmp[1::2]
         return tuple(roundrobin(all_train, all_valid, all_test))
@@ -94,13 +95,17 @@ else:
         @property
         def X(self) -> "_TemporalView":
             return _TemporalView(
-                train=self.X_train, valid=self.X_valid, test=self.X_test,
+                train=self.X_train,
+                valid=self.X_valid,
+                test=self.X_test,
             )
 
         @property
         def y(self) -> "_TemporalView":
             return _TemporalView(
-                train=self.y_train, valid=self.y_valid, test=self.y_test,
+                train=self.y_train,
+                valid=self.y_valid,
+                test=self.y_test,
             )
 
         @classmethod
@@ -143,12 +148,14 @@ else:
 
         def map_x(self, func: Callable[[T], T]) -> "TemporalSplit[T]":
             return replace(
-                self, **{f"X_{k}": func(v) for k, v in self.X._asdict().items()},
+                self,
+                **{f"X_{k}": func(v) for k, v in self.X._asdict().items()},
             )
 
         def map_y(self, func: Callable[[T], T]) -> "TemporalSplit[T]":
             return replace(
-                self, **{f"y_{k}": func(v) for k, v in self.y._asdict().items()},
+                self,
+                **{f"y_{k}": func(v) for k, v in self.y._asdict().items()},
             )
 
     class _TemporalView(NamedTuple):

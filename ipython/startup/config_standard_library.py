@@ -27,7 +27,9 @@ shuffle = _SYSTEM_RANDOM.shuffle
 
 def _initialize_logger() -> Logger:
     formatter = Formatter(
-        fmt="{asctime} {message}", datefmt="%Y-%m-%d %H:%M:%S", style="{",
+        fmt="{asctime} {message}",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        style="{",
     )
     handler = StreamHandler(stdout)
     handler.setLevel(INFO)

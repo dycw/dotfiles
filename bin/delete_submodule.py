@@ -61,7 +61,8 @@ def main(name: str) -> None:
 
 def _get_repo_root() -> Path:
     (root,) = check_output(  # noqa:S603,S607
-        ["git", "rev-parse", "--show-toplevel"], text=True,
+        ["git", "rev-parse", "--show-toplevel"],
+        text=True,
     ).splitlines()
     return Path(root)
 

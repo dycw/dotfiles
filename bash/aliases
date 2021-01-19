@@ -46,7 +46,11 @@ alias juplab='jupyter lab'
 alias jupnb='jupyter notebook'
 
 # pre-commit
-alias pc='$(git rev-parse --show-toplevel)/.git/hooks/pre-commit'
+alias pc='pre-commit run --files $(git diff --name-only | xargs )'
+alias pci='pre-commit install'
+alias pcaf='pre-commit run --all-files'
+alias pcau='pre-commit autoupdate'
+alias pcui='pre-commit uninstall'
 
 # python
 alias p='python'
