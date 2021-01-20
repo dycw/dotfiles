@@ -1,10 +1,17 @@
 repos:
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 897b3ee1f0e1bc43c1a2d634d24a7dbeae664002
+    rev: 926ec87350e5b1ea20618c898e089e31d526ef38
     hooks:
+      - id: elm
+      - id: markdown
+      - id: no-binary
       - id: no-commit
+      - id: notebook
       - id: prettier
       - id: python
+      - id: shell-exec
+      - id: shell-non-exec
+        exclude: bash-completion.bash
       - id: shellcheck
         exclude: bash-completion.bash
       - id: shfmt

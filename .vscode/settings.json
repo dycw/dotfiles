@@ -1,9 +1,5 @@
 {
   "python.pythonPath": "/home/derek/miniconda3/envs/.dotfiles/bin/python",
-  "files.exclude": {
-    "bash/bash_it": true,
-    "git/bash-completion.bash": true
-  },
   "python.formatting.provider": "black",
   "python.linting.pylintEnabled": false,
   "python.linting.flake8Enabled": true,
