@@ -28,7 +28,7 @@ scripts+=("conda/init")
 scripts+=("dropbox/init")
 scripts+=("rust/init")
 for script in "${scripts[@]}"; do
-	path_script="$PATH_DOTFILES/$script"
+	path_script="$PATH_DOTFILES/$script.sh"
 	if [ -f "$path_script" ]; then
 		source "$path_script"
 	else

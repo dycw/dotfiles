@@ -51,12 +51,12 @@ alias pci='pre-commit install'
 alias pcaf='pre-commit run --all-files'
 alias pcau='pre-commit autoupdate'
 alias pcui='pre-commit uninstall'
-pctr() { pre-commit try-repo "$1" "$2" --all-files ; }
+pctr() { pre-commit try-repo "$1" "$2" --all-files; }
 
 # pyclean
 pyclean() {
-    find . -type f -name "*.py[co]" -delete
-    find . -type d -name "__pycache__" -delete
+	find . -type f -name "*.py[co]" -delete
+	find . -type d -name "__pycache__" -delete
 }
 
 # python
@@ -72,7 +72,7 @@ alias pypath='export PYTHONPATH=.'
 alias tb='tensorboard --logdir .'
 
 # tf
-tf() { tail -f "$1" | batcat --paging=never -l -log ; }
+tf() { tail -f "$1" | batcat --paging=never -l -log; }
 
 # vim
 alias v=vim
