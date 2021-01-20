@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+path="$1"
+shift
+when-changed -1 -r -s -v "$path" -c _wchg "$@"
