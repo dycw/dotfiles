@@ -138,6 +138,7 @@ bar {
 # Launcher mode
 mode "application" {
   bindsym c exec code ;; mode "default"
+  bindsym e exec evince ;; mode "default"
   bindsym f exec firefox ;; mode "default"
   bindsym n exec nautilus ;; mode "default"
   bindsym i exec signal-desktop ;; mode "default"
