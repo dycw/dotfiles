@@ -6,5 +6,5 @@ if [ -f "$path" ]; then
 	source "$path"
 	bind -x '"\t": fzf_bash_completion'
 else
-	timed_log "$path not found\n"
+	timed_log "Unable to find %s\n" "$path"
 fi

@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# bump2version
-alias bp='bump2version patch --allow-dirty'
-alias bp-major='bump2version major --allow-dirty'
-alias bp-minor='bump2version minor --allow-dirty'
-
 # bat
 alias cat=batcat
 
@@ -51,13 +46,6 @@ alias pci='pre-commit install'
 alias pcaf='pre-commit run --all-files'
 alias pcau='pre-commit autoupdate'
 alias pcui='pre-commit uninstall'
-pctr() { pre-commit try-repo "$1" "$2" --all-files; }
-
-# pyclean
-pyclean() {
-	find . -type f -name "*.py[co]" -delete
-	find . -type d -name "__pycache__" -delete
-}
 
 # python
 alias p='python'
@@ -70,9 +58,6 @@ alias pypath='export PYTHONPATH=.'
 
 # tensorboard
 alias tb='tensorboard --logdir .'
-
-# tf
-tf() { tail -f "$1" | batcat --paging=never -l -log; }
 
 # vim
 alias v=vim

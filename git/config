@@ -97,6 +97,10 @@
   r = reset
   rp = r --patch
 
+  # rev-parse
+  current = rev-parse --abbrev-ref HEAD
+  root = rev-parse --show-toplevel
+
   # revert
   rv = revert
 
@@ -120,9 +124,6 @@
 
   # tag
   ta = tag -a \"$1\" \"$2\" -m \"$1\" && :
-
-  # custom
-  current = rev-parse --abbrev-ref HEAD
 
   # publish
   pb = !git psuo $(git current) && :
