@@ -23,13 +23,3 @@ for program in "${programs[@]}"; do
 		timed_log "%s installed\n" "$program"
 	fi
 done
-
-declare -a programs=()
-programs+=("pre-commit")
-for program in "${programs[@]}"; do
-	if ! snap list | grep -q "$program"; then
-		timed_log "%s not installed; installing...\n" "$program"
-		sudo snap install --classic "$program"
-		timed_log "%s installed\n" "$program"
-	fi
-done

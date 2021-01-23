@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2154
 
 # bat
 alias cat=batcat
@@ -15,6 +16,9 @@ alias cddt='cd ~/Desktop'
 alias cdw='cd ~/work'
 
 # conda
+alias cec='conda env create'
+alias cel='conda env list'
+alias cer='default_env="$CONDA_DEFAULT_ENV"; if ! [[ $default_env == base  ]]; then conda deactivate; conda env remove --name "$default_env"; fi'
 alias ceu='conda env update --prune'
 
 # evince

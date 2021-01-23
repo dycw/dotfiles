@@ -74,7 +74,6 @@
   ll = pull
 
   # push
-  # p = push --set-upstream origin
   p = push
   pf = p --force
   pdo = p --delete origin

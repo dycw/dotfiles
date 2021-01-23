@@ -1,4 +1,4 @@
-name: .dotfiles
+name: dotfiles
 
 channels:
   - conda-forge
