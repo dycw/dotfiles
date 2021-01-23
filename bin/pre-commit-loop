@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [ $# -ge 1 ]; then
+	path="$1"
+else
+	path="."
+fi
+wchg "$path" "printf \"Running pre-commit in 5 seconds...\n\"; sleep 5; pre-commit-current"

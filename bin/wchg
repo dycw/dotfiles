@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+if ! command -v when-changed >/dev/null 2>&1; then
+	timed_log "when-changed not found; installing..."
+	pip install when-changed
+	timed_log "when-changed installed..."
+fi
+
 path="$1"
 shift
-when-changed -1 -r -s -v "$path" -c _wchg "$@"
+cmd="printf \"\n\n\n\n\n\"; timed_log \"%f changed\n\"; "
+for i in "$@"; do
+	cmd+=" $i"
+done
+
+when-changed -1 -r -s -v "$path" -c "$cmd"
