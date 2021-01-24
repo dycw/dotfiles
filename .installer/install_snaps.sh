@@ -15,11 +15,11 @@ for program in "${programs[@]}"; do
 done
 
 declare -a programs=()
-programs+=("loop-rs")
+programs+=("ripgrep")
 for program in "${programs[@]}"; do
 	if ! snap list | grep -q "$program"; then
 		timed_log "%s not installed; installing...\n" "$program"
-		sudo snap install --beta "$program"
+		sudo snap install --classic "$program"
 		timed_log "%s installed\n" "$program"
 	fi
 done
