@@ -8,7 +8,7 @@ fi
 
 path="$1"
 shift
-cmd="printf \"\n\n\n\n\n\"; timed_log \"%f changed\n\"; "
+cmd="printf \"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\"; timed_log \"%f changed\n\"; "
 for i in "$@"; do
 	cmd+=" $i"
 done
