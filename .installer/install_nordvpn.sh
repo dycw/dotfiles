@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if ! apt-get-has nordvpn; then
+if ! dpkg -s nordvpn >/dev/null 2>&1; then
 	timed_log "nordvpn not installed; installing...\n"
 	filename="nordvpn-release_1.0.0_all.deb"
 	wget https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/$filename -P /tmp

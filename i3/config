@@ -19,8 +19,8 @@ workspace_layout stacking
 title_align center
 
 # default border style for new windows
-default_border pixel 20
-default_floating_border pixel 20
+default_border pixel 10
+default_floating_border pixel 10
 
 # hiding borders adjacent to the screen edges
 hide_edge_borders none

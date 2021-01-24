@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-if ! apt-get-has speedtest; then
+if ! dpkg -s speedtest >/dev/null 2>&1; then
 	timed_log "speedtest not installed; installing...\n"
 	declare -a programs=()
 	programs+=("apt-transport-https")
 	programs+=("dirmngr")
 	programs+=("gnupg1")
 	for program in "${programs[@]}"; do
-		if ! apt-get-has "$program"; then
+		if ! dpkg -s "$program" >/dev/null 2>&1; then
 			timed_log "%s not installed; installing...\n" "$program"
 			sudo apt-get --yes install "$program"
 			timed_log "%s installed\n" "$program"
