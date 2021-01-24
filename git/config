@@ -124,7 +124,8 @@
   s = status --short
 
   # tag
-  ta = tag -a \"$1\" \"$2\" -m \"$1\" && :
+  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && :
+  td = !git tag --delete \"$1\" && :
 
   # publish
   pb = !git psuo $(git current) && :
