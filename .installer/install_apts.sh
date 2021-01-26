@@ -2,6 +2,7 @@
 
 declare -a programs=()
 programs+=("bat")
+programs+=("calibre")
 programs+=("curl")
 programs+=("direnv")
 programs+=("fd-find")
