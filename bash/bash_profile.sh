@@ -4,7 +4,7 @@
 export EDITOR=vim
 export FLASK_DEBUG=1
 export GIST_ID=690a59ef26208e43fa880c874e01c18c
-export GITHUB_TOKEN=8b82e7cb17b13b55ef906af4771a137cab91d3fa
+export GITHUB_TOKEN=16529f446da7391d919a0072cf1cab9eec1cf0f6
 export MKL_NUM_THREADS=1
 export PATH_DROPBOX="/data/derek/Dropbox"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
