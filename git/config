@@ -196,6 +196,6 @@
   sort = version:refname
 
 [user]
-  email = d.wan@icloud.com
-  name = Derek Wan
+	email = d.wan@icloud.com
+	name = Derek Wan
   useConfigOnly = true

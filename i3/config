@@ -127,6 +127,7 @@ bindsym $mod+Return exec i3-sensible-terminal
 
 # application mode
 mode "application" {
+  bindsym a exec atom ;; mode "default"
   bindsym c exec code ;; mode "default"
   bindsym e exec evince ;; mode "default"
   bindsym f exec firefox ;; mode "default"
