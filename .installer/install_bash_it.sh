@@ -20,7 +20,6 @@ if [ -f "$path" ]; then
 
 	declare -a completions=()
 	completions+=("bash-it")
-	completions+=("conda")
 	completions+=("git")
 	for completion in "${completions[@]}"; do
 		bash-it enable completion "$completion" >/dev/null 2>&1
@@ -33,7 +32,6 @@ if [ -f "$path" ]; then
 	plugins+=("fzf")
 	plugins+=("history")
 	plugins+=("man")
-	# plugins+=("sudo")
 	plugins+=("tmux")
 	plugins+=("xterm")
 	for plugin in "${plugins[@]}"; do
