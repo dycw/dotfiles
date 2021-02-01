@@ -102,6 +102,5 @@ class timer(metaclass=_TimerMeta):  # noqa:N801
 
 @contextmanager
 def no_stdout() -> Iterator[None]:
-    with open(devnull, mode="w") as null:
-        with redirect_stdout(null):
-            yield
+    with open(devnull, mode="w") as null, redirect_stdout(null):
+        yield

@@ -4,4 +4,4 @@ url = https://github.com/Bash-it/bash-it.git
 
 [submodule "shell/fzf-tab-completion"]
 path = shell/fzf-tab-completion
-url = git@github.com:lincheney/fzf-tab-completion.git
+url = https://github.com/lincheney/fzf-tab-completion.git
