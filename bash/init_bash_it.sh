@@ -3,7 +3,7 @@
 
 # Path to the bash it configuration
 # export BASH_IT="/home/derek/.bash_it"
-export BASH_IT="$PATH_DOTFILES/bash/bash_it"
+export BASH_IT="$PATH_DOTFILES/bash/bash-it"
 
 # Lock and Load a custom theme file.
 # Leave empty to disable theming.
