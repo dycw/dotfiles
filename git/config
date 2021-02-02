@@ -1,201 +1,207 @@
 [alias]
-  # add
-  a = add
-  aa = add --all
-  ai = aa --interactive
-  aip = a --interactive --patch
-  ap = a --patch
+	# add
+	a = add
+	aa = add --all
+	ai = aa --interactive
+	aip = a --interactive --patch
+	ap = a --patch
 
-  # add + commit
-  aac = !git aa && git c && :
-  aacm = !git aa && git cm \"$1\" && :
-  ac = "!f() { for v in \"$@\"; do git a \"$GIT_PREFIX$v\"; done; git c; }; f"
-  acm = "!f() { i=0; for v in \"$@\"; do i=$(($i+1)); if [ $i -lt $# ]; then git a \"$GIT_PREFIX$v\"; else git cm \"$v\"; fi; done; }; f"
-  acnv = "!f() { for v in \"$@\"; do git a \"$GIT_PREFIX$v\"; done; git cnv; }; f"
-  acnvm = "!f() { i=0; for v in \"$@\"; do i=$(($i+1)); if [ $i -lt $# ]; then git a \"$GIT_PREFIX$v\"; else git cnvm \"$v\"; fi; done; }; f"
-  apc = "!f() { for v in \"$@\"; do git ap \"$GIT_PREFIX$v\"; done; git c; }; f"
+	# add + commit
+	aac = !git aa && git c && :
+	aacm = !git aa && git cm \"$1\" && :
+	ac = "!f() { for v in \"$@\"; do git a \"$GIT_PREFIX$v\"; done; git c; }; f"
+	acm = "!f() { i=0; for v in \"$@\"; do i=$(($i+1)); if [ $i -lt $# ]; then git a \"$GIT_PREFIX$v\"; else git cm \"$v\"; fi; done; }; f"
+	acnv = "!f() { for v in \"$@\"; do git a \"$GIT_PREFIX$v\"; done; git cnv; }; f"
+	acnvm = "!f() { i=0; for v in \"$@\"; do i=$(($i+1)); if [ $i -lt $# ]; then git a \"$GIT_PREFIX$v\"; else git cnvm \"$v\"; fi; done; }; f"
+	apc = "!f() { for v in \"$@\"; do git ap \"$GIT_PREFIX$v\"; done; git c; }; f"
 
-  # branch
-  b = branch --verbose
-  ba = b --all
-  bd = b --delete
-  bdd = b -D
-  br = b --remote
-  bu = b -u
+	# branch
+	b = branch --verbose
+	ba = b --all
+	bd = b --delete
+	bdd = b -D
+	br = b --remote
+	bu = b -u
 
-  # branch + checkout
-  dev = !(git bdd dev || true) && git cob dev && :
+	# branch + checkout
+	dev = !(git bdd dev || true) && git cob dev && :
 
-  # checkout
-  co = checkout
-  cob = co -b
-  cobmom = co -B master origin/master
-  com = co master
-  cop = gco --patch
+	# checkout
+	co = checkout
+	cob = co -b
+	cobmom = co -B master origin/master
+	com = co master
+	cop = gco --patch
 
-  # checkout + pull
-  coml = !git com && git ll && :
+	# checkout + pull
+	coml = !git com && git ll && :
 
-  # checkout + pull + branch + checkout
-  redev = !git coml && git dev && :
+	# checkout + pull + branch + checkout
+	redev = !git coml && git dev && :
 
-  # cherry-pick
-  cp = cherry-pick
-  cpa = cp --abort
-  cpc = cp --continue
-  cps = cp --skip
+	# cherry-pick
+	cp = cherry-pick
+	cpa = cp --abort
+	cpc = cp --continue
+	cps = cp --skip
 
-  # clone
-  cl = clone --recurse-submodules
+	# clone
+	clone = clone --recurse-submodules
+	cl = clone
 
-  # commit
-  c = commit
-  cm = !git c --message \"$1\" && :
-  cnv = commit --no-verify
-  cnvm = !git c --message --no-verify \"$1\" && :
+	# commit
+	c = commit
+	cm = !git c --message \"$1\" && :
+	cnv = commit --no-verify
+	cnvm = !git c --message --no-verify \"$1\" && :
 
-  # diff
-  d = diff
-  dc = d --cached
+	# config
+	clso = config --list --show-origin
 
-  # fetch
-  f = fetch --all --prune
+	# diff
+	d = diff
+	dc = d --cached
 
-  # log
-  l = log --oneline --decorate --graph
+	# fetch
+	f = fetch --all --prune
 
-  # merge
-  m = merge
+	# log
+	l = log --oneline --decorate --graph
 
-  # mv
-  mv = mv
+	# merge
+	m = merge
 
-  # pull
-  ll = pull
+	# mv
+	mv = mv
 
-  # push
-  p = push
-  pf = p --force
-  pdo = p --delete origin
-  pdr = p --dry-run
-  po = p origin
-  psuo = p --set-upstream origin
+	# pull
+	ll = pull
 
-  # rebase
-  rb = rebase
-  rba = rb --abort
-  rbc = rb --continue
-  rbi = rb --interactive
-  rbm = rb master
-  rbs = rb --skip
+	# push
+	p = push
+	pf = p --force
+	pdo = p --delete origin
+	pdr = p --dry-run
+	po = p origin
+	psuo = p --set-upstream origin
 
-  # remote
-  re =  remote
-  resu = re set-url
-  reu = re update
+	# rebase
+	rb = rebase
+	rba = rb --abort
+	rbc = rb --continue
+	rbi = rb --interactive
+	rbm = rb master
+	rbs = rb --skip
 
-  # reset
-  r = reset
-  rp = r --patch
+	# remote
+	re =  remote
+	resu = re set-url
+	reu = re update
 
-  # rev-parse
-  current = rev-parse --abbrev-ref HEAD
-  root = rev-parse --show-toplevel
+	# reset
+	r = reset
+	rp = r --patch
 
-  # revert
-  rv = revert
+	# rev-parse
+	current = rev-parse --abbrev-ref HEAD
+	root = rev-parse --show-toplevel
 
-  # rm
-  rm = rm
-  rmc = rm --cached
+	# revert
+	rv = revert
 
-  # stash
-  st = stash
-  sta = st apply
-  stc = st clear
-  std = st drop
-  stl = st list
-  stp = st pop
+	# rm
+	rm = rm
+	rmc = rm --cached
 
-  # submodule
-  smurr = submodule update --recursive --remote
+	# stash
+	st = stash
+	sta = st apply
+	stc = st clear
+	std = st drop
+	stl = st list
+	stp = st pop
 
-  # status
-  s = status --short
+	# submodule
+	smurr = submodule update --recursive --remote
 
-  # tag
-  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && :
-  td = !git tag --delete \"$1\" && :
+	# status
+	s = status --short
 
-  # publish
-  pb = !git psuo $(git current) && :
-  unpb = "!git branch -r --color=never | fzf | sed -En 's/origin\\/(.*)/\\1/p' | xargs -n 1 git pdo"
+	# tag
+	ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && :
+	td = !git tag --delete \"$1\" && :
+
+	# publish
+	pb = !git psuo $(git current) && :
+	unpb = "!git branch -r --color=never | fzf | sed -En 's/origin\\/(.*)/\\1/p' | xargs -n 1 git pdo"
 
 [apply]
-  whitespace = nowarn
+	whitespace = nowarn
 
 [branch]
-  autoSetupMerge = always
-  autoSetupRebase = always
+	autoSetupMerge = always
+	autoSetupRebase = always
 
 [checkout]
-  defaultRemote = origin
+	defaultRemote = origin
 
 [commit]
-  verbose = true
+	verbose = true
 
 [color]
-  ui = always
+	ui = always
 
 [core]
-  editor = vim
-  eol = lf
+	editor = vim
+	eol = lf
 
 [diff]
-  tool = vimdiff
+	tool = vimdiff
 
 [difftool]
-  prompt = false
+	prompt = false
 
 [fetch]
-  prune = true
-  pruneTags = true
+	prune = true
+	pruneTags = true
 
 [help]
-  autoCorrect = 1
+	autoCorrect = 1
 
 [include]
-  path = ~/.config/git/config.local
+	path = ~/.config/git/config.local
 
 [log]
-  abbrevCommit = true
-  date = format:%Y-%m-%d %H:%M:%S (%a)
-  decorate = full
+	abbrevCommit = true
+	date = format:%Y-%m-%d %H:%M:%S (%a)
+	decorate = full
 
 [merge]
-  conflictstyle = diff3
-  ff = only
-  tool = vimdiff
+	conflictstyle = diff3
+	ff = only
+	tool = vimdiff
 
 [mergetool]
-  keepBackup = false
+	keepBackup = false
+
+[pull]
+	default = upstream
+	ff = only
 
 [push]
-  default = simple
-  followTags = true
+	default = simple
+	followTags = true
 
 [rebase]
-  abbreviateCommands = true
-  autoSquash = true
-  stat = true
+	abbreviateCommands = true
+	autoSquash = true
+	stat = true
 
 [status]
-  branch = true
+	branch = true
 
 [tag]
-  sort = version:refname
+	sort = version:refname
 
 [user]
-	email = d.wan@icloud.com
-	name = Derek Wan
-  useConfigOnly = true
+	useConfigOnly = true
