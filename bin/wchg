@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 if ! command -v when-changed >/dev/null 2>&1; then
-	timed_log "when-changed not found; installing..."
+	printf "when-changed not found; installing...\n"
 	pip install when-changed
-	timed_log "when-changed installed..."
+	printf "when-changed installed...\n"
 fi
 
 path="$1"
 shift
-cmd="printf \"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\"; timed_log \"%f changed\n\"; "
+cmd="printf \"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\"; printf \"%f changed\n\"; "
 for i in "$@"; do
 	cmd+=" $i"
 done

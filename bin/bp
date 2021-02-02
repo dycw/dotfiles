@@ -15,5 +15,5 @@ if [ -f "$path" ]; then
 	esac
 	bump2version --allow-dirty --config-file="$path" "$part"
 else
-	timed_log "Unable to find %s\n" "$path"
+	printf "Unable to find %s\n" "$path"
 fi

@@ -5,5 +5,5 @@ path="$HOME/.cargo/env"
 if [ -f "$path" ]; then
 	source "$path"
 else
-	timed_log "Unable to find %s\n" "$path"
+	printf "Unable to find %s\n" "$path"
 fi

@@ -38,5 +38,5 @@ if [ -f "$path" ]; then
 		bash-it enable plugin "$plugin" >/dev/null 2>&1
 	done
 else
-	timed_log "Unable to find %s\n" "$path"
+	printf "Unable to find %s\n" "$path"
 fi

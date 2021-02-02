@@ -6,17 +6,17 @@ process_link() {
 	if [ -L "$to" ]; then
 		target=$(readlink "$to")
 		if ! [ "$target" = "$from" ]; then
-			timed_log "Overwriting symlink:\n"
-			timed_log "   %s\n" "$to"
-			timed_log "-> |    %s\n" "$target"
-			timed_log "   | -> %s\n" "$to"
+			printf "Overwriting symlink:\n"
+			printf "   %s\n" "$to"
+			printf "-> |    %s\n" "$target"
+			printf "   | -> %s\n" "$to"
 			rm "$to"
 			make_link "$from" "$to"
 		fi
 	else
-		timed_log "Symlinking:\n"
-		timed_log "   %s\n" "$from"
-		timed_log "-> %s\n" "$to"
+		printf "Symlinking:\n"
+		printf "   %s\n" "$from"
+		printf "-> %s\n" "$to"
 		make_link "$from" "$to"
 	fi
 }

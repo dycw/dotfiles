@@ -19,9 +19,9 @@ programs+=("transmission")
 programs+=("vim")
 for program in "${programs[@]}"; do
 	if ! dpkg -s "$program" >/dev/null 2>&1; then
-		timed_log "%s not installed; installing...\n" "$program"
+		printf "%s not installed; installing...\n" "$program"
 		sudo apt-get --yes install "$program"
-		timed_log "%s installed\n" "$program"
+		printf "%s installed\n" "$program"
 	fi
 done
 

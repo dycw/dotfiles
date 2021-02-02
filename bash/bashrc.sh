@@ -12,26 +12,22 @@ case $- in
 *) return ;;
 esac
 
-# some settings
-shopt -s histappend
-shopt -s checkwinsize
-#shopt -s globstar
-
+# Source scripts
 declare -a scripts=()
 scripts+=("bash/aliases")
 scripts+=("bash/configure_bash")
+scripts+=("bash/configure_shopt")
 scripts+=("bash/init_bash_it")
-scripts+=("bash/init_fzf_tab_completion")
 scripts+=("bash/init_git_aliases")
 scripts+=("bash/init_zoxide")
 scripts+=("conda/init")
 scripts+=("dropbox/init")
 scripts+=("rust/init")
 for script in "${scripts[@]}"; do
-	path_script="$PATH_DOTFILES/$script.sh"
-	if [ -f "$path_script" ]; then
-		source "$path_script"
+	path="$PATH_DOTFILES/$script.sh"
+	if [ -f "$path" ]; then
+		source "$path"
 	else
-		timed_log "%Unable to find %s\n" "$path_script"
+		printf "Unable to find %s\n" "$path"
 	fi
 done

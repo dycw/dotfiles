@@ -8,8 +8,8 @@ if [ -d "$dir" ]; then
 		"$file" autostart yes
 		"$file" start >/dev/null 2>&1
 	else
-		timed_log "Unable to find %s\n" "$file"
+		printf "Unable to find %s\n" "$file"
 	fi
 else
-	timed_log "Unable to find %s\n" "$dir"
+	printf "Unable to find %s\n" "$dir"
 fi

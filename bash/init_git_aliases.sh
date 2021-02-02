@@ -18,5 +18,5 @@ if [ -f "$path" ]; then
 		function_exists "$complete_fnc" && __git_complete g"$al" "$complete_func"
 	done
 else
-	timed_log "Unable to find %s\n" "$path"
+	printf "Unable to find %s\n" "$path"
 fi
