@@ -9,7 +9,7 @@ fi
 
 # git config
 
-path="$HOME/.config/git/config.local222"
+path="$HOME/.config/git/config.local"
 if ! [ -f "$path" ]; then
 	{
 		printf "[user]\n"
