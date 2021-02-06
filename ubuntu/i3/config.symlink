@@ -55,8 +55,8 @@ bar {
 }
 
 # splitting containers
-bindsym $mod+y exec split-as-stacked horizontal
-bindsym $mod+u exec split-as-stacked vertical
+bindsym $mod+y exec $HOME/.dotfiles/ubuntu/i3/bin/split-as-stacked horizontal
+bindsym $mod+u exec $HOME/.dotfiles/ubuntu/i3/bin/split-as-stacked vertical
 
 # manipulating layout
 # bindsym $mod+t layout stacking
