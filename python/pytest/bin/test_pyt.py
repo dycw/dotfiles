@@ -11,7 +11,7 @@ from pytest import param
 from pytest import raises
 
 
-sys.path.append(str(Path(__file__).resolve().parent.joinpath("bin")))
+sys.path.append(str(Path(__file__).resolve().parent))
 
 
 from pyt import _get_repo_root  # noqa: E402
