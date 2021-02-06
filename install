@@ -56,19 +56,19 @@ process_link() {
 	file="$1"
 	link="${2/#\~/$HOME}"
 	if [ -L "$link" ]; then
-		target=$(readlink "$link")
-		if ! [ "$target" = "$file" ]; then
-			echo "Overwriting symlink:"
-			echo "old $link"
-			echo "new $file"
-			echo " -> $target"
+		old=$(readlink "$link")
+		if [ "$old" != "$file" ]; then
+			echo "Re-directing symlink:"
+			echo "       $link"
+			echo "old -> $old"
+			echo "new -> $file"
 			rm "$link"
 			make_link "$file" "$link"
 		fi
 	else
 		echo "Making symlink:"
-		echo "   $file"
-		echo "-> $link"
+		echo "   $link"
+		echo "-> $file"
 		make_link "$file" "$link"
 	fi
 }
