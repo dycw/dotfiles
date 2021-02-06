@@ -1,0 +1,210 @@
+# symlink=~/.config/git/config
+
+[alias]
+	# add
+	a = add
+	aa = add --all
+	ai = aa --interactive
+	aip = a --interactive --patch
+	ap = a --patch
+
+	# add + commit
+	aac = !git aa && git c && :
+	aacm = !git aa && git cm \"$1\" && :
+	ac = "!f() { for v in \"$@\"; do git a \"$GIT_PREFIX$v\"; done; git c; }; f"
+	acm = "!f() { i=0; for v in \"$@\"; do i=$(($i+1)); if [ $i -lt $# ]; then git a \"$GIT_PREFIX$v\"; else git cm \"$v\"; fi; done; }; f"
+	acnv = "!f() { for v in \"$@\"; do git a \"$GIT_PREFIX$v\"; done; git cnv; }; f"
+	acnvm = "!f() { i=0; for v in \"$@\"; do i=$(($i+1)); if [ $i -lt $# ]; then git a \"$GIT_PREFIX$v\"; else git cnvm \"$v\"; fi; done; }; f"
+	apc = "!f() { for v in \"$@\"; do git ap \"$GIT_PREFIX$v\"; done; git c; }; f"
+
+	# branch
+	b = branch --verbose
+	ba = b --all
+	bd = b --delete
+	bdd = b -D
+	br = b --remote
+	bu = b -u
+
+	# branch + checkout
+	dev = !(git bdd dev || true) && git cob dev && :
+
+	# checkout
+	co = checkout
+	cob = co -b
+	cobmom = co -B master origin/master
+	com = co master
+	cop = gco --patch
+
+	# checkout + pull
+	coml = !git com && git ll && :
+
+	# checkout + pull + branch + checkout
+	redev = !git coml && git dev && :
+
+	# cherry-pick
+	cp = cherry-pick
+	cpa = cp --abort
+	cpc = cp --continue
+	cps = cp --skip
+
+	# clone
+	clone = clone --recurse-submodules
+	cl = clone
+
+	# commit
+	c = commit
+	cm = !git c --message \"$1\" && :
+	cnv = commit --no-verify
+	cnvm = !git c --message --no-verify \"$1\" && :
+
+	# config
+	clso = config --list --show-origin
+
+	# diff
+	d = diff
+	dc = d --cached
+
+	# fetch
+	f = fetch --all --prune
+
+	# log
+	l = log --oneline --decorate --graph
+
+	# merge
+	m = merge
+
+	# mv
+	mv = mv
+
+	# pull
+	ll = pull
+
+	# push
+	p = push
+	pf = p --force
+	pdo = p --delete origin
+	pdr = p --dry-run
+	po = p origin
+	pot = po --tags
+	psuo = p --set-upstream origin
+
+	# rebase
+	rb = rebase
+	rba = rb --abort
+	rbc = rb --continue
+	rbi = rb --interactive
+	rbm = rb master
+	rbs = rb --skip
+
+	# remote
+	re =  remote
+	resu = re set-url
+	reu = re update
+
+	# reset
+	r = reset
+	rp = r --patch
+
+	# rev-parse
+	current = rev-parse --abbrev-ref HEAD
+	root = rev-parse --show-toplevel
+
+	# revert
+	rv = revert
+
+	# rm
+	rm = rm
+	rmc = rm --cached
+
+	# stash
+	st = stash
+	sta = st apply
+	stc = st clear
+	std = st drop
+	stl = st list
+	stp = st pop
+
+	# submodule
+	smurr = submodule update --recursive --remote
+
+	# status
+	s = status --short
+
+	# tag
+	ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && :
+	td = !git tag --delete \"$1\" && :
+
+	# publish
+	pb = !git psuo $(git current) && :
+	unpb = "!git branch -r --color=never | fzf | sed -En 's/origin\\/(.*)/\\1/p' | xargs -n 1 git pdo"
+
+[apply]
+	whitespace = nowarn
+
+[branch]
+	autoSetupMerge = always
+	autoSetupRebase = always
+
+[checkout]
+	defaultRemote = origin
+
+[commit]
+	verbose = true
+
+[color]
+	ui = always
+
+[core]
+	editor = vim
+	eol = lf
+
+[diff]
+	tool = vimdiff
+
+[difftool]
+	prompt = false
+
+[fetch]
+	prune = true
+	pruneTags = true
+
+[help]
+	autoCorrect = 1
+
+[include]
+	path = ~/.config/git/config.local
+
+[log]
+	abbrevCommit = true
+	date = format:%Y-%m-%d %H:%M:%S (%a)
+	decorate = full
+
+[merge]
+	conflictstyle = diff3
+	ff = only
+	tool = vimdiff
+
+[mergetool]
+	keepBackup = false
+
+[pull]
+	default = upstream
+	ff = only
+
+[push]
+	default = simple
+	followTags = true
+
+[rebase]
+	abbreviateCommands = true
+	autoSquash = true
+	stat = true
+
+[status]
+	branch = true
+
+[tag]
+	sort = version:refname
+
+[user]
+	useConfigOnly = true

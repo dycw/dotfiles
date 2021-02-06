@@ -1,0 +1,3 @@
+# symlink=~/.config/git/ignore
+
+.DS_Store

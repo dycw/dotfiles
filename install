@@ -1,67 +1,99 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1090,SC2059
 
-log() {
-	template=$(printf "%(%Y-%m-%d %H:%H:%S)T: %s" -1 "$1")
-	shift
-	printf "$template" "$@"
-}
+# git
 
-path="$HOME/.config/git/config.local"
-if ! [ -f "$path" ]; then
-	log "%s does not exist; creating...\n" "$path"
-	printf "[user]\n\tname = Derek Wan\n\temail = d.wan@icloud.com\n" >>"$path"
-	log "%s created\n" "$path"
+name=git
+if ! command -v "$name" >/dev/null 2>&1; then
+	sudo apt-get --yes install "$name"
 fi
+
+# git config
+
+path="$HOME/.config/git/config.local222"
+if ! [ -f "$path" ]; then
+	{
+		printf "[user]\n"
+		printf "\tname = Derek Wan\n"
+		printf "\temail = d.wan@icloud.com\n"
+	} >>"$path"
+fi
+
+# SSH key
 
 private="$HOME/.ssh/id_rsa"
 public="$private.pub"
 if ! [ -f "$public" ]; then
-	log "%s does not exist; creating...\n" "$public"
 	ssh-keygen -t rsa -b 4096 -C "d.wan@icloud.com"
 	ssh-agent -s
 	ssh-add -K "$private"
-	log "%s created\n" "$public"
 fi
 
-declare -a programs=("git" "xclip")
-for program in "${programs[@]}"; do
-	if ! dpkg -s "$program" >/dev/null 2>&1; then
-		log "%s is not installed; installing...\n" "$program"
-		sudo apt-get --yes install "$program"
-		log "%s installed\n" "$program"
-	fi
-done
+# clone repo
 
-if [ -n "$PATH_DOTFILES" ]; then
-	REPO_ROOT="$PATH_DOTFILES"
-else
-	log "\$PATH_DOTFILES is not set; please set...\n"
-	read -r REPO_ROOT
-	log "\$PATH_DOTFILES set\n"
-fi
-
-if ! [ -d "$REPO_ROOT" ]; then
-	log "%s does not exist\n" "$REPO_ROOT"
+root="$HOME/.dotfiles"
+if ! [ -d "$root" ]; then
 	while true; do
-		log "Is your SSH key already added to GitHub? (y/n) "
-		read -n1 -r input
-		if [ "$input" = y ]; then
+		read -e -r -n1 -p "Is your SSH key already added to Github? (y/n)? " input
+		if [ "$input" = "y" ]; then
 			break
 		fi
-		printf "\n"
-		log "Copying your SSH key to the clipboard; please add it to GitHub at:\n"
-		log "    https://github.com/settings/keys\n"
+
+		name=xclip
+		if ! command -v "$name" >/dev/null 2>&1; then
+			sudo apt-get --yes install "$name"
+		fi
+
+		echo "Please add your SSH key (copied) to Github at:"
+		echo "    https://github.com/settings/keys"
 		xclip -sel clip <"$public"
 	done
-	printf "\n"
-	git clone --recurse-submodules git@github.com:dycw/dotfiles.git "$REPO_ROOT"
+	git clone --recurse-submodules git@github.com:dycw/dotfiles.git "$root"
 fi
 
-# Add bin/ for utilities
-PATH="$REPO_ROOT/bin${PATH:+:${PATH}}"
+# symlinks
 
-# Install components
-while read -r installer; do
-	source "$installer"
-done <<<"$(find "$REPO_ROOT/.installer" -type f)"
+process_link() {
+	file="$1"
+	link="${2/#\~/$HOME}"
+	if [ -L "$link" ]; then
+		target=$(readlink "$link")
+		if ! [ "$target" = "$file" ]; then
+			echo "Overwriting symlink:"
+			echo "old $link"
+			echo "new $file"
+			echo " -> $target"
+			rm "$link"
+			make_link "$file" "$link"
+		fi
+	else
+		echo "Making symlink:"
+		echo "   $file"
+		echo "-> $link"
+		make_link "$file" "$link"
+	fi
+}
+
+make_link() {
+	file="$1"
+	link="$2"
+	mkdir -p "$(dirname "$link")"
+	ln -s "$file" "$link"
+}
+
+mapfile -t files < <(find "$root" -name "*.symlink*" -type f)
+for file in "${files[@]}"; do
+	mapfile -t matches < <(grep "symlink=" "$file")
+	for match in "${matches[@]}"; do
+		mapfile -td = splits < <(printf "%s" "$match")
+		link=${splits[1]}
+		process_link "$file" "$link"
+	done
+done
+
+# installers
+
+mapfile -t files < <(find "$root" -name "install.sh" -type f)
+for file in "${files[@]}"; do
+	# shellcheck source=/dev/null
+	source "$file"
+done

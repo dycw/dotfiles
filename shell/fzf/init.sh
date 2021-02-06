@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-file="$HOME/.cargo/env"
+file="$HOME/.fzf.bash"
 if [ -f "$file" ]; then
 	# shellcheck source=/dev/null
 	source "$file"
