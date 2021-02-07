@@ -13,7 +13,6 @@ if command -v bash-it >/dev/null 2>&1; then
 		aliases+=("bash-it")
 		aliases+=("clipboard")
 		aliases+=("curl")
-		aliases+=("general")
 		aliases+=("npm")
 		aliases+=("tmux")
 		aliases+=("vim")
