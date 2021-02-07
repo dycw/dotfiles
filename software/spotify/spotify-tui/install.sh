@@ -2,7 +2,7 @@
 
 if ! command -v spt >/dev/null 2>&1; then
 	sudo apt-get --yes install libssl-dev
-	file="$(git rev-parse --show-toplevel)/installers/cargo.sh"
+	file="$(git rev-parse --show-toplevel)/rust/cargo-install.sh"
 	if [ -f "$file" ]; then
 		# shellcheck source=/dev/null
 		source "$file" spotify-tui
