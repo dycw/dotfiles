@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# cd
 alias ~='cd ~'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
-alias cddb='cd $PATH_DROPBOX'
 alias cddf='cd ~/.dotfiles'
+alias cddl='cd ~/Downloads'
 alias cddt='cd ~/Desktop'
+alias cdp='cd ~/Pictures'
 alias cdw='cd ~/work'
