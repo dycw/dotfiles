@@ -2,10 +2,11 @@
 
 ## Introduction
 
-My dotfiles, with the topical organization structure inspired by [Zach Holman](https://github.com/holman/dotfiles).
-There are two special files:
+My dotfiles, with the topical organization structure inspired by
+[Zach Holman](https://github.com/holman/dotfiles).
+There are three special files:
 
-- `bashrc` (as I am a `bash` user) will:
+- `bashrc` will:
 
   1. Add all folders named `bin/` to your `PATH`,
   2. Source all files named `init.sh`, then
@@ -13,13 +14,16 @@ There are two special files:
 
   Note that the:
 
-  1. files/folders can be freely placed in the repo, and
-  2. repo itself can be freely located in your `$HOME`.
+  1. files/folders can be anywhere in the repo, and
+  2. repo itself can be anywhere on your drive.
 
-  Thus, it is very easy to maintain a topical organization structure.
-  That is, you can keep all `git` related binaries,
-  initialization and aliases under a single `git/` folder (though this is not enforced).
-  What is important is that your dotfiles can easily grow and evolve.
+  Thus, it is very easy to maintain a topical organization structure (i.e.,
+  you could keep all `git` related binaries, initialization and aliases under a
+  single `git/` folder; though this is not enforced). This facilitates the easy
+  addition and removal of new packages/software you may use.
+
+- `bash_profile` will source all files named `env.sh`. Like the files/folders
+  above, these files can anywhere in your repo.
 
 - `install`, an executable, will:
 
