@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
 if ! command -v elm >/dev/null 2>&1; then
-	VERSION=0.19.1
-	name=binary-for-linux-64-bit
-	gz_name="$name.gz"
-	tmp_dir="$(mktemp -d -t elm-XXXXXX)"
-	wget "https://github.com/elm/compiler/releases/download/$VERSION/$gz_name" -P "$tmp_dir"
-	cd "$tmp_dir" || exit
-	gunzip "$gz_name"
-	chmod u+x "$name"
-	sudo mv "$name" /usr/local/bin/elm
+	file="$(git rev-parse --show-toplevel)/installers/github-bin.sh"
+	if [ -f "$file" ]; then
+		VERSION=0.19.1
+		tmp_dir="$(mktemp -d)"
+		cd "$tmp_dir" || exit
+		wget --output-document=elm.gz "https://github.com/elm/compiler/releases/download/$VERSION/binary-for-linux-64-bit.gz"
+		gunzip elm.gz
+		chmod u+x elm
+		sudo mv elm /usr/local/bin
+	else
+		echo "$file not found"
+	fi
 fi

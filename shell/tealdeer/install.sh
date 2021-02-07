@@ -5,10 +5,9 @@ if ! command -v tldr >/dev/null 2>&1; then
 	if [ -f "$file" ]; then
 		VERSION=1.4.1
 		tmp_dir="$(mktemp -d)"
-		url="https://github.com/imsnif/bandwhich/releases/download/$VERSION/bandwhich-v$VERSION-x86_64-unknown-linux-musl.tar.gz"
-		# shellcheck source=/dev/null
-		source "$file" "$tmp_dir" "$url"
-		sudo mv "$tmp_dir/binary" /usr/local/bin/tldr
+		cd "$tmp_dir" || exit
+		wget --output-document=tldr "https://github.com/dbrgn/tealdeer/releases/download/v$VERSION/tldr-linux-x86_64-musl"
+		sudo mv "$tmp_dir/tldr" /usr/local/bin
 	else
 		echo "$file not found"
 	fi
