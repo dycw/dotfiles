@@ -8,5 +8,5 @@ if command -v exa >/dev/null 2>&1; then
 	_EXA_LONG_ARGS="$_EXA_ARGS --git --group --header --long --time-style=long-iso"
 	alias ll='exa $_EXA_LONG_ARGS --git-ignore'
 	alias lla='exa $_EXA_LONG_ARGS --all'
-	alias lal=lla
+	alias lal='lla'
 fi
