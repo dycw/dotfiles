@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
 if ! command -v zoxide >/dev/null 2>&1; then
-	curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/ajeetdsouza/zoxide/master/install.sh | sh
+	file="$(git rev-parse --show-toplevel)/installers/cargo.sh"
+	if [ -f "$file" ]; then
+		# shellcheck source=/dev/null
+		source "$file" zoxide
+	else
+		echo "$file not found"
+	fi
 fi

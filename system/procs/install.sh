@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-name=procs
-if ! command -v "$name" >/dev/null 2>&1; then
-	sudo snap install "$name"
+if ! command -v procs >/dev/null 2>&1; then
+	file="$(git rev-parse --show-toplevel)/installers/cargo.sh"
+	if [ -f "$file" ]; then
+		# shellcheck source=/dev/null
+		source "$file" procs
+	else
+		echo "$file not found"
+	fi
 fi
