@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if command -v starship >/dev/null 2>&1; then
+	eval "$(starship init bash)"
+else
+	echo "starship not found"
+fi
