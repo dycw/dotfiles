@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-alias cddb='cd $PATH_DROPBOX'
+if command -v dropbox.py >/dev/null 2>&1; then
+	alias cddb='cd $PATH_DROPBOX'
+fi

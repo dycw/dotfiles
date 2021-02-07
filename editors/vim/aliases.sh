@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-alias v=vim
+if command -v vim >/dev/null 2>&1; then
+	alias v=vim
+fi

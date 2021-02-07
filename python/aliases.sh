@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
-alias p='python'
-alias pypath='export PYTHONPATH=.'
+if command -v python >/dev/null 2>&1; then
+	alias p='python'
+	alias pypath='export PYTHONPATH=.'
+fi
