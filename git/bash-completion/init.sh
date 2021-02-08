@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
-file="$(find "$(git rev-parse --show-toplevel)" -path \*/rust/cargo-install.sh -type f)"
+file="$(
+	cd "$(dirname "$(readlink --canonicalize-existing "${BASH_SOURCE[0]}")")" || exit
+	find "$(git rev-parse --show-toplevel)" -path \*/bash-completion/bash-completion.bash -type f
+)"
 if [ -f "$file" ]; then
 	# shellcheck source=/dev/null
 	source "$file"
 else
-	echo "$file not found"
+	echo "bash-completion.bash not found"
 fi

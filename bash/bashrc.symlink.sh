@@ -8,10 +8,10 @@ case $- in
 esac
 
 # If interactive
-root=$(
+root="$(
 	cd "$(dirname "$(readlink --canonicalize-existing "${BASH_SOURCE[0]}")")" || exit
 	git rev-parse --show-toplevel
-)
+)"
 
 # bin/, then init, then alias
 mapfile -t paths < <(find "$root" -name "bin" -type d)
