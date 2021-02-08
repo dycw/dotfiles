@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-name=dropbox.py
-if command -v "$name" >/dev/null 2>&1; then
-	"$name" autostart yes
-	"$name" start >/dev/null 2>&1
+if command -v dropbox.py >/dev/null 2>&1; then
+	dropbox.py autostart yes
+	dropbox.py start >/dev/null 2>&1
 else
-	echo "$name not found"
+	echo "dropbox.py not found"
 fi
