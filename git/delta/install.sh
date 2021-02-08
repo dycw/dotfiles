@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 if ! command -v delta >/dev/null 2>&1; then
-	file="$(git rev-parse --show-toplevel)/installers/"
+	file="$(find "$(git rev-parse --show-toplevel)" -path \*/rust/cargo-install.sh -type f)"
 	if [ -f "$file" ]; then
 		# shellcheck source=/dev/null
 		source "$file" git-delta
 	else
-		echo "$file not found"
+		echo "cargo-install.sh not found"
 	fi
 fi

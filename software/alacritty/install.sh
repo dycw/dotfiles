@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 if ! command -v alacritty >/dev/null 2>&1; then
-	sudo add-apt-repository ppa:aslatter/ppa
-	sudo apt-get update
-	sudo apt-get --yes install alacritty
+	file="$(find "$(git rev-parse --show-toplevel)" -path \*/rust/cargo-install.sh -type f)"
+	if [ -f "$file" ]; then
+		# shellcheck source=/dev/null
+		source "$file" alacritty
+	else
+		echo "cargo-install.sh not found"
+	fi
 fi

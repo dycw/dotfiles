@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 
 if ! command -v tldr >/dev/null 2>&1; then
-	file="$(git rev-parse --show-toplevel)/installers/github-bin.sh"
+	file="$(find "$(git rev-parse --show-toplevel)" -path \*/rust/cargo-install.sh -type f)"
 	if [ -f "$file" ]; then
-		VERSION=1.4.1
-		tmp_dir="$(mktemp -d)"
-		cd "$tmp_dir" || exit
-		wget --output-document=tldr "https://github.com/dbrgn/tealdeer/releases/download/v$VERSION/tldr-linux-x86_64-musl"
-		sudo mv "$tmp_dir/tldr" /usr/local/bin
+		# shellcheck source=/dev/null
+		source "$file" tealdeer
 	else
-		echo "$file not found"
+		echo "cargo-install.sh not found"
 	fi
 fi

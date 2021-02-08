@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 if ! command -v bat >/dev/null 2>&1; then
-	file="$(git rev-parse --show-toplevel)/rust/cargo-install.sh"
+	file="$(find "$(git rev-parse --show-toplevel)" -path \*/rust/cargo-install.sh -type f)"
 	if [ -f "$file" ]; then
 		# shellcheck source=/dev/null
 		source "$file" bat
 	else
-		echo "$file not found"
+		echo "cargo-install.sh not found"
 	fi
 fi

@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-name=tmux
-if ! command -v "$name" >/dev/null 2>&1; then
+if ! command -v tmux >/dev/null 2>&1; then
 	sudo apt-get update
-	sudo apt-get --yes install "$name"
+	sudo apt-get --yes install tmux
 fi

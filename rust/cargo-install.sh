@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-file="$(git rev-parse --show-toplevel)/rust/install.sh"
+file="$(find "$(git rev-parse --show-toplevel)" -path \*/rust/install.sh -type f)"
 if [ -f "$file" ]; then
 	# shellcheck source=/dev/null
 	source "$file"
-else
-	echo "$file not found"
 fi
 
 if ! command -v "$1" >/dev/null 2>&1; then

@@ -2,9 +2,9 @@
 
 # git
 
-name=git
-if ! command -v "$name" >/dev/null 2>&1; then
-	sudo apt-get --yes install "$name"
+if ! command -v git >/dev/null 2>&1; then
+	sudo apt-get update
+	sudo apt-get --yes install git
 fi
 
 # git config

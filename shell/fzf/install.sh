@@ -8,6 +8,6 @@ if ! command -v fzf >/dev/null 2>&1; then
 		# shellcheck source=/dev/null
 		source "$file"
 	else
-		echo "$file not found"
+		echo "$path not found"
 	fi
 fi

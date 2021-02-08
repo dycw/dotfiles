@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 if ! command -v nordvpn >/dev/null 2>&1; then
-	name=nordvpn-release_1.0.0_all.deb
-	tmp_dir="$(mktemp -d -t nordvpn-XXXXXX)"
-	wget "https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/$name" -P "$tmp_dir"
-	sudo apt-get --yes install "$tmp_dir/$name"
+	VERSION=1.0.0
+	tmp_dir="$(mktemp -d)"
+	cd "$tmp_dir" || exit
+	wget --output-file=package.deb "https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/nordvpn-release_${VERSION}_all.deb"
+	sudo apt-get --yes install package.deb
 fi
