@@ -11,11 +11,11 @@ fi
 
 path="$HOME/.config/git/config.local"
 if ! [ -f "$path" ]; then
-	{
-		printf "[user]\n"
-		printf "\tname = Derek Wan\n"
-		printf "\temail = d.wan@icloud.com\n"
-	} >>"$path"
+	tee -a "$path" >/dev/null 2>&1 <<END
+[user]
+	name = Derek Wan
+	email = d.wan@icloud.com
+END
 fi
 
 # SSH key

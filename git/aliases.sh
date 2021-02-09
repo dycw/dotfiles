@@ -1,19 +1,8 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2139,SC2140,SC2154
+# shellcheck disable=SC2139,SC2140
 
 # https://gist.github.com/mwhite/6887990
 
-if command -v git >/dev/null 2>&1; then
-
-	function_exists() {
-		declare -f -F "$1" >/dev/null
-		return $?
-	}
-
-	for al in $(git --list-cmds=alias); do
-		alias g"$al"="git $al"
-		complete_func=_git_$(__git_aliased_command "$al")
-		function_exists "$complete_fnc" && __git_complete g"$al" "$complete_func"
-	done
-
-fi
+for al in $(git --list-cmds=alias); do
+	alias "g$al"="git $al"
+done

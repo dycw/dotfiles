@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# symlink=~/.condarc
+
+alway_yes: True

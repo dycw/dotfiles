@@ -13,20 +13,18 @@ root="$(
 	git rev-parse --show-toplevel
 )"
 
-# bin/, then init, then alias
+# bin/
 mapfile -t paths < <(find "$root" -name "bin" -type d)
 for path in "${paths[@]}"; do
 	PATH="$path${PATH:+:${PATH}}"
 done
 
-mapfile -t files < <(find "$root" -name "init.sh" -type f)
-for file in "${files[@]}"; do
-	# shellcheck source=/dev/null
-	source "$file"
-done
-
-mapfile -t files < <(find "$root" -name "aliases.sh" -type f)
-for file in "${files[@]}"; do
-	# shellcheck source=/dev/null
-	source "$file"
+# init, alias, completion
+declare -a names=("init" "aliases" "completion")
+for name in "${names[@]}"; do
+	mapfile -t files < <(find "$root" -name "$name.sh" -type f)
+	for file in "${files[@]}"; do
+		# shellcheck source=/dev/null
+		source "$file"
+	done
 done
