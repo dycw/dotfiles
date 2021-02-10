@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-file="$(find "$(git rev-parse --show-toplevel)" -path \*/brew/install.sh -type f)"
+file="$(
+	cd "$(dirname "$(readlink --canonicalize-existing "${BASH_SOURCE[0]}")")" || exit
+	find "$(git rev-parse --show-toplevel)" -path \*/brew/install.sh -type f
+)"
 if [ -f "$file" ]; then
 	# shellcheck source=/dev/null
 	source "$file"

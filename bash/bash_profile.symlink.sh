@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # symlink=~/.bash_profile
 
-root=$(
+root="$(
 	cd "$(dirname "$(readlink --canonicalize-existing "${BASH_SOURCE[0]}")")" || exit
 	git rev-parse --show-toplevel
-)
+)"
 mapfile -t files < <(find "$root" -name "env.sh" -type f)
 for file in "${files[@]}"; do
 	# shellcheck source=/dev/null

@@ -19,7 +19,7 @@ for path in "${paths[@]}"; do
 	PATH="$path${PATH:+:${PATH}}"
 done
 
-# init, alias, completion
+# init, aliases, completion
 declare -a names=("init" "aliases" "completion")
 for name in "${names[@]}"; do
 	mapfile -t files < <(find "$root" -name "$name.sh" -type f)
