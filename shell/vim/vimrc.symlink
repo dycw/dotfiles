@@ -209,9 +209,6 @@ Plug 'tpope/vim-eunuch'
 " vim-exchange
 Plug 'tommcdo/vim-exchange'
 
-" vim-mucomplete
-Plug 'lifepillar/vim-mucomplete'
-
 " vim-repeat
 Plug 'tpope/vim-repeat'
 

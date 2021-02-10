@@ -156,7 +156,6 @@
 
 [core]
 	pager = delta
-	editor = vim
 	eol = lf
 
 [delta]
