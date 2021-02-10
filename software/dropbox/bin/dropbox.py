@@ -198,7 +198,7 @@ def verify_signature(key_file, sig_file, plain_file):
             return result.signatures[0].status == 0
         # gpgme exists
         sigs = ctx.verify(sig_file, plain_file, None)
-        return sigs[0].status == None
+        return sigs[0].status is None
 
 
 def download_file_chunk(url, buf):
@@ -1032,7 +1032,7 @@ def filestatus(args):
                 def path_to_string(file_path):
                     if not os.path.exists(file_path):
                         path = "%s (File doesn't exist!)" % os.path.basename(file_path)
-                        return (path, path)
+                        return path, path
                     try:
                         status = dc.icon_overlay_file_status(path=file_path).get(
                             "status",
@@ -1040,7 +1040,7 @@ def filestatus(args):
                         )[0]
                     except DropboxCommand.CommandError as e:
                         path = "{} ({})".format(os.path.basename(file_path), e)
-                        return (path, path)
+                        return path, path
 
                     env_term = os.environ.get("TERM", "")
                     supports_color = sys.stderr.isatty() and (
@@ -1053,7 +1053,7 @@ def filestatus(args):
                     # TODO: Test when you don't support color.
                     if not supports_color:
                         path = os.path.basename(file_path)
-                        return (path, path)
+                        return path, path
 
                     if status == "up to date":
                         init, cleanup = "\x1b[32;1m", "\x1b[0m"
@@ -1067,7 +1067,7 @@ def filestatus(args):
                         init, cleanup = "", ""
 
                     path = os.path.basename(file_path)
-                    return (path, f"{init}{path}{cleanup}")
+                    return path, f"{init}{path}{cleanup}"
 
                 # Prints a directory.
                 def print_directory(name):
@@ -1756,7 +1756,7 @@ def main(argv):
             cut = i
             break
 
-    if cut == None:
+    if cut is None:
         usage()
         os._exit(0)
         return
