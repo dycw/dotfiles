@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-alias gw='gitweb'
+alias gw="gitweb"
