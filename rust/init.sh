@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-file="$HOME/.cargo/env"
-if [ -f "$file" ]; then
-	# shellcheck source=/dev/null
-	source "$file"
-else
-	echo "$file not found"
-fi

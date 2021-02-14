@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-pre-commit try-repo "$1" "$2" --all-files

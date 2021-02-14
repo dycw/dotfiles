@@ -1,24 +1,119 @@
 #!/usr/bin/env bash
 
-# git
+# === brew ===
 
-if ! command -v git >/dev/null 2>&1; then
-	sudo apt-get update
-	sudo apt-get --yes install git
+ensure_apt_install() {
+	pkg="$1"
+	repo="$2"
+	if ! dpkg -s "$pkg" >/dev/null 2>&1; then
+		if [ -n "$repo" ]; then
+			sudo add-apt-repository -y "$repo"
+		fi
+		sudo apt update
+		sudo apt -y install "$pkg"
+	fi
+}
+
+ensure_apt_install curl
+ensure_apt_install git
+
+if ! command -v brew >/dev/null 2>&1; then
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-# git config
+# === symlinks ===
+
+make_link() {
+	file="$1"
+	link="$2"
+	mkdir -p "$(dirname "$link")"
+	ln -s "$file" "$link"
+}
+
+process_link() {
+	file="$1"
+	link="$2"
+	if [ -f "$link" ]; then
+		if [ -L "$link" ]; then
+			old="$(readlink "$link")"
+			if [ "$old" != "$file" ]; then
+				echo "\
+Re-directing symlink:
+       $link
+old -> $old
+new -> $file"
+				rm "$link"
+				make_link "$file" "$link"
+			fi
+		else
+			backup="$link.bk"
+			echo "\
+Backing up existing file, and then overriding with symlink:
+       $link
+old -> $backup
+new -> $file"
+			mv "$link" "$backup"
+			make_link "$file" "$link"
+		fi
+	else
+		echo "\
+Making symlink:
+   $link
+-> $file"
+		make_link "$file" "$link"
+	fi
+}
+
+path="$HOME/dotfiles"
+if ! [ -d "$path" ]; then
+	git clone https://github.com/dycw/dotfiles.git "$path"
+fi
+
+root="$HOME/dotfiles/home"
+mapfile -t paths < <(find "$root" -type f -or -type l)
+for path in "${paths[@]}"; do
+	file="$(realpath "$path")"
+	if [ -f "$file" ]; then
+		link="$HOME/$(realpath --relative-to="$root" "$file")"
+		process_link "$file" "$link"
+	fi
+done
+
+# === reboot, or brew post-installation ===
+
+ensure_brew_install() {
+	if ! brew list "$1" >/dev/null 2>&1; then
+		brew install "$@"
+	fi
+}
+
+if command -v brew >/dev/null 2>&1; then
+	ensure_apt_install build-essential
+	ensure_brew_install gcc
+else
+	echo "Time to reboot"
+	while true; do
+		read -e -r -n1 -p "Reboot needed; press 'y' to confirm. " input
+		if [ "$input" = "y" ]; then
+			reboot
+		else
+			exit 0
+		fi
+	done
+fi
+
+# === SSH key ===
+
+ensure_brew_install xclip
 
 path="$HOME/.config/git/config.local"
 if ! [ -f "$path" ]; then
 	tee -a "$path" >/dev/null 2>&1 <<END
 [user]
-	name = Derek Wan
-	email = d.wan@icloud.com
+  name = Derek Wan
+  email = d.wan@icloud.com
 END
 fi
-
-# SSH key
 
 private="$HOME/.ssh/id_rsa"
 public="$private.pub"
@@ -28,72 +123,117 @@ if ! [ -f "$public" ]; then
 	ssh-add -K "$private"
 fi
 
-# clone repo
-
-root="$HOME/.dotfiles"
-if ! [ -d "$root" ]; then
+path="$HOME/.ssh/.added-to-github"
+if ! [ -f "$path" ]; then
+	xclip -sel clip <"$public"
+	firefox "https://github.com/settings/keys"
 	while true; do
-		read -e -r -n1 -p "Is your SSH key already added to Github? (y/n)? " input
+		read -e -r -n1 -p "Add your SSH key (copied) to GitHub; press 'y' when done. " input
 		if [ "$input" = "y" ]; then
+			touch "$path"
+			git remote set-url origin git@github.com:dycw/dotfiles.git
 			break
 		fi
-
-		name=xclip
-		if ! command -v "$name" >/dev/null 2>&1; then
-			sudo apt-get --yes install "$name"
-		fi
-
-		echo "Please add your SSH key (copied) to Github at:"
-		echo "    https://github.com/settings/keys"
-		xclip -sel clip <"$public"
 	done
-	git clone --recurse-submodules git@github.com:dycw/dotfiles.git "$root"
 fi
 
-# symlinks
+# === brew installs ===
 
-process_link() {
-	file="$1"
-	link="${2/#\~/$HOME}"
-	if [ -L "$link" ]; then
-		old=$(readlink "$link")
-		if [ "$old" != "$file" ]; then
-			echo "Re-directing symlink:"
-			echo "       $link"
-			echo "old -> $old"
-			echo "new -> $file"
-			rm "$link"
-			make_link "$file" "$link"
-		fi
-	else
-		echo "Making symlink:"
-		echo "   $link"
-		echo "-> $file"
-		make_link "$file" "$link"
+# need to make valid shell
+#      command -v zsh | sudo tee -a /etc/shells
+#      sudo chsh -s "$(command -v zsh)" "${USER}"
+
+# start installing other things
+
+declare -a formulae=(
+	bandwhich
+	bat
+	bingrep
+	broot
+	ddgr
+	direnv
+	diskonaut
+	dust
+	elm
+	exa
+	fd
+	fzf
+	git-crypt
+	git-delta
+	googler
+	grex
+	hyperfine
+	mdcat
+	neovim
+	node
+	procs
+	ripgrep
+	sd
+	speedtest-cli
+	spotify-tui
+	starship
+	tealdeer
+	tmux
+	tokei
+	watchexec
+	zoxide
+	zplug
+	zsh
+	clementtsang/bottom/bottom
+)
+for formula in "${formulae[@]}"; do
+	ensure_brew_install "$formula"
+done
+
+# === cargo installs ===
+
+declare -a apps=(
+	gitui
+	rmesg
+)
+for app in "${apps[@]}"; do
+	if ! command -v "$app" >/dev/null 2>&1; then
+		cargo install "$app"
+	fi
+done
+
+# === conda ===
+
+if ! command -v conda >/dev/null 2>&1; then
+	path="$(mktemp -d)/miniconda.sh"
+	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O "$path"
+	bash "$path" -b -u -p ~/miniconda3
+	"$HOME/miniconda3/bin/conda" init bash
+	"$HOME/miniconda3/bin/conda" init zsh
+fi
+
+# === curl ===
+path="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim"
+if ! [ -f "$path" ]; then
+	curl -fLo --create-dirs "$path" https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+fi
+
+if ! command -v nordvpn >/dev/null 2>&1; then
+	sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh)
+fi
+
+# === apt ===
+
+ensure_apt_install pdfarranger ppa:linuxuprisinig/apps
+ensure_apt_install sqlitebrowser ppa:linuxgndu/sqlitebrowser
+ensure_apt_install texlive-xetex
+ensure_apt_install chrome-gnome-shell # screenshot locations
+ensure_apt_install gnome-tweaks       # screenshot locations
+
+# === snap ===
+
+ensure_snap_install() {
+	pkg="$1"
+	if ! command -v "$pkg" >/dev/null 2>&1; then
+		shift
+		sudo snap install "$pkg" "$@"
 	fi
 }
 
-make_link() {
-	file="$1"
-	link="$2"
-	mkdir -p "$(dirname "$link")"
-	ln -s "$file" "$link"
-}
-
-mapfile -t files < <(find "$root" -name "*.symlink*" -type f)
-for file in "${files[@]}"; do
-	mapfile -t matches < <(grep "symlink=" "$file")
-	for match in "${matches[@]}"; do
-		mapfile -td = splits < <(printf "%s" "$match")
-		link=${splits[1]}
-		process_link "$file" "$link"
-	done
-done
-
-# installers
-
-mapfile -t files < <(find "$root" -name "install.sh" -type f)
-for file in "${files[@]}"; do
-	# shellcheck source=/dev/null
-	source "$file"
-done
+ensure_snap_install insomnia-designer
+ensure_snap_install transmission --beta

@@ -11,10 +11,8 @@ repos:
       - id: python
       - id: shell-exec
       - id: shell-non-exec
-        exclude: bash-completion.bash
+        exclude: \.(bash|zsh)_?(profile|rc)$
       - id: shellcheck
-        exclude: bash-completion.bash
       - id: shfmt
-        exclude: bash-completion.bash
       - id: text
       - id: universal
