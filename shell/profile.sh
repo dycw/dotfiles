@@ -77,5 +77,7 @@ fi
 
 # zsh + tmux
 if (command -v zsh) && (command -v tmux); then
-	export ZSH_TMUX_AUTOSTART=false
+	export ZSH_TMUX_AUTOSTART=true
+	export ZSH_TMUX_FIXTERM=false
+	export ZSH_TMUX_UNICODE=true
 fi

@@ -53,6 +53,8 @@ auto-ls-git-status() { [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == 
 
 zinit snippet OMZP::zsh-interactive-cd
 
+zinit load nviennot/zsh-vim-plugin
+
 # Oh-my-zsh plugins
 zinit snippet OMZP::alias-finder
 zinit snippet OMZP::git-auto-fetch
