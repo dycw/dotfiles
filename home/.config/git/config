@@ -33,7 +33,7 @@
   cob = co -b
   cobmom = co -B master origin/master
   com = co master
-  cop = gco --patch
+  cop = co --patch
 
   # checkout + pull
   coml = !git com && git ll && :

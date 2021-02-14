@@ -7,8 +7,8 @@
 shell="$1"
 
 # bash
-alias bash_profile='$EDITOR ~/.bash_profile'
 alias bashrc='$EDITOR ~/.bashrc'
+alias profile='$EDITOR ~/.profile'
 
 # bat
 if command -v bat >/dev/null 2>&1; then
@@ -123,8 +123,8 @@ if command -v python >/dev/null 2>&1; then
 fi
 
 # sh
-alias shprofile='$EDITOR $HOME/dotfiles/shell/profile'
-alias shrc='$EDITOR $HOME/dotfiles/shell/rc'
+alias shprofile='$EDITOR $HOME/dotfiles/shell/profile.sh'
+alias shrc='$EDITOR $HOME/dotfiles/shell/rc.sh'
 
 # starship
 if command -v starship >/dev/null 2>&1; then

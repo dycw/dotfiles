@@ -20,7 +20,12 @@ unsetopt beep
 bindkey -v
 # End of lines configured by zsh-newuser-install
 
+# zdharma & zsh-user plugins
 zinit load zdharma/fast-syntax-highlighting
 zinit load zdharma/history-search-multi-word
 zinit load zsh-users/zsh-autosuggestions
 zinit load zsh-users/zsh-completions
+
+# completions
+zinit load esc/conda-zsh-completion
+zinit load srijanshetty/zsh-pip-completion
