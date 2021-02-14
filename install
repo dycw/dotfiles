@@ -179,6 +179,7 @@ ensure_brew_install watchexec
 ensure_brew_install zoxide
 ensure_brew_install zsh
 ensure_brew_install clementtsang/bottom/bottom
+ensure_brew_install eth-p/software/bat-extras
 
 # === cargo installs ===
 
@@ -202,6 +203,11 @@ if ! command -v conda >/dev/null 2>&1; then
 	"$HOME/miniconda3/bin/conda" init zsh
 fi
 
+neovim_dir="$HOME/miniconda3/envs/neovim"
+if ! [ -d "$neovim_dir" ]; then
+	conda create -n neovim -c conda-forge python=3.9 pynvim
+fi
+
 # === curl ===
 if ! command -v nordvpn >/dev/null 2>&1; then
 	sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh)
@@ -214,6 +220,7 @@ fi
 # === apt ===
 
 ensure_apt_install pdfarranger ppa:linuxuprisinig/apps
+ensure_apt_install qutebrowser
 ensure_apt_install sqlitebrowser ppa:linuxgndu/sqlitebrowser
 ensure_apt_install texlive-xetex
 ensure_apt_install chrome-gnome-shell # screenshot locations

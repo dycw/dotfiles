@@ -7,9 +7,9 @@ export HOMEBREW_REPOSITORY="/home/linuxbrew/.linuxbrew/Homebrew"
 export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin${PATH:+:$PATH}"
 export MANPATH="/home/linuxbrew/.linuxbrew/share/man${MANPATH:+:$MANPATH}:"
 export INFOPATH="/home/linuxbrew/.linuxbrew/share/info${INFOPATH:+:$INFOPATH}"
-path="/home/linuxbrew/.linuxbrew/bin/brew"
-if [ -f "$path" ]; then
-	eval "$("$path" shellenv)"
+brew_dir="/home/linuxbrew_dir/.linuxbrew_dir/bin/brew_dir"
+if [ -f "$brew_dir" ]; then
+	eval "$("$brew_dir" shellenv)"
 fi
 
 # atom
@@ -17,25 +17,30 @@ if command -v atom >/dev/null 2>&1; then
 	export GIST_ID=690a59ef26208e43fa880c874e01c1
 fi
 
+# bat
+if command -v bat >/dev/null 2>&1; then
+	export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
+
 # bin
-path="$HOME/dotfiles/bin"
-if [ -d "$path" ]; then
-	export PATH="$path${PATH:+:$PATH}"
+bin_dir="$HOME/dotfiles/bin"
+if [ -d "$bin_dir" ]; then
+	export PATH="$bin_dir${PATH:+:$PATH}"
 fi
 
 # cargo
-path="$HOME/.cargo/bin"
-if [ -d "$path" ]; then
-	export PATH="$path${PATH:+:$PATH}"
+cargo_bin="$HOME/.cargo/bin"
+if [ -d "$cargo_bin" ]; then
+	export PATH="$cargo_bin${PATH:+:$PATH}"
 fi
 
 # dropbox
-path="/data/derek/Dropbox"
-if [ -d "$path" ]; then
-	export PATH_DROPBOX="$path"
+dropbox_dir="/data/derek/Dropbox"
+if [ -d "$dropbox_dir" ]; then
+	export PATH_DROPBOX="$dropbox_dir"
 fi
 
-# editor (after homebrew)
+# editor
 if command -v nvim >/dev/null 2>&1; then
 	export EDITOR=nvim
 fi
@@ -68,4 +73,9 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$USER}"
 # zoxide
 if command -v zoxide >/dev/null 2>&1; then
 	export _ZO_EXCLUDE_DIRS="/tmp"
+fi
+
+# zsh + tmux
+if (command -v zsh) && (command -v tmux); then
+	export ZSH_TMUX_AUTOSTART=false
 fi

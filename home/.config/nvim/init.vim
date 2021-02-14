@@ -27,6 +27,11 @@ set tabstop=2
 " settings: tab pages
 set showtabline=2
 
+" python
+if filereadable(expand('~') . '/miniconda3/envs/neovim/bin/python')
+  let g:python3_host_prog = expand('~') . '/miniconda3/envs/neovim/bin/python'
+endif
+
 " mappings: leader
 let mapleader=' '
 
@@ -52,7 +57,7 @@ nnoremap <C-s> :w<CR>
 inoremap <C-s> <Esc>:w<CR>
 vnoremap <C-s> <Esc>:w<CR>
 
-" mappings: shift blocks visually
+" mappings: shift blocks visually (https://bit.ly/3alZUhL)
 vnoremap > >gv
 vnoremap < <gv
 
@@ -73,7 +78,8 @@ nnoremap <C-h>      <C-w>h
 nnoremap <C-j>      <C-w><C-w>
 nnoremap <C-k>      <C-w>W
 nnoremap <C-l>      <C-w>l
-nnoremap <C-w><C-w> <C-w>p
+nnoremap <C-w>w     <C-w>p
+nmap     <C-w><C-w> <C-w>w
 
 " mappings: quit
 nnoremap <C-q> :q<CR>
@@ -103,7 +109,7 @@ else
 endif
 nnoremap <Leader>L :BLines<CR>
 
-" ncm2
+" plugins: ncm2
 Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
 
@@ -162,6 +168,7 @@ let g:ncm2#matcher = 'substrfuzzy'
 Plug 'preservim/nerdcommenter'
 
 " plugins:
+Plug 'jiangmiao/auto-pairs'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tpope/vim-eunuch'
 Plug 'farmergreg/vim-lastplace'
@@ -171,7 +178,7 @@ Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-surround'
 Plug 'christoomey/vim-tmux-navigator'
 
-" plugins: vim-fugitive
+" plugins: git
 Plug 'tpope/vim-fugitive'
 nnoremap gd :Gdiff<CR>
 nnoremap gs :Gstatus<CR>

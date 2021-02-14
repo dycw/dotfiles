@@ -17,6 +17,11 @@ if command -v bat >/dev/null 2>&1; then
 	tf() { tail -f "$1" | bat --paging=never -l log; }
 fi
 
+# batgrep
+if command -v batgrep >/dev/null 2>&1; then
+	alias bg='batgrep'
+fi
+
 # cd
 alias ~='cd ~'
 alias ..='cd ..'
@@ -134,6 +139,12 @@ fi
 # tmux
 if command -v tmux >/dev/null 2>&1; then
 	alias tmuxconf='$EDITOR ~/.tmux.conf'
+fi
+
+# xclip
+if command -v xclip >/dev/null 2>&1; then
+	alias pbcopy='xclip -selection clipboard'
+	alias pbpaste='xclip -selection clipboard -o'
 fi
 
 # zsh
