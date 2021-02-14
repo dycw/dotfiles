@@ -2,9 +2,9 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2015,SC2154,SC2181
 
-path="$HOME/dotfiles/shell/rc.sh"
-if [ -f "$path" ]; then
-	source "$path"
+rc="$HOME/dotfiles/shell/rc.sh"
+if [ -f "$rc" ]; then
+	source "$rc" bash
 fi
 
 # bash

@@ -64,17 +64,17 @@ Making symlink:
 	fi
 }
 
-path="$HOME/dotfiles"
-if ! [ -d "$path" ]; then
-	git clone https://github.com/dycw/dotfiles.git "$path"
+dotfiles="$HOME/dotfiles"
+if ! [ -d "$dotfiles" ]; then
+	git clone https://github.com/dycw/dotfiles.git "$dotfiles"
 fi
 
-root="$HOME/dotfiles/home"
-mapfile -t paths < <(find "$root" -type f -or -type l)
-for path in "${paths[@]}"; do
-	file="$(realpath "$path")"
+home="$HOME/dotfiles/home"
+mapfile -t dotfiles < <(find "$home" -type f -or -type l)
+for dotfile in "${dotfiles[@]}"; do
+	file="$(realpath "$dotfile")"
 	if [ -f "$file" ]; then
-		link="$HOME/$(realpath --relative-to="$root" "$file")"
+		link="$HOME/$(realpath --relative-to="$home" "$file")"
 		process_link "$file" "$link"
 	fi
 done
@@ -106,9 +106,9 @@ fi
 
 ensure_brew_install xclip
 
-path="$HOME/.config/git/config.local"
-if ! [ -f "$path" ]; then
-	tee -a "$path" >/dev/null 2>&1 <<END
+config="$HOME/.config/git/config.local"
+if ! [ -f "$config" ]; then
+	tee -a "$config" >/dev/null 2>&1 <<END
 [user]
   name = Derek Wan
   email = d.wan@icloud.com
@@ -123,14 +123,14 @@ if ! [ -f "$public" ]; then
 	ssh-add -K "$private"
 fi
 
-path="$HOME/.ssh/.added-to-github"
-if ! [ -f "$path" ]; then
+marker="$HOME/.ssh/.added-to-github"
+if ! [ -f "$marker" ]; then
 	xclip -sel clip <"$public"
 	firefox "https://github.com/settings/keys"
 	while true; do
 		read -e -r -n1 -p "Add your SSH key (copied) to GitHub; press 'y' when done. " input
 		if [ "$input" = "y" ]; then
-			touch "$path"
+			touch "$marker"
 			git remote set-url origin git@github.com:dycw/dotfiles.git
 			break
 		fi
@@ -145,45 +145,40 @@ fi
 
 # start installing other things
 
-declare -a formulae=(
-	bandwhich
-	bat
-	bingrep
-	broot
-	ddgr
-	direnv
-	diskonaut
-	dust
-	elm
-	exa
-	fd
-	fzf
-	git-crypt
-	git-delta
-	googler
-	grex
-	hyperfine
-	mdcat
-	neovim
-	node
-	procs
-	ripgrep
-	sd
-	speedtest-cli
-	spotify-tui
-	starship
-	tealdeer
-	tmux
-	tokei
-	watchexec
-	zoxide
-	zplug
-	zsh
-	clementtsang/bottom/bottom
-)
-for formula in "${formulae[@]}"; do
-	ensure_brew_install "$formula"
-done
+ensure_brew_install bandwhich
+ensure_brew_install bat
+ensure_brew_install bingrep
+ensure_brew_install broot
+ensure_brew_install ddgr
+ensure_brew_install direnv
+ensure_brew_install diskonaut
+ensure_brew_install dust
+ensure_brew_install elm
+ensure_brew_install exa
+ensure_brew_install fd
+ensure_brew_install fzf
+ensure_brew_install git-crypt
+ensure_brew_install git-delta
+ensure_brew_install googler
+ensure_brew_install grex
+ensure_brew_install hyperfine
+ensure_brew_install mdcat
+ensure_brew_install neovim
+ensure_brew_install node
+ensure_brew_install procs
+ensure_brew_install ripgrep
+ensure_brew_install sd
+ensure_brew_install speedtest-cli
+ensure_brew_install spotify-tui
+ensure_brew_install starship
+ensure_brew_install tealdeer
+ensure_brew_install tmux
+ensure_brew_install tokei
+ensure_brew_install watchexec
+ensure_brew_install zoxide
+ensure_brew_install zplug
+ensure_brew_install zsh
+ensure_brew_install clementtsang/bottom/bottom
 
 # === cargo installs ===
 
@@ -200,17 +195,17 @@ done
 # === conda ===
 
 if ! command -v conda >/dev/null 2>&1; then
-	path="$(mktemp -d)/miniconda.sh"
-	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O "$path"
-	bash "$path" -b -u -p ~/miniconda3
+	miniconda="$(mktemp -d)/miniconda.sh"
+	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O "$miniconda"
+	bash "$miniconda" -b -u -p ~/miniconda3
 	"$HOME/miniconda3/bin/conda" init bash
 	"$HOME/miniconda3/bin/conda" init zsh
 fi
 
 # === curl ===
-path="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim"
-if ! [ -f "$path" ]; then
-	curl -fLo --create-dirs "$path" https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+plug="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim"
+if ! [ -f "$plug" ]; then
+	curl -fLo --create-dirs "$plug" https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
 if ! command -v nordvpn >/dev/null 2>&1; then
@@ -225,6 +220,13 @@ ensure_apt_install texlive-xetex
 ensure_apt_install chrome-gnome-shell # screenshot locations
 ensure_apt_install gnome-tweaks       # screenshot locations
 
+if ! command -v signal-desktop >/dev/null 2>&1; then
+	wget -O- https://updates.signal.org/desktop/apt/keys.asc | sudo apt-key add -
+	echo "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main" | sudo tee -a /etc/apt/sources.list.d/signal-xenial.list
+	sudo apt update
+	sudo apt -y install signal-desktop
+fi
+
 # === snap ===
 
 ensure_snap_install() {
@@ -236,4 +238,4 @@ ensure_snap_install() {
 }
 
 ensure_snap_install insomnia-designer
-ensure_snap_install transmission --beta
+# ensure_snap_install transmission --beta  # low quality

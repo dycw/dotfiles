@@ -1,6 +1,10 @@
+#!/usr/bin/env sh
+
 # shellcheck disable=SC1091,SC2139,SC2140,SC2181
 # shellcheck shell=bash
 # shellcheck source=/dev/null
+
+shell="$1"
 
 # bash
 alias bash_profile='$EDITOR ~/.bash_profile'
@@ -28,7 +32,7 @@ alias cdw='cd $HOME/work'
 
 # direnv
 if command -v direnv >/dev/null 2>&1; then
-	eval "$(direnv hook "$0")"
+	eval "$(direnv hook "$shell")"
 fi
 
 # dropbox
@@ -61,9 +65,9 @@ if command -v exa >/dev/null 2>&1; then
 fi
 
 # fzf
-path="$HOME/.fzf.$0"
-if [ -f "$path" ]; then
-	source "$path"
+fzf_sh="$HOME/.fzf.$shell"
+if [ -f "$fzf_sh" ]; then
+	source "$fzf_sh"
 fi
 
 # git
@@ -124,7 +128,7 @@ alias shrc='$EDITOR $HOME/dotfiles/shell/rc'
 
 # starship
 if command -v starship >/dev/null 2>&1; then
-	eval "$(starship init "$0")"
+	eval "$(starship init "$shell")"
 fi
 
 # tmux
@@ -138,5 +142,5 @@ alias zshrc='$EDITOR ~/.zshrc'
 
 # zoxide
 if command -v zoxide >/dev/null 2>&1; then
-	eval "$(zoxide init "$0")"
+	eval "$(zoxide init "$shell")"
 fi

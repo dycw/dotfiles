@@ -1,7 +1,9 @@
+#!/usr/bin/env zsh
+
 # shellcheck shell=bash
 # shellcheck source=/dev/null
 
-path="$HOME/dotfiles/shell/profile.sh"
-if [ -f "$path" ]; then
-  source "$path"
+profile="$HOME/dotfiles/shell/profile.sh"
+if [ -f "$profile" ]; then
+  source "$profile"
 fi

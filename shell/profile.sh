@@ -8,13 +8,13 @@ fi
 # bin
 path="$HOME/dotfiles/bin"
 if [ -d "$path" ]; then
-	export PATH="$path${PATH+:$PATH}"
+	export PATH="$path${PATH:+:$PATH}"
 fi
 
 # cargo
 path="$HOME/.cargo/bin"
 if [ -d "$path" ]; then
-	export PATH="$path${PATH+:$PATH}"
+	export PATH="$path${PATH:+:$PATH}"
 fi
 
 # dropbox
@@ -32,9 +32,9 @@ fi
 export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
 export HOMEBREW_CELLAR="/home/linuxbrew/.linuxbrew/Cellar"
 export HOMEBREW_REPOSITORY="/home/linuxbrew/.linuxbrew/Homebrew"
-export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin${PATH+:$PATH}"
-export MANPATH="/home/linuxbrew/.linuxbrew/share/man${MANPATH+:$MANPATH}:"
-export INFOPATH="/home/linuxbrew/.linuxbrew/share/info:${INFOPATH:-}"
+export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin${PATH:+:$PATH}"
+export MANPATH="/home/linuxbrew/.linuxbrew/share/man${MANPATH:+:$MANPATH}:"
+export INFOPATH="/home/linuxbrew/.linuxbrew/share/info:${INFOPATH:+:$INFOPATH}"
 path="/home/linuxbrew/.linuxbrew/bin/brew"
 if [ -f "$path" ]; then
 	eval "$("$path" shellenv)"

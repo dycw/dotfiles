@@ -2,9 +2,9 @@
 # shellcheck shell=bash
 # shellcheck source=/dev/null
 
-path="$HOME/dotfiles/shell/rc.sh"
-if [ -f "$path" ]; then
-	source "$path"
+rc="$HOME/dotfiles/shell/rc.sh"
+if [ -f "$rc" ]; then
+	source "$rc" zsh
 fi
 
 # Lines configured by zsh-newuser-install
