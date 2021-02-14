@@ -70,7 +70,7 @@ if command -v exa >/dev/null 2>&1; then
 fi
 
 # fzf
-fzf_sh="$HOME/.fzf.$shell"
+fzf_sh="$XDG_CONFIG_HOME/fzf/fzf.$shell"
 if [ -f "$fzf_sh" ]; then
 	source "$fzf_sh"
 fi
