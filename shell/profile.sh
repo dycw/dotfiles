@@ -42,8 +42,12 @@ fi
 
 # fzf
 if (command -v fzf) && (command -v fd); then
-	export FZF_DEFAULT_COMMAND='fd -HL -c=always -t=f -E .git'
-	export FZF_DEFAULT_OPTS="--ansi"
+	_fzf_ctrl_t_alt_c_command='fd -HL -c=always -E=.git'
+	export FZF_CTRL_T_COMMAND="$_fzf_ctrl_t_alt_c_command -t=f"
+	export FZF_CTRL_T_OPTS='--ansi --preview "bat --style=numbers --color=always --line-range :500 {}"'
+	export FZF_CTRL_R_OPTS='--ansi'
+	export FZF_ALT_C_COMMAND="$_fzf_ctrl_t_alt_c_command -t=d"
+	export FZF_ALT_C_OPTS='--ansi'
 fi
 
 # python: flask
