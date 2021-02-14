@@ -11,8 +11,10 @@ repos:
       - id: python
       - id: shell-exec
       - id: shell-non-exec
-        exclude: \.(bash|zsh)_?(profile|rc)$
+        exclude: \.?(bash|zsh)_?(profile|rc)(_managed)?
       - id: shellcheck
+        exclude: (bash|zsh)rc-managed\.(bash|zsh)
       - id: shfmt
+        exclude: zshrc-managed\.zsh
       - id: text
       - id: universal

@@ -176,7 +176,6 @@ ensure_brew_install tmux
 ensure_brew_install tokei
 ensure_brew_install watchexec
 ensure_brew_install zoxide
-ensure_brew_install zplug
 ensure_brew_install zsh
 ensure_brew_install clementtsang/bottom/bottom
 
@@ -184,6 +183,7 @@ ensure_brew_install clementtsang/bottom/bottom
 
 declare -a apps=(
 	gitui
+	gitweb
 	rmesg
 )
 for app in "${apps[@]}"; do
@@ -203,13 +203,12 @@ if ! command -v conda >/dev/null 2>&1; then
 fi
 
 # === curl ===
-plug="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim"
-if ! [ -f "$plug" ]; then
-	curl -fLo --create-dirs "$plug" https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-fi
-
 if ! command -v nordvpn >/dev/null 2>&1; then
 	sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh)
+fi
+
+if ! [ -d "$HOME/.zinit" ]; then
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
 fi
 
 # === apt ===
@@ -219,13 +218,6 @@ ensure_apt_install sqlitebrowser ppa:linuxgndu/sqlitebrowser
 ensure_apt_install texlive-xetex
 ensure_apt_install chrome-gnome-shell # screenshot locations
 ensure_apt_install gnome-tweaks       # screenshot locations
-
-if ! command -v signal-desktop >/dev/null 2>&1; then
-	wget -O- https://updates.signal.org/desktop/apt/keys.asc | sudo apt-key add -
-	echo "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main" | sudo tee -a /etc/apt/sources.list.d/signal-xenial.list
-	sudo apt update
-	sudo apt -y install signal-desktop
-fi
 
 # === snap ===
 
@@ -238,4 +230,5 @@ ensure_snap_install() {
 }
 
 ensure_snap_install insomnia-designer
-# ensure_snap_install transmission --beta  # low quality
+ensure_snap_install signal-desktop
+# ensure_snap_install transmission --beta

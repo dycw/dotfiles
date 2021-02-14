@@ -1,5 +1,17 @@
 #!/usr/bin/env sh
 
+# homebrew
+export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+export HOMEBREW_CELLAR="/home/linuxbrew/.linuxbrew/Cellar"
+export HOMEBREW_REPOSITORY="/home/linuxbrew/.linuxbrew/Homebrew"
+export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin${PATH:+:$PATH}"
+export MANPATH="/home/linuxbrew/.linuxbrew/share/man${MANPATH:+:$MANPATH}:"
+export INFOPATH="/home/linuxbrew/.linuxbrew/share/info:${INFOPATH:+:$INFOPATH}"
+path="/home/linuxbrew/.linuxbrew/bin/brew"
+if [ -f "$path" ]; then
+	eval "$("$path" shellenv)"
+fi
+
 # atom
 if command -v atom >/dev/null 2>&1; then
 	export GIST_ID=690a59ef26208e43fa880c874e01c1
@@ -23,21 +35,9 @@ if [ -d "$path" ]; then
 	export PATH_DROPBOX="$path"
 fi
 
-# editor
+# editor (after homebrew)
 if command -v nvim >/dev/null 2>&1; then
 	export EDITOR=nvim
-fi
-
-# homebrew
-export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
-export HOMEBREW_CELLAR="/home/linuxbrew/.linuxbrew/Cellar"
-export HOMEBREW_REPOSITORY="/home/linuxbrew/.linuxbrew/Homebrew"
-export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin${PATH:+:$PATH}"
-export MANPATH="/home/linuxbrew/.linuxbrew/share/man${MANPATH:+:$MANPATH}:"
-export INFOPATH="/home/linuxbrew/.linuxbrew/share/info:${INFOPATH:+:$INFOPATH}"
-path="/home/linuxbrew/.linuxbrew/bin/brew"
-if [ -f "$path" ]; then
-	eval "$("$path" shellenv)"
 fi
 
 # python: flask
