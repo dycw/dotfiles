@@ -138,9 +138,6 @@ done
 # googler
 (command -v googler >/dev/null 2>&1) && alias g='googler'
 
-# npm
-(command -v npm >/dev/null 2>&1) && source <(npm completion)
-
 # nvim
 if command -v nvim >/dev/null 2>&1; then
 	alias n='nvim'

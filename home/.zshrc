@@ -31,14 +31,16 @@ zinit load zsh-users/zsh-completions
 # plugins: completion
 zinit load esc/conda-zsh-completion
 
-zinit load srijanshetty/zsh-pip-completion
-
 zinit snippet OMZP::ubuntu
 
-# plugins: editing
-zinit snippet OMZP::sudo
+zinit load lukechilds/zsh-better-npm-completion
 
+zinit load zchee/zsh-completions
+
+# plugins: editing
 zinit load zdharma/fast-syntax-highlighting
+
+zinit snippet OMZP::sudo
 
 zinit load hlissner/zsh-autopair
 

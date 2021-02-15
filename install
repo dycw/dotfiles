@@ -120,6 +120,7 @@ ensure_brew_install bandwhich
 ensure_brew_install bat
 ensure_brew_install bingrep
 ensure_brew_install broot
+ensure_brew_install ctags
 ensure_brew_install ddgr
 ensure_brew_install direnv
 ensure_brew_install diskonaut
@@ -138,6 +139,8 @@ ensure_brew_install node
 ensure_brew_install procs
 ensure_brew_install ripgrep
 ensure_brew_install sd
+ensure_brew_install shellcheck
+ensure_brew_install shfmt
 ensure_brew_install speedtest-cli
 ensure_brew_install spotify-tui
 ensure_brew_install starship

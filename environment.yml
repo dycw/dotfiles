@@ -6,6 +6,9 @@ channels:
 dependencies:
   - python = 3.9
   - bump2version
+  - flake8
+  - mypy
   - pre-commit
+  - pynvim
   - pytest
   - pytest-xdist
