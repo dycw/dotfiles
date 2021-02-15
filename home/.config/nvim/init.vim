@@ -115,8 +115,8 @@ Plug 'neoclide/coc.nvim', {
   \ 'tag': '*',
   \ }
 let g:coc_global_extensions = [
-  \ 'coc-sh',
   \ 'coc-css',
+  \ 'coc-dictionary',
   \ 'coc-git',
   \ 'coc-highlight',
   \ 'coc-html',
@@ -125,12 +125,12 @@ let g:coc_global_extensions = [
   \ 'coc-pairs',
   \ 'coc-prettier',
   \ 'coc-pyright',
+  \ 'coc-sh',
   \ 'coc-snippets',
   \ 'coc-sql',
   \ 'coc-stylelint',
   \ 'coc-syntax',
   \ 'coc-tag',
-  \ 'coc-word',
   \ 'coc-yaml',
   \ 'coc-yank',
   \ ]
@@ -370,6 +370,10 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-fugitive'
 
 Plug 'mhinz/vim-signify'
+
+" plugins: gruvbox
+Plug 'morhetz/gruvbox'
+autocmd vimenter * ++nested colorscheme gruvbox
 
 " plugins: linting
 Plug 'dense-analysis/ale'
