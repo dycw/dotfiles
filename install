@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# === brew ===
+# shellcheck source=/dev/null
+
+# === curl and git ===
 
 ensure_apt_install() {
 	pkg="$1"
@@ -17,8 +19,11 @@ ensure_apt_install() {
 ensure_apt_install curl
 ensure_apt_install git
 
-if ! command -v brew >/dev/null 2>&1; then
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# === repo ===
+
+dotfiles="$HOME/dotfiles"
+if ! [ -d "$dotfiles" ]; then
+	git clone --recuse-submodules https://github.com/dycw/dotfiles.git "$dotfiles"
 fi
 
 # === symlinks ===
@@ -64,11 +69,6 @@ Making symlink:
 	fi
 }
 
-dotfiles="$HOME/dotfiles"
-if ! [ -d "$dotfiles" ]; then
-	git clone https://github.com/dycw/dotfiles.git "$dotfiles"
-fi
-
 home="$HOME/dotfiles/home"
 mapfile -t dotfiles < <(find "$home" -type f -or -type l)
 for dotfile in "${dotfiles[@]}"; do
@@ -81,7 +81,17 @@ done
 
 process_link "$HOME/dotfiles/submodules/.tmux/.tmux.conf" "$HOME/.tmux.conf"
 
-# === reboot, or brew post-installation ===
+# === brew (needs confirmation) ===
+
+linuxbrew="/home/linuxbrew"
+if ! [ -d "$linuxbrew" ]; then
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+profile="$HOME/.profile"
+if [ -f "$profile" ]; then
+	source "$profile"
+fi
 
 ensure_brew_install() {
 	if ! brew list "$1" >/dev/null 2>&1; then
@@ -89,63 +99,26 @@ ensure_brew_install() {
 	fi
 }
 
-if command -v brew >/dev/null 2>&1; then
-	ensure_apt_install build-essential
-	ensure_brew_install gcc
-else
-	echo "Time to reboot"
-	while true; do
-		read -e -r -n1 -p "Reboot needed; press 'y' to confirm. " input
-		if [ "$input" = "y" ]; then
-			reboot
-		else
-			exit 0
-		fi
-	done
+ensure_apt_install build-essential
+ensure_brew_install gcc
+
+# === brew: fzf ===
+
+ensure_brew_install fzf
+install="$(brew --prefix)/opt/fzf/install"
+if [ -f "$install" ] && ! [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/fzf" ]; then
+	"$install" --xdg --key-bindings --completion --no-update-rc
 fi
 
-# === SSH key ===
+# === brew: zsh ===
 
-ensure_brew_install xclip
-
-config="$HOME/.config/git/config.local"
-if ! [ -f "$config" ]; then
-	tee -a "$config" >/dev/null 2>&1 <<END
-[user]
-  name = Derek Wan
-  email = d.wan@icloud.com
-END
+ensure_brew_install zsh
+if (command -v zsh >/dev/null 2>&1) && ! (grep -q zsh "/etc/shells"); then
+	command -v zsh | sudo tee -a /etc/shells
+	sudo chsh -s "$(command -v zsh)" "${USER}"
 fi
 
-private="$HOME/.ssh/id_rsa"
-public="$private.pub"
-if ! [ -f "$public" ]; then
-	ssh-keygen -t rsa -b 4096 -C "d.wan@icloud.com"
-	ssh-agent -s
-	ssh-add -K "$private"
-fi
-
-marker="$HOME/.ssh/.added-to-github"
-if ! [ -f "$marker" ]; then
-	xclip -sel clip <"$public"
-	firefox "https://github.com/settings/keys"
-	while true; do
-		read -e -r -n1 -p "Add your SSH key (copied) to GitHub; press 'y' when done. " input
-		if [ "$input" = "y" ]; then
-			touch "$marker"
-			git remote set-url origin git@github.com:dycw/dotfiles.git
-			break
-		fi
-	done
-fi
-
-# === brew installs ===
-
-# need to make valid shell
-#      command -v zsh | sudo tee -a /etc/shells
-#      sudo chsh -s "$(command -v zsh)" "${USER}"
-
-# start installing other things
+# === brew: rest of them ===
 
 ensure_brew_install bandwhich
 ensure_brew_install bat
@@ -158,7 +131,6 @@ ensure_brew_install dust
 ensure_brew_install elm
 ensure_brew_install exa
 ensure_brew_install fd
-ensure_brew_install fzf
 ensure_brew_install git-crypt
 ensure_brew_install git-delta
 ensure_brew_install googler
@@ -179,17 +151,37 @@ ensure_brew_install tokei
 ensure_brew_install tree
 ensure_brew_install watchexec
 ensure_brew_install zoxide
-ensure_brew_install zsh
 ensure_brew_install clementtsang/bottom/bottom
 ensure_brew_install eth-p/software/bat-extras
 
-# === fzf ===
-fzf_bash="$XDG_CONFIG_HOME/fzf/fzf.bash"
-if ! [ -f "$fzf_bash" ]; then
-	"$(brew --prefix)/opt/fzf/install" --xdg --key-bindings --completion --no-update-rc
+# === conda ===
+
+miniconda3="$HOME/miniconda3"
+if ! [ -d "$miniconda3" ]; then
+	miniconda="$(mktemp -d)/miniconda.sh"
+	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O "$miniconda"
+	bash "$miniconda" -b -u -p "$miniconda3"
 fi
 
-# === cargo installs ===
+envs_neovim="$miniconda3/envs/neovim"
+if ! [ -d "$envs_neovim" ]; then
+	"$miniconda3/bin/conda" create -n neovim -c conda-forge python=3.9 pynvim
+fi
+
+# === vim-plug ===
+
+plug_vim="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim"
+if ! [ -f "$plug_vim" ]; then
+	sh -c 'curl -fLo "$plug_vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+fi
+
+# === zinit ===
+
+if ! [ -d "$HOME/.zinit" ]; then
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)" <<<n
+fi
+
+# === cargo ===
 
 ensure_cargo_install() {
 	if ! command -v "$1" >/dev/null 2>&1; then
@@ -201,35 +193,6 @@ ensure_cargo_install gitui
 ensure_cargo_install gitweb
 ensure_cargo_install rmesg
 
-# === conda ===
-
-if ! command -v conda >/dev/null 2>&1; then
-	miniconda="$(mktemp -d)/miniconda.sh"
-	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O "$miniconda"
-	bash "$miniconda" -b -u -p ~/miniconda3
-	"$HOME/miniconda3/bin/conda" init bash
-	"$HOME/miniconda3/bin/conda" init zsh
-fi
-
-neovim_dir="$HOME/miniconda3/envs/neovim"
-if ! [ -d "$neovim_dir" ]; then
-	conda create -n neovim -c conda-forge python=3.9 pynvim
-fi
-
-# === curl ===
-if ! command -v nordvpn >/dev/null 2>&1; then
-	sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh)
-fi
-
-plug_vim="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim"
-if ! [ -f "$plug_vim" ]; then
-	sh -c 'curl -fLo "$plug_vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-fi
-
-if ! [ -d "$HOME/.zinit" ]; then
-	sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
-fi
-
 # === apt ===
 
 ensure_apt_install pdfarranger ppa:linuxuprisinig/apps
@@ -238,6 +201,12 @@ ensure_apt_install sqlitebrowser ppa:linuxgndu/sqlitebrowser
 ensure_apt_install texlive-xetex
 ensure_apt_install chrome-gnome-shell # screenshot locations
 ensure_apt_install gnome-tweaks       # screenshot locations
+
+# === apt: nordvpn ===
+
+if ! command -v nordvpn >/dev/null 2>&1; then
+	sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh) <<<y
+fi
 
 # === snap ===
 
@@ -252,3 +221,29 @@ ensure_snap_install() {
 ensure_snap_install insomnia-designer
 ensure_snap_install signal-desktop
 # ensure_snap_install transmission --beta
+
+# === SSH key ===
+
+ensure_brew_install xclip
+
+config="${XDG_CONFIG_HOME:-$HOME/.config}/git/config.local"
+if ! [ -f "$config" ]; then
+	tee -a "$config" >/dev/null 2>&1 <<END
+[user]
+  name = Derek Wan
+  email = d.wan@icloud.com
+END
+fi
+
+private="$HOME/.ssh/id_rsa"
+public="$private.pub"
+if ! [ -f "$public" ]; then
+	ssh-keygen -b 4096 -f "$HOME/.ssh/id_rsa" -q -t rsa -C 'd.wan@icloud.com' -N '' <<<y >/dev/null 2>&1
+	ssh-agent -s
+	ssh-add
+	xclip -sel clip <"$public"
+	firefox "https://github.com/settings/keys"
+	echo "Please add your SSH key (copied) to GitHub"
+	cd "$HOME/dotfiles" || exit
+	git remote set-url origin git@github.com:dycw/dotfiles.git
+fi

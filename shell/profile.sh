@@ -56,7 +56,7 @@ if command -v zoxide >/dev/null 2>&1; then
 fi
 
 # zsh + tmux
-if (command -v zsh) && (command -v tmux); then
+if (command -v zsh >/dev/null 2>&1) && (command -v tmux >/dev/null 2>&1); then
 	export ZSH_TMUX_AUTOSTART=true
 	export ZSH_TMUX_FIXTERM=false
 	export ZSH_TMUX_UNICODE=true
