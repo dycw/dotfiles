@@ -86,7 +86,6 @@
   pdo = p --delete origin
   pdr = p --dry-run
   po = p origin
-  pot = po --tags
   psuo = p --set-upstream origin
 
   # rebase
@@ -132,8 +131,8 @@
   s = status --short
 
   # tag
-  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && :
-  td = !git tag --delete \"$1\" && :
+  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && git po --tags && :
+  td = !git tag -d \"$1\" && git pdo \"$1\" && :
 
   # publish
   pb = !git psuo $(git current) && :
