@@ -11,10 +11,10 @@ repos:
       - id: python
       - id: shell-exec
       - id: shell-non-exec
-        exclude: \.?(bash|zsh)_?(profile|rc)(_managed)?
+        exclude: \.?(bash|zsh)_?(profile|rc)
       - id: shellcheck
-        exclude: (bash|zsh)rc-managed\.(bash|zsh)
+        exclude: zinit.sh
       - id: shfmt
-        exclude: zshrc-managed\.zsh
+        exclude: zinit.sh
       - id: text
       - id: universal

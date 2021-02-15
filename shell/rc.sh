@@ -1,19 +1,32 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # shellcheck disable=SC1091,SC2139,SC2140,SC2181
-# shellcheck shell=bash
 # shellcheck source=/dev/null
 
 shell="$1"
 
+# === system ==
+# homebrew
+export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+export HOMEBREW_CELLAR="/home/linuxbrew/.linuxbrew/Cellar"
+export HOMEBREW_REPOSITORY="/home/linuxbrew/.linuxbrew/Homebrew"
+export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin${PATH:+:$PATH}"
+export MANPATH="/home/linuxbrew/.linuxbrew/share/man${MANPATH:+:$MANPATH}:"
+export INFOPATH="/home/linuxbrew/.linuxbrew/share/info${INFOPATH:+:$INFOPATH}"
+[ -f /home/linuxbrew_dir/.linuxbrew_dir/bin/brew_dir ] &&
+	eval "$(/home/linuxbrew_dir/.linuxbrew_dir/bin/brew_dir shellenv)"
+
+# XDG
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$USER}"
+
+# === applications ===
 # atom
-if command -v atom >/dev/null 2>&1; then
-	export GIST_ID=690a59ef26208e43fa880c874e01c1
-fi
+(command -v atom >/dev/null 2>&1) && export GIST_ID=690a59ef26208e43fa880c874e01c1
 
 # bash
 alias bashrc='$EDITOR ~/.bashrc'
-alias profile='$EDITOR ~/.profile'
 
 # bat
 if command -v bat >/dev/null 2>&1; then
@@ -24,9 +37,13 @@ if command -v bat >/dev/null 2>&1; then
 fi
 
 # batgrep
-if command -v batgrep >/dev/null 2>&1; then
-	alias bg='batgrep'
-fi
+(command -v batgrep >/dev/null 2>&1) && alias bg='batgrep'
+
+# bin
+[ -d "$HOME/dotfiles/bin" ] && export PATH="$HOME/dotfiles/bin${PATH:+:$PATH}"
+
+# cargo
+[ -d "$HOME/.cargo/bin" ] && export PATH="$HOME/.cargo/bin${PATH:+:$PATH}"
 
 # cd
 alias ~='cd ~'
@@ -41,18 +58,29 @@ alias cddt='cd $HOME/Desktop'
 alias cdp='cd $HOME/Pictures'
 alias cdw='cd $HOME/work'
 
-# direnv
-if command -v direnv >/dev/null 2>&1; then
-	eval "$(direnv hook "$shell")"
+# conda
+if [ -d "$HOME/miniconda3" ]; then
+	__conda_setup="$("$HOME/miniconda3/bin/conda" "shell.$shell" 'hook' 2>/dev/null)"
+	if [ $? -eq 0 ]; then
+		eval "$__conda_setup"
+	else
+		if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+			. "$HOME/miniconda3/etc/profile.d/conda.sh"
+		else
+			export PATH="/home/derek/miniconda3/bin:$PATH"
+		fi
+	fi
+	unset __conda_setup
 fi
+
+# direnv
+(command -v direnv >/dev/null 2>&1) && eval "$(direnv hook "$shell")"
 
 # dropbox
 if command -v dropbox.py >/dev/null 2>&1; then
+	alias cddb='cd /data/dropbox'
 	dropbox.py autostart yes
 	dropbox.py start >/dev/null 2>&1
-	if [ -n "$PATH_DROPBOX" ]; then
-		alias cddb='cd $PATH_DROPBOX'
-	fi
 fi
 
 # fd
@@ -76,10 +104,11 @@ if command -v exa >/dev/null 2>&1; then
 fi
 
 # fzf
-fzf_sh="${XDG_CONFIG_HOME:-$HOME/.cache}/fzf/fzf.$shell"
-if [ -f "$fzf_sh" ]; then
-	source "$fzf_sh"
-	if (command -v bat >/dev/null 2>&1) && (command -v fd >/dev/null 2>&1) && (command -v tree >/dev/null 2>&1); then
+if [ -f "$XDG_CONFIG_HOME/fzf/fzf.$shell" ]; then
+	source "$XDG_CONFIG_HOME/fzf/fzf.$shell"
+	if (command -v bat >/dev/null 2>&1) &&
+		(command -v fd >/dev/null 2>&1) &&
+		(command -v tree >/dev/null 2>&1); then
 		_fzf_ctrl_t_alt_c_command='fd -HL -c=always -E=.git'
 		_fzf_ctrl_t_alt_c_opts="
       --ansi
@@ -93,39 +122,32 @@ if [ -f "$fzf_sh" ]; then
 		export FZF_ALT_C_COMMAND="$_fzf_ctrl_t_alt_c_command -t=d"
 		export FZF_ALT_C_OPTS="$_fzf_ctrl_t_alt_c_opts"
 	fi
-
 fi
 
-# fzf
 # git
 alias cdr='cd $(git root)'
-alias gitconfig='$EDITOR ${XDG_CONFIG_HOME:-$HOME/.cache}/git/config'
-alias gitignore='$EDITOR ${XDG_CONFIG_HOME:-$HOME/.cache}/git/ignore'
+alias gitconfig='$EDITOR $XDG_CONFIG_HOME/.cache/git/config'
+alias gitignore='$EDITOR $XDG_CONFIG_HOME/.cache/git/ignore'
 for al in $(git --list-cmds=alias); do
 	alias "g$al"="git $al"
 done
 
 # gitweb
-if command -v gitweb >/dev/null 2>&1; then
-	alias gw='gitweb'
-fi
+(command -v gitweb >/dev/null 2>&1) && alias gw='gitweb'
 
 # googler
-if command -v googler >/dev/null 2>&1; then
-	alias g='googler'
-fi
+(command -v googler >/dev/null 2>&1) && alias g='googler'
 
 # npm
-if command -v npm >/dev/null 2>&1; then
-	source <(npm completion)
-fi
+(command -v npm >/dev/null 2>&1) && source <(npm completion)
 
 # nvim
 if command -v nvim >/dev/null 2>&1; then
 	alias n='nvim'
 	alias v='nvim'
 	alias vim='nvim'
-	alias vimrc='$EDITOR ${XDG_CONFIG_HOME:-$HOME}/nvim/init.vim'
+	alias vimrc='$EDITOR $XDG_CONFIG_HOME/nvim/init.vim'
+	export EDITOR=nvim
 fi
 
 # pre-commit
@@ -150,9 +172,18 @@ if command -v python >/dev/null 2>&1; then
 	alias tb='tensorboard --logdir .'
 fi
 
+# python: flask
+if command -v python >/dev/null 2>&1; then
+	export FLASK_DEBUG=1
+fi
+
+# python: numpy
+if command -v python >/dev/null 2>&1; then
+	export MKL_NUM_THREADS=1
+fi
+
 # sh
-alias shprofile='$EDITOR $HOME/dotfiles/shell/profile.sh'
-alias shrc='$EDITOR $HOME/dotfiles/shell/rc.sh'
+alias shrc='$EDITOR ~/dotfiles/shell/rc.sh'
 
 # starship
 if command -v starship >/dev/null 2>&1; then
@@ -170,11 +201,11 @@ if command -v xclip >/dev/null 2>&1; then
 	alias pbpaste='xclip -selection clipboard -o'
 fi
 
-# zsh
-alias zprofile='$EDITOR ~/.zprofile'
-alias zshrc='$EDITOR ~/.zshrc'
-
 # zoxide
 if command -v zoxide >/dev/null 2>&1; then
+	export _ZO_EXCLUDE_DIRS="/tmp"
 	eval "$(zoxide init "$shell" --cmd=c)"
 fi
+
+# zsh
+alias zshrc='$EDITOR $HOME/.zshrc'

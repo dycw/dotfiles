@@ -1,15 +1,14 @@
+#!/usr/bin/env zsh
 # shellcheck shell=bash
 # shellcheck source=/dev/null
 
-rc="$HOME/dotfiles/shell/rc.sh"
-if [ -f "$rc" ]; then
-	source "$rc" zsh
-fi
+[ -f "$HOME/dotfiles/shell/rc.sh" ] && source "$HOME/dotfiles/shell/rc.sh" zsh
+[ -f "$HOME/dotfiles/shell/zinit.sh" ] && source "$HOME/dotfiles/shell/zinit.sh"
 
-zshrc_managed="$HOME/dotfiles/shell/zshrc-managed.zsh"
-if [ -f "$zshrc_managed" ]; then
-	source "$zshrc_managed"
-fi
+# compinstall
+zstyle :compinstall filename "$HOME/.zshrc"
+autoload -Uz compinit
+compinit
 
 # settings: history
 export HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/.histfile"
@@ -39,6 +38,8 @@ zinit load srijanshetty/zsh-pip-completion
 zinit snippet OMZP::ubuntu
 
 # plugins: editing
+zinit snippet OMZP::sudo
+
 zinit load zdharma/fast-syntax-highlighting
 
 zinit load hlissner/zsh-autopair
@@ -46,6 +47,9 @@ zinit load hlissner/zsh-autopair
 zinit load mtxr/zsh-change-case
 bindkey '^K^U' _mtxr-to-upper # Ctrl+K + Ctrl+U
 bindkey '^K^L' _mtxr-to-lower # Ctrl+K + Ctrl+L
+
+# plugins: git
+zinit snippet OMZP::git-auto-fetch
 
 # plugins: navigation
 zinit load desyncr/auto-ls
@@ -56,8 +60,10 @@ zinit snippet OMZP::zsh-interactive-cd
 
 zinit load nviennot/zsh-vim-plugin
 
-# Oh-my-zsh plugins
-zinit snippet OMZP::alias-finder
-zinit snippet OMZP::git-auto-fetch
-zinit snippet OMZP::sudo
+# plugins: tmux
 zinit snippet OMZP::tmux
+if (command -v tmux >/dev/null 2>&1); then
+	export ZSH_TMUX_AUTOSTART=true
+	export ZSH_TMUX_FIXTERM=false
+	export ZSH_TMUX_UNICODE=true
+fi

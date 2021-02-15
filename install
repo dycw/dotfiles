@@ -32,7 +32,7 @@ make_link() {
 	file="$1"
 	link="$2"
 	mkdir -p "$(dirname "$link")"
-	ln -s "$file" "$link"
+	ln -f -s "$file" "$link"
 }
 
 process_link() {
@@ -47,17 +47,13 @@ Re-directing symlink:
        $link
 old -> $old
 new -> $file"
-				rm "$link"
 				make_link "$file" "$link"
 			fi
 		else
-			backup="$link.bk"
 			echo "\
-Backing up existing file, and then overriding with symlink:
-       $link
-old -> $backup
-new -> $file"
-			mv "$link" "$backup"
+Overriding existing file with symlink:
+   $link
+-> $file"
 			make_link "$file" "$link"
 		fi
 	else
