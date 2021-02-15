@@ -50,6 +50,7 @@ bindkey '^K^L' _mtxr-to-lower # Ctrl+K + Ctrl+L
 
 # plugins: git
 zinit snippet OMZP::git-auto-fetch
+export GIT_AUTO_FETCH_INTERVAL=60
 
 # plugins: navigation
 zinit snippet OMZP::zsh-interactive-cd
@@ -58,7 +59,7 @@ zinit load nviennot/zsh-vim-plugin
 
 # plugins: tmux
 zinit snippet OMZP::tmux
-if (command -v tmux >/dev/null 2>&1); then
+if command -v tmux >/dev/null 2>&1; then
 	export ZSH_TMUX_AUTOSTART=true
 	export ZSH_TMUX_FIXTERM=false
 	export ZSH_TMUX_UNICODE=true

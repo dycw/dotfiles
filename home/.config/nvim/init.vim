@@ -117,7 +117,6 @@ Plug 'neoclide/coc.nvim', {
 let g:coc_global_extensions = [
   \ 'coc-sh',
   \ 'coc-css',
-  \ 'coc-dictionary',
   \ 'coc-git',
   \ 'coc-highlight',
   \ 'coc-html',
@@ -127,7 +126,6 @@ let g:coc_global_extensions = [
   \ 'coc-prettier',
   \ 'coc-pyright',
   \ 'coc-snippets',
-  \ 'coc-spell-checker',
   \ 'coc-sql',
   \ 'coc-stylelint',
   \ 'coc-syntax',
