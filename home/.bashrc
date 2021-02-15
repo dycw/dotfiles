@@ -13,7 +13,7 @@ fi
 
 # bash
 HISTCONTROL=ignoreboth
-HISTFILE="$XDG_CACHE_HOME/bash/bash_history"
+HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/bash/bash_history"
 HISTSIZE=1000
 HISTFILESIZE=2000
 

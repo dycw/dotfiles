@@ -11,18 +11,19 @@ if [ -f "$zshrc_managed" ]; then
 	source "$zshrc_managed"
 fi
 
-# Lines configured by zsh-newuser-install
-HISTFILE=~/.histfile
+# settings: history
+export HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/.histfile"
 export HISTSIZE=10000
 export SAVEHIST=10000
+
+# settings: opts
 setopt autocd extendedglob nomatch notify
 unsetopt beep
 bindkey -v
-# End of lines configured by zsh-newuser-install
 
 # plugins: autocompletion
 zinit load marlonrichert/zsh-autocomplete
-zstyle ':autocomplete:*' min-input 1
+zstyle ':autocomplete:*' min-input 2
 zstyle ':autocomplete:tab:*' insert-unambiguous yes
 zstyle ':autocomplete:tab:*' fzf-completion yes
 

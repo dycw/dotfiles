@@ -79,6 +79,8 @@ for dotfile in "${dotfiles[@]}"; do
 	fi
 done
 
+process_link "$HOME/dotfiles/submodules/.tmux/.tmux.conf" "$HOME/.tmux.conf"
+
 # === reboot, or brew post-installation ===
 
 ensure_brew_install() {

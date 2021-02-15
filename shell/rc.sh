@@ -6,6 +6,11 @@
 
 shell="$1"
 
+# atom
+if command -v atom >/dev/null 2>&1; then
+	export GIST_ID=690a59ef26208e43fa880c874e01c1
+fi
+
 # bash
 alias bashrc='$EDITOR ~/.bashrc'
 alias profile='$EDITOR ~/.profile'
@@ -15,6 +20,7 @@ if command -v bat >/dev/null 2>&1; then
 	alias cat="bat"
 	alias catp="bat --style=plain"
 	tf() { tail -f "$1" | bat --paging=never -l log; }
+	export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 fi
 
 # batgrep
@@ -70,15 +76,31 @@ if command -v exa >/dev/null 2>&1; then
 fi
 
 # fzf
-fzf_sh="$XDG_CONFIG_HOME/fzf/fzf.$shell"
+fzf_sh="${XDG_CONFIG_HOME:-$HOME/.cache}/fzf/fzf.$shell"
 if [ -f "$fzf_sh" ]; then
 	source "$fzf_sh"
+	if (command -v bat >/dev/null 2>&1) && (command -v fd >/dev/null 2>&1) && (command -v tree >/dev/null 2>&1); then
+		_fzf_ctrl_t_alt_c_command='fd -HL -c=always -E=.git'
+		_fzf_ctrl_t_alt_c_opts="
+      --ansi
+      --bind='ctrl-u:preview-page-up'
+      --bind='ctrl-d:preview-page-down'
+      --preview '([[ -d {} ]] && tree -C {}) || ([[ -f {} ]] && bat --style=full --color=always {}) || echo {}'
+      --preview-window 'right:60%:wrap'"
+		export FZF_CTRL_T_COMMAND="$_fzf_ctrl_t_alt_c_command -t=f -t=d"
+		export FZF_CTRL_T_OPTS="$_fzf_ctrl_t_alt_c_opts"
+		export FZF_CTRL_R_OPTS='--ansi'
+		export FZF_ALT_C_COMMAND="$_fzf_ctrl_t_alt_c_command -t=d"
+		export FZF_ALT_C_OPTS="$_fzf_ctrl_t_alt_c_opts"
+	fi
+
 fi
 
+# fzf
 # git
 alias cdr='cd $(git root)'
-alias gitconfig='$EDITOR $XDG_CONFIG_HOME/git/config'
-alias gitignore='$EDITOR $XDG_CONFIG_HOME/git/ignore'
+alias gitconfig='$EDITOR ${XDG_CONFIG_HOME:-$HOME/.cache}/git/config'
+alias gitignore='$EDITOR ${XDG_CONFIG_HOME:-$HOME/.cache}/git/ignore'
 for al in $(git --list-cmds=alias); do
 	alias "g$al"="git $al"
 done
@@ -100,9 +122,10 @@ fi
 
 # nvim
 if command -v nvim >/dev/null 2>&1; then
+	alias n='nvim'
 	alias v='nvim'
 	alias vim='nvim'
-	alias vimrc='$EDITOR $XDG_CONFIG_HOME/nvim/init.vim'
+	alias vimrc='$EDITOR ${XDG_CONFIG_HOME:-$HOME}/nvim/init.vim'
 fi
 
 # pre-commit
@@ -138,7 +161,7 @@ fi
 
 # tmux
 if command -v tmux >/dev/null 2>&1; then
-	alias tmuxconf='$EDITOR ~/.tmux.conf'
+	alias tmuxconf='$EDITOR ~/.tmux.conf.local'
 fi
 
 # xclip
@@ -153,5 +176,5 @@ alias zshrc='$EDITOR ~/.zshrc'
 
 # zoxide
 if command -v zoxide >/dev/null 2>&1; then
-	eval "$(zoxide init "$shell")"
+	eval "$(zoxide init "$shell" --cmd=c)"
 fi
