@@ -39,7 +39,7 @@
   comp = !git com && git pl && :
 
   # checkout + pull + branch + checkout
-  redev = !git coml && git dev && :
+  redev = !git comp && git dev && :
 
   # cherry-pick
   cp = cherry-pick
