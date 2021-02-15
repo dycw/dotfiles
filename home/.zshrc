@@ -22,9 +22,7 @@ bindkey -v
 
 # plugins: autocompletion
 zinit load marlonrichert/zsh-autocomplete
-zstyle ':autocomplete:*' min-input 2
-zstyle ':autocomplete:tab:*' insert-unambiguous yes
-zstyle ':autocomplete:tab:*' fzf-completion yes
+zstyle ':autocomplete:*' min-input 1
 
 zinit load zsh-users/zsh-autosuggestions
 
@@ -52,10 +50,6 @@ bindkey '^K^L' _mtxr-to-lower # Ctrl+K + Ctrl+L
 zinit snippet OMZP::git-auto-fetch
 
 # plugins: navigation
-zinit load desyncr/auto-ls
-auto-ls-ls() { l; }
-auto-ls-git-status() { [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == true ]] && gs; }
-
 zinit snippet OMZP::zsh-interactive-cd
 
 zinit load nviennot/zsh-vim-plugin

@@ -26,7 +26,7 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$USER}"
 (command -v atom >/dev/null 2>&1) && export GIST_ID=690a59ef26208e43fa880c874e01c1
 
 # bash
-alias bashrc='$EDITOR ~/.bashrc'
+alias bashrc='$EDITOR $HOME/.bashrc'
 
 # bat
 if command -v bat >/dev/null 2>&1; then
@@ -46,7 +46,7 @@ fi
 [ -d "$HOME/.cargo/bin" ] && export PATH="$HOME/.cargo/bin${PATH:+:$PATH}"
 
 # cd
-alias ~='cd ~'
+alias ~='cd $HOME'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
@@ -126,8 +126,8 @@ fi
 
 # git
 alias cdr='cd $(git root)'
-alias gitconfig='$EDITOR $XDG_CONFIG_HOME/.cache/git/config'
-alias gitignore='$EDITOR $XDG_CONFIG_HOME/.cache/git/ignore'
+alias gitconfig='$EDITOR $XDG_CONFIG_HOME/git/config'
+alias gitignore='$EDITOR $XDG_CONFIG_HOME/git/ignore'
 for al in $(git --list-cmds=alias); do
 	alias "g$al"="git $al"
 done
@@ -159,6 +159,11 @@ if command -v python >/dev/null 2>&1; then
 	alias pcui='pre-commit uninstall'
 fi
 
+# python: flask
+if command -v python >/dev/null 2>&1; then
+	export FLASK_DEBUG=1
+fi
+
 # python: hypothesis
 if command -v python >/dev/null 2>&1; then
 	alias hypothesis-ci='export HYPOTHESIS_PROFILE=ci'
@@ -167,33 +172,27 @@ if command -v python >/dev/null 2>&1; then
 	alias hypothesis-dev='export HYPOTHESIS_PROFILE=dev'
 fi
 
-# python: tensorboard
-if command -v python >/dev/null 2>&1; then
-	alias tb='tensorboard --logdir .'
-fi
-
-# python: flask
-if command -v python >/dev/null 2>&1; then
-	export FLASK_DEBUG=1
-fi
-
 # python: numpy
 if command -v python >/dev/null 2>&1; then
 	export MKL_NUM_THREADS=1
 fi
 
+# python: tensorboard
+if command -v python >/dev/null 2>&1; then
+	alias tb='tensorboard --logdir .'
+fi
+
 # sh
-alias shrc='$EDITOR ~/dotfiles/shell/rc.sh'
+alias shrc='$EDITOR $HOME/dotfiles/shell/rc.sh'
 
 # starship
 if command -v starship >/dev/null 2>&1; then
+	alias starshiptoml='$EDITOR $XDG_CONFIG_HOME/starship.toml'
 	eval "$(starship init "$shell")"
 fi
 
 # tmux
-if command -v tmux >/dev/null 2>&1; then
-	alias tmuxconf='$EDITOR ~/.tmux.conf.local'
-fi
+(command -v tmux >/dev/null 2>&1) && alias tmuxconf='$EDITOR $HOME/.tmux.conf.local'
 
 # xclip
 if command -v xclip >/dev/null 2>&1; then
@@ -204,6 +203,7 @@ fi
 # zoxide
 if command -v zoxide >/dev/null 2>&1; then
 	export _ZO_EXCLUDE_DIRS="/tmp"
+	export _ZO_RESOLVE_SYMLINKS=1
 	eval "$(zoxide init "$shell" --cmd=c)"
 fi
 

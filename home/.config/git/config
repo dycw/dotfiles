@@ -36,7 +36,7 @@
   cop = co --patch
 
   # checkout + pull
-  coml = !git com && git ll && :
+  comp = !git com && git pl && :
 
   # checkout + pull + branch + checkout
   redev = !git coml && git dev && :
@@ -68,7 +68,8 @@
   f = fetch --all --prune
 
   # log
-  l = log --oneline --decorate --graph
+  l = ll origin/master..HEAD
+  ll = log --oneline --decorate --graph
 
   # merge
   m = merge
@@ -77,7 +78,7 @@
   mv = mv
 
   # pull
-  ll = pull
+  pl = pull
 
   # push
   p = push
