@@ -23,7 +23,7 @@ bindkey -v
 
 # plugins: autocompletion
 zinit load marlonrichert/zsh-autocomplete
-zstyle ':autocomplete:*' min-input 1
+zstyle ':autocomplete:*' min-input 3
 
 zinit load zsh-users/zsh-autosuggestions
 
