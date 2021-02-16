@@ -8,9 +8,7 @@ ensure_apt_install() {
 	pkg="$1"
 	repo="$2"
 	if ! dpkg -s "$pkg" >/dev/null 2>&1; then
-		if [ -n "$repo" ]; then
-			sudo add-apt-repository -y "$repo"
-		fi
+		[ -n "$repo" ] && sudo add-apt-repository -y "$repo"
 		sudo apt update
 		sudo apt -y install "$pkg"
 	fi
@@ -21,10 +19,8 @@ ensure_apt_install git
 
 # === repo ===
 
-dotfiles="$HOME/dotfiles"
-if ! [ -d "$dotfiles" ]; then
-	git clone --recuse-submodules https://github.com/dycw/dotfiles.git "$dotfiles"
-fi
+export PATH_DOTFILES="${PATH_DOTFILES:-$HOME/dotfiles}"
+! [ -d "$PATH_DOTFILES" ] && git clone --recuse-submodules https://github.com/dycw/dotfiles.git "$PATH_DOTFILES"
 
 # === symlinks ===
 
@@ -75,24 +71,15 @@ for dotfile in "${dotfiles[@]}"; do
 	fi
 done
 
-process_link "$HOME/dotfiles/submodules/.tmux/.tmux.conf" "$HOME/.tmux.conf"
+__submodules="$(realpath "$(find "$PATH_DOTFILES" -name submodules -not -path "*/.git/*")")"
+__tmux_conf="$__submodules/.tmux/.tmux.conf" && [ -f "$__tmux_conf" ] && process_link "$__tmux_conf" "$HOME/.tmux.conf"
 
 # === brew (needs confirmation) ===
 
-linuxbrew="/home/linuxbrew"
-if ! [ -d "$linuxbrew" ]; then
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
-
-profile="$HOME/.profile"
-if [ -f "$profile" ]; then
-	source "$profile"
-fi
+__linuxbrew="/home/linuxbrew" && ! [ -d "$__linuxbrew" ] && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 ensure_brew_install() {
-	if ! brew list "$1" >/dev/null 2>&1; then
-		brew install "$@"
-	fi
+	! (brew list "$1" >/dev/null 2>&1) && brew install "$@"
 }
 
 ensure_apt_install build-essential
@@ -101,10 +88,7 @@ ensure_brew_install gcc
 # === brew: fzf ===
 
 ensure_brew_install fzf
-install="$(brew --prefix)/opt/fzf/install"
-if [ -f "$install" ] && ! [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/fzf" ]; then
-	"$install" --xdg --key-bindings --completion --no-update-rc
-fi
+__install="$(brew --prefix)/opt/fzf/install" && [ -f "$__install" ] && ! [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/fzf" ] && "$__install" --xdg --key-bindings --completion --no-update-rc
 
 # === brew: zsh ===
 
@@ -156,37 +140,27 @@ ensure_brew_install eth-p/software/bat-extras
 
 # === conda ===
 
-miniconda3="$HOME/miniconda3"
-if ! [ -d "$miniconda3" ]; then
-	miniconda="$(mktemp -d)/miniconda.sh"
-	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O "$miniconda"
-	bash "$miniconda" -b -u -p "$miniconda3"
+__miniconda3="$HOME/miniconda3"
+if ! [ -d "$__miniconda3" ]; then
+	__miniconda="$(mktemp -d)/miniconda.sh"
+	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O "$__miniconda"
+	bash "$__miniconda" -b -u -p "$__miniconda3"
 fi
 
-envs_neovim="$miniconda3/envs/neovim"
-if ! [ -d "$envs_neovim" ]; then
-	"$miniconda3/bin/conda" create -n neovim -c conda-forge python=3.9 pynvim
-fi
+__neovim="$__miniconda3/envs/neovim" && ! [ -d "$__neovim" ] && "$__miniconda3/bin/conda" create -n neovim -c conda-forge python=3.9 pynvim
 
 # === vim-plug ===
 
-plug_vim="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim"
-if ! [ -f "$plug_vim" ]; then
-	sh -c 'curl -fLo "$plug_vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-fi
+__plug_vim="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" && ! [ -f "$__plug_vim" ] && sh -c 'curl -fLo "$__plug_vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
 # === zinit ===
 
-if ! [ -d "$HOME/.zinit" ]; then
-	sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)" <<<n
-fi
+! [ -d "$HOME/.zinit" ] && sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)" <<<n
 
 # === cargo ===
 
 ensure_cargo_install() {
-	if ! command -v "$1" >/dev/null 2>&1; then
-		cargo install "$1"
-	fi
+	! (command -v "$1" >/dev/null 2>&1) && cargo install "$1"
 }
 
 ensure_cargo_install gitui
@@ -213,9 +187,7 @@ fi
 
 # === apt: nordvpn ===
 
-if ! command -v nordvpn >/dev/null 2>&1; then
-	sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh) <<<y
-fi
+! (command -v nordvpn >/dev/null 2>&1) && sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh) <<<y
 
 # === snap ===
 
@@ -235,14 +207,12 @@ ensure_snap_install signal-desktop
 
 ensure_brew_install xclip
 
-config="${XDG_CONFIG_HOME:-$HOME/.config}/git/config.local"
-if ! [ -f "$config" ]; then
-	tee -a "$config" >/dev/null 2>&1 <<END
+__config_local="${XDG_CONFIG_HOME:-$HOME/.config}/git/config.local"
+! [ -f "$__config_local" ] && tee -a "$__config_local" >/dev/null 2>&1 <<END
 [user]
   name = Derek Wan
   email = d.wan@icloud.com
 END
-fi
 
 private="$HOME/.ssh/id_rsa"
 public="$private.pub"

@@ -2,8 +2,9 @@
 # shellcheck shell=bash
 # shellcheck source=/dev/null
 
-[ -f "$HOME/dotfiles/shell/rc.sh" ] && source "$HOME/dotfiles/shell/rc.sh" zsh
-[ -f "$HOME/dotfiles/shell/zinit.sh" ] && source "$HOME/dotfiles/shell/zinit.sh"
+__shell_sh="$HOME/.shell.sh" && [ -f "$__shell_sh" ] && source "$__shell_sh" zsh
+__zinit_sh="$HOME/.zinit.sh" && [ -f "$__zinit_sh" ] && source "$__zinit_sh"
+__zshrc_local="$HOME/.zshrc.local" && [ -f "$__zshrc_local" ] && source "$__zshrc_local"
 
 # compinstall
 zstyle :compinstall filename "$HOME/.zshrc"
@@ -11,7 +12,7 @@ autoload -Uz compinit
 compinit
 
 # settings: history
-export HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/.histfile"
+export HISTFILE="$XDG_CACHE_HOME/zsh/.histfile"
 export HISTSIZE=10000
 export SAVEHIST=10000
 

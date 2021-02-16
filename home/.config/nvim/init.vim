@@ -56,10 +56,6 @@ let mapleader=' '
 " mappings: clear search highlights
 nnoremap <Esc> :nohlsearch<return><Esc>
 
-" mappings: command mode
-nnoremap ; :
-vnoremap ; :
-
 " mappings: ex mode disabled
 noremap Q <Nop>
 

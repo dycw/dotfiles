@@ -1,3 +1,3 @@
 #!/usr/bin/env zsh
 
-[ -f "$HOME/.zshrc" ] && source "$HOME/.zshrc"
+__zshrc="$HOME/.zshrc" && [ -f "$__zshrc" ] && source "$__zshrc"

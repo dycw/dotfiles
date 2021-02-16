@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 # shellcheck source=/dev/null
 
-[ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
+__bashrc="$HOME/.bashrc" && [ -f "$__bashrc" ] && source "$__bashrc"
