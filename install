@@ -61,15 +61,21 @@ Making symlink:
 	fi
 }
 
-home="$HOME/dotfiles/home"
-mapfile -t dotfiles < <(find "$home" -type f -or -type l)
-for dotfile in "${dotfiles[@]}"; do
-	file="$(realpath "$dotfile")"
-	if [ -f "$file" ]; then
-		link="$HOME/$(realpath --relative-to="$home" "$file")"
-		process_link "$file" "$link"
-	fi
-done
+process_root() {
+	super_dir="$1"
+	home="$super_dir/home"
+	mapfile -t rel_paths < <(find "$home" -type f -or -type l)
+	for rel_path in "${rel_paths[@]}"; do
+		abs_path="$(realpath "$rel_path")"
+		if [ -f "$abs_path" ]; then
+			link="$HOME/$(realpath --relative-to="$home" "$abs_path")"
+			process_link "$abs_path" "$link"
+		fi
+	done
+}
+
+process_root "$PATH_DOTFILES"
+__dotfiles_local="$PATH_DOTFILES/local" && [ -d "$__dotfiles_local" ] && process_root "$__dotfiles_local"
 
 __submodules="$(realpath "$(find "$PATH_DOTFILES" -name submodules -not -path "*/.git/*")")"
 __tmux_conf="$__submodules/.tmux/.tmux.conf" && [ -f "$__tmux_conf" ] && process_link "$__tmux_conf" "$HOME/.tmux.conf"
