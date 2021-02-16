@@ -8,7 +8,7 @@ $line_break\
 $username$hostname$cmd_duration$jobs$memory_usage$shlvl$status\
 $character"""
 
-[characterr]
+[character]
 success_symbol = "[❯](bold green)"
 error_symbol = "[❯](bold red)"
 vicmd_symbol = "[❮](bold yellow)"

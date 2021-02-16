@@ -128,6 +128,7 @@ ensure_brew_install dust
 ensure_brew_install elm
 ensure_brew_install exa
 ensure_brew_install fd
+ensure_brew_install git
 ensure_brew_install git-crypt
 ensure_brew_install git-delta
 ensure_brew_install googler
@@ -200,6 +201,15 @@ ensure_apt_install sqlitebrowser ppa:linuxgndu/sqlitebrowser
 ensure_apt_install texlive-xetex
 ensure_apt_install chrome-gnome-shell # screenshot locations
 ensure_apt_install gnome-tweaks       # screenshot locations
+
+# === apt: chrome ===
+
+if ! command -v google-chrome >/dev/null 2>&1; then
+	tmp_dir="$(mktemp -d)"
+	cd "$tmp_dir" || exit
+	wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+	sudo dpkg -i google-chrome-stable_current_amd64.deb
+fi
 
 # === apt: nordvpn ===
 
