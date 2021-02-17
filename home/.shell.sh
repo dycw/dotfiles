@@ -86,9 +86,13 @@ fi
 
 # dropbox
 if command -v dropbox.py >/dev/null 2>&1; then
-	alias cddb='cd /data/dropbox'
 	dropbox.py autostart yes
 	dropbox.py start >/dev/null 2>&1
+	__path_dropbox=/data/derek/Dropbox
+	if [ -d "$__path_dropbox" ]; then
+		alias cddb='cd $PATH_DROPBOX'
+		export PATH_DROPBOX="$__path_dropbox"
+	fi
 fi
 
 # fd

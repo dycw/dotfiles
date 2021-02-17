@@ -157,11 +157,14 @@ __neovim="$__miniconda3/envs/neovim" && ! [ -d "$__neovim" ] && "$__miniconda3/b
 
 # === dropbox ===
 
-__dropboxd="$HOME/.dropbox-dist/dropboxd"
-if ! [ -f "$__dropboxd" ]; then
-	cd "$HOME" || exit
-	wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
-	"$__dropboxd"
+__data_dir=/data/derek
+if [ -d "$__data_dir" ]; then
+	__dropboxd="$__data_dir/.dropbox-dist/dropboxd"
+	if ! [ -f "$__dropboxd" ]; then
+		cd "$__data_dir" || exit
+		wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
+		HOME="$__data_dir" "$__dropboxd"
+	fi
 fi
 
 # === vim-plug ===
