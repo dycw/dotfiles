@@ -50,6 +50,8 @@ bindkey '^K^U' _mtxr-to-upper # Ctrl+K + Ctrl+U
 bindkey '^K^L' _mtxr-to-lower # Ctrl+K + Ctrl+L
 
 # plugins: git
+zinit load wfxr/forgit
+
 zinit snippet OMZP::git-auto-fetch
 export GIT_AUTO_FETCH_INTERVAL=60
 

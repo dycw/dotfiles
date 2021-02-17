@@ -62,20 +62,20 @@ Making symlink:
 }
 
 process_root() {
-	super_dir="$1"
-	home="$super_dir/home"
-	mapfile -t rel_paths < <(find "$home" -type f -or -type l)
-	for rel_path in "${rel_paths[@]}"; do
-		abs_path="$(realpath "$rel_path")"
-		if [ -f "$abs_path" ]; then
-			link="$HOME/$(realpath --relative-to="$home" "$abs_path")"
-			process_link "$abs_path" "$link"
-		fi
-	done
+	home_name="$1"
+	while IFS= read -d '' -r home_path; do
+		while IFS= read -d '' -r rel_path; do
+			abs_path="$(realpath "$rel_path")"
+			if [ -f "$abs_path" ]; then
+				link="$HOME/$(realpath --relative-to="$home_path" "$abs_path")"
+				process_link "$abs_path" "$link"
+			fi
+		done < <(find "$home_path" -print0 -type f -or -type l)
+	done < <(find "$PATH_DOTFILES" -name "$home_name" -print0 -type d)
 }
 
-process_root "$PATH_DOTFILES"
-__dotfiles_local="$PATH_DOTFILES/local" && [ -d "$__dotfiles_local" ] && process_root "$__dotfiles_local"
+process_root home
+process_root home.local
 
 __submodules="$(realpath "$(find "$PATH_DOTFILES" -name submodules -not -path "*/.git/*")")"
 __tmux_conf="$__submodules/.tmux/.tmux.conf" && [ -f "$__tmux_conf" ] && process_link "$__tmux_conf" "$HOME/.tmux.conf"

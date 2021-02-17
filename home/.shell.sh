@@ -33,8 +33,8 @@ alias bashrc='$EDITOR $HOME/.bashrc'
 
 # bat
 if command -v bat >/dev/null 2>&1; then
-	alias cat="bat"
-	alias catp="bat --style=plain"
+	alias cat='bat'
+	alias catp='bat --style=plain'
 	tf() { tail -f "$1" | bat --paging=never -l log; }
 	export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 fi
@@ -43,7 +43,9 @@ fi
 (command -v batgrep >/dev/null 2>&1) && alias bg='batgrep'
 
 # bin
-__dotfiles_bin="$PATH_DOTFILES/bin" && [ -d "$__dotfiles_bin" ] && export PATH="$__dotfiles_bin${PATH:+:$PATH}"
+while IFS= read -d '' -r __bin; do
+	export PATH="$__bin${PATH:+:$PATH}"
+done < <(find "$PATH_DOTFILES" -name bin -print0 -type d)
 
 # cargo
 __cargo_bin="$HOME/.cargo/bin" && [ -d "$__cargo_bin" ] && export PATH="$__cargo_bin${PATH:+:$PATH}"
@@ -116,18 +118,25 @@ if [ -f "$__fzf_shell" ]; then
 	if (command -v bat >/dev/null 2>&1) &&
 		(command -v fd >/dev/null 2>&1) &&
 		(command -v tree >/dev/null 2>&1); then
-		__fzf_ctrl_t_alt_c_command='fd -HL -c=always -E=.git'
-		__fzf_ctrl_t_alt_c_opts="
+		# https://bit.ly/2OMLMpm
+		export FZF_DEFAULT_COMMAND='fd -HL -c=always -E=.git -E=node_modules'
+		export FZF_DEFAULT_OPTS="
       --ansi
-      --bind='ctrl-u:preview-page-up'
-      --bind='ctrl-d:preview-page-down'
-      --preview '([[ -d {} ]] && tree -C {}) || ([[ -f {} ]] && bat --style=full --color=always {}) || echo {}'
-      --preview-window 'right:60%:wrap'"
-		export FZF_CTRL_T_COMMAND="$__fzf_ctrl_t_alt_c_command -t=f -t=d"
-		export FZF_CTRL_T_OPTS="$__fzf_ctrl_t_alt_c_opts"
-		export FZF_CTRL_R_OPTS='--ansi'
-		export FZF_ALT_C_COMMAND="$__fzf_ctrl_t_alt_c_command -t=d"
-		export FZF_ALT_C_OPTS="$__fzf_ctrl_t_alt_c_opts"
+      --bind 'ctrl-a:select-all'
+      --bind 'ctrl-e:execute(echo {+} | xargs -o vim)'
+      --bind 'ctrl-v:execute(code {+})'
+      --bind 'ctrl-y:execute-silent(echo {+} | pbcopy)'
+      --color='hl:148,hl+:154,pointer:032,marker:010,bg+:237,gutter:008'
+      --height=80%
+      --info=inline
+      --layout=reverse
+      --multi
+      --preview '([[ -f {} ]] && (bat --style=numbers --color=always {} || cat {})) || ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
+      --preview-window 'right:60%:wrap'
+      --prompt='∼ ' --pointer='▶' --marker='✓'
+      "
+		export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND -t=f -t=d"
+		export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND -t=d"
 	fi
 fi
 
@@ -164,9 +173,7 @@ if command -v python >/dev/null 2>&1; then
 fi
 
 # python: flask
-if command -v python >/dev/null 2>&1; then
-	export FLASK_DEBUG=1
-fi
+(command -v python >/dev/null 2>&1) && export FLASK_DEBUG=1
 
 # python: hypothesis
 if command -v python >/dev/null 2>&1; then
@@ -177,14 +184,13 @@ if command -v python >/dev/null 2>&1; then
 fi
 
 # python: numpy
-if command -v python >/dev/null 2>&1; then
-	export MKL_NUM_THREADS=1
-fi
+(command -v python >/dev/null 2>&1) && export MKL_NUM_THREADS=1
 
 # python: tensorboard
-if command -v python >/dev/null 2>&1; then
-	alias tb='tensorboard --logdir .'
-fi
+(command -v python >/dev/null 2>&1) && alias tb='tensorboard --logdir .'
+
+# rg
+(command -v rg >/dev/null 2>&1) && alias rg='rg --no-messages'
 
 # sh
 alias shellsh='$EDITOR $HOME/.shell.sh'
