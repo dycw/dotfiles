@@ -204,6 +204,10 @@ fi
 # tmux
 (command -v tmux >/dev/null 2>&1) && alias tmuxconf='$EDITOR $HOME/.tmux.conf.local'
 
+# ubuntu
+# https://askubuntu.com/a/492343
+alias apt-installed="comm -23 <(apt-mark showmanual | sort -u) <(gzip -dc /var/log/installer/initial-status.gz | sed -n 's/^Package: //p' | sort -u)"
+
 # xclip
 if command -v xclip >/dev/null 2>&1; then
 	alias pbcopy='xclip -selection clipboard'
