@@ -141,6 +141,7 @@ ensure_brew_install tmux
 ensure_brew_install tokei
 ensure_brew_install tree
 ensure_brew_install watchexec
+ensure_brew_install yarn
 ensure_brew_install zoxide
 ensure_brew_install clementtsang/bottom/bottom
 ensure_brew_install eth-p/software/bat-extras

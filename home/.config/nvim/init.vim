@@ -1,52 +1,103 @@
-" settings: backups
-set nobackup|      " required by coc.nvim
-set noswapfile
-set nowritebackup| " required by coc.nvim
-
-" settings: casing
+" =============================================================================
+" settings
+" =============================================================================
+" casing
 set ignorecase
 set smartcase
 
-" settings: folding
+" coc.nvim
+set cmdheight=2
+set hidden
+set nobackup
+set nowritebackup
+set shortmess+=c
+set signcolumn=yes
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" folding
 set foldlevel=99
 set foldmethod=indent
 
-" settings: line numbers
+" line numbers
 set number
 set relativenumber
 
-" settings: pasting
+" pasting
 nnoremap <F2> :set pastetoggle<Bar>:set expandtab<CR>
 
-" settings: read files automatically
-set autoread
-
-" settings: scrolling
+" scrolling
 set scrolloff=5
 set sidescrolloff=5
 
-" settings: status bar
-set noshowmode
-set noruler
-set laststatus=0
-set noshowcmd
-set shortmess=F
-
-" settings: substitute globally
-set gdefault
-
-" settings: spaces and tabs
-set list
+" spaces and tabs
 set expandtab
-set nosmarttab
+set list
 set shiftwidth=2
 set softtabstop=2
 set tabstop=2
 
-" settings: tab pages
+" status bar
+set noshowmode
+set noruler
+set laststatus=0
+set noshowcmd
+
+" substitute globally
+set gdefault
+
+" swap files
+set noswapfile
+
+" tab pages
 set showtabline=2
 
-" neovim: python host
+" update (coc.nvim, vim-signify)
+set updatetime=100
+
+" =============================================================================
+" mappings
+" =============================================================================
+" leader
+let mapleader=' '
+
+" ex mode disabled
+noremap Q <Nop>
+
+" insert -> normal mode
+inoremap jk <Esc>
+inoremap kj <Esc>
+
+" quit
+nnoremap <C-q> :q<CR>
+
+" save
+nnoremap <C-s> :w<CR>
+inoremap <C-s> <Esc>:w<CR>
+vnoremap <C-s> <Esc>:w<CR>
+
+" shift blocks visually (https://bit.ly/3alZUhL)
+vnoremap > >gv
+vnoremap < <gv
+
+" windows
+nnoremap <C-w>h     :set nosplitright<Bar>:vsplit<Bar>:set splitright<CR>
+nmap     <C-w><C-h> <C-w>h
+nnoremap <C-w>j     :split<CR>
+nmap     <C-w><C-j> <C-w>j
+nnoremap <C-w>k     :set nosplitbelow<Bar>:split<Bar>:set splitbelow<CR>
+nmap     <C-w><C-k> <C-w>k
+nnoremap <C-w>l     :vsplit<CR>
+nmap     <C-w><C-l> <C-w>l
+nnoremap <C-w>w     <C-w><C-p>
+nmap     <C-w><C-w> <C-w>w
+
+" yank (https://bit.ly/2M2qG5n)
+nnoremap Y y$
+vnoremap Y y$
+
+" =============================================================================
+" python host
+" =============================================================================
 let conda_default_env = $CONDA_DEFAULT_ENV
 if conda_default_env == 'base'
   let env_name = 'neovim'
@@ -58,63 +109,20 @@ if filereadable(bin_python)
   let g:python3_host_prog = bin_python
 endif
 
-" mappings: leader
-let mapleader=' '
-
-" mappings: clear search highlights
-nnoremap <Esc> :nohlsearch<return><Esc>
-
-" mappings: ex mode disabled
-noremap Q <Nop>
-
-" mappings: normal mode
-imap jk <Esc>
-imap kj <Esc>
-
-" mappings: save
-nnoremap <C-s> :w<CR>
-inoremap <C-s> <Esc>:w<CR>
-vnoremap <C-s> <Esc>:w<CR>
-
-" mappings: quit
-nnoremap <C-q> :q<CR>
-
-" mappings: shift blocks visually (https://bit.ly/3alZUhL)
-vnoremap > >gv
-vnoremap < <gv
-
-" mappings: windows
-nnoremap <C-w>h     :set nosplitright<Bar>:vsplit<Bar>:set splitright<CR>
-nmap     <C-w><C-h> <C-w>h
-nnoremap <C-w>j     :split<CR>
-nmap     <C-w><C-j> <C-w>j
-nnoremap <C-w>k     :set nosplitbelow<Bar>:split<Bar>:set splitbelow<CR>
-nmap     <C-w><C-k> <C-w>k
-nnoremap <C-w>l     :vsplit<CR>
-nmap     <C-w><C-l> <C-w>l
-nnoremap <C-h>      <C-w>h
-nnoremap <C-j>      <C-w><C-w>
-nnoremap <C-k>      <C-w>W
-nnoremap <C-l>      <C-w>l
-nnoremap <C-w>w     <C-w>p
-nmap     <C-w><C-w> <C-w>w
-
-" mappings: yank
-nnoremap Y y$
-vnoremap Y y$
-
-" vim-plug
+" =============================================================================
+" plugins
+" =============================================================================
 call plug#begin(stdpath('data') . '/plugged')
 
-" plugins: buffers
-Plug 'qpkorr/vim-bufkill'
-
+" =============================================================================
 " plugins: coc.nvim
+" =============================================================================
 Plug 'neoclide/coc.nvim', {
   \ 'do': { -> coc#util#install() },
   \ 'branch': 'release',
   \ 'tag': '*',
   \ }
+
 let g:coc_global_extensions = [
   \ 'coc-css',
   \ 'coc-dictionary',
@@ -135,55 +143,29 @@ let g:coc_global_extensions = [
   \ 'coc-yaml',
   \ 'coc-yank',
   \ ]
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-" TextEdit might fail if hidden is not set.
-set hidden
-
-" Give more space for displaying messages.
-set cmdheight=2
-
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=300
-
-" Don't pass messages to |ins-completion-menu|.
-set shortmess+=c
-
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 " Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
+inoremap <silent><expr> <c-space> coc#refresh()
 
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+  \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
@@ -198,7 +180,6 @@ nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
-
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
@@ -216,8 +197,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+xmap <leader>f <Plug>(coc-format-selected)
+nmap <leader>f <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -249,14 +230,12 @@ xmap ac <Plug>(coc-classobj-a)
 omap ac <Plug>(coc-classobj-a)
 
 " Remap <C-f> and <C-b> for scroll float windows/popups.
-if has('nvim-0.4.0') || has('patch-8.2.0750')
-  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#foat#scroll(1)\<cr>" : "\<Right>"
-  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-endif
+nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 
 " Use CTRL-S for selections ranges.
 " Requires 'textDocument/selectionRange' support of language server.
@@ -267,10 +246,10 @@ endif
 command! -nargs=0 Format :call CocAction('format')
 
 " Add `:Fold` command to fold current buffer.
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
 " Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
 
 " Add (Neo)Vim's native statusline support.
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
@@ -278,40 +257,53 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings for CoCList
-" Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>l
+nnoremap <silent><nowait> <space>a :<C-u>CocList diagnostics<cr>| " Show all diagnostics.
+nnoremap <silent><nowait> <space>e :<C-u>CocList extensions<cr> | " Manage extensions.
+nnoremap <silent><nowait> <space>c :<C-u>CocList commands<cr>   | " Show commands.
+nnoremap <silent><nowait> <space>o :<C-u>CocList outline<cr>    | " Find symbol of current document.
+nnoremap <silent><nowait> <space>s :<C-u>CocList -I symbols<cr> | " Search workspace symbols.
+nnoremap <silent><nowait> <space>j :<C-u>CocNext<CR>            | " Do default action for next item.
+nnoremap <silent><nowait> <space>k :<C-u>CocPrev<CR>            | " Do default action for previous item.
+nnoremap <silent><nowait> <space>p :<C-u>CocListResume<CR>l     | " Resume latest coc list.
 
-" plugins: coc.nvim: sql
+" =============================================================================
+" plugins: rest
+" =============================================================================
+" coc.nvim: sql
 let g:LanguageClient_serverCommands = {
   \ 'sql': ['sql-language-server', 'up', '--method', 'stdio'],
   \ }
 
-" plugins: diff
+" command level
+Plug 'tpope/vim-eunuch'
+
+" Plug 'airblade/vim-rooter'
+let g:rooter_patterns = ['.git']
+let g:rooter_change_directory_for_non_project_files = 'current'
+
+" diff
 Plug 'will133/vim-dirdiff'
 
-" plugins: editing
+" editing
 Plug 'tpope/vim-abolish'
 
 Plug 'jiangmiao/auto-pairs'
 
+Plug 'luochen1990/rainbow'
+let g:rainbow_active = 1
+
+" Plug 'junegunn/rainbow_parentheses.vim'
+
+Plug 'AndrewRadev/splitjoin.vim'
+
 Plug 'mbbill/undotree'
-nnoremap <F5> :UndotreeToggle<CR>
+nnoremap U :UndotreeToggle<CR>
+
+" set undofile
 
 Plug 'tpope/vim-commentary'
+
+Plug 'junegunn/vim-easy-align'
 
 Plug 'tpope/vim-endwise'
 let g:endwise_no_mappings = 1| " https://bit.ly/3dmrs8z
@@ -336,12 +328,29 @@ nmap <c-p> <plug>(YoinkPostPasteSwapForward)
 nmap p <plug>(YoinkPaste_p)
 nmap P <plug>(YoinkPaste_P)
 
-" plugins: editing: database
+" editing: database
 Plug 'tpope/vim-dadbod'
 
 Plug 'kristijanhusak/vim-dadbod-completion'
 
-" plugins: fzf
+" files and buffers
+Plug 'qpkorr/vim-bufkill'
+
+Plug 'wsdjeg/vim-fetch'
+
+Plug 'mhinz/vim-startify'
+let g:startify_lists = [
+  \ { 'type': 'dir',       'header': ['MRU '. getcwd()] },
+  \ { 'type': 'files',     'header': ['MRU']            },
+  \ { 'type': 'sessions',  'header': ['Sessions']       },
+  \ { 'type': 'bookmarks', 'header': ['Bookmarks']      },
+  \ { 'type': 'commands',  'header': ['Commands']       },
+  \ ]
+let g:startify_custom_indices = map(range(1,100), 'string(v:val)')
+let g:ascii = []
+let g:startify_custom_header = ['Hello, Derek']
+
+" fzf
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 nnoremap <Leader>b :Buffers<CR>
@@ -363,12 +372,20 @@ else
 endif
 nnoremap <Leader>L :BLines<CR>
 
-" plugins: general
+" general
 Plug 'tpope/vim-repeat'
 
 Plug 'tpope/vim-sensible'
 
-" plugins: git
+" git
+Plug 'rhysd/committia.vim'
+let g:committia_min_window_width=100
+let g:committia_edit_window_width=50
+
+Plug 'rhysd/conflict-marker.vim'
+
+Plug 'rhysd/git-messenger.vim'
+
 Plug 'junegunn/gv.vim'
 
 Plug 'tpope/vim-fugitive'
@@ -378,36 +395,29 @@ nnoremap gdl :diffget //3<CR>|   " ......................
 
 Plug 'mhinz/vim-signify'
 
-" plugins: gruvbox
+" gruvbox
 Plug 'morhetz/gruvbox'
 autocmd vimenter * ++nested colorscheme gruvbox
 
-" plugins: linting
+" linting
 Plug 'dense-analysis/ale'
 let g:ale_disable_lsp = 1| " https://bit.ly/2ZfmdPM
 let g:ale_fixers = {'python': ['autoimport', 'black', 'reorder-python-imports']}
 let g:ale_fix_on_save = 1
 let g:ale_linters = {'python': ['flake8', 'mypy']}
-
 nnoremap <F10> :ALEFix<CR>
 nnoremap <F11> <Plug>(ale_previous_wrap)
 nnoremap <silent> <C-j> <Plug>(ale_next_wrap)
 
-  " use <c-space>for trigger completion
-  inoremap <silent><expr> <c-space> coc#refresh()
-
-  " use <Tab> to navigate the completion list
-  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-" plugins: navigation
+" navigation
 Plug 'preservim/nerdtree'
-
-Plug 'justinmk/vim-ipmotion'
 
 Plug 'farmergreg/vim-lastplace'
 
 Plug 'andymass/vim-matchup'
+
+Plug 'junegunn/vim-slash'
+noremap <plug>(slash-after) zz
 
 Plug 'justinmk/vim-sneak'
 let g:sneak#label = 1
@@ -417,32 +427,50 @@ map F <Plug>Sneak_F
 map t <Plug>Sneak_t
 map T <Plug>Sneak_T
 
-Plug 'mhinz/vim-startify'
-let g:startify_lists = [
-  \ { 'type': 'dir',       'header': ['MRU '. getcwd()] },
-  \ { 'type': 'files',     'header': ['MRU']            },
-  \ { 'type': 'sessions',  'header': ['Sessions']       },
-  \ { 'type': 'bookmarks', 'header': ['Bookmarks']      },
-  \ { 'type': 'commands',  'header': ['Commands']       },
-  \ ]
-let g:startify_custom_indices = map(range(1,100), 'string(v:val)')
-let g:ascii = []
-let g:startify_custom_header = ['Hello, Derek']
+" registers
+Plug 'junegunn/vim-peekaboo'
 
-" plugins: sessions
+" sessions
 Plug 'tpope/vim-obsession'
 
-" plugins: status bar
+" status bar
 Plug 'vim-airline/vim-airline'
 let g:airline#extensions#ale#enabled = 1
 
-" plugins: tags
+" style
+Plug 'ryanoasis/vim-devicons'
+
+" tags
+Plug 'majutsushi/tagbar'
+nnoremap <F8> :TagbarToggle<CR>
+
 Plug 'liuchengxu/vista.vim'
 
-""""""""""""""""""""""""""""""
-" plugins: unclassified
-Plug 'ryanoasis/vim-devicons'
-Plug 'tpope/vim-eunuch'
+" text objects
+Plug 'wellle/targets.vim'
+
+Plug 'terryma/vim-expand-region'
+
+Plug 'michaeljsmith/vim-indent-object'
+
+Plug 'justinmk/vim-ipmotion'
+
+Plug 'rhysd/vim-textobj-anyblock'
+Plug 'kana/vim-textobj-user' | " vim-textobj-anyblock
+
+" tmux
 Plug 'christoomey/vim-tmux-navigator'
+
+Plug 'wellle/tmux-complete.vim'
+Plug 'prabirshrestha/async.vim'        | " for tmux-complete
+Plug 'prabirshrestha/asyncomplete.vim' | " for tmux-complete
+
+" viewing
+Plug 'wellle/context.vim'
+let g:indentLine_char = '▏'
+
+Plug 'Yggdroot/indentLine'
+
+Plug 'wellle/visual-split.vim'
 
 call plug#end()
