@@ -118,6 +118,7 @@ ensure_brew_install dust
 ensure_brew_install elm
 ensure_brew_install exa
 ensure_brew_install fd
+ensure_brew_install fpp
 ensure_brew_install git
 ensure_brew_install git-crypt
 ensure_brew_install git-delta

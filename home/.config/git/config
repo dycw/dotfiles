@@ -178,6 +178,7 @@
 
 [diff]
   colorMoved = default
+  mnemonicPrefix = true
   tool = vimdiff
 
 [difftool]
@@ -189,6 +190,9 @@
 
 [help]
   autoCorrect = 1
+
+[init]
+  defaultBranch = master
 
 [include]
   path = ~/.config/git/config.local
@@ -204,10 +208,14 @@
 [merge]
   conflictstyle = diff3
   ff = only
-  tool = vimdiff
+  tool = fugitive
 
 [mergetool]
   keepBackup = false
+  prompt = false
+
+[mergetool "fugitive"]
+  cmd = nvim -c \"Git mergetool\"
 
 [pull]
   default = upstream

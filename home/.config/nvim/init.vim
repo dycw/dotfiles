@@ -1,3 +1,8 @@
+" settings: backups
+set nobackup|      " required by coc.nvim
+set noswapfile
+set nowritebackup| " required by coc.nvim
+
 " settings: casing
 set ignorecase
 set smartcase
@@ -9,6 +14,9 @@ set foldmethod=indent
 " settings: line numbers
 set number
 set relativenumber
+
+" settings: pasting
+nnoremap <F2> :set pastetoggle<Bar>:set expandtab<CR>
 
 " settings: read files automatically
 set autoread
@@ -63,21 +71,17 @@ noremap Q <Nop>
 imap jk <Esc>
 imap kj <Esc>
 
-" settings: pasting
-nnoremap <F2> :set pastetoggle<Bar>:set expandtab<CR>
-
 " mappings: save
 nnoremap <C-s> :w<CR>
 inoremap <C-s> <Esc>:w<CR>
 vnoremap <C-s> <Esc>:w<CR>
 
+" mappings: quit
+nnoremap <C-q> :q<CR>
+
 " mappings: shift blocks visually (https://bit.ly/3alZUhL)
 vnoremap > >gv
 vnoremap < <gv
-
-" mappings: substitute
-vnoremap s :s/
-vnoremap <C-r> "hy:,$s/<C-r>h//gc<Left><Left><Left>
 
 " mappings: windows
 nnoremap <C-w>h     :set nosplitright<Bar>:vsplit<Bar>:set splitright<CR>
@@ -95,14 +99,15 @@ nnoremap <C-l>      <C-w>l
 nnoremap <C-w>w     <C-w>p
 nmap     <C-w><C-w> <C-w>w
 
-" mappings: quit
-nnoremap <C-q> :q<CR>
-
-" ALE and coc.nvim (https://bit.ly/2ZfmdPM)
-let g:ale_disable_lsp = 1
+" mappings: yank
+nnoremap Y y$
+vnoremap Y y$
 
 " vim-plug
 call plug#begin(stdpath('data') . '/plugged')
+
+" plugins: buffers
+Plug 'qpkorr/vim-bufkill'
 
 " plugins: coc.nvim
 Plug 'neoclide/coc.nvim', {
@@ -134,10 +139,6 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " TextEdit might fail if hidden is not set.
 set hidden
-
-" Some servers have issues with backup files, see #649.
-set nobackup
-set nowritebackup
 
 " Give more space for displaying messages.
 set cmdheight=2
@@ -299,25 +300,30 @@ let g:LanguageClient_serverCommands = {
   \ 'sql': ['sql-language-server', 'up', '--method', 'stdio'],
   \ }
 
+" plugins: diff
+Plug 'will133/vim-dirdiff'
+
 " plugins: editing
 Plug 'tpope/vim-abolish'
 
 Plug 'jiangmiao/auto-pairs'
 
+Plug 'mbbill/undotree'
+nnoremap <F5> :UndotreeToggle<CR>
+
 Plug 'tpope/vim-commentary'
 
-Plug 'svermeulen/vim-cutlass'
-nnoremap m d
-xnoremap m d
-nnoremap mm dd
-nnoremap M D
+Plug 'tpope/vim-endwise'
+let g:endwise_no_mappings = 1| " https://bit.ly/3dmrs8z
+
+Plug 'tommcdo/vim-exchange'
 
 Plug 'tpope/vim-speeddating'
 
 Plug 'svermeulen/vim-subversive'
-nmap s <plug>(SubversiveSubstitute)
-nmap ss <plug>(SubversiveSubstituteLine)
-nmap S <plug>(SubversiveSubstituteToEndOfLine)
+" nmap s <plug>(SubversiveSubstitute)            | " figure out where to go
+" nmap ss <plug>(SubversiveSubstituteLine)
+" nmap S <plug>(SubversiveSubstituteToEndOfLine)
 
 Plug 'tpope/vim-surround'
 
@@ -363,7 +369,12 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sensible'
 
 " plugins: git
+Plug 'junegunn/gv.vim'
+
 Plug 'tpope/vim-fugitive'
+nnoremap <leader>gd :Gvdiff<CR>| " https://bit.ly/3u7Z3ci
+nnoremap gdh :diffget //2<CR>|   " ......................
+nnoremap gdl :diffget //3<CR>|   " ......................
 
 Plug 'mhinz/vim-signify'
 
@@ -373,6 +384,7 @@ autocmd vimenter * ++nested colorscheme gruvbox
 
 " plugins: linting
 Plug 'dense-analysis/ale'
+let g:ale_disable_lsp = 1| " https://bit.ly/2ZfmdPM
 let g:ale_fixers = {'python': ['autoimport', 'black', 'reorder-python-imports']}
 let g:ale_fix_on_save = 1
 let g:ale_linters = {'python': ['flake8', 'mypy']}
@@ -389,9 +401,21 @@ nnoremap <silent> <C-j> <Plug>(ale_next_wrap)
   inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " plugins: navigation
-Plug 'scrooloose/nerdtree'
+Plug 'preservim/nerdtree'
+
+Plug 'justinmk/vim-ipmotion'
 
 Plug 'farmergreg/vim-lastplace'
+
+Plug 'andymass/vim-matchup'
+
+Plug 'justinmk/vim-sneak'
+let g:sneak#label = 1
+let g:sneak#s_next = 1
+map f <Plug>Sneak_f
+map F <Plug>Sneak_F
+map t <Plug>Sneak_t
+map T <Plug>Sneak_T
 
 Plug 'mhinz/vim-startify'
 let g:startify_lists = [
@@ -404,6 +428,9 @@ let g:startify_lists = [
 let g:startify_custom_indices = map(range(1,100), 'string(v:val)')
 let g:ascii = []
 let g:startify_custom_header = ['Hello, Derek']
+
+" plugins: sessions
+Plug 'tpope/vim-obsession'
 
 " plugins: status bar
 Plug 'vim-airline/vim-airline'
