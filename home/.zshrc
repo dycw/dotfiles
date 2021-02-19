@@ -63,3 +63,6 @@ if command -v tmux >/dev/null 2>&1; then
 	export ZSH_TMUX_FIXTERM=false
 	export ZSH_TMUX_UNICODE=true
 fi
+
+# vim-superman
+(command -v vman >/dev/null 2>&1) && compdef vman="man"

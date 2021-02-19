@@ -22,8 +22,16 @@ set foldmethod=indent
 set number
 set relativenumber
 
-" pasting
-nnoremap <F2> :set pastetoggle<Bar>:set expandtab<CR>
+" pasting (https://bit.ly/3pwr6yE)
+nnoremap <F2> :call TogglePaste()<CR>
+function! TogglePaste()
+  if(&paste == 0)
+    set paste
+  else
+    set nopaste
+  endif
+  set expandtab
+endfunction
 
 " scrolling
 set scrolloff=5
@@ -60,8 +68,9 @@ set updatetime=100
 " leader
 let mapleader=' '
 
-" ex mode disabled
-noremap Q <Nop>
+" command mode
+nnoremap <CR> :
+vnoremap <CR> :
 
 " insert -> normal mode
 inoremap jk <Esc>
@@ -72,12 +81,19 @@ nnoremap <C-q> :q<CR>
 
 " save
 nnoremap <C-s> :w<CR>
-inoremap <C-s> <Esc>:w<CR>
 vnoremap <C-s> <Esc>:w<CR>
+inoremap <C-s> <Esc>:w<CR>
+
+" search
+nnoremap <Esc> :nohlsearch<CR>
 
 " shift blocks visually (https://bit.ly/3alZUhL)
 vnoremap > >gv
 vnoremap < <gv
+
+" unneeded
+nnoremap K <Nop>
+nnoremap Q <Nop>
 
 " windows
 nnoremap <C-w>h     :set nosplitright<Bar>:vsplit<Bar>:set splitright<CR>
@@ -90,6 +106,22 @@ nnoremap <C-w>l     :vsplit<CR>
 nmap     <C-w><C-l> <C-w>l
 nnoremap <C-w>w     <C-w><C-p>
 nmap     <C-w><C-w> <C-w>w
+
+" wrapped lines (https://bit.ly/2Zwqnmg)
+nnoremap k  gk
+vnoremap k  gk
+nnoremap j  gj
+vnoremap j  gj
+nnoremap gk k
+vnoremap gk k
+nnoremap gj j
+vnoremap gj j
+nnoremap ^  g^
+vnoremap ^  g^
+nnoremap g^ ^
+vnoremap g^ ^
+nnoremap _  g_
+vnoremap _  g_
 
 " yank (https://bit.ly/2M2qG5n)
 nnoremap Y y$
@@ -266,61 +298,45 @@ nnoremap <silent><nowait> <space>j :<C-u>CocNext<CR>            | " Do default a
 nnoremap <silent><nowait> <space>k :<C-u>CocPrev<CR>            | " Do default action for previous item.
 nnoremap <silent><nowait> <space>p :<C-u>CocListResume<CR>l     | " Resume latest coc list.
 
-" =============================================================================
-" plugins: rest
-" =============================================================================
 " coc.nvim: sql
 let g:LanguageClient_serverCommands = {
   \ 'sql': ['sql-language-server', 'up', '--method', 'stdio'],
   \ }
 
-" command level
-Plug 'tpope/vim-eunuch'
-
-" Plug 'airblade/vim-rooter'
-let g:rooter_patterns = ['.git']
-let g:rooter_change_directory_for_non_project_files = 'current'
+" =============================================================================
+" plugins: rest
+" =============================================================================
+" database
+Plug 'tpope/vim-dadbod'
+Plug 'kristijanhusak/vim-dadbod-completion'
 
 " diff
 Plug 'will133/vim-dirdiff'
 
 " editing
 Plug 'tpope/vim-abolish'
-
 Plug 'jiangmiao/auto-pairs'
-
 Plug 'luochen1990/rainbow'
-let g:rainbow_active = 1
-
-" Plug 'junegunn/rainbow_parentheses.vim'
-
+  let g:rainbow_active = 1
 Plug 'AndrewRadev/splitjoin.vim'
-
 Plug 'mbbill/undotree'
-nnoremap U :UndotreeToggle<CR>
-
-" set undofile
-
+  nnoremap U :UndotreeToggle<CR>
+Plug 'tpope/vim-capslock'
+Plug 'alvan/vim-closetag'
 Plug 'tpope/vim-commentary'
-
 Plug 'junegunn/vim-easy-align'
-
 Plug 'tpope/vim-endwise'
-let g:endwise_no_mappings = 1| " https://bit.ly/3dmrs8z
-
+  let g:endwise_no_mappings = 1| " https://bit.ly/3dmrs8z
 Plug 'tommcdo/vim-exchange'
-
+Plug 'osyo-manga/vim-over'
+Plug 'mg979/vim-visual-multi'
 Plug 'tpope/vim-speeddating'
-
 Plug 'svermeulen/vim-subversive'
-" nmap s <plug>(SubversiveSubstitute)            | " figure out where to go
-" nmap ss <plug>(SubversiveSubstituteLine)
-" nmap S <plug>(SubversiveSubstituteToEndOfLine)
-
+  nnoremap <Leader>s  <plug>(SubversiveSubstitute)
+  nnoremap <Leader>ss <plug>(SubversiveSubstituteLine)
+  nnoremap <Leader>S  <plug>(SubversiveSubstituteToEndOfLine)
 Plug 'tpope/vim-surround'
-
 Plug 'tpope/vim-unimpaired'
-
 Plug 'svermeulen/vim-yoink'
 let g:yoinkIncludeDeleteOperations=1
 nmap <c-n> <plug>(YoinkPostPasteSwapBack)
@@ -328,149 +344,157 @@ nmap <c-p> <plug>(YoinkPostPasteSwapForward)
 nmap p <plug>(YoinkPaste_p)
 nmap P <plug>(YoinkPaste_P)
 
-" editing: database
-Plug 'tpope/vim-dadbod'
-
-Plug 'kristijanhusak/vim-dadbod-completion'
-
-" files and buffers
+" directories, files and buffers
+Plug 'preservim/nerdtree'
+  Plug 'Xuyuanp/nerdtree-git-plugin'
+  Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'qpkorr/vim-bufkill'
-
 Plug 'wsdjeg/vim-fetch'
-
+Plug 'farmergreg/vim-lastplace'
+Plug 'airblade/vim-rooter'
 Plug 'mhinz/vim-startify'
-let g:startify_lists = [
-  \ { 'type': 'dir',       'header': ['MRU '. getcwd()] },
-  \ { 'type': 'files',     'header': ['MRU']            },
-  \ { 'type': 'sessions',  'header': ['Sessions']       },
-  \ { 'type': 'bookmarks', 'header': ['Bookmarks']      },
-  \ { 'type': 'commands',  'header': ['Commands']       },
-  \ ]
-let g:startify_custom_indices = map(range(1,100), 'string(v:val)')
-let g:ascii = []
-let g:startify_custom_header = ['Hello, Derek']
+  let g:startify_lists = [
+    \ { 'type': 'dir',       'header': ['MRU '. getcwd()] },
+    \ { 'type': 'files',     'header': ['MRU']            },
+    \ { 'type': 'sessions',  'header': ['Sessions']       },
+    \ { 'type': 'bookmarks', 'header': ['Bookmarks']      },
+    \ { 'type': 'commands',  'header': ['Commands']       },
+    \ ]
+  let g:startify_custom_indices = map(range(1,100), 'string(v:val)')
+  let g:ascii = []
+  let g:startify_custom_header = ['Hello, Derek']
 
 " fzf
-Plug 'junegunn/fzf.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-nnoremap <Leader>b :Buffers<CR>
-nnoremap <Leader>c :Commands<CR>
-nnoremap <Leader>C :History<CR>
-nnoremap <Leader>f :GFiles<CR>
-nnoremap <Leader>F :Files<CR>
-nnoremap <Leader>h :History<CR>
-nnoremap <Leader>H :Helptags!<CR>
-nnoremap <Leader>m :Marks<CR>
-nnoremap <Leader>M :Maps<CR>
-nnoremap <Leader>t :Tags<CR>
-nnoremap <Leader>T :BTags<CR>
-nnoremap <Leader>w :Windows<CR>
-if executable('rg')
-  nnoremap <Leader>l :Rg<CR>
-else
-  nnoremap <Leader>l :Lines<CR>
-endif
-nnoremap <Leader>L :BLines<CR>
+Plug 'junegunn/fzf.vim'
+  nnoremap <Leader>bb :Buffers<CR>
+  nnoremap <Leader>bc :BCommits<CR>
+  nnoremap <Leader>bl :BLines<CR>
+  nnoremap <Leader>bt :BTags<CR>
+  nnoremap <Leader>c  :Commands<CR>
+  nnoremap <Leader>f  :Files<CR>
+  nnoremap <Leader>gc :Commits<CR>
+  nnoremap <Leader>gf :GFiles<CR>
+  nnoremap <Leader>gs :GFiles?<CR>
+  nnoremap <Leader>hc :History:<CR> | " command history
+  nnoremap <Leader>hi :History<CR>
+  nnoremap <Leader>hs :History/<CR> | " search history
+  nnoremap <Leader>ht :Helptags!<CR>
+  nnoremap <Leader>l  :Rg<CR>       | " lines
+  nnoremap <Leader>mk :Marks<CR>
+  nnoremap <Leader>mp :Maps<CR>
+  nnoremap <Leader>t  :Tags<CR>
+  nnoremap <Leader>w  :Windows<CR>
 
 " general
 Plug 'tpope/vim-repeat'
-
 Plug 'tpope/vim-sensible'
 
 " git
 Plug 'rhysd/committia.vim'
-let g:committia_min_window_width=100
-let g:committia_edit_window_width=50
-
+  let g:committia_min_window_width=100
+  let g:committia_edit_window_width=50
 Plug 'rhysd/conflict-marker.vim'
-
 Plug 'rhysd/git-messenger.vim'
-
 Plug 'junegunn/gv.vim'
-
 Plug 'tpope/vim-fugitive'
-nnoremap <leader>gd :Gvdiff<CR>| " https://bit.ly/3u7Z3ci
-nnoremap gdh :diffget //2<CR>|   " ......................
-nnoremap gdl :diffget //3<CR>|   " ......................
-
+  nnoremap <leader>gd :Gvdiff<CR>| " https://bit.ly/3u7Z3ci
+  nnoremap gdh :diffget //2<CR>|   " ......................
+  nnoremap gdl :diffget //3<CR>|   " ......................
 Plug 'mhinz/vim-signify'
-
-" gruvbox
-Plug 'morhetz/gruvbox'
-autocmd vimenter * ++nested colorscheme gruvbox
 
 " linting
 Plug 'dense-analysis/ale'
-let g:ale_disable_lsp = 1| " https://bit.ly/2ZfmdPM
-let g:ale_fixers = {'python': ['autoimport', 'black', 'reorder-python-imports']}
-let g:ale_fix_on_save = 1
-let g:ale_linters = {'python': ['flake8', 'mypy']}
-nnoremap <F10> :ALEFix<CR>
-nnoremap <F11> <Plug>(ale_previous_wrap)
-nnoremap <silent> <C-j> <Plug>(ale_next_wrap)
+  let g:ale_disable_lsp = 1| " https://bit.ly/2ZfmdPM
+  let g:ale_fix_on_save = 1
+  let g:ale_fixers = {
+    \ 'haskell': ['brittany'],
+    \ 'python': ['autoimport', 'black', 'reorder-python-imports'],
+    \ 'rust': ['rustfmt'],
+    \ }
+  let g:ale_linters = {
+    \ 'haskell': ['hlint'],
+    \ 'python': ['flake8', 'mypy'],
+    \ 'rust': [],
+    \ }
+  nnoremap <F10> :ALEFix<CR>
+  nnoremap <F11> <Plug>(ale_previous_wrap)
+  nnoremap <silent> <C-j> <Plug>(ale_next_wrap)
 
 " navigation
-Plug 'preservim/nerdtree'
-
-Plug 'farmergreg/vim-lastplace'
-
+Plug 'airblade/vim-matchquote'
 Plug 'andymass/vim-matchup'
-
+Plug 'kshenoy/vim-signature'
 Plug 'junegunn/vim-slash'
-noremap <plug>(slash-after) zz
-
+  nnoremap <plug>(slash-after) zz
+  vnoremap <plug>(slash-after) zz
 Plug 'justinmk/vim-sneak'
-let g:sneak#label = 1
-let g:sneak#s_next = 1
-map f <Plug>Sneak_f
-map F <Plug>Sneak_F
-map t <Plug>Sneak_t
-map T <Plug>Sneak_T
+  " let g:sneak#label = 1
+  let g:sneak#s_next = 1
+  map f <Plug>Sneak_f
+  map F <Plug>Sneak_F
+  map t <Plug>Sneak_t
+  map T <Plug>Sneak_T
+Plug 'vim-utils/vim-vertical-move'
 
 " registers
 Plug 'junegunn/vim-peekaboo'
+
+" searching
+Plug 'mhinz/vim-grepper'
+Plug 'bronson/vim-visual-star-search'
 
 " sessions
 Plug 'tpope/vim-obsession'
 
 " status bar
 Plug 'vim-airline/vim-airline'
-let g:airline#extensions#ale#enabled = 1
+  let g:airline#extensions#ale#enabled = 1
+  let g:airline#extensions#hunks#non_zero_only = 1
 
 " style
+Plug 'morhetz/gruvbox'
+  autocmd vimenter * ++nested colorscheme gruvbox
 Plug 'ryanoasis/vim-devicons'
+
+" syntax
+Plug 'cespare/vim-toml'
 
 " tags
 Plug 'majutsushi/tagbar'
-nnoremap <F8> :TagbarToggle<CR>
-
+  nnoremap tt :TagbarToggle<CR>
 Plug 'liuchengxu/vista.vim'
 
 " text objects
+Plug 'wellle/line-targets.vim'
 Plug 'wellle/targets.vim'
-
+Plug 'coderifous/textobj-word-column.vim'
 Plug 'terryma/vim-expand-region'
-
 Plug 'michaeljsmith/vim-indent-object'
-
+Plug 'jeetsukumaran/vim-indentwise'
 Plug 'justinmk/vim-ipmotion'
-
+Plug 'tommcdo/vim-ninja-feet'
 Plug 'rhysd/vim-textobj-anyblock'
-Plug 'kana/vim-textobj-user' | " vim-textobj-anyblock
+Plug 'kana/vim-textobj-entire'
+Plug 'kana/vim-textobj-indent'
+Plug 'kana/vim-textobj-user'| " used by others
 
 " tmux
 Plug 'christoomey/vim-tmux-navigator'
-
 Plug 'wellle/tmux-complete.vim'
-Plug 'prabirshrestha/async.vim'        | " for tmux-complete
-Plug 'prabirshrestha/asyncomplete.vim' | " for tmux-complete
+  Plug 'prabirshrestha/async.vim'
+  Plug 'prabirshrestha/asyncomplete.vim'
+
+" unix
+Plug 'tpope/vim-eunuch'
+Plug 'jez/vim-superman'
 
 " viewing
 Plug 'wellle/context.vim'
-let g:indentLine_char = '▏'
-
+  let g:indentLine_char = '▏'
+Plug 'blueyed/vim-diminactive'
 Plug 'Yggdroot/indentLine'
-
+Plug 'RRethy/vim-illuminate'
 Plug 'wellle/visual-split.vim'
 
 call plug#end()

@@ -23,3 +23,6 @@ shopt -s nocaseglob
 shopt -s nocasematch
 shopt -s shift_verbose
 shopt -s xpg_echo
+
+# vim-superman
+(command -v vman >/dev/null 2>&1) && complete -o default -o nospace -F _man vman

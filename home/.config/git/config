@@ -47,9 +47,11 @@
   cpc = cp --continue
   cps = cp --skip
 
+  # clean
+  cli = clean -i
+
   # clone
-  clone = clone --recurse-submodules
-  cl = clone
+  cl = clone --recurse-submodules
 
   # commit
   c = commit
@@ -63,6 +65,7 @@
   # diff
   d = diff
   dc = d --cached
+  dom = d origin/master..
 
   # fetch
   f = fetch --all --prune
@@ -191,11 +194,11 @@
 [help]
   autoCorrect = 1
 
-[init]
-  defaultBranch = master
-
 [include]
   path = ~/.config/git/config.local
+
+[init]
+  defaultBranch = master
 
 [interactive]
   diffFilter = delta --color-only
