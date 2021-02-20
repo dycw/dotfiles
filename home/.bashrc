@@ -6,7 +6,8 @@ __bashrc_local="$HOME/.bashrc.local" && [ -f "$__bashrc_local" ] && source "$__b
 
 # bash
 HISTCONTROL=ignoreboth
-HISTFILE="$XDG_CACHE_HOME/bash/bash_history"
+__bash="$XDG_CACHE_HOME/bash" && ! [ -d "$__bash" ] && mkdir -p "$__bash"
+HISTFILE="$__bash/bash_history"
 HISTSIZE=1000
 HISTFILESIZE=2000
 

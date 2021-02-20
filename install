@@ -76,15 +76,19 @@ process_root() {
 process_root home
 process_root home.local
 
-__submodules="$(realpath "$(find "$PATH_DOTFILES" -name submodules -not -path "*/.git/*")")"
-__tmux_conf="$__submodules/.tmux/.tmux.conf" && [ -f "$__tmux_conf" ] && process_link "$__tmux_conf" "$HOME/.tmux.conf"
+while IFS= read -d '' -r __rel_submodules; do
+	__abs_submodules="$(realpath "$__rel_submodules")"
+	__tmux_conf="$__abs_submodules/.tmux/.tmux.conf" && [ -f "$__tmux_conf" ] && process_link "$__tmux_conf" "$HOME/.tmux.conf"
+done < <(find "$PATH_DOTFILES" -name submodules -not -path "*/.git/*" -print0 -type d)
 
 # === brew (needs confirmation) ===
 
 __linuxbrew="/home/linuxbrew" && ! [ -d "$__linuxbrew" ] && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 ensure_brew_install() {
-	! (brew list "$1" >/dev/null 2>&1) && brew install "$@"
+	(command -v brew >/dev/null 2>&1) &&
+		! (brew list "$1" >/dev/null 2>&1) &&
+		brew install "$@"
 }
 
 ensure_apt_install build-essential
@@ -154,7 +158,14 @@ if ! [ -d "$__miniconda3" ]; then
 	bash "$__miniconda" -b -u -p "$__miniconda3"
 fi
 
-__neovim="$__miniconda3/envs/neovim" && ! [ -d "$__neovim" ] && "$__miniconda3/bin/conda" create -n neovim -c conda-forge python=3.9 pynvim
+__neovim="$__miniconda3/envs/neovim"
+if ! [ -d "$__neovim" ]; then
+	"$__miniconda3/bin/conda" create -n neovim python=3.9
+	conda activate neovim
+	while IFS= read -d '' -r __requirements; do
+		pip install -r "$__requirements"
+	done < <(find "$PATH_DOTFILES" -name requirements-neovim.txt -print0 -type f)
+fi
 
 # === dropbox ===
 
@@ -203,12 +214,34 @@ fi
 # === cargo ===
 
 ensure_cargo_install() {
-	! (command -v "$1" >/dev/null 2>&1) && cargo install "$1"
+	(command -v cargo >/dev/null 2>&1) &&
+		! (command -v "$1" >/dev/null 2>&1) &&
+		cargo install "$1"
 }
 
 ensure_cargo_install gitui
 ensure_cargo_install gitweb
 ensure_cargo_install rmesg
+
+# === gem ===
+
+ensure_gem_install() {
+	(command -v gem >/dev/null 2>&1) &&
+		! (command -v "$1" >/dev/null 2>&1) &&
+		gem install "$1"
+}
+
+ensure_gem_install mdl
+
+# === npm ===
+
+ensure_npm_install() {
+	(command -v npm >/dev/null 2>&1) &&
+		! (command -v "$1" >/dev/null 2>&1) &&
+		npm install "$1"
+}
+
+ensure_npm_install pyright
 
 # === apt ===
 

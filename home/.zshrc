@@ -12,7 +12,8 @@ autoload -Uz compinit
 compinit
 
 # settings: history
-export HISTFILE="$XDG_CACHE_HOME/zsh/.histfile"
+__zsh="$XDG_CACHE_HOME/zsh" && ! [ -d "$__zsh" ] && mkdir -p "$__zsh"
+export HISTFILE="$__zsh/.histfile"
 export HISTSIZE=10000
 export SAVEHIST=10000
 

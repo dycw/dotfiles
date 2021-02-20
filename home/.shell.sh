@@ -62,6 +62,7 @@ alias cddl='cd $HOME/Downloads'
 alias cddt='cd $HOME/Desktop'
 alias cdp='cd $HOME/Pictures'
 alias cdw='cd $HOME/work'
+__work="$HOME/work" && ! [ -d "$__work" ] && mkdir -p "$__work"
 
 # conda
 __miniconda3="$HOME/miniconda3"
@@ -79,10 +80,17 @@ if [ -d "$__miniconda3" ]; then
 		fi
 	fi
 	unset __conda_setup
+	alias cec='conda env create --force'
+	alias cel='conda env list'
+	alias ceu='conda env update'
+	__bin="$__miniconda3/envs/neovim/bin" && [ -d "$__bin" ] && export PATH="$__bin${PATH:+:$PATH}"
 fi
 
 # direnv
-(command -v direnv >/dev/null 2>&1) && eval "$(direnv hook "$__shell")"
+if command -v direnv >/dev/null 2>&1; then
+	eval "$(direnv hook "$__shell")"
+	alias dea='direnv allow'
+fi
 
 # dropbox
 if command -v dropbox.py >/dev/null 2>&1; then
@@ -144,6 +152,12 @@ if [ -f "$__fzf_shell" ]; then
 	fi
 fi
 
+# gem
+(command -v gem >/dev/null 2>&1) &&
+	__bin="$(gem environment gemdir)/bin" &&
+	[ -d "$__bin" ] &&
+	export PATH="$__bin${PATH:+:$PATH}"
+
 # git
 alias cdr='cd $(git root)'
 alias gitconfig='$EDITOR $XDG_CONFIG_HOME/git/config'
@@ -194,7 +208,7 @@ fi
 (command -v python >/dev/null 2>&1) && alias tb='tensorboard --logdir .'
 
 # rg
-(command -v rg >/dev/null 2>&1) && alias rg='rg --no-messages'
+(command -v rg >/dev/null 2>&1) && alias rg='rg -L --hidden --no-messages'
 
 # sh
 alias shellsh='$EDITOR $HOME/.shell.sh'

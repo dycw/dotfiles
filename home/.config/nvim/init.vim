@@ -176,7 +176,7 @@ let g:coc_global_extensions = [
   \ 'coc-yank',
   \ ]
 
-" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -304,6 +304,52 @@ let g:LanguageClient_serverCommands = {
   \ }
 
 " =============================================================================
+" plugins: ALE
+" =============================================================================
+Plug 'dense-analysis/ale'
+
+let g:ale_cache_executable_check_failures = 1
+let g:ale_disable_lsp = 1| " https://bit.ly/2ZfmdPM
+let g:ale_fix_on_save = 1
+let g:ale_fixers = {
+  \ 'css': ['prettier'],
+  \ 'haskell': ['brittany'],
+  \ 'html': ['prettier'],
+  \ 'javascript': ['prettier'],
+  \ 'json': ['prettier'],
+  \ 'markdown': ['prettier'],
+  \ 'python': ['autoimport', 'black', 'reorder-python-imports'],
+  \ 'rust': ['rustfmt'],
+  \ 'typescript': ['prettier'],
+  \ 'yaml': ['prettier'],
+  \ }
+let g:ale_linters = {
+  \ 'haskell': ['hlint'],
+  \ 'python': ['flake8', 'mypy', 'prospector', 'pyre', 'pyright'],
+  \ 'rust': [],
+  \ 'vim': ['vim-vint'],
+  \ }
+let g:ale_linters_explicit = 1
+let g:ale_sign_column_always = 1
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '▲'
+let g:ale_use_global_executables = 1
+let g:ale_virtualtext_cursor = 1
+let g:ale_warn_about_trailing_blank_lines = 0
+let g:ale_warn_about_trailing_whitespace = 0
+nmap <Leader>ak <Plug>(ale_previous_wrap)
+nmap <Leader>aj <Plug>(ale_next_wrap)
+
+" Python
+let g:ale_python_autoimport_executable = expand('~') . '/miniconda3/envs/neovim/bin/autoimport'
+let g:ale_python_black_executable = expand('~') . '/miniconda3/envs/neovim/bin/black'
+let g:ale_python_flake8_executable = expand('~') . '/miniconda3/envs/neovim/bin/flake8'
+let g:ale_python_mypy_executable = expand('~') . '/miniconda3/envs/neovim/bin/mypy'
+let g:ale_python_prospector_executable = expand('~') . '/miniconda3/envs/neovim/bin/prospector'
+let g:ale_python_pyre_executable = expand('~') . '/miniconda3/envs/neovim/bin/pyre'
+let g:ale_python_reorder_python_imports_executable = expand('~') . '/miniconda3/envs/neovim/bin/reorder-python-imports'
+
+" =============================================================================
 " plugins: rest
 " =============================================================================
 " database
@@ -348,6 +394,7 @@ nmap P <plug>(YoinkPaste_P)
 Plug 'preservim/nerdtree'
   Plug 'Xuyuanp/nerdtree-git-plugin'
   Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'djoshea/vim-autoread'
 Plug 'qpkorr/vim-bufkill'
 Plug 'wsdjeg/vim-fetch'
 Plug 'farmergreg/vim-lastplace'
@@ -402,24 +449,7 @@ Plug 'tpope/vim-fugitive'
   nnoremap gdh :diffget //2<CR>|   " ......................
   nnoremap gdl :diffget //3<CR>|   " ......................
 Plug 'mhinz/vim-signify'
-
-" linting
-Plug 'dense-analysis/ale'
-  let g:ale_disable_lsp = 1| " https://bit.ly/2ZfmdPM
-  let g:ale_fix_on_save = 1
-  let g:ale_fixers = {
-    \ 'haskell': ['brittany'],
-    \ 'python': ['autoimport', 'black', 'reorder-python-imports'],
-    \ 'rust': ['rustfmt'],
-    \ }
-  let g:ale_linters = {
-    \ 'haskell': ['hlint'],
-    \ 'python': ['flake8', 'mypy'],
-    \ 'rust': [],
-    \ }
-  nnoremap <F10> :ALEFix<CR>
-  nnoremap <F11> <Plug>(ale_previous_wrap)
-  nnoremap <silent> <C-j> <Plug>(ale_next_wrap)
+  let g:signify_sign_show_count = 0
 
 " navigation
 Plug 'airblade/vim-matchquote'
@@ -458,6 +488,7 @@ Plug 'morhetz/gruvbox'
 Plug 'ryanoasis/vim-devicons'
 
 " syntax
+Plug 'kevinoid/vim-jsonc'
 Plug 'cespare/vim-toml'
 
 " tags
@@ -492,7 +523,6 @@ Plug 'jez/vim-superman'
 " viewing
 Plug 'wellle/context.vim'
   let g:indentLine_char = '▏'
-Plug 'blueyed/vim-diminactive'
 Plug 'Yggdroot/indentLine'
 Plug 'RRethy/vim-illuminate'
 Plug 'wellle/visual-split.vim'

@@ -3,7 +3,7 @@ format = """\
 $time\
 $directory\
 $git_branch$git_state$git_commit$git_status\
-$conda$docker_context$elixir$elm$package$python\
+$conda$docker_context$elixir$elm$python$package\
 $line_break\
 $username$hostname$cmd_duration$jobs$memory_usage$shlvl$status\
 $character"""
@@ -17,7 +17,7 @@ vicmd_symbol = "[❮](bold yellow)"
 show_notifications = true
 
 [conda]
-format = "[$symbol]($style) "
+format = "[$symbol$environment]($style) "
 
 [directory]
 truncation_length = 3
@@ -53,10 +53,13 @@ untracked = "?$count"
 format = "[$hostname]($style) "
 
 [memory_usage]
-format = "$symbol[$ram]($style) "
+format = "[$symbol$ram]($style) "
+
+[package]
+format = "[$symbol$version]($style) "
 
 [python]
-disabled = true
+format = "[$symbol$version]($style) "
 
 [shlvl]
 disabled = false

@@ -1,6 +1,4 @@
 {
-  "python.linting.enabled": true,
-  "python.linting.flake8Enabled": true,
-  "python.linting.mypyEnabled": false,
-  "python.linting.pylintEnabled": false
+  "diagnostic.displayByAle": true,
+  "python.linting.enabled": false
 }
