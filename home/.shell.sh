@@ -93,10 +93,10 @@ if command -v direnv >/dev/null 2>&1; then
 fi
 
 # dropbox
-if command -v dropbox.py >/dev/null 2>&1; then
-	dropbox.py autostart yes
-	dropbox.py start >/dev/null 2>&1
-	__path_dropbox=/data/derek/Dropbox
+__data_dir=/data/derek
+if [ -d "$__data_dir" ] && (command -v dropbox.py >/dev/null 2>&1); then
+	HOME="$__data_dir" dropbox.py start >/dev/null 2>&1
+	__path_dropbox="$__data_dir/Dropbox"
 	if [ -d "$__path_dropbox" ]; then
 		alias cddb='cd $PATH_DROPBOX'
 		export PATH_DROPBOX="$__path_dropbox"
@@ -116,11 +116,12 @@ if command -v exa >/dev/null 2>&1; then
 	__exa_base() { exa -F --group-directories-first "$@"; }
 	__exa_short() { __exa_base -x "$@"; }
 	l() { __exa_short --git-ignore "$@"; }
-	la() { __exa_short -a "$@"; }
+	la() { l -a "$@"; }
+	lag() { __exa_short -a "$@"; }
 	__exa_long() { __exa_base -ghl --git --time-style=long-iso "$@"; }
 	ll() { __exa_long --git-ignore "$@"; }
-	lla() { __exa_long -a "$@"; }
-	lal() { lla "$@"; }
+	lla() { ll -a "$@"; }
+	llag() { __exa_long -a "$@"; }
 fi
 
 # fzf
@@ -190,6 +191,9 @@ if command -v python >/dev/null 2>&1; then
 	alias pcui='pre-commit uninstall'
 fi
 
+# python
+(command -v python >/dev/null 2>&1) && alias pie='pip install -e .'
+
 # python: flask
 (command -v python >/dev/null 2>&1) && export FLASK_DEBUG=1
 
@@ -233,6 +237,11 @@ if command -v xclip >/dev/null 2>&1; then
 	alias pbcopy='xclip -selection clipboard'
 	alias pbpaste='xclip -selection clipboard -o'
 fi
+
+# watchexe + pre-commit
+(command -v watchexec >/dev/null 2>&1) &&
+	(command -v pre-commit-current >/dev/null 2>&1) &&
+	alias wpcc='watchexec -d 5000 pre-commit-current'
 
 # zoxide
 if command -v zoxide >/dev/null 2>&1; then

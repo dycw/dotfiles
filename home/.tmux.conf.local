@@ -3,9 +3,6 @@
 bind \\ split-window -h
 bind | split-window -h
 
-# pane navigation
-bind -r l select-pane -R  # move right
-
 # -- clipboard -----------------------------------------------------------------
 tmux_conf_copy_to_os_clipboard=true
 

@@ -238,10 +238,11 @@ ensure_gem_install mdl
 ensure_npm_install() {
 	(command -v npm >/dev/null 2>&1) &&
 		! (command -v "$1" >/dev/null 2>&1) &&
-		npm install "$1"
+		npm install -g "$1"
 }
 
 ensure_npm_install pyright
+ensure_npm_install @stoplight/spectral
 
 # === apt ===
 

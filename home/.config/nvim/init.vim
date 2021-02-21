@@ -158,7 +158,6 @@ Plug 'neoclide/coc.nvim', {
 let g:coc_global_extensions = [
   \ 'coc-css',
   \ 'coc-dictionary',
-  \ 'coc-git',
   \ 'coc-highlight',
   \ 'coc-html',
   \ 'coc-json',
@@ -325,9 +324,11 @@ let g:ale_fixers = {
   \ }
 let g:ale_linters = {
   \ 'haskell': ['hlint'],
+  \ 'markdown': ['mdl'],
   \ 'python': ['flake8', 'mypy', 'prospector', 'pyre', 'pyright'],
   \ 'rust': [],
   \ 'vim': ['vim-vint'],
+  \ 'yaml': ['spectral', 'yamllint'],
   \ }
 let g:ale_linters_explicit = 1
 let g:ale_sign_column_always = 1
@@ -340,6 +341,12 @@ let g:ale_warn_about_trailing_whitespace = 0
 nmap <Leader>ak <Plug>(ale_previous_wrap)
 nmap <Leader>aj <Plug>(ale_next_wrap)
 
+" Javascript
+let g:ale_javascript_prettier_executable = '/home/linuxbrew/.linuxbrew/bin/prettier'
+
+" Markdown
+let g:ale_markdown_mdl_executable = '/home/linuxbrew/.linuxbrew/lib/ruby/gems/3.0.0/bin/mdl'
+
 " Python
 let g:ale_python_autoimport_executable = expand('~') . '/miniconda3/envs/neovim/bin/autoimport'
 let g:ale_python_black_executable = expand('~') . '/miniconda3/envs/neovim/bin/black'
@@ -349,6 +356,9 @@ let g:ale_python_prospector_executable = expand('~') . '/miniconda3/envs/neovim/
 let g:ale_python_pyre_executable = expand('~') . '/miniconda3/envs/neovim/bin/pyre'
 let g:ale_python_reorder_python_imports_executable = expand('~') . '/miniconda3/envs/neovim/bin/reorder-python-imports'
 
+" YAML
+let g:ale_yaml_spectral_executable = '/home/linuxbrew/.linuxbrew/bin/spectral'
+let g:ale_yaml_yamllint_executable = expand('~') . '/miniconda3/envs/neovim/bin/yamllint'
 " =============================================================================
 " plugins: rest
 " =============================================================================
@@ -445,9 +455,9 @@ Plug 'rhysd/conflict-marker.vim'
 Plug 'rhysd/git-messenger.vim'
 Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-fugitive'
-  nnoremap <leader>gd :Gvdiff<CR>| " https://bit.ly/3u7Z3ci
-  nnoremap gdh :diffget //2<CR>|   " ......................
-  nnoremap gdl :diffget //3<CR>|   " ......................
+  " nnoremap <leader>gd :Gvdiff<CR>| " https://bit.ly/3u7Z3ci
+  " nnoremap gdh :diffget //2<CR>|   " ......................
+  " nnoremap gdl :diffget //3<CR>|   " ......................
 Plug 'mhinz/vim-signify'
   let g:signify_sign_show_count = 0
 
