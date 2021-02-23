@@ -227,6 +227,9 @@ if command -v nvim >/dev/null 2>&1; then
 	export EDITOR=nvim
 fi
 
+# path
+alias echo-path='sed '"'"'s/:/\n/g'"'"' <<< "$PATH"'
+
 # pre-commit
 if command -v python >/dev/null 2>&1; then
 	alias pc='pre-commit-current'
