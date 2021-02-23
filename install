@@ -232,13 +232,15 @@ fi
 # === zinit ===
 
 if ! [ -d "$HOME/.zinit" ]; then
-	curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh
+	__url=https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh
+	curl -fsSL "$__url"
 fi
 
 # === cargo ===
 
 ensure_cargo_install() {
-	if (command -v cargo >/dev/null 2>&1) && ! (command -v "$1" >/dev/null 2>&1); then
+	if (command -v cargo >/dev/null 2>&1) &&
+		! (command -v "$1" >/dev/null 2>&1); then
 		cargo install "$1"
 	fi
 }
@@ -250,7 +252,8 @@ ensure_cargo_install rmesg
 # === gem ===
 
 ensure_gem_install() {
-	if (command -v gem >/dev/null 2>&1) && ! (command -v "$1" >/dev/null 2>&1); then
+	if (command -v gem >/dev/null 2>&1) &&
+		! (command -v "$1" >/dev/null 2>&1); then
 		gem install "$1"
 	fi
 }
@@ -260,7 +263,8 @@ ensure_gem_install mdl
 # === npm ===
 
 ensure_npm_install() {
-	if (command -v npm >/dev/null 2>&1) && ! (npm ls -g | grep "$1" >/dev/null 2>&1); then
+	if (command -v npm >/dev/null 2>&1) &&
+		! (npm ls -g | grep "$1" >/dev/null 2>&1); then
 		npm install -g "$1"
 	fi
 }
@@ -284,7 +288,8 @@ ensure_apt_install gnome-tweaks       # screenshot locations
 if ! command -v google-chrome >/dev/null 2>&1; then
 	tmp_dir="$(mktemp -d)"
 	cd "$tmp_dir" || exit
-	wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+	__url=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+	wget "$__url"
 	sudo dpkg -i google-chrome-stable_current_amd64.deb
 fi
 
@@ -321,16 +326,16 @@ if ! [ -f "$__config_local" ]; then
 END
 fi
 
-private="$HOME/.ssh/id_rsa"
-public="$private.pub"
-if ! [ -f "$public" ]; then
-	ssh-keygen -b 4096 -f "$HOME/.ssh/id_rsa" -q -t rsa -C 'd.wan@icloud.com' -N '' <<<y \
-		>/dev/null 2>&1
+__private="$HOME/.ssh/id_rsa"
+__public="$__private.pub"
+if ! [ -f "$__public" ]; then
+	ssh-keygen -b 4096 -f "$__private" -q -t rsa -C d.wan@icloud.com -N '' \
+		<<<y >/dev/null 2>&1
 	ssh-agent -s
 	ssh-add
-	xclip -sel clip <"$public"
+	xclip -sel clip <"$__public"
 	firefox "https://github.com/settings/keys"
 	echo "Please add your SSH key (copied) to GitHub"
-	cd "$HOME/dotfiles" || exit
+	cd "$PATH_DOTFILES" || exit
 	git remote set-url origin git@github.com:dycw/dotfiles.git
 fi

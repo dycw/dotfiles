@@ -38,7 +38,9 @@ if command -v atom >/dev/null 2>&1; then
 fi
 
 # bash
-alias bashrc='$EDITOR $HOME/.bashrc'
+if command -v bash >/dev/null 2>&1; then
+	alias bashrc='$EDITOR $HOME/.bashrc'
+fi
 
 # bat
 if command -v bat >/dev/null 2>&1; then
@@ -293,8 +295,10 @@ if command -v tmux >/dev/null 2>&1; then
 fi
 
 # ubuntu (https://askubuntu.com/a/492343)
-alias apt-installed="comm -23 <(apt-mark showmanual | sort -u) <(gzip -dc " \
-	"/var/log/installer/initial-status.gz | sed -n 's/^Package: //p' | sort -u)"
+if command -v apt >/dev/null 2>&1; then
+	alias apt-installed="comm -23 <(apt-mark showmanual | sort -u) <(gzip -dc " \
+		"/var/log/installer/initial-status.gz | sed -n 's/^Package: //p' | sort -u)"
+fi
 
 # vim
 if command -v vim >/dev/null 2>&1; then
@@ -336,4 +340,6 @@ if command -v zoxide >/dev/null 2>&1; then
 fi
 
 # zsh
-alias zshrc='$EDITOR $HOME/.zshrc'
+if command -v zsh >/dev/null 2>&1; then
+	alias zshrc='$EDITOR $HOME/.zshrc'
+fi

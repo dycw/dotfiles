@@ -6,7 +6,7 @@ set ignorecase
 set smartcase
 
 " column
-set colorcolumn=90
+set colorcolumn=80
 highlight ColorColumn ctermbg=0 guibg=lightgrey
 
 " coc.nvim
@@ -63,7 +63,7 @@ set noswapfile
 " tab pages
 set showtabline=2
 
-" update (coc.nvim, vim-signify)
+" update (coc.nvim)
 set updatetime=100
 
 " =============================================================================
@@ -277,12 +277,18 @@ xmap ac <Plug>(coc-classobj-a)
 omap ac <Plug>(coc-classobj-a)
 
 " Remap <C-f> and <C-b> for scroll float windows/popups.
-nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ?
+  \ coc#float#scroll(1) : "\<C-f>"
+nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ?
+  \ coc#float#scroll(0) : "\<C-b>"
+inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ?
+  \ "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ?
+  \ "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ?
+  \ coc#float#scroll(1) : "\<C-f>"
+vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ?
+  \ coc#float#scroll(0) : "\<C-b>"
 
 " Use CTRL-S for selections ranges.
 " Requires 'textDocument/selectionRange' support of language server.
@@ -473,8 +479,6 @@ Plug 'tpope/vim-fugitive'
   " nnoremap <leader>gd :Gvdiff<CR>| " https://bit.ly/3u7Z3ci
   " nnoremap gdh :diffget //2<CR>|   " ......................
   " nnoremap gdl :diffget //3<CR>|   " ......................
-Plug 'mhinz/vim-signify'
-  let g:signify_sign_show_count = 0
 
 " navigation
 Plug 'airblade/vim-matchquote'
