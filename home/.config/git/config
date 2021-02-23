@@ -95,8 +95,11 @@
   rb = rebase
   rba = rb --abort
   rbc = rb --continue
-  rbi = rb --interactive
+  rbi = rb -i
+  rbim = rbi master
+  rbiom = rbi origin/master
   rbm = rb master
+  rbom = rb origin/master
   rbs = rb --skip
 
   # remote
@@ -218,7 +221,7 @@
   prompt = false
 
 [mergetool "fugitive"]
-  cmd = nvim -c \"Git mergetool\"
+  cmd = nvim -f -c "Gvdiffsplit!" "$MERGED"
 
 [pull]
   default = upstream

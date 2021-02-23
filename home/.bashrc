@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 # shellcheck source=/dev/null
 
-__shell_sh="$HOME/.shell.sh" && [ -f "$__shell_sh" ] && source "$__shell_sh" bash
-__bashrc_local="$HOME/.bashrc.local" && [ -f "$__bashrc_local" ] && source "$__bashrc_local"
+__shell_sh="$HOME/.shell.sh"
+if [ -f "$__shell_sh" ]; then
+	source "$__shell_sh" bash
+fi
+__bashrc_local="$HOME/.bashrc.local"
+if [ -f "$__bashrc_local" ]; then
+	source "$__bashrc_local"
+fi
 
 # bash
+__bash="$XDG_CACHE_HOME/bash"
+mkdir -p "$__bash"
 HISTCONTROL=ignoreboth
-__bash="$XDG_CACHE_HOME/bash" && ! [ -d "$__bash" ] && mkdir -p "$__bash"
 HISTFILE="$__bash/bash_history"
 HISTSIZE=1000
 HISTFILESIZE=2000

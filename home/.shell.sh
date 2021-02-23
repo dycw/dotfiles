@@ -8,16 +8,23 @@ __shell="$1"
 # === system ==
 # dotfiles
 export PATH_DOTFILES="${PATH_DOTFILES:-$HOME/dotfiles}"
-__shell_local_sh="$HOME/.shell.local.sh" && [ -f "$__shell_local_sh" ] && source "$__shell_local_sh" zsh
+__shell_local_sh="$HOME/.shell.local.sh"
+if [ -f "$__shell_local_sh" ]; then
+	source "$__shell_local_sh" zsh
+fi
 
 # homebrew
 export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
-export HOMEBREW_CELLAR="/home/linuxbrew/.linuxbrew/Cellar"
-export HOMEBREW_REPOSITORY="/home/linuxbrew/.linuxbrew/Homebrew"
-export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin${PATH:+:$PATH}"
-export MANPATH="/home/linuxbrew/.linuxbrew/share/man${MANPATH:+:$MANPATH}:"
-export INFOPATH="/home/linuxbrew/.linuxbrew/share/info${INFOPATH:+:$INFOPATH}"
-__brew_dir=/home/linuxbrew_dir/.linuxbrew_dir/bin/brew_dir && [ -f "$__brew_dir" ] && eval "$("$__brew_dir" shellenv)"
+export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
+export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX/Homebrew"
+export PATH="$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin${PATH:+:$PATH}"
+__share="$HOMEBREW_PREFIX/share"
+export MANPATH="$__share/man${MANPATH:+:$MANPATH}:"
+export INFOPATH="$__share/info${INFOPATH:+:$INFOPATH}"
+__brew_dir=/home/linuxbrew_dir/.linuxbrew_dir/bin/brew_dir
+if [ -f "$__brew_dir" ]; then
+	eval "$("$__brew_dir" shellenv)"
+fi
 
 # XDG
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
@@ -26,7 +33,9 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$USER}"
 
 # === applications ===
 # atom
-(command -v atom >/dev/null 2>&1) && export GIST_ID=690a59ef26208e43fa880c874e01c1
+if command -v atom >/dev/null 2>&1; then
+	export GIST_ID=690a59ef26208e43fa880c874e01c1
+fi
 
 # bash
 alias bashrc='$EDITOR $HOME/.bashrc'
@@ -40,7 +49,9 @@ if command -v bat >/dev/null 2>&1; then
 fi
 
 # batgrep
-(command -v batgrep >/dev/null 2>&1) && alias bg='batgrep'
+if command -v batgrep >/dev/null 2>&1; then
+	alias bg='batgrep'
+fi
 
 # bin
 while IFS= read -d '' -r __bin; do
@@ -48,7 +59,10 @@ while IFS= read -d '' -r __bin; do
 done < <(find "$PATH_DOTFILES" -name bin -print0 -type d)
 
 # cargo
-__cargo_bin="$HOME/.cargo/bin" && [ -d "$__cargo_bin" ] && export PATH="$__cargo_bin${PATH:+:$PATH}"
+__cargo_bin="$HOME/.cargo/bin"
+if [ -d "$__cargo_bin" ]; then
+	export PATH="$__cargo_bin${PATH:+:$PATH}"
+fi
 
 # cd
 alias ~='cd $HOME'
@@ -62,7 +76,7 @@ alias cddl='cd $HOME/Downloads'
 alias cddt='cd $HOME/Desktop'
 alias cdp='cd $HOME/Pictures'
 alias cdw='cd $HOME/work'
-__work="$HOME/work" && ! [ -d "$__work" ] && mkdir -p "$__work"
+mkdir -p "$HOME/work"
 
 # conda
 __miniconda3="$HOME/miniconda3"
@@ -83,7 +97,6 @@ if [ -d "$__miniconda3" ]; then
 	alias cec='conda env create --force'
 	alias cel='conda env list'
 	alias ceu='conda env update'
-	__bin="$__miniconda3/envs/neovim/bin" && [ -d "$__bin" ] && export PATH="$__bin${PATH:+:$PATH}"
 fi
 
 # direnv
@@ -128,8 +141,7 @@ fi
 __fzf_shell="$XDG_CONFIG_HOME/fzf/fzf.$__shell"
 if [ -f "$__fzf_shell" ]; then
 	source "$__fzf_shell"
-	if (command -v bat >/dev/null 2>&1) &&
-		(command -v fd >/dev/null 2>&1) &&
+	if (command -v bat >/dev/null 2>&1) && (command -v fd >/dev/null 2>&1) &&
 		(command -v tree >/dev/null 2>&1); then
 		# https://bit.ly/2OMLMpm
 		export FZF_DEFAULT_COMMAND='fd -HL -c=always -E=.git -E=node_modules'
@@ -154,30 +166,54 @@ if [ -f "$__fzf_shell" ]; then
 fi
 
 # gem
-(command -v gem >/dev/null 2>&1) &&
-	__bin="$(gem environment gemdir)/bin" &&
-	[ -d "$__bin" ] &&
-	export PATH="$__bin${PATH:+:$PATH}"
+if command -v gem >/dev/null 2>&1; then
+	__bin="$(gem environment gemdir)/bin"
+	if [ -d "$__bin" ]; then
+		export PATH="$__bin${PATH:+:$PATH}"
+	fi
+fi
 
 # git
-alias cdr='cd $(git root)'
-alias gitconfig='$EDITOR $XDG_CONFIG_HOME/git/config'
-alias gitignore='$EDITOR $XDG_CONFIG_HOME/git/ignore'
-for al in $(git --list-cmds=alias); do
-	alias "g$al"="git $al"
-done
+if command -v nvim >/dev/null 2>&1; then
+	alias cdr='cd $(git root)'
+	alias gitconfig='$EDITOR $XDG_CONFIG_HOME/git/config'
+	alias gitignore='$EDITOR $XDG_CONFIG_HOME/git/ignore'
+	for al in $(git --list-cmds=alias); do
+		alias "g$al"="git $al"
+	done
+fi
 
 # gitweb
-(command -v gitweb >/dev/null 2>&1) && alias gw='gitweb'
+if command -v gitweb >/dev/null 2>&1; then
+	alias gw='gitweb'
+fi
 
 # googler
-(command -v googler >/dev/null 2>&1) && alias g='googler'
+if command -v googler >/dev/null 2>&1; then
+	alias g='googler'
+fi
+
+# less
+if command -v less >/dev/null 2>&1; then
+	__less="$XDG_CACHE_HOME/less"
+	mkdir -p "$__less"
+	export LESSHISTFILE="$__less/history"
+	export LESSKEY="$__less/lesskey"
+fi
+
+# nano
+if command -v nano >/dev/null 2>&1; then
+	alias nanorc='$EDITOR $XDG_CONFIG_HOME/nano/nanorc'
+fi
+
+# npm
+if command -v npm >/dev/null 2>&1; then
+	alias npmrc='$EDITOR $HOME/.npmrc'
+fi
 
 # nvim
 if command -v nvim >/dev/null 2>&1; then
 	alias n='nvim'
-	alias v='nvim'
-	alias vim='nvim'
 	alias vimrc='$EDITOR $XDG_CONFIG_HOME/nvim/init.vim'
 	export EDITOR=nvim
 fi
@@ -192,10 +228,17 @@ if command -v python >/dev/null 2>&1; then
 fi
 
 # python
-(command -v python >/dev/null 2>&1) && alias pie='pip install -e .'
+if command -v python >/dev/null 2>&1; then
+	alias pie='pip install -e .'
+	while IFS= read -d '' -r __pythonrc; do
+		export PYTHONSTARTUP="$__pythonrc"
+	done < <(find "$PATH_DOTFILES" -name pythonrc.py -print0 -type f)
+fi
 
 # python: flask
-(command -v python >/dev/null 2>&1) && export FLASK_DEBUG=1
+if command -v python >/dev/null 2>&1; then
+	export FLASK_DEBUG=1
+fi
 
 # python: hypothesis
 if command -v python >/dev/null 2>&1; then
@@ -206,16 +249,30 @@ if command -v python >/dev/null 2>&1; then
 fi
 
 # python: numpy
-(command -v python >/dev/null 2>&1) && export MKL_NUM_THREADS=1
+if command -v python >/dev/null 2>&1; then
+	export MKL_NUM_THREADS=1
+fi
 
 # python: tensorboard
-(command -v python >/dev/null 2>&1) && alias tb='tensorboard --logdir .'
+if command -v python >/dev/null 2>&1; then
+	alias tb='tensorboard --logdir .'
+fi
+
+# redis
+if command -v redis >/dev/null 2>&1; then
+	__redis="$XDG_CACHE_HOME/redis"
+	mkdir -p "$__redis"
+	export REDISCLI_HISTFILE="$__redis/history"
+fi
 
 # rg
-(command -v rg >/dev/null 2>&1) && alias rg='rg -L --hidden --no-messages'
+if command -v rg >/dev/null 2>&1; then
+	alias rg='rg -L --hidden --no-messages'
+fi
 
 # sh
 alias shellsh='$EDITOR $HOME/.shell.sh'
+alias shelllocalsh='$EDITOR $HOME/.shell.local.sh'
 
 # starship
 if command -v starship >/dev/null 2>&1; then
@@ -224,13 +281,28 @@ if command -v starship >/dev/null 2>&1; then
 fi
 
 # tmux
-(command -v tmux >/dev/null 2>&1) && alias tmuxconf='$EDITOR $HOME/.tmux.conf.local'
+if command -v tmux >/dev/null 2>&1; then
+	alias tmuxconf='$EDITOR $HOME/.tmux.conf.local'
+fi
 
 # ubuntu (https://askubuntu.com/a/492343)
-alias apt-installed="comm -23 <(apt-mark showmanual | sort -u) <(gzip -dc /var/log/installer/initial-status.gz | sed -n 's/^Package: //p' | sort -u)"
+alias apt-installed="comm -23 <(apt-mark showmanual | sort -u) <(gzip -dc " \
+	"/var/log/installer/initial-status.gz | sed -n 's/^Package: //p' | sort -u)"
+
+# vim
+if command -v vim >/dev/null 2>&1; then
+	alias v='vim'
+	__init_vim="$XDG_CONFIG_HOME/nvim/init.vim"
+	if [ -f "$__init_vim" ]; then
+		export VIMINIT="source $__init_vim"
+	fi
+fi
 
 # vim-superman
-__bin="$HOME/.local/share/nvim/plugged/vim-superman/bin" && [ -d "$__bin" ] && export PATH="$__bin${PATH:+:$PATH}"
+__bin="$HOME/.local/share/nvim/plugged/vim-superman/bin"
+if [ -d "$__bin" ]; then
+	export PATH="$__bin${PATH:+:$PATH}"
+fi
 
 # xclip
 if command -v xclip >/dev/null 2>&1; then
@@ -238,10 +310,16 @@ if command -v xclip >/dev/null 2>&1; then
 	alias pbpaste='xclip -selection clipboard -o'
 fi
 
-# watchexe + pre-commit
-(command -v watchexec >/dev/null 2>&1) &&
-	(command -v pre-commit-current >/dev/null 2>&1) &&
+# watchexec + pre-commit
+if (command -v watchexec >/dev/null 2>&1) &&
+	(command -v pre-commit-current >/dev/null 2>&1); then
 	alias wpcc='watchexec -d 5000 pre-commit-current'
+fi
+
+# wget
+if command -v wget >/dev/null 2>&1; then
+	export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
+fi
 
 # zoxide
 if command -v zoxide >/dev/null 2>&1; then

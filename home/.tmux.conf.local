@@ -12,6 +12,7 @@ tmux_conf_24b_colour=true
 # -- tpm -----------------------------------------------------------------------
 set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @continuum-restore 'on'
+set -g @continuum-save-interval '5'
 
 set -g @plugin 'tmux-plugins/tmux-copycat'
 

@@ -17,14 +17,15 @@ vicmd_symbol = "[❮](bold yellow)"
 show_notifications = true
 
 [conda]
-format = "[$symbol$environment]($style) "
+format = "[$symbol:$environment]($style) "
+symbol = "c"
 
 [directory]
 truncation_length = 3
 
 [git_branch]
 always_show_remote = true
-format = "[$symbol$branch]($style) "
+format = "[$branch]($style) "
 style = "bold yellow"
 
 [git_commit]
@@ -59,7 +60,8 @@ format = "[$symbol$ram]($style) "
 format = "[$symbol$version]($style) "
 
 [python]
-format = "[$symbol$version]($style) "
+format = "[$symbol:$version]($style) "
+symbol = "py"
 
 [shlvl]
 disabled = false

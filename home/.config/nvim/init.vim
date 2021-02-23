@@ -5,6 +5,10 @@
 set ignorecase
 set smartcase
 
+" column
+set colorcolumn=90
+highlight ColorColumn ctermbg=0 guibg=lightgrey
+
 " coc.nvim
 set cmdheight=2
 set hidden
@@ -86,6 +90,7 @@ inoremap <C-s> <Esc>:w<CR>
 
 " search
 nnoremap <Esc> :nohlsearch<CR>
+vnoremap <Esc> :nohlsearch<CR>
 
 " shift blocks visually (https://bit.ly/3alZUhL)
 vnoremap > >gv
@@ -93,7 +98,9 @@ vnoremap < <gv
 
 " unneeded
 nnoremap K <Nop>
+vnoremap K <Nop>
 nnoremap Q <Nop>
+vnoremap Q <Nop>
 
 " windows
 nnoremap <C-w>h     :set nosplitright<Bar>:vsplit<Bar>:set splitright<CR>
@@ -130,22 +137,31 @@ vnoremap Y y$
 " =============================================================================
 " python host
 " =============================================================================
-let conda_default_env = $CONDA_DEFAULT_ENV
-if conda_default_env == 'base'
-  let env_name = 'neovim'
-else
-  let env_name = conda_default_env
-endif
-let bin_python = expand('~') . '/miniconda3/envs/' . env_name . '/bin/python'
-if filereadable(bin_python)
-  let g:python3_host_prog = bin_python
+if has('nvim')
+  let conda_default_env = $CONDA_DEFAULT_ENV
+  if conda_default_env == 'base'
+    let env_name = 'neovim'
+  else
+    let env_name = conda_default_env
+  endif
+  let bin_python = expand('~') . '/miniconda3/envs/' . env_name . '/bin/python'
+  if filereadable(bin_python)
+    let g:python3_host_prog = bin_python
+  endif
 endif
 
 " =============================================================================
 " plugins
 " =============================================================================
-call plug#begin(stdpath('data') . '/plugged')
+if has('nvim')
+  call plug#begin(stdpath('data') . '/plugged')
+else
+  call plug#begin('~/.vim/plugged')
+endif
 
+Plug 'tpope/vim-sensible'
+
+if has('nvim')
 " =============================================================================
 " plugins: coc.nvim
 " =============================================================================
@@ -445,7 +461,6 @@ Plug 'junegunn/fzf.vim'
 
 " general
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-sensible'
 
 " git
 Plug 'rhysd/committia.vim'
@@ -537,4 +552,5 @@ Plug 'Yggdroot/indentLine'
 Plug 'RRethy/vim-illuminate'
 Plug 'wellle/visual-split.vim'
 
+endif
 call plug#end()

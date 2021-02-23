@@ -19,7 +19,8 @@ ensure_apt_install git
 # === repo ===
 
 export PATH_DOTFILES="${PATH_DOTFILES:-$HOME/dotfiles}"
-! [ -d "$PATH_DOTFILES" ] && git clone --recuse-submodules https://github.com/dycw/dotfiles.git "$PATH_DOTFILES"
+! [ -d "$PATH_DOTFILES" ] &&
+	git clone --recuse-submodules https://github.com/dycw/dotfiles.git "$PATH_DOTFILES"
 
 # === symlinks ===
 
@@ -78,12 +79,17 @@ process_root home.local
 
 while IFS= read -d '' -r __rel_submodules; do
 	__abs_submodules="$(realpath "$__rel_submodules")"
-	__tmux_conf="$__abs_submodules/.tmux/.tmux.conf" && [ -f "$__tmux_conf" ] && process_link "$__tmux_conf" "$HOME/.tmux.conf"
+	__tmux_conf="$__abs_submodules/.tmux/.tmux.conf" &&
+		[ -f "$__tmux_conf" ] &&
+		process_link "$__tmux_conf" "$HOME/.tmux.conf"
 done < <(find "$PATH_DOTFILES" -name submodules -not -path "*/.git/*" -print0 -type d)
 
 # === brew (needs confirmation) ===
 
-__linuxbrew="/home/linuxbrew" && ! [ -d "$__linuxbrew" ] && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+__linuxbrew="/home/linuxbrew" &&
+	! [ -d "$__linuxbrew" ] &&
+	/bin/bash -c \
+		"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 ensure_brew_install() {
 	(command -v brew >/dev/null 2>&1) &&
@@ -97,7 +103,10 @@ ensure_brew_install gcc
 # === brew: fzf ===
 
 ensure_brew_install fzf
-__install="$(brew --prefix)/opt/fzf/install" && [ -f "$__install" ] && ! [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/fzf" ] && "$__install" --xdg --key-bindings --completion --no-update-rc
+__install="$(brew --prefix)/opt/fzf/install" &&
+	[ -f "$__install" ] &&
+	! [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/fzf" ] &&
+	"$__install" --xdg --key-bindings --completion --no-update-rc
 
 # === brew: zsh ===
 
@@ -154,7 +163,8 @@ ensure_brew_install eth-p/software/bat-extras
 __miniconda3="$HOME/miniconda3"
 if ! [ -d "$__miniconda3" ]; then
 	__miniconda="$(mktemp -d)/miniconda.sh"
-	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O "$__miniconda"
+	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+		-O "$__miniconda"
 	bash "$__miniconda" -b -u -p "$__miniconda3"
 fi
 
@@ -181,7 +191,13 @@ fi
 
 # === vim-plug ===
 
-__plug_vim="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" && ! [ -f "$__plug_vim" ] && sh -c 'curl -fLo "$__plug_vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+for __dir in "$HOME/.vim" "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site"; do
+	__plug_vim="$__dir/autoload/plug.vim"
+	if ! [ -f "$__plug_vim" ]; then
+		curl -fLo "$__plug_vim" --create-dirs \
+			https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	fi
+done
 
 # === wally ===
 
@@ -209,7 +225,9 @@ fi
 
 # === zinit ===
 
-! [ -d "$HOME/.zinit" ] && sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)" <<<n
+! [ -d "$HOME/.zinit" ] &&
+	sh -c "$(curl -fsSL " \
+    "https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)" <<<n
 
 # === cargo ===
 
@@ -246,10 +264,12 @@ ensure_npm_install @stoplight/spectral
 
 # === apt ===
 
+ensure_apt_install alacritty ppa:aslatter/ppa
 ensure_apt_install pdfarranger ppa:linuxuprisinig/apps
 ensure_apt_install qutebrowser
 ensure_apt_install sqlitebrowser ppa:linuxgndu/sqlitebrowser
 ensure_apt_install texlive-xetex
+ensure_apt_install vim
 ensure_apt_install chrome-gnome-shell # screenshot locations
 ensure_apt_install gnome-tweaks       # screenshot locations
 
@@ -264,7 +284,8 @@ fi
 
 # === apt: nordvpn ===
 
-! (command -v nordvpn >/dev/null 2>&1) && sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh) <<<y
+! (command -v nordvpn >/dev/null 2>&1) &&
+	sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh) <<<y
 
 # === snap ===
 
@@ -294,7 +315,8 @@ END
 private="$HOME/.ssh/id_rsa"
 public="$private.pub"
 if ! [ -f "$public" ]; then
-	ssh-keygen -b 4096 -f "$HOME/.ssh/id_rsa" -q -t rsa -C 'd.wan@icloud.com' -N '' <<<y >/dev/null 2>&1
+	ssh-keygen -b 4096 -f "$HOME/.ssh/id_rsa" -q -t rsa -C 'd.wan@icloud.com' -N '' <<<y \
+		>/dev/null 2>&1
 	ssh-agent -s
 	ssh-add
 	xclip -sel clip <"$public"
