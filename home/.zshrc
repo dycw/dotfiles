@@ -2,15 +2,17 @@
 # shellcheck shell=bash
 # shellcheck source=/dev/null
 
-__shell_sh="$HOME/.shell.sh"
-if [ -f "$__shell_sh" ]; then
-	source "$__shell_sh" zsh
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+
+__config="$XDG_CONFIG_HOME/shell/config.sh"
+if [ -f "$__config" ]; then
+	source "$__config" zsh
 fi
-__zinit_sh="$HOME/.zinit.sh"
-if [ -f "$__zinit_sh" ]; then
-	source "$__zinit_sh"
+__zinit="$XDG_CONFIG_HOME/zinit/zinit.sh"
+if [ -f "$__zinit" ]; then
+	source "$__zinit"
 fi
-__zshrc_local="$HOME/.zshrc.local"
+__zshrc_local="$XDG_CONFIG_HOME/zsh/zshrc.local.sh"
 if [ -f "$__zshrc_local" ]; then
 	source "$__zshrc_local"
 fi

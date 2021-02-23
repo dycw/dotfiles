@@ -6,15 +6,20 @@
 __shell="$1"
 
 # === system ==
+# XDG
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$USER}"
+
 # dotfiles
 export PATH_DOTFILES="${PATH_DOTFILES:-$HOME/dotfiles}"
-__shell_local_sh="$HOME/.shell.local.sh"
-if [ -f "$__shell_local_sh" ]; then
-	source "$__shell_local_sh" zsh
+__config_local="$XDG_CONFIG_HOME/shell/config.local.sh"
+if [ -f "$__config_local" ]; then
+	source "$__config_local" zsh
 fi
 
 # homebrew
-export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
 export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX/Homebrew"
 export PATH="$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin${PATH:+:$PATH}"
@@ -25,11 +30,6 @@ __brew_dir=/home/linuxbrew_dir/.linuxbrew_dir/bin/brew_dir
 if [ -f "$__brew_dir" ]; then
 	eval "$("$__brew_dir" shellenv)"
 fi
-
-# XDG
-export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
-export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$USER}"
 
 # === applications ===
 # atom
@@ -178,6 +178,7 @@ fi
 if command -v git >/dev/null 2>&1; then
 	alias cdr='cd $(git root)'
 	alias gitconfig='$EDITOR $XDG_CONFIG_HOME/git/config'
+	alias gitconfiglocal='$EDITOR $XDG_CONFIG_HOME/git/config.local'
 	alias gitignore='$EDITOR $XDG_CONFIG_HOME/git/ignore'
 	for al in $(git --list-cmds=alias); do
 		alias "g$al"="git $al"
@@ -276,9 +277,9 @@ if command -v rg >/dev/null 2>&1; then
 	alias rg='rg -L --hidden --no-messages'
 fi
 
-# sh
-alias shellsh='$EDITOR $HOME/.shell.sh'
-alias shelllocalsh='$EDITOR $HOME/.shell.local.sh'
+# shell
+alias shellconfig='$EDITOR $XDG_CONFIG_HOME/shell/config.sh'
+alias shellconfiglocal='$EDITOR $XDG_CONFIG_HOME/shell/config.local.sh'
 
 # starship
 if command -v starship >/dev/null 2>&1; then
