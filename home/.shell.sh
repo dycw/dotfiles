@@ -97,6 +97,7 @@ if [ -d "$__miniconda3" ]; then
 	alias cec='conda env create --force'
 	alias cel='conda env list'
 	alias ceu='conda env update'
+	export CONDARC="$XDG_CONFIG_HOME/conda/condarc"
 fi
 
 # direnv
@@ -174,13 +175,18 @@ if command -v gem >/dev/null 2>&1; then
 fi
 
 # git
-if command -v nvim >/dev/null 2>&1; then
+if command -v git >/dev/null 2>&1; then
 	alias cdr='cd $(git root)'
 	alias gitconfig='$EDITOR $XDG_CONFIG_HOME/git/config'
 	alias gitignore='$EDITOR $XDG_CONFIG_HOME/git/ignore'
 	for al in $(git --list-cmds=alias); do
 		alias "g$al"="git $al"
 	done
+fi
+
+# git + gitweb
+if (command -v git >/dev/null 2>&1) && (command -v gitweb >/dev/null 2>&1); then
+	alias gpw='git push && gitweb'
 fi
 
 # gitweb

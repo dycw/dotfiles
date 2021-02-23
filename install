@@ -7,7 +7,9 @@ ensure_apt_install() {
 	pkg="$1"
 	repo="$2"
 	if ! dpkg -s "$pkg" >/dev/null 2>&1; then
-		[ -n "$repo" ] && sudo add-apt-repository -y "$repo"
+		if [ -n "$repo" ]; then
+			sudo add-apt-repository -y "$repo"
+		fi
 		sudo apt update
 		sudo apt -y install "$pkg"
 	fi
@@ -19,8 +21,9 @@ ensure_apt_install git
 # === repo ===
 
 export PATH_DOTFILES="${PATH_DOTFILES:-$HOME/dotfiles}"
-! [ -d "$PATH_DOTFILES" ] &&
+if ! [ -d "$PATH_DOTFILES" ]; then
 	git clone --recuse-submodules https://github.com/dycw/dotfiles.git "$PATH_DOTFILES"
+fi
 
 # === symlinks ===
 
@@ -61,6 +64,8 @@ Making symlink:
 	fi
 }
 
+find "$PATH_DOTFILES" -name .mypy_cache -type d -prune -exec rm -rf {} \;
+
 process_root() {
 	home_name="$1"
 	while IFS= read -d '' -r home_path; do
@@ -79,22 +84,23 @@ process_root home.local
 
 while IFS= read -d '' -r __rel_submodules; do
 	__abs_submodules="$(realpath "$__rel_submodules")"
-	__tmux_conf="$__abs_submodules/.tmux/.tmux.conf" &&
-		[ -f "$__tmux_conf" ] &&
+	__tmux_conf="$__abs_submodules/.tmux/.tmux.conf"
+	if [ -f "$__tmux_conf" ]; then
 		process_link "$__tmux_conf" "$HOME/.tmux.conf"
+	fi
 done < <(find "$PATH_DOTFILES" -name submodules -not -path "*/.git/*" -print0 -type d)
 
 # === brew (needs confirmation) ===
 
-__linuxbrew="/home/linuxbrew" &&
-	! [ -d "$__linuxbrew" ] &&
-	/bin/bash -c \
-		"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+__linuxbrew="/home/linuxbrew"
+if ! [ -d "$__linuxbrew" ]; then
+	curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+fi
 
 ensure_brew_install() {
-	(command -v brew >/dev/null 2>&1) &&
-		! (brew list "$1" >/dev/null 2>&1) &&
+	if (command -v brew >/dev/null 2>&1) && ! (brew list "$1" >/dev/null 2>&1); then
 		brew install "$@"
+	fi
 }
 
 ensure_apt_install build-essential
@@ -103,10 +109,10 @@ ensure_brew_install gcc
 # === brew: fzf ===
 
 ensure_brew_install fzf
-__install="$(brew --prefix)/opt/fzf/install" &&
-	[ -f "$__install" ] &&
-	! [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/fzf" ] &&
+__install="$(brew --prefix)/opt/fzf/install"
+if [ -f "$__install" ] && ! [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/fzf" ]; then
 	"$__install" --xdg --key-bindings --completion --no-update-rc
+fi
 
 # === brew: zsh ===
 
@@ -225,16 +231,16 @@ fi
 
 # === zinit ===
 
-! [ -d "$HOME/.zinit" ] &&
-	sh -c "$(curl -fsSL " \
-    "https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)" <<<n
+if ! [ -d "$HOME/.zinit" ]; then
+	curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh
+fi
 
 # === cargo ===
 
 ensure_cargo_install() {
-	(command -v cargo >/dev/null 2>&1) &&
-		! (command -v "$1" >/dev/null 2>&1) &&
+	if (command -v cargo >/dev/null 2>&1) && ! (command -v "$1" >/dev/null 2>&1); then
 		cargo install "$1"
+	fi
 }
 
 ensure_cargo_install gitui
@@ -244,9 +250,9 @@ ensure_cargo_install rmesg
 # === gem ===
 
 ensure_gem_install() {
-	(command -v gem >/dev/null 2>&1) &&
-		! (command -v "$1" >/dev/null 2>&1) &&
+	if (command -v gem >/dev/null 2>&1) && ! (command -v "$1" >/dev/null 2>&1); then
 		gem install "$1"
+	fi
 }
 
 ensure_gem_install mdl
@@ -254,9 +260,9 @@ ensure_gem_install mdl
 # === npm ===
 
 ensure_npm_install() {
-	(command -v npm >/dev/null 2>&1) &&
-		! (command -v "$1" >/dev/null 2>&1) &&
+	if (command -v npm >/dev/null 2>&1) && ! (npm ls -g | grep "$1" >/dev/null 2>&1); then
 		npm install -g "$1"
+	fi
 }
 
 ensure_npm_install pyright
@@ -284,8 +290,9 @@ fi
 
 # === apt: nordvpn ===
 
-! (command -v nordvpn >/dev/null 2>&1) &&
-	sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh) <<<y
+if ! command -v nordvpn >/dev/null 2>&1; then
+	curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh
+fi
 
 # === snap ===
 
@@ -306,11 +313,13 @@ ensure_snap_install signal-desktop
 ensure_brew_install xclip
 
 __config_local="${XDG_CONFIG_HOME:-$HOME/.config}/git/config.local"
-! [ -f "$__config_local" ] && tee -a "$__config_local" >/dev/null 2>&1 <<END
+if ! [ -f "$__config_local" ]; then
+	tee -a "$__config_local" >/dev/null 2>&1 <<END
 [user]
   name = Derek Wan
   email = d.wan@icloud.com
 END
+fi
 
 private="$HOME/.ssh/id_rsa"
 public="$private.pub"
