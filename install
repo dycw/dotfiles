@@ -82,9 +82,8 @@ process_root() {
 process_root home
 process_root home.local
 
-while IFS= read -d '' -r __rel_submodules; do
-	__abs_submodules="$(realpath "$__rel_submodules")"
-	__tmux_conf="$__abs_submodules/.tmux/.tmux.conf"
+while IFS= read -d '' -r __submodules; do
+	__tmux_conf="$__submodules/.tmux/.tmux.conf"
 	if [ -f "$__tmux_conf" ]; then
 		process_link "$__tmux_conf" "$HOME/.tmux.conf"
 	fi
@@ -285,13 +284,14 @@ ensure_npm_install @stoplight/spectral
 # === pipx ===
 
 ensure_pipx_install() {
-	pkg="$1"
 	if (command -v pipx >/dev/null 2>&1) &&
-		! (pipx list | grep "package $pkg" >/dev/null 2>&1); then
-		pipx install "$pkg"
-		if [ "$#" -ge 2 ]; then
-			shift
-			pipx inject "$pkg" "$@"
+		! (pipx list | grep "package $1" >/dev/null 2>&1); then
+		pipx install "$1"
+		if [ "$1" == flake8 ]; then
+			url=https://raw.githubusercontent.com/dycw/pre-commit-hooks/master/flake8-extensions
+			for ext in $(curl $url); do
+				pipx inject "$1" "$ext"
+			done
 		fi
 	fi
 }
@@ -299,31 +299,7 @@ ensure_pipx_install() {
 ensure_pipx_install autoimport
 ensure_pipx_install black
 ensure_pipx_install bump2version
-ensure_pipx_install flake8 \
-	flake8-absolute-import \
-	flake8-annotations \
-	flake8-bandit \
-	flake8-bugbear \
-	flake8-builtins \
-	flake8-commas \
-	flake8-comprehensions \
-	flake8-debugger \
-	flake8-eradicate \
-	flake8-executable \
-	flake8-fine-pytest \
-	flake8-fixme \
-	flake8-future-import \
-	flake8-implicit-str-concat \
-	flake8-mutable \
-	flake8-print \
-	flake8-pytest-style \
-	flake8-simplify \
-	flake8-string-format \
-	flake8-todo \
-	flake8-typing-imports \
-	flake8-unused-arguments \
-	pep8-naming \
-	ensure_pipx_install mypy
+ensure_pipx_install flake8
 ensure_pipx_install pre-commit
 ensure_pipx_install pyre-check
 ensure_pipx_install reorder-python-imports
