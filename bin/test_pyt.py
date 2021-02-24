@@ -1,24 +1,16 @@
-import sys
-from pathlib import Path
 from typing import Callable
 from typing import cast
 from typing import List
 from typing import Optional
 from typing import TypeVar
 
+from pyt import _get_repo_root
+from pyt import _parse_extra
+from pyt import _yield_args
+from pyt import Parsed
 from pytest import mark
 from pytest import param
 from pytest import raises
-
-
-sys.path.append(str(Path(__file__).resolve().parent))
-
-
-from pyt import _get_repo_root  # noqa: E402
-from pyt import _parse_extra  # noqa: E402
-from pyt import _yield_args  # noqa: E402
-from pyt import Parsed  # noqa: E402
-
 
 T = TypeVar("T")
 
@@ -53,7 +45,7 @@ T = TypeVar("T")
             param(["-n1"], Parsed(n=1), id="n, dash"),
             param(["auto"], Parsed(n=0), id="n, auto"),
             param(["-nauto"], Parsed(n=0), id="n, dash auto"),
-            param(["ipython"], Parsed(paths=["ipython"]), id="arg as path"),
+            param(["home"], Parsed(paths=["home"]), id="arg as path"),
             param(["main_test"], Parsed(k=["main_test"]), id="arg as -k, test name"),
             param(
                 ["python/test_foo.py::test_foo"],
@@ -66,8 +58,8 @@ T = TypeVar("T")
                 id="arg as -k, full test case",
             ),
             param(
-                ["ipython", "p"],
-                Parsed(paths=["ipython"], pdb=True),
+                ["home", "p"],
+                Parsed(paths=["home"], pdb=True),
                 id="arg as path, with --pdb",
             ),
         ],
