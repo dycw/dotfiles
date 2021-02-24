@@ -73,6 +73,8 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 
+alias cdcache='cd $XDG_CACHE_HOME'
+alias cdconfig='cd $XDG_CONFIG_HOME'
 alias cddf='cd $PATH_DOTFILES'
 alias cddl='cd $HOME/Downloads'
 alias cddt='cd $HOME/Desktop'
@@ -215,23 +217,35 @@ if command -v nano >/dev/null 2>&1; then
 	alias nanorc='$EDITOR $XDG_CONFIG_HOME/nano/nanorc'
 fi
 
-# npm
-if command -v npm >/dev/null 2>&1; then
-	alias npmrc='$EDITOR $HOME/.npmrc'
-fi
-
-# nvim
+# neovim
 if command -v nvim >/dev/null 2>&1; then
 	alias n='nvim'
 	alias vimrc='$EDITOR $XDG_CONFIG_HOME/nvim/init.vim'
 	export EDITOR=nvim
 fi
 
+# npm
+if command -v npm >/dev/null 2>&1; then
+	alias npmrc='$EDITOR $HOME/.npmrc'
+fi
+
 # path
 alias echo-path='sed '"'"'s/:/\n/g'"'"' <<< "$PATH"'
 
+# pipx
+__bin="$HOME/.local/bin"
+if [ -d "$__bin" ]; then
+	export PATH="$__bin${PATH:+:$PATH}"
+fi
+
+# pylint/prospector
+if (command -v pylint >/dev/null 2>&1) ||
+	(command -v prospector >/dev/null 2>&1); then
+	export PYLINTHOME="$XDG_CACHE_HOME/pylint"
+fi
+
 # pre-commit
-if command -v python >/dev/null 2>&1; then
+if command -v pre-commit >/dev/null 2>&1; then
 	alias pc='pre-commit-current'
 	alias pci='pre-commit install'
 	alias pcaf='pre-commit run --all-files'
@@ -275,6 +289,7 @@ if command -v redis >/dev/null 2>&1; then
 	__redis="$XDG_CACHE_HOME/redis"
 	mkdir -p "$__redis"
 	export REDISCLI_HISTFILE="$__redis/history"
+	export REDISCLI_RCFILE="$XDG_CONFIG_HOME/redies/redisclirc"
 fi
 
 # rg
@@ -285,6 +300,13 @@ fi
 # shell
 alias shellconfig='$EDITOR $XDG_CONFIG_HOME/shell/config.sh'
 alias shellconfiglocal='$EDITOR $XDG_CONFIG_HOME/shell/config.local.sh'
+
+# sqlite3
+if command -v sqlite3 >/dev/null 2>&1; then
+	__sqlite3="$XDG_CACHE_HOME/sqlite3"
+	mkdir -p "$__sqlite3"
+	export SQLITE_HISTORY="$__sqlite3/history"
+fi
 
 # starship
 if command -v starship >/dev/null 2>&1; then
@@ -333,6 +355,7 @@ fi
 # wget
 if command -v wget >/dev/null 2>&1; then
 	export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
+	mkdir -p "$XDG_CACHE_HOME/wget"
 fi
 
 # zoxide

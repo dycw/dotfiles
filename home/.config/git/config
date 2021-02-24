@@ -1,5 +1,3 @@
-# symlink=~/.config/git/config
-
 [alias]
   # add
   a = add
@@ -32,7 +30,9 @@
   co = checkout
   cob = co -b
   cobmom = co -B master origin/master
+  cocm = co --conflict=merge
   com = co master
+  coom = co origin/master
   cop = co --patch
 
   # checkout + pull
@@ -76,6 +76,9 @@
 
   # merge
   m = merge
+
+  # mergetool
+  mt = mergetool
 
   # mv
   mv = mv
@@ -131,10 +134,11 @@
   stp = st pop
 
   # submodule
-  smurr = submodule update --recursive --remote
+  smu = submodule update --init --recursive --remote
 
   # status
-  s = status --short
+  s = status -s
+  sv = status -v
 
   # tag
   ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && git po --tags && :

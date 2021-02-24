@@ -38,7 +38,7 @@ function! TogglePaste()
 endfunction
 
 " scrolling
-set scrolloff=5
+set scrolloff=20
 set sidescrolloff=5
 
 " spaces and tabs
@@ -138,13 +138,7 @@ vnoremap Y y$
 " python host
 " =============================================================================
 if has('nvim')
-  let conda_default_env = $CONDA_DEFAULT_ENV
-  if conda_default_env == 'base'
-    let env_name = 'neovim'
-  else
-    let env_name = conda_default_env
-  endif
-  let bin_python = expand('~') . '/miniconda3/envs/' . env_name . '/bin/python'
+  let bin_python = $XDG_CACHE_HOME . '/pynvim/bin/python'
   if filereadable(bin_python)
     let g:python3_host_prog = bin_python
   endif
@@ -172,11 +166,13 @@ Plug 'neoclide/coc.nvim', {
   \ }
 
 let g:coc_global_extensions = [
+  \ 'coc-browser',
   \ 'coc-css',
   \ 'coc-dictionary',
   \ 'coc-highlight',
   \ 'coc-html',
   \ 'coc-json',
+  \ 'coc-just-complete',
   \ 'coc-lists',
   \ 'coc-pairs',
   \ 'coc-prettier',
@@ -187,11 +183,11 @@ let g:coc_global_extensions = [
   \ 'coc-stylelint',
   \ 'coc-syntax',
   \ 'coc-tag',
+  \ 'coc-vimlsp',
+  \ 'coc-word',
   \ 'coc-yaml',
   \ 'coc-yank',
   \ ]
-
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -347,7 +343,7 @@ let g:ale_fixers = {
 let g:ale_linters = {
   \ 'haskell': ['hlint'],
   \ 'markdown': ['mdl'],
-  \ 'python': ['flake8', 'mypy', 'prospector', 'pyre', 'pyright'],
+  \ 'python': ['flake8', 'mypy', 'pyre'],
   \ 'rust': [],
   \ 'vim': ['vim-vint'],
   \ 'yaml': ['spectral', 'yamllint'],
@@ -357,30 +353,11 @@ let g:ale_sign_column_always = 1
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '▲'
 let g:ale_use_global_executables = 1
-let g:ale_virtualtext_cursor = 1
 let g:ale_warn_about_trailing_blank_lines = 0
 let g:ale_warn_about_trailing_whitespace = 0
 nmap <Leader>ak <Plug>(ale_previous_wrap)
 nmap <Leader>aj <Plug>(ale_next_wrap)
 
-" Javascript
-let g:ale_javascript_prettier_executable = '/home/linuxbrew/.linuxbrew/bin/prettier'
-
-" Markdown
-let g:ale_markdown_mdl_executable = '/home/linuxbrew/.linuxbrew/lib/ruby/gems/3.0.0/bin/mdl'
-
-" Python
-let g:ale_python_autoimport_executable = expand('~') . '/miniconda3/envs/neovim/bin/autoimport'
-let g:ale_python_black_executable = expand('~') . '/miniconda3/envs/neovim/bin/black'
-let g:ale_python_flake8_executable = expand('~') . '/miniconda3/envs/neovim/bin/flake8'
-let g:ale_python_mypy_executable = expand('~') . '/miniconda3/envs/neovim/bin/mypy'
-let g:ale_python_prospector_executable = expand('~') . '/miniconda3/envs/neovim/bin/prospector'
-let g:ale_python_pyre_executable = expand('~') . '/miniconda3/envs/neovim/bin/pyre'
-let g:ale_python_reorder_python_imports_executable = expand('~') . '/miniconda3/envs/neovim/bin/reorder-python-imports'
-
-" YAML
-let g:ale_yaml_spectral_executable = '/home/linuxbrew/.linuxbrew/bin/spectral'
-let g:ale_yaml_yamllint_executable = expand('~') . '/miniconda3/envs/neovim/bin/yamllint'
 " =============================================================================
 " plugins: rest
 " =============================================================================
@@ -551,8 +528,9 @@ Plug 'jez/vim-superman'
 
 " viewing
 Plug 'wellle/context.vim'
-  let g:indentLine_char = '▏'
 Plug 'Yggdroot/indentLine'
+  let g:indentLine_char = '▏'
+  let g:indentLine_setConceal = 0
 Plug 'RRethy/vim-illuminate'
 Plug 'wellle/visual-split.vim'
 

@@ -16,7 +16,7 @@ fi
 __bash="$XDG_CACHE_HOME/bash"
 mkdir -p "$__bash"
 HISTCONTROL=ignoreboth
-HISTFILE="$__bash/bash_history"
+HISTFILE="$__bash/history"
 HISTSIZE=1000
 HISTFILESIZE=2000
 

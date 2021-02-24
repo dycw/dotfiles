@@ -25,13 +25,14 @@ compinit
 # settings: history
 __zsh="$XDG_CACHE_HOME/zsh"
 mkdir -p "$__zsh"
-export HISTFILE="$__zsh/histfile"
+export HISTFILE="$__zsh/history"
 export HISTSIZE=10000
 export SAVEHIST=10000
 
 # settings: opts
 setopt autocd
 setopt extendedglob
+setopt globdots
 setopt nomatch
 setopt notify
 unsetopt beep
@@ -58,6 +59,13 @@ zinit load mtxr/zsh-change-case
 bindkey '^K^U' _mtxr-to-upper # Ctrl+K + Ctrl+U
 bindkey '^K^L' _mtxr-to-lower # Ctrl+K + Ctrl+L
 zinit load jeffreytse/zsh-vi-mode
+function zvm_after_init() {
+	fzf_zsh="$XDG_CONFIG_HOME/fzf/fzf.zsh"
+	if [ -f "$fzf_zsh" ]; then
+		source "$fzf_zsh"
+	fi
+	enable-fzf-tab
+}
 
 # plugins: git
 zinit snippet OMZP::git-auto-fetch
