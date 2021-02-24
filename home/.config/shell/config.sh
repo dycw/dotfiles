@@ -192,6 +192,7 @@ fi
 # git + gitweb
 if (command -v git >/dev/null 2>&1) && (command -v gitweb >/dev/null 2>&1); then
 	alias gpw='git push && gitweb'
+	alias gpbw='git pb && gitweb'
 fi
 
 # gitweb
@@ -250,6 +251,7 @@ if command -v pre-commit >/dev/null 2>&1; then
 	alias pci='pre-commit install'
 	alias pcaf='pre-commit run --all-files'
 	alias pcau='pre-commit autoupdate'
+	alias pctr='pre-commit try-repo .'
 	alias pcui='pre-commit uninstall'
 fi
 
