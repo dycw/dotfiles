@@ -16,11 +16,13 @@
   apc = "!f() { for v in \"$@\"; do git ap \"$GIT_PREFIX$v\"; done; git c; }; f"
 
   # branch
-  b = branch --verbose
-  ba = b --all
-  bd = b --delete
+  b = branch -v
+  ba = b -a
+  bd = b -d
   bdd = b -D
-  br = b --remote
+  bm = b -m
+  br = b -r
+  bra = b -ra
   bu = b -u
 
   # branch + checkout
@@ -88,11 +90,12 @@
 
   # push
   p = push
-  pf = p --force
-  pdo = p --delete origin
-  pdr = p --dry-run
+  pdo = p -d origin
+  pf = p -f
+  pn = p -n
   po = p origin
-  psuo = p --set-upstream origin
+  pot = po --tags
+  puo = p -u origin
 
   # rebase
   rb = rebase
@@ -109,6 +112,9 @@
   re =  remote
   resu = re set-url
   reu = re update
+
+  # rename
+  brn = !git bm \"$1\" && git pb && git unpb
 
   # reset
   r = reset
@@ -143,10 +149,11 @@
   # tag
   ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && git po --tags && :
   td = !git tag -d \"$1\" && git pdo \"$1\" && :
+  tl = tag -l
 
   # publish
-  pb = !git psuo $(git current) && :
-  unpb = "!git branch -r --color=never | fzf | sed -En 's/origin\\/(.*)/\\1/p' | xargs -n 1 git pdo"
+  pb = !git puo $(git current) && :
+  unpb = "!git br --color=never | fzf | sed -En 's/origin\\/(.*)/\\1/p' | xargs -n 1 git pdo"
 
 [apply]
   whitespace = nowarn

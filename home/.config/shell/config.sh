@@ -131,6 +131,7 @@ fi
 
 # exa
 if command -v exa >/dev/null 2>&1; then
+	alias ls='exa'
 	__exa_base() { exa -F --group-directories-first "$@"; }
 	__exa_short() { __exa_base -x "$@"; }
 	l() { __exa_short --git-ignore "$@"; }
@@ -205,6 +206,11 @@ if command -v googler >/dev/null 2>&1; then
 	alias g='googler'
 fi
 
+# hub
+if command -v hub >/dev/null 2>&1; then
+	alias git='hub'
+fi
+
 # less
 if command -v less >/dev/null 2>&1; then
 	__less="$XDG_CACHE_HOME/less"
@@ -239,12 +245,6 @@ if [ -d "$__bin" ]; then
 	export PATH="$__bin${PATH:+:$PATH}"
 fi
 
-# pylint/prospector
-if (command -v pylint >/dev/null 2>&1) ||
-	(command -v prospector >/dev/null 2>&1); then
-	export PYLINTHOME="$XDG_CACHE_HOME/pylint"
-fi
-
 # pre-commit
 if command -v pre-commit >/dev/null 2>&1; then
 	alias pc='pre-commit-current'
@@ -255,9 +255,18 @@ if command -v pre-commit >/dev/null 2>&1; then
 	alias pcui='pre-commit uninstall'
 fi
 
+# pylint/prospector
+if (command -v pylint >/dev/null 2>&1) ||
+	(command -v prospector >/dev/null 2>&1); then
+	export PYLINTHOME="$XDG_CACHE_HOME/pylint"
+fi
+
 # python
 if command -v python >/dev/null 2>&1; then
 	alias pie='pip install -e .'
+	__pyclean='find . \( -name .mypy_cache -o -name .pytest_cache -o -name'
+	__pyclean+=' __pycache__ \) -type d -prume -exec rm -rf {} \;'
+	alias pyclean="$__pyclean"
 	while IFS= read -d '' -r __pythonrc; do
 		export PYTHONSTARTUP="$__pythonrc"
 	done < <(find "$PATH_DOTFILES" -name pythonrc.py -print0 -type f)
@@ -291,7 +300,7 @@ if command -v redis >/dev/null 2>&1; then
 	__redis="$XDG_CACHE_HOME/redis"
 	mkdir -p "$__redis"
 	export REDISCLI_HISTFILE="$__redis/history"
-	export REDISCLI_RCFILE="$XDG_CONFIG_HOME/redies/redisclirc"
+	export REDISCLI_RCFILE="$XDG_CONFIG_HOME/redis/redisclirc"
 fi
 
 # rg
@@ -319,6 +328,7 @@ fi
 # tmux
 if command -v tmux >/dev/null 2>&1; then
 	alias tmuxconf='$EDITOR $HOME/.tmux.conf.local'
+	export TERM=xterm-256color
 fi
 
 # ubuntu (https://askubuntu.com/a/492343)

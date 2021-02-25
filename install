@@ -141,6 +141,7 @@ ensure_brew_install git-crypt
 ensure_brew_install git-delta
 ensure_brew_install googler
 ensure_brew_install grex
+ensure_brew_install hub
 ensure_brew_install hyperfine
 ensure_brew_install mdcat
 ensure_brew_install neovim
@@ -193,7 +194,6 @@ __pynvim="$XDG_CACHE_HOME/pynvim"
 __bin="$__pynvim/bin"
 __pynvim_python="$__bin/python"
 if [ -f "$__brew_python" ] && ! [ -f "$__pynvim_python" ]; then
-	echo we are inside
 	mkdir -p "$__pynvim"
 	cd "$__pynvim" || exit
 	"$__brew_python" -m venv .

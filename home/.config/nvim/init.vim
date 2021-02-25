@@ -45,6 +45,7 @@ set sidescrolloff=5
 set expandtab
 set list
 set shiftwidth=2
+set smartindent
 set softtabstop=2
 set tabstop=2
 
@@ -64,7 +65,7 @@ set noswapfile
 set showtabline=2
 
 " update (coc.nvim)
-set updatetime=100
+set updatetime=50
 
 " =============================================================================
 " mappings
@@ -95,6 +96,10 @@ vnoremap <Esc> :nohlsearch<CR>
 " shift blocks visually (https://bit.ly/3alZUhL)
 vnoremap > >gv
 vnoremap < <gv
+
+" source
+nnoremap <leader>so :source $XDG_CONFIG_HOME/nvim/init.vim<Bar>
+  \ :echo '$XDG_CONFIG_HOME/nvim/init.vim sourced'<CR>
 
 " unneeded
 nnoremap K <Nop>
@@ -237,7 +242,7 @@ endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
+nmap <leader>rr <Plug>(coc-rename)
 
 " Formatting selected code.
 xmap <leader>f <Plug>(coc-format-selected)
@@ -320,6 +325,9 @@ let g:LanguageClient_serverCommands = {
   \ 'sql': ['sql-language-server', 'up', '--method', 'stdio'],
   \ }
 
+" project wide rename (https://bit.ly/2ZNTCkL)
+nnoremap <leader>pwr :CocSearch <C-r>=expand('<cword>')<CR><CR>
+
 " =============================================================================
 " plugins: ALE
 " =============================================================================
@@ -350,8 +358,8 @@ let g:ale_linters = {
   \ }
 let g:ale_linters_explicit = 1
 let g:ale_sign_column_always = 1
-let g:ale_sign_error = '✘'
-let g:ale_sign_warning = '▲'
+let g:ale_sign_error = '!'
+let g:ale_sign_warning = '?'
 let g:ale_use_global_executables = 1
 let g:ale_warn_about_trailing_blank_lines = 0
 let g:ale_warn_about_trailing_whitespace = 0
@@ -500,6 +508,9 @@ Plug 'cespare/vim-toml'
 " tags
 Plug 'majutsushi/tagbar'
   nnoremap tt :TagbarToggle<CR>
+Plug 'soramugi/auto-ctags.vim'
+  let g:auto_ctags = 1
+  let g:auto_ctags_set_tags_option = 1
 Plug 'liuchengxu/vista.vim'
 
 " text objects

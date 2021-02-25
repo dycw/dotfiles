@@ -27,7 +27,7 @@ set -g @plugin 'tmux-plugins/tmux-open'
 
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 
-set -g @plutin 'tmux-plugins/tmux-urlview'
+set -g @plugin 'tmux-plugins/tmux-urlview'
 
 set -g @plugin 'christoomey/vim-tmux-navigator'
 
