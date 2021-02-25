@@ -5,7 +5,7 @@
   "formatOnSave": true,
   "preferences": {
     "default_formatter": {
-      "python": ["black"],
+      "python": ["black"]
     }
   }
 }
