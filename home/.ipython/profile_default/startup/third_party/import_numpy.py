@@ -39,7 +39,7 @@ from numpy import ndarray  # noqa: F401
 from numpy import newaxis  # noqa: F401
 from numpy import ones  # noqa: F401
 from numpy import ones_like  # noqa: F401
-from numpy import set_printoptions  # noqa: F401
+from numpy import set_printoptions
 from numpy import sqrt  # noqa: F401
 from numpy import vstack  # noqa: F401
 from numpy import where  # noqa: F401
@@ -48,3 +48,6 @@ from numpy import zeros_like  # noqa: F401
 from numpy.linalg import inv  # noqa: F401
 from numpy.linalg import LinAlgError  # noqa: F401
 from numpy.random import RandomState  # noqa: F401
+
+
+set_printoptions(suppress=True)

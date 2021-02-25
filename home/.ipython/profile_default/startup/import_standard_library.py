@@ -2,7 +2,7 @@ import abc  # noqa: F401
 import argparse  # noqa: F401
 import collections  # noqa: F401
 import contextlib  # noqa: F401
-import datetime as dt  # noqa: F401
+import datetime as dt
 import enum  # noqa: F401
 import functools  # noqa: F401
 import gzip  # noqa: F401
@@ -37,7 +37,8 @@ from argparse import ArgumentParser  # noqa: F401
 from collections import Counter  # noqa: F401
 from collections import defaultdict  # noqa: F401
 from collections import deque  # noqa: F401
-from contextlib import contextmanager  # noqa: F401
+from contextlib import contextmanager
+from contextlib import redirect_stdout
 from contextlib import suppress  # noqa: F401
 from dataclasses import asdict  # noqa: F401
 from dataclasses import astuple  # noqa: F401
@@ -85,9 +86,12 @@ from logging import DEBUG  # noqa: F401
 from logging import debug  # noqa: F401
 from logging import ERROR  # noqa: F401
 from logging import error  # noqa: F401
-from logging import getLogger  # noqa: F401
-from logging import INFO  # noqa: F401
+from logging import Formatter
+from logging import getLogger
+from logging import INFO
 from logging import info  # noqa: F401
+from logging import Logger
+from logging import StreamHandler
 from logging import WARNING  # noqa: F401
 from logging import warning  # noqa: F401
 from multiprocessing import cpu_count  # noqa: F401
@@ -103,17 +107,19 @@ from operator import mul  # noqa: F401
 from operator import or_  # noqa: F401
 from operator import sub  # noqa: F401
 from operator import truediv  # noqa: F401
+from os import devnull
 from os import environ  # noqa: F401
 from os import getenv  # noqa: F401
 from os.path import expanduser  # noqa: F401
 from os.path import expandvars  # noqa: F401
-from pathlib import Path  # noqa: F401
+from pathlib import Path
 from platform import system  # noqa: F401
+from random import SystemRandom
 from re import escape  # noqa: F401
 from re import findall  # noqa: F401
 from re import fullmatch  # noqa: F401
 from re import match  # noqa: F401
-from re import search  # noqa: F401
+from re import search
 from shutil import copyfile  # noqa: F401
 from shutil import which  # noqa: F401
 from socket import gethostname  # noqa: F401
@@ -134,12 +140,13 @@ from subprocess import PIPE  # noqa: F401, S404
 from subprocess import run  # noqa: F401, S404
 from subprocess import STDOUT  # noqa: F401, S404
 from sys import stderr  # noqa: F401
-from sys import stdout  # noqa: F401
+from sys import stdout
 from tempfile import gettempdir  # noqa: F401
 from tempfile import NamedTemporaryFile  # noqa: F401
-from tempfile import TemporaryDirectory  # noqa: F401
+from tempfile import TemporaryDirectory
 from time import sleep  # noqa: F401
-from typing import Any  # noqa: F401
+from timeit import default_timer
+from typing import Any
 from typing import Awaitable  # noqa: F401
 from typing import BinaryIO  # noqa: F401
 from typing import Callable  # noqa: F401
@@ -153,10 +160,10 @@ from typing import Generator  # noqa: F401
 from typing import Generic  # noqa: F401
 from typing import Hashable  # noqa: F401
 from typing import Iterable  # noqa: F401
-from typing import Iterator  # noqa: F401
-from typing import List  # noqa: F401
+from typing import Iterator
+from typing import List
 from typing import NamedTuple  # noqa: F401
-from typing import Optional  # noqa: F401
+from typing import Optional
 from typing import Set  # noqa: F401
 from typing import Sized  # noqa: F401
 from typing import TextIO  # noqa: F401
@@ -166,3 +173,90 @@ from typing import TypeVar  # noqa: F401
 from typing import Union  # noqa: F401
 from urllib.request import urlretrieve  # noqa: F401
 from zipfile import ZipFile  # noqa: F401
+
+
+_SYSTEM_RANDOM = SystemRandom()
+choice = _SYSTEM_RANDOM.choice
+sample = _SYSTEM_RANDOM.sample
+shuffle = _SYSTEM_RANDOM.shuffle
+
+
+def _initialize_logger() -> Logger:
+    formatter = Formatter(
+        fmt="{asctime} {message}",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        style="{",
+    )
+    handler = StreamHandler(stdout)
+    handler.setLevel(INFO)
+    handler.setFormatter(formatter)
+    logger = getLogger("timer")
+    logger.addHandler(handler)
+    logger.setLevel(INFO)
+    return logger
+
+
+_TIMER_LOGGER = _initialize_logger()
+
+
+class TemporaryDirectoryPath(TemporaryDirectory):
+    def __enter__(self) -> Path:
+        return Path(super().__enter__())
+
+
+class _TimerCM:
+    def __init__(self, msg: Optional[str] = None) -> None:
+        self._msg = msg
+
+    def __enter__(self) -> None:
+        self._start = default_timer()
+        if self._msg is None:
+            _TIMER_LOGGER.info("[S.]")
+        else:
+            _TIMER_LOGGER.info(f"[S.] {self._msg}")
+
+    def __exit__(
+        self,
+        exc_type: Any,  # noqa:U100
+        exc_val: Any,  # noqa:U100
+        exc_tb: Any,  # noqa:U100
+    ) -> None:
+        elapsed = dt.timedelta(seconds=default_timer() - self._start)
+        e_str = str(elapsed)
+        if _match := search(r"(.*\.\d{1})\d{5}$", e_str):
+            e_str = _match.group(1)
+        if self._msg is None:
+            _TIMER_LOGGER.info(f"[.F] t={e_str}")
+        else:
+            _TIMER_LOGGER.info(f"[.F] {self._msg}, t={e_str}")
+
+
+class _TimerMeta(type):
+    _timers: List[_TimerCM] = []
+
+    def __enter__(cls) -> None:
+        timer = _TimerCM()
+        cls._timers.append(timer)
+        timer.__enter__()
+
+    def __exit__(cls, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        last = cls._timers.pop()
+        last.__exit__(exc_type, exc_val, exc_tb)
+
+
+class timer(metaclass=_TimerMeta):  # noqa:N801
+    def __init__(self, msg: str) -> None:
+        self.msg = msg
+
+    def __enter__(self) -> None:
+        self._timer = _TimerCM(self.msg)
+        self._timer.__enter__()
+
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        self._timer.__exit__(exc_type, exc_val, exc_tb)
+
+
+@contextmanager
+def no_stdout() -> Iterator[None]:
+    with open(devnull, mode="w") as null, redirect_stdout(null):
+        yield

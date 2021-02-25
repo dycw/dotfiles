@@ -106,7 +106,7 @@
   rbiom = rbi origin/master
   rbm = rb master
   rbom = rb origin/master
-  rbrt = rbi -s recursive -X theirs
+  rbrt = rb -s recursive -X theirs
   rbrtm = rbrt master
   rbrtom = rbrt origin/master
   rbs = rb --skip
