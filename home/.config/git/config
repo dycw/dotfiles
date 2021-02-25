@@ -150,7 +150,7 @@
   sv = status -v
 
   # tag
-  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && git po --tags && :
+  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && git pot && :
   td = !git tag -d \"$1\" && git pdo \"$1\" && :
   tl = tag -l
 
