@@ -32,6 +32,8 @@ set -g @plugin 'tmux-plugins/tmux-urlview'
 set -g @plugin 'christoomey/vim-tmux-navigator'
 
 # -- user customizations -------------------------------------------------------
+set -g escape-time 50
+
 set -g history-limit 10000
 
 set -g mouse on
@@ -41,6 +43,11 @@ unbind C-a
 unbind C-b
 set -g prefix `
 bind ` send-prefix
+
+bind -r H resize-pane -L 5
+bind -r J resize-pane -D 5
+bind -r K resize-pane -U 5
+bind -r L resize-pane -R 5
 
 # -- windows & pane creation ---------------------------------------------------
 tmux_conf_new_window_retain_current_path=true

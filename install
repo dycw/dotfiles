@@ -97,8 +97,10 @@ if ! [ -d "$__linuxbrew" ]; then
 fi
 
 ensure_brew_install() {
-	if (command -v brew >/dev/null 2>&1) && ! (brew list "$1" >/dev/null 2>&1); then
-		brew install "$@"
+	pkg="$1"
+	if (command -v brew >/dev/null 2>&1) && ! (brew list "$pkg" >/dev/null 2>&1); then
+		shift
+		brew install "$pkg" "$@"
 	fi
 }
 
@@ -148,6 +150,7 @@ ensure_brew_install neovim
 ensure_brew_install node
 ensure_brew_install pipx
 ensure_brew_install procs
+ensure_brew_install ranger
 ensure_brew_install ripgrep
 ensure_brew_install sd
 ensure_brew_install shellcheck
@@ -156,6 +159,7 @@ ensure_brew_install speedtest-cli
 ensure_brew_install spotify-tui
 ensure_brew_install starship
 ensure_brew_install tealdeer
+ensure_brew_install tmpreaper
 ensure_brew_install tmux
 ensure_brew_install tokei
 ensure_brew_install tree
@@ -164,6 +168,7 @@ ensure_brew_install yarn
 ensure_brew_install zoxide
 ensure_brew_install clementtsang/bottom/bottom
 ensure_brew_install eth-p/software/bat-extras
+ensure_brew_install universal-ctags/universal-ctags/universal-ctags --HEAD
 
 # === conda ===
 
@@ -173,6 +178,10 @@ if ! [ -d "$__miniconda3" ]; then
 	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
 		-O "$__miniconda"
 	bash "$__miniconda" -b -u -p "$__miniconda3"
+	__python="/usr/bin/python"
+	if ! [ -f "$__python" ]; then
+		sudo ln -s "$__miniconda3/bin/python" "$__python"
+	fi
 fi
 
 # === dropbox ===
@@ -279,6 +288,7 @@ ensure_npm_install() {
 }
 
 ensure_npm_install pyright
+ensure_npm_install @elm-tooling/elm-language-server
 ensure_npm_install @stoplight/spectral
 
 # === pipx ===
@@ -302,6 +312,7 @@ ensure_pipx_install bump2version
 ensure_pipx_install flake8
 ensure_pipx_install pre-commit
 ensure_pipx_install pyre-check
+ensure_pipx_install pytype
 ensure_pipx_install reorder-python-imports
 ensure_pipx_install vim-vint
 ensure_pipx_install yamllint

@@ -1,6 +1,17 @@
 {
   "coc.preferences.extensionUpdateCheck": "daily",
+  "coc.preferences.formatOnInsertLeave": true,
+  "coc.preferences.formatOnSaveFiletypes": ["*"],
+  "diagnostic.checkCurrentLine": true,
   "diagnostic.displayByAle": true,
+  "python.formatting.blackPath": "~/.local/bin/black",
+  "python.formatting.provider": "black",
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Path": "~/.local/bin/flake8",
+  "python.linting.mypyEnabled": true,
+  "python.linting.mypyPath": "~/.local/bin/mypy",
+  "python.linting.pytypeEnabled": true,
+  "python.linting.pytypePath": "~/.local/bin/pytype",
   "suggest.enablePreview": true,
-  "suggest.languageSourcePriority": true
+  "suggest.languageSourcePriority": 99
 }

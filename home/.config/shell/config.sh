@@ -265,7 +265,7 @@ fi
 if command -v python >/dev/null 2>&1; then
 	alias pie='pip install -e .'
 	__pyclean='find . \( -name .mypy_cache -o -name .pytest_cache -o -name'
-	__pyclean+=' __pycache__ \) -type d -prume -exec rm -rf {} \;'
+	__pyclean+=' __pycache__ \) -type d -prune -exec rm -rf {} \;'
 	alias pyclean="$__pyclean"
 	while IFS= read -d '' -r __pythonrc; do
 		export PYTHONSTARTUP="$__pythonrc"
@@ -372,9 +372,9 @@ fi
 
 # zoxide
 if command -v zoxide >/dev/null 2>&1; then
+	eval "$(zoxide init "$__shell" --cmd=c)"
 	export _ZO_EXCLUDE_DIRS="/tmp"
 	export _ZO_RESOLVE_SYMLINKS=1
-	eval "$(zoxide init "$__shell" --cmd=c)"
 fi
 
 # zsh

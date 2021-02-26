@@ -31,11 +31,11 @@ style = "bold yellow"
 [git_commit]
 format = "[$hash]($style) [$tag]($style)"
 style = "bold purple"
+tag_disabled = false
 
 [git_state]
 format = "[$state(:$progress_current/$progress_total)]($style) "
 style = "bold red"
-tag_disabled = false
 
 [git_status]
 format = "([$conflicted$untracked$modified$deleted$renamed$staged$stashed$ahead_behind]($style) )"
