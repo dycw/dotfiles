@@ -39,7 +39,7 @@ fi
 
 # bash
 if command -v bash >/dev/null 2>&1; then
-	alias bashrc='$EDITOR $HOME/.bashrc'
+	alias bashrc='$EDITOR $(realpath $HOME/.bashrc)'
 fi
 
 # bat
@@ -182,9 +182,9 @@ fi
 # git
 if command -v git >/dev/null 2>&1; then
 	alias cdr='cd $(git root)'
-	alias gitconfig='$EDITOR $XDG_CONFIG_HOME/git/config'
-	alias gitconfiglocal='$EDITOR $XDG_CONFIG_HOME/git/config.local'
-	alias gitignore='$EDITOR $XDG_CONFIG_HOME/git/ignore'
+	alias gitconfig='$EDITOR $(realpath $XDG_CONFIG_HOME/git/config)'
+	alias gitconfiglocal='$EDITOR $(realpath $XDG_CONFIG_HOME/git/config.local)'
+	alias gitignore='$EDITOR $(realpath $XDG_CONFIG_HOME/git/ignore)'
 	for al in $(git --list-cmds=alias); do
 		alias "g$al"="git $al"
 	done
@@ -221,19 +221,19 @@ fi
 
 # nano
 if command -v nano >/dev/null 2>&1; then
-	alias nanorc='$EDITOR $XDG_CONFIG_HOME/nano/nanorc'
+	alias nanorc='$EDITOR $(realpath $XDG_CONFIG_HOME/nano/nanorc)'
 fi
 
 # neovim
 if command -v nvim >/dev/null 2>&1; then
 	alias n='nvim'
-	alias vimrc='$EDITOR $XDG_CONFIG_HOME/nvim/init.vim'
+	alias vimrc='$EDITOR $(realpath $XDG_CONFIG_HOME/nvim/init.vim)'
 	export EDITOR=nvim
 fi
 
 # npm
 if command -v npm >/dev/null 2>&1; then
-	alias npmrc='$EDITOR $HOME/.npmrc'
+	alias npmrc='$EDITOR $(realpath $HOME/.npmrc)'
 fi
 
 # path
@@ -309,8 +309,8 @@ if command -v rg >/dev/null 2>&1; then
 fi
 
 # shell
-alias shellconfig='$EDITOR $XDG_CONFIG_HOME/shell/config.sh'
-alias shellconfiglocal='$EDITOR $XDG_CONFIG_HOME/shell/config.local.sh'
+alias shellconfig='$EDITOR $(realpath $XDG_CONFIG_HOME/shell/config.sh)'
+alias shellconfiglocal='$EDITOR $(realpath $XDG_CONFIG_HOME/shell/config.local.sh)'
 
 # sqlite3
 if command -v sqlite3 >/dev/null 2>&1; then
@@ -321,13 +321,13 @@ fi
 
 # starship
 if command -v starship >/dev/null 2>&1; then
-	alias starshiptoml='$EDITOR $XDG_CONFIG_HOME/starship.toml'
+	alias starshiptoml='$EDITOR $(realpath $XDG_CONFIG_HOME/starship.toml)'
 	eval "$(starship init "$__shell")"
 fi
 
 # tmux
 if command -v tmux >/dev/null 2>&1; then
-	alias tmuxconf='$EDITOR $HOME/.tmux.conf.local'
+	alias tmuxconf='$EDITOR $(realpath $HOME/.tmux.conf.local)'
 	export TERM=xterm-256color
 fi
 
@@ -379,5 +379,5 @@ fi
 
 # zsh
 if command -v zsh >/dev/null 2>&1; then
-	alias zshrc='$EDITOR $HOME/.zshrc'
+	alias zshrc='$EDITOR $(realpath $HOME/.zshrc)'
 fi

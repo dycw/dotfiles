@@ -22,6 +22,9 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 set foldlevel=99
 set foldmethod=indent
 
+" history
+set viminfo='1000
+
 " line numbers
 set number
 set relativenumber
@@ -64,7 +67,7 @@ set noswapfile
 " tab pages
 set showtabline=2
 
-" update (coc.nvim)
+" update time
 set updatetime=50
 
 " =============================================================================
@@ -194,6 +197,7 @@ let g:coc_global_extensions = [
   \ 'coc-browser',
   \ 'coc-css',
   \ 'coc-dictionary',
+  \ 'coc-fzf-preview',
   \ 'coc-highlight',
   \ 'coc-html',
   \ 'coc-json',
@@ -234,12 +238,11 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
   \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " GoTo code navigation.
-nmap gd  <Plug>(coc-definition)
-nmap gek <Plug>(coc-diagnostic-prev)
-nmap gej <Plug>(coc-diagnostic-next)
-nmap gy  <Plug>(coc-type-definition)
+nmap gdf <Plug>(coc-definition)
+nmap gdk <Plug>(coc-diagnostic-prev)
+nmap gdj <Plug>(coc-diagnostic-next)
 nmap gi  <Plug>(coc-implementation)
-nmap gr  <Plug>(coc-references)
+nmap gt  <Plug>(coc-type-definition)
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -316,39 +319,68 @@ nnoremap <leader>pwr :CocSearch <C-r>=expand('<cword>')<CR><CR>
 " =============================================================================
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-  let g:fzf_preview_window = ['down:60%', 'ctrl-/']
-  nnoremap <Leader>bb :Buffers<CR>
-  nnoremap <Leader>bc :BCommits<CR>
-  nnoremap <Leader>bl :BLines<CR>
-  nnoremap <Leader>bt :BTags<CR>
-  nnoremap <Leader>c  :Commands<CR>
-  nnoremap <Leader>C  :History:<CR> | " command history
-  nnoremap <Leader>f  :Files<CR>
-  nnoremap <Leader>F  :History<CR>  | " file history
-  nnoremap <Leader>gc :Commits<CR>
-  nnoremap <Leader>gf :GFiles<CR>   | " git ls-files
-  nnoremap <Leader>gs :GFiles?<CR>  | " git status
-  nnoremap <Leader>ht :Helptags!<CR>
-  nnoremap <Leader>l  :Rg<CR>       | " lines
-  nnoremap <Leader>M  :Maps<CR>
-  nnoremap <Leader>t  :Tags<CR>
-  nnoremap <Leader>w  :Windows<CR>
-  nnoremap <Leader>/  :History/<CR> | " search history
+  let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9 } }
+  let g:fzf_preview_window = ['down:50%', 'ctrl-/']
+  nnoremap <Leader><Leader> :Commands<CR>
+  nnoremap <Leader>ch :<C-u>History:<CR>| " command history
+  nnoremap <Leader>ht :<C-u>Helptags!<CR>
+  nnoremap <Leader>mp :<C-u>Maps<CR>
+  nnoremap <Leader>sh :<C-u>History/<CR> | " search history
+  nnoremap <Leader>ww :<C-u>Windows<CR>
 
-Plug 'antoinemadec/coc-fzf'
-  let g:coc_fzf_preview = 'down:60%'
-  nnoremap <Leader>bd :<C-u>CocFzfList diagnostics --current-buf<CR>
-  nnoremap <Leader>cl :<C-u>CocFzfList<CR>
-  nnoremap <Leader>cc :<C-u>CocFzfList commands<CR>
-  nnoremap <Leader>d  :<C-u>CocFzfList diagnostics<CR>
-  nnoremap <Leader>o  :<C-u>CocFzfList outline<CR>
-  nnoremap <Leader>s  :<C-u>CocFzfList symbols<CR>
-  nnoremap <Leader>y  :<C-u>CocFzfList yank<CR>
-
-Plug 'chengzeyi/fzf-preview.vim'
-  nnoremap <Leader>bl :FZFBLines<CR>
+Plug 'chengzeyi/fzf-preview.vim', { 'as': 'fzf-preview.vim-chengzeyi' }
   nnoremap <Leader>gg :FZFGGrep<CR>
-  nnoremap <Leader>m  :FZFMarks<CR>
+  nnoremap <Leader>mm :FZFMarks<CR>
+  nnoremap <Leader>rg :FZFRg<CR>
+
+Plug 'yuki-yano/fzf-preview.vim', {
+  \ 'as': 'fzf-preview.vim-yuki-yano',
+  \ 'branch': 'release/remote',
+  \ 'do': ':UpdateRemotePlugins',
+  \ }
+  let g:fzf_preview_command = 'bat --color=always --plain {-1}'
+  let g:fzf_preview_filelist_command = 'rg --files --hidden --follow --no-messages -g \!"* *"'
+  let g:fzf_preview_lines_command = 'bat --color=always --plain --number'
+  nnoremap <Leader>ab  :<C-u>FzfPreviewAllBuffers<CR>
+  nnoremap <Leader>bb  :<C-u>FzfPreviewBuffers<CR>
+  nnoremap <Leader>bl  :<C-u>FzfPreviewBufferLines<CR>
+  nnoremap <Leader>bt  :<C-u>FzfPreviewVistaBufferCtags<CR>
+  nnoremap <Leader>cp  :<C-u>FzfPreviewCommandPalette<CR>
+  nnoremap <Leader>df  :<C-u>FzfPreviewDirectoryFiles<CR>
+  nnoremap <Leader>ga  :<C-u>FzfPreviewGitActions<CR>
+  nnoremap <Leader>gf  :<C-u>FzfPreviewGitFiles<CR>
+  nnoremap <Leader>gs  :<C-u>FzfPreviewGitStatus<CR>
+  nnoremap <Leader>j   :<C-u>FzfPreviewJumps<CR>
+  nnoremap <Leader>ll  :<C-u>FzfPreviewLines<CR>
+  nnoremap <Leader>lo  :<C-u>FzfPreviewLocationList<CR>
+  nnoremap <Leader>mn  :<C-u>FzfPreviewMarks<CR>
+  nnoremap <Leader>of  :<C-u>FzfPreviewOldFiles<CR>
+  nnoremap <Leader>pf  :<C-u>FzfPreviewProjectFiles<CR>
+  " nnoremap <Leader>pg  :<C-u>FzfPreviewProjectGrep<Space>
+  " xnoremap <Leader>pg  "sy:FzfPreviewProjectGrep<Space>-F<Space>"<C-r>=substitute(substitute(@s, '\n', '', 'g'), '/', '\\/', 'g')<CR>"
+  nnoremap <Leader>pof :<C-u>FzfPreviewProjectOldFiles<CR>
+  nnoremap <Leader>puf :<C-u>FzfPreviewProjectMruFiles<CR>
+  nnoremap <Leader>pwf :<C-u>FzfPreviewProjectMrwFiles<CR>
+  nnoremap <Leader>qf  :<C-u>FzfPreviewQuickFix<CR>
+  nnoremap <Leader>t   :<C-u>FzfPreviewVistaCtags<CR>
+  nnoremap <Leader>uf  :<C-u>FzfPreviewMruFiles<CR>
+  nnoremap <Leader>wf  :<C-u>FzfPreviewMrwFiles<CR>
+  nnoremap <Leader>y   :<C-u>FzfPreviewYankround<CR>
+
+" =============================================================================
+" plugins: coc.nvim + fzf
+" =============================================================================
+Plug 'antoinemadec/coc-fzf'
+  " let g:coc_fzf_preview = 'down:60%'
+  nnoremap <Leader>co :<C-u>CocFzfList commands<CR>
+  nnoremap <Leader>cs :<C-u>CocFzfList symbols<CR>
+
+" yuki-yano/fzf-preview.vim
+  nnoremap <Leader>ccd :<C-u>CocCommand fzf-preview.CocCurrentDiagnostics<CR>
+  nnoremap <Leader>cr  :<C-u>CocCommand fzf-preview.CocReferences<CR>
+  nnoremap <Leader>cd  :<C-u>CocCommand fzf-preview.CocDiagnostics<CR>
+  nnoremap <Leader>ci  :<C-u>CocCommand fzf-preview.CocImplementations<CR>
+  nnoremap <Leader>ct  :<C-u>CocCommand fzf-preview.CocTypeDefinitions<CR>
 
 " =============================================================================
 " plugins: rest
@@ -379,18 +411,9 @@ Plug 'osyo-manga/vim-over'
 Plug 'tpope/vim-sleuth'
 Plug 'mg979/vim-visual-multi'
 Plug 'tpope/vim-speeddating'
-Plug 'svermeulen/vim-subversive'
-  " nnoremap <Leader>s  <Plug>(SubversiveSubstitute)
-  " nnoremap <Leader>ss <Plug>(SubversiveSubstituteLine)
-  " nnoremap <Leader>S  <Plug>(SubversiveSubstituteToEndOfLine)
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'svermeulen/vim-yoink'
-  let g:yoinkIncludeDeleteOperations=1
-  nmap <c-n> <Plug>(YoinkPostPasteSwapBack)
-  nmap <c-p> <Plug>(YoinkPostPasteSwapForward)
-  nmap p <Plug>(YoinkPaste_p)
-  nmap P <Plug>(YoinkPaste_P)
+Plug 'LeafCage/yankround.vim'
 
 " directories, files and buffers
 Plug 'francoiscabrol/ranger.vim'
@@ -415,6 +438,8 @@ Plug 'mhinz/vim-startify'
   let g:startify_custom_header = ['Hello, Derek']
 
 " general
+Plug 'glidenote/memolist.vim'
+  let g:memolist_path = '$HOME/.memolist'
 Plug 'tpope/vim-repeat'
 
 " git
