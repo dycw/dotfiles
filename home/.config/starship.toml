@@ -3,7 +3,7 @@ format = """\
 $time\
 $directory\
 $git_branch$git_state$git_commit$git_status\
-$conda$docker_context$elixir$elm$package\
+$conda$docker_context$elixir$elm\
 $line_break\
 $username$hostname$cmd_duration$jobs$memory_usage$shlvl$status\
 $character"""
@@ -56,9 +56,6 @@ format = "[$hostname]($style) "
 
 [memory_usage]
 format = "[$symbol$ram]($style) "
-
-[package]
-format = "[$symbol$version]($style) "
 
 [shlvl]
 disabled = false

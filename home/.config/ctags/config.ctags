@@ -1,0 +1,11 @@
+--exclude=.coverage
+--exclude=.git
+--exclude=.hypothesis
+--exclude=.mypy_cache
+--exclude=.pytest_cache
+--exclude=build
+--exclude=dist
+--exclude=elm_stuff
+--exclude=node_modules
+--exclude=tags
+--recurse=yes

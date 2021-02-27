@@ -266,6 +266,7 @@ endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
+nmap <leader>rf <Plug>(coc-refactor)
 nmap <leader>rr <Plug>(coc-rename)
 
 " Map function and class text objects
@@ -378,6 +379,7 @@ Plug 'yuki-yano/fzf-preview.vim', {
   nnoremap <Leader>t   :<C-u>FzfPreviewVistaCtags<CR>
   nnoremap <Leader>uf  :<C-u>FzfPreviewMruFiles<CR>
   nnoremap <Leader>wf  :<C-u>FzfPreviewMrwFiles<CR>
+  nnoremap <Leader>/   :<C-u>FzfPreviewLines<CR>
 
 " =============================================================================
 " plugins: coc.nvim + fzf
@@ -418,6 +420,8 @@ Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-endwise'
   let g:endwise_no_mappings = 1| " https://bit.ly/3dmrs8z
 Plug 'tommcdo/vim-exchange'
+Plug 'Jorengarenar/vim-MvVis'
+Plug 'honza/vim-snippets'
 Plug 'mg979/vim-visual-multi'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-surround'
@@ -464,6 +468,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-matchquote'
 Plug 'andymass/vim-matchup'
 Plug 'kshenoy/vim-signature'
+Plug 'psliwka/vim-smoothie'
 Plug 'justinmk/vim-sneak'
   let g:sneak#label = 1
   let g:sneak#s_next = 1
@@ -472,9 +477,6 @@ Plug 'justinmk/vim-sneak'
   map t <Plug>Sneak_t
   map T <Plug>Sneak_T
 Plug 'vim-utils/vim-vertical-move'
-
-" registers
-Plug 'junegunn/vim-peekaboo'
 
 " searching
 Plug 'mhinz/vim-grepper'

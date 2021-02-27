@@ -2,8 +2,17 @@
   "coc.preferences.extensionUpdateCheck": "daily",
   "coc.preferences.formatOnInsertLeave": true,
   "coc.preferences.formatOnSaveFiletypes": ["*"],
+  "codeLens.enable": true,
   "diagnostic.checkCurrentLine": true,
-  "diagnostic.displayByAle": true,
+  "diagnostic.errorSign": "✘",
+  "diagnostic.level": "warning",
+  "diagnostic.messageDelay": 50,
+  "diagnostic.refreshOnInsertMode": true,
+  "diagnostic.virtualText": true,
+  "diagnostic.virtualTextCurrentLineOnly": false,
+  "diagnostic.virtualTextPrefix": "✘ ",
+  "diagnostic.warningSign": "⚠",
+  "html.autoClosingTags": true,
   "python.formatting.blackPath": "~/.local/bin/black",
   "python.formatting.provider": "black",
   "python.linting.flake8Enabled": true,
@@ -12,17 +21,17 @@
   "python.linting.mypyPath": "~/.local/bin/mypy",
   "python.linting.pytypeEnabled": true,
   "python.linting.pytypePath": "~/.local/bin/pytype",
+  "signature.triggerSignatureWait": 200,
   "suggest.enablePreview": true,
-  "suggest.languageSourcePriority": 99,
+  "suggest.enablePreselect": true,
+  "suggest.numberSelect": true,
+  "suggest.lowPrioritySourceLimit": 5,
+  "suggest.removeDuplicateItems": true,
+  "suggest.triggerAfterInsertEnter": true,
   "languageserver": {
     "elmLS": {
       "command": "elm-language-server",
-      "enable": true,
       "filetypes": ["elm"],
-      "initializationOptions": {
-        "elmAnalyseTrigger": "save",
-        "elmFormatPath": "elm-format"
-      },
       "rootPatterns": ["elm.json"],
       "trace.server": "verbose"
     }
