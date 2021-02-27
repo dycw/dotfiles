@@ -195,8 +195,10 @@ Plug 'neoclide/coc.nvim', {
   \ }
 
 let g:coc_global_extensions = [
+  \ 'coc-actions',
   \ 'coc-browser',
   \ 'coc-css',
+  \ 'coc-diagnostic',
   \ 'coc-dictionary',
   \ 'coc-fzf-preview',
   \ 'coc-highlight',
@@ -204,6 +206,8 @@ let g:coc_global_extensions = [
   \ 'coc-json',
   \ 'coc-just-complete',
   \ 'coc-lists',
+  \ 'coc-markdownlint',
+  \ 'coc-marketplace',
   \ 'coc-pairs',
   \ 'coc-prettier',
   \ 'coc-pyright',
@@ -213,6 +217,7 @@ let g:coc_global_extensions = [
   \ 'coc-stylelint',
   \ 'coc-syntax',
   \ 'coc-tag',
+  \ 'coc-toml',
   \ 'coc-vimlsp',
   \ 'coc-word',
   \ 'coc-yaml',
@@ -339,12 +344,6 @@ Plug 'chengzeyi/fzf-preview.vim', { 'as': 'fzf-preview.vim-chengzeyi' }
   nnoremap <Leader>mm :<C-u>FZFMarks<CR>
   nnoremap <Leader>sh :<C-u>FZFHistory/<CR>| " search history
   nnoremap <Leader>ww :<C-u>FZFWindows<CR>
-  " command! -bang -nargs=* FZFRg
-    " \ call fzf#vim#grep(
-    " \    'rg --column --hidden --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
-    " \     fzf_preview#p(<bang>0, {'options': '--delimiter : --nth 3..'}),
-    " \     <bang>0
-    " \)
 
 Plug 'yuki-yano/fzf-preview.vim', {
   \ 'as': 'fzf-preview.vim-yuki-yano',
@@ -379,7 +378,6 @@ Plug 'yuki-yano/fzf-preview.vim', {
   nnoremap <Leader>t   :<C-u>FzfPreviewVistaCtags<CR>
   nnoremap <Leader>uf  :<C-u>FzfPreviewMruFiles<CR>
   nnoremap <Leader>wf  :<C-u>FzfPreviewMrwFiles<CR>
-  nnoremap <Leader>y   :<C-u>FzfPreviewYankround<CR>
 
 " =============================================================================
 " plugins: coc.nvim + fzf
@@ -387,8 +385,10 @@ Plug 'yuki-yano/fzf-preview.vim', {
 Plug 'antoinemadec/coc-fzf'
   let g:coc_fzf_preview = 'down:50%'
   nnoremap <Leader>cc :<C-u>CocFzfList commands<CR>
+  nnoremap <Leader>cl :<C-u>CocFzfList<CR>
   nnoremap <Leader>co :<C-u>CocFzfList outline<CR>
   nnoremap <Leader>cs :<C-u>CocFzfList symbols<CR>
+  nnoremap <Leader>y  :<C-u>CocFzfList yank<CR>
 
 " yuki-yano/fzf-preview.vim
   nnoremap <Leader>cd :<C-u>CocCommand fzf-preview.CocCurrentDiagnostics<CR>
@@ -404,31 +404,24 @@ Plug 'antoinemadec/coc-fzf'
 Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-completion'
 
-" diff
-Plug 'will133/vim-dirdiff'
-
 " editing
 Plug 'tpope/vim-abolish'
-Plug 'jiangmiao/auto-pairs'
+Plug 'chrisbra/NrrwRgn'
 Plug 'luochen1990/rainbow'
   let g:rainbow_active = 1
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'mbbill/undotree'
   nnoremap U :UndotreeToggle<CR>
-Plug 'tpope/vim-capslock'
 Plug 'alvan/vim-closetag'
 Plug 'tpope/vim-commentary'
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-endwise'
   let g:endwise_no_mappings = 1| " https://bit.ly/3dmrs8z
 Plug 'tommcdo/vim-exchange'
-Plug 'osyo-manga/vim-over'
-Plug 'tpope/vim-sleuth'
 Plug 'mg979/vim-visual-multi'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'LeafCage/yankround.vim'
 
 " directories, files and buffers
 Plug 'francoiscabrol/ranger.vim'
@@ -501,9 +494,7 @@ Plug 'morhetz/gruvbox'
 Plug 'ryanoasis/vim-devicons'
 
 " syntax
-Plug 'andys8/vim-elm-syntax', { 'for': ['elm'] }
-Plug 'kevinoid/vim-jsonc'
-Plug 'cespare/vim-toml', { 'for': ['toml'] }
+Plug 'sheerun/vim-polyglot'
 
 " tags
 Plug 'soramugi/auto-ctags.vim'

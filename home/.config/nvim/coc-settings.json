@@ -17,14 +17,11 @@
   "languageserver": {
     "elmLS": {
       "command": "elm-language-server",
+      "enable": true,
       "filetypes": ["elm"],
       "initializationOptions": {
-        "disableElmLSDiagnostics": false,
-        "elmAnalyseTrigger": "change",
-        "elmFormatPath": "/home/linuxbrew/.linuxbrew/bin/elm-format",
-        "elmPath": "elm",
-        "elmTestPath": "elm-test",
-        "skipInstallPackageConfirmation": false
+        "elmAnalyseTrigger": "save",
+        "elmFormatPath": "elm-format"
       },
       "rootPatterns": ["elm.json"],
       "trace.server": "verbose"
