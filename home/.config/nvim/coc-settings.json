@@ -13,5 +13,21 @@
   "python.linting.pytypeEnabled": true,
   "python.linting.pytypePath": "~/.local/bin/pytype",
   "suggest.enablePreview": true,
-  "suggest.languageSourcePriority": 99
+  "suggest.languageSourcePriority": 99,
+  "languageserver": {
+    // "codeLens.enable": true,
+    "elmLS": {
+      "command": "elm-language-server",
+      "filetypes": ["elm"],
+      "initializationOptions": {
+        "elmPath": "elm",
+        "elmFormatPath": "elm-format",
+        "elmTestPath": "elm-test",
+        "disableElmLSDiagnostics": false,
+        "skipInstallPackageConfirmation": false
+      },
+      "rootPatterns": ["elm.json"],
+      "trace.server": "verbose"
+    }
+  }
 }

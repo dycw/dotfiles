@@ -75,6 +75,7 @@ set updatetime=50
 " =============================================================================
 " leader
 let mapleader=' '
+let maplocalleader='\\'
 
 " command mode
 nnoremap <CR> :
@@ -322,16 +323,28 @@ Plug 'junegunn/fzf.vim'
   let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9 } }
   let g:fzf_preview_window = ['down:50%', 'ctrl-/']
   nnoremap <Leader><Leader> :Commands<CR>
-  nnoremap <Leader>ch :<C-u>History:<CR>| " command history
   nnoremap <Leader>ht :<C-u>Helptags!<CR>
   nnoremap <Leader>mp :<C-u>Maps<CR>
-  nnoremap <Leader>sh :<C-u>History/<CR> | " search history
-  nnoremap <Leader>ww :<C-u>Windows<CR>
+  nnoremap <Leader>rg :<C-u>Rg<CR>
+  " https://bit.ly/3q5KZwQ
+  command! -bang -nargs=* Rg
+    \ call fzf#vim#grep(
+    \   'rg --hidden --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+    \   fzf#vim#with_preview(), <bang>0)
 
 Plug 'chengzeyi/fzf-preview.vim', { 'as': 'fzf-preview.vim-chengzeyi' }
-  nnoremap <Leader>gg :FZFGGrep<CR>
-  nnoremap <Leader>mm :FZFMarks<CR>
-  nnoremap <Leader>rg :FZFRg<CR>
+  nnoremap <Leader>ch :<C-u>FZFHistory:<CR>| " command history
+  nnoremap <Leader>fh :<C-u>FZFHistory<CR> | " file history
+  nnoremap <Leader>gg :<C-u>FZFGGrep<CR>
+  nnoremap <Leader>mm :<C-u>FZFMarks<CR>
+  nnoremap <Leader>sh :<C-u>FZFHistory/<CR>| " search history
+  nnoremap <Leader>ww :<C-u>FZFWindows<CR>
+  " command! -bang -nargs=* FZFRg
+    " \ call fzf#vim#grep(
+    " \    'rg --column --hidden --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+    " \     fzf_preview#p(<bang>0, {'options': '--delimiter : --nth 3..'}),
+    " \     <bang>0
+    " \)
 
 Plug 'yuki-yano/fzf-preview.vim', {
   \ 'as': 'fzf-preview.vim-yuki-yano',
@@ -339,7 +352,8 @@ Plug 'yuki-yano/fzf-preview.vim', {
   \ 'do': ':UpdateRemotePlugins',
   \ }
   let g:fzf_preview_command = 'bat --color=always --plain {-1}'
-  let g:fzf_preview_filelist_command = 'rg --files --hidden --follow --no-messages -g \!"* *"'
+  let g:fzf_preview_filelist_command =
+    \ 'rg --files --hidden --follow --no-messages -g \!"* *"'
   let g:fzf_preview_lines_command = 'bat --color=always --plain --number'
   nnoremap <Leader>ab  :<C-u>FzfPreviewAllBuffers<CR>
   nnoremap <Leader>bb  :<C-u>FzfPreviewBuffers<CR>
@@ -371,16 +385,17 @@ Plug 'yuki-yano/fzf-preview.vim', {
 " plugins: coc.nvim + fzf
 " =============================================================================
 Plug 'antoinemadec/coc-fzf'
-  " let g:coc_fzf_preview = 'down:60%'
-  nnoremap <Leader>co :<C-u>CocFzfList commands<CR>
+  let g:coc_fzf_preview = 'down:50%'
+  nnoremap <Leader>cc :<C-u>CocFzfList commands<CR>
+  nnoremap <Leader>co :<C-u>CocFzfList outline<CR>
   nnoremap <Leader>cs :<C-u>CocFzfList symbols<CR>
 
 " yuki-yano/fzf-preview.vim
-  nnoremap <Leader>ccd :<C-u>CocCommand fzf-preview.CocCurrentDiagnostics<CR>
-  nnoremap <Leader>cr  :<C-u>CocCommand fzf-preview.CocReferences<CR>
-  nnoremap <Leader>cd  :<C-u>CocCommand fzf-preview.CocDiagnostics<CR>
-  nnoremap <Leader>ci  :<C-u>CocCommand fzf-preview.CocImplementations<CR>
-  nnoremap <Leader>ct  :<C-u>CocCommand fzf-preview.CocTypeDefinitions<CR>
+  nnoremap <Leader>cd :<C-u>CocCommand fzf-preview.CocCurrentDiagnostics<CR>
+  nnoremap <Leader>cr :<C-u>CocCommand fzf-preview.CocReferences<CR>
+  nnoremap <Leader>ci :<C-u>CocCommand fzf-preview.CocImplementations<CR>
+  nnoremap <Leader>ct :<C-u>CocCommand fzf-preview.CocTypeDefinitions<CR>
+  nnoremap <Leader>dd :<C-u>CocCommand fzf-preview.CocDiagnostics<CR>
 
 " =============================================================================
 " plugins: rest
@@ -419,7 +434,7 @@ Plug 'LeafCage/yankround.vim'
 Plug 'francoiscabrol/ranger.vim'
   Plug 'rbgrouleff/bclose.vim'
   let g:ranger_map_keys = 0
-  nnoremap <leader>r :Ranger<CR>
+  nnoremap <leader>rn :Ranger<CR>
 Plug 'djoshea/vim-autoread'
 Plug 'qpkorr/vim-bufkill'
 Plug 'wsdjeg/vim-fetch'
@@ -486,8 +501,9 @@ Plug 'morhetz/gruvbox'
 Plug 'ryanoasis/vim-devicons'
 
 " syntax
+Plug 'andys8/vim-elm-syntax', { 'for': ['elm'] }
 Plug 'kevinoid/vim-jsonc'
-Plug 'cespare/vim-toml'
+Plug 'cespare/vim-toml', { 'for': ['toml'] }
 
 " tags
 Plug 'soramugi/auto-ctags.vim'
@@ -502,6 +518,9 @@ Plug 'liuchengxu/vista.vim'
   let g:vista_fzf_preview = ['right:50%']
   nnoremap <Leader>v :Vista<CR>
   vnoremap <Leader>v :Vista<CR>
+
+" tests
+Plug 'vim-test/vim-test'
 
 " text objects
 Plug 'wellle/line-targets.vim'

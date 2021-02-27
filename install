@@ -129,7 +129,6 @@ ensure_brew_install bandwhich
 ensure_brew_install bat
 ensure_brew_install bingrep
 ensure_brew_install broot
-ensure_brew_install ctags
 ensure_brew_install ddgr
 ensure_brew_install direnv
 ensure_brew_install diskonaut
@@ -159,7 +158,6 @@ ensure_brew_install speedtest-cli
 ensure_brew_install spotify-tui
 ensure_brew_install starship
 ensure_brew_install tealdeer
-ensure_brew_install tmpreaper
 ensure_brew_install tmux
 ensure_brew_install tokei
 ensure_brew_install tree
@@ -324,6 +322,7 @@ ensure_apt_install pdfarranger ppa:linuxuprisinig/apps
 ensure_apt_install qutebrowser
 ensure_apt_install sqlitebrowser ppa:linuxgndu/sqlitebrowser
 ensure_apt_install texlive-xetex
+ensure_apt_install tmpreaper
 ensure_apt_install vim
 ensure_apt_install chrome-gnome-shell # screenshot locations
 ensure_apt_install gnome-tweaks       # screenshot locations
