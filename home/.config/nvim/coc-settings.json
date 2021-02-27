@@ -15,15 +15,15 @@
   "suggest.enablePreview": true,
   "suggest.languageSourcePriority": 99,
   "languageserver": {
-    // "codeLens.enable": true,
     "elmLS": {
       "command": "elm-language-server",
       "filetypes": ["elm"],
       "initializationOptions": {
-        "elmPath": "elm",
-        "elmFormatPath": "elm-format",
-        "elmTestPath": "elm-test",
         "disableElmLSDiagnostics": false,
+        "elmAnalyseTrigger": "change",
+        "elmFormatPath": "/home/linuxbrew/.linuxbrew/bin/elm-format",
+        "elmPath": "elm",
+        "elmTestPath": "elm-test",
         "skipInstallPackageConfirmation": false
       },
       "rootPatterns": ["elm.json"],
