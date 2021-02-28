@@ -13,9 +13,6 @@ success_symbol = "[❯](bold green)"
 error_symbol = "[❯](bold red)"
 vicmd_symbol = "[❮](bold yellow)"
 
-[cmd_duration]
-show_notifications = true
-
 [conda]
 format = "[$symbol:$environment]($style) "
 symbol = "c"
