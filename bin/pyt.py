@@ -15,7 +15,6 @@ from typing import Iterator
 from typing import List
 from typing import Optional
 
-
 basicConfig(
     format="\033[94m{asctime}\033[0m {msg}",
     datefmt="%Y-%m-%d %H:%M:%S",

@@ -3,5 +3,5 @@
 
 __bashrc="$HOME/.bashrc"
 if [ -f "$__bashrc" ]; then
-	source "$__bashrc"
+  source "$__bashrc"
 fi

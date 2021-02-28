@@ -35,5 +35,10 @@
       "rootPatterns": ["elm.json"],
       "trace.server": "verbose"
     }
+  },
+  "diagnostic-languageserver.filetypes": {
+    "haskell": "hlint",
+    "sh": "shellcheck",
+    "vim": "vint"
   }
 }

@@ -6,15 +6,15 @@ export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 
 __config="$XDG_CONFIG_HOME/shell/config.sh"
 if [ -f "$__config" ]; then
-	source "$__config" zsh
+  source "$__config" zsh
 fi
 __zinit="$XDG_CONFIG_HOME/zinit/zinit.sh"
 if [ -f "$__zinit" ]; then
-	source "$__zinit"
+  source "$__zinit"
 fi
 __zshrc_local="$XDG_CONFIG_HOME/zsh/zshrc.local.sh"
 if [ -f "$__zshrc_local" ]; then
-	source "$__zshrc_local"
+  source "$__zshrc_local"
 fi
 
 # compinstall
@@ -60,11 +60,11 @@ bindkey '^K^U' _mtxr-to-upper # Ctrl+K + Ctrl+U
 bindkey '^K^L' _mtxr-to-lower # Ctrl+K + Ctrl+L
 zinit load jeffreytse/zsh-vi-mode
 function zvm_after_init() {
-	fzf_zsh="$XDG_CONFIG_HOME/fzf/fzf.zsh"
-	if [ -f "$fzf_zsh" ]; then
-		source "$fzf_zsh"
-	fi
-	enable-fzf-tab
+  fzf_zsh="$XDG_CONFIG_HOME/fzf/fzf.zsh"
+  if [ -f "$fzf_zsh" ]; then
+    source "$fzf_zsh"
+  fi
+  enable-fzf-tab
 }
 
 # plugins: git
@@ -77,12 +77,12 @@ zinit snippet OMZP::zsh-interactive-cd
 # plugins: tmux
 zinit snippet OMZP::tmux
 if command -v tmux >/dev/null 2>&1; then
-	export ZSH_TMUX_AUTOSTART=true
-	export ZSH_TMUX_FIXTERM=false
-	export ZSH_TMUX_UNICODE=true
+  export ZSH_TMUX_AUTOSTART=true
+  export ZSH_TMUX_FIXTERM=false
+  export ZSH_TMUX_UNICODE=true
 fi
 
 # vim-superman
 if command -v vman >/dev/null 2>&1; then
-	compdef vman="man"
+  compdef vman="man"
 fi

@@ -3,18 +3,18 @@
 
 declare -a names=()
 while read -r name; do
-	names+=("$name")
+  names+=("$name")
 done <<<"$(git diff --name-only)"
 while read -r name; do
-	names+=("$name")
+  names+=("$name")
 done <<<"$(git ls-files --exclude-standard --full-name --others $(git root))"
 
 declare -a files=()
 for name in "${names[@]}"; do
-	file="$(git rev-parse --show-toplevel)/$name"
-	if [ -f "$file" ]; then
-		files+=("$file")
-	fi
+  file="$(git rev-parse --show-toplevel)/$name"
+  if [ -f "$file" ]; then
+    files+=("$file")
+  fi
 done
 
 pre-commit run --files "${files[@]}"

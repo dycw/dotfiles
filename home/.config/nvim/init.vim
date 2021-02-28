@@ -175,11 +175,14 @@ Plug 'dense-analysis/ale'
   let g:ale_disable_lsp = 1| " https://bit.ly/2ZfmdPM
   let g:ale_fix_on_save = 1
   let g:ale_fixers = {
-  \ 'python': ['autoimport', 'reorder-python-imports'],
-  \ }
-  let g:ale_linters = {
+    \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+    \ 'haskell': ['brittany'],
+    \ 'python': ['autoimport', 'reorder-python-imports'],
+    \ 'sh': ['shfmt'],
     \ }
+  let g:ale_linters = {}| " use coc.nvim
   let g:ale_linters_explicit = 1
+  let g:ale_sh_shfmt_options = '-i 2'
   let g:ale_sign_column_always = 1
   let g:ale_use_global_executables = 1
   let g:ale_warn_about_trailing_blank_lines = 0
