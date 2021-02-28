@@ -34,6 +34,18 @@
       "filetypes": ["elm"],
       "rootPatterns": ["elm.json"],
       "trace.server": "verbose"
+    },
+    "haskell": {
+      "command": "haskell-language-server-wrapper",
+      "args": ["--lsp"],
+      "rootPatterns": [
+        "*.cabal",
+        "cabal.project",
+        "hie.yaml",
+        "package.yaml",
+        "stack.yaml"
+      ],
+      "filetypes": ["haskell", "lhaskell"]
     }
   },
   "diagnostic-languageserver.filetypes": {

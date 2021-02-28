@@ -258,7 +258,18 @@ if ! [ -d "$HOME/.zinit" ]; then
   curl -fsSL "$__url"
 fi
 
-# === cargo ===
+# === cabal (needs ghcup) ===
+
+ensure_cabal_install() {
+  if (command -v cabal >/dev/null 2>&1) &&
+    ! (command -v "$1" >/dev/null 2>&1); then
+    cabal install "$1"
+  fi
+}
+
+ensure_cabal_install brittany
+
+# === cargo (needs brew) ===
 
 ensure_cargo_install() {
   if (command -v cargo >/dev/null 2>&1) &&
@@ -282,7 +293,7 @@ ensure_gem_install() {
 
 ensure_gem_install mdl
 
-# === npm ===
+# === npm (needs brew) ===
 
 ensure_npm_install() {
   if (command -v npm >/dev/null 2>&1) &&
@@ -295,7 +306,7 @@ ensure_npm_install pyright
 ensure_npm_install @elm-tooling/elm-language-server
 ensure_npm_install @stoplight/spectral
 
-# === pipx ===
+# === pipx (needs brew) ===
 
 ensure_pipx_install() {
   if (command -v pipx >/dev/null 2>&1) &&
