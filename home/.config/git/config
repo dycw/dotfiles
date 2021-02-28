@@ -1,15 +1,20 @@
 [alias]
   # add
   a = add
-  aa = add --all
-  ai = aa --interactive
-  aip = a --interactive --patch
-  ap = a --patch
+  aa = add -A
+  ai = add -i
+  aip = add -ip
+  ap = add -p
 
   # add + commit
-  aac = !git aa && git c && :
-  aacm = !git aa && git cm \"$1\" && :
-  ac = "!f() { for v in \"$@\"; do git a \"$GIT_PREFIX$v\"; done; git c; }; f"
+  aac = !git add -A && git commit && :
+  aacm = !git add -A && git commit -m \"$1\" && :
+  ac = "!f() { \
+      for v in \"$@\"; do \
+        git add \"$GIT_PREFIX$v\"; \
+      done; \
+      git commit; \
+    }; f"
   acm = "!f() { i=0; for v in \"$@\"; do i=$(($i+1)); if [ $i -lt $# ]; then git a \"$GIT_PREFIX$v\"; else git cm \"$v\"; fi; done; }; f"
   acnv = "!f() { for v in \"$@\"; do git a \"$GIT_PREFIX$v\"; done; git cnv; }; f"
   acnvm = "!f() { i=0; for v in \"$@\"; do i=$(($i+1)); if [ $i -lt $# ]; then git a \"$GIT_PREFIX$v\"; else git cnvm \"$v\"; fi; done; }; f"
@@ -156,7 +161,8 @@
 
   # publish
   pb = !git puo $(git current) && :
-  unpb = "!git br --color=never | fzf | sed -En 's/origin\\/(.*)/\\1/p' | xargs -n 1 git pdo"
+  pbf = pb -f
+  unpb = "!git branch -r --color=never | fzf | sed -En 's/origin\\/(.*)/\\1/p' | xargs -n 1 git pdo"
 
 [apply]
   whitespace = nowarn

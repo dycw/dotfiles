@@ -227,6 +227,12 @@ for __dir in "$HOME/.vim" "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site"; do
   fi
 done
 
+# === stack ===
+
+if ! command -v stack >/dev/null 2>&1; then
+  curl -sSL https://get.haskellstack.org/ | sh
+fi
+
 # === wally ===
 
 ensure_apt_install libusb-dev

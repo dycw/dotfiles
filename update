@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+sudo apt -y autoremove
+sudo apt -y update
+sudo apt -y upgrade
 brew update
 brew upgrade
 npm update -g
 pre-commit autoupdate
-sudo apt -y autoremove
-sudo apt -y update
-sudo apt -y upgrade
+stack upgrade
