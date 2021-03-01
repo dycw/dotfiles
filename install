@@ -369,16 +369,14 @@ fi
 # === snap ===
 
 ensure_snap_install() {
-  pkg="$1"
-  if ! command -v "$pkg" >/dev/null 2>&1; then
-    shift
-    sudo snap install "$pkg" "$@"
+  if ! command -v "$1" >/dev/null 2>&1; then
+    sudo snap install "$1"
   fi
 }
 
 ensure_snap_install insomnia-designer
 ensure_snap_install signal-desktop
-# ensure_snap_install transmission --beta
+ensure_snap_install spotify
 
 # === sound (https://intel.ly/3r68ua1) ===
 
