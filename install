@@ -380,6 +380,16 @@ ensure_snap_install insomnia-designer
 ensure_snap_install signal-desktop
 # ensure_snap_install transmission --beta
 
+# === sound (https://intel.ly/3r68ua1) ===
+
+__alsa_base_conf=/etc/modprobe.d/alsa-base.conf
+if [ -f "$__alsa_base_conf" ]; then
+  __dell_headset_multi='options snd-hda-intel model=dell-headset-multi'
+  if ! grep "$__dell_headset_multi" "$__alsa_base_conf" >/dev/null 2>&1; then
+    echo "$__dell_headset_multi" | sudo tee -a "$__alsa_base_conf"
+  fi
+fi
+
 # === SSH key ===
 
 ensure_brew_install xclip

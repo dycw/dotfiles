@@ -61,9 +61,9 @@ while IFS= read -d '' -r __bin; do
 done < <(find "$PATH_DOTFILES" -name bin -print0 -type d)
 
 # cargo
-__cargo_bin="$HOME/.cargo/bin"
-if [ -d "$__cargo_bin" ]; then
-  export PATH="$__cargo_bin${PATH:+:$PATH}"
+__bin="$HOME/.cargo/bin"
+if [ -d "$__bin" ]; then
+  export PATH="$__bin${PATH:+:$PATH}"
 fi
 
 # cd
@@ -81,6 +81,12 @@ alias cddt='cd $HOME/Desktop'
 alias cdp='cd $HOME/Pictures'
 alias cdw='cd $HOME/work'
 mkdir -p "$HOME/work"
+
+# cisco
+__bin=/opt/cisco/anyconnect/bin
+if [ -d "$__bin" ]; then
+  export PATH="$__bin${PATH:+:$PATH}"
+fi
 
 # conda
 __miniconda3="$HOME/miniconda3"
