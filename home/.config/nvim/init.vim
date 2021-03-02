@@ -97,6 +97,9 @@ inoremap <C-s> <Esc>:w<CR>
 nnoremap <Esc> :nohlsearch<CR>
 vnoremap <Esc> :nohlsearch<CR>
 
+" search for visual selection (https://bit.ly/3r9XAAg)
+vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>'")
+
 " shift blocks visually (https://bit.ly/3alZUhL)
 vnoremap > >gv
 vnoremap < <gv
@@ -177,7 +180,7 @@ Plug 'dense-analysis/ale'
   let g:ale_fixers = {
     \ '*': ['remove_trailing_lines', 'trim_whitespace'],
     \ 'haskell': ['brittany'],
-    \ 'python': ['autoimport', 'reorder-python-imports'],
+    \ 'python': ['reorder-python-imports', 'black'],
     \ 'sh': ['shfmt'],
     \ }
   let g:ale_linters = {}| " use coc.nvim
@@ -247,11 +250,11 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
   \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " GoTo code navigation.
-nmap gdf <Plug>(coc-definition)
-nmap gdk <Plug>(coc-diagnostic-prev)
-nmap gdj <Plug>(coc-diagnostic-next)
+nmap gd  <Plug>(coc-definition)
 nmap gi  <Plug>(coc-implementation)
 nmap gt  <Plug>(coc-type-definition)
+nmap gxk <Plug>(coc-xiagnostic-prev)
+nmap gxj <Plug>(coc-xiagnostic-next)
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -270,7 +273,7 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
 nmap <leader>rf <Plug>(coc-refactor)
-nmap <leader>rr <Plug>(coc-rename)
+nmap <leader>rn <Plug>(coc-rename)
 
 " Map function and class text objects
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
@@ -331,26 +334,21 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
   let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9 } }
   let g:fzf_preview_window = ['down:50%', 'ctrl-/']
-  nnoremap <Leader><Leader> :Commands<CR>
-  nnoremap <Leader>ht :<C-u>Helptags!<CR>
-  nnoremap <Leader>mp :<C-u>Maps<CR>
-  nnoremap <Leader>rg :<C-u>Rg<CR>
+  nnoremap <Leader>c         :<C-u>Commands<CR>
+  vnoremap <Leader>c         :<C-u>Commands<CR>
+  nnoremap <Leader><Leader>c :<C-u>History:<CR> | " command history
+  nnoremap <Leader><Leader>f :<C-u>History<CR>  | " file history
+  nnoremap <Leader><Leader>m :<C-u>Maps<CR>
+  nnoremap <Leader>gg        :<C-u>GGrep<CR>
+  nnoremap <Leader>ht        :<C-u>Helptags!<CR>
+  nnoremap <Leader>rg        :<C-u>Rg<CR>
   " https://bit.ly/3q5KZwQ
   command! -bang -nargs=* Rg
     \ call fzf#vim#grep(
     \   'rg --hidden --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
     \   fzf#vim#with_preview(), <bang>0)
 
-Plug 'chengzeyi/fzf-preview.vim', { 'as': 'fzf-preview.vim-chengzeyi' }
-  nnoremap <Leader>ch :<C-u>FZFHistory:<CR>| " command history
-  nnoremap <Leader>fh :<C-u>FZFHistory<CR> | " file history
-  nnoremap <Leader>gg :<C-u>FZFGGrep<CR>
-  nnoremap <Leader>mm :<C-u>FZFMarks<CR>
-  nnoremap <Leader>sh :<C-u>FZFHistory/<CR>| " search history
-  nnoremap <Leader>ww :<C-u>FZFWindows<CR>
-
 Plug 'yuki-yano/fzf-preview.vim', {
-  \ 'as': 'fzf-preview.vim-yuki-yano',
   \ 'branch': 'release/remote',
   \ 'do': ':UpdateRemotePlugins',
   \ }
@@ -358,49 +356,42 @@ Plug 'yuki-yano/fzf-preview.vim', {
   let g:fzf_preview_filelist_command =
     \ 'rg --files --hidden --follow --no-messages -g \!"* *"'
   let g:fzf_preview_lines_command = 'bat --color=always --plain --number'
-  nnoremap <Leader>ab  :<C-u>FzfPreviewAllBuffers<CR>
-  nnoremap <Leader>bb  :<C-u>FzfPreviewBuffers<CR>
-  nnoremap <Leader>bl  :<C-u>FzfPreviewBufferLines<CR>
-  nnoremap <Leader>bt  :<C-u>FzfPreviewVistaBufferCtags<CR>
-  nnoremap <Leader>cp  :<C-u>FzfPreviewCommandPalette<CR>
-  nnoremap <Leader>df  :<C-u>FzfPreviewDirectoryFiles<CR>
-  nnoremap <Leader>ga  :<C-u>FzfPreviewGitActions<CR>
-  nnoremap <Leader>gf  :<C-u>FzfPreviewGitFiles<CR>
-  nnoremap <Leader>gs  :<C-u>FzfPreviewGitStatus<CR>
-  nnoremap <Leader>j   :<C-u>FzfPreviewJumps<CR>
-  nnoremap <Leader>ll  :<C-u>FzfPreviewLines<CR>
-  nnoremap <Leader>lo  :<C-u>FzfPreviewLocationList<CR>
-  nnoremap <Leader>mn  :<C-u>FzfPreviewMarks<CR>
-  nnoremap <Leader>of  :<C-u>FzfPreviewOldFiles<CR>
-  nnoremap <Leader>pf  :<C-u>FzfPreviewProjectFiles<CR>
-  " nnoremap <Leader>pg  :<C-u>FzfPreviewProjectGrep<Space>
-  " xnoremap <Leader>pg  "sy:FzfPreviewProjectGrep<Space>-F<Space>"<C-r>=substitute(substitute(@s, '\n', '', 'g'), '/', '\\/', 'g')<CR>"
-  nnoremap <Leader>pof :<C-u>FzfPreviewProjectOldFiles<CR>
-  nnoremap <Leader>puf :<C-u>FzfPreviewProjectMruFiles<CR>
-  nnoremap <Leader>pwf :<C-u>FzfPreviewProjectMrwFiles<CR>
-  nnoremap <Leader>qf  :<C-u>FzfPreviewQuickFix<CR>
-  nnoremap <Leader>t   :<C-u>FzfPreviewVistaCtags<CR>
-  nnoremap <Leader>uf  :<C-u>FzfPreviewMruFiles<CR>
-  nnoremap <Leader>wf  :<C-u>FzfPreviewMrwFiles<CR>
-  nnoremap <Leader>/   :<C-u>FzfPreviewLines<CR>
+  nnoremap <Leader>b         :<C-u>FzfPreviewBuffers<CR>
+  nnoremap <Leader>f         :<C-u>FzfPreviewDirectoryFiles<CR>
+  nnoremap <Leader>j         :<C-u>FzfPreviewJumps<CR>
+  nnoremap <Leader>l         :<C-u>FzfPreviewLines<CR>
+  nnoremap <Leader><Leader>l :<C-u>FzfPreviewBufferLines<CR>
+  nnoremap <Leader>m         :<C-u>FzfPreviewMarks<CR>
+  nnoremap <Leader>t         :<C-u>FzfPreviewVistaCtags<CR>
+  nnoremap <Leader><Leader>t :<C-u>FzfPreviewVistaBufferCtags<CR>
+  nnoremap <Leader>ga        :<C-u>FzfPreviewGitActions<CR>
+  nnoremap <Leader>gf        :<C-u>FzfPreviewGitFiles<CR>
+  nnoremap <Leader>gs        :<C-u>FzfPreviewGitStatus<CR>
+  nnoremap <Leader>of        :<C-u>FzfPreviewOldFiles<CR>
+  nnoremap <Leader>pf        :<C-u>FzfPreviewProjectFiles<CR>
+  nnoremap <Leader>pg        :<C-u>FzfPreviewProjectGrep<Space>
+  nnoremap <Leader>qf        :<C-u>FzfPreviewQuickFix<CR>
+  nnoremap <Leader>uf        :<C-u>FzfPreviewMruFiles<CR>
+  nnoremap <Leader>wf        :<C-u>FzfPreviewMrwFiles<CR>
+  nnoremap <Leader>pof       :<C-u>FzfPreviewProjectOldFiles<CR>
+  nnoremap <Leader>puf       :<C-u>FzfPreviewProjectMruFiles<CR>
+  nnoremap <Leader>pwf       :<C-u>FzfPreviewProjectMrwFiles<CR>
 
 " =============================================================================
 " plugins: coc.nvim + fzf
 " =============================================================================
 Plug 'antoinemadec/coc-fzf'
   let g:coc_fzf_preview = 'down:50%'
-  nnoremap <Leader>cc :<C-u>CocFzfList commands<CR>
-  nnoremap <Leader>cl :<C-u>CocFzfList<CR>
-  nnoremap <Leader>co :<C-u>CocFzfList outline<CR>
-  nnoremap <Leader>cs :<C-u>CocFzfList symbols<CR>
-  nnoremap <Leader>y  :<C-u>CocFzfList yank<CR>
+  nnoremap <Leader>o :<C-u>CocFzfList outline<CR>
+  nnoremap <Leader>s :<C-u>CocFzfList symbols<CR>
+  nnoremap <Leader>y :<C-u>CocFzfList yank<CR>
 
 " yuki-yano/fzf-preview.vim
-  nnoremap <Leader>cd :<C-u>CocCommand fzf-preview.CocCurrentDiagnostics<CR>
-  nnoremap <Leader>cr :<C-u>CocCommand fzf-preview.CocReferences<CR>
-  nnoremap <Leader>ci :<C-u>CocCommand fzf-preview.CocImplementations<CR>
-  nnoremap <Leader>ct :<C-u>CocCommand fzf-preview.CocTypeDefinitions<CR>
-  nnoremap <Leader>dd :<C-u>CocCommand fzf-preview.CocDiagnostics<CR>
+  nnoremap <Leader>d         :<C-u>CocCommand fzf-preview.CocCurrentDiagnostics<CR>
+  nnoremap <Leader><Leader>d :<C-u>CocCommand fzf-preview.CocDiagnostics<CR>
+  nnoremap <Leader>r         :<C-u>CocCommand fzf-preview.CocReferences<CR>
+  nnoremap <Leader>gi        :<C-u>CocCommand fzf-preview.CocImplementations<CR>
+  nnoremap <Leader>gt        :<C-u>CocCommand fzf-preview.CocTypeDefinitions<CR>
 
 " =============================================================================
 " plugins: rest
@@ -411,6 +402,7 @@ Plug 'kristijanhusak/vim-dadbod-completion'
 
 " editing
 Plug 'tpope/vim-abolish'
+Plug 'jiangmiao/auto-pairs'
 Plug 'chrisbra/NrrwRgn'
 Plug 'luochen1990/rainbow'
   let g:rainbow_active = 1
@@ -433,10 +425,10 @@ Plug 'tpope/vim-unimpaired'
 " directories, files and buffers
 Plug 'francoiscabrol/ranger.vim'
   Plug 'rbgrouleff/bclose.vim'
+  let g:bclose_no_plugin_maps = 1
   let g:ranger_map_keys = 0
-  nnoremap <leader>rn :Ranger<CR>
+  nnoremap <leader>R :Ranger<CR>
 Plug 'djoshea/vim-autoread'
-Plug 'qpkorr/vim-bufkill'
 Plug 'wsdjeg/vim-fetch'
 Plug 'farmergreg/vim-lastplace'
 Plug 'airblade/vim-rooter'
@@ -455,6 +447,10 @@ Plug 'mhinz/vim-startify'
 " general
 Plug 'glidenote/memolist.vim'
   let g:memolist_path = '$HOME/.memolist'
+Plug '907th/vim-auto-save'
+  let g:auto_save = 1
+  let g:auto_save_write_all_buffers = 2
+  nnoremap <Leader>as :<C-u>AutoSaveToggle<CR>
 Plug 'tpope/vim-repeat'
 
 " git
@@ -512,8 +508,8 @@ Plug 'liuchengxu/vista.vim'
   set statusline+=%{NearestMethodOrFunction()}
   autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
   let g:vista_fzf_preview = ['right:50%']
-  nnoremap <Leader>v :Vista<CR>
-  vnoremap <Leader>v :Vista<CR>
+  nnoremap <Leader>v :Vista!<CR>
+  vnoremap <Leader>v :Vista!<CR>
 
 " tests
 Plug 'vim-test/vim-test'
@@ -534,9 +530,6 @@ Plug 'kana/vim-textobj-user'| " used by others
 
 " tmux
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'wellle/tmux-complete.vim'
-  Plug 'prabirshrestha/async.vim'
-  Plug 'prabirshrestha/asyncomplete.vim'
 
 " unix
 Plug 'tpope/vim-eunuch'
@@ -548,6 +541,7 @@ Plug 'Yggdroot/indentLine'
   let g:indentLine_char = '▏'
   let g:indentLine_setConceal = 0
 Plug 'RRethy/vim-illuminate'
+Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'wellle/visual-split.vim'
 Plug 'simeji/winresizer'
   let g:winresizer_start_key = 'Q'
