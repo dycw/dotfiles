@@ -3,7 +3,7 @@ format = """\
 $time\
 $directory\
 $git_branch$git_state$git_commit$git_status\
-$conda$docker_context$elixir$elm\
+$docker_context$elixir$elm$python\
 $line_break\
 $username$hostname$cmd_duration$jobs$memory_usage$shlvl$status\
 $character"""
@@ -12,10 +12,6 @@ $character"""
 success_symbol = "[❯](bold green)"
 error_symbol = "[❯](bold red)"
 vicmd_symbol = "[❮](bold yellow)"
-
-[conda]
-format = "[$symbol:$environment]($style) "
-symbol = "c"
 
 [directory]
 truncation_length = 3
@@ -50,6 +46,11 @@ untracked = "?$count"
 
 [hostname]
 format = "[$hostname]($style) "
+
+[python]
+format = "[$symbol$pyenv_prefix$version]($style)"
+pyenv_version_name = true
+symbol = "p:"
 
 [memory_usage]
 format = "[$symbol$ram]($style) "

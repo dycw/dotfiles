@@ -62,7 +62,7 @@ repos:
   - repo: https://github.com/dycw/pre-commit-hooks
     rev: 0.0.81
     hooks:
-      - id: check-settings
+      # - id: check-settings
       - id: shfmt
         exclude: zinit.sh
   - repo: https://github.com/jumanjihouse/pre-commit-hooks

@@ -46,7 +46,6 @@ zinit load zsh-users/zsh-autosuggestions
 zinit load zsh-users/zsh-completions
 
 # plugins: completion
-zinit load esc/conda-zsh-completion
 zinit snippet OMZP::ubuntu
 zinit load lukechilds/zsh-better-npm-completion
 zinit load zchee/zsh-completions

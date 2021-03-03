@@ -88,28 +88,6 @@ if [ -d "$__bin" ]; then
   export PATH="$__bin${PATH:+:$PATH}"
 fi
 
-# conda
-__miniconda3="$HOME/miniconda3"
-if [ -d "$__miniconda3" ]; then
-  __conda_bin="$__miniconda3/bin"
-  __conda_setup="$("$__conda_bin/conda" "shell.$__shell" 'hook' 2>/dev/null)"
-  if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-  else
-    __conda_sh="$__miniconda3/etc/profile.d/conda.sh"
-    if [ -f "$__conda_sh" ]; then
-      . "$__conda_sh"
-    else
-      export PATH="$__conda_bin${PATH:+:$PATH}"
-    fi
-  fi
-  unset __conda_setup
-  alias cec='conda env create --force'
-  alias cel='conda env list'
-  alias ceu='conda env update'
-  export CONDARC="$XDG_CONFIG_HOME/conda/condarc"
-fi
-
 # direnv
 if command -v direnv >/dev/null 2>&1; then
   eval "$(direnv hook "$__shell")"
@@ -265,6 +243,11 @@ if command -v pre-commit >/dev/null 2>&1; then
   alias pcau='pre-commit autoupdate'
   alias pctr='pre-commit try-repo .'
   alias pcui='pre-commit uninstall'
+fi
+
+# pyenv
+if (command -v pyenv >/dev/null 2>&1); then
+  eval "$(pyenv init -)"
 fi
 
 # pylint/prospector

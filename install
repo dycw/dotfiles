@@ -96,20 +96,12 @@ if ! [ -d "$__linuxbrew" ]; then
   curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
 fi
 
-ensure_brew_install() {
-  pkg="$1"
-  if (command -v brew >/dev/null 2>&1) && ! (brew list "$pkg" >/dev/null 2>&1); then
-    shift
-    brew install "$pkg" "$@"
-  fi
-}
-
-ensure_apt_install build-essential
-ensure_brew_install gcc
+sudo apt -y install build-essential
+brew install gcc
 
 # === brew: fzf ===
 
-ensure_brew_install fzf
+brew install fzf
 __install="$(brew --prefix)/opt/fzf/install"
 if [ -f "$__install" ] && ! [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/fzf" ]; then
   "$__install" --xdg --key-bindings --completion --no-update-rc
@@ -117,7 +109,7 @@ fi
 
 # === brew: zsh ===
 
-ensure_brew_install zsh
+brew install zsh
 if (command -v zsh >/dev/null 2>&1) && ! (grep -q zsh "/etc/shells"); then
   command -v zsh | sudo tee -a /etc/shells
   sudo chsh -s "$(command -v zsh)" "${USER}"
@@ -125,62 +117,51 @@ fi
 
 # === brew: rest of them ===
 
-ensure_brew_install bandwhich
-ensure_brew_install bat
-ensure_brew_install bingrep
-ensure_brew_install broot
-ensure_brew_install ddgr
-ensure_brew_install direnv
-ensure_brew_install diskonaut
-ensure_brew_install dust
-ensure_brew_install elm
-ensure_brew_install exa
-ensure_brew_install fd
-ensure_brew_install fpp
-ensure_brew_install git
-ensure_brew_install git-crypt
-ensure_brew_install git-delta
-ensure_brew_install googler
-ensure_brew_install grex
-ensure_brew_install hub
-ensure_brew_install hyperfine
-ensure_brew_install mdcat
-ensure_brew_install neovim
-ensure_brew_install node
-ensure_brew_install pipx
-ensure_brew_install procs
-ensure_brew_install ranger
-ensure_brew_install ripgrep
-ensure_brew_install sd
-ensure_brew_install shellcheck
-ensure_brew_install shfmt
-ensure_brew_install speedtest-cli
-ensure_brew_install spotify-tui
-ensure_brew_install starship
-ensure_brew_install tealdeer
-ensure_brew_install tmux
-ensure_brew_install tokei
-ensure_brew_install tree
-ensure_brew_install watchexec
-ensure_brew_install yarn
-ensure_brew_install zoxide
-ensure_brew_install clementtsang/bottom/bottom
-ensure_brew_install eth-p/software/bat-extras
-ensure_brew_install universal-ctags/universal-ctags/universal-ctags --HEAD
-
-# === conda ===
-
-__miniconda3="$HOME/miniconda3"
-if ! [ -d "$__miniconda3" ]; then
-  __miniconda="$(mktemp -d)/miniconda.sh"
-  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-    -O "$__miniconda"
-  bash "$__miniconda" -b -u -p "$__miniconda3"
-  __python="/usr/bin/python"
-  if ! [ -f "$__python" ]; then
-    sudo ln -s "$__miniconda3/bin/python" "$__python"
-  fi
-fi
+brew install \
+  bandwhich \
+  bat \
+  bingrep \
+  broot \
+  ddgr \
+  direnv \
+  diskonaut \
+  dust \
+  elm \
+  exa \
+  fd \
+  fpp \
+  git \
+  git-crypt \
+  git-delta \
+  googler \
+  grex \
+  hub \
+  hyperfine \
+  mdcat \
+  neovim \
+  node \
+  pipx \
+  procs \
+  pyenv \
+  ranger \
+  ripgrep \
+  sd \
+  shellcheck \
+  shfmt \
+  speedtest-cli \
+  spotify-tui \
+  starship \
+  tealdeer \
+  tmux \
+  tokei \
+  tree \
+  watchexec \
+  yarn \
+  zoxide \
+  clementtsang/bottom/bottom \
+  eth-p/software/bat-extras \
+  bzip2 libffi libxml2 libxmlsec1 openssl readline sqlite xz zlib # pyenv
+brew install universal-ctags/universal-ctags/universal-ctags --HEAD
 
 # === dropbox ===
 
@@ -198,6 +179,16 @@ fi
 
 if ! command -v ghcup >/dev/null 2>&1; then
   curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
+fi
+
+# === pyenv ===
+
+if command -v pyenv >/dev/null 2>&1; then
+  __version=3.9.1
+  pyenv install -s "$__version"
+else
+  echo "Expected to find pyenv; abort me..."
+  sleep 999
 fi
 
 # === pynvim ===
@@ -266,27 +257,15 @@ fi
 
 # === cabal (needs ghcup) ===
 
-ensure_cabal_install() {
-  if (command -v cabal >/dev/null 2>&1) &&
-    ! (command -v "$1" >/dev/null 2>&1); then
-    cabal install "$1"
-  fi
-}
-
-ensure_cabal_install brittany
+cabal install \
+  brittany
 
 # === cargo (needs brew) ===
 
-ensure_cargo_install() {
-  if (command -v cargo >/dev/null 2>&1) &&
-    ! (command -v "$1" >/dev/null 2>&1); then
-    cargo install "$1"
-  fi
-}
-
-ensure_cargo_install gitui
-ensure_cargo_install gitweb
-ensure_cargo_install rmesg
+cargo install \
+  gitui \
+  gitweb \
+  rmesg
 
 # === gem ===
 
@@ -390,7 +369,7 @@ fi
 
 # === SSH key ===
 
-ensure_brew_install xclip
+brew install xclip
 
 __config_local="${XDG_CONFIG_HOME:-$HOME/.config}/git/config.local"
 if ! [ -f "$__config_local" ]; then
