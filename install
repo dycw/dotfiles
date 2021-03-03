@@ -141,6 +141,7 @@ brew install \
   neovim \
   node \
   pipx \
+  poetry \
   procs \
   pyenv \
   ranger \
