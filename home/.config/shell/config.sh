@@ -15,7 +15,7 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$USER}"
 export PATH_DOTFILES="${PATH_DOTFILES:-$HOME/dotfiles}"
 __config_local="$XDG_CONFIG_HOME/shell/config.local.sh"
 if [ -f "$__config_local" ]; then
-  source "$__config_local" zsh
+  source "$__config_local" "$__shell"
 fi
 
 # homebrew
@@ -250,17 +250,11 @@ if (command -v pyenv >/dev/null 2>&1); then
   eval "$(pyenv init -)"
 fi
 
-# pylint/prospector
-if (command -v pylint >/dev/null 2>&1) ||
-  (command -v prospector >/dev/null 2>&1); then
-  export PYLINTHOME="$XDG_CACHE_HOME/pylint"
-fi
-
 # python
 if command -v python >/dev/null 2>&1; then
   alias pie='pip install -e .'
   __pyclean='find . \( -name .mypy_cache -o -name .pytest_cache -o -name'
-  __pyclean+=' __pycache__ \) -type d -prune -exec rm -rf {} \;'
+  __pyclean+=' .pytype -o -name __pycache__ \) -type d -prune -exec rm -rf {} \;'
   alias pyclean="$__pyclean"
   while IFS= read -d '' -r __pythonrc; do
     export PYTHONSTARTUP="$__pythonrc"
@@ -283,6 +277,17 @@ fi
 # python: numpy
 if command -v python >/dev/null 2>&1; then
   export MKL_NUM_THREADS=1
+fi
+
+# python: poetry
+if (command -v poetry >/dev/null 2>&1); then
+  alias poetry-build-install='rm -rf dist/ && poetry build && pip install --force-reinstall dist/*.whl'
+fi
+
+# python: pylint/prospector
+if (command -v pylint >/dev/null 2>&1) ||
+  (command -v prospector >/dev/null 2>&1); then
+  export PYLINTHOME="$XDG_CACHE_HOME/pylint"
 fi
 
 # python: tensorboard
