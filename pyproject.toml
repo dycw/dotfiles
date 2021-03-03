@@ -24,7 +24,7 @@ virtual_env = ".venv/bin/python"
 
 [tool.poetry]
 name = "dotfiles"
-version = "0.6.65"
+version = "0.6.66"
 description = "My dotfiles"
 authors = ["Derek Wan <d.wan@icloud.com>"]
 license = "MIT"
