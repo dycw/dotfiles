@@ -1,22 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck source=/dev/null
 
-# === curl and git ===
-
-ensure_apt_install() {
-  pkg="$1"
-  repo="$2"
-  if ! dpkg -s "$pkg" >/dev/null 2>&1; then
-    if [ -n "$repo" ]; then
-      sudo add-apt-repository -y "$repo"
-    fi
-    sudo apt update
-    sudo apt -y install "$pkg"
-  fi
-}
-
-ensure_apt_install curl
-ensure_apt_install git
+sudo apt -y install curl git
 
 # === repo ===
 
@@ -64,10 +49,7 @@ Making symlink:
   fi
 }
 
-find "$PATH_DOTFILES" -name .mypy_cache -type d -prune -exec rm -rf {} \;
-
-process_root() {
-  home_name="$1"
+for home_name in home home.local; do
   while IFS= read -d '' -r home_path; do
     while IFS= read -d '' -r rel_path; do
       abs_path="$(realpath "$rel_path")"
@@ -77,51 +59,28 @@ process_root() {
       fi
     done < <(find "$home_path" -print0 -type f -or -type l)
   done < <(find "$PATH_DOTFILES" -name "$home_name" -print0 -type d)
-}
+done
 
-process_root home
-process_root home.local
-
-while IFS= read -d '' -r __submodules; do
-  __tmux_conf="$__submodules/.tmux/.tmux.conf"
-  if [ -f "$__tmux_conf" ]; then
-    process_link "$__tmux_conf" "$HOME/.tmux.conf"
+while IFS= read -d '' -r submodules; do
+  tmux_conf="$submodules/.tmux/.tmux.conf"
+  if [ -f "$tmux_conf" ]; then
+    process_link "$tmux_conf" "$HOME/.tmux.conf"
   fi
 done < <(find "$PATH_DOTFILES" -name submodules -not -path "*/.git/*" -print0 -type d)
 
-# === brew (needs confirmation) ===
+# === brew ===
 
 __linuxbrew="/home/linuxbrew"
 if ! [ -d "$__linuxbrew" ]; then
   curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
 fi
-
 sudo apt -y install build-essential
-brew install gcc
-
-# === brew: fzf ===
-
-brew install fzf
-__install="$(brew --prefix)/opt/fzf/install"
-if [ -f "$__install" ] && ! [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/fzf" ]; then
-  "$__install" --xdg --key-bindings --completion --no-update-rc
-fi
-
-# === brew: zsh ===
-
-brew install zsh
-if (command -v zsh >/dev/null 2>&1) && ! (grep -q zsh "/etc/shells"); then
-  command -v zsh | sudo tee -a /etc/shells
-  sudo chsh -s "$(command -v zsh)" "${USER}"
-fi
-
-# === brew: rest of them ===
-
 brew install \
   bandwhich \
   bat \
   bingrep \
   broot \
+  gcc \
   ddgr \
   direnv \
   diskonaut \
@@ -130,9 +89,11 @@ brew install \
   exa \
   fd \
   fpp \
+  fzf \
   git \
   git-crypt \
   git-delta \
+  go \
   googler \
   grex \
   hub \
@@ -159,10 +120,18 @@ brew install \
   watchexec \
   yarn \
   zoxide \
+  zsh \
   clementtsang/bottom/bottom \
   eth-p/software/bat-extras \
   bzip2 libffi libxml2 libxmlsec1 openssl readline sqlite xz zlib # pyenv
 brew install universal-ctags/universal-ctags/universal-ctags --HEAD
+
+# === cargo ===
+
+cargo install \
+  gitui \
+  gitweb \
+  rmesg
 
 # === dropbox ===
 
@@ -176,11 +145,43 @@ if [ -d "$__data_dir" ]; then
   fi
 fi
 
+# === fzf ===
+
+__install="$(brew --prefix)/opt/fzf/install"
+if [ -f "$__install" ] && ! [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/fzf" ]; then
+  "$__install" --xdg --key-bindings --completion --no-update-rc
+fi
+
+# === gem ===
+
+gem install mdl
+
+# === npm ===
+
+npm install -g \
+  pyright \
+  @elm-tooling/elm-language-server \
+  @stoplight/spectral
+
+# === pipx ===
+
+for __app in \
+  flake8 \
+  pre-commit \
+  git+git://github.com/psf/black; do
+  pipx install "$__app"
+done
+url=https://raw.githubusercontent.com/dycw/pre-commit-hooks/master/flake8-extensions
+for __extension in $(curl $url); do
+  pipx inject flake8 "$__extension"
+done
+
 # === ghcup ===
 
 if ! command -v ghcup >/dev/null 2>&1; then
   curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 fi
+cabal install brittany
 
 # === pyenv ===
 
@@ -194,27 +195,26 @@ fi
 
 # === pynvim ===
 
-__brew_python="$(brew --prefix)/bin/python3)"
-__pynvim="$XDG_CACHE_HOME/pynvim"
-__bin="$__pynvim/bin"
-__pynvim_python="$__bin/python"
-if [ -f "$__brew_python" ] && ! [ -f "$__pynvim_python" ]; then
-  mkdir -p "$__pynvim"
-  cd "$__pynvim" || exit
-  "$__brew_python" -m venv .
-  __pip="$__bin/pip"
-  if [ -f "$__pip" ]; then
-    "$__pip" install --upgrade pip
-    "$__pip" install neovim
+brew_python="$(brew --prefix)/bin/python3"
+pynvim="$XDG_CACHE_HOME/pynvim"
+bin="$pynvim/bin"
+if [ -f "$brew_python" ] && ! [ -f "$bin/python" ]; then
+  mkdir -p "$pynvim"
+  cd "$pynvim" || exit
+  "$brew_python" -m venv .
+  pip="$bin/pip"
+  if [ -f "$pip" ]; then
+    "$pip" install --upgrade pip
+    "$pip" install neovim
   fi
 fi
 
 # === vim-plug ===
 
-for __dir in "$HOME/.vim" "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site"; do
-  __plug_vim="$__dir/autoload/plug.vim"
-  if ! [ -f "$__plug_vim" ]; then
-    curl -fLo "$__plug_vim" --create-dirs \
+for directory in "$HOME/.vim" "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site"; do
+  plug_vim="$directory/autoload/plug.vim"
+  if ! [ -f "$plug_vim" ]; then
+    curl -fLo "$plug_vim" --create-dirs \
       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   fi
 done
@@ -249,74 +249,16 @@ END
   sudo usermod -aG plugdev "$USER"
 fi
 
-# === zinit ===
+# === zsh & zinit ===
 
+if (command -v zsh >/dev/null 2>&1) && ! (grep -q zsh "/etc/shells"); then
+  command -v zsh | sudo tee -a /etc/shells
+  sudo chsh -s "$(command -v zsh)" "${USER}"
+fi
 if ! [ -d "$HOME/.zinit" ]; then
   __url=https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh
   curl -fsSL "$__url"
 fi
-
-# === cabal (needs ghcup) ===
-
-cabal install \
-  brittany
-
-# === cargo (needs brew) ===
-
-cargo install \
-  gitui \
-  gitweb \
-  rmesg
-
-# === gem ===
-
-ensure_gem_install() {
-  if (command -v gem >/dev/null 2>&1) &&
-    ! (command -v "$1" >/dev/null 2>&1); then
-    gem install "$1"
-  fi
-}
-
-ensure_gem_install mdl
-
-# === npm (needs brew) ===
-
-ensure_npm_install() {
-  if (command -v npm >/dev/null 2>&1) &&
-    ! (npm ls -g | grep "$1" >/dev/null 2>&1); then
-    npm install -g "$1"
-  fi
-}
-
-ensure_npm_install pyright
-ensure_npm_install @elm-tooling/elm-language-server
-ensure_npm_install @stoplight/spectral
-
-# === pipx (needs brew) ===
-
-ensure_pipx_install() {
-  if (command -v pipx >/dev/null 2>&1) &&
-    ! (pipx list | grep "package $1" >/dev/null 2>&1); then
-    pipx install "$1"
-    if [ "$1" == flake8 ]; then
-      url=https://raw.githubusercontent.com/dycw/pre-commit-hooks/master/flake8-extensions
-      for ext in $(curl $url); do
-        pipx inject "$1" "$ext"
-      done
-    fi
-  fi
-}
-
-ensure_pipx_install autoimport
-ensure_pipx_install black
-ensure_pipx_install bump2version
-ensure_pipx_install flake8
-ensure_pipx_install pre-commit
-ensure_pipx_install pyre-check
-ensure_pipx_install pytype
-ensure_pipx_install reorder-python-imports
-ensure_pipx_install vim-vint
-ensure_pipx_install yamllint
 
 # === apt ===
 
@@ -329,16 +271,6 @@ ensure_apt_install tmpreaper
 ensure_apt_install vim
 ensure_apt_install chrome-gnome-shell # screenshot locations
 ensure_apt_install gnome-tweaks       # screenshot locations
-
-# === apt: chrome ===
-
-if ! command -v google-chrome >/dev/null 2>&1; then
-  tmp_dir="$(mktemp -d)"
-  cd "$tmp_dir" || exit
-  __url=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  wget "$__url"
-  sudo dpkg -i google-chrome-stable_current_amd64.deb
-fi
 
 # === apt: nordvpn ===
 

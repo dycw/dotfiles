@@ -40,7 +40,6 @@ from more_itertools.recipes import powerset  # noqa: F401
 from more_itertools.recipes import prepend  # noqa: F401
 from more_itertools.recipes import quantify  # noqa: F401
 from more_itertools.recipes import random_combination  # noqa: F401
-from more_itertools.recipes import random_combination_with_replacement  # noqa: F401
 from more_itertools.recipes import random_permutation  # noqa: F401
 from more_itertools.recipes import random_product  # noqa: F401
 from more_itertools.recipes import repeatfunc  # noqa: F401

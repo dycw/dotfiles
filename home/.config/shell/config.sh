@@ -281,7 +281,8 @@ fi
 
 # python: poetry
 if (command -v poetry >/dev/null 2>&1); then
-  alias poetry-build-install='rm -rf dist/ && poetry build && pip install --force-reinstall dist/*.whl'
+  alias pbi='rm -rf dist/ && poetry build && pip install --force-reinstall dist/*.whl'
+  alias pvp='poetry version patch'
 fi
 
 # python: pylint/prospector

@@ -2,34 +2,32 @@ from functools import partial
 from pathlib import Path
 from typing import Any
 from typing import Callable
-from typing import Dict
-from typing import List
 from typing import Optional
 from typing import Union
 
 import pandas as pd  # noqa: F401
 from pandas import BooleanDtype  # noqa: F401
-from pandas import concat  # noqa: F401
 from pandas import DataFrame  # noqa: F401
-from pandas import date_range  # noqa: F401
 from pandas import DateOffset  # noqa: F401
 from pandas import DatetimeIndex  # noqa: F401
 from pandas import Index  # noqa: F401
 from pandas import Int64Dtype  # noqa: F401
 from pandas import MultiIndex  # noqa: F401
-from pandas import option_context
-from pandas import qcut  # noqa: F401
 from pandas import RangeIndex  # noqa: F401
-from pandas import read_csv
-from pandas import read_parquet  # noqa: F401
-from pandas import read_pickle  # noqa: F401
-from pandas import read_table  # noqa: F401
 from pandas import Series
-from pandas import set_option
 from pandas import StringDtype  # noqa: F401
 from pandas import Timedelta  # noqa: F401
 from pandas import TimedeltaIndex  # noqa: F401
 from pandas import Timestamp  # noqa: F401
+from pandas import concat  # noqa: F401
+from pandas import date_range  # noqa: F401
+from pandas import option_context
+from pandas import qcut  # noqa: F401
+from pandas import read_csv
+from pandas import read_parquet  # noqa: F401
+from pandas import read_pickle  # noqa: F401
+from pandas import read_table  # noqa: F401
+from pandas import set_option
 from pandas import to_pickle  # noqa: F401
 from pandas.testing import assert_frame_equal  # noqa: F401
 from pandas.testing import assert_index_equal  # noqa: F401
@@ -71,10 +69,12 @@ else:
     )
 
     class _ShowMeta(type):
-        _contexts: List[option_context] = []
+        _contexts: list[option_context] = []
 
         def __enter__(cls) -> None:
-            new = option_context("display.min_rows", 100, "display.max_rows", 100)
+            new = option_context(
+                "display.min_rows", 100, "display.max_rows", 100
+            )
             cls._contexts.append(new)
             new.__enter__()
 
@@ -118,7 +118,7 @@ else:
         def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
             self._context.__exit__(exc_type, exc_val, exc_tb)
 
-    def accumulate_csv(path: Union[Path, str], data: Dict) -> None:
+    def accumulate_csv(path: Union[Path, str], data: dict) -> None:
         try:
             df = read_csv(path)
         except FileNotFoundError:

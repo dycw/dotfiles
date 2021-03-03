@@ -36,6 +36,12 @@ import threading
 import time
 import traceback
 import urllib.request
+from contextlib import closing
+from contextlib import contextmanager
+from io import BytesIO
+from operator import methodcaller
+from os.path import relpath
+
 
 try:
     import gpg
@@ -49,10 +55,6 @@ except ImportError:
     except ImportError:
         gpgme = None
 
-from contextlib import closing, contextmanager
-from io import BytesIO
-from operator import methodcaller
-from os.path import relpath
 
 INFO = "Dropbox is the easiest way to share and store your files online. Want to learn more? Head to"
 LINK = "https://www.dropbox.com/"
@@ -121,7 +123,9 @@ def yes_no_question(question):
         elif text.lower().startswith("n"):
             return False
         else:
-            console_print("Sorry, I didn't understand that. Please type yes or no.")
+            console_print(
+                "Sorry, I didn't understand that. Please type yes or no."
+            )
 
 
 def plat():
@@ -231,12 +235,16 @@ class DownloadState:
         self.local_file = BytesIO()
 
     def copy_data(self):
-        return download_file_chunk(DOWNLOAD_LOCATION_FMT % plat(), self.local_file)
+        return download_file_chunk(
+            DOWNLOAD_LOCATION_FMT % plat(), self.local_file
+        )
 
     def unpack(self):
         # download signature
         signature = BytesIO()
-        for _ in download_file_chunk(SIGNATURE_LOCATION_FMT % plat(), signature):
+        for _ in download_file_chunk(
+            SIGNATURE_LOCATION_FMT % plat(), signature
+        ):
             pass
         signature.seek(0)
         self.local_file.seek(0)
@@ -336,7 +344,10 @@ if GUI_AVAILABLE:
         gi.require_version("Gtk", "3.0")
         import webbrowser
 
-        from gi.repository import Gdk, GObject, Gtk, Pango
+        from gi.repository import Gdk
+        from gi.repository import GObject
+        from gi.repository import Gtk
+        from gi.repository import Pango
 
         GObject.threads_init()
 
@@ -648,7 +659,9 @@ else:
             write(save)
             flush()
         console_print(f"{INFO} {LINK}\n")
-        GPG_WARNING_MSG = ("\n%s" % GPG_WARNING) if not gpg and not gpgme else ""
+        GPG_WARNING_MSG = (
+            ("\n%s" % GPG_WARNING) if not gpg and not gpgme else ""
+        )
 
         if not yes_no_question(f"{WARNING}{GPG_WARNING_MSG}"):
             return
@@ -768,7 +781,9 @@ class DropboxCommand:
         try:
             ok = self.__readline() == "ok"
         except KeyboardInterrupt:
-            raise DropboxCommand.BadConnectionError("Keyboard interruption detected")
+            raise DropboxCommand.BadConnectionError(
+                "Keyboard interruption detected"
+            )
         finally:
             # Tell the ticker to stop.
             ticker_thread.stop()
@@ -966,7 +981,9 @@ def columnize(list, display_list=None, display_width=None):
         original_texts = texts[:]
         for col in range(len(texts)):
             texts[col] = texts[col].ljust(colwidths[col])
-            texts[col] = texts[col].replace(original_texts[col], display_texts[col])
+            texts[col] = texts[col].replace(
+                original_texts[col], display_texts[col]
+            )
         line = "  ".join(texts)
         lines.append(line)
     for line in lines:
@@ -1031,13 +1048,14 @@ def filestatus(args):
                 # Gets a string representation for a path.
                 def path_to_string(file_path):
                     if not os.path.exists(file_path):
-                        path = "%s (File doesn't exist!)" % os.path.basename(file_path)
+                        path = "%s (File doesn't exist!)" % os.path.basename(
+                            file_path
+                        )
                         return path, path
                     try:
-                        status = dc.icon_overlay_file_status(path=file_path).get(
-                            "status",
-                            [None],
-                        )[0]
+                        status = dc.icon_overlay_file_status(
+                            path=file_path
+                        ).get("status", [None],)[0]
                     except DropboxCommand.CommandError as e:
                         path = "{} ({})".format(os.path.basename(file_path), e)
                         return path, path
@@ -1073,7 +1091,9 @@ def filestatus(args):
                 def print_directory(name):
                     clean_paths = []
                     formatted_paths = []
-                    for subname in sorted(os.listdir(name), key=methodcaller("lower")):
+                    for subname in sorted(
+                        os.listdir(name), key=methodcaller("lower")
+                    ):
                         if type(subname) != str:
                             continue
 
@@ -1131,7 +1151,9 @@ def filestatus(args):
                 if len(args) == 0:
                     args = [
                         name
-                        for name in sorted(os.listdir("."), key=methodcaller("lower"))
+                        for name in sorted(
+                            os.listdir("."), key=methodcaller("lower")
+                        )
                         if type(name) == str
                     ]
                 if len(args) == 0:
@@ -1149,7 +1171,8 @@ def filestatus(args):
                         continue
                     if not os.path.exists(fp):
                         console_print(
-                            "%-*s %s" % (indent, file + ":", "File doesn't exist"),
+                            "%-*s %s"
+                            % (indent, file + ":", "File doesn't exist"),
                         )
                         continue
 
@@ -1499,7 +1522,8 @@ def exclude(args):
             with closing(DropboxCommand()) as dc:
                 try:
                     lines = [
-                        relpath(path) for path in dc.get_ignore_set()["ignore_set"]
+                        relpath(path)
+                        for path in dc.get_ignore_set()["ignore_set"]
                     ]
                     lines.sort()
                     if len(lines) == 0:
@@ -1509,7 +1533,9 @@ def exclude(args):
                         for line in lines:
                             console_print(str(line))
                 except KeyError:
-                    console_print("Couldn't get ignore set: daemon isn't responding")
+                    console_print(
+                        "Couldn't get ignore set: daemon isn't responding"
+                    )
                 except DropboxCommand.CommandError as e:
                     if e.args[0].startswith("No command exists by that name"):
                         console_print(
@@ -1536,7 +1562,9 @@ def exclude(args):
                         result = dc.ignore_set_add(paths=absolute_paths)
                         if result["ignored"]:
                             console_print("Excluded: ")
-                            lines = [relpath(path) for path in result["ignored"]]
+                            lines = [
+                                relpath(path) for path in result["ignored"]
+                            ]
                             for line in lines:
                                 console_print(str(line))
                     except KeyError:
@@ -1544,7 +1572,9 @@ def exclude(args):
                             "Couldn't add ignore path: daemon isn't responding",
                         )
                     except DropboxCommand.CommandError as e:
-                        if e.args[0].startswith("No command exists by that name"):
+                        if e.args[0].startswith(
+                            "No command exists by that name"
+                        ):
                             console_print(
                                 "This version of the client does not support this command.",
                             )
@@ -1563,7 +1593,9 @@ def exclude(args):
                         result = dc.ignore_set_remove(paths=absolute_paths)
                         if result["removed"]:
                             console_print("No longer excluded: ")
-                            lines = [relpath(path) for path in result["removed"]]
+                            lines = [
+                                relpath(path) for path in result["removed"]
+                            ]
                             for line in lines:
                                 console_print(str(line))
                     except KeyError:
@@ -1571,7 +1603,9 @@ def exclude(args):
                             "Couldn't remove ignore path: daemon isn't responding",
                         )
                     except DropboxCommand.CommandError as e:
-                        if e.args[0].startswith("No command exists by that name"):
+                        if e.args[0].startswith(
+                            "No command exists by that name"
+                        ):
                             console_print(
                                 "This version of the client does not support this command.",
                             )

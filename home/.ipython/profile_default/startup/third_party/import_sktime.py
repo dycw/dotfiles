@@ -3,28 +3,19 @@ from dataclasses import replace
 from itertools import chain
 from typing import Any
 from typing import Callable
-from typing import Dict
 from typing import Generic
 from typing import NamedTuple
 from typing import Optional
-from typing import Tuple
 from typing import TypeVar
 
 import sktime  # noqa: F401
-from sktime.classification.compose import TimeSeriesForestClassifier  # noqa: F401
-from sktime.forecasting.compose import RecursiveRegressionForecaster  # noqa: F401
 from sktime.forecasting.compose import ReducedRegressionForecaster  # noqa: F401
 from sktime.forecasting.exp_smoothing import ExponentialSmoothing  # noqa: F401
 from sktime.forecasting.model_selection import CutoffSplitter  # noqa: F401
-from sktime.forecasting.model_selection import ForecastingGridSearchCV  # noqa: F401
-from sktime.forecasting.model_selection import SingleWindowSplitter  # noqa: F401
-from sktime.forecasting.model_selection import SlidingWindowSplitter  # noqa: F401
 from sktime.forecasting.model_selection import temporal_train_test_split
 from sktime.forecasting.naive import NaiveForecaster  # noqa: F401
 from sktime.performance_metrics.forecasting import sMAPE  # noqa: F401
 from sktime.performance_metrics.forecasting import smape_loss  # noqa: F401
-from sktime.transformers.series_as_features.compose import RowTransformer  # noqa: F401
-from sktime.transformers.series_as_features.reduce import Tabularizer  # noqa: F401
 from sktime.transformers.single_series.detrend import Detrender  # noqa: F401
 from sktime.utils.plotting.forecasting import plot_ys  # noqa: F401
 from sktime.utils.time_series import time_series_slope  # noqa: F401
@@ -58,16 +49,20 @@ else:
         train: float = _DEFAULT_FRAC_TRAIN,
         valid: float = _DEFAULT_FRAC_VALID,
         test: float = _DEFAULT_FRAC_TEST,
-    ) -> Tuple[ArrayLike, ...]:
+    ) -> tuple[ArrayLike, ...]:
         if not isclose(total := (train + valid + test), 1.0):
-            raise ValueError(f"The fractions must add up to 1; they add up to {total}")
+            raise ValueError(
+                f"The fractions must add up to 1; they add up to {total}"
+            )
         if isclose(train, 1.0):
             return tuple(chain(*[(arg, arg[:0], arg[:0]) for arg in args]))
         train_and_valid = train + valid
         if isclose(train_and_valid, 1.0):
             tmp = temporal_train_test_split(*args, train_size=train)
             all_train, all_valid = tmp[::2], tmp[1::2]
-            return tuple(chain(*[(t, v, t[:0]) for t, v in zip(all_train, all_valid)]))
+            return tuple(
+                chain(*[(t, v, t[:0]) for t, v in zip(all_train, all_valid)])
+            )
         tmp = temporal_train_test_split(*args, train_size=train_and_valid)
         all_train_valid, all_test = tmp[::2], tmp[1::2]
         tmp = temporal_train_test_split(
@@ -90,11 +85,14 @@ else:
         index_test: Optional[Index] = None
 
         @property
-        def shape(self) -> Dict[str, Tuple[int, ...]]:
+        def shape(self) -> dict[str, tuple[int, ...]]:
             out = {}
             for prefix, view in {"X": self.X, "y": self.y}.items():
                 out.update(
-                    {f"{prefix}_{k}": v.shape for k, v in view._asdict().items()},
+                    {
+                        f"{prefix}_{k}": v.shape
+                        for k, v in view._asdict().items()
+                    },
                 )
             return out
 
@@ -137,7 +135,9 @@ else:
             test: float = _DEFAULT_FRAC_TEST,
         ) -> "TemporalSplit[DataFrame]":
             return TemporalSplit(
-                *temporal_3_way_split(X, y, train=train, valid=valid, test=test),
+                *temporal_3_way_split(
+                    X, y, train=train, valid=valid, test=test
+                ),
             )
 
         @classmethod

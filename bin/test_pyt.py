@@ -1,16 +1,16 @@
 from typing import Callable
-from typing import cast
-from typing import List
 from typing import Optional
 from typing import TypeVar
+from typing import cast
 
+from pyt import Parsed
 from pyt import _get_repo_root
 from pyt import _parse_extra
 from pyt import _yield_args
-from pyt import Parsed
 from pytest import mark
 from pytest import param
 from pytest import raises
+
 
 T = TypeVar("T")
 
@@ -46,7 +46,11 @@ T = TypeVar("T")
             param(["auto"], Parsed(n=0), id="n, auto"),
             param(["-nauto"], Parsed(n=0), id="n, dash auto"),
             param(["home"], Parsed(paths=["home"]), id="arg as path"),
-            param(["main_test"], Parsed(k=["main_test"]), id="arg as -k, test name"),
+            param(
+                ["main_test"],
+                Parsed(k=["main_test"]),
+                id="arg as -k, test name",
+            ),
             param(
                 ["python/test_foo.py::test_foo"],
                 Parsed(paths=["python/test_foo.py::test_foo"]),
@@ -65,7 +69,7 @@ T = TypeVar("T")
         ],
     ),
 )
-def test_parse_extra(args: List[str], expected: List[str]) -> None:
+def test_parse_extra(args: list[str], expected: list[str]) -> None:
     assert _parse_extra(*args) == expected  # noqa: S101
 
 
@@ -81,7 +85,7 @@ def test_parse_extra(args: List[str], expected: List[str]) -> None:
         ],
     ),
 )
-def test_yield_args(args: List[str], expected: Optional[List[str]]) -> None:
+def test_yield_args(args: list[str], expected: Optional[list[str]]) -> None:
     if expected is None:
         with raises(RuntimeError):
             list(_yield_args(*args))
@@ -92,4 +96,6 @@ def test_yield_args(args: List[str], expected: Optional[List[str]]) -> None:
 
 
 def test_get_repo_root() -> None:
-    assert any(path.name == ".git" for path in _get_repo_root().iterdir())  # noqa: S101
+    assert any(  # noqa: S101
+        path.name == ".git" for path in _get_repo_root().iterdir()
+    )

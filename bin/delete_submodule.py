@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from argparse import ArgumentParser
 from configparser import ConfigParser
-from logging import basicConfig
 from logging import DEBUG
+from logging import basicConfig
 from logging import info
 from pathlib import Path
 from shutil import move

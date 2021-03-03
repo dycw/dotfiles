@@ -2,8 +2,8 @@
 from argparse import ArgumentParser
 from dataclasses import dataclass
 from dataclasses import field
-from logging import basicConfig
 from logging import DEBUG
+from logging import basicConfig
 from logging import info
 from os import environ
 from pathlib import Path
@@ -12,7 +12,6 @@ from subprocess import check_output  # noqa:S404
 from subprocess import run  # noqa:S404
 from sys import stdout
 from typing import Iterator
-from typing import List
 from typing import Optional
 
 
@@ -27,11 +26,11 @@ basicConfig(
 
 @dataclass
 class Parsed:
-    paths: List[str] = field(default_factory=list)
-    k: List[str] = field(default_factory=list)
-    m: List[str] = field(default_factory=list)
+    paths: list[str] = field(default_factory=list)
+    k: list[str] = field(default_factory=list)
+    m: list[str] = field(default_factory=list)
     n: Optional[int] = None
-    flags: List[str] = field(default_factory=list)
+    flags: list[str] = field(default_factory=list)
     pdb: bool = False
 
 
@@ -95,7 +94,9 @@ def _parse_extra(*args: str) -> Parsed:
                 if parsed.n is None:
                     parsed.n = n
                 else:
-                    raise RuntimeError(f"Multiple arguments for 'n': {parsed.n}, {n}")
+                    raise RuntimeError(
+                        f"Multiple arguments for 'n': {parsed.n}, {n}"
+                    )
 
     while True:
         try:

@@ -180,7 +180,6 @@ Plug 'dense-analysis/ale'
   let g:ale_fixers = {
     \ '*': ['remove_trailing_lines', 'trim_whitespace'],
     \ 'haskell': ['brittany'],
-    \ 'python': ['reorder-python-imports', 'black'],
     \ 'sh': ['shfmt'],
     \ }
   let g:ale_linters = {}| " use coc.nvim

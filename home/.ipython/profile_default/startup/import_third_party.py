@@ -1,6 +1,7 @@
 from pathlib import Path
 from re import search
 
+
 PATH_HERE = Path(__file__).absolute()  # absolute; not resolve
 for path in PATH_HERE.parent.joinpath("third_party").iterdir():
     filename = path.name

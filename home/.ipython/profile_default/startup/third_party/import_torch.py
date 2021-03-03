@@ -1,20 +1,19 @@
 from itertools import repeat
-from typing import List
 from typing import Optional
 from typing import Sequence
 from typing import Union
 
 import torch  # noqa: F401
 from torch import FloatTensor  # noqa: F401
+from torch import Tensor  # noqa: F401
 from torch import from_numpy  # noqa: F401
 from torch import no_grad  # noqa: F401
-from torch import Tensor  # noqa: F401
+from torch.nn import LSTM  # noqa: F401
 from torch.nn import Dropout  # noqa: F401
 from torch.nn import Embedding  # noqa: F401
 from torch.nn import L1Loss  # noqa: F401
 from torch.nn import LeakyReLU  # noqa: F401
 from torch.nn import Linear  # noqa: F401
-from torch.nn import LSTM  # noqa: F401
 from torch.nn import LSTMCell  # noqa: F401
 from torch.nn import Module
 from torch.nn import ModuleDict  # noqa: F401
@@ -25,8 +24,8 @@ from torch.nn import Sequential  # noqa: F401
 from torch.nn import Sigmoid  # noqa: F401
 from torch.nn import SmoothL1Loss  # noqa: F401
 from torch.nn import Tanh  # noqa: F401
-from torch.optim import Adam  # noqa: F401
 from torch.optim import SGD  # noqa: F401
+from torch.optim import Adam  # noqa: F401
 from torch.optim.optimizer import Optimizer  # noqa: F401
 from torch.utils.data import DataLoader  # noqa: F401
 from torch.utils.data import Dataset  # noqa: F401
@@ -57,8 +56,8 @@ else:
     def view_predictions(
         net: Module,
         *X_y: ndarray,
-        indices: Optional[List[DatetimeIndex]] = None,
-        labels: Optional[List[str]] = None,
+        indices: Optional[list[DatetimeIndex]] = None,
+        labels: Optional[list[str]] = None,
         length: Optional[Union[int, float, DateOffset]] = None,
     ) -> Layout:
         if not X_y:
@@ -73,7 +72,9 @@ else:
             )
         else:
             if (n_indices := len(indices)) != n_pairs:
-                raise ValueError(f"Expected {n_pairs} index/indices; got {n_indices}")
+                raise ValueError(
+                    f"Expected {n_pairs} index/indices; got {n_indices}"
+                )
             indices_use = indices
         if labels is None:
             labels_use: Sequence[Optional[str]] = list(repeat(None, n_pairs))
@@ -82,7 +83,7 @@ else:
                 raise ValueError(f"Expected {n_pairs} label(s); got {n_labels}")
             labels_use = labels
 
-        plots: List[NdOverlay] = []
+        plots: list[NdOverlay] = []
         for i, (X, y, index, label) in enumerate(
             zip(X_y[::2], X_y[1::2], indices_use, labels_use),
         ):
@@ -107,7 +108,9 @@ else:
                 view = paired.iloc[start:end]
             elif isinstance(length, DateOffset):
                 if index is None:
-                    raise ValueError("Expected indices if the length is a DateOffset")
+                    raise ValueError(
+                        "Expected indices if the length is a DateOffset"
+                    )
                 while True:
                     start = Timestamp(choice(index))
                     end = start + length

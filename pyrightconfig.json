@@ -1,4 +1,6 @@
 {
-  "venvPath": ".direnv",
-  "venv": "python-3.9.1"
+  "include": ["src"],
+  "venvPath": ".venv",
+  "verboseOutput": false,
+  "executionEnvironments": [{ "root": "src" }]
 }
