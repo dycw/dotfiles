@@ -24,7 +24,7 @@ virtual_env = ".venv/bin/python"
 
 [tool.poetry]
 name = "dotfiles"
-version = "0.6.66"
+version = "0.6.67"
 description = "My dotfiles"
 authors = ["Derek Wan <d.wan@icloud.com>"]
 license = "MIT"
@@ -33,4 +33,4 @@ license = "MIT"
 python = "^3.9"
 
 [tool.poetry.dev-dependencies]
-pre-commit = "^2.10"
+pre-commit = "^2"

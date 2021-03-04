@@ -137,7 +137,8 @@
 
   # rm
   rm = rm
-  rmc = rm --cached
+  rmca = rm --cached
+  rmco = !git rm \"$1\" && git commit && :
 
   # stash
   st = stash

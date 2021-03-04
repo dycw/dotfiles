@@ -280,9 +280,9 @@ if command -v python >/dev/null 2>&1; then
 fi
 
 # python: poetry
-if (command -v poetry >/dev/null 2>&1); then
-  alias pbi='rm -rf dist/ && poetry build && pip install --force-reinstall dist/*.whl'
-  alias pvp='poetry version patch'
+if command -v poetry >/dev/null 2>&1; then
+  alias pi='poetry install'
+  alias pvp='poetry version patch && git add "$(git root)/pyproject.toml" && git commit -m "bump patch"'
 fi
 
 # python: pylint/prospector
@@ -313,6 +313,8 @@ fi
 if command -v rg >/dev/null 2>&1; then
   alias rg='rg -L --hidden --no-messages'
 fi
+
+alias rmrf='rm -rf'
 
 # shell
 alias shellconfig='$EDITOR $(realpath $XDG_CONFIG_HOME/shell/config.sh)'
@@ -364,10 +366,10 @@ if command -v xclip >/dev/null 2>&1; then
   alias pbpaste='xclip -selection clipboard -o'
 fi
 
-# watchexec + pre-commit
+# watchexec + pyright
 if (command -v watchexec >/dev/null 2>&1) &&
-  (command -v pre-commit-current >/dev/null 2>&1); then
-  alias wpcc='watchexec -d 5000 pre-commit-current'
+  (command -v pyright >/dev/null 2>&1); then
+  alias wpr='watchexec -- pyright'
 fi
 
 # wget

@@ -3,4 +3,5 @@ __pycache__/
 .direnv/
 .mypy_cache/
 .pytest_cache/
+.vim/
 tags

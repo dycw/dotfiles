@@ -13,7 +13,7 @@
   "codeLens.enable": true,
   "diagnostic.checkCurrentLine": true,
   "diagnostic.errorSign": "✘",
-  "diagnostic.level": "warning",
+  "diagnostic.level": "information",
   "diagnostic.messageDelay": 50,
   "diagnostic.refreshOnInsertMode": true,
   "diagnostic.virtualText": true,

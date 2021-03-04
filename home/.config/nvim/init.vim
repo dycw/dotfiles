@@ -7,6 +7,7 @@ set smartcase
 
 " column
 set colorcolumn=80
+set nowrap
 highlight ColorColumn ctermbg=0 guibg=lightgrey
 
 " coc.nvim
@@ -82,6 +83,8 @@ nnoremap <CR> :
 vnoremap <CR> :
 
 " insert -> normal mode
+inoremap df <Esc>
+inoremap fd <Esc>
 inoremap jk <Esc>
 inoremap kj <Esc>
 
@@ -128,22 +131,6 @@ nnoremap <C-w><C-w> <C-w><C-p>
 nnoremap <C-w>m     <C-w>_<C-w><Bar>
 nnoremap <C-w><C-m> <C-w>_<C-w><Bar>
 
-" wrapped lines (https://bit.ly/2Zwqnmg)
-nnoremap k  gk
-vnoremap k  gk
-nnoremap j  gj
-vnoremap j  gj
-nnoremap gk k
-vnoremap gk k
-nnoremap gj j
-vnoremap gj j
-nnoremap ^  g^
-vnoremap ^  g^
-nnoremap g^ ^
-vnoremap g^ ^
-nnoremap _  g_
-vnoremap _  g_
-
 " yank (https://bit.ly/2M2qG5n)
 nnoremap Y y$
 vnoremap Y y$
@@ -180,6 +167,7 @@ Plug 'dense-analysis/ale'
   let g:ale_fixers = {
     \ '*': ['remove_trailing_lines', 'trim_whitespace'],
     \ 'haskell': ['brittany'],
+    \ 'python': ['isort'],
     \ 'sh': ['shfmt'],
     \ }
   let g:ale_linters = {}| " use coc.nvim
@@ -252,8 +240,8 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
 nmap gd  <Plug>(coc-definition)
 nmap gi  <Plug>(coc-implementation)
 nmap gt  <Plug>(coc-type-definition)
-nmap gxk <Plug>(coc-xiagnostic-prev)
-nmap gxj <Plug>(coc-xiagnostic-next)
+nmap gxk <Plug>(coc-diagnostic-prev)
+nmap gxj <Plug>(coc-diagnostic-next)
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -338,7 +326,6 @@ Plug 'junegunn/fzf.vim'
   nnoremap <Leader><Leader>c :<C-u>History:<CR> | " command history
   nnoremap <Leader><Leader>f :<C-u>History<CR>  | " file history
   nnoremap <Leader><Leader>m :<C-u>Maps<CR>
-  nnoremap <Leader>gg        :<C-u>GGrep<CR>
   nnoremap <Leader>ht        :<C-u>Helptags!<CR>
   nnoremap <Leader>rg        :<C-u>Rg<CR>
   " https://bit.ly/3q5KZwQ
@@ -366,15 +353,12 @@ Plug 'yuki-yano/fzf-preview.vim', {
   nnoremap <Leader>ga        :<C-u>FzfPreviewGitActions<CR>
   nnoremap <Leader>gf        :<C-u>FzfPreviewGitFiles<CR>
   nnoremap <Leader>gs        :<C-u>FzfPreviewGitStatus<CR>
-  nnoremap <Leader>of        :<C-u>FzfPreviewOldFiles<CR>
+  nnoremap <Leader>of        :<C-u>FzfPreviewProjectOldFiles<CR>
   nnoremap <Leader>pf        :<C-u>FzfPreviewProjectFiles<CR>
   nnoremap <Leader>pg        :<C-u>FzfPreviewProjectGrep<Space>
   nnoremap <Leader>qf        :<C-u>FzfPreviewQuickFix<CR>
-  nnoremap <Leader>uf        :<C-u>FzfPreviewMruFiles<CR>
-  nnoremap <Leader>wf        :<C-u>FzfPreviewMrwFiles<CR>
-  nnoremap <Leader>pof       :<C-u>FzfPreviewProjectOldFiles<CR>
-  nnoremap <Leader>puf       :<C-u>FzfPreviewProjectMruFiles<CR>
-  nnoremap <Leader>pwf       :<C-u>FzfPreviewProjectMrwFiles<CR>
+  nnoremap <Leader>uf        :<C-u>FzfPreviewProjectMruFiles<CR>
+  nnoremap <Leader>wf        :<C-u>FzfPreviewProjectMrwFiles<CR>
 
 " =============================================================================
 " plugins: coc.nvim + fzf
@@ -407,7 +391,7 @@ Plug 'luochen1990/rainbow'
   let g:rainbow_active = 1
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'mbbill/undotree'
-  nnoremap U :UndotreeToggle<CR>
+  nnoremap U :<C-u>UndotreeToggle<CR>
 Plug 'alvan/vim-closetag'
 Plug 'tpope/vim-commentary'
 Plug 'junegunn/vim-easy-align'
@@ -426,7 +410,7 @@ Plug 'francoiscabrol/ranger.vim'
   Plug 'rbgrouleff/bclose.vim'
   let g:bclose_no_plugin_maps = 1
   let g:ranger_map_keys = 0
-  nnoremap <leader>R :Ranger<CR>
+  nnoremap <Leader><Leader>r :Ranger<CR>
 Plug 'djoshea/vim-autoread'
 Plug 'wsdjeg/vim-fetch'
 Plug 'farmergreg/vim-lastplace'
@@ -507,8 +491,8 @@ Plug 'liuchengxu/vista.vim'
   set statusline+=%{NearestMethodOrFunction()}
   autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
   let g:vista_fzf_preview = ['right:50%']
-  nnoremap <Leader>v :Vista!<CR>
-  vnoremap <Leader>v :Vista!<CR>
+  nnoremap <Leader>v :<C-u>Vista!<CR>
+  vnoremap <Leader>v :<C-u>Vista!<CR>
 
 " tests
 Plug 'vim-test/vim-test'
@@ -542,6 +526,8 @@ Plug 'Yggdroot/indentLine'
 Plug 'RRethy/vim-illuminate'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'wellle/visual-split.vim'
+  vmap <C-w>sj <C-w>gsb
+  vmap <C-w>sk <C-w>gsa
 Plug 'simeji/winresizer'
   let g:winresizer_start_key = 'Q'
   let g:winresizer_vert_resize = 5
