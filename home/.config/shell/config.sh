@@ -235,6 +235,7 @@ if command -v pre-commit >/dev/null 2>&1; then
   alias pci='pre-commit install'
   alias pcaf='pre-commit run --all-files'
   alias pcau='pre-commit autoupdate'
+  alias pcauf='pre-commit autoupdate && pre-commit run --all-files'
   alias pctr='pre-commit try-repo .'
   alias pcui='pre-commit uninstall'
 fi
