@@ -314,6 +314,7 @@ if command -v rg >/dev/null 2>&1; then
   alias rg='rg -L --hidden --no-messages'
 fi
 
+# rm
 alias rmrf='rm -rf'
 
 # shell

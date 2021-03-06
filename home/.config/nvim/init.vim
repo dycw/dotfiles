@@ -83,16 +83,16 @@ nnoremap <CR> :
 vnoremap <CR> :
 
 " insert -> normal mode
-inoremap df <Esc>
-inoremap fd <Esc>
+inoremap jj <Esc>
 inoremap jk <Esc>
 inoremap kj <Esc>
+inoremap kk <Esc>
 
 " quit
 nnoremap <C-q> :q<CR>
 
 " save
-nnoremap <C-s> :w<CR>
+nnoremap <C-s> :wa<CR>
 vnoremap <C-s> <Esc>:w<CR>
 inoremap <C-s> <Esc>:w<CR>
 
@@ -240,8 +240,8 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
 nmap gd  <Plug>(coc-definition)
 nmap gi  <Plug>(coc-implementation)
 nmap gt  <Plug>(coc-type-definition)
-nmap gxk <Plug>(coc-diagnostic-prev)
-nmap gxj <Plug>(coc-diagnostic-next)
+nmap <Leader>dk <Plug>(coc-diagnostic-prev)
+nmap <Leader>dj <Plug>(coc-diagnostic-next)
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -259,8 +259,8 @@ endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
-nmap <leader>rf <Plug>(coc-refactor)
-nmap <leader>rn <Plug>(coc-rename)
+nmap <Leader>rf <Plug>(coc-refactor)
+nmap <Leader>rn <Plug>(coc-rename)
 
 " Map function and class text objects
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
@@ -311,7 +311,7 @@ let g:LanguageClient_serverCommands = {
   \ 'sql': ['sql-language-server', 'up', '--method', 'stdio'],
   \ }
 
-" project wide rename (https://bit.ly/2ZNTCkL)
+" project rename (https://bit.ly/2ZNTCkL)
 nnoremap <leader>pwr :CocSearch <C-r>=expand('<cword>')<CR><CR>
 
 " =============================================================================
@@ -321,13 +321,13 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
   let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9 } }
   let g:fzf_preview_window = ['down:50%', 'ctrl-/']
-  nnoremap <Leader>c         :<C-u>Commands<CR>
-  vnoremap <Leader>c         :<C-u>Commands<CR>
-  nnoremap <Leader><Leader>c :<C-u>History:<CR> | " command history
-  nnoremap <Leader><Leader>f :<C-u>History<CR>  | " file history
-  nnoremap <Leader><Leader>m :<C-u>Maps<CR>
-  nnoremap <Leader>ht        :<C-u>Helptags!<CR>
-  nnoremap <Leader>rg        :<C-u>Rg<CR>
+  nnoremap <Leader>c  :<C-u>Commands<CR>
+  vnoremap <Leader>c  :<C-u>Commands<CR>
+  nnoremap <Leader>ch :<C-u>History:<CR> | " command history
+  nnoremap <Leader>fh :<C-u>History<CR>  | " file history
+  nnoremap <Leader>mp :<C-u>Maps<CR>
+  nnoremap <Leader>ht :<C-u>Helptags!<CR>
+  nnoremap <Leader>rg :<C-u>Rg<CR>
   " https://bit.ly/3q5KZwQ
   command! -bang -nargs=* Rg
     \ call fzf#vim#grep(
@@ -342,23 +342,23 @@ Plug 'yuki-yano/fzf-preview.vim', {
   let g:fzf_preview_filelist_command =
     \ 'rg --files --hidden --follow --no-messages -g \!"* *"'
   let g:fzf_preview_lines_command = 'bat --color=always --plain --number'
-  nnoremap <Leader>b         :<C-u>FzfPreviewBuffers<CR>
-  nnoremap <Leader>f         :<C-u>FzfPreviewDirectoryFiles<CR>
-  nnoremap <Leader>j         :<C-u>FzfPreviewJumps<CR>
-  nnoremap <Leader>l         :<C-u>FzfPreviewLines<CR>
-  nnoremap <Leader><Leader>l :<C-u>FzfPreviewBufferLines<CR>
-  nnoremap <Leader>m         :<C-u>FzfPreviewMarks<CR>
-  nnoremap <Leader>t         :<C-u>FzfPreviewVistaCtags<CR>
-  nnoremap <Leader><Leader>t :<C-u>FzfPreviewVistaBufferCtags<CR>
-  nnoremap <Leader>ga        :<C-u>FzfPreviewGitActions<CR>
-  nnoremap <Leader>gf        :<C-u>FzfPreviewGitFiles<CR>
-  nnoremap <Leader>gs        :<C-u>FzfPreviewGitStatus<CR>
-  nnoremap <Leader>of        :<C-u>FzfPreviewProjectOldFiles<CR>
-  nnoremap <Leader>pf        :<C-u>FzfPreviewProjectFiles<CR>
-  nnoremap <Leader>pg        :<C-u>FzfPreviewProjectGrep<Space>
-  nnoremap <Leader>qf        :<C-u>FzfPreviewQuickFix<CR>
-  nnoremap <Leader>uf        :<C-u>FzfPreviewProjectMruFiles<CR>
-  nnoremap <Leader>wf        :<C-u>FzfPreviewProjectMrwFiles<CR>
+  nnoremap <Leader>b  :<C-u>FzfPreviewBuffers<CR>
+  nnoremap <Leader>bl :<C-u>FzfPreviewBufferLines<CR>
+  nnoremap <Leader>bt :<C-u>FzfPreviewVistaBufferCtags<CR>
+  nnoremap <Leader>f  :<C-u>FzfPreviewDirectoryFiles<CR>
+  nnoremap <Leader>j  :<C-u>FzfPreviewJumps<CR>
+  nnoremap <Leader>l  :<C-u>FzfPreviewLines<CR>
+  nnoremap <Leader>m  :<C-u>FzfPreviewMarks<CR>
+  nnoremap <Leader>t  :<C-u>FzfPreviewVistaCtags<CR>
+  nnoremap <Leader>ga :<C-u>FzfPreviewGitActions<CR>
+  nnoremap <Leader>gf :<C-u>FzfPreviewGitFiles<CR>
+  nnoremap <Leader>gs :<C-u>FzfPreviewGitStatus<CR>
+  nnoremap <Leader>of :<C-u>FzfPreviewProjectOldFiles<CR>
+  nnoremap <Leader>pf :<C-u>FzfPreviewProjectFiles<CR>
+  nnoremap <Leader>pg :<C-u>FzfPreviewProjectGrep<Space>
+  nnoremap <Leader>qf :<C-u>FzfPreviewQuickFix<CR>
+  nnoremap <Leader>uf :<C-u>FzfPreviewProjectMruFiles<CR>
+  nnoremap <Leader>wf :<C-u>FzfPreviewProjectMrwFiles<CR>
 
 " =============================================================================
 " plugins: coc.nvim + fzf
@@ -366,15 +366,15 @@ Plug 'yuki-yano/fzf-preview.vim', {
 Plug 'antoinemadec/coc-fzf'
   let g:coc_fzf_preview = 'down:50%'
   nnoremap <Leader>o :<C-u>CocFzfList outline<CR>
+  nnoremap <Leader>p :<C-u>CocFzfList yank<CR>
   nnoremap <Leader>s :<C-u>CocFzfList symbols<CR>
-  nnoremap <Leader>y :<C-u>CocFzfList yank<CR>
 
 " yuki-yano/fzf-preview.vim
-  nnoremap <Leader>d         :<C-u>CocCommand fzf-preview.CocCurrentDiagnostics<CR>
-  nnoremap <Leader><Leader>d :<C-u>CocCommand fzf-preview.CocDiagnostics<CR>
-  nnoremap <Leader>r         :<C-u>CocCommand fzf-preview.CocReferences<CR>
-  nnoremap <Leader>gi        :<C-u>CocCommand fzf-preview.CocImplementations<CR>
-  nnoremap <Leader>gt        :<C-u>CocCommand fzf-preview.CocTypeDefinitions<CR>
+  nnoremap <Leader>d  :<C-u>CocCommand fzf-preview.CocCurrentDiagnostics<CR>
+  nnoremap <Leader>d  :<C-u>CocCommand fzf-preview.CocDiagnostics<CR>
+  nnoremap <Leader>r  :<C-u>CocCommand fzf-preview.CocReferences<CR>
+  nnoremap <Leader>gi :<C-u>CocCommand fzf-preview.CocImplementations<CR>
+  nnoremap <Leader>gt :<C-u>CocCommand fzf-preview.CocTypeDefinitions<CR>
 
 " =============================================================================
 " plugins: rest
@@ -410,7 +410,7 @@ Plug 'francoiscabrol/ranger.vim'
   Plug 'rbgrouleff/bclose.vim'
   let g:bclose_no_plugin_maps = 1
   let g:ranger_map_keys = 0
-  nnoremap <Leader><Leader>r :Ranger<CR>
+  nnoremap <Leader>ra :Ranger<CR>
 Plug 'djoshea/vim-autoread'
 Plug 'wsdjeg/vim-fetch'
 Plug 'farmergreg/vim-lastplace'
@@ -444,7 +444,7 @@ Plug 'rhysd/conflict-marker.vim'
 Plug 'rhysd/git-messenger.vim'
 Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-fugitive'
-  nnoremap <Leader>G :Git<CR>
+  nnoremap <Leader>g :Git<CR>
 
 " navigation
 Plug 'airblade/vim-matchquote'
