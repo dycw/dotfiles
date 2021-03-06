@@ -198,7 +198,7 @@
 
   # dev branch
   dev = !(git branch -D dev >/dev/null 2>&1 || true) && git checkout -b dev && :
-  dedev = branch -D dev
+  ddev = branch -D dev
   redev = !git checkout master && git pull && git dev && :
 
 [apply]
