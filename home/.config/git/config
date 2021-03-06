@@ -10,76 +10,109 @@
   aac = !git add -A && git commit && :
   aacm = !git add -A && git commit -m \"$1\" && :
   ac = "!f() { \
-      for v in \"$@\"; do \
-        git add \"$GIT_PREFIX$v\"; \
-      done; \
-      git commit; \
+    for path in \"$@\"; do \
+      git add-safe \"$GIT_PREFIX\" \"$path\"; \
+    done; \
+    git commit; \
     }; f"
-  acm = "!f() { i=0; for v in \"$@\"; do i=$(($i+1)); if [ $i -lt $# ]; then git a \"$GIT_PREFIX$v\"; else git cm \"$v\"; fi; done; }; f"
-  acnv = "!f() { for v in \"$@\"; do git a \"$GIT_PREFIX$v\"; done; git cnv; }; f"
-  acnvm = "!f() { i=0; for v in \"$@\"; do i=$(($i+1)); if [ $i -lt $# ]; then git a \"$GIT_PREFIX$v\"; else git cnvm \"$v\"; fi; done; }; f"
-  apc = "!f() { for v in \"$@\"; do git ap \"$GIT_PREFIX$v\"; done; git c; }; f"
+  acm = "!f() { \
+    while [ $# -gt 1 ]; do \
+      git add-safe \"$GIT_PREFIX\" \"$1\"; \
+      shift; \
+    done; \
+    git commit -m \"$1\"; \
+    }; f"
+  acn = "!f() { \
+    for path in \"$@\"; do \
+      git add-safe \"$GIT_PREFIX\" \"$path\"; \
+    done; \
+    git commit -n; \
+    }; f"
+  acnm = "!f() { \
+    while [ $# -gt 1 ]; do \
+      git add-safe \"$GIT_PREFIX\" \"$1\"; \
+      shift; \
+    done; \
+    git commit -m \"'\"\"$1\"\"'\" -n; \
+    }; f"
+  apc = "!f() { \
+    for path in \"$@\"; do \
+      git add-safe \"$GIT_PREFIX\" \"$1\" -p; \
+    done; \
+    git commit; \
+    }; f"
+  add-safe = "!f() { \
+    prefix=\"$1\"; \
+    shift; \
+    path=\"$1\"; \
+    shift; \
+    git add \"$(realpath \"$(git root)/$prefix$path\")\" \"$@\"; \
+    }; f"
 
   # branch
-  b = branch -v
-  ba = b -a
-  bd = b -d
-  bdd = b -D
-  bm = b -m
-  br = b -r
-  bra = b -ra
-  bu = b -u
-
-  # branch + checkout
-  dev = !(git bdd dev || true) && git cob dev && :
+  b = branch-default
+  ba = branch-default -a
+  bd = branch-default -d
+  bdd = branch-default -D
+  bdr = "!git branch -r --color=never | \
+    fzf | \
+    sed -En 's/origin\\/(.*)/\\1/p' | \
+    xargs -n 1 git push -d origin"
+  bm = branch-default -m
+  br = branch-default -r
+  bra = branch-default -ra
+  bu = branch-default -u
+  branch-default = branch -v
 
   # checkout
   co = checkout
-  cob = co -b
-  cobmom = co -B master origin/master
-  cocm = co --conflict=merge
-  com = co master
-  coom = co origin/master
-  cop = co --patch
+  cob = checkout -b
+  cobt = !git checkout -b \"$1\" -t \"$2\" && :
+  cobmom = checkout -B master origin/master
+  cocm = checkout --conflict=merge
+  com = checkout master
+  coom = checkout origin/master
+  cop = checkout -p
 
   # checkout + pull
-  comp = !git com && git pl && :
-
-  # checkout + pull + branch + checkout
-  redev = !git comp && git dev && :
+  comp = !git checkout master && git pull && :
 
   # cherry-pick
   cp = cherry-pick
-  cpa = cp --abort
-  cpc = cp --continue
-  cps = cp --skip
+  cpa = cherry-pick --abort
+  cpc = cherry-pick --continue
+  cps = cherry-pick --skip
 
   # clean
-  cli = clean -i
+  cle = clean-default
+  clean-default = clean -i
 
   # clone
-  cl = clone --recurse-submodules
+  cl = clone-default
+  clone-default = clone --recurse-submodules
 
   # commit
   c = commit
-  cm = !git c --message \"$1\" && :
-  cnv = commit --no-verify
-  cnvm = !git c --message --no-verify \"$1\" && :
+  cm = !git commit -m \"$1\" && :
+  cn = commit -n
+  cmn = !git commit -m \"$1\" -n && :
 
   # config
-  clso = config --list --show-origin
+  clso = config -l --show-origin
 
   # diff
   d = diff
-  dc = d --cached
-  dom = d origin/master..
+  dc = diff --cached
+  dom = diff origin/master..
 
   # fetch
-  f = fetch --all --prune
+  f = fetch-default
+  fetch-default = fetch -p --all
 
   # log
-  l = ll origin/master..HEAD
-  ll = log --oneline --decorate --graph
+  l = log-default origin/master..HEAD
+  ll = log-default
+  log-default = log --oneline --decorate --graph
 
   # merge
   m = merge
@@ -94,35 +127,33 @@
   pl = pull
 
   # push
-  p = push
-  pdo = p -d origin
-  pf = p -f
-  pn = p -n
-  po = p origin
-  pot = po --tags
-  puo = p -u origin
+  p = !git push -u origin $(git current) && :
+  pd = push -d origin
+  pf = push -f -u origin
+  pn = push -n
+  pt = push -u origin --tags
 
   # rebase
   rb = rebase
-  rba = rb --abort
-  rbc = rb --continue
-  rbi = rb -i
-  rbim = rbi master
-  rbiom = rbi origin/master
-  rbm = rb master
-  rbom = rb origin/master
-  rbrt = rb -s recursive -X theirs
-  rbrtm = rbrt master
-  rbrtom = rbrt origin/master
-  rbs = rb --skip
+  rba = rebase --abort
+  rbc = rebase --continue
+  rbi = rebase -i
+  rbim = rebase -i master
+  rbiom = rebase -i origin/master
+  rbm = rebase master
+  rbom = rebase origin/master
+  rbrt = rebase -s recursive -X theirs
+  rbrtm = rebase -s recursive -X theirs master
+  rbrtom = rebase -s recursive -X theirs origin/master
+  rbs = rebase --skip
 
   # remote
   re =  remote
-  resu = re set-url
-  reu = re update
+  resu = remote set-url
+  reu = remote update
 
   # rename
-  brn = !git bm \"$1\" && git pb && git unpb
+  brn = !git branch-default -m \"$1\" && git pb && git unpb
 
   # reset
   r = reset
@@ -142,11 +173,11 @@
 
   # stash
   st = stash
-  sta = st apply
-  stc = st clear
-  std = st drop
-  stl = st list
-  stp = st pop
+  sta = stash apply
+  stc = stash clear
+  std = stash drop
+  stl = stash list
+  stp = stash pop
 
   # submodule
   smu = submodule update --init --recursive --remote
@@ -156,14 +187,13 @@
   sv = status -v
 
   # tag
-  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && git pot && :
-  td = !git tag -d \"$1\" && git pdo \"$1\" && :
+  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && git push -u origin --tags && :
+  td = !git tag -d \"$1\" && git push -d origin \"$1\" && :
   tl = tag -l
 
-  # publish
-  pb = !git puo $(git current) && :
-  pbf = pb -f
-  unpb = "!git branch -r --color=never | fzf | sed -En 's/origin\\/(.*)/\\1/p' | xargs -n 1 git pdo"
+  # dev branch
+  dev = !(git branch -D dev || true) && git checkout -b dev && :
+  redev = !git checkout master && git pull && git dev && :
 
 [apply]
   whitespace = nowarn
