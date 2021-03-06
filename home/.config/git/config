@@ -130,13 +130,14 @@
   # push
   p = push-default
   pd = push -d origin
-  pf = push -f -u origin
+  pf = push-default -f
   pn = push -n
-  pt = push -u origin --tags
+  pt = push-default --tags
   push-default = !git push -u origin $(git current) && :
 
   # push + gitweb
   pw = !git push-default && gitweb && :
+  pfw = !git push-default -f && gitweb && :
 
   # rebase
   rb = rebase
@@ -192,7 +193,7 @@
   sv = status -v
 
   # tag
-  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && git push -u origin --tags && :
+  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && git push-default --tags && :
   td = !git tag -d \"$1\" && git push -d origin \"$1\" && :
   tl = tag -l
 
