@@ -54,15 +54,15 @@
   ba = branch-default -a
   bd = branch-default -d
   bdd = branch-default -D
-  bdr = "!git branch -r --color=never | \
+  bdr = branch-delete-remote
+  bm = branch -m
+  br = branch-default -r
+  bra = branch-default -ra
+  branch-default = branch -v
+  branch-delete-remote = "!git branch -r --color=never | \
     fzf | \
     sed -En 's/origin\\/(.*)/\\1/p' | \
     xargs -n 1 git push -d origin"
-  bm = branch-default -m
-  br = branch-default -r
-  bra = branch-default -ra
-  bu = branch-default -u
-  branch-default = branch -v
 
   # checkout
   co = checkout
@@ -128,16 +128,15 @@
   pl = pull
 
   # push
-  p = push-default
+  p = !git push -u origin $(git current) && -
   pd = push -d origin
-  pf = push-default -f
+  pf = !git push -f -u origin $(git current) && -
   pn = push -n
-  pt = push-default --tags
-  push-default = !git push -u origin $(git current) && :
+  pt = !git push -u --tags origin $(git current) && -
 
   # push + gitweb
-  pw = !git push-default && gitweb && :
-  pfw = !git push-default -f && gitweb && :
+  pw = !git push -u origin $(git current) && gitweb && :
+  pfw = !git push -f -u origin $(git current) && gitweb && :
 
   # rebase
   rb = rebase
@@ -159,7 +158,7 @@
   reu = remote update
 
   # rename
-  brn = !git branch-default -m \"$1\" && git pb && git unpb
+  brn = !git branch-default -m \"$1\" && git push && git branch-delete-remote
 
   # reset
   r = reset
@@ -193,7 +192,7 @@
   sv = status -v
 
   # tag
-  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && git push-default --tags && :
+  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && git push -u --tags $(git current) && :
   td = !git tag -d \"$1\" && git push -d origin \"$1\" && :
   tl = tag -l
 
