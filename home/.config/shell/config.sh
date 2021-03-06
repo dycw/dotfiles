@@ -247,11 +247,12 @@ fi
 # python
 if command -v python >/dev/null 2>&1; then
   alias pie='pip install -e .'
-  __pyclean='find . \( -name .mypy_cache -o -name .pytest_cache -o -name'
-  __pyclean+=' .pytype -o -name __pycache__ \) -type d -prune -exec rm -rf {} \;'
-  alias pyclean="$__pyclean"
-  while IFS= read -d '' -r __pythonrc; do
-    export PYTHONSTARTUP="$__pythonrc"
+  pyclean='find . \( -name .hypothesis -o -name .mypy_cache -o -name'
+  pyclean+=' .pytest_cache -o -name .pytype -o -name __pycache__ \) -type d'
+  pyclean+=' -prune -exec rm -rf {} \;'
+  alias pyclean="$pyclean"
+  while IFS= read -d '' -r pythonrc; do
+    export PYTHONSTARTUP="$pythonrc"
   done < <(find "$PATH_DOTFILES" -name pythonrc.py -print0 -type f)
 fi
 
