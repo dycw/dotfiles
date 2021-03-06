@@ -167,6 +167,7 @@ npm install -g \
 for app in \
   flake8 \
   isort \
+  pre-commit \
   git+git://github.com/psf/black; do
   pipx install "$app"
 done
@@ -288,15 +289,10 @@ fi
 
 # === snap ===
 
-ensure_snap_install() {
-  if ! command -v "$1" >/dev/null 2>&1; then
-    sudo snap install "$1"
-  fi
-}
-
-ensure_snap_install insomnia-designer
-ensure_snap_install signal-desktop
-ensure_snap_install spotify
+sudo snap install \
+  insomnia-designer \
+  signal-desktop \
+  spotify
 
 # === sound (https://intel.ly/3r68ua1) ===
 
