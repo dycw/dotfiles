@@ -180,12 +180,6 @@ if command -v git >/dev/null 2>&1; then
   done
 fi
 
-# git + gitweb
-if (command -v git >/dev/null 2>&1) && (command -v gitweb >/dev/null 2>&1); then
-  alias gpw='git push && gitweb'
-  alias gpbw='git pb && gitweb'
-fi
-
 # gitweb
 if command -v gitweb >/dev/null 2>&1; then
   alias gw='gitweb'

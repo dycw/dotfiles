@@ -127,11 +127,15 @@
   pl = pull
 
   # push
-  p = !git push -u origin $(git current) && :
+  p = push-default
   pd = push -d origin
   pf = push -f -u origin
   pn = push -n
   pt = push -u origin --tags
+  push-default = !git push -u origin $(git current) && :
+
+  # push + gitweb
+  pw = !git push-default && gitweb && :
 
   # rebase
   rb = rebase
@@ -192,7 +196,8 @@
   tl = tag -l
 
   # dev branch
-  dev = !(git branch -D dev || true) && git checkout -b dev && :
+  deldev = branch -D dev
+  dev = !(git branch -D dev >/dev/null 2>&1 || true) && git checkout -b dev && :
   redev = !git checkout master && git pull && git dev && :
 
 [apply]
