@@ -276,7 +276,6 @@ fi
 # python: poetry
 if command -v poetry >/dev/null 2>&1; then
   alias pi='poetry install'
-  alias pvp='poetry version patch && git add "$(git root)/pyproject.toml" && git commit -m "bump patch"'
 fi
 
 # python: pylint/prospector

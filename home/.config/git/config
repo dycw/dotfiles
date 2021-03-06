@@ -93,6 +93,7 @@
 
   # commit
   c = commit
+  ca = commit --amend
   cm = !git commit -m \"$1\" && :
   cn = commit -n
   cmn = !git commit -m \"$1\" -n && :
