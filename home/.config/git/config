@@ -198,8 +198,8 @@
   tl = tag -l
 
   # dev branch
-  deldev = branch -D dev
   dev = !(git branch -D dev >/dev/null 2>&1 || true) && git checkout -b dev && :
+  dedev = branch -D dev
   redev = !git checkout master && git pull && git dev && :
 
 [apply]
