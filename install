@@ -167,7 +167,7 @@ npm install -g \
 
 for __app in \
   flake8 \
-  pre-commit \
+  isort \
   git+git://github.com/psf/black; do
   pipx install "$__app"
 done
