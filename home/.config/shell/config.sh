@@ -245,6 +245,11 @@ if (command -v pyenv >/dev/null 2>&1); then
   eval "$(pyenv init -)"
 fi
 
+# pyright
+if command -v pyright >/dev/null 2>&1; then
+  alias pyw='pyright -w'
+fi
+
 # python
 if command -v python >/dev/null 2>&1; then
   alias pie='pip install -e .'
@@ -360,12 +365,6 @@ fi
 if command -v xclip >/dev/null 2>&1; then
   alias pbcopy='xclip -selection clipboard'
   alias pbpaste='xclip -selection clipboard -o'
-fi
-
-# watchexec + pyright
-if (command -v watchexec >/dev/null 2>&1) &&
-  (command -v pyright >/dev/null 2>&1); then
-  alias wpr='watchexec -- pyright'
 fi
 
 # wget
