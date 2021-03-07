@@ -67,7 +67,7 @@
   # checkout
   co = checkout
   cob = checkout -b
-  cobt = !git checkout -b \"$1\" -t \"$2\" && :
+  cobt = !git checkout -b \"$1\" -t \"origin/$1\" && :
   cobmom = checkout -B master origin/master
   cocm = checkout --conflict=merge
   com = checkout master
