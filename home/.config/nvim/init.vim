@@ -11,13 +11,12 @@ set nowrap
 highlight ColorColumn ctermbg=0 guibg=lightgrey
 
 " coc.nvim
-set cmdheight=2
+set cmdheight=1
 set hidden
 set nobackup
 set nowritebackup
 set shortmess+=c
 set signcolumn=yes
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " folding
 set foldlevel=99
@@ -301,11 +300,6 @@ command! -nargs=? Fold :call CocAction('fold', <f-args>)
 " Add `:OR` command for organize imports of the current buffer.
 command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
 
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
 " coc.nvim: sql
 let g:LanguageClient_serverCommands = {
   \ 'sql': ['sql-language-server', 'up', '--method', 'stdio'],
@@ -365,14 +359,15 @@ Plug 'yuki-yano/fzf-preview.vim', {
 " =============================================================================
 Plug 'antoinemadec/coc-fzf'
   let g:coc_fzf_preview = 'down:50%'
-  nnoremap <Leader>o :<C-u>CocFzfList outline<CR>
-  nnoremap <Leader>p :<C-u>CocFzfList yank<CR>
-  nnoremap <Leader>s :<C-u>CocFzfList symbols<CR>
+  nnoremap <Leader>o  :<C-u>CocFzfList outline<CR>
+  nnoremap <Leader>p  :<C-u>CocFzfList yank<CR>
+  nnoremap <Leader>s  :<C-u>CocFzfList symbols<CR>
+  nnoremap <Leader>cl :<C-u>CocFzfList<CR>
 
 " yuki-yano/fzf-preview.vim
-  nnoremap <Leader>d  :<C-u>CocCommand fzf-preview.CocCurrentDiagnostics<CR>
   nnoremap <Leader>d  :<C-u>CocCommand fzf-preview.CocDiagnostics<CR>
   nnoremap <Leader>r  :<C-u>CocCommand fzf-preview.CocReferences<CR>
+  nnoremap <Leader>cd :<C-u>CocCommand fzf-preview.CocCurrentDiagnostics<CR>
   nnoremap <Leader>gi :<C-u>CocCommand fzf-preview.CocImplementations<CR>
   nnoremap <Leader>gt :<C-u>CocCommand fzf-preview.CocTypeDefinitions<CR>
 
@@ -468,9 +463,33 @@ Plug 'bronson/vim-visual-star-search'
 Plug 'tpope/vim-obsession'
 
 " status bar
-Plug 'vim-airline/vim-airline'
-  let g:airline#extensions#ale#enabled = 1
-  let g:airline#extensions#hunks#non_zero_only = 1
+Plug 'itchyny/lightline.vim'
+  let g:lightline = {
+    \ 'colorscheme': 'wombat',
+    \ 'active': {
+    \   'left':  [['mode', 'paste'],
+    \             ['relativepath'],
+    \             ['readonly', 'modified'],
+    \            ],
+    \   'right': [['lineinfo'],
+    \             ['percent'],
+    \             ['cocstatus'],
+    \            ],
+    \   },
+    \ 'inactive': {
+    \   'left':  [['mode', 'paste'],
+    \             ['relativepath'],
+    \             ['readonly', 'modified'],
+    \            ],
+    \   'right': [['lineinfo'],
+    \             ['percent'],
+    \             ['cocstatus'],
+    \            ],
+    \   },
+    \ 'component_function': {
+    \   'cocstatus': 'coc#status',
+    \   },
+    \ }
 
 " style
 Plug 'morhetz/gruvbox'
@@ -488,7 +507,6 @@ Plug 'liuchengxu/vista.vim'
   function! NearestMethodOrFunction() abort
     return get(b:, 'vista_nearest_method_or_function', '')
   endfunction
-  set statusline+=%{NearestMethodOrFunction()}
   autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
   let g:vista_fzf_preview = ['right:50%']
   nnoremap <Leader>v :<C-u>Vista!<CR>

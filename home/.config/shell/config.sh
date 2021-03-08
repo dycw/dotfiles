@@ -290,6 +290,10 @@ if (command -v pylint >/dev/null 2>&1) ||
   (command -v prospector >/dev/null 2>&1); then
   export PYLINTHOME="$XDG_CACHE_HOME/pylint"
 fi
+# python: pytest
+if command -v python >/dev/null 2>&1; then
+  alias pytflf='pytest -f --lf'
+fi
 
 # python: tensorboard
 if command -v python >/dev/null 2>&1; then
