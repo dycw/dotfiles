@@ -232,10 +232,11 @@ fi
 # pre-commit
 if command -v pre-commit >/dev/null 2>&1; then
   alias pc='pre-commit-current'
+  alias pca='pre-commit run -a'
+  alias pcav='pre-commit run -av'
   alias pci='pre-commit install'
-  alias pcaf='pre-commit run --all-files'
   alias pcau='pre-commit autoupdate'
-  alias pcauf='pre-commit autoupdate && pre-commit run --all-files'
+  alias pcaua='pre-commit autoupdate && pre-commit run -a'
   alias pctr='pre-commit try-repo .'
   alias pcui='pre-commit uninstall'
 fi

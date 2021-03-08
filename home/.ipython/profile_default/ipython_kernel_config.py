@@ -12,7 +12,8 @@
 # BaseIPythonApplication(Application) configuration
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-# IPKernelApp(BaseIPythonApplication, InteractiveShellApp, ConnectionFileMixin) configuration
+# IPKernelApp(BaseIPythonApplication, InteractiveShellApp,
+#             ConnectionFileMixin) configuration
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 # Kernel(SingletonConfigurable) configuration

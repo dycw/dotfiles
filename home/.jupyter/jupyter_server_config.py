@@ -66,7 +66,8 @@ c.JupyterApp.answer_yes = True
 # ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
-# AsyncFileContentsManager(FileContentsManager, AsyncFileManagerMixin, AsyncContentsManager) configuration
+# AsyncFileContentsManager(FileContentsManager, AsyncFileManagerMixin,
+#                          AsyncContentsManager) configuration
 # ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
