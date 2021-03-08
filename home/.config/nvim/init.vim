@@ -401,9 +401,8 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 
 " directories, files and buffers
+Plug 'rbgrouleff/bclose.vim' " for ranger.vim
 Plug 'francoiscabrol/ranger.vim'
-  Plug 'rbgrouleff/bclose.vim'
-  let g:bclose_no_plugin_maps = 1
   let g:ranger_map_keys = 0
   nnoremap <Leader>ra :Ranger<CR>
 Plug 'djoshea/vim-autoread'
