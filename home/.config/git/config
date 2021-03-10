@@ -133,7 +133,7 @@
   pd = push -d origin
   pf = !git push -f -u origin $(git current) && -
   pn = push -n
-  pt = !git push -u --tags origin $(git current) && -
+  pt = !git push -u origin --tags && -
 
   # push + gitweb
   pw = !git push -u origin $(git current) && gitweb && :
@@ -193,7 +193,7 @@
   sv = status -v
 
   # tag
-  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && git push -u --tags $(git current) && :
+  ta = !git tag -a \"$1\" \"$2\" -m \"$1\" && git push -u origin --tags && :
   td = !git tag -d \"$1\" && git push -d origin \"$1\" && :
   tl = tag -l
 
