@@ -406,6 +406,7 @@ Plug 'francoiscabrol/ranger.vim'
   let g:ranger_map_keys = 0
   nnoremap <Leader>ra :Ranger<CR>
 Plug 'djoshea/vim-autoread'
+Plug 'moll/vim-bbye'
 Plug 'wsdjeg/vim-fetch'
 Plug 'farmergreg/vim-lastplace'
 Plug 'airblade/vim-rooter'
@@ -455,6 +456,7 @@ Plug 'justinmk/vim-sneak'
 Plug 'vim-utils/vim-vertical-move'
 
 " searching
+Plug 'brooth/far.vim'
 Plug 'mhinz/vim-grepper'
 Plug 'bronson/vim-visual-star-search'
 
@@ -551,3 +553,9 @@ Plug 'simeji/winresizer'
 
 endif
 call plug#end()
+
+" install missing plugins on startup
+autocmd VimEnter *
+  \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \|   PlugInstall --sync | q
+  \| endif
