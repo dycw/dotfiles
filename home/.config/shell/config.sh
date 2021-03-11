@@ -125,6 +125,13 @@ if command -v exa >/dev/null 2>&1; then
   ll() { __exa_long --git-ignore "$@"; }
   lla() { ll -a "$@"; }
   llag() { __exa_long -a "$@"; }
+
+  __watch_exa_base() {
+    watch -n 0.1 --color -- exa -F --color=always \
+      --git-ignore --group-directories-first "$@"
+  }
+  watchl() { __watch_exa_base -x "$@"; }
+  watchll() { __watch_exa_base -ghl --git --time-style=long-iso "$@"; }
 fi
 
 # fzf
@@ -294,7 +301,18 @@ fi
 
 # python: pytest
 if command -v python >/dev/null 2>&1; then
-  alias pytflf='pytest -f --lf'
+  alias pyt='pytest'
+  alias pytf='pytest -f'
+  alias pytl='pytest --lf'
+  alias pytn='pytest -n0'
+  alias pytp='pytest --pdb'
+  alias pytfl='pytest -f --lf'
+  alias pytfn='pytest -f -n0'
+  alias pytln='pytest --lf -n0'
+  alias pytlp='pytest --lf --pdb'
+  alias pytnp='pytest -n0 --pdb'
+  alias pytfln='pytest -f --lf -n0'
+  alias pytlnp='pytest -f -n0 --pdb'
 fi
 
 # python: tensorboard

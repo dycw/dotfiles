@@ -129,11 +129,11 @@
   pl = pull
 
   # push
-  p = !git push -u origin $(git current) && -
+  p = !git push -u origin $(git current) && :
   pd = push -d origin
-  pf = !git push -f -u origin $(git current) && -
+  pf = !git push -f -u origin $(git current) && :
   pn = push -n
-  pt = !git push -u origin --tags && -
+  pt = !git push -u origin --tags && :
 
   # push + gitweb
   pw = !git push -u origin $(git current) && gitweb && :
@@ -159,7 +159,7 @@
   reu = remote update
 
   # rename
-  brn = !git branch-default -m \"$1\" && git push && git branch-delete-remote
+  brn = !git branch-default -m \"$1\" && git push && git branch-delete-remote :
 
   # reset
   r = reset
