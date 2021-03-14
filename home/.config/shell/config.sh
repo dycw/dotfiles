@@ -308,11 +308,18 @@ if command -v python >/dev/null 2>&1; then
   alias pytp='pytest --pdb'
   alias pytfl='pytest -f --lf'
   alias pytfn='pytest -f -n0'
+  alias pytlf='pytest --lf -f'
   alias pytln='pytest --lf -n0'
   alias pytlp='pytest --lf --pdb'
+  alias pytnl='pytest -n0 --lf'
   alias pytnp='pytest -n0 --pdb'
+  alias pytpn='pytest --pdb -n0'
   alias pytfln='pytest -f --lf -n0'
-  alias pytlnp='pytest -f -n0 --pdb'
+  alias pytfnl='pytest -f -n0 --lf'
+  alias pytlnp='pytest --lf -n0 --pdb'
+  alias pytlpn='pytest --lf --pdb -n0'
+  alias pytpln='pytest --pdb --lf -n0'
+  alias pytpnl='pytest --pdb -n0 --lf'
 fi
 
 # python: tensorboard
