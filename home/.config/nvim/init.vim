@@ -325,7 +325,8 @@ Plug 'junegunn/fzf.vim'
   " https://bit.ly/3q5KZwQ
   command! -bang -nargs=* Rg
     \ call fzf#vim#grep(
-    \   'rg --hidden --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+    \   'rg --hidden --column --line-number --no-heading --color=always
+    \    --smart-case -- '.shellescape(<q-args>), 1,
     \   fzf#vim#with_preview(), <bang>0)
 
 Plug 'yuki-yano/fzf-preview.vim', {
@@ -336,23 +337,37 @@ Plug 'yuki-yano/fzf-preview.vim', {
   let g:fzf_preview_filelist_command =
     \ 'rg --files --hidden --follow --no-messages -g \!"* *"'
   let g:fzf_preview_lines_command = 'bat --color=always --plain --number'
-  nnoremap <Leader>b  :<C-u>FzfPreviewBuffers<CR>
-  nnoremap <Leader>bl :<C-u>FzfPreviewBufferLines<CR>
-  nnoremap <Leader>bt :<C-u>FzfPreviewVistaBufferCtags<CR>
-  nnoremap <Leader>f  :<C-u>FzfPreviewDirectoryFiles<CR>
-  nnoremap <Leader>j  :<C-u>FzfPreviewJumps<CR>
-  nnoremap <Leader>l  :<C-u>FzfPreviewLines<CR>
-  nnoremap <Leader>m  :<C-u>FzfPreviewMarks<CR>
-  nnoremap <Leader>t  :<C-u>FzfPreviewVistaCtags<CR>
-  nnoremap <Leader>ga :<C-u>FzfPreviewGitActions<CR>
-  nnoremap <Leader>gf :<C-u>FzfPreviewGitFiles<CR>
-  nnoremap <Leader>gs :<C-u>FzfPreviewGitStatus<CR>
-  nnoremap <Leader>of :<C-u>FzfPreviewProjectOldFiles<CR>
-  nnoremap <Leader>pf :<C-u>FzfPreviewProjectFiles<CR>
-  nnoremap <Leader>pg :<C-u>FzfPreviewProjectGrep<Space>
-  nnoremap <Leader>qf :<C-u>FzfPreviewQuickFix<CR>
-  nnoremap <Leader>uf :<C-u>FzfPreviewProjectMruFiles<CR>
-  nnoremap <Leader>wf :<C-u>FzfPreviewProjectMrwFiles<CR>
+  nnoremap <Leader>b   :<C-u>FzfPreviewBuffers<CR>
+  nnoremap <Leader>bl  :<C-u>FzfPreviewBufferLines<CR>
+  nnoremap <Leader>bm  :<C-u>FzfPreviewBookmarks<CR>
+  nnoremap <Leader>bt  :<C-u>FzfPreviewVistaBufferCtags<CR>
+  nnoremap <Leader>ga  :<C-u>FzfPreviewGitActions<CR>
+  nnoremap <Leader>gs  :<C-u>FzfPreviewGitStatus<CR>
+  nnoremap <Leader>pg  :<C-u>FzfPreviewProjectGrep<Space>
+  nnoremap <Leader>j   :<C-u>FzfPreviewJumps<CR>
+  nnoremap <Leader>l   :<C-u>FzfPreviewLines<CR>
+  nnoremap <Leader>m   :<C-u>FzfPreviewMarks<CR>
+  nnoremap <Leader>ml  :<C-u>FzfPreviewMemoList<CR>
+  nnoremap <Leader>mlg :<C-u>FzfPreviewMemoListGrep<CR>
+  nnoremap <Leader>qf  :<C-u>FzfPreviewQuickFix<CR>
+  nnoremap <Leader>t   :<C-u>FzfPreviewVistaCtags<CR>
+  nnoremap <Leader>/   :<C-u>CocCommand fzf-preview.Lines
+    \ --add-fzf-arg=--no-sort --add-fzf-arg=--query="'"<CR>
+  nnoremap <Leader>*   :<C-u>CocCommand fzf-preview.Lines
+    \ --add-fzf-arg=--no-sort --add-fzf-arg=--query="'<C-r>=expand('<cword>')
+    \ <CR>"<CR>
+
+  " files
+  nnoremap <Leader>f   :<C-u>FzfPreviewFromResources buffer project_mru directory<CR>
+  nnoremap <Leader>df  :<C-u>FzfPreviewDirectoryFiles<CR>
+  nnoremap <Leader>gf  :<C-u>FzfPreviewGitFiles<CR>
+  nnoremap <Leader>of  :<C-u>FzfPreviewOldFiles<CR>
+  nnoremap <Leader>pf  :<C-u>FzfPreviewProjectFiles<CR>
+  nnoremap <Leader>pof :<C-u>FzfPreviewProjectOldFiles<CR>
+  nnoremap <Leader>puf :<C-u>FzfPreviewProjectMruFiles<CR>
+  nnoremap <Leader>pwf :<C-u>FzfPreviewProjectMrwFiles<CR>
+  nnoremap <Leader>uf  :<C-u>FzfPreviewMruFiles<CR>
+  nnoremap <Leader>wf  :<C-u>FzfPreviewMrwFiles<CR>
 
 " =============================================================================
 " plugins: coc.nvim + fzf
@@ -379,14 +394,15 @@ Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-completion'
 
 " editing
-Plug 'tpope/vim-abolish'
 Plug 'jiangmiao/auto-pairs'
 Plug 'chrisbra/NrrwRgn'
 Plug 'luochen1990/rainbow'
   let g:rainbow_active = 1
+Plug 'mtth/scratch.vim'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'mbbill/undotree'
   nnoremap U :<C-u>UndotreeToggle<CR>
+Plug 'tpope/vim-abolish'
 Plug 'alvan/vim-closetag'
 Plug 'tpope/vim-commentary'
 Plug 'junegunn/vim-easy-align'
@@ -540,8 +556,7 @@ Plug 'jez/vim-superman'
 " viewing
 Plug 'wellle/context.vim'
 Plug 'Yggdroot/indentLine'
-  let g:indentLine_char = '▏'
-  let g:indentLine_setConceal = 0
+  let g:indentLine_char = '│'
 Plug 'RRethy/vim-illuminate'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'wellle/visual-split.vim'

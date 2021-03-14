@@ -1,8 +1,13 @@
 --exclude=.coverage
 --exclude=.git
 --exclude=.hypothesis
+--exclude=.ipynb_checkpoints
 --exclude=.mypy_cache
+--exclude=.pyre
 --exclude=.pytest_cache
+--exclude=.pytype
+--exclude=.venv
+--exclude=__pycache__
 --exclude=build
 --exclude=dist
 --exclude=elm_stuff
