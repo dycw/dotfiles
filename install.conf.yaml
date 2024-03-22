@@ -34,7 +34,6 @@
     - [brew install ruff, Installing ruff]
     - [brew install shellcheck, Installing shellcheck]
     - [brew install shfmt, Installing shfmt]
-    - [brew install sk, Installing skim]
     - [brew install starship, Installing starship]
     - [brew install watch, Installing watch]
     - [brew install watchexec, Installing watchexec]
