@@ -23,7 +23,22 @@ if command -v git &> /dev/null; then
 	# add
 	alias ga='git add'
 	# add + commit
-	alias gaac='git add -A && git commit'
+	alias gac='git add -A && git commit'
+	alias gacm='git add -A && git commit -m'
+	# branch
+	alias gb='git branch'
+	alias gba='git branch -a'
+	# checkout
+	alias gco='git checkout'
+	alias gcob='git checkout -b'
+	gcobt() { git checkout -b "$1" -t "origin/$1"; }
+	alias gcom='git checkout master'
+	# cherry-pick
+	alias gcp='git cherry-pick'
+	# commit
+	alias gcn='git commit --no-verify'
+	# push
+	alias gp='git push'
 	# status
 	alias gs='git status'
 fi
