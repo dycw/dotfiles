@@ -1,0 +1,55 @@
+# cd 
+alias ~='cd ~'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias cddf='cd ~/dotfiles'
+
+# eza
+if command -v eza &> /dev/null; then
+	# base
+	alias l='eza -F --group-directories-first'
+	alias ls='eza -F --group-directories-first'
+	# variants
+	alias la='eza -aF --group-directories-first'
+	alias lal='eza -alF --group-directories-first'
+	alias ll='eza -lF --group-directories-first'
+	alias lla='eza -alF --group-directories-first'
+	alias l1='eza -1lF --group-directories-first'
+fi
+
+# git
+if command -v git &> /dev/null; then
+	# add
+	alias ga='git add'
+	# add + commit
+	alias gac='git add -A && git commit'
+	alias gacm='git add -A && git commit -m'
+	# branch
+	alias gb='git branch'
+	alias gba='git branch -a'
+	# checkout
+	alias gco='git checkout'
+	alias gcob='git checkout -b'
+	gcobt() { git checkout -b "$1" -t "origin/$1"; }
+	alias gcom='git checkout master'
+	# cherry-pick
+	alias gcp='git cherry-pick'
+	# commit
+	alias gcn='git commit --no-verify'
+	# push
+	alias gp='git push'
+	# status
+	alias gs='git status'
+fi
+
+# neovim
+if command -v nvim &> /dev/null; then
+	alias n='nvim'
+	alias v='nvim'
+	alias vim='nvim'
+fi
+
+# zsh
+alias zprofile='$EDITOR ~/.zprofile'
+alias zshrc='$EDITOR ~/.zshrc'
