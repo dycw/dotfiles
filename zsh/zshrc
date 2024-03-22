@@ -145,7 +145,7 @@ if command -v git &> /dev/null; then
       echo "Expected 0 or 1 argument; got $#"
     fi
   }
-  gacn() {
+  gcn() {
     if [[ $# -eq 0 ]]; then
       git commit --no-verify && git push -u origin $(gcurr)
     elif [[ $# -eq 1 ]]; then
@@ -154,7 +154,7 @@ if command -v git &> /dev/null; then
       echo "Expected 0 or 1 argument; got $#"
     fi
   }
-  gacnf() {
+  gcnf() {
     if [[ $# -eq 0 ]]; then
       git commit --no-verify && git push -fu origin $(gcurr)
     elif [[ $# -eq 1 ]]; then
