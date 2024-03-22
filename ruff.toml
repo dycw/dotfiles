@@ -4,9 +4,9 @@ unsafe-fixes = true
 
 [lint]
 ignore = [
-  "ANN101",  # flake8-annotations, missing-type-self
-  "ANN102",  # flake8-annotations, missing-type-cls
-  "ANN401",  # flake8-annotations, dynamically-typed-expression
+  "ANN101",  # missing-type-self
+  "ANN102",  # missing-type-cls
+  "ANN401",  # dynamically-typed-expression
   "D",  # pydocstyle
   # formatter
   "W191",  # tab-indentation
