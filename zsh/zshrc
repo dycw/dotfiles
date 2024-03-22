@@ -1,301 +1,152 @@
 # bat
-if command -v bat &> /dev/null; then
-  alias cat='bat'
+if command -v bat &>/dev/null; then
+	alias cat='bat'
 fi
 
 # cd
-alias ~='cd ~'
+alias ~='cd "$HOME"'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias cddf='cd ~/dotfiles'
-alias cddl='cd ~/Downloads'
-alias cdw='cd ~/work'
+alias cddf='cd "$HOME"/dotfiles'
+alias cddl='cd "$HOME"/Downloads'
+alias cdw='cd "$HOME"/work'
+
+# coverage
+alias open-cov='open .coverage/html/index.html'
 
 # direnv
-if command -v direnv &> /dev/null; then
-  alias dea='direnv allow'
+if command -v direnv &>/dev/null; then
+	alias dea='direnv allow'
 fi
 
 # eza
-if command -v eza &> /dev/null; then
-  __eza_base() { eza -F --group-directories-first --ignore-glob=node_modules "$@"; }
-  __eza_short() { __eza_base -x "$@"; }
-  ls() { __eza_short --git-ignore "$@"; }
-  lsa() { __eza_short -a "$@"; }
-  __eza_long() { __eza_base -ghl --git --time-style=long-iso "$@"; }
-  __eza_long_default() { __eza_long -a --git-ignore "$@"; }
-  l() { __eza_long_default "$@"; }
-  ll() { __eza_long_default "$@"; }
-  la() { __eza_long -a "$@"; }
+if command -v eza &>/dev/null; then
+	__eza_base() { eza -F --group-directories-first --ignore-glob=node_modules "$@"; }
+	__eza_short() { __eza_base -x "$@"; }
+	ls() { __eza_short --git-ignore "$@"; }
+	lsa() { __eza_short -a "$@"; }
+	__eza_long() { __eza_base -ghl --git --time-style=long-iso "$@"; }
+	__eza_long_default() { __eza_long -a --git-ignore "$@"; }
+	l() { __eza_long_default "$@"; }
+	ll() { __eza_long_default "$@"; }
+	la() { __eza_long -a "$@"; }
 
-  if [ -x "$(command -v watch)" ]; then
-    __watch_eza_base() {
-      watch -d -n 0.1 --color -- \
-        eza -aF --color=always --group-directories-first --ignore-glob=node_modules "$@"
-    }
-    __watch_eza_short() { __watch_eza_base -x "$@"; }
-    wls() { __watch_eza_short --git-ignore "$@"; }
-    wlsa() { __watch_eza_short -a "$@"; }
-    __watch_eza_long() { __watch_eza_base -ghl --git --time-style=long-iso "$@"; }
-    __watch_eza_long_default() { __watch_eza_long -a --git-ignore "$@"; }
-    wl() { __watch_eza_long_default "$@"; }
-    wll() { __watch_eza_long_default "$@"; }
-    wla() { __watch_eza_long -a "$@"; }
-  fi
+	if [ -x "$(command -v watch)" ]; then
+		__watch_eza_base() {
+			watch -d -n 0.1 --color -- \
+				eza -aF --color=always --group-directories-first --ignore-glob=node_modules "$@"
+		}
+		__watch_eza_short() { __watch_eza_base -x "$@"; }
+		wls() { __watch_eza_short --git-ignore "$@"; }
+		wlsa() { __watch_eza_short -a "$@"; }
+		__watch_eza_long() { __watch_eza_base -ghl --git --time-style=long-iso "$@"; }
+		__watch_eza_long_default() { __watch_eza_long -a --git-ignore "$@"; }
+		wl() { __watch_eza_long_default "$@"; }
+		wll() { __watch_eza_long_default "$@"; }
+		wla() { __watch_eza_long -a "$@"; }
+	fi
 fi
 
 # fd
-if command -v fd &> /dev/null; then
-  alias fdd='fd --type=directory'
-  alias fde='fd --type=executable'
-  alias fdf='fd --type=file'
-  alias fds='fd --type=symlink'
+if command -v fd &>/dev/null; then
+	alias fdd='fd --type=directory'
+	alias fde='fd --type=executable'
+	alias fdf='fd --type=file'
+	alias fds='fd --type=symlink'
 fi
 
 # fzf
 __file="${XDG_CONFIG_HOME:-$HOME/.config}/fzf/fzf.zsh"
 if [ -f "$__file" ]; then
-  source "$__file"
+	source "$__file"
 fi
 
 # gh
-if command -v gh &> /dev/null; then
+if command -v gh &>/dev/null; then
 	alias ghc='gh pr create'
 	alias ghm='gh pr merge --auto'
 	alias ghcm='gh pr create && gh pr merge --auto'
 fi
 
 # git
-if command -v git &> /dev/null; then
-  # add
-  alias ga='git add'
-  alias gaa='git add -A'
-  # add + commit + push
-  gac() {
-    if [[ $# -eq 0 ]]; then
-      git add -A && git commit && git push -u origin $(gcurr)
-    elif [[ $# -eq 1 ]]; then
-      git add -A && git commit -m "$1" && git push -u origin $(gcurr)
-    else
-      echo "Expected 0 or 1 argument; got $#"
-    fi
-  }
-  gacf() {
-    if [[ $# -eq 0 ]]; then
-      git add -A && git commit && git push -fu origin $(gcurr)
-    elif [[ $# -eq 1 ]]; then
-      git add -A && git commit -m "$1" && git push -fu origin $(gcurr)
-    else
-      echo "Expected 0 or 1 argument; got $#"
-    fi
-  }
-  gacn() {
-    if [[ $# -eq 0 ]]; then
-      git add -A && git commit --no-verify && git push -u origin $(gcurr)
-    elif [[ $# -eq 1 ]]; then
-      git add -A && git commit -m "$1" --no-verify && git push -u origin $(gcurr)
-    else
-      echo "Expected 0 or 1 argument; got $#"
-    fi
-  }
-  gacnf() {
-    if [[ $# -eq 0 ]]; then
-      git add -A && git commit --no-verify && git push -fu origin $(gcurr)
-    elif [[ $# -eq 1 ]]; then
-      git add -A && git commit -m "$1" --no-verify && git push -fu origin $(gcurr)
-    else
-      echo "Expected 0 or 1 argument; got $#"
-    fi
-  }
-  # branch
-  alias gb='git branch'
-  alias gba='git branch -a'
-  alias gbd='git branch -d'
-  alias gbdd='git branch -D dev'
-  # checkout
-  alias gco='git checkout'
-  alias gcob='git checkout -b'
-  alias gcobd='git checkout -b dev'
-  gcobt() { git checkout -b "$1" -t "origin/$1"; }
-  alias gcom='git checkout master'
-  alias gcomp='git checkout master && git pull --force'
-  alias gcompd='git checkout master && git pull --force && git branch -D dev'
-  alias gcop='git checkout --patch'
-  # cherry-pick
-  alias gcp='git cherry-pick'
-  # clone
-  alias gcl='git clone'
-  # commit
-  gc() {
-    if [[ $# -eq 0 ]]; then
-      git commit && git push -u origin $(gcurr)
-    elif [[ $# -eq 1 ]]; then
-      git commit -m "$1" && git push -u origin $(gcurr)
-    else
-      echo "Expected 0 or 1 argument; got $#"
-    fi
-  }
-  gcf() {
-    if [[ $# -eq 0 ]]; then
-      git commit && git push -fu origin $(gcurr)
-    elif [[ $# -eq 1 ]]; then
-      git commit -m "$1" && git push -fu origin $(gcurr)
-    else
-      echo "Expected 0 or 1 argument; got $#"
-    fi
-  }
-  gcn() {
-    if [[ $# -eq 0 ]]; then
-      git commit --no-verify && git push -u origin $(gcurr)
-    elif [[ $# -eq 1 ]]; then
-      git commit -m "$1" --no-verify && git push -u origin $(gcurr)
-    else
-      echo "Expected 0 or 1 argument; got $#"
-    fi
-  }
-  gcnf() {
-    if [[ $# -eq 0 ]]; then
-      git commit --no-verify && git push -fu origin $(gcurr)
-    elif [[ $# -eq 1 ]]; then
-      git commit -m "$1" --no-verify && git push -fu origin $(gcurr)
-    else
-      echo "Expected 0 or 1 argument; got $#"
-    fi
-  }
-  # diff
-  alias gd='git diff'
-  alias gdc='git diff --cached'
-  alias gdm='git diff origin/master'
-  # log
-  alias gl='git log --oneline --decorate --graph'
-  # mv
-  alias gmv='git mv'
-  # pull
-  alias gpl='git pull --force'
-  # push
-  alias gp='git push -u origin $(gcurr)'
-  alias gpf='git push -fu origin $(gcurr)'
-  # rebase
-  alias grb='git rebase'
-  alias grbi='git rebase -i'
-  alias grbim='git rebase -i origin/master'
-  alias grbm='git rebase -s recursive -X theirs origin/master'
-  # reset
-  alias gr='git reset'
-  alias grp='git reset --patch'
-  # rev-parse
-  alias gcurr='git rev-parse --abbrev-ref HEAD'
-  alias groot='git rev-parse --show-toplevel'
-  # rm
-  alias grm='git rm'
-  alias grmc='git rm --cached'
-  alias grmf='git rm -f'
-  # status
-  alias gs='git status'
-  # stash
-  alias gst='git stash'
-  alias gstd='git stash drop'
-  alias gstp='git stash pop'
-  # tag
-  gta() { git tag -a "$1" "$2" -m "$1" && git push -u origin --tags; }
-  gtd() { git tag -d "$1" && git push -d origin "$1"; }
+__file="$HOME/dotfiles/git/aliases.sh"
+if [ -f "$__file" ]; then
+	source "$__file"
 fi
 
-# gitweb
-if command -v gitweb &> /dev/null; then
-  alias gw='gitweb'
-  gacw() {
-    if [[ $# -eq 0 ]]; then
-      git add -A && git commit && git push -u origin $(gcurr) && gitweb
-    elif [[ $# -eq 1 ]]; then
-      git add -A && git commit -m "$1" && git push -u origin $(gcurr) && gitweb
-    else
-      echo "Expected 0 or 1 argument; got $#"
-    fi
-  }
-  gacfw() {
-    if [[ $# -eq 0 ]]; then
-      git add -A && git commit && git push -fu origin $(gcurr) && gitweb
-    elif [[ $# -eq 1 ]]; then
-      git add -A && git commit -m "$1" && git push -fu origin $(gcurr) && gitweb
-    else
-      echo "Expected 0 or 1 argument; got $#"
-    fi
-  }
-  gacnw() {
-    if [[ $# -eq 0 ]]; then
-      git add -A && git commit --no-verify && git push -u origin $(gcurr) && gitweb
-    elif [[ $# -eq 1 ]]; then
-      git add -A && git commit -m "$1" --no-verify && git push -u origin $(gcurr) && gitweb
-    else
-      echo "Expected 0 or 1 argument; got $#"
-    fi
-  }
-  gacnfw() {
-    if [[ $# -eq 0 ]]; then
-      git add -A && git commit --no-verify && git push -fu origin $(gcurr) && gitweb
-    elif [[ $# -eq 1 ]]; then
-      git add -A && git commit -m "$1" --no-verify && git push -fu origin $(gcurr) && gitweb
-    else
-      echo "Expected 0 or 1 argument; got $#"
-    fi
-  }
-fi
+# hypothesis
+alias hypothesis-ci='export HYPOTHESIS_PROFILE=ci'
+alias hypothesis-debug='export HYPOTHESIS_PROFILE=debug'
+alias hypothesis-default='export HYPOTHESIS_PROFILE=default'
+alias hypothesis-dev='export HYPOTHESIS_PROFILE=dev'
 
 # neovim
-if command -v nvim &> /dev/null; then
-  alias n='nvim'
-  alias v='nvim'
-  alias vim='nvim'
+if command -v nvim &>/dev/null; then
+	alias n='nvim'
+	alias v='nvim'
+	alias vim='nvim'
+fi
+
+# pip
+alias pi='pip install'
+alias pie='pip install --editable .'
+alias piip='pip install ipython'
+alias pijl='pip install jupyterlab jupyterlab-vim'
+alias plo='pip list --outdated'
+alias pui='pip uninstall'
+
+# pytest
+__file="$HOME/dotfiles/pytest/aliases.sh"
+if [ -f "$__file" ]; then
+	source "$__file"
 fi
 
 # pre-commit
-if command -v pre-commit &> /dev/null; then
-  alias pca='pre-commit run -a'
-  alias pcav='pre-commit run -av'
-  alias pcau='pre-commit autoupdate'
-  alias pci='pre-commit install'
+if command -v pre-commit &>/dev/null; then
+	alias pca='pre-commit run -a'
+	alias pcav='pre-commit run -av'
+	alias pcau='pre-commit autoupdate'
+	alias pci='pre-commit install'
 fi
 
 # zsh
-alias zprofile='$EDITOR ~/.zprofile'
-alias zshrc='$EDITOR ~/.zshrc'
-if command -v brew &> /dev/null; then
-  __dir="$(brew --prefix)/share/zsh/site-functions"
-  if [ -d "$__dir" ]; then
-    export FPATH="$__dir${FPATH:+:$FPATH}"
-  fi
+alias zshrc='"$EDITOR" "$HOME"/.zshrc'
+if command -v brew &>/dev/null; then
+	__dir="$(brew --prefix)/share/zsh/site-functions"
+	if [ -d "$__dir" ]; then
+		export FPATH="$__dir${FPATH:+:$FPATH}"
+	fi
 fi
 
 # ---- end ----
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
 if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
+	eval "$__conda_setup"
 else
-    if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/opt/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/miniconda3/bin:$PATH"
-    fi
+	if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
+		. "/opt/miniconda3/etc/profile.d/conda.sh"
+	else
+		export PATH="/opt/miniconda3/bin:$PATH"
+	fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<
 
 # direnv
-if command -v starship &> /dev/null; then
-  eval "$(direnv hook zsh)"
+if command -v starship &>/dev/null; then
+	eval "$(direnv hook zsh)"
 fi
 
 # starship
-if command -v starship &> /dev/null; then
-  eval "$(starship init zsh)"
+if command -v starship &>/dev/null; then
+	eval "$(starship init zsh)"
 fi
 
 # zoxide
-if command -v zoxide &> /dev/null; then
-  eval "$(zoxide init zsh --cmd j --hook prompt)"
+if command -v zoxide &>/dev/null; then
+	eval "$(zoxide init zsh --cmd j --hook prompt)"
 fi
