@@ -22,12 +22,12 @@ fi
 if command -v git &> /dev/null; then
 	# add
 	alias ga='git add'
-	# add + commit
-	alias gac='git add -A && git commit'
-	alias gacm='git add -A && git commit -m'
+	alias gaa='git add -A'
 	# add + commit + push
-	gacmp() { git add -A && git commit -m "$1" && git push -u origin $(gcurr); }
-	gacmpf() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr); }
+	alias gac='git add -A && git commit && git push -u origin $(gcurr)'
+	alias gacf='git add -A && git commit && git push -fu origin $(gcurr)'
+	gacm() { git add -A && git commit -m "$1" && git push -u origin $(gcurr); }
+	gacmf() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr); }
 	# branch
 	alias gb='git branch'
 	alias gba='git branch -a'
@@ -50,7 +50,7 @@ if command -v git &> /dev/null; then
 	alias gdc='git diff --cached'
 	alias gdm='git diff origin/master'
 	# log
-	alias gl='git log'
+	alias gl='git log --oneline --decorate --graph'
 	# pull
 	alias gpl='git pull --force'
 	# push
@@ -82,8 +82,10 @@ fi
 if command -v gitweb &> /dev/null; then
 	alias gw='gitweb'
 	# add + commit + push
-	gacmpw() { git add -A && git commit -m "$1" && git push -u origin $(gcurr) && gitweb; }
-	gacmpfw() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr) && gitweb; }
+	alias gacw='git add -A && git commit && git push -u origin $(gcurr) && gitweb'
+	alias gacfw='git add -A && git commit && git push -fu origin $(gcurr) && gitweb'
+	gacmw() { git add -A && git commit -m "$1" && git push -u origin $(gcurr) && gitweb; }
+	gacmpw() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr) && gitweb; }
 	# push
 	alias gpw='git push -u origin $(gcurr) && gitweb'
 	alias gpfw='git push -fu origin $(gcurr) && gitweb'
