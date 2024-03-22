@@ -1,0 +1,10 @@
+- defaults:
+    link:
+      relink: true
+
+- link:
+    ~/.zprofile: zsh/zprofile
+
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]
+  - [brew install neovim, Install neovim]
