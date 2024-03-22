@@ -48,6 +48,7 @@ if command -v git &> /dev/null; then
 	# diff
 	alias gd='git diff'
 	alias gdc='git diff --cached'
+	alias gdm='git diff origin/master'
 	# log
 	alias gl='git log'
 	# pull
@@ -56,11 +57,10 @@ if command -v git &> /dev/null; then
 	alias gp='git push -u origin $(gcurr)'
 	alias gpf='git push -fu origin $(gcurr)'
 	# rebase
-	alias gr='git rebase'
-	alias gri='git rebase -i'
-	alias grim='git rebase -i master'
-	alias griom='git rebase -i origin/master'
-	alias grom='git rebase -s recursive -X theirs origin/master'
+	alias grb='git rebase'
+	alias grbi='git rebase -i'
+	alias grbim='git rebase -i origin/master'
+	alias grbm='git rebase -s recursive -X theirs origin/master'
 	# rev-parse
 	alias gcurr='git rev-parse --abbrev-ref HEAD'
 	alias groot='git rev-parse --show-toplevel'
@@ -80,6 +80,7 @@ fi
 
 # gitweb
 if command -v gitweb &> /dev/null; then
+	alias gw='gitweb'
 	# add + commit + push
 	gacmpw() { git add -A && git commit -m "$1" && git push -u origin $(gcurr) && gitweb; }
 	gacmpfw() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr) && gitweb; }
