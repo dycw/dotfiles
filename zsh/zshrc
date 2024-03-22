@@ -59,6 +59,13 @@ if [ -f "$__file" ]; then
   source "$__file"
 fi
 
+# gh
+if command -v gh &> /dev/null; then
+	alias ghc='gh pr create'
+	alias ghm='gh pr merge --auto'
+	alias ghcm='gh pr create && gh pr merge --auto'
+fi
+
 # git
 if command -v git &> /dev/null; then
   # add
