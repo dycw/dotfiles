@@ -72,14 +72,8 @@ fi
 # git
 __file="$HOME/dotfiles/git/aliases.sh"
 if [ -f "$__file" ]; then
-	source "$__file"
+  source "$__file"
 fi
-
-# hypothesis
-alias hypothesis-ci='export HYPOTHESIS_PROFILE=ci'
-alias hypothesis-debug='export HYPOTHESIS_PROFILE=debug'
-alias hypothesis-default='export HYPOTHESIS_PROFILE=default'
-alias hypothesis-dev='export HYPOTHESIS_PROFILE=dev'
 
 # hypothesis
 alias hypothesis-ci='export HYPOTHESIS_PROFILE=ci'
