@@ -28,19 +28,46 @@ if command -v git &> /dev/null; then
 	# branch
 	alias gb='git branch'
 	alias gba='git branch -a'
+	alias gbd='git branch -d'
+	alias gbdd='git branch -D dev'
 	# checkout
 	alias gco='git checkout'
 	alias gcob='git checkout -b'
+	alias gcobd='git checkout -b dev'
 	gcobt() { git checkout -b "$1" -t "origin/$1"; }
 	alias gcom='git checkout master'
+	alias gcomp='git checkout master && git pull --force'
+	alias gcompd='git checkout master && git pull --force && git branch -D dev'
 	# cherry-pick
 	alias gcp='git cherry-pick'
 	# commit
 	alias gcn='git commit --no-verify'
+	# diff
+	alias gd='git diff'
+	alias gdc='git diff --cached'
+	# log
+	alias gl='git log'
+	# pull
+	alias gpl='git pull --force'
 	# push
-	alias gp='git push'
+	alias gp='git push -u origin $(gcurr)'
+	# rebase 
+	alias gr='git rebase'
+	alias gri='git rebase -i'
+	alias grim='git rebase -i master'
+	alias griom='git rebase -i origin/master'
+	alias grom='git rebase -s recursive -X theirs origin/master'
+	# rev-parse
+	alias gcurr='git rev-parse --abbrev-ref HEAD'
+	alias groot='git rev-parse --show-toplevel'
+	# rm
+	alias grm='git rm'
+	alias grmc='git rm --cached'
 	# status
 	alias gs='git status'
+	# tag
+	gta() { git tag -a "$1" "$2" -m "$1" && git push -u origin --tags; }
+	gtd() { git tag -d "$1" && git push -d origin "$1"; }
 fi
 
 # neovim
@@ -53,3 +80,4 @@ fi
 # zsh
 alias zprofile='$EDITOR ~/.zprofile'
 alias zshrc='$EDITOR ~/.zshrc'
+
