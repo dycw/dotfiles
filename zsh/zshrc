@@ -47,7 +47,22 @@ if command -v git &> /dev/null; then
 	alias ga='git add'
 	alias gaa='git add -A'
 	# add + commit + push
+  gac() {
+    if [[ $# -eq 0 ]]; then
+      git add -A
+      git commit 
+      git push -u origin $(gcurr)
+    elif [[ $# -eq 1 ]]; then
+      git add -A
+      git commit -m "$1" 
+      git push -u origin $(gcurr)
+    else
+      echo "Expected 0 or 1 argument; got $#"
+    fi
+}
+
 	alias gac='git add -A && git commit && git push -u origin $(gcurr)'
+	alias gacn='git add -A && git commit -n && git push -u origin $(gcurr)'
 	alias gacf='git add -A && git commit && git push -fu origin $(gcurr)'
 	gacm() { git add -A && git commit -m "$1" && git push -u origin $(gcurr); }
 	gacmf() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr); }
