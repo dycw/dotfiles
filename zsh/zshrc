@@ -1,4 +1,4 @@
-# cd 
+# cd
 alias ~='cd ~'
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -22,12 +22,12 @@ fi
 if command -v git &> /dev/null; then
 	# add
 	alias ga='git add'
-	# add + commit
-	alias gac='git add -A && git commit'
-	alias gacm='git add -A && git commit -m'
+	alias gaa='git add -A'
 	# add + commit + push
-	gacmp() { git add -A && git commit -m "$1" && git push -u origin $(gcurr); }
-	gacmpf() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr); }
+	alias gac='git add -A && git commit && git push -u origin $(gcurr)'
+	alias gacf='git add -A && git commit && git push -fu origin $(gcurr)'
+	gacm() { git add -A && git commit -m "$1" && git push -u origin $(gcurr); }
+	gacmf() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr); }
 	# branch
 	alias gb='git branch'
 	alias gba='git branch -a'
@@ -48,19 +48,19 @@ if command -v git &> /dev/null; then
 	# diff
 	alias gd='git diff'
 	alias gdc='git diff --cached'
+	alias gdm='git diff origin/master'
 	# log
-	alias gl='git log'
+	alias gl='git log --oneline --decorate --graph'
 	# pull
 	alias gpl='git pull --force'
 	# push
 	alias gp='git push -u origin $(gcurr)'
 	alias gpf='git push -fu origin $(gcurr)'
-	# rebase 
-	alias gr='git rebase'
-	alias gri='git rebase -i'
-	alias grim='git rebase -i master'
-	alias griom='git rebase -i origin/master'
-	alias grom='git rebase -s recursive -X theirs origin/master'
+	# rebase
+	alias grb='git rebase'
+	alias grbi='git rebase -i'
+	alias grbim='git rebase -i origin/master'
+	alias grbm='git rebase -s recursive -X theirs origin/master'
 	# rev-parse
 	alias gcurr='git rev-parse --abbrev-ref HEAD'
 	alias groot='git rev-parse --show-toplevel'
@@ -80,9 +80,12 @@ fi
 
 # gitweb
 if command -v gitweb &> /dev/null; then
+	alias gw='gitweb'
 	# add + commit + push
-	gacmpw() { git add -A && git commit -m "$1" && git push -u origin $(gcurr) && gitweb; }
-	gacmpfw() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr) && gitweb; }
+	alias gacw='git add -A && git commit && git push -u origin $(gcurr) && gitweb'
+	alias gacfw='git add -A && git commit && git push -fu origin $(gcurr) && gitweb'
+	gacmw() { git add -A && git commit -m "$1" && git push -u origin $(gcurr) && gitweb; }
+	gacmpw() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr) && gitweb; }
 	# push
 	alias gpw='git push -u origin $(gcurr) && gitweb'
 	alias gpfw='git push -fu origin $(gcurr) && gitweb'
@@ -95,7 +98,25 @@ if command -v nvim &> /dev/null; then
 	alias vim='nvim'
 fi
 
+# pre-commit
+if command -v pre-commit &> /dev/null; then
+	alias pca='pre-commit run --all-files'
+	alias pcau='pre-commit autoupdate'
+	alias pci='pre-commit install'
+fi
+
 # zsh
 alias zprofile='$EDITOR ~/.zprofile'
 alias zshrc='$EDITOR ~/.zshrc'
 
+# ---- end ----
+
+# starship
+if command -v starship &> /dev/null; then
+	eval "$(starship init zsh)"
+fi
+
+# zoxide
+if command -v zoxide &> /dev/null; then
+	eval "$(zoxide init zsh --cmd j --hook prompt)"
+fi
