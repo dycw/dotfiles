@@ -7,6 +7,10 @@
     "branch": "master",
     "commit": "a7a4b4682c4b3e2ba82b82a4e6e5f5a0e79dec32"
   },
+  "auto-save.nvim": {
+    "branch": "main",
+    "commit": "42fce87ab468efd080c74759b425be430d636d15"
+  },
   "bufferline.nvim": {
     "branch": "main",
     "commit": "64e2c5def50dfd6b6f14d96a45fa3d815a4a1eef"
