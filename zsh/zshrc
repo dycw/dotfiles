@@ -51,6 +51,7 @@ if command -v git &> /dev/null; then
 	alias gpl='git pull --force'
 	# push
 	alias gp='git push -u origin $(gcurr)'
+	alias gpf='git push -fu origin $(gcurr)'
 	# rebase 
 	alias gr='git rebase'
 	alias gri='git rebase -i'
@@ -65,9 +66,19 @@ if command -v git &> /dev/null; then
 	alias grmc='git rm --cached'
 	# status
 	alias gs='git status'
+	# stash
+	alias gst='git stash'
+	alias gstd='git stash drop'
+	alias gstp='git stash pop'
 	# tag
 	gta() { git tag -a "$1" "$2" -m "$1" && git push -u origin --tags; }
 	gtd() { git tag -d "$1" && git push -d origin "$1"; }
+fi
+
+# gitweb
+if command -v gitweb &> /dev/null; then
+	alias gpw='git push -u origin $(gcurr) && gitweb'
+	alias gpfw='git push -fu origin $(gcurr) && gitweb'
 fi
 
 # neovim
