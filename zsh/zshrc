@@ -7,15 +7,30 @@ alias cddf='cd ~/dotfiles'
 
 # eza
 if command -v eza &> /dev/null; then
-	# base
-	alias l='eza -F --group-directories-first'
-	alias ls='eza -F --group-directories-first'
-	# variants
-	alias la='eza -aF --group-directories-first'
-	alias lal='eza -alF --group-directories-first'
-	alias ll='eza -lF --group-directories-first'
-	alias lla='eza -alF --group-directories-first'
-	alias l1='eza -1lF --group-directories-first'
+	__eza_base() { eza -F --group-directories-first --ignore-glob=node_modules "$@"; }
+	__eza_short() { __eza_base -x "$@"; }
+	ls() { __eza_short --git-ignore "$@"; }
+	lsa() { __eza_short -a "$@"; }
+	__eza_long() { __eza_base -ghl --git --time-style=long-iso "$@"; }
+	__eza_long_default() { __eza_long -a --git-ignore "$@"; }
+	l() { __eza_long_default "$@"; }
+	ll() { __eza_long_default "$@"; }
+	la() { __eza_long -a "$@"; }
+
+	if [ -x "$(command -v watch)" ]; then
+		__watch_eza_base() {
+			watch -d -n 0.1 --color -- \
+				eza -aF --color=always --group-directories-first --ignore-glob=node_modules "$@"
+		}
+		__watch_eza_short() { __watch_eza_base -x "$@"; }
+		wls() { __watch_eza_short --git-ignore "$@"; }
+		wlsa() { __watch_eza_short -a "$@"; }
+		__watch_eza_long() { __watch_eza_base -ghl --git --time-style=long-iso "$@"; }
+		__watch_eza_long_default() { __watch_eza_long -a --git-ignore "$@"; }
+		wl() { __watch_eza_long_default "$@"; }
+		wll() { __watch_eza_long_default "$@"; }
+		wla() { __watch_eza_long -a "$@"; }
+	fi
 fi
 
 # git
@@ -51,6 +66,8 @@ if command -v git &> /dev/null; then
 	alias gdm='git diff origin/master'
 	# log
 	alias gl='git log --oneline --decorate --graph'
+	# mv
+	alias gmv='git mv'
 	# pull
 	alias gpl='git pull --force'
 	# push
