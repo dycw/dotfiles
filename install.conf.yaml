@@ -26,6 +26,7 @@
     - [brew install git-delta, Installing delta]
     - [brew install just, Installing just]
     - [brew install neovim, Installing neovim]
+    - [brew install node@20, Installing node@20]
     - [brew install nushell, Installing nushell]
     - [brew install pipx, Installing pipx]
     - [brew install pre-commit, Installing pre-commit]
