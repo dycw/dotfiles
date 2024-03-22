@@ -16,6 +16,7 @@
     - [brew install eza, Installing eza]
     - [brew install fd, Installing fd]
     - [brew install fzf, Installing fzf]
+    - [brew install gh, Installing gh]
     - [brew install git-delta, Installing delta]
     - [brew install just, Installing just]
     - [brew install neovim, Installing neovim]
