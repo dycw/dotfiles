@@ -4,13 +4,16 @@ if command -v bat &> /dev/null; then
 fi
 
 # cd
-alias ~='cd ~'
+alias ~='cd "$HOME"'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias cddf='cd ~/dotfiles'
-alias cddl='cd ~/Downloads'
-alias cdw='cd ~/work'
+alias cddf='cd "$HOME"/dotfiles'
+alias cddl='cd "$HOME"/Downloads'
+alias cdw='cd "$HOME"/work'
+
+# coverage
+alias open-cov='open .coverage/html/index.html'
 
 # direnv
 if command -v direnv &> /dev/null; then
@@ -243,11 +246,34 @@ if command -v gitweb &> /dev/null; then
   }
 fi
 
+# hypothesis
+alias hypothesis-ci='export HYPOTHESIS_PROFILE=ci'
+alias hypothesis-debug='export HYPOTHESIS_PROFILE=debug'
+alias hypothesis-default='export HYPOTHESIS_PROFILE=default'
+alias hypothesis-dev='export HYPOTHESIS_PROFILE=dev'
+
 # neovim
 if command -v nvim &> /dev/null; then
   alias n='nvim'
   alias v='nvim'
   alias vim='nvim'
+fi
+
+# pip
+alias pi='pip install'
+alias pie='pip install --editable .'
+alias piip='pip install ipython'
+alias pijl='pip install jupyterlab jupyterlab-vim'
+alias plo='pip list --outdated'
+alias pui='pip uninstall'
+
+# pyproject.toml
+alias pyprojecttoml='$EDITOR $(git rev-parse --show-toplevel)/pyproject.toml'
+
+# pytest
+__file="$HOME/dotfiles/pytest/aliases.sh"
+if [ -f "$__file" ]; then
+  source "$__file"
 fi
 
 # pre-commit
@@ -259,8 +285,7 @@ if command -v pre-commit &> /dev/null; then
 fi
 
 # zsh
-alias zprofile='$EDITOR ~/.zprofile'
-alias zshrc='$EDITOR ~/.zshrc'
+alias zshrc='"$EDITOR" "$HOME"/.zshrc'
 if command -v brew &> /dev/null; then
   __dir="$(brew --prefix)/share/zsh/site-functions"
   if [ -d "$__dir" ]; then
