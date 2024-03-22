@@ -4,6 +4,7 @@
 
 - link:
     ~/.config/starship.toml: starship/starship.toml
+    ~/.wezterm.lua: wezterm/wezterm.lua
     ~/.zprofile: zsh/zprofile
     ~/.zshrc: zsh/zshrc
 
