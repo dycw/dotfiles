@@ -3,6 +3,7 @@
       relink: true
 
 - link:
+    ~/.config/nvim: lazyvim
     ~/.config/starship.toml: starship/starship.toml
     ~/.wezterm.lua: wezterm/wezterm.lua
     ~/.zprofile: zsh/zprofile
