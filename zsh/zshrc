@@ -25,6 +25,9 @@ if command -v git &> /dev/null; then
 	# add + commit
 	alias gac='git add -A && git commit'
 	alias gacm='git add -A && git commit -m'
+	# add + commit + push
+	gacmp() { git add -A && git commit -m "$1" && git push -u origin $(gcurr); }
+	gacmpf() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr); }
 	# branch
 	alias gb='git branch'
 	alias gba='git branch -a'
@@ -77,6 +80,10 @@ fi
 
 # gitweb
 if command -v gitweb &> /dev/null; then
+	# add + commit + push
+	gacmpw() { git add -A && git commit -m "$1" && git push -u origin $(gcurr) && gitweb; }
+	gacmpfw() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr) && gitweb; }
+	# push
 	alias gpw='git push -u origin $(gcurr) && gitweb'
 	alias gpfw='git push -fu origin $(gcurr) && gitweb'
 fi
