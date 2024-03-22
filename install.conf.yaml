@@ -5,6 +5,7 @@
 - link:
     ~/.config/nvim: lazyvim
     ~/.config/starship.toml: starship/starship.toml
+    ~/.gitconfig: git/config
     ~/.wezterm.lua: wezterm/wezterm.lua
     ~/.zprofile: zsh/zprofile
     ~/.zshrc: zsh/zshrc
