@@ -46,6 +46,12 @@ if command -v fd &> /dev/null; then
 	alias fds='fd --type=symlink'
 fi
 
+# fzf
+__file="${XDG_CONFIG_HOME:-$HOME/.config}/fzf/fzf.zsh"
+if [ -f "$__file" ]; then
+  source "$__file"
+fi
+
 # git
 if command -v git &> /dev/null; then
 	# add
