@@ -3,6 +3,7 @@
       relink: true
 
 - link:
+    ~/.config/starship.toml: starship/starship.toml
     ~/.zprofile: zsh/zprofile
     ~/.zshrc: zsh/zshrc
 
