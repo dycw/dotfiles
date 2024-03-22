@@ -9,6 +9,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias cddf='cd ~/dotfiles'
+alias cdw='cd ~/work'
 
 # eza
 if command -v eza &> /dev/null; then
@@ -110,6 +111,8 @@ if command -v git &> /dev/null; then
   alias gcop='git checkout --patch'
   # cherry-pick
   alias gcp='git cherry-pick'
+  # clone
+  alias gcl='git clone'
   # commit
   gc() {
     if [[ $# -eq 0 ]]; then
@@ -253,6 +256,11 @@ if command -v brew &> /dev/null; then
 fi
 
 # ---- end ----
+
+# direnv
+if command -v starship &> /dev/null; then
+  eval "$(direnv hook zsh)"
+fi
 
 # starship
 if command -v starship &> /dev/null; then
