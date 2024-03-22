@@ -56,6 +56,7 @@ if command -v git &> /dev/null; then
 	alias gri='git rebase -i'
 	alias grim='git rebase -i master'
 	alias griom='git rebase -i origin/master'
+	alias grom='git rebase -s recursive -X theirs origin/master'
 	# rev-parse
 	alias gcurr='git rev-parse --abbrev-ref HEAD'
 	alias groot='git rev-parse --show-toplevel'
