@@ -4,6 +4,7 @@
 
 - link:
     ~/.zprofile: zsh/zprofile
+    ~/.zshrc: zsh/zshrc
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
@@ -20,9 +21,12 @@
   - [brew install ruff, Installing ruff]
   - [brew install shellcheck, Installing shellcheck]
   - [brew install shfmt, Installing shfmt]
+  - [brew install sk, Installing skim]
   - [brew install starship, Installing starship]
   - [brew install watchexec, Installing watchexec]
   - [brew install yoannfleurydev/gitweb/gitweb, Installing gitweb]
   - [brew install zoxide, Installing zoxide]
   - [brew install --cask 1password, Installing 1Password]
+  - [brew install --cask protonvpn, Installing ProtonVPN]
+
   - [brew install --cask wezterm, Installing WezTerm]

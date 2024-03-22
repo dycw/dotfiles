@@ -1,0 +1,13 @@
+# eza
+if command -v eza &> /dev/null; then
+	alias l=eza
+	alias ls=eza
+	alias ll=eza -l
+	alias l1=eza -1
+fi
+
+# neovim
+if command -v nvim &> /dev/null; then
+	alias v=nvim
+	alias vim=nvim
+fi
