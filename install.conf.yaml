@@ -34,5 +34,6 @@
     - [brew install zsh-completions, Installing zsh-completions]
     - [brew install zoxide, Installing zoxide]
     - [brew install --cask 1password, Installing 1Password]
+    - [brew install --cask dropbox, Installing Dropbox]
     - [brew install --cask protonvpn, Installing ProtonVPN]
     - [brew install --cask wezterm, Installing WezTerm]

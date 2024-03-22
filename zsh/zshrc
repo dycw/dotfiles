@@ -33,6 +33,14 @@ if command -v eza &> /dev/null; then
 	fi
 fi
 
+# fd
+if command -v fd &> /dev/null; then
+	alias fdd='fd --type=directory'
+	alias fde='fd --type=executable'
+	alias fdf='fd --type=file'
+	alias fds='fd --type=symlink'
+fi
+
 # git
 if command -v git &> /dev/null; then
 	# add
