@@ -7,8 +7,8 @@ ignore = [
   "ANN101",  # flake8-annotations, missing-type-self
   "ANN102",  # flake8-annotations, missing-type-cls
   "ANN401",  # flake8-annotations, dynamically-typed-expression
+  "D",  # pydocstyle
   # formatter
-  
   "E501",  # pycodestyle, line-too-long
   "ISC001",  # flake8-implicit-str-concat, single-line-implicit-string-concatenation
   "W191",  # pycodestyle, tab-indentation
