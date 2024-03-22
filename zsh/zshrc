@@ -33,16 +33,64 @@ if command -v eza &> /dev/null; then
 	fi
 fi
 
+# fd
+if command -v fd &> /dev/null; then
+	alias fdd='fd --type=directory'
+	alias fde='fd --type=executable'
+	alias fdf='fd --type=file'
+	alias fds='fd --type=symlink'
+fi
+
 # git
 if command -v git &> /dev/null; then
 	# add
 	alias ga='git add'
 	alias gaa='git add -A'
 	# add + commit + push
-	alias gac='git add -A && git commit && git push -u origin $(gcurr)'
-	alias gacf='git add -A && git commit && git push -fu origin $(gcurr)'
-	gacm() { git add -A && git commit -m "$1" && git push -u origin $(gcurr); }
-	gacmf() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr); }
+  gac() {
+    if [[ $# -eq 0 ]]; then
+      git add -A && git commit && git push -u origin $(gcurr)
+    elif [[ $# -eq 1 ]]; then
+      git add -A && git commit -m "$1" && git push -u origin $(gcurr)
+    else
+      echo "Expected 0 or 1 argument; got $#"
+    fi
+  }
+  gacf() {
+    if [[ $# -eq 0 ]]; then
+      git add -A && git commit && git push -fu origin $(gcurr)
+    elif [[ $# -eq 1 ]]; then
+      git add -A && git commit -m "$1" && git push -fu origin $(gcurr)
+    else
+      echo "Expected 0 or 1 argument; got $#"
+    fi
+  }
+  gacn() {
+    if [[ $# -eq 0 ]]; then
+      git add -A
+      git commit --no-verify
+      git push -u origin $(gcurr)
+    elif [[ $# -eq 1 ]]; then
+      git add -A
+      git commit -m "$1" --no-verify
+      git push -u origin $(gcurr)
+    else
+      echo "Expected 0 or 1 argument; got $#"
+    fi
+  }
+  gacnf() {
+    if [[ $# -eq 0 ]]; then
+      git add -A
+      git commit --no-verify
+      git push -fu origin $(gcurr)
+    elif [[ $# -eq 1 ]]; then
+      git add -A
+      git commit -m "$1" --no-verify
+      git push -fu origin $(gcurr)
+    else
+      echo "Expected 0 or 1 argument; got $#"
+    fi
+  }
 	# branch
 	alias gb='git branch'
 	alias gba='git branch -a'
@@ -98,14 +146,42 @@ fi
 # gitweb
 if command -v gitweb &> /dev/null; then
 	alias gw='gitweb'
-	# add + commit + push
-	alias gacw='git add -A && git commit && git push -u origin $(gcurr) && gitweb'
-	alias gacfw='git add -A && git commit && git push -fu origin $(gcurr) && gitweb'
-	gacmw() { git add -A && git commit -m "$1" && git push -u origin $(gcurr) && gitweb; }
-	gacmpw() { git add -A && git commit -m "$1" && git push -fu origin $(gcurr) && gitweb; }
-	# push
-	alias gpw='git push -u origin $(gcurr) && gitweb'
-	alias gpfw='git push -fu origin $(gcurr) && gitweb'
+  gacw() {
+    if [[ $# -eq 0 ]]; then
+      git add -A && git commit && git push -u origin $(gcurr) && gitweb
+    elif [[ $# -eq 1 ]]; then
+      git add -A && git commit -m "$1" && git push -u origin $(gcurr) && gitweb
+    else
+      echo "Expected 0 or 1 argument; got $#"
+    fi
+  }
+  gacfw() {
+    if [[ $# -eq 0 ]]; then
+      git add -A && git commit && git push -fu origin $(gcurr) && gitweb
+    elif [[ $# -eq 1 ]]; then
+      git add -A && git commit -m "$1" && git push -fu origin $(gcurr) && gitweb
+    else
+      echo "Expected 0 or 1 argument; got $#"
+    fi
+  }
+  gacnw() {
+    if [[ $# -eq 0 ]]; then
+      git add -A && git commit --no-verify && git push -u origin $(gcurr) && gitweb
+    elif [[ $# -eq 1 ]]; then
+      git add -A && git commit -m "$1" --no-verify && git push -u origin $(gcurr) && gitweb
+    else
+      echo "Expected 0 or 1 argument; got $#"
+    fi
+  }
+  gacnfw() {
+    if [[ $# -eq 0 ]]; then
+      git add -A && git commit --no-verify && git push -fu origin $(gcurr) && gitweb
+    elif [[ $# -eq 1 ]]; then
+      git add -A && git commit -m "$1" --no-verify && git push -fu origin $(gcurr) && gitweb
+    else
+      echo "Expected 0 or 1 argument; got $#"
+    fi
+  }
 fi
 
 # neovim
@@ -117,7 +193,8 @@ fi
 
 # pre-commit
 if command -v pre-commit &> /dev/null; then
-	alias pca='pre-commit run --all-files'
+	alias pca='pre-commit run -a'
+	alias pcav='pre-commit run -av'
 	alias pcau='pre-commit autoupdate'
 	alias pci='pre-commit install'
 fi
@@ -125,6 +202,12 @@ fi
 # zsh
 alias zprofile='$EDITOR ~/.zprofile'
 alias zshrc='$EDITOR ~/.zshrc'
+if command -v brew &> /dev/null; then
+  __dir="$(brew --prefix)/share/zsh/site-functions"
+  if [ -d "$__dir" ]; then
+    export FPATH="$__dir${FPATH:+:$FPATH}"
+  fi
+fi
 
 # ---- end ----
 

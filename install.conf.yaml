@@ -3,6 +3,7 @@
       relink: true
 
 - link:
+    ~/.config/nvim: lazyvim
     ~/.config/starship.toml: starship/starship.toml
     ~/.wezterm.lua: wezterm/wezterm.lua
     ~/.zprofile: zsh/zprofile
@@ -21,6 +22,7 @@
     - [brew install just, Installing just]
     - [brew install neovim, Installing neovim]
     - [brew install nushell, Installing nushell]
+    - [brew install pipx, Installing pipx]
     - [brew install pre-commit, Installing pre-commit]
     - [brew install ripgrep, Installing ripgrep]
     - [brew install ruff, Installing ruff]
@@ -34,5 +36,7 @@
     - [brew install zsh-completions, Installing zsh-completions]
     - [brew install zoxide, Installing zoxide]
     - [brew install --cask 1password, Installing 1Password]
+    - [brew install --cask dropbox, Installing Dropbox]
     - [brew install --cask protonvpn, Installing ProtonVPN]
     - [brew install --cask wezterm, Installing WezTerm]
+    - [pipx install bump2version, Installing bump2version]
