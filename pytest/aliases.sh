@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 alias pyt='pytest -ra -vv --color=yes --strict-markers'
 alias pytc='pytest -ra -vv --color=yes --strict-markers --no-cov'
 alias pytcf='pytest -ra -vv --color=yes --strict-markers --no-cov -f'
