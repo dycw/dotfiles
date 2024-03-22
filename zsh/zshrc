@@ -96,9 +96,6 @@ alias pijl='pip install jupyterlab jupyterlab-vim'
 alias plo='pip list --outdated'
 alias pui='pip uninstall'
 
-# pyproject.toml
-alias pyprojecttoml='$EDITOR $(git rev-parse --show-toplevel)/pyproject.toml'
-
 # pytest
 __file="$HOME/dotfiles/pytest/aliases.sh"
 if [ -f "$__file" ]; then
