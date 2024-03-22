@@ -11,6 +11,11 @@ alias ....='cd ../../..'
 alias cddf='cd ~/dotfiles'
 alias cdw='cd ~/work'
 
+# direnv
+if command -v direnv &> /dev/null; then
+  alias dea='direnv allow'
+fi
+
 # eza
 if command -v eza &> /dev/null; then
   __eza_base() { eza -F --group-directories-first --ignore-glob=node_modules "$@"; }
