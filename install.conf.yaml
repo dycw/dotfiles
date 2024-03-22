@@ -5,6 +5,7 @@
 - link:
     ~/.config/nvim: lazyvim
     ~/.config/starship.toml: starship/starship.toml
+    ~/.gitconfig: git/config
     ~/.wezterm.lua: wezterm/wezterm.lua
     ~/.zprofile: zsh/zprofile
     ~/.zshrc: zsh/zshrc
@@ -17,6 +18,10 @@
     - [brew install eza, Installing eza]
     - [brew install fd, Installing fd]
     - [brew install fzf, Installing fzf]
+    - [
+        $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish,
+        Configuring fzf,
+      ]
     - [brew install gh, Installing gh]
     - [brew install git-delta, Installing delta]
     - [brew install just, Installing just]

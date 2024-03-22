@@ -1,0 +1,65 @@
+[apply]
+  whitespace = nowarn
+
+[branch]
+  autoSetupMerge = always
+  autoSetupRebase = always
+
+[checkout]
+  defaultRemote = origin
+
+[commit]
+  verbose = true
+
+[core]
+  pager = delta
+
+[diff]
+  colorMoved = default
+
+[delta]
+  navigate = true
+
+[fetch]
+  prune = true
+  pruneTags = true
+
+[help]
+  autoCorrect = 1
+
+[interactive]
+  diffFilter = delta --color-only
+
+[log]
+  abbrevCommit = true
+  date = format:%Y-%m-%d %H:%M:%S (%a)
+  decorate = full
+
+[merge]
+  conflictstyle = diff3
+
+[pull]
+  default = upstream
+  ff = only
+
+[push]
+  default = simple
+  followTags = true
+
+[rebase]
+  abbreviateCommands = true
+  autoSquash = true
+  stat = true
+
+[status]
+  branch = true
+
+[submodule]
+  fetchJobs = 0
+
+[tag]
+  sort = version:refname
+
+[user]
+  email = d.wan@icloud.com
+  name = Derek Wan
