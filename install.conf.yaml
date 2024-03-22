@@ -7,4 +7,8 @@
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
-  - [brew install neovim, Install neovim]
+  - [brew install neovim, Installing neovim]
+  - [brew install nushell, Installing nushell]
+  - [brew install zoxide, Installing zoxide]
+  - [brew install --cask 1password, Installing 1Password]
+  - [brew install --cask wezterm, Installing WezTerm]
