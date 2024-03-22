@@ -99,3 +99,14 @@ fi
 alias zprofile='$EDITOR ~/.zprofile'
 alias zshrc='$EDITOR ~/.zshrc'
 
+# ---- end ----
+
+# starship
+if command -v starship &> /dev/null; then
+	eval "$(starship init zsh)"
+fi
+
+# zoxide
+if command -v zoxide &> /dev/null; then
+	eval "$(zoxide init zsh --cmd j --hook prompt)"
+fi

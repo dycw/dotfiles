@@ -13,6 +13,7 @@
   - [brew install direnv, Installing direnv]
   - [brew install eza, Installing eza]
   - [brew install fd, Installing fd]
+  - [brew install fzf, Installing fzf]
   - [brew install git-delta, Installing delta]
   - [brew install just, Installing just]
   - [brew install neovim, Installing neovim]
