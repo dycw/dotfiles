@@ -3,11 +3,11 @@
       relink: true
 
 - clean:
-  - '~'
+    - "~"
 
 - create:
-  - ~/.config
-  - ~/.config/direnv
+    - ~/.config
+    - ~/.config/direnv
 
 - link:
     ~/.config/direnv/direnvrc: direnv/direnvrc
