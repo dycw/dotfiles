@@ -125,7 +125,8 @@ fi
 
 # pre-commit
 if command -v pre-commit &> /dev/null; then
-	alias pca='pre-commit run --all-files'
+	alias pca='pre-commit run -a'
+	alias pcav='pre-commit run -av'
 	alias pcau='pre-commit autoupdate'
 	alias pci='pre-commit install'
 fi
