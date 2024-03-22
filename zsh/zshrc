@@ -125,6 +125,12 @@ fi
 # zsh
 alias zprofile='$EDITOR ~/.zprofile'
 alias zshrc='$EDITOR ~/.zshrc'
+if command -v brew &> /dev/null; then
+  __dir="$(brew --prefix)/share/zsh/site-functions"
+  if [ -d "$__dir" ]; then
+    export FPATH="$__dir${FPATH:+:$FPATH}"
+  fi
+fi
 
 # ---- end ----
 
