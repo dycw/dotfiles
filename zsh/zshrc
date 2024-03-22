@@ -1,4 +1,4 @@
-# cd 
+# cd
 alias ~='cd ~'
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -55,7 +55,7 @@ if command -v git &> /dev/null; then
 	# push
 	alias gp='git push -u origin $(gcurr)'
 	alias gpf='git push -fu origin $(gcurr)'
-	# rebase 
+	# rebase
 	alias gr='git rebase'
 	alias gri='git rebase -i'
 	alias grim='git rebase -i master'
@@ -93,6 +93,13 @@ if command -v nvim &> /dev/null; then
 	alias n='nvim'
 	alias v='nvim'
 	alias vim='nvim'
+fi
+
+# pre-commit
+if command -v pre-commit &> /dev/null; then
+	alias pca='pre-commit run --all-files'
+	alias pcau='pre-commit autoupdate'
+	alias pci='pre-commit install'
 fi
 
 # zsh
