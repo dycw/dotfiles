@@ -1,3 +1,8 @@
+# bat
+if command -v bat &> /dev/null; then
+	alias cat='bat'
+fi
+
 # cd
 alias ~='cd ~'
 alias ..='cd ..'
@@ -67,26 +72,18 @@ if command -v git &> /dev/null; then
   }
   gacn() {
     if [[ $# -eq 0 ]]; then
-      git add -A
-      git commit --no-verify
-      git push -u origin $(gcurr)
+      git add -A && git commit --no-verify && git push -u origin $(gcurr)
     elif [[ $# -eq 1 ]]; then
-      git add -A
-      git commit -m "$1" --no-verify
-      git push -u origin $(gcurr)
+      git add -A && git commit -m "$1" --no-verify && git push -u origin $(gcurr)
     else
       echo "Expected 0 or 1 argument; got $#"
     fi
   }
   gacnf() {
     if [[ $# -eq 0 ]]; then
-      git add -A
-      git commit --no-verify
-      git push -fu origin $(gcurr)
+      git add -A && git commit --no-verify && git push -fu origin $(gcurr)
     elif [[ $# -eq 1 ]]; then
-      git add -A
-      git commit -m "$1" --no-verify
-      git push -fu origin $(gcurr)
+      git add -A && git commit -m "$1" --no-verify && git push -fu origin $(gcurr)
     else
       echo "Expected 0 or 1 argument; got $#"
     fi
@@ -104,10 +101,46 @@ if command -v git &> /dev/null; then
 	alias gcom='git checkout master'
 	alias gcomp='git checkout master && git pull --force'
 	alias gcompd='git checkout master && git pull --force && git branch -D dev'
+  alias gcop='git checkout --patch'
 	# cherry-pick
 	alias gcp='git cherry-pick'
 	# commit
-	alias gcn='git commit --no-verify'
+  gc() {
+    if [[ $# -eq 0 ]]; then
+      git commit && git push -u origin $(gcurr)
+    elif [[ $# -eq 1 ]]; then
+      git commit -m "$1" && git push -u origin $(gcurr)
+    else
+      echo "Expected 0 or 1 argument; got $#"
+    fi
+  }
+  gcf() {
+    if [[ $# -eq 0 ]]; then
+      git commit && git push -fu origin $(gcurr)
+    elif [[ $# -eq 1 ]]; then
+      git commit -m "$1" && git push -fu origin $(gcurr)
+    else
+      echo "Expected 0 or 1 argument; got $#"
+    fi
+  }
+  gacn() {
+    if [[ $# -eq 0 ]]; then
+      git commit --no-verify && git push -u origin $(gcurr)
+    elif [[ $# -eq 1 ]]; then
+      git commit -m "$1" --no-verify && git push -u origin $(gcurr)
+    else
+      echo "Expected 0 or 1 argument; got $#"
+    fi
+  }
+  gacnf() {
+    if [[ $# -eq 0 ]]; then
+      git commit --no-verify && git push -fu origin $(gcurr)
+    elif [[ $# -eq 1 ]]; then
+      git commit -m "$1" --no-verify && git push -fu origin $(gcurr)
+    else
+      echo "Expected 0 or 1 argument; got $#"
+    fi
+  }
 	# diff
 	alias gd='git diff'
 	alias gdc='git diff --cached'
@@ -126,6 +159,9 @@ if command -v git &> /dev/null; then
 	alias grbi='git rebase -i'
 	alias grbim='git rebase -i origin/master'
 	alias grbm='git rebase -s recursive -X theirs origin/master'
+  # reset
+  alias gr='git reset'
+  alias grp='git reset --patch'
 	# rev-parse
 	alias gcurr='git rev-parse --abbrev-ref HEAD'
 	alias groot='git rev-parse --show-toplevel'
