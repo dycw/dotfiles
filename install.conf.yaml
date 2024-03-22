@@ -2,7 +2,15 @@
     link:
       relink: true
 
+- clean:
+  - '~'
+
+- create:
+  - ~/.config
+  - ~/.config/direnv
+
 - link:
+    ~/.config/direnv/direnvrc: direnv/direnvrc
     ~/.config/nvim: lazyvim
     ~/.config/starship.toml: starship/starship.toml
     ~/.gitconfig: git/config
