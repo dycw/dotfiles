@@ -10,6 +10,8 @@
     - ~/.config/direnv
 
 - link:
+    /Users/derekwan/Library/Application Support/nushell/config.nu: nushell/config.nu
+    /Users/derekwan/Library/Application Support/nushell/env.nu: nushell/env.nu
     ~/.config/direnv/direnvrc: direnv/direnvrc
     ~/.config/nvim: lazyvim
     ~/.config/starship.toml: starship/starship.toml
@@ -19,9 +21,9 @@
     ~/.zshrc: zsh/zshrc
 
 - shell:
-    - [sudo scutil --set ComputerName DW-Mac, Configuring computer name]
-    - [sudo scutil --set HostName DW-Mac, Configuring host name]
-    - [sudo scutil --set LocalHostName DW-Mac, Configuring local host name]
+    # - [sudo scutil --set ComputerName DW-Mac, Configuring computer name]
+    # - [sudo scutil --set HostName DW-Mac, Configuring host name]
+    # - [sudo scutil --set LocalHostName DW-Mac, Configuring local host name]
     - [git submodule update --init --recursive, Installing submodules]
     - [brew install bat, Installing bat]
     - [brew install bottom, Installing bottom]
