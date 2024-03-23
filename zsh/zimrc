@@ -22,6 +22,8 @@ zmodule termtitle
 zmodule utility
 # fzf
 zmodule fzf
+# homebrew
+zmodule homebrew
 # vim
 zmodule jeffreytse/zsh-vi-mode
 
