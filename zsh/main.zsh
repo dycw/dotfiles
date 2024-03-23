@@ -64,6 +64,13 @@ if command -v fd &>/dev/null; then
 	alias fds='fd -Hts'
 fi
 
+# fzf
+if command -v fzf &>/dev/null; then
+	echo done
+	bindkey '^R' fzf-history-widget
+	zle -N fzf-history-widget
+fi
+
 # gh
 if command -v gh &>/dev/null; then
 	alias ghc='gh pr create'

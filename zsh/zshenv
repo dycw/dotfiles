@@ -21,3 +21,4 @@ if [ -d "$__dir" ]; then
 else
 	echo 'Expected to find "$__dir"; did not'
 fi
+. "$HOME/.cargo/env"
