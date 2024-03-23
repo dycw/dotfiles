@@ -62,6 +62,7 @@
     - [brew install node@20, Installing node@20]
     - [brew install nushell, Installing nushell]
     - [brew install pipx, Installing pipx]
+    - [brew install postgresql, Installing postgresql]
     - [brew install pre-commit, Installing pre-commit]
     - [brew install prettier, Installing prettier]
     - [brew install restic, Installing restic]
@@ -81,6 +82,7 @@
     - [brew install --cask protonvpn, Installing ProtonVPN]
     - [brew install --cask wezterm, Installing WezTerm]
     - [brew install --cask whatsapp, Installing WhatsApp]
+    - [brew services start postgresql, Configuring postgresql]
     - [pipx install bump2version, Installing bump2version]
     - [
         "[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh",
