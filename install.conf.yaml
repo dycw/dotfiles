@@ -85,7 +85,7 @@
     - [brew install --cask whatsapp, Installing WhatsApp]
     - [pipx install bump2version, Installing bump2version]
     - [
-        '[ -d $HOME/.oh-my-zsh ] || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)',
+        '[ -d $HOME/.oh-my-zsh ] || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"',
         Installing oh-my-zsh,
       ]
     - [
