@@ -1093,6 +1093,15 @@ else:
     _ = [pqdm]
 
 
+try:
+    import pydantic  # type: ignore[]
+    from pydantic import BaseModel  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [pydantic, BaseModel]
+
+
 # functions
 
 
