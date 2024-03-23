@@ -7,15 +7,25 @@ from contextlib import suppress
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
-from beartype import beartype  # type: ignore[]
-
 _ = [
     abc,
-    beartype,
     ABC,
+    sys,
+    PIPE,
+    CalledProcessError,
+    check_output,
     ABCMeta,
     suppress,
+    Path,
 ]
+
+
+try:
+    from beartype import beartype  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [beartype]
 
 
 def _add_src_to_sys_path() -> None:
