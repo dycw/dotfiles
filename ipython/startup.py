@@ -664,12 +664,10 @@ else:
 
         _ = [tabulate]
     try:
+        from utilities.iterables import one, take, transpose  # type: ignore[]
         from utilities.more_itertools import (  # type: ignore[]
             always_iterable,
-            one,
             peekable,
-            take,
-            transpose,
             windowed_complete,
         )
     except ModuleNotFoundError:
