@@ -66,10 +66,10 @@ if command -v fd >/dev/null 2>&1; then
 fi
 
 # fzf
-# __file="${HOME}/fzf/fzf.zsh"
-# if [ -f "$__file" ]; then
-# 	. "$__file"
-# fi
+__file="${HOME}/fzf/fzf.zsh"
+if [ -f "$__file" ]; then
+	. "$__file"
+fi
 
 # gh
 if command -v gh >/dev/null 2>&1; then
