@@ -3,7 +3,7 @@ from __future__ import annotations  # noqa: INP001
 import datetime as dt
 import gzip
 import hashlib
-import itertools
+import itertools as it
 import json
 import pickle
 import re
@@ -158,12 +158,12 @@ _ = [
     dropwhile,
     filterfalse,
     hashlib,
-    itertools,
     groupby,
     islice,
     pairwise,
     permutations,
     subprocess,
+    it,
     DEVNULL,
     PIPE,
     STDOUT,
