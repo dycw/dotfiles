@@ -77,7 +77,7 @@
   },
   "lazy.nvim": {
     "branch": "main",
-    "commit": "3132d7d27d56d6bb4bdd0a09623d162b3cf1c588"
+    "commit": "af6afefbb46ab29a8a1db69536b04290a9403876"
   },
   "leap.nvim": {
     "branch": "main",
