@@ -1120,6 +1120,16 @@ else:
     _ = [semver, VersionInfo]
 
 
+try:
+    import sqlalchemy as sqla  # type: ignore[]
+    import sqlalchemy.orm  # type: ignore[]
+    from sqlalchemy import create_engine, select  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [sqla, sqlalchemy.orm, create_engine, select]
+
+
 # functions
 
 
