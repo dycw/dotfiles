@@ -78,7 +78,7 @@ from operator import add, and_, attrgetter, itemgetter, mul, or_, sub, truediv
 from os import environ, getenv
 from pathlib import Path
 from platform import system
-from pprint import pformat, pp, pprint  # type: ignore[]
+from pprint import pformat, pp, pprint
 from subprocess import PIPE, CalledProcessError, check_output
 
 _ = [
