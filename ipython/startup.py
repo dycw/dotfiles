@@ -856,11 +856,7 @@ try:
     from pandas._libs.missing import (  # type: ignore[]
         NAType,
     )
-    from pandas.testing import (  # type: ignore[]
-        assert_frame_equal,
-        assert_index_equal,
-        assert_series_equal,
-    )
+    from pandas.testing import assert_index_equal  # type: ignore[]
     from pandas.tseries.offsets import (  # type: ignore[]
         BDay,
         Hour,
@@ -901,9 +897,7 @@ else:
         TimedeltaIndex,
         Timestamp,
         Week,
-        assert_frame_equal,
         assert_index_equal,
-        assert_series_equal,
         bdate_range,
         date_range,
         pd,
