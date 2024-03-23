@@ -1,175 +1,101 @@
-# bat
-if command -v bat &>/dev/null; then
-	alias cat='bat'
-fi
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-# bottom
-if command -v btm &>/dev/null; then
-	alias htop='btm'
-fi
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
 
-# cd
-alias ~='cd "$HOME"'
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias cddb='cd "$HOME"/Dropbox'
-alias cddf='cd "$HOME"/dotfiles'
-alias cddl='cd "$HOME"/Downloads'
-alias cdw='cd "$HOME"/work'
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time oh-my-zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+# ZSH_THEME="robbyrussell"
 
-# coverage
-alias open-cov='open .coverage/html/index.html'
+# Set list of themes to pick from when loading at random
+# Setting this variable when ZSH_THEME=random will cause zsh to load
+# a theme from this variable instead of looking in $ZSH/themes/
+# If set to an empty array, this variable will have no effect.
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
-# direnv
-if command -v direnv &>/dev/null; then
-	alias dea='direnv allow'
-fi
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
 
-# eza
-if command -v eza &>/dev/null; then
-	__eza_base() { eza -F --group-directories-first --ignore-glob=node_modules "$@"; }
-	__eza_short() { __eza_base -x "$@"; }
-	ls() { __eza_short --git-ignore "$@"; }
-	lsa() { __eza_short -a "$@"; }
-	__eza_long() { __eza_base -ghl --git --time-style=long-iso "$@"; }
-	__eza_long_default() { __eza_long -a --git-ignore "$@"; }
-	l() { __eza_long_default "$@"; }
-	ll() { __eza_long_default "$@"; }
-	la() { __eza_long -a "$@"; }
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
 
-	if [ -x "$(command -v watch)" ]; then
-		__watch_eza_base() {
-			watch -d -n 0.1 --color -- \
-				eza -aF --color=always --group-directories-first --ignore-glob=node_modules "$@"
-		}
-		__watch_eza_short() { __watch_eza_base -x "$@"; }
-		wls() { __watch_eza_short --git-ignore "$@"; }
-		wlsa() { __watch_eza_short -a "$@"; }
-		__watch_eza_long() { __watch_eza_base -ghl --git --time-style=long-iso "$@"; }
-		__watch_eza_long_default() { __watch_eza_long -a --git-ignore "$@"; }
-		wl() { __watch_eza_long_default "$@"; }
-		wll() { __watch_eza_long_default "$@"; }
-		wla() { __watch_eza_long -a "$@"; }
-	fi
-fi
+# Uncomment one of the following lines to change the auto-update behavior
+# zstyle ':omz:update' mode disabled  # disable automatic updates
+# zstyle ':omz:update' mode auto      # update automatically without asking
+# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
-# fd
-if command -v fd &>/dev/null; then
-	alias fdd='fd -Htd'
-	alias fde='fd -Hte'
-	alias fdf='fd -Htf'
-	alias fds='fd -Hts'
-fi
+# Uncomment the following line to change how often to auto-update (in days).
+# zstyle ':omz:update' frequency 13
 
-# fzf
-__file="${XDG_CONFIG_HOME:-$HOME/.config}/fzf/fzf.zsh"
-if [ -f "$__file" ]; then
-	source "$__file"
-fi
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS="true"
 
-# gh
-if command -v gh &>/dev/null; then
-	alias ghc='gh pr create'
-	alias ghm='gh pr merge --auto'
-	alias ghcm='gh pr create && gh pr merge --auto'
-fi
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
 
-# git
-__file="$HOME"/dotfiles/git/aliases.sh
-if [ -f "$__file" ]; then
-	source "$__file"
-fi
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
 
-# hypothesis
-alias hypothesis-ci='export HYPOTHESIS_PROFILE=ci'
-alias hypothesis-debug='export HYPOTHESIS_PROFILE=debug'
-alias hypothesis-default='export HYPOTHESIS_PROFILE=default'
-alias hypothesis-dev='export HYPOTHESIS_PROFILE=dev'
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
 
-# input
-set bell-style none
-set editing-mode vi
+# Uncomment the following line to display red dots whilst waiting for completion.
+# You can also set it to another string to have that shown instead of the default red dots.
+# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
+# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
+# COMPLETION_WAITING_DOTS="true"
 
-# neovim
-if command -v nvim &>/dev/null; then
-	alias n='nvim'
-	alias v='nvim'
-	alias vim='nvim'
-fi
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# pip
-alias pi='pip install'
-alias pie='pip install --editable .'
-alias piip='pip install ipython'
-alias pijl='pip install jupyterlab jupyterlab-vim'
-alias plo='pip list --outdated'
-alias pui='pip uninstall'
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
 
-# pytest
-__file="$HOME"/dotfiles/pytest/aliases.sh
-if [ -f "$__file" ]; then
-	source "$__file"
-fi
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
 
-# pre-commit
-if command -v pre-commit &>/dev/null; then
-	alias pca='pre-commit run -a'
-	alias pcav='pre-commit run -av'
-	alias pcau='pre-commit autoupdate'
-	alias pci='pre-commit install'
-fi
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(git)
 
-# ruff
-if command -v ruff &>/dev/null; then
-	alias rw='ruff check -w'
-fi
+source $ZSH/oh-my-zsh.sh
 
-# uv
-if command -v uv &>/dev/null; then
-	alias uvpi='uv pip install'
-	alias uvpie='uv pip install --editable .'
-	alias uvps='uv pip sync --strict requirements.txt'
-fi
+# User configuration
 
-# zsh
-alias zshrc='"$EDITOR" "$HOME"/.zshrc'
+# export MANPATH="/usr/local/man:$MANPATH"
 
-# ---- end ----
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
 
-# brew
-if command -v brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
-  autoload -Uz compinit
-  compinit
-fi
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
-if [ $? -eq 0 ]; then
-	eval "$__conda_setup"
-else
-	if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
-		. "/opt/miniconda3/etc/profile.d/conda.sh"
-	else
-		export PATH="/opt/miniconda3/bin:$PATH"
-	fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
 
-# direnv
-if command -v starship &>/dev/null; then
-	eval "$(direnv hook zsh)"
-fi
-
-# starship
-if command -v starship &>/dev/null; then
-	eval "$(starship init zsh)"
-fi
-
-# zoxide
-if command -v zoxide &>/dev/null; then
-	eval "$(zoxide init zsh --cmd j --hook prompt)"
-fi
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
