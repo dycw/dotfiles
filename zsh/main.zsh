@@ -117,7 +117,7 @@ if command -v uv &>/dev/null; then
 fi
 
 # zsh
-alias zshrc='"$EDITOR" "$HOME"/.zshrc'
+alias zshrc='"$EDITOR" "$HOME"/dotfiles/zsh/main.zsh'
 
 # ---- end ----
 
