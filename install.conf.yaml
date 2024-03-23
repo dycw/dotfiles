@@ -8,6 +8,7 @@
 - create:
     - ~/.config
     - ~/.config/direnv
+    - ~/.config/pip
     - ~/.ipython/profile_default
     - ~/.ipython/profile_default/startup
 
@@ -16,6 +17,7 @@
     /Users/derekwan/Library/Application Support/nushell/env.nu: nushell/env.nu
     ~/.config/direnv/direnvrc: direnv/direnvrc
     ~/.config/nvim: lazyvim
+    ~/.config/pip/pip.conf: pip/pip.conf
     ~/.config/starship.toml: starship/starship.toml
     ~/.gitconfig: git/config
     ~/.ipython/profile_default/ipython_config.py: ipython/ipython_config.py
