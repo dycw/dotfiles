@@ -274,17 +274,10 @@ else:
 
 try:
     import humanize  # type: ignore[]
-    from humanize import (  # type: ignore[]
-        naturaldate,
-        naturalday,
-        naturaldelta,
-        naturalsize,
-        naturaltime,
-    )
 except ModuleNotFoundError:
     pass
 else:
-    _ = [humanize, naturaldate, naturalday, naturaldelta, naturalsize, naturaltime]
+    _ = [humanize]
 
 
 try:
