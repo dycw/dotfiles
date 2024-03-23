@@ -32,13 +32,13 @@ fi
 if command -v eza &>/dev/null; then
 	__eza_base() { eza -F --group-directories-first --ignore-glob=node_modules "$@"; }
 	__eza_short() { __eza_base -x "$@"; }
-	alias ls='__eza_short --git-ignore'
-	alias lsa='__eza_short -a'
+	function ls() { __eza_short --git-ignore "$@"; }
+	function lsa() { __eza_short -a "$@"; }
 	__eza_long() { __eza_base -ghl --git --time-style=long-iso "$@"; }
 	__eza_long_default() { __eza_long -a --git-ignore "$@"; }
-	alias l='__eza_long_default'
-	alias ll='__eza_long_default'
-	alias la='__eza_long -a'
+	function l() { __eza_long_default "$@"; }
+	function ll() { __eza_long_default "$@"; }
+	function la() { __eza_long -a "$@"; }
 
 	if command -v watch &>/dev/null; then
 		__watch_eza_base() {
@@ -46,13 +46,13 @@ if command -v eza &>/dev/null; then
 				eza -aF --color=always --group-directories-first --ignore-glob=node_modules "$@"
 		}
 		__watch_eza_short() { __watch_eza_base -x "$@"; }
-		alias wls='__watch_eza_short --git-ignore'
-		alias wlsa='__watch_eza_short -a'
+		function wls() { __watch_eza_short --git-ignore "$@"; }
+		function wlsa() { __watch_eza_short -a "$@"; }
 		__watch_eza_long() { __watch_eza_base -ghl --git --time-style=long-iso "$@"; }
 		__watch_eza_long_default() { __watch_eza_long -a --git-ignore "$@"; }
-		alias wl='__watch_eza_long_default'
-		alias wll='__watch_eza_long_default'
-		alias wla='__watch_eza_long -a'
+		function wl() { __watch_eza_long_default "$@"; }
+		function wll() { __watch_eza_long_default "$@"; }
+		function wla() { __watch_eza_long -a "$@"; }
 	fi
 fi
 
