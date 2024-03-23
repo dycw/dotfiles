@@ -29,6 +29,7 @@ import textwrap
 import time
 import types
 import typing
+import urllib
 from collections import Counter, defaultdict, deque
 from collections.abc import (
     Callable,
@@ -72,19 +73,11 @@ from itertools import (
 from multiprocessing import Pool, cpu_count
 from os import environ, getenv
 from pathlib import Path
-from re import DOTALL, escape, findall, fullmatch, match, search
+from re import escape, findall, search
 from shutil import copyfile, rmtree, which
 from socket import gethostname
 from string import ascii_letters, ascii_lowercase, ascii_uppercase
-from subprocess import (
-    DEVNULL,
-    PIPE,
-    STDOUT,
-    CalledProcessError,
-    check_call,
-    check_output,
-    run,
-)
+from subprocess import PIPE, CalledProcessError, check_call, check_output, run
 from tempfile import TemporaryDirectory
 from time import sleep
 from typing import (
@@ -93,7 +86,6 @@ from typing import (
     Any,
     BinaryIO,
     ClassVar,
-    Concatenate,
     Generic,
     Literal,
     NewType,
@@ -121,15 +113,12 @@ _ = [
     Container,
     Coroutine,
     Counter,
-    DEVNULL,
-    DOTALL,
     typing,
     IO,
     Annotated,
     Any,
     BinaryIO,
     ClassVar,
-    Concatenate,
     Generic,
     Literal,
     NewType,
@@ -147,11 +136,8 @@ _ = [
     Iterable,
     Iterator,
     Mapping,
-    PIPE,
-    PIPE,
     Path,
     Pool,
-    STDOUT,
     Sequence,
     Sized,
     abc,
@@ -164,6 +150,7 @@ _ = [
     types,
     typing,
     chain,
+    urllib,
     check_call,
     check_output,
     copyfile,
@@ -179,7 +166,6 @@ _ = [
     field,
     fields,
     findall,
-    fullmatch,
     getenv,
     gethostname,
     groupby,
@@ -193,7 +179,6 @@ _ = [
     json,
     lru_cache,
     make_dataclass,
-    match,
     md5,
     multiprocessing,
     numbers,
@@ -840,6 +825,15 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [tabulate]
+
+
+try:
+    import xarray  # type: ignore[]
+    from xarray import DataArray, Dataset  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [xarray, DataArray, Dataset]
 
 
 # functions
