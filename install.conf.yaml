@@ -19,6 +19,7 @@
     ~/.zshrc: zsh/zshrc
 
 - shell:
+    - [sudo scutil --set ComputerName DW-Mac, Configuring host name]
     - [git submodule update --init --recursive, Installing submodules]
     - [brew install bat, Installing bat]
     - [brew install bottom, Installing bottom]
@@ -43,6 +44,7 @@
     - [brew install shellcheck, Installing shellcheck]
     - [brew install shfmt, Installing shfmt]
     - [brew install starship, Installing starship]
+    - [brew install uv, Installing uv]
     - [brew install watch, Installing watch]
     - [brew install watchexec, Installing watchexec]
     - [brew install yoannfleurydev/gitweb/gitweb, Installing gitweb]

@@ -8,6 +8,7 @@ alias ~='cd "$HOME"'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+alias cddb='cd "$HOME"/Dropbox'
 alias cddf='cd "$HOME"/dotfiles'
 alias cddl='cd "$HOME"/Downloads'
 alias cdw='cd "$HOME"/work'
@@ -108,6 +109,13 @@ if command -v pre-commit &>/dev/null; then
 	alias pcav='pre-commit run -av'
 	alias pcau='pre-commit autoupdate'
 	alias pci='pre-commit install'
+fi
+
+# uv
+if command -v uv &>/dev/null; then
+	alias uvpi='uv pip install'
+	alias uvpie='uv pip install --editable .'
+	alias uvps='uv pip sync --strict requirements.txt'
 fi
 
 # zsh
