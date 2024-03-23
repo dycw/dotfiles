@@ -1072,6 +1072,27 @@ else:
     _ = [pydantic, BaseModel]
 
 
+try:
+    import requests  # type: ignore[]
+    from request import get  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [requests, get]
+
+
+try:
+    import rich  # type: ignore[]
+    from rich import inspect, pretty, print  # type: ignore[]
+    from rich.traceback import install as _install  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [rich, inspect, pretty, print]
+
+    _install()
+
+
 # functions
 
 
