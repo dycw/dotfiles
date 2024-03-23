@@ -9,6 +9,8 @@ import pickle
 import re
 import shutil
 import socket
+import stat
+import string
 import sys
 from abc import ABC, ABCMeta
 from collections import Counter, defaultdict, deque
@@ -75,6 +77,7 @@ from random import choice, randint, randrange, shuffle, uniform
 from re import DOTALL, escape, findall, fullmatch, match, search
 from shutil import copyfile, rmtree, which
 from socket import gethostname
+from string import ascii_letters, ascii_lowercase, ascii_uppercase
 from subprocess import PIPE, CalledProcessError, check_output
 
 _ = [
@@ -115,12 +118,17 @@ _ = [
     BytesIO,
     choice,
     randint,
+    string,
+    ascii_letters,
+    ascii_lowercase,
+    ascii_uppercase,
     randrange,
     shuffle,
     uniform,
     StringIO,
     lru_cache,
     pickle,
+    stat,
     socket,
     gethostname,
     reduce,
@@ -947,7 +955,6 @@ try:
         UInt16,
         UInt32,
         UInt64,
-        Unknown,
         Utf8,
         col,
         lit,
@@ -1005,7 +1012,6 @@ else:
         UInt32,
         UInt64,
         UInt8,
-        Unknown,
         Utf8,
         assert_frame_not_equal,
         assert_series_not_equal,
