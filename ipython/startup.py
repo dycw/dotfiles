@@ -79,6 +79,7 @@ from os import environ, getenv
 from pathlib import Path
 from platform import system
 from pprint import pformat, pp, pprint
+from random import choice, randint, randrange, shuffle, uniform
 from subprocess import PIPE, CalledProcessError, check_output
 
 _ = [
@@ -122,6 +123,11 @@ _ = [
     getenv,
     cached_property,
     BytesIO,
+    choice,
+    randint,
+    randrange,
+    shuffle,
+    uniform,
     StringIO,
     lru_cache,
     pickle,
