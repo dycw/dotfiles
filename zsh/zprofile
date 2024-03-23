@@ -1,22 +1,2 @@
 # brew
 eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# neovim
-if command -v nvim &>/dev/null; then
-	export EDITOR=nvim
-else
-	export EDITOR=vim
-fi
-
-# node
-#
-__dir="/opt/homebrew/opt/node@20/bin"
-if [ -d "$__dir" ]; then
-	export PATH="$__dir${PATH:+:${PATH}}"
-fi
-
-# pipx
-__dir="$HOME/.local/bin"
-if [ -d "$__dir" ]; then
-	export PATH="${PATH:+${PATH}:}$__dir"
-fi

@@ -119,6 +119,12 @@ fi
 # zsh
 alias zshrc='"$EDITOR" "$HOME"/dotfiles/zsh/main.zsh'
 
+if command -v brew &>/dev/null; then
+	alias uvpi='uv pip install'
+	alias uvpie='uv pip install --editable .'
+	alias uvps='uv pip sync --strict requirements.txt'
+fi
+
 # ---- end ----
 
 # conda
@@ -153,10 +159,3 @@ fi
 if command -v zoxide &>/dev/null; then
 	eval "$(zoxide init zsh --cmd j --hook prompt)"
 fi
-
-# autocompletes
-FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
-fpath+=$HOME/dotfiles/condaauto
-# FPATH="$HOME"/dotfiles/condaauto:$FPATH
-autoload -Uz compinit
-compinit
