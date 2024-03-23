@@ -4,11 +4,11 @@ layout_anaconda() {
 
   if [ -n "$1" ]; then
     # Explicit environment name from layout command.
-    local env_name="$1"
-    source activate ${env_name}
+    local env="$1"
+    source activate ${env}
   elif (grep -q name: environment.yml); then
-    # Detect environment name from `environment.yml` file in `.envrc` directory
-    source activate `grep name: environment.yml | sed -e 's/name: //'`
+    local env=$(grep name: environment.yml | sed -e 's/name: //')
+    source activate "$env" || (conda env create -f environment.yml && source activate "$env")
   else
     (>&2 echo No environment specified);
     exit 1;
