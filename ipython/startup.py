@@ -11,6 +11,7 @@ import shutil
 import socket
 import stat
 import string
+import subprocess
 import sys
 from abc import ABC, ABCMeta
 from collections import Counter, defaultdict, deque
@@ -78,7 +79,15 @@ from re import DOTALL, escape, findall, fullmatch, match, search
 from shutil import copyfile, rmtree, which
 from socket import gethostname
 from string import ascii_letters, ascii_lowercase, ascii_uppercase
-from subprocess import PIPE, CalledProcessError, check_output
+from subprocess import (
+    DEVNULL,
+    PIPE,
+    STDOUT,
+    CalledProcessError,
+    check_call,
+    check_output,
+    run,
+)
 
 _ = [
     ABC,
@@ -150,6 +159,14 @@ _ = [
     islice,
     pairwise,
     permutations,
+    subprocess,
+    DEVNULL,
+    PIPE,
+    STDOUT,
+    CalledProcessError,
+    check_call,
+    check_output,
+    run,
     product,
     repeat,
     starmap,
