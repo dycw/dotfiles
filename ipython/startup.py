@@ -350,6 +350,30 @@ else:
     ]
 
 
+try:
+    import matplotlib as mpl  # type: ignore[]
+    import matplotlib.pyplot as plt  # type: ignore[]
+    from matplotlib.pyplot import (  # type: ignore[]
+        gca,
+        gcf,
+        subplot,
+        twinx,
+        twiny,
+    )
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [
+        mpl,
+        plt,
+        gca,
+        gcf,
+        subplot,
+        twinx,
+        twiny,
+    ]
+
+
 # functions
 
 
