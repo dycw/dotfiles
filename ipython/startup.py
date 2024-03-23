@@ -186,13 +186,27 @@ try:
 except ModuleNotFoundError:
     pass
 else:
-    _ = [
-        naturaldelta,
-        naturalsize,
-        naturaltime,
-        naturalday,
-        naturaldate,
-    ]
+    _ = [naturaldate, naturalday, naturaldelta, naturalsize, naturaltime]
+
+
+try:
+    import hvplot.pandas  # type: ignore[]
+except (AttributeError, ModuleNotFoundError):
+    pass
+else:
+    _ = [hvplot.pandas]
+try:
+    import hvplot.polars  # type: ignore[]
+except (AttributeError, ModuleNotFoundError):
+    pass
+else:
+    _ = [hvplot.polars]
+try:
+    import hvplot.xarray  # type: ignore[]
+except (AttributeError, ModuleNotFoundError):
+    pass
+else:
+    _ = [hvplot.xarray]
 
 
 # functions
