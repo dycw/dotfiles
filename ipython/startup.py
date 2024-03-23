@@ -78,11 +78,7 @@ from operator import add, and_, attrgetter, itemgetter, mul, or_, sub, truediv
 from os import environ, getenv
 from pathlib import Path
 from platform import system
-from pprint import (  # type: ignore[]
-    pformat,
-    pp,
-    pprint,
-)
+from pprint import pformat, pp, pprint  # type: ignore[]
 from subprocess import PIPE, CalledProcessError, check_output
 
 _ = [
@@ -368,13 +364,7 @@ else:
 try:
     import matplotlib as mpl  # type: ignore[]
     import matplotlib.pyplot as plt  # type: ignore[]
-    from matplotlib.pyplot import (  # type: ignore[]
-        gca,
-        gcf,
-        subplot,
-        twinx,
-        twiny,
-    )
+    from matplotlib.pyplot import gca, gcf, subplot, twinx, twiny  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
@@ -751,19 +741,10 @@ try:
         zeros,
         zeros_like,
     )
-    from numpy.linalg import (  # type: ignore[]
-        LinAlgError,
-        cholesky,
-        inv,
-    )
-    from numpy.random import (  # type: ignore[]
-        Generator,
-        RandomState,
-        default_rng,
-    )
-    from numpy.typing import (  # type: ignore[]
-        NDArray,
-    )
+    from numpy.linalg import LinAlgError, cholesky, inv
+    from numpy.random import Generator, RandomState, default_rng
+    from numpy.typing import NDArray  # type: ignore[]
+
 
 except ModuleNotFoundError:
     pass
@@ -980,16 +961,12 @@ try:
         read_ods,
         when,
     )
-    from polars.datatypes import (  # type: ignore[]
-        DataTypeClass,
-    )
+    from polars.datatypes import DataTypeClass  # type: ignore[]
     from polars.testing import (  # type: ignore[]
         assert_frame_not_equal,
         assert_series_not_equal,
     )
-    from polars.type_aliases import (  # type: ignore[]
-        SchemaDict,
-    )
+    from polars.type_aliases import SchemaDict  # type: ignore[]
 
     Config(tbl_rows=7, tbl_cols=100)
 
