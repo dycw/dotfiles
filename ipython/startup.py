@@ -78,6 +78,11 @@ from operator import add, and_, attrgetter, itemgetter, mul, or_, sub, truediv
 from os import environ, getenv
 from pathlib import Path
 from platform import system
+from pprint import (  # type: ignore[]
+    pformat,
+    pp,
+    pprint,
+)
 from subprocess import PIPE, CalledProcessError, check_output
 
 _ = [
@@ -157,6 +162,9 @@ _ = [
     Enum,
     auto,
     PIPE,
+    pformat,
+    pp,
+    pprint,
     Path,
     Reversible,
     Sequence,
@@ -1075,6 +1083,17 @@ else:
             read_excel,
             read_parquet,
         ]
+
+
+try:
+    from pqdm.processes import (  # type: ignore[]
+        pqdm,
+    )
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [pqdm]
+
 
 # functions
 
