@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# shellcheck source=/dev/null
+
+_script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+_env="$_script_dir/.env"
+
+if [ -f "$_env" ]; then
+	echo "Sourcing environment file '$_env'..."
+	source "$_env"
+	restic -r "$RESTIC_REPOSITORY" init
+else
+	echo "Unable to find environment file '$_env'; exiting..."
+fi
