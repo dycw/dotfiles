@@ -83,6 +83,20 @@ from numbers import (
     Number,
     Real,
 )
+from operator import (
+    add,
+    and_,
+    attrgetter,
+    itemgetter,
+    mul,
+    or_,
+    sub,
+    truediv,
+)
+from os import (
+    environ,
+    getenv,
+)
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
@@ -114,7 +128,17 @@ _ = [
     json,
     JSONDecoder,
     JSONEncoder,
+    add,
+    and_,
+    attrgetter,
+    itemgetter,
+    mul,
+    or_,
+    sub,
+    truediv,
     cache,
+    environ,
+    getenv,
     cached_property,
     BytesIO,
     StringIO,
