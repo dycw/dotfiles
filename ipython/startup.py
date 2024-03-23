@@ -27,6 +27,8 @@ import sys
 import tempfile
 import textwrap
 import time
+import types
+import typing
 from collections import Counter, defaultdict, deque
 from collections.abc import (
     Callable,
@@ -53,7 +55,7 @@ from dataclasses import (
     replace,
 )
 from enum import Enum, auto
-from functools import cached_property, lru_cache, partial, reduce, wraps
+from functools import lru_cache, partial, reduce, wraps
 from hashlib import md5
 from itertools import (
     chain,
@@ -85,6 +87,25 @@ from subprocess import (
 )
 from tempfile import TemporaryDirectory
 from time import sleep
+from typing import (
+    IO,
+    Annotated,
+    Any,
+    BinaryIO,
+    ClassVar,
+    Concatenate,
+    Generic,
+    Literal,
+    NewType,
+    NoReturn,
+    ParamSpec,
+    Protocol,
+    TextIO,
+    TypeAlias,
+    TypeGuard,
+    TypeVar,
+    Union,
+)
 
 _ = [
     tempfile,
@@ -102,6 +123,24 @@ _ = [
     Counter,
     DEVNULL,
     DOTALL,
+    typing,
+    IO,
+    Annotated,
+    Any,
+    BinaryIO,
+    ClassVar,
+    Concatenate,
+    Generic,
+    Literal,
+    NewType,
+    NoReturn,
+    ParamSpec,
+    Protocol,
+    TextIO,
+    TypeAlias,
+    TypeGuard,
+    TypeVar,
+    Union,
     Enum,
     Generator,
     Hashable,
@@ -122,7 +161,8 @@ _ = [
     ascii_uppercase,
     astuple,
     auto,
-    cached_property,
+    types,
+    typing,
     chain,
     check_call,
     check_output,
