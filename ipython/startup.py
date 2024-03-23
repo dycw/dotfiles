@@ -3,11 +3,7 @@ from __future__ import annotations  # noqa: INP001
 import abc
 import sys
 from abc import ABC, ABCMeta
-from collections import (
-    Counter,
-    defaultdict,
-    deque,
-)
+from collections import Counter, defaultdict, deque
 from collections.abc import (
     AsyncGenerator,
     AsyncIterable,
@@ -39,6 +35,10 @@ from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
 _ = [
+    abc,
+    sys,
+    ABC,
+    ABCMeta,
     Counter,
     AbstractSet,
     defaultdict,
@@ -82,7 +82,7 @@ _ = [
 
 try:
     from collections.abc import Buffer
-except ModuleNotFoundError:
+except ImportError:
     pass
 else:
     _ = [Buffer]
@@ -116,7 +116,7 @@ else:
 
 
 try:
-    from cachetools import ttl_cache  # type: ignore[]
+    from cachetools.func import ttl_cache  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
