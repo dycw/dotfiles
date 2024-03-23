@@ -402,10 +402,10 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [
-        mpl,
-        plt,
         gca,
         gcf,
+        mpl,
+        plt,
         subplot,
         twinx,
         twiny,
@@ -873,6 +873,122 @@ else:
         zeros,
         zeros_like,
     ]
+
+
+try:
+    import pandas as pd  # type: ignore[]
+    from pandas import (  # type: ignore[]
+        NA,
+        BooleanDtype,
+        DataFrame,
+        DateOffset,
+        DatetimeIndex,
+        Index,
+        Int64Dtype,
+        MultiIndex,
+        RangeIndex,
+        Series,
+        StringDtype,
+        Timedelta,
+        TimedeltaIndex,
+        Timestamp,
+        bdate_range,
+        concat,
+        date_range,
+        qcut,
+        read_csv,
+        read_excel,
+        read_parquet,
+        read_sql,
+        read_table,
+        set_option,
+        to_datetime,
+        to_pickle,
+    )
+    from pandas._libs.missing import (  # type: ignore[]
+        NAType,
+    )
+    from pandas.testing import (  # type: ignore[]
+        assert_frame_equal,
+        assert_index_equal,
+        assert_series_equal,
+    )
+    from pandas.tseries.offsets import (  # type: ignore[]
+        BDay,
+        Hour,
+        Micro,
+        Milli,
+        Minute,
+        MonthBegin,
+        MonthEnd,
+        Nano,
+        Second,
+        Week,
+    )
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [
+        BDay,
+        BooleanDtype,
+        DataFrame,
+        DateOffset,
+        DateOffset,
+        DatetimeIndex,
+        Hour,
+        Index,
+        Int64Dtype,
+        Micro,
+        Milli,
+        Minute,
+        MonthBegin,
+        MonthEnd,
+        MultiIndex,
+        NA,
+        NAType,
+        Nano,
+        RangeIndex,
+        Second,
+        Series,
+        StringDtype,
+        Timedelta,
+        TimedeltaIndex,
+        Timestamp,
+        Week,
+        assert_frame_equal,
+        assert_index_equal,
+        assert_series_equal,
+        bdate_range,
+        concat,
+        concat,
+        date_range,
+        pd,
+        qcut,
+        read_csv,
+        read_excel,
+        read_parquet,
+        read_sql,
+        read_table,
+        set_option,
+        to_datetime,
+        to_pickle,
+    ]
+    if find_spec("utilities") is None:
+        from pandas import read_pickle  # type: ignore[]
+
+        _ = [read_pickle]
+
+    _min_max_rows = 7
+    set_option(
+        "display.float_format",
+        lambda x: f"{x:,.5f}",
+        "display.min_rows",
+        _min_max_rows,
+        "display.max_rows",
+        _min_max_rows,
+        "display.max_columns",
+        100,
+    )
 
 
 try:
