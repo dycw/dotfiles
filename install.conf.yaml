@@ -52,6 +52,7 @@
     - [brew install pipx, Installing pipx]
     - [brew install pre-commit, Installing pre-commit]
     - [brew install prettier, Installing prettier]
+    - [brew install restic, Installing restic]
     - [brew install ripgrep, Installing ripgrep]
     - [brew install ruff, Installing ruff]
     - [brew install shellcheck, Installing shellcheck]
