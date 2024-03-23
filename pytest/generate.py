@@ -95,12 +95,7 @@ class Alias:
     def __repr__(self) -> str:  # type: ignore[]
         keys = "".join(p.key for p in self.parts)
         alias = f"pyt{keys}"
-        options = " ".join(
-            chain(
-                ["-ra", "-vv", "--color=yes", "--strict-markers"],
-                (p.option for p in self.parts),
-            )
-        )
+        options = " ".join(chain(["-ra", "-vv", "--color=yes", "--strict-markers"], (p.option for p in self.parts)))
         command = f"pytest {options}".strip()
         return f"alias {alias}='{command}'"
 
@@ -109,20 +104,9 @@ class Alias:
 
 
 def yield_aliases() -> Iterator[Alias]:
-    for f, i, k, maxfail, n, no_cov, pdb, x in product(
-        [True, False],
-        [True, False],
-        [True, False],
-        [True, False],
-        [True, False],
-        [True, False],
-        [True, False],
-        [True, False],
-    ):
+    for f, i, k, maxfail, n, no_cov, pdb, x in product([True, False], [True, False], [True, False], [True, False], [True, False], [True, False], [True, False], [True, False]):
         try:
-            settings = Settings(
-                f=f, i=i, k=k, maxfail=maxfail, n=n, no_cov=no_cov, pdb=pdb, x=x
-            )
+            settings = Settings(f=f, i=i, k=k, maxfail=maxfail, n=n, no_cov=no_cov, pdb=pdb, x=x)
         except ArgumentError:
             pass
         else:

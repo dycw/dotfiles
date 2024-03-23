@@ -23,47 +23,15 @@ import string
 import subprocess
 import sys
 from collections import Counter, defaultdict, deque
-from collections.abc import (
-    Awaitable,
-    Callable,
-    Collection,
-    Container,
-    Coroutine,
-    Generator,
-    Hashable,
-    Iterable,
-    Iterator,
-    Mapping,
-    Sequence,
-    Sized,
-)
+from collections.abc import Awaitable, Callable, Collection, Container, Coroutine, Generator, Hashable, Iterable, Iterator, Mapping, Sequence, Sized
 from collections.abc import Set as AbstractSet
 from contextlib import suppress
-from dataclasses import (
-    astuple,
-    dataclass,
-    field,
-    fields,
-    is_dataclass,
-    make_dataclass,
-    replace,
-)
+from dataclasses import astuple, dataclass, field, fields, is_dataclass, make_dataclass, replace
 from enum import Enum, auto
 from functools import cached_property, lru_cache, partial, reduce, wraps
 from hashlib import md5
 from io import BytesIO, StringIO
-from itertools import (
-    chain,
-    dropwhile,
-    groupby,
-    islice,
-    pairwise,
-    permutations,
-    product,
-    repeat,
-    starmap,
-    takewhile,
-)
+from itertools import chain, dropwhile, groupby, islice, pairwise, permutations, product, repeat, starmap, takewhile
 from json import JSONDecoder, JSONEncoder
 from multiprocessing import Pool, cpu_count
 from numbers import Integral, Number, Real
@@ -76,15 +44,7 @@ from re import DOTALL, escape, findall, fullmatch, match, search
 from shutil import copyfile, rmtree, which
 from socket import gethostname
 from string import ascii_letters, ascii_lowercase, ascii_uppercase
-from subprocess import (
-    DEVNULL,
-    PIPE,
-    STDOUT,
-    CalledProcessError,
-    check_call,
-    check_output,
-    run,
-)
+from subprocess import DEVNULL, PIPE, STDOUT, CalledProcessError, check_call, check_output, run
 from sys import stderr, stdout
 
 _ = [
@@ -302,11 +262,10 @@ else:
 
 try:
     import joblib  # type: ignore[]
-    from joblib import Memory, Parallel, delayed  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [joblib, Memory, Parallel, delayed]
+    _ = [joblib]
 
 
 try:
@@ -319,38 +278,11 @@ else:
 
 try:
     import luigi  # type: ignore[]
-    from luigi import (  # type: ignore[]
-        BoolParameter,
-        DictParameter,
-        EnumParameter,
-        ExternalTask,
-        FloatParameter,
-        IntParameter,
-        LocalTarget,
-        Task,
-        TaskParameter,
-        TupleParameter,
-        WrapperTask,
-        build,
-    )
+    from luigi import BoolParameter, DictParameter, EnumParameter, ExternalTask, FloatParameter, IntParameter, LocalTarget, Task, TaskParameter, TupleParameter, WrapperTask, build  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [
-        luigi,
-        BoolParameter,
-        DictParameter,
-        EnumParameter,
-        ExternalTask,
-        FloatParameter,
-        IntParameter,
-        LocalTarget,
-        Task,
-        TaskParameter,
-        TupleParameter,
-        WrapperTask,
-        build,
-    ]
+    _ = [luigi, BoolParameter, DictParameter, EnumParameter, ExternalTask, FloatParameter, IntParameter, LocalTarget, Task, TaskParameter, TupleParameter, WrapperTask, build]
 
 
 try:
@@ -364,312 +296,11 @@ else:
 
 
 try:
-    from more_itertools import (  # type: ignore[]
-        adjacent,
-        all_equal,
-        all_unique,
-        always_reversible,
-        batched,
-        before_and_after,
-        bucket,
-        callback_iter,
-        chunked,
-        chunked_even,
-        circular_shifts,
-        classify_unique,
-        collapse,
-        combination_index,
-        combination_with_replacement_index,
-        consecutive_groups,
-        constrained_batches,
-        consume,
-        consumer,
-        convolve,
-        count_cycle,
-        countable,
-        difference,
-        distinct_combinations,
-        distinct_permutations,
-        distribute,
-        divide,
-        dotproduct,
-        duplicates_everseen,
-        duplicates_justseen,
-        exactly_n,
-        factor,
-        filter_except,
-        filter_map,
-        first,
-        first_true,
-        flatten,
-        gray_product,
-        groupby_transform,
-        grouper,
-        ichunked,
-        iequals,
-        ilen,
-        interleave,
-        interleave_evenly,
-        interleave_longest,
-        intersperse,
-        is_sorted,
-        islice_extended,
-        iter_except,
-        iter_index,
-        iter_suppress,
-        iterate,
-        last,
-        locate,
-        longest_common_prefix,
-        lstrip,
-        make_decorator,
-        map_except,
-        map_if,
-        map_reduce,
-        mark_ends,
-        matmul,
-        minmax,
-        ncycles,
-        nth,
-        nth_combination,
-        nth_combination_with_replacement,
-        nth_or_last,
-        nth_permutation,
-        nth_product,
-        numeric_range,
-        only,
-        outer_product,
-        pad_none,
-        padded,
-        padnone,
-        partial_product,
-        partition,
-        partitions,
-        permutation_index,
-        polynomial_derivative,
-        polynomial_eval,
-        polynomial_from_roots,
-        powerset,
-        prepend,
-        product_index,
-        quantify,
-        raise_,
-        random_combination,
-        random_combination_with_replacement,
-        random_permutation,
-        random_product,
-        repeat_each,
-        repeat_last,
-        repeatfunc,
-        reshape,
-        rlocate,
-        roundrobin,
-        rstrip,
-        run_length,
-        sample,
-        seekable,
-        set_partitions,
-        side_effect,
-        sieve,
-        sliced,
-        sliding_window,
-        sort_together,
-        split_after,
-        split_at,
-        split_before,
-        split_into,
-        split_when,
-        spy,
-        stagger,
-        strictly_n,
-        strip,
-        subslices,
-        substrings,
-        substrings_indexes,
-        sum_of_squares,
-        tail,
-        takewhile_inclusive,
-        time_limited,
-        totient,
-        triplewise,
-        unique_everseen,
-        unique_in_window,
-        unique_justseen,
-        unique_to_each,
-        unzip,
-        value_chain,
-        windowed,
-        with_iter,
-        zip_broadcast,
-        zip_offset,
-    )
+    import more_itertools as mi  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [
-        adjacent,
-        all_equal,
-        all_unique,
-        always_reversible,
-        batched,
-        before_and_after,
-        bucket,
-        callback_iter,
-        chunked,
-        chunked_even,
-        circular_shifts,
-        classify_unique,
-        collapse,
-        combination_index,
-        combination_with_replacement_index,
-        consecutive_groups,
-        constrained_batches,
-        consume,
-        consumer,
-        convolve,
-        count_cycle,
-        countable,
-        difference,
-        distinct_combinations,
-        distinct_permutations,
-        distribute,
-        divide,
-        dotproduct,
-        duplicates_everseen,
-        duplicates_justseen,
-        exactly_n,
-        factor,
-        filter_except,
-        filter_map,
-        first,
-        first_true,
-        flatten,
-        gray_product,
-        groupby_transform,
-        grouper,
-        ichunked,
-        iequals,
-        ilen,
-        interleave,
-        interleave_evenly,
-        interleave_longest,
-        intersperse,
-        is_sorted,
-        islice_extended,
-        iter_except,
-        iter_index,
-        iter_suppress,
-        iterate,
-        last,
-        locate,
-        longest_common_prefix,
-        lstrip,
-        make_decorator,
-        map_except,
-        map_if,
-        map_reduce,
-        mark_ends,
-        matmul,
-        minmax,
-        ncycles,
-        nth,
-        nth_combination,
-        nth_combination_with_replacement,
-        nth_or_last,
-        nth_permutation,
-        nth_product,
-        numeric_range,
-        only,
-        outer_product,
-        pad_none,
-        padded,
-        padnone,
-        pairwise,
-        partial_product,
-        partition,
-        partitions,
-        permutation_index,
-        polynomial_derivative,
-        polynomial_eval,
-        polynomial_from_roots,
-        powerset,
-        prepend,
-        product_index,
-        quantify,
-        raise_,
-        random_combination,
-        random_combination_with_replacement,
-        random_permutation,
-        random_product,
-        repeat_each,
-        repeat_last,
-        repeatfunc,
-        reshape,
-        rlocate,
-        roundrobin,
-        rstrip,
-        run_length,
-        sample,
-        seekable,
-        set_partitions,
-        side_effect,
-        sieve,
-        sliced,
-        sliding_window,
-        sort_together,
-        split_after,
-        split_at,
-        split_before,
-        split_into,
-        split_when,
-        spy,
-        stagger,
-        strictly_n,
-        strip,
-        subslices,
-        substrings,
-        substrings_indexes,
-        sum_of_squares,
-        tail,
-        takewhile_inclusive,
-        time_limited,
-        totient,
-        triplewise,
-        unique_everseen,
-        unique_in_window,
-        unique_justseen,
-        unique_to_each,
-        unzip,
-        value_chain,
-        windowed,
-        with_iter,
-        zip_broadcast,
-        zip_offset,
-    ]
-    try:
-        from tabulate import tabulate  # type: ignore[]
-    except ModuleNotFoundError:
-        from more_itertools import tabulate  # type: ignore[]
-    else:
-        _ = [tabulate]
-    try:
-        from utilities.iterables import one, take, transpose  # type: ignore[]
-        from utilities.more_itertools import (  # type: ignore[]
-            always_iterable,
-            peekable,
-            windowed_complete,
-        )
-    except ModuleNotFoundError:
-        from more_itertools import (  # type: ignore[]
-            always_iterable,
-            one,
-            peekable,
-            take,
-            transpose,
-            windowed_complete,
-        )
-    else:
-        _ = [always_iterable, one, peekable, take, transpose, windowed_complete]
+    _ = [mi]
 
 
 try:
@@ -812,42 +443,10 @@ else:
 
 try:
     import pandas as pd  # type: ignore[]
-    from pandas import (  # type: ignore[]
-        NA,
-        BooleanDtype,
-        DateOffset,
-        DatetimeIndex,
-        Index,
-        Int64Dtype,
-        MultiIndex,
-        RangeIndex,
-        StringDtype,
-        Timedelta,
-        TimedeltaIndex,
-        Timestamp,
-        bdate_range,
-        date_range,
-        qcut,
-        read_sql,
-        read_table,
-        set_option,
-        to_datetime,
-        to_pickle,
-    )
+    from pandas import NA, BooleanDtype, DateOffset, DatetimeIndex, Index, Int64Dtype, MultiIndex, RangeIndex, StringDtype, Timedelta, TimedeltaIndex, Timestamp, bdate_range, date_range, qcut, read_sql, read_table, set_option, to_datetime, to_pickle  # type: ignore[]
     from pandas._libs.missing import NAType  # type: ignore[]
     from pandas.testing import assert_index_equal  # type: ignore[]
-    from pandas.tseries.offsets import (  # type: ignore[]
-        BDay,
-        Hour,
-        Micro,
-        Milli,
-        Minute,
-        MonthBegin,
-        MonthEnd,
-        Nano,
-        Second,
-        Week,
-    )
+    from pandas.tseries.offsets import BDay, Hour, Micro, Milli, Minute, MonthBegin, MonthEnd, Nano, Second, Week  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
@@ -895,16 +494,7 @@ else:
         _ = [read_pickle]
 
     _min_max_rows = 7
-    set_option(
-        "display.float_format",
-        lambda x: f"{x:,.5f}",
-        "display.min_rows",
-        _min_max_rows,
-        "display.max_rows",
-        _min_max_rows,
-        "display.max_columns",
-        100,
-    )
+    set_option("display.float_format", lambda x: f"{x:,.5f}", "display.min_rows", _min_max_rows, "display.max_rows", _min_max_rows, "display.max_columns", 100)
 
 
 try:
@@ -953,10 +543,7 @@ try:
         when,
     )
     from polars.datatypes import DataTypeClass  # type: ignore[]
-    from polars.testing import (  # type: ignore[]
-        assert_frame_not_equal,
-        assert_series_not_equal,
-    )
+    from polars.testing import assert_frame_not_equal, assert_series_not_equal  # type: ignore[]
     from polars.type_aliases import SchemaDict  # type: ignore[]
 
     Config(tbl_rows=7, tbl_cols=100)
@@ -1014,42 +601,13 @@ else:
         SchemaDict,
     ]
     try:
-        from pandas import (  # type: ignore[]
-            DataFrame,
-            Series,
-            concat,
-            read_csv,
-            read_excel,
-            read_parquet,
-        )
-        from pandas.testing import (  # type: ignore[]
-            assert_frame_equal,
-            assert_series_equal,
-        )
+        from pandas import DataFrame, Series, concat, read_csv, read_excel, read_parquet  # type: ignore[]
+        from pandas.testing import assert_frame_equal, assert_series_equal  # type: ignore[]
     except ModuleNotFoundError:
-        from polars import (  # type: ignore[]
-            DataFrame,
-            Series,
-            concat,
-            read_csv,
-            read_excel,
-            read_parquet,
-        )
-        from polars.testing import (  # type: ignore[]
-            assert_frame_equal,
-            assert_series_equal,
-        )
+        from polars import DataFrame, Series, concat, read_csv, read_excel, read_parquet  # type: ignore[]
+        from polars.testing import assert_frame_equal, assert_series_equal  # type: ignore[]
     else:
-        _ = [
-            DataFrame,
-            Series,
-            assert_frame_equal,
-            assert_series_equal,
-            concat,
-            read_csv,
-            read_excel,
-            read_parquet,
-        ]
+        _ = [DataFrame, Series, assert_frame_equal, assert_series_equal, concat, read_csv, read_excel, read_parquet]
 
 
 try:
@@ -1071,11 +629,10 @@ else:
 
 try:
     import requests  # type: ignore[]
-    from request import get  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [requests, get]
+    _ = [requests]
 
 
 try:
@@ -1100,11 +657,10 @@ else:
 
 try:
     import semver  # type: ignore[]
-    from semver import VersionInfo  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [semver, VersionInfo]
+    _ = [semver]
 
 
 try:
@@ -1115,6 +671,14 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [sqla, sqlalchemy.orm, create_engine, select]
+
+
+try:
+    from tabulate import tabulate  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [tabulate]
 
 
 # functions
