@@ -85,10 +85,14 @@
     - [brew install --cask whatsapp, Installing WhatsApp]
     - [pipx install bump2version, Installing bump2version]
     - [
-        '[ -d $HOME/.oh-my-zsh ] || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"',
+        '[ -d ${HOME}/.oh-my-zsh ] || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"',
         Installing oh-my-zsh,
       ]
     - [
-        "[ -d $HOME/.oh-my-zsh/custom/plugins/conda-zsh-completion ] || git clone https://github.com/conda-incubator/conda-zsh-completion $HOME/.oh-my-zsh/custom/plugins/conda-zsh-completion",
+        "[ -d ${HOME}/.oh-my-zsh/custom/plugins/conda-zsh-completion ] || git clone https://github.com/conda-incubator/conda-zsh-completion ${HOME}/.oh-my-zsh/custom/plugins/conda-zsh-completion",
         Cloning conda-zsh-completion,
+      ]
+    - [
+        '[ -d ${HOME}/.cargo ] || curl --proto ''=https'' --tlsv1.2 -sSf https://sh.rustup.rs | sh"',
+        Installing rust,
       ]
