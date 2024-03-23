@@ -6,7 +6,9 @@ local config = wezterm.config_builder()
 
 -- This is where you actually apply your config choices
 config.audible_bell = "Disabled"
-config.font_size = 15.0
+config.initial_cols = 200
+config.initial_rows = 100
+config.font_size = 14.0
 config.keys = {
 	-- navigate panes
 	{
