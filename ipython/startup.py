@@ -703,6 +703,162 @@ else:
             windowed_complete,
         ]
 
+
+try:
+    import numpy as np  # type: ignore[]
+    from numpy import (  # type: ignore[]
+        allclose,
+        arange,
+        array,
+        block,
+        bool_,
+        ceil,
+        concatenate,
+        corrcoef,
+        cumsum,
+        diag,
+        dtype,
+        empty,
+        exp,
+        exp2,
+        expand_dims,
+        eye,
+        finfo,
+        flatnonzero,
+        float16,
+        float32,
+        float64,
+        floor,
+        histogram,
+        hstack,
+        iinfo,
+        inf,
+        int8,
+        int16,
+        int32,
+        int64,
+        isclose,
+        isfinite,
+        isinf,
+        isnan,
+        issubdtype,
+        linspace,
+        log,
+        log2,
+        log10,
+        maximum,
+        memmap,
+        minimum,
+        nan,
+        nan_to_num,
+        nansum,
+        ndarray,
+        newaxis,
+        nonzero,
+        ones,
+        ones_like,
+        ravel,
+        set_printoptions,
+        sqrt,
+        vstack,
+        where,
+        zeros,
+        zeros_like,
+    )
+    from numpy.linalg import (  # type: ignore[]
+        LinAlgError,
+        cholesky,
+        inv,
+    )
+    from numpy.random import (  # type: ignore[]
+        Generator,
+        RandomState,
+        default_rng,
+    )
+    from numpy.typing import (  # type: ignore[]
+        NDArray,
+    )
+
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [
+        Generator,
+        LinAlgError,
+        NDArray,
+        RandomState,
+        allclose,
+        arange,
+        array,
+        block,
+        bool_,
+        ceil,
+        cholesky,
+        concatenate,
+        corrcoef,
+        cumsum,
+        default_rng,
+        diag,
+        dtype,
+        empty,
+        exp,
+        exp2,
+        expand_dims,
+        eye,
+        finfo,
+        flatnonzero,
+        float16,
+        float32,
+        float64,
+        floor,
+        histogram,
+        hstack,
+        iinfo,
+        inf,
+        int16,
+        int32,
+        int64,
+        int8,
+        inv,
+        isclose,
+        isfinite,
+        isinf,
+        isnan,
+        issubdtype,
+        linspace,
+        log,
+        log10,
+        log2,
+        maximum,
+        memmap,
+        minimum,
+        nan,
+        nan_to_num,
+        nansum,
+        ndarray,
+        newaxis,
+        nonzero,
+        np,
+        ones,
+        ones_like,
+        ravel,
+        set_printoptions,
+        sqrt,
+        vstack,
+        where,
+        zeros,
+        zeros_like,
+    ]
+
+
+try:
+    from tabulate import tabulate  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [tabulate]
+
+
 # functions
 
 
