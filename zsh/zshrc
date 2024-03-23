@@ -78,13 +78,11 @@ if command -v gh >/dev/null 2>&1; then
 	alias ghcm='gh pr create && gh pr merge --auto'
 fi
 
-
 # git
 __file="${HOME}/dotfiles/git/aliases.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
-
 
 # hypothesis
 alias hypothesis-ci='export HYPOTHESIS_PROFILE=ci'
@@ -119,13 +117,11 @@ if command -v pre-commit >/dev/null 2>&1; then
 	alias pci='pre-commit install'
 fi
 
-
 # pytest
 __file="${HOME}/dotfiles/pytest/aliases.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
-
 
 # ruff
 if command -v ruff >/dev/null 2>&1; then
