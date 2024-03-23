@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+zmodule zimfw/fzf
+
 zmodule zsh-users/zsh-autosuggestions
 zmodule zsh-users/zsh-syntax-highlighting
 zmodule jeffreytse/zsh-vi-mode

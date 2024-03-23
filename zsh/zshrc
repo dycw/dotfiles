@@ -66,10 +66,10 @@ if command -v fd >/dev/null 2>&1; then
 fi
 
 # fzf
-__file="${HOME}/fzf/fzf.zsh"
-if [ -f "$__file" ]; then
-	. "$__file"
-fi
+# __file="${HOME}/fzf/fzf.zsh"
+# if [ -f "$__file" ]; then
+# 	. "$__file"
+# fi
 
 # gh
 if command -v gh >/dev/null 2>&1; then
@@ -153,14 +153,6 @@ fi
 
 # zsh
 alias zshrc='"$EDITOR" "$HOME"/.zshrc'
-
-# zsh-vi-mode
-if command -v brew >/dev/null 2>&1; then
-	__file="$(brew --prefix)"/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-	if [ -f "$__file" ]; then
-		. "$__file"
-	fi
-fi
 
 # ---- end ----
 
