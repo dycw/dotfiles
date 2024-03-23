@@ -88,6 +88,7 @@ from subprocess import (
     check_output,
     run,
 )
+from sys import stderr, stdout
 
 _ = [
     ABC,
@@ -120,6 +121,9 @@ _ = [
     or_,
     sub,
     truediv,
+    sys,
+    stderr,
+    stdout,
     cache,
     environ,
     getenv,
