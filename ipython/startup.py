@@ -4,6 +4,7 @@ import datetime as dt
 import gzip
 import json
 import pickle
+import re
 import sys
 from abc import ABC, ABCMeta
 from collections import Counter, defaultdict, deque
@@ -26,7 +27,6 @@ from collections.abc import Set as AbstractSet
 from contextlib import suppress
 from dataclasses import (
     Field,
-    asdict,
     astuple,
     dataclass,
     field,
@@ -70,6 +70,7 @@ from pathlib import Path
 from platform import system
 from pprint import pformat, pp, pprint
 from random import choice, randint, randrange, shuffle, uniform
+from re import DOTALL, escape, findall, fullmatch, match, search
 from subprocess import PIPE, CalledProcessError, check_output
 
 _ = [
@@ -153,7 +154,13 @@ _ = [
     system,
     Sized,
     ValuesView,
-    asdict,
+    re,
+    DOTALL,
+    escape,
+    findall,
+    fullmatch,
+    match,
+    search,
     astuple,
     check_output,
     dataclass,
