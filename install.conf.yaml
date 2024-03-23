@@ -57,4 +57,5 @@
     - [brew install --cask dropbox, Installing Dropbox]
     - [brew install --cask protonvpn, Installing ProtonVPN]
     - [brew install --cask wezterm, Installing WezTerm]
+    - [brew install --cask whatsapp, Installing WhatsApp]
     - [pipx install bump2version, Installing bump2version]
