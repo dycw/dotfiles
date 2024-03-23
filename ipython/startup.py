@@ -74,6 +74,15 @@ from json import (
     JSONDecoder,
     JSONEncoder,
 )
+from multiprocessing import (
+    Pool,
+    cpu_count,
+)
+from numbers import (
+    Integral,
+    Number,
+    Real,
+)
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
@@ -92,9 +101,14 @@ _ = [
     Collection,
     Container,
     Coroutine,
+    Integral,
+    Number,
+    Real,
     Counter,
     Field,
     Generator,
+    Pool,
+    cpu_count,
     Hashable,
     ItemsView,
     json,
