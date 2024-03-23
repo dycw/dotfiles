@@ -1,101 +1,194 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+#!/usr/bin/env sh
+# shellcheck source=/dev/null
 
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+# bat
+if command -v bat >/dev/null 2>&1; then
+	alias cat='bat'
+fi
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-# ZSH_THEME="robbyrussell"
+# bottom
+if command -v btm >/dev/null 2>&1; then
+	alias htop='btm'
+fi
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+# cd
+alias ~='cd "$HOME"'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias cddb='cd "$HOME"/Dropbox'
+alias cddf='cd "$HOME"/dotfiles'
+alias cddl='cd "$HOME"/Downloads'
+alias cdw='cd "$HOME"/work'
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+# coverage
+alias open-cov='open .coverage/html/index.html'
 
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
+# direnv
+if command -v direnv >/dev/null 2>&1; then
+	alias dea='direnv allow'
+fi
 
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+# eza
+if command -v eza >/dev/null 2>&1; then
+	__eza_base() { eza -F --group-directories-first --ignore-glob=node_modules "$@"; }
+	__eza_short() { __eza_base -x "$@"; }
+	alias ls='__eza_short --git-ignore'
+	alias lsa='__eza_short -a'
+	__eza_long() { __eza_base -ghl --git --time-style=long-iso "$@"; }
+	__eza_long_default() { __eza_long -a --git-ignore "$@"; }
+	alias l='__eza_long_default'
+	alias ll='__eza_long_default'
+	alias la='__eza_long -a'
 
-# Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
+	if command -v watch >/dev/null 2>&1; then
+		__watch_eza_base() {
+			watch -d -n 0.1 --color -- \
+				eza -aF --color=always --group-directories-first --ignore-glob=node_modules "$@"
+		}
+		__watch_eza_short() { __watch_eza_base -x "$@"; }
+		alias wls='__watch_eza_short --git-ignore'
+		alias wlsa='__watch_eza_short -a'
+		__watch_eza_long() { __watch_eza_base -ghl --git --time-style=long-iso "$@"; }
+		__watch_eza_long_default() { __watch_eza_long -a --git-ignore "$@"; }
+		alias wl='__watch_eza_long_default'
+		alias wll='__watch_eza_long_default'
+		alias wla='__watch_eza_long -a'
+	fi
+fi
 
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
+# fd
+if command -v fd >/dev/null 2>&1; then
+	alias fdd='fd -Htd'
+	alias fde='fd -Hte'
+	alias fdf='fd -Htf'
+	alias fds='fd -Hts'
+fi
 
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
+# fzf
+__file="${HOME}/.config/fzf/fzf.zsh"
+if [ -f "$__file" ]; then
+	. "$__file"
+fi
 
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+# gh
+if command -v gh >/dev/null 2>&1; then
+	alias ghc='gh pr create'
+	alias ghm='gh pr merge --auto'
+	alias ghcm='gh pr create && gh pr merge --auto'
+fi
 
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+# git
+__file="${HOME}/dotfiles/git/aliases.sh"
+if [ -f "$__file" ]; then
+	. "$__file"
+fi
 
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
+# hypothesis
+alias hypothesis-ci='export HYPOTHESIS_PROFILE=ci'
+alias hypothesis-debug='export HYPOTHESIS_PROFILE=debug'
+alias hypothesis-default='export HYPOTHESIS_PROFILE=default'
+alias hypothesis-dev='export HYPOTHESIS_PROFILE=dev'
 
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+# input
+set bell-style none
+set editing-mode vi
 
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
+# neovim
+if command -v nvim >/dev/null 2>&1; then
+	alias n='nvim'
+	alias v='nvim'
+	alias vim='nvim'
+fi
 
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
+# pip
+alias pi='pip install'
+alias pie='pip install --editable .'
+alias piip='pip install ipython'
+alias pijl='pip install jupyterlab jupyterlab-vim'
+alias plo='pip list --outdated'
+alias pui='pip uninstall'
 
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(git conda-zsh-completion)
+# pre-commit
+if command -v pre-commit >/dev/null 2>&1; then
+	alias pca='pre-commit run -a'
+	alias pcav='pre-commit run -av'
+	alias pcau='pre-commit autoupdate'
+	alias pci='pre-commit install'
+fi
 
-source $ZSH/oh-my-zsh.sh
+# pytest
+__file="${HOME}/dotfiles/pytest/aliases.sh"
+if [ -f "$__file" ]; then
+	. "$__file"
+fi
 
-# User configuration
+# ruff
+if command -v ruff >/dev/null 2>&1; then
+	alias rw='ruff check -w'
+fi
 
-# export MANPATH="/usr/local/man:$MANPATH"
+# uv
+if command -v uv >/dev/null 2>&1; then
+	alias uvpi='uv pip install'
+	alias uvpie='uv pip install --editable .'
+	alias uvps='uv pip sync --strict requirements.txt'
+fi
 
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+# zim
+export ZIM_HOME="${HOME}"/.zim
+if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
+	# Download zimfw plugin manager if missing.
+	curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
+		https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+fi
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
+	# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
+	source ${ZIM_HOME}/zimfw.zsh init -q
+fi
+__file="${ZIM_HOME}/init.zsh"
+if [ -f "$__file" ]; then
+	. "$__file"
+fi
 
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+# zsh
+alias zshrc='"$EDITOR" "$HOME"/.zshrc'
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
+# ---- end ----
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+# conda
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
+# shellcheck disable=SC2181
+if [ $? -eq 0 ]; then
+	eval "$__conda_setup"
+else
+	if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
+		. "/opt/miniconda3/etc/profile.d/conda.sh"
+	else
+		export PATH="/opt/miniconda3/bin:$PATH"
+	fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+# direnv
+if command -v starship >/dev/null 2>&1; then
+	eval "$(direnv hook zsh)"
+fi
+
+# fzf
+if command -v fzf >/dev/null 2>&1; then
+	eval "$(fzf --zsh)"
+fi
+
+# starship
+if command -v starship >/dev/null 2>&1; then
+	eval "$(starship init zsh)"
+fi
+
+# zoxide
+if command -v zoxide >/dev/null 2>&1; then
+	eval "$(zoxide init zsh --cmd j --hook prompt)"
+fi

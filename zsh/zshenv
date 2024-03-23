@@ -10,7 +10,7 @@ case ":${PATH}:" in
 esac
 
 # node
-if command -v brew &>/dev/null; then
+if command -v brew >/dev/null 2>&1; then
 	__dir="$(brew --prefix)"/opt/node@20/bin
 	case ":${PATH}:" in
 	*:"$__dir":*) ;;
