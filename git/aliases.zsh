@@ -126,6 +126,8 @@ if command -v git &>/dev/null; then
 	alias grm='git rm'
 	alias grmc='git rm --cached'
 	alias grmf='git rm -f'
+	alias grmr='git rm -r'
+	alias grmrf='git rm -rf'
 	# status
 	alias gs='git status'
 	# stash
