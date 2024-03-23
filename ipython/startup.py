@@ -80,6 +80,19 @@ _ = [
 ]
 
 
+# standard library imports
+
+try:
+    from collections.abc import Buffer
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [Buffer]
+
+
+# third party imports
+
+
 try:
     from beartype import beartype  # type: ignore[]
 except ModuleNotFoundError:
