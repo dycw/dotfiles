@@ -33,9 +33,7 @@ from collections.abc import (
     Sized,
     ValuesView,
 )
-from collections.abc import (
-    Set as AbstractSet,
-)
+from collections.abc import Set as AbstractSet
 from contextlib import suppress
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
