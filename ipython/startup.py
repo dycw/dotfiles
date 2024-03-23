@@ -41,20 +41,13 @@ from dataclasses import (
     replace,
 )
 from enum import Enum, auto
-from functools import cache, cached_property, lru_cache, reduce, wraps
+from functools import cached_property, lru_cache, partial, reduce, wraps
 from hashlib import md5
 from importlib.util import find_spec
 from io import BytesIO, StringIO
 from itertools import (
-    accumulate,
     chain,
-    combinations,
-    combinations_with_replacement,
-    compress,
-    count,
-    cycle,
     dropwhile,
-    filterfalse,
     groupby,
     islice,
     pairwise,
@@ -63,8 +56,6 @@ from itertools import (
     repeat,
     starmap,
     takewhile,
-    tee,
-    zip_longest,
 )
 from json import JSONDecoder, JSONEncoder
 from multiprocessing import Pool, cpu_count
@@ -124,13 +115,13 @@ _ = [
     sys,
     stderr,
     stdout,
-    cache,
     environ,
     getenv,
     cached_property,
     BytesIO,
     choice,
     randint,
+    partial,
     string,
     ascii_letters,
     ascii_lowercase,
@@ -147,16 +138,9 @@ _ = [
     reduce,
     wraps,
     Iterable,
-    accumulate,
     chain,
-    combinations,
-    combinations_with_replacement,
-    compress,
     shutil,
-    count,
-    cycle,
     dropwhile,
-    filterfalse,
     hashlib,
     groupby,
     islice,
@@ -175,8 +159,6 @@ _ = [
     repeat,
     starmap,
     takewhile,
-    tee,
-    zip_longest,
     md5,
     Iterator,
     Mapping,
