@@ -3,6 +3,11 @@ if command -v bat &>/dev/null; then
 	alias cat='bat'
 fi
 
+# bottom
+if command -v btm &>/dev/null; then
+  alias htop='btm'
+fi
+
 # cd
 alias ~='cd "$HOME"'
 alias ..='cd ..'
