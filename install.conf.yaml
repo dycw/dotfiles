@@ -18,6 +18,7 @@
     ~/.gitconfig: git/config
     ~/.wezterm.lua: wezterm/wezterm.lua
     ~/.zprofile: zsh/zprofile
+    ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
 
 - shell:
@@ -31,6 +32,7 @@
     - [brew install direnv, Installing direnv]
     - [brew install eza, Installing eza]
     - [brew install fd, Installing fd]
+    - [brew install ffmpeg, Installing ffmpeg]
     - [brew install fzf, Installing fzf]
     - [
         $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish,
