@@ -4,6 +4,7 @@ if command -v git &>/dev/null; then
 	# add
 	alias ga='git add'
 	alias gaa='git add -A'
+	alias gap='git add -p'
 	# add + commit + push
 	gac() {
 		if [[ $# -eq 0 ]]; then

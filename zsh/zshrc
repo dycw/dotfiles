@@ -111,6 +111,11 @@ if command -v pre-commit &>/dev/null; then
 	alias pci='pre-commit install'
 fi
 
+# ruff
+if command -v ruff &>/dev/null; then
+	alias rcw='ruff check -w'
+fi
+
 # uv
 if command -v uv &>/dev/null; then
 	alias uvpi='uv pip install'
