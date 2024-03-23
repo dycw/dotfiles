@@ -10,7 +10,7 @@
     - ~/.config/direnv
     - ~/.ipython/profile_default
     - ~/.ipython/profile_default/startup
-    - ~/.oh-my-zsh/custom
+    - ~/.zim
 
 - link:
     /Users/derekwan/Library/Application Support/nushell/config.nu: nushell/config.nu
@@ -22,6 +22,7 @@
     ~/.ipython/profile_default/ipython_config.py: ipython/ipython_config.py
     ~/.ipython/profile_default/startup/startup.py: ipython/startup.py
     ~/.wezterm.lua: wezterm/wezterm.lua
+    ~/.zim/zimrc: zsh/zimrc
     ~/.zprofile: zsh/zprofile
     ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
