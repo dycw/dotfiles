@@ -3,6 +3,7 @@ from __future__ import annotations  # noqa: INP001
 import datetime as dt
 import gzip
 import json
+import pickle
 import sys
 from abc import ABC, ABCMeta
 from collections import Counter, defaultdict, deque
@@ -76,6 +77,7 @@ from numbers import Integral, Number, Real
 from operator import add, and_, attrgetter, itemgetter, mul, or_, sub, truediv
 from os import environ, getenv
 from pathlib import Path
+from platform import system
 from subprocess import PIPE, CalledProcessError, check_output
 
 _ = [
@@ -121,6 +123,7 @@ _ = [
     BytesIO,
     StringIO,
     lru_cache,
+    pickle,
     reduce,
     wraps,
     Iterable,
@@ -157,6 +160,7 @@ _ = [
     Path,
     Reversible,
     Sequence,
+    system,
     Sized,
     ValuesView,
     asdict,
