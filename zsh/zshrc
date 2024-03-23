@@ -66,7 +66,7 @@ if command -v fd >/dev/null 2>&1; then
 fi
 
 # fzf
-__file="${HOME}/fzf/fzf.zsh"
+__file="${HOME}/.config/fzf/fzf.zsh"
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
@@ -176,6 +176,11 @@ unset __conda_setup
 # direnv
 if command -v starship >/dev/null 2>&1; then
 	eval "$(direnv hook zsh)"
+fi
+
+# fzf
+if command -v fzf >/dev/null 2>&1; then
+	eval "$(fzf --zsh)"
 fi
 
 # starship
