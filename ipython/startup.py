@@ -1,11 +1,20 @@
 from __future__ import annotations  # noqa: INP001
 
+import abc
 import datetime as dt
 import gzip
 import hashlib
 import itertools as it
 import json
+import math
+import multiprocessing
+import numbers
+import operator
+import os
+import pathlib
 import pickle
+import platform
+import pprint
 import re
 import shutil
 import socket
@@ -13,7 +22,6 @@ import stat
 import string
 import subprocess
 import sys
-from abc import ABC, ABCMeta
 from collections import Counter, defaultdict, deque
 from collections.abc import (
     Awaitable,
@@ -43,7 +51,6 @@ from dataclasses import (
 from enum import Enum, auto
 from functools import cached_property, lru_cache, partial, reduce, wraps
 from hashlib import md5
-from importlib.util import find_spec
 from io import BytesIO, StringIO
 from itertools import (
     chain,
@@ -64,7 +71,6 @@ from operator import add, and_, attrgetter, itemgetter, mul, or_, sub, truediv
 from os import environ, getenv
 from pathlib import Path
 from platform import system
-from pprint import pformat, pp, pprint
 from random import choice, randint, randrange, shuffle, uniform
 from re import DOTALL, escape, findall, fullmatch, match, search
 from shutil import copyfile, rmtree, which
@@ -82,118 +88,123 @@ from subprocess import (
 from sys import stderr, stdout
 
 _ = [
-    ABC,
-    ABCMeta,
     AbstractSet,
-    dt,
-    gzip,
     Awaitable,
+    BytesIO,
     Callable,
     CalledProcessError,
+    wraps,
     Collection,
     Container,
     Coroutine,
-    Integral,
-    Number,
-    Real,
     Counter,
+    DEVNULL,
+    DOTALL,
+    Enum,
     Generator,
-    Pool,
-    cpu_count,
     Hashable,
-    json,
+    Integral,
+    Iterable,
+    Iterator,
     JSONDecoder,
     JSONEncoder,
+    Mapping,
+    Number,
+    PIPE,
+    PIPE,
+    Path,
+    Pool,
+    Real,
+    STDOUT,
+    Sequence,
+    Sized,
+    StringIO,
+    abc,
     add,
     and_,
-    attrgetter,
-    itemgetter,
-    mul,
-    or_,
-    sub,
-    truediv,
-    sys,
-    stderr,
-    stdout,
-    environ,
-    getenv,
-    cached_property,
-    BytesIO,
-    choice,
-    randint,
-    partial,
-    string,
+    math,
     ascii_letters,
     ascii_lowercase,
     ascii_uppercase,
-    randrange,
-    shuffle,
-    uniform,
-    StringIO,
-    lru_cache,
-    pickle,
-    stat,
-    socket,
-    gethostname,
-    reduce,
-    wraps,
-    Iterable,
+    astuple,
+    attrgetter,
+    auto,
+    cached_property,
     chain,
-    shutil,
-    dropwhile,
-    hashlib,
-    groupby,
-    islice,
-    pairwise,
-    permutations,
-    subprocess,
-    it,
-    DEVNULL,
-    PIPE,
-    STDOUT,
-    CalledProcessError,
     check_call,
     check_output,
-    run,
-    product,
-    repeat,
-    starmap,
-    takewhile,
-    md5,
-    Iterator,
-    Mapping,
-    Enum,
-    auto,
-    PIPE,
-    pformat,
-    pp,
-    pprint,
-    Path,
-    Sequence,
-    system,
-    Sized,
+    choice,
     copyfile,
-    rmtree,
-    which,
-    re,
-    DOTALL,
-    escape,
-    findall,
-    fullmatch,
-    match,
-    search,
-    astuple,
-    check_output,
+    cpu_count,
     dataclass,
     defaultdict,
     deque,
+    dropwhile,
+    dt,
+    environ,
+    escape,
     field,
     fields,
+    findall,
+    fullmatch,
+    getenv,
+    gethostname,
+    groupby,
+    gzip,
+    hashlib,
     is_dataclass,
+    islice,
+    it,
+    itemgetter,
+    json,
+    json,
+    lru_cache,
     make_dataclass,
+    match,
+    md5,
+    mul,
+    multiprocessing,
+    numbers,
+    operator,
+    or_,
+    os,
+    pairwise,
+    partial,
+    pathlib,
+    permutations,
+    pickle,
+    platform,
+    pprint,
+    pprint,
+    product,
+    randint,
+    randrange,
+    re,
+    reduce,
+    repeat,
     replace,
+    rmtree,
+    run,
+    search,
+    shuffle,
+    shutil,
+    socket,
+    socket,
+    starmap,
+    stat,
+    stderr,
+    stdout,
+    string,
+    sub,
+    subprocess,
     suppress,
     sys,
+    sys,
+    system,
+    takewhile,
+    truediv,
+    uniform,
+    which,
 ]
 
 
@@ -206,25 +217,6 @@ except ImportError:
     pass
 else:
     _ = [Buffer]
-
-
-if find_spec("numpy") is None:
-    from math import (
-        ceil,
-        exp,
-        floor,
-        inf,
-        isclose,
-        isfinite,
-        isinf,
-        isnan,
-        log,
-        log2,
-        nan,
-        sqrt,
-    )
-
-    _ = [ceil, exp, floor, inf, isclose, isfinite, isinf, isnan, log, log2, nan, sqrt]
 
 
 # third party imports
@@ -265,18 +257,11 @@ else:
 
 
 try:
-    import cxvpy as cvxpy  # type: ignore[]
-    from cxvpy import (  # type: ignore[]
-        Expression,
-        Maximize,
-        Minimize,
-        Problem,
-        Variable,
-    )
+    import cxvpy as cp  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [cvxpy, Expression, Maximize, Minimize, Problem, Variable]
+    _ = [cp]
 
 
 try:
