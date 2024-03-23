@@ -46,6 +46,7 @@ from dataclasses import (
 from enum import Enum, auto
 from functools import cache, cached_property, lru_cache, reduce, wraps
 from hashlib import md5
+from io import BytesIO, StringIO
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
@@ -71,6 +72,8 @@ _ = [
     ItemsView,
     cache,
     cached_property,
+    BytesIO,
+    StringIO,
     lru_cache,
     reduce,
     wraps,
