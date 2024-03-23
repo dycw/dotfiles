@@ -30,6 +30,7 @@
     - [brew install bottom, Installing bottom]
     - [brew install cmake, Installing cmake] # for qdldl
     - [brew install direnv, Installing direnv]
+    - [brew install dust, Installing dust]
     - [brew install eza, Installing eza]
     - [brew install fd, Installing fd]
     - [brew install ffmpeg, Installing ffmpeg]
