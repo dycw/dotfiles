@@ -119,10 +119,13 @@ fi
 # zsh
 alias zshrc='"$EDITOR" "$HOME"/dotfiles/zsh/main.zsh'
 
+# zsh-vi-mode
 if command -v brew &>/dev/null; then
-	alias uvpi='uv pip install'
-	alias uvpie='uv pip install --editable .'
-	alias uvps='uv pip sync --strict requirements.txt'
+	__file="$(brew --prefix)"/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+	if [ -f "$__file" ]; then
+		# shellcheck source=/dev/null
+		source "$__file"
+	fi
 fi
 
 # ---- end ----
