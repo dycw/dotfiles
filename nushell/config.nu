@@ -840,4 +840,10 @@ $env.config = {
     ]
 }
 
+# ---- end ----
+
+# starship
+use ~/.cache/starship/init.nu
+
+# zoxide
 source ~/.zoxide.nu
