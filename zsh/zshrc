@@ -118,7 +118,7 @@ fi
 
 # ruff
 if command -v ruff &>/dev/null; then
-	alias rcw='ruff check -w'
+	alias rw='ruff check -w'
 fi
 
 # uv
