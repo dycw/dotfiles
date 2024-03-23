@@ -64,6 +64,12 @@ if command -v fd &>/dev/null; then
 	alias fds='fd -Hts'
 fi
 
+# fzf
+__file="${XDG_CONFIG_HOME:-$HOME/.config}/fzf/fzf.zsh"
+if [ -f "$__file" ]; then
+	source "$__file"
+fi
+
 # gh
 if command -v gh &>/dev/null; then
 	alias ghc='gh pr create'
