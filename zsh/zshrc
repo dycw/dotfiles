@@ -130,8 +130,7 @@ if command -v brew &>/dev/null; then
 	if [ -d "$__dir" ]; then
 		export FPATH="$__dir${FPATH:+:$FPATH}" # preprend
 	else
-		echo Expected to find "$__dir"
-		did not
+    echo 'Expected to find "$__dir"; did not'
 	fi
 fi
 
