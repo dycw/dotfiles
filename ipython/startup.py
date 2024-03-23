@@ -378,7 +378,6 @@ try:
         adjacent,
         all_equal,
         all_unique,
-        always_iterable,
         always_reversible,
         batched,
         before_and_after,
@@ -521,7 +520,6 @@ else:
         adjacent,
         all_equal,
         all_unique,
-        always_iterable,
         always_reversible,
         batched,
         before_and_after,
@@ -658,9 +656,11 @@ else:
         zip_broadcast,
         zip_offset,
     ]
-    if find_spec("tabulate") is None:
+    try:
+        from tabulate import tabulate  # type: ignore[]
+    except ModuleNotFoundError:
         from more_itertools import tabulate  # type: ignore[]
-
+    else:
         _ = [tabulate]
     try:
         from utilities.iterables import one, take, transpose  # type: ignore[]
@@ -926,9 +926,11 @@ else:
         to_datetime,
         to_pickle,
     ]
-    if find_spec("utilities") is None:
+    try:
+        from utilities.pickle import read_pickle  # type: ignore[]
+    except ModuleNotFoundError:
         from pandas import read_pickle  # type: ignore[]
-
+    else:
         _ = [read_pickle]
 
     _min_max_rows = 7
@@ -945,12 +947,31 @@ else:
 
 
 try:
-    from tabulate import tabulate  # type: ignore[]
+    from polars import UInt8  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [tabulate]
-
+    _ = [UInt8]
+    try:
+        from pandas import (  # type: ignore[]
+            DataFrame,
+            Series,
+            concat,
+            read_csv,
+            read_excel,
+            read_parquet,
+        )
+    except ModuleNotFoundError:
+        from polars import (  # type: ignore[]
+            DataFrame,
+            Series,
+            concat,
+            read_csv,
+            read_excel,
+            read_parquet,
+        )
+    else:
+        _ = [DataFrame, Series, concat, read_csv, read_excel, read_parquet]
 
 # functions
 
