@@ -75,9 +75,7 @@ from multiprocessing import Pool, cpu_count
 from os import environ, getenv
 from pathlib import Path
 from re import escape, findall, search
-from shutil import copyfile, rmtree, which
-from socket import gethostname
-from string import ascii_letters, ascii_lowercase, ascii_uppercase
+from shutil import copyfile, rmtree
 from subprocess import PIPE, CalledProcessError, check_call, check_output, run
 from tempfile import TemporaryDirectory
 from time import sleep
@@ -144,9 +142,6 @@ _ = [
     Sized,
     abc,
     math,
-    ascii_letters,
-    ascii_lowercase,
-    ascii_uppercase,
     astuple,
     auto,
     types,
@@ -169,7 +164,6 @@ _ = [
     fields,
     findall,
     getenv,
-    gethostname,
     groupby,
     gzip,
     hashlib,
@@ -213,7 +207,6 @@ _ = [
     sys,
     sys,
     takewhile,
-    which,
 ]
 
 
