@@ -1,5 +1,6 @@
 from __future__ import annotations  # noqa: INP001
 
+import datetime as dt
 import sys
 from abc import ABC, ABCMeta
 from collections import Counter, defaultdict, deque
@@ -41,34 +42,29 @@ from dataclasses import (
     make_dataclass,
     replace,
 )
+from enum import (
+    Enum,
+    auto,
+)
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
 _ = [
-    sys,
     ABC,
-    Field,
-    asdict,
-    astuple,
-    dataclass,
-    field,
-    fields,
-    is_dataclass,
-    make_dataclass,
-    replace,
     ABCMeta,
-    Counter,
     AbstractSet,
-    defaultdict,
-    deque,
     AsyncGenerator,
+    dt,
     AsyncIterable,
     AsyncIterator,
     Awaitable,
     Callable,
+    CalledProcessError,
     Collection,
     Container,
     Coroutine,
+    Counter,
+    Field,
     Generator,
     Hashable,
     ItemsView,
@@ -80,18 +76,27 @@ _ = [
     MutableMapping,
     MutableSequence,
     MutableSet,
+    Enum,
+    auto,
+    PIPE,
+    Path,
     Reversible,
     Sequence,
     Sized,
     ValuesView,
-    ABC,
-    sys,
-    PIPE,
-    CalledProcessError,
+    asdict,
+    astuple,
     check_output,
-    ABCMeta,
+    dataclass,
+    defaultdict,
+    deque,
+    field,
+    fields,
+    is_dataclass,
+    make_dataclass,
+    replace,
     suppress,
-    Path,
+    sys,
 ]
 
 
