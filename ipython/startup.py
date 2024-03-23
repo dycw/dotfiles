@@ -123,6 +123,23 @@ else:
     _ = [ttl_cache]
 
 
+try:
+    from cxvpy import (  # type: ignore[]
+        Expression,
+        Maximize,
+        Minimize,
+        Problem,
+        Variable,
+    )
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [Expression, Maximize, Minimize, Problem, Variable]
+
+
+# functions
+
+
 def _add_src_to_sys_path() -> None:
     try:
         output = check_output(
