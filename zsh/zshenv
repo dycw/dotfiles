@@ -6,13 +6,6 @@ else
 	echo 'Expected to find "$__dir"; did not'
 fi
 
-# neovim
-if command -v nvim &>/dev/null; then
-	export EDITOR=nvim
-else
-	export EDITOR=vim
-fi
-
 # node
 __dir='/opt/homebrew/opt/node@20/bin'
 if [ -d "$__dir" ]; then
