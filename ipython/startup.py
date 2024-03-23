@@ -23,15 +23,47 @@ import string
 import subprocess
 import sys
 from collections import Counter, defaultdict, deque
-from collections.abc import Awaitable, Callable, Collection, Container, Coroutine, Generator, Hashable, Iterable, Iterator, Mapping, Sequence, Sized
+from collections.abc import (
+    Awaitable,
+    Callable,
+    Collection,
+    Container,
+    Coroutine,
+    Generator,
+    Hashable,
+    Iterable,
+    Iterator,
+    Mapping,
+    Sequence,
+    Sized,
+)
 from collections.abc import Set as AbstractSet
 from contextlib import suppress
-from dataclasses import astuple, dataclass, field, fields, is_dataclass, make_dataclass, replace
+from dataclasses import (
+    astuple,
+    dataclass,
+    field,
+    fields,
+    is_dataclass,
+    make_dataclass,
+    replace,
+)
 from enum import Enum, auto
 from functools import cached_property, lru_cache, partial, reduce, wraps
 from hashlib import md5
 from io import BytesIO, StringIO
-from itertools import chain, dropwhile, groupby, islice, pairwise, permutations, product, repeat, starmap, takewhile
+from itertools import (
+    chain,
+    dropwhile,
+    groupby,
+    islice,
+    pairwise,
+    permutations,
+    product,
+    repeat,
+    starmap,
+    takewhile,
+)
 from json import JSONDecoder, JSONEncoder
 from multiprocessing import Pool, cpu_count
 from numbers import Integral, Number, Real
@@ -44,7 +76,15 @@ from re import DOTALL, escape, findall, fullmatch, match, search
 from shutil import copyfile, rmtree, which
 from socket import gethostname
 from string import ascii_letters, ascii_lowercase, ascii_uppercase
-from subprocess import DEVNULL, PIPE, STDOUT, CalledProcessError, check_call, check_output, run
+from subprocess import (
+    DEVNULL,
+    PIPE,
+    STDOUT,
+    CalledProcessError,
+    check_call,
+    check_output,
+    run,
+)
 from sys import stderr, stdout
 
 _ = [
@@ -278,11 +318,38 @@ else:
 
 try:
     import luigi  # type: ignore[]
-    from luigi import BoolParameter, DictParameter, EnumParameter, ExternalTask, FloatParameter, IntParameter, LocalTarget, Task, TaskParameter, TupleParameter, WrapperTask, build  # type: ignore[]
+    from luigi import (
+        BoolParameter,
+        DictParameter,
+        EnumParameter,
+        ExternalTask,
+        FloatParameter,
+        IntParameter,
+        LocalTarget,
+        Task,
+        TaskParameter,
+        TupleParameter,
+        WrapperTask,
+        build,
+    )
 except ModuleNotFoundError:
     pass
 else:
-    _ = [luigi, BoolParameter, DictParameter, EnumParameter, ExternalTask, FloatParameter, IntParameter, LocalTarget, Task, TaskParameter, TupleParameter, WrapperTask, build]
+    _ = [
+        luigi,
+        BoolParameter,
+        DictParameter,
+        EnumParameter,
+        ExternalTask,
+        FloatParameter,
+        IntParameter,
+        LocalTarget,
+        Task,
+        TaskParameter,
+        TupleParameter,
+        WrapperTask,
+        build,
+    ]
 
 
 try:
@@ -443,10 +510,42 @@ else:
 
 try:
     import pandas as pd  # type: ignore[]
-    from pandas import NA, BooleanDtype, DateOffset, DatetimeIndex, Index, Int64Dtype, MultiIndex, RangeIndex, StringDtype, Timedelta, TimedeltaIndex, Timestamp, bdate_range, date_range, qcut, read_sql, read_table, set_option, to_datetime, to_pickle  # type: ignore[]
+    from pandas import (  # type: ignore[]    from pandas import (
+        NA,
+        BooleanDtype,
+        DateOffset,
+        DatetimeIndex,
+        Index,
+        Int64Dtype,
+        MultiIndex,
+        RangeIndex,
+        StringDtype,
+        Timedelta,
+        TimedeltaIndex,
+        Timestamp,
+        bdate_range,
+        date_range,
+        qcut,
+        read_sql,
+        read_table,
+        set_option,
+        to_datetime,
+        to_pickle,
+    )
     from pandas._libs.missing import NAType  # type: ignore[]
     from pandas.testing import assert_index_equal  # type: ignore[]
-    from pandas.tseries.offsets import BDay, Hour, Micro, Milli, Minute, MonthBegin, MonthEnd, Nano, Second, Week  # type: ignore[]
+    from pandas.tseries.offsets import (  # type: ignore[]
+        BDay,
+        Hour,
+        Micro,
+        Milli,
+        Minute,
+        MonthBegin,
+        MonthEnd,
+        Nano,
+        Second,
+        Week,
+    )
 except ModuleNotFoundError:
     pass
 else:
@@ -494,7 +593,16 @@ else:
         _ = [read_pickle]
 
     _min_max_rows = 7
-    set_option("display.float_format", lambda x: f"{x:,.5f}", "display.min_rows", _min_max_rows, "display.max_rows", _min_max_rows, "display.max_columns", 100)
+    set_option(
+        "display.float_format",
+        lambda x: f"{x:,.5f}",
+        "display.min_rows",
+        _min_max_rows,
+        "display.max_rows",
+        _min_max_rows,
+        "display.max_columns",
+        100,
+    )
 
 
 try:
@@ -543,7 +651,10 @@ try:
         when,
     )
     from polars.datatypes import DataTypeClass  # type: ignore[]
-    from polars.testing import assert_frame_not_equal, assert_series_not_equal  # type: ignore[]
+    from polars.testing import (  # type: ignore[]
+        assert_frame_not_equal,
+        assert_series_not_equal,
+    )
     from polars.type_aliases import SchemaDict  # type: ignore[]
 
     Config(tbl_rows=7, tbl_cols=100)
@@ -601,13 +712,42 @@ else:
         SchemaDict,
     ]
     try:
-        from pandas import DataFrame, Series, concat, read_csv, read_excel, read_parquet  # type: ignore[]
-        from pandas.testing import assert_frame_equal, assert_series_equal  # type: ignore[]
+        from pandas import (  # type: ignore[]
+            DataFrame,
+            Series,
+            concat,
+            read_csv,
+            read_excel,
+            read_parquet,
+        )
+        from pandas.testing import (  # type: ignore[]
+            assert_frame_equal,
+            assert_series_equal,
+        )
     except ModuleNotFoundError:
-        from polars import DataFrame, Series, concat, read_csv, read_excel, read_parquet  # type: ignore[]
-        from polars.testing import assert_frame_equal, assert_series_equal  # type: ignore[]
+        from polars import (  # type: ignore[]
+            DataFrame,
+            Series,
+            concat,
+            read_csv,
+            read_excel,
+            read_parquet,
+        )
+        from polars.testing import (  # type: ignore[]
+            assert_frame_equal,
+            assert_series_equal,
+        )
     else:
-        _ = [DataFrame, Series, assert_frame_equal, assert_series_equal, concat, read_csv, read_excel, read_parquet]
+        _ = [
+            DataFrame,
+            Series,
+            assert_frame_equal,
+            assert_series_equal,
+            concat,
+            read_csv,
+            read_excel,
+            read_parquet,
+        ]
 
 
 try:
