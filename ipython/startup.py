@@ -47,6 +47,7 @@ from dataclasses import (
 from enum import Enum, auto
 from functools import cache, cached_property, lru_cache, reduce, wraps
 from hashlib import md5
+from importlib.util import find_spec
 from io import BytesIO, StringIO
 from itertools import (
     accumulate,
@@ -167,6 +168,38 @@ except ImportError:
     pass
 else:
     _ = [Buffer]
+
+
+if find_spec("numpy") is None:
+    from math import (
+        ceil,
+        exp,
+        floor,
+        inf,
+        isclose,
+        isfinite,
+        isinf,
+        isnan,
+        log,
+        log2,
+        nan,
+        sqrt,
+    )
+
+    _ = [
+        ceil,
+        exp,
+        floor,
+        inf,
+        isclose,
+        isfinite,
+        isinf,
+        isnan,
+        log,
+        log2,
+        nan,
+        sqrt,
+    ]
 
 
 # third party imports
