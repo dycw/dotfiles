@@ -741,8 +741,8 @@ try:
         zeros,
         zeros_like,
     )
-    from numpy.linalg import LinAlgError, cholesky, inv
-    from numpy.random import Generator, RandomState, default_rng
+    from numpy.linalg import LinAlgError, cholesky, inv  # type: ignore[]
+    from numpy.random import Generator, RandomState, default_rng  # type: ignore[]
     from numpy.typing import NDArray  # type: ignore[]
 
 
