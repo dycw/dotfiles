@@ -1,6 +1,7 @@
 from __future__ import annotations  # noqa: INP001
 
 import datetime as dt
+import gzip
 import sys
 from abc import ABC, ABCMeta
 from collections import Counter, defaultdict, deque
@@ -42,10 +43,9 @@ from dataclasses import (
     make_dataclass,
     replace,
 )
-from enum import (
-    Enum,
-    auto,
-)
+from enum import Enum, auto
+from functools import cache, cached_property, lru_cache, reduce, wraps
+from hashlib import md5
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
@@ -57,6 +57,7 @@ _ = [
     dt,
     AsyncIterable,
     AsyncIterator,
+    gzip,
     Awaitable,
     Callable,
     CalledProcessError,
@@ -68,7 +69,13 @@ _ = [
     Generator,
     Hashable,
     ItemsView,
+    cache,
+    cached_property,
+    lru_cache,
+    reduce,
+    wraps,
     Iterable,
+    md5,
     Iterator,
     KeysView,
     Mapping,
@@ -101,6 +108,7 @@ _ = [
 
 
 # standard library imports
+
 
 try:
     from collections.abc import Buffer
@@ -157,6 +165,34 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [Expression, Maximize, Minimize, Problem, Variable]
+
+
+try:
+    from frozendict import frozendict  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [frozendict]
+
+
+try:
+    from humanize import (  # type: ignore[]
+        naturaldate,
+        naturalday,
+        naturaldelta,
+        naturalsize,
+        naturaltime,
+    )
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [
+        naturaldelta,
+        naturalsize,
+        naturaltime,
+        naturalday,
+        naturaldate,
+    ]
 
 
 # functions
