@@ -19,6 +19,7 @@
     ~/.zshrc: zsh/zshrc
 
 - shell:
+    - [sudo scutil --set ComputerName DW-Mac, Configuring host name]
     - [git submodule update --init --recursive, Installing submodules]
     - [brew install bat, Installing bat]
     - [brew install bottom, Installing bottom]
