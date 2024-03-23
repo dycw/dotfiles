@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 if command -v git &>/dev/null; then
 	# add
@@ -62,7 +62,7 @@ if command -v git &>/dev/null; then
 	# clone
 	alias gcl='git clone'
 	# commit
-	gc() {
+	function gc {
 		if [[ $# -eq 0 ]]; then
 			git commit && git push -u origin "$(gcurr)"
 		elif [[ $# -eq 1 ]]; then
@@ -71,7 +71,7 @@ if command -v git &>/dev/null; then
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
-	gcf() {
+	function gcf {
 		if [[ $# -eq 0 ]]; then
 			git commit && git push -fu origin "$(gcurr)"
 		elif [[ $# -eq 1 ]]; then
@@ -80,7 +80,7 @@ if command -v git &>/dev/null; then
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
-	gcn() {
+	function gcn {
 		if [[ $# -eq 0 ]]; then
 			git commit --no-verify && git push -u origin "$(gcurr)"
 		elif [[ $# -eq 1 ]]; then
@@ -89,7 +89,7 @@ if command -v git &>/dev/null; then
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
-	gcnf() {
+	function gcnf {
 		if [[ $# -eq 0 ]]; then
 			git commit --no-verify && git push -fu origin "$(gcurr)"
 		elif [[ $# -eq 1 ]]; then
@@ -120,8 +120,8 @@ if command -v git &>/dev/null; then
 	alias gr='git reset'
 	alias grp='git reset --patch'
 	# rev-parse
-	gcurr() { git rev-parse --abbrev-ref HEAD; }
-	groot() { git rev-parse --show-toplevel; }
+	alias gcurr='git rev-parse --abbrev-ref HEAD'
+	alias groot='git rev-parse --show-toplevel'
 	# rm
 	alias grm='git rm'
 	alias grmc='git rm --cached'
@@ -133,8 +133,8 @@ if command -v git &>/dev/null; then
 	alias gstd='git stash drop'
 	alias gstp='git stash pop'
 	# tag
-	gta() { git tag -a "$1" "$2" -m "$1" && git push -u origin --tags; }
-	gtd() { git tag -d "$1" && git push -d origin "$1"; }
+	function gta { git tag -a "$1" "$2" -m "$1" && git push -u origin --tags; }
+	function gtd { git tag -d "$1" && git push -d origin "$1"; }
 
 	# gitweb
 	if command -v gitweb &>/dev/null; then

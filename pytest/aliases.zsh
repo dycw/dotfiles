@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 alias pyt='pytest -ra -vv --color=yes --strict-markers'
 alias pytc='pytest -ra -vv --color=yes --strict-markers --no-cov'
