@@ -30,6 +30,7 @@ import time
 import types
 import typing
 import urllib
+import zipfile
 from collections import Counter, defaultdict, deque
 from collections.abc import (
     Callable,
@@ -121,6 +122,7 @@ _ = [
     ClassVar,
     Generic,
     Literal,
+    zipfile,
     NewType,
     NoReturn,
     ParamSpec,
