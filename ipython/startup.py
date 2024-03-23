@@ -70,33 +70,11 @@ from itertools import (
     tee,
     zip_longest,
 )
-from json import (
-    JSONDecoder,
-    JSONEncoder,
-)
-from multiprocessing import (
-    Pool,
-    cpu_count,
-)
-from numbers import (
-    Integral,
-    Number,
-    Real,
-)
-from operator import (
-    add,
-    and_,
-    attrgetter,
-    itemgetter,
-    mul,
-    or_,
-    sub,
-    truediv,
-)
-from os import (
-    environ,
-    getenv,
-)
+from json import JSONDecoder, JSONEncoder
+from multiprocessing import Pool, cpu_count
+from numbers import Integral, Number, Real
+from operator import add, and_, attrgetter, itemgetter, mul, or_, sub, truediv
+from os import environ, getenv
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
@@ -224,20 +202,7 @@ if find_spec("numpy") is None:
         sqrt,
     )
 
-    _ = [
-        ceil,
-        exp,
-        floor,
-        inf,
-        isclose,
-        isfinite,
-        isinf,
-        isnan,
-        log,
-        log2,
-        nan,
-        sqrt,
-    ]
+    _ = [ceil, exp, floor, inf, isclose, isfinite, isinf, isnan, log, log2, nan, sqrt]
 
 
 # third party imports
@@ -401,15 +366,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
-    _ = [
-        gca,
-        gcf,
-        mpl,
-        plt,
-        subplot,
-        twinx,
-        twiny,
-    ]
+    _ = [gca, gcf, mpl, plt, subplot, twinx, twiny]
 
 
 try:
@@ -718,14 +675,7 @@ else:
             windowed_complete,
         )
     else:
-        _ = [
-            always_iterable,
-            one,
-            peekable,
-            take,
-            transpose,
-            windowed_complete,
-        ]
+        _ = [always_iterable, one, peekable, take, transpose, windowed_complete]
 
 
 try:
@@ -959,7 +909,6 @@ else:
         assert_index_equal,
         assert_series_equal,
         bdate_range,
-        concat,
         concat,
         date_range,
         pd,

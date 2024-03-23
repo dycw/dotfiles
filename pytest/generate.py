@@ -99,7 +99,7 @@ class Alias:
             chain(
                 ["-ra", "-vv", "--color=yes", "--strict-markers"],
                 (p.option for p in self.parts),
-            ),
+            )
         )
         command = f"pytest {options}".strip()
         return f"alias {alias}='{command}'"
@@ -121,14 +121,7 @@ def yield_aliases() -> Iterator[Alias]:
     ):
         try:
             settings = Settings(
-                f=f,
-                i=i,
-                k=k,
-                maxfail=maxfail,
-                n=n,
-                no_cov=no_cov,
-                pdb=pdb,
-                x=x,
+                f=f, i=i, k=k, maxfail=maxfail, n=n, no_cov=no_cov, pdb=pdb, x=x
             )
         except ArgumentError:
             pass
