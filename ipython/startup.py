@@ -1,7 +1,10 @@
 from __future__ import annotations  # noqa: INP001
 
 import abc
+import csv
 import datetime as dt
+import enum
+import functools
 import gzip
 import hashlib
 import io
@@ -115,6 +118,7 @@ _ = [
     typing,
     IO,
     Annotated,
+    functools,
     Any,
     BinaryIO,
     ClassVar,
@@ -135,6 +139,8 @@ _ = [
     Hashable,
     Iterable,
     Iterator,
+    csv,
+    enum,
     Mapping,
     Path,
     Pool,
@@ -258,6 +264,14 @@ else:
 
 
 try:
+    import click  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [click]
+
+
+try:
     import cxvpy as cp  # type: ignore[]
 except ModuleNotFoundError:
     pass
@@ -299,6 +313,14 @@ except (AttributeError, ModuleNotFoundError):
     pass
 else:
     _ = [hvplot.xarray]
+
+
+try:
+    import hypothesis  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [hypothesis]
 
 
 try:
@@ -812,6 +834,14 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [sqla, sqlalchemy.orm, create_engine, select]
+
+
+try:
+    import streamlit as st  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [st]
 
 
 try:
