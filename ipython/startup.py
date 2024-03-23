@@ -834,25 +834,19 @@ try:
     from pandas import (  # type: ignore[]
         NA,
         BooleanDtype,
-        DataFrame,
         DateOffset,
         DatetimeIndex,
         Index,
         Int64Dtype,
         MultiIndex,
         RangeIndex,
-        Series,
         StringDtype,
         Timedelta,
         TimedeltaIndex,
         Timestamp,
         bdate_range,
-        concat,
         date_range,
         qcut,
-        read_csv,
-        read_excel,
-        read_parquet,
         read_sql,
         read_table,
         set_option,
@@ -885,7 +879,6 @@ else:
     _ = [
         BDay,
         BooleanDtype,
-        DataFrame,
         DateOffset,
         DateOffset,
         DatetimeIndex,
@@ -903,7 +896,6 @@ else:
         Nano,
         RangeIndex,
         Second,
-        Series,
         StringDtype,
         Timedelta,
         TimedeltaIndex,
@@ -913,13 +905,9 @@ else:
         assert_index_equal,
         assert_series_equal,
         bdate_range,
-        concat,
         date_range,
         pd,
         qcut,
-        read_csv,
-        read_excel,
-        read_parquet,
         read_sql,
         read_table,
         set_option,
@@ -961,6 +949,10 @@ else:
             read_excel,
             read_parquet,
         )
+        from pandas.testing import (  # type: ignore[]
+            assert_frame_equal,
+            assert_series_equal,
+        )
     except ModuleNotFoundError:
         from polars import (  # type: ignore[]
             DataFrame,
@@ -970,8 +962,21 @@ else:
             read_excel,
             read_parquet,
         )
+        from polars.testing import (  # type: ignore[]
+            assert_frame_equal,
+            assert_series_equal,
+        )
     else:
-        _ = [DataFrame, Series, concat, read_csv, read_excel, read_parquet]
+        _ = [
+            DataFrame,
+            Series,
+            concat,
+            read_csv,
+            read_excel,
+            read_parquet,
+            assert_frame_equal,
+            assert_series_equal,
+        ]
 
 # functions
 
