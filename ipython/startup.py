@@ -499,7 +499,6 @@ try:
         substrings,
         substrings_indexes,
         sum_of_squares,
-        tabulate,
         tail,
         takewhile_inclusive,
         time_limited,
@@ -514,7 +513,6 @@ try:
         windowed,
         with_iter,
         zip_broadcast,
-        zip_equal,
         zip_offset,
     )
 except ModuleNotFoundError:
@@ -645,7 +643,6 @@ else:
         substrings,
         substrings_indexes,
         sum_of_squares,
-        tabulate,
         tail,
         takewhile_inclusive,
         time_limited,
@@ -660,10 +657,39 @@ else:
         windowed,
         with_iter,
         zip_broadcast,
-        zip_equal,
         zip_offset,
     ]
+    if find_spec("tabulate") is None:
+        from more_itertools import tabulate  # type: ignore[]
 
+        _ = [tabulate]
+    try:
+        from utilities.more_itertools import (  # type: ignore[]
+            always_iterable,
+            one,
+            peekable,
+            take,
+            transpose,
+            windowed_complete,
+        )
+    except ModuleNotFoundError:
+        from more_itertools import (  # type: ignore[]
+            always_iterable,
+            one,
+            peekable,
+            take,
+            transpose,
+            windowed_complete,
+        )
+    else:
+        _ = [
+            always_iterable,
+            one,
+            peekable,
+            take,
+            transpose,
+            windowed_complete,
+        ]
 
 # functions
 
