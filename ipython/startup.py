@@ -1086,9 +1086,7 @@ else:
 
 
 try:
-    from pqdm.processes import (  # type: ignore[]
-        pqdm,
-    )
+    from pqdm.processes import pqdm  # type: ignore[]m
 except ModuleNotFoundError:
     pass
 else:
