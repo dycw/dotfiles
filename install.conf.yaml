@@ -75,3 +75,7 @@
     - [brew install --cask wezterm, Installing WezTerm]
     - [brew install --cask whatsapp, Installing WhatsApp]
     - [pipx install bump2version, Installing bump2version]
+    - [
+        git clone https://github.com/conda-incubator/conda-zsh-completion $HOME/.oh-my-zsh/custom/plugins/conda-zsh-completion,
+        Cloning conda-zsh-completion,
+      ]
