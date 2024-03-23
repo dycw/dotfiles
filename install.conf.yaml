@@ -74,7 +74,6 @@
     - [brew install watchexec, Installing watchexec]
     - [brew install yoannfleurydev/gitweb/gitweb, Installing gitweb]
     - [brew install zoxide, Installing zoxide]
-    - [brew install zsh-completions, Installing zsh-completions]
     - [brew install zsh-vi-mode, Installing zsh-vi-mode]
     - [brew install --cask 1password, Installing 1Password]
     - [brew install --cask dropbox, Installing Dropbox]

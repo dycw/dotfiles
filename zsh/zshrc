@@ -151,7 +151,6 @@ if [ -f "$__file" ]; then
 	. "$__file"
 fi
 
-
 # zsh
 alias zshrc='"$EDITOR" "$HOME"/.zshrc'
 

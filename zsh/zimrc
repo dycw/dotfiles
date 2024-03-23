@@ -1,4 +1,10 @@
 #!/usr/bin/env zsh
 
-zmodule zsh-users/zsh-syntax-highlighting
 zmodule zsh-users/zsh-autosuggestions
+zmodule zsh-users/zsh-syntax-highlighting
+zmodule jeffreytse/zsh-vi-mode
+
+# The modules will be initialized in the order they are defined, and completion must be initialized after all modules that add completion definitions, so it must come after zsh-users/zsh-completions.
+zmodule zsh-users/zsh-completions --fpath src
+zmodule conda-incubator/conda-zsh-completion
+zmodule completion
