@@ -1,7 +1,10 @@
 from __future__ import annotations  # noqa: INP001
 
 import abc
+import csv
 import datetime as dt
+import enum
+import functools
 import gzip
 import hashlib
 import io
@@ -115,6 +118,7 @@ _ = [
     typing,
     IO,
     Annotated,
+    functools,
     Any,
     BinaryIO,
     ClassVar,
@@ -135,6 +139,8 @@ _ = [
     Hashable,
     Iterable,
     Iterator,
+    csv,
+    enum,
     Mapping,
     Path,
     Pool,
