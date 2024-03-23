@@ -56,10 +56,10 @@ fi
 
 # fd
 if command -v fd &>/dev/null; then
-	alias fdd='fd --type=directory'
-	alias fde='fd --type=executable'
-	alias fdf='fd --type=file'
-	alias fds='fd --type=symlink'
+	alias fdd='fd -Htd'
+	alias fde='fd -Hte'
+	alias fdf='fd -Htf'
+	alias fds='fd -Hts'
 fi
 
 # fzf
