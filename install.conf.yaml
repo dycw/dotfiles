@@ -31,9 +31,18 @@
     ~/.zshrc: zsh/zshrc
 
 - shell:
-    # - [sudo scutil --set ComputerName DW-Mac, Configuring computer name]
-    # - [sudo scutil --set HostName DW-Mac, Configuring host name]
-    # - [sudo scutil --set LocalHostName DW-Mac, Configuring local host name]
+    - [
+        '[ "$(scutil --get ComputerName)" = DW-Mac ] || sudo scutil --set ComputerName DW-Mac',
+        Configuring computer name,
+      ]
+    - [
+        '[ "$(scutil --get HostName)" = DW-Mac ] || sudo scutil --set HostName DW-Mac',
+        Configuring host name,
+      ]
+    - [
+        '[ "$(scutil --get LocalHostName)" = DW-Mac ] || sudo scutil --set LocalHostName DW-Mac',
+        Configuring local host name,
+      ]
     - [git submodule update --init --recursive, Installing submodules]
     - [brew install bat, Installing bat]
     - [brew install bottom, Installing bottom]
@@ -76,6 +85,10 @@
     - [brew install --cask whatsapp, Installing WhatsApp]
     - [pipx install bump2version, Installing bump2version]
     - [
-        git clone https://github.com/conda-incubator/conda-zsh-completion $HOME/.oh-my-zsh/custom/plugins/conda-zsh-completion,
+        '[ -d $HOME/.oh-my-zsh ] || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)',
+        Installing oh-my-zsh,
+      ]
+    - [
+        "[ -d $HOME/.oh-my-zsh/custom/plugins/conda-zsh-completion ] || git clone https://github.com/conda-incubator/conda-zsh-completion $HOME/.oh-my-zsh/custom/plugins/conda-zsh-completion",
         Cloning conda-zsh-completion,
       ]
