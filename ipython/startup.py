@@ -853,9 +853,7 @@ try:
         to_datetime,
         to_pickle,
     )
-    from pandas._libs.missing import (  # type: ignore[]
-        NAType,
-    )
+    from pandas._libs.missing import NAType  # type: ignore[]
     from pandas.testing import assert_index_equal  # type: ignore[]
     from pandas.tseries.offsets import (  # type: ignore[]
         BDay,
@@ -929,11 +927,117 @@ else:
 
 
 try:
-    from polars import UInt8  # type: ignore[]
+    import polars as pl  # type: ignore[]
+    from polars import (  # type: ignore[]
+        Array,
+        Binary,
+        Boolean,
+        Categorical,
+        Config,
+        DataType,
+        Date,
+        Datetime,
+        Decimal,
+        Duration,
+        Float32,
+        Float64,
+        Int8,
+        Int16,
+        Int32,
+        Int64,
+        List,
+        Null,
+        Object,
+        PolarsDataType,
+        Struct,
+        Time,
+        UInt8,
+        UInt16,
+        UInt32,
+        UInt64,
+        Unknown,
+        Utf8,
+        col,
+        lit,
+        read_avro,
+        read_csv_batched,
+        read_database,
+        read_database_uri,
+        read_delta,
+        read_ipc,
+        read_ipc_schema,
+        read_ipc_stream,
+        read_json,
+        read_ndjson,
+        read_ods,
+        when,
+    )
+    from polars.datatypes import (  # type: ignore[]
+        DataTypeClass,
+    )
+    from polars.testing import (  # type: ignore[]
+        assert_frame_not_equal,
+        assert_series_not_equal,
+    )
+    from polars.type_aliases import (  # type: ignore[]
+        SchemaDict,
+    )
+
+    Config(tbl_rows=7, tbl_cols=100)
+
 except ModuleNotFoundError:
     pass
 else:
-    _ = [UInt8]
+    _ = [
+        Array,
+        Binary,
+        Boolean,
+        Categorical,
+        Config,
+        DataType,
+        DataTypeClass,
+        Date,
+        Datetime,
+        Decimal,
+        Duration,
+        Float32,
+        Float64,
+        Int16,
+        Int32,
+        Int64,
+        Int8,
+        List,
+        Null,
+        Object,
+        PolarsDataType,
+        SchemaDict,
+        Struct,
+        Time,
+        UInt16,
+        UInt32,
+        UInt64,
+        UInt8,
+        Unknown,
+        Utf8,
+        assert_frame_not_equal,
+        assert_series_not_equal,
+        col,
+        lit,
+        pl,
+        read_avro,
+        read_csv_batched,
+        read_database,
+        read_database_uri,
+        read_delta,
+        read_ipc,
+        read_ipc_schema,
+        read_ipc_stream,
+        read_json,
+        read_ndjson,
+        read_ods,
+        when,
+        SchemaDict,
+    ]
     try:
         from pandas import (  # type: ignore[]
             DataFrame,
