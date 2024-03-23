@@ -119,10 +119,6 @@
     "branch": "main",
     "commit": "04f58f2545ed80ac3b52dd4826e93f33e15b2af6"
   },
-  "mini.surround": {
-    "branch": "main",
-    "commit": "a1b590cc3b676512de507328d6bbab5e43794720"
-  },
   "neo-tree.nvim": {
     "branch": "v3.x",
     "commit": "8afbb06081ce1e4beb5b18945d14a608b10babeb"
@@ -162,6 +158,10 @@
   "nvim-spectre": {
     "branch": "master",
     "commit": "31f62d7fc30257b2a5c5327ff7b47719da37a1b4"
+  },
+  "nvim-surround": {
+    "branch": "main",
+    "commit": "d47001f8ddf9646c24f16d2732d4d0255acd2121"
   },
   "nvim-treesitter": {
     "branch": "master",

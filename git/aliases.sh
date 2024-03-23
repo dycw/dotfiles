@@ -55,6 +55,7 @@ if command -v git &>/dev/null; then
 	alias gcom='git checkout master'
 	alias gcomp='git checkout master && git pull --force'
 	alias gcompd='git checkout master && git pull --force && git branch -D dev'
+	alias gcompr='git checkout master && git pull --force && git branch -D dev && git checkout -b dev'
 	alias gcop='git checkout --patch'
 	# cherry-pick
 	alias gcp='git cherry-pick'

@@ -1,8 +1,9 @@
+[tool.ruff]
 extend-exclude = ["dotbot"]
 target-version = "py311"
 unsafe-fixes = true
 
-[lint]
+[tool.ruff.lint]
 ignore = [
   "ANN101",  # missing-type-self
   "ANN102",  # missing-type-cls
@@ -26,5 +27,5 @@ ignore = [
 ]
 select = ["ALL"]
 
-[lint.flake8-tidy-imports]
+[tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
