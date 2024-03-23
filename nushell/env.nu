@@ -98,3 +98,5 @@ $env.NU_PLUGIN_DIRS = [
 
 # To load from a custom file you can use:
 # source ($nu.default-config-dir | path join 'custom.nu')
+
+zoxide init nushell --cmd j --hook prompt | save -f ~/.zoxide.nu
