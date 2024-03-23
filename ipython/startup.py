@@ -253,7 +253,7 @@ else:
 
 
 try:
-    from joblib import Memory, Parallel, delayed
+    from joblib import Memory, Parallel, delayed  # type: ignore[]
 except (AttributeError, ModuleNotFoundError):
     pass
 else:
