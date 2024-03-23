@@ -10,18 +10,21 @@
     - ~/.config/direnv
 
 - link:
+    /Users/derekwan/Library/Application Support/nushell/config.nu: nushell/config.nu
+    /Users/derekwan/Library/Application Support/nushell/env.nu: nushell/env.nu
     ~/.config/direnv/direnvrc: direnv/direnvrc
     ~/.config/nvim: lazyvim
     ~/.config/starship.toml: starship/starship.toml
     ~/.gitconfig: git/config
     ~/.wezterm.lua: wezterm/wezterm.lua
     ~/.zprofile: zsh/zprofile
+    ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
 
 - shell:
-    - [sudo scutil --set ComputerName DW-Mac, Configuring computer name]
-    - [sudo scutil --set HostName DW-Mac, Configuring host name]
-    - [sudo scutil --set LocalHostName DW-Mac, Configuring local host name]
+    # - [sudo scutil --set ComputerName DW-Mac, Configuring computer name]
+    # - [sudo scutil --set HostName DW-Mac, Configuring host name]
+    # - [sudo scutil --set LocalHostName DW-Mac, Configuring local host name]
     - [git submodule update --init --recursive, Installing submodules]
     - [brew install bat, Installing bat]
     - [brew install bottom, Installing bottom]
@@ -29,6 +32,7 @@
     - [brew install direnv, Installing direnv]
     - [brew install eza, Installing eza]
     - [brew install fd, Installing fd]
+    - [brew install ffmpeg, Installing ffmpeg]
     - [brew install fzf, Installing fzf]
     - [
         $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish,

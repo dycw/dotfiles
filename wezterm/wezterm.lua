@@ -12,22 +12,22 @@ config.keys = {
 	-- navigate panes
 	{
 		key = "h",
-		mods = "CTRL",
+		mods = "CTRL|SHIFT",
 		action = wezterm.action.ActivatePaneDirection("Left"),
 	},
 	{
 		key = "j",
-		mods = "CTRL",
+		mods = "CTRL|SHIFT",
 		action = wezterm.action.ActivatePaneDirection("Down"),
 	},
 	{
 		key = "k",
-		mods = "CTRL",
+		mods = "CTRL|SHIFT",
 		action = wezterm.action.ActivatePaneDirection("Up"),
 	},
 	{
 		key = "l",
-		mods = "CTRL",
+		mods = "CTRL|SHIFT",
 		action = wezterm.action.ActivatePaneDirection("Right"),
 	},
 	-- new panes

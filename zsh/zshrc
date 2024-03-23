@@ -71,7 +71,7 @@ if command -v gh &>/dev/null; then
 fi
 
 # git
-__file="$HOME/dotfiles/git/aliases.sh"
+__file="$HOME"/dotfiles/git/aliases.sh
 if [ -f "$__file" ]; then
 	source "$__file"
 fi
@@ -98,7 +98,7 @@ alias plo='pip list --outdated'
 alias pui='pip uninstall'
 
 # pytest
-__file="$HOME/dotfiles/pytest/aliases.sh"
+__file="$HOME"/dotfiles/pytest/aliases.sh
 if [ -f "$__file" ]; then
 	source "$__file"
 fi
@@ -128,7 +128,9 @@ alias zshrc='"$EDITOR" "$HOME"/.zshrc'
 if command -v brew &>/dev/null; then
 	__dir="$(brew --prefix)/share/zsh/site-functions"
 	if [ -d "$__dir" ]; then
-		export FPATH="$__dir${FPATH:+:$FPATH}"
+		export FPATH="$__dir${FPATH:+:$FPATH}" # preprend
+	else
+    echo 'Expected to find "$__dir"; did not'
 	fi
 fi
 
@@ -136,15 +138,15 @@ fi
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
 if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
+	eval "$__conda_setup"
 else
-    if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/opt/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/miniconda3/bin:$PATH"
-    fi
+	if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
+		. "/opt/miniconda3/etc/profile.d/conda.sh"
+	else
+		export PATH="/opt/miniconda3/bin:$PATH"
+	fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<

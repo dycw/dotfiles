@@ -1,0 +1,30 @@
+# flutter
+__dir="$HOME"/development/flutter/bin
+if [ -d "$__dir" ]; then
+	export PATH="${PATH:+${PATH}:}$__dir" # append
+else
+	echo 'Expected to find "$__dir"; did not'
+fi
+
+# neovim
+if command -v nvim &>/dev/null; then
+	export EDITOR=nvim
+else
+	export EDITOR=vim
+fi
+
+# node
+__dir='/opt/homebrew/opt/node@20/bin'
+if [ -d "$__dir" ]; then
+	export PATH="$__dir${PATH:+:${PATH}}" # prepend
+else
+	echo 'Expected to find "$__dir"; did not'
+fi
+
+# pipx
+__dir="$HOME"/.local/bin
+if [ -d "$__dir" ]; then
+	export PATH="${PATH:+${PATH}:}$__dir" # append
+else
+	echo 'Expected to find "$__dir"; did not'
+fi
