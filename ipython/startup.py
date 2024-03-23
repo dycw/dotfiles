@@ -189,22 +189,25 @@ else:
 
 
 try:
+    import bs4  # type: ignore[]
     from bs4 import BeautifulSoup  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [BeautifulSoup]
+    _ = [bs4, BeautifulSoup]
 
 
 try:
+    import cachetools  # type: ignore[]
     from cachetools.func import ttl_cache  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [ttl_cache]
+    _ = [cachetools, ttl_cache]
 
 
 try:
+    import cxvpy as cvxpy  # type: ignore[]
     from cxvpy import (  # type: ignore[]
         Expression,
         Maximize,
@@ -215,7 +218,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Expression, Maximize, Minimize, Problem, Variable]
+    _ = [cvxpy, Expression, Maximize, Minimize, Problem, Variable]
 
 
 try:
@@ -227,6 +230,7 @@ else:
 
 
 try:
+    import humanize  # type: ignore[]
     from humanize import (  # type: ignore[]
         naturaldate,
         naturalday,
@@ -237,7 +241,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
-    _ = [naturaldate, naturalday, naturaldelta, naturalsize, naturaltime]
+    _ = [humanize, naturaldate, naturalday, naturaldelta, naturalsize, naturaltime]
 
 
 try:
@@ -261,11 +265,12 @@ else:
 
 
 try:
+    import joblib  # type: ignore[]
     from joblib import Memory, Parallel, delayed  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Memory, Parallel, delayed]
+    _ = [joblib, Memory, Parallel, delayed]
 
 
 try:
