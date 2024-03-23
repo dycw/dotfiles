@@ -2,6 +2,7 @@ from __future__ import annotations  # noqa: INP001
 
 import datetime as dt
 import gzip
+import json
 import sys
 from abc import ABC, ABCMeta
 from collections import Counter, defaultdict, deque
@@ -68,6 +69,10 @@ from itertools import (
     tee,
     zip_longest,
 )
+from json import (
+    JSONDecoder,
+    JSONEncoder,
+)
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
@@ -91,6 +96,9 @@ _ = [
     Generator,
     Hashable,
     ItemsView,
+    json,
+    JSONDecoder,
+    JSONEncoder,
     cache,
     cached_property,
     BytesIO,
@@ -254,10 +262,18 @@ else:
 
 try:
     from joblib import Memory, Parallel, delayed  # type: ignore[]
-except (AttributeError, ModuleNotFoundError):
+except ModuleNotFoundError:
     pass
 else:
     _ = [Memory, Parallel, delayed]
+
+
+try:
+    from loguru import logger  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [logger]
 
 
 # functions
