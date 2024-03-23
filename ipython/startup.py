@@ -315,8 +315,8 @@ else:
 
 
 try:
-    import luigi
-    from luigi import (
+    import luigi  # type: ignore[]
+    from luigi import (  # type: ignore[]
         BoolParameter,
         DictParameter,
         EnumParameter,
