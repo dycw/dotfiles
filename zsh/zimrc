@@ -25,7 +25,6 @@ zmodule fzf
 # vim
 zmodule jeffreytse/zsh-vi-mode
 
-
 #
 # Prompt
 #
