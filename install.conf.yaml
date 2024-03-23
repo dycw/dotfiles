@@ -93,6 +93,6 @@
         Cloning conda-zsh-completion,
       ]
     - [
-        '[ -d ${HOME}/.cargo ] || curl --proto ''=https'' --tlsv1.2 -sSf https://sh.rustup.rs | sh"',
+        "[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh",
         Installing rust,
       ]
