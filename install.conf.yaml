@@ -19,7 +19,9 @@
     ~/.zshrc: zsh/zshrc
 
 - shell:
-    - [sudo scutil --set ComputerName DW-Mac, Configuring host name]
+    - [sudo scutil --set ComputerName DW-Mac, Configuring computer name]
+    - [sudo scutil --set HostName DW-Mac, Configuring host name]
+    - [sudo scutil --set LocalHostName DW-Mac, Configuring local host name]
     - [git submodule update --init --recursive, Installing submodules]
     - [brew install bat, Installing bat]
     - [brew install bottom, Installing bottom]

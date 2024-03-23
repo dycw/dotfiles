@@ -181,7 +181,7 @@
   },
   "nvim-web-devicons": {
     "branch": "master",
-    "commit": "cb0c967c9723a76ccb1be0cc3a9a10e577d2f6ec"
+    "commit": "585b2dc4bba2b5973f2b1d3e576709af5ac34fb6"
   },
   "persistence.nvim": {
     "branch": "main",
@@ -201,7 +201,7 @@
   },
   "telescope.nvim": {
     "branch": "master",
-    "commit": "221778e93bfaa58bce4be4e055ed2edecc26f799"
+    "commit": "1e591885751d255b12c3649253cb6c2838e2c724"
   },
   "todo-comments.nvim": {
     "branch": "main",
@@ -218,6 +218,10 @@
   "venv-selector.nvim": {
     "branch": "main",
     "commit": "2ad34f36d498ff5193ea10f79c87688bd5284172"
+  },
+  "vim-caser": {
+    "branch": "master",
+    "commit": "6bc9f41d170711c58e0157d882a5fe8c30f34bf6"
   },
   "vim-illuminate": {
     "branch": "master",
