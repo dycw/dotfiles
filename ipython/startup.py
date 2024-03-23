@@ -970,12 +970,12 @@ else:
         _ = [
             DataFrame,
             Series,
+            assert_frame_equal,
+            assert_series_equal,
             concat,
             read_csv,
             read_excel,
             read_parquet,
-            assert_frame_equal,
-            assert_series_equal,
         ]
 
 # functions
