@@ -1,42 +1,42 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env sh
 
-if command -v git &>/dev/null; then
+if command -v git >/dev/null 2>&1; then
 	# add
 	alias ga='git add'
 	alias gaa='git add -A'
 	alias gap='git add -p'
 	# add + commit + push
 	gac() {
-		if [[ $# -eq 0 ]]; then
+		if [ $# -eq 0 ]; then
 			git add -A && git commit && git push -u origin "$(gcurr)"
-		elif [[ $# -eq 1 ]]; then
+		elif [ $# -eq 1 ]; then
 			git add -A && git commit -m "$1" && git push -u origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
 	gacf() {
-		if [[ $# -eq 0 ]]; then
+		if [ $# -eq 0 ]; then
 			git add -A && git commit && git push -fu origin "$(gcurr)"
-		elif [[ $# -eq 1 ]]; then
+		elif [ $# -eq 1 ]; then
 			git add -A && git commit -m "$1" && git push -fu origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
 	gacn() {
-		if [[ $# -eq 0 ]]; then
+		if [ $# -eq 0 ]; then
 			git add -A && git commit --no-verify && git push -u origin "$(gcurr)"
-		elif [[ $# -eq 1 ]]; then
+		elif [ $# -eq 1 ]; then
 			git add -A && git commit -m "$1" --no-verify && git push -u origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
 	gacnf() {
-		if [[ $# -eq 0 ]]; then
+		if [ $# -eq 0 ]; then
 			git add -A && git commit --no-verify && git push -fu origin "$(gcurr)"
-		elif [[ $# -eq 1 ]]; then
+		elif [ $# -eq 1 ]; then
 			git add -A && git commit -m "$1" --no-verify && git push -fu origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
@@ -62,37 +62,37 @@ if command -v git &>/dev/null; then
 	# clone
 	alias gcl='git clone'
 	# commit
-	function gc {
-		if [[ $# -eq 0 ]]; then
+	gc() {
+		if [ $# -eq 0 ]; then
 			git commit && git push -u origin "$(gcurr)"
-		elif [[ $# -eq 1 ]]; then
+		elif [ $# -eq 1 ]; then
 			git commit -m "$1" && git push -u origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
-	function gcf {
-		if [[ $# -eq 0 ]]; then
+	gcf() {
+		if [ $# -eq 0 ]; then
 			git commit && git push -fu origin "$(gcurr)"
-		elif [[ $# -eq 1 ]]; then
+		elif [ $# -eq 1 ]; then
 			git commit -m "$1" && git push -fu origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
-	function gcn {
-		if [[ $# -eq 0 ]]; then
+	gcn() {
+		if [ $# -eq 0 ]; then
 			git commit --no-verify && git push -u origin "$(gcurr)"
-		elif [[ $# -eq 1 ]]; then
+		elif [ $# -eq 1 ]; then
 			git commit -m "$1" --no-verify && git push -u origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
-	function gcnf {
-		if [[ $# -eq 0 ]]; then
+	gcnf() {
+		if [ $# -eq 0 ]; then
 			git commit --no-verify && git push -fu origin "$(gcurr)"
-		elif [[ $# -eq 1 ]]; then
+		elif [ $# -eq 1 ]; then
 			git commit -m "$1" --no-verify && git push -fu origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
@@ -120,8 +120,8 @@ if command -v git &>/dev/null; then
 	alias gr='git reset'
 	alias grp='git reset --patch'
 	# rev-parse
-	alias gcurr='git rev-parse --abbrev-ref HEAD'
-	alias groot='git rev-parse --show-toplevel'
+	gcurr() { git rev-parse --abbrev-ref HEAD; }
+	groot() { git rev-parse --show-toplevel; }
 	# rm
 	alias grm='git rm'
 	alias grmc='git rm --cached'
@@ -135,43 +135,43 @@ if command -v git &>/dev/null; then
 	alias gstd='git stash drop'
 	alias gstp='git stash pop'
 	# tag
-	function gta { git tag -a "$1" "$2" -m "$1" && git push -u origin --tags; }
-	function gtd { git tag -d "$1" && git push -d origin "$1"; }
+	gta() { git tag -a "$1" "$2" -m "$1" && git push -u origin --tags; }
+	gtd() { git tag -d "$1" && git push -d origin "$1"; }
 
 	# gitweb
-	if command -v gitweb &>/dev/null; then
+	if command -v gitweb >/dev/null 2>&1; then
 		alias gw='gitweb'
 		gacw() {
-			if [[ $# -eq 0 ]]; then
+			if [ $# -eq 0 ]; then
 				git add -A && git commit && git push -u origin "$(gcurr)" && gitweb
-			elif [[ $# -eq 1 ]]; then
+			elif [ $# -eq 1 ]; then
 				git add -A && git commit -m "$1" && git push -u origin "$(gcurr)" && gitweb
 			else
 				echo "Expected 0 or 1 argument; got $#"
 			fi
 		}
 		gacfw() {
-			if [[ $# -eq 0 ]]; then
+			if [ $# -eq 0 ]; then
 				git add -A && git commit && git push -fu origin "$(gcurr)" && gitweb
-			elif [[ $# -eq 1 ]]; then
+			elif [ $# -eq 1 ]; then
 				git add -A && git commit -m "$1" && git push -fu origin "$(gcurr)" && gitweb
 			else
 				echo "Expected 0 or 1 argument; got $#"
 			fi
 		}
 		gacnw() {
-			if [[ $# -eq 0 ]]; then
+			if [ $# -eq 0 ]; then
 				git add -A && git commit --no-verify && git push -u origin "$(gcurr)" && gitweb
-			elif [[ $# -eq 1 ]]; then
+			elif [ $# -eq 1 ]; then
 				git add -A && git commit -m "$1" --no-verify && git push -u origin "$(gcurr)" && gitweb
 			else
 				echo "Expected 0 or 1 argument; got $#"
 			fi
 		}
 		gacnfw() {
-			if [[ $# -eq 0 ]]; then
+			if [ $# -eq 0 ]; then
 				git add -A && git commit --no-verify && git push -fu origin "$(gcurr)" && gitweb
-			elif [[ $# -eq 1 ]]; then
+			elif [ $# -eq 1 ]; then
 				git add -A && git commit -m "$1" --no-verify && git push -fu origin "$(gcurr)" && gitweb
 			else
 				echo "Expected 0 or 1 argument; got $#"
