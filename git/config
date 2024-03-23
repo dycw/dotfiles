@@ -30,6 +30,9 @@
 [interactive]
   diffFilter = delta --color-only
 
+[init]
+  defaultBranch = master
+
 [log]
   abbrevCommit = true
   date = format:%Y-%m-%d %H:%M:%S (%a)
