@@ -2,9 +2,13 @@ from __future__ import annotations  # noqa: INP001
 
 import datetime as dt
 import gzip
+import hashlib
+import itertools
 import json
 import pickle
 import re
+import shutil
+import socket
 import sys
 from abc import ABC, ABCMeta
 from collections import Counter, defaultdict, deque
@@ -21,12 +25,10 @@ from collections.abc import (
     Mapping,
     Sequence,
     Sized,
-    ValuesView,
 )
 from collections.abc import Set as AbstractSet
 from contextlib import suppress
 from dataclasses import (
-    Field,
     astuple,
     dataclass,
     field,
@@ -71,6 +73,8 @@ from platform import system
 from pprint import pformat, pp, pprint
 from random import choice, randint, randrange, shuffle, uniform
 from re import DOTALL, escape, findall, fullmatch, match, search
+from shutil import copyfile, rmtree, which
+from socket import gethostname
 from subprocess import PIPE, CalledProcessError, check_output
 
 _ = [
@@ -89,7 +93,6 @@ _ = [
     Number,
     Real,
     Counter,
-    Field,
     Generator,
     Pool,
     cpu_count,
@@ -118,6 +121,8 @@ _ = [
     StringIO,
     lru_cache,
     pickle,
+    socket,
+    gethostname,
     reduce,
     wraps,
     Iterable,
@@ -126,10 +131,13 @@ _ = [
     combinations,
     combinations_with_replacement,
     compress,
+    shutil,
     count,
     cycle,
     dropwhile,
     filterfalse,
+    hashlib,
+    itertools,
     groupby,
     islice,
     pairwise,
@@ -153,7 +161,9 @@ _ = [
     Sequence,
     system,
     Sized,
-    ValuesView,
+    copyfile,
+    rmtree,
+    which,
     re,
     DOTALL,
     escape,
@@ -1091,6 +1101,23 @@ else:
     _ = [rich, inspect, pretty, print]
 
     _install()
+
+
+try:
+    import scipy as sp  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [sp]
+
+
+try:
+    import semver  # type: ignore[]
+    from semver import VersionInfo  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [semver, VersionInfo]
 
 
 # functions
