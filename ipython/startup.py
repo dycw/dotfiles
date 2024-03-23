@@ -281,6 +281,42 @@ else:
     _ = [logger]
 
 
+try:
+    import luigi
+    from luigi import (
+        BoolParameter,
+        DictParameter,
+        EnumParameter,
+        ExternalTask,
+        FloatParameter,
+        IntParameter,
+        LocalTarget,
+        Task,
+        TaskParameter,
+        TupleParameter,
+        WrapperTask,
+        build,
+    )
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [
+        luigi,
+        BoolParameter,
+        DictParameter,
+        EnumParameter,
+        ExternalTask,
+        FloatParameter,
+        IntParameter,
+        LocalTarget,
+        Task,
+        TaskParameter,
+        TupleParameter,
+        WrapperTask,
+        build,
+    ]
+
+
 # functions
 
 
