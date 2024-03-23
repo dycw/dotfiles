@@ -1,6 +1,5 @@
 from __future__ import annotations  # noqa: INP001
 
-import abc
 import sys
 from abc import ABC, ABCMeta
 from collections import Counter, defaultdict, deque
@@ -31,13 +30,32 @@ from collections.abc import (
 )
 from collections.abc import Set as AbstractSet
 from contextlib import suppress
+from dataclasses import (
+    Field,
+    asdict,
+    astuple,
+    dataclass,
+    field,
+    fields,
+    is_dataclass,
+    make_dataclass,
+    replace,
+)
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
 _ = [
-    abc,
     sys,
     ABC,
+    Field,
+    asdict,
+    astuple,
+    dataclass,
+    field,
+    fields,
+    is_dataclass,
+    make_dataclass,
+    replace,
     ABCMeta,
     Counter,
     AbstractSet,
@@ -66,7 +84,6 @@ _ = [
     Sequence,
     Sized,
     ValuesView,
-    abc,
     ABC,
     sys,
     PIPE,
