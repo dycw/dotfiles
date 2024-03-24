@@ -24,6 +24,12 @@ lvim.lsp.buffer_mappings.normal_mode["gr"] = { "<Cmd>Telescope lsp_references<CR
 lvim.keys.normal_mode["ge"] = "<Cmd>Telescope diagnostics<CR>"
 lvim.keys.normal_mode["`j"] = "<Cmd>lua vim.diagnostic.goto_next()<CR>"
 lvim.keys.normal_mode["`k"] = "<Cmd>lua vim.diagnostic.goto_prev()<CR>"
+lvim.keys.normal_mode["R"] = {
+	function()
+		return ":IncRename " .. vim.fn.expand("<cword>")
+	end,
+	{ expr = true, noremap = true },
+}
 
 -- marks
 local prefixes = "m'"
@@ -114,7 +120,7 @@ lvim.builtin.which_key.mappings["e"] = { "<Cmd>TroubleToggle document_diagnostic
 lvim.builtin.which_key.mappings["E"] = { "<Cmd>TroubleToggle workspace_diagnostics<CR>", "Diagnostics (ws)" }
 
 -- files
-lvim.keys.normal_mode["<Leader>f"] = "<Cmd>Telescope find_files<CR>"
+lvim.builtin.which_key.mappings["f"] = "<Cmd>Telescope find_files<CR>"
 lvim.keys.normal_mode["<Leader>gf"] = "<Cmd>Telescope git_files<CR>"
 lvim.keys.normal_mode["<Leader>gs"] = "<Cmd>Telescope git_status<CR>"
 lvim.keys.normal_mode["<Leader>of"] = "<Cmd>Telescope oldfiles<CR>"
@@ -131,12 +137,6 @@ lvim.keys.normal_mode["<Leader>lu"] = "<Cmd>Lazy update<CR>"
 
 -- LSP
 lvim.builtin.which_key.mappings["r"] = { "<Cmd>TroubleToggle lsp_references<CR>", "References" }
--- lvim.builtin.which_key.mappings["R"] = {
--- 	function()
--- 		return ":IncRename " .. vim.fn.expand("<cword>")
--- 	end,
--- 	"Rename",
--- }
 lvim.builtin.which_key.mappings["lR"] = { "<Cmd>LspRestart<CR>", "Restart LSP" }
 
 -- marks
@@ -562,16 +562,6 @@ lvim.plugins = {
 		event = { "BufRead", "BufNew" },
 	},
 
-	-- treesj
-	{
-		"wansmer/treesj",
-		config = function()
-			require("treesj").setup()
-		end,
-		keys = { "<space>m", "<space>j", "<space>s" },
-		dependencies = { "nvim-treesitter/nvim-treesitter" },
-	},
-
 	-- treesitter autotag
 	{
 		"windwp/nvim-ts-autotag",
@@ -582,10 +572,11 @@ lvim.plugins = {
 	},
 
 	-- treesitter context
-	{
-		"nvim-treesitter/nvim-treesitter-context",
-		event = { "BufRead", "BufNew" },
-	},
+	-- https://github.com/LunarVim/LunarVim/issues/4386#issuecomment-1916835688
+	-- {
+	-- 	"nvim-treesitter/nvim-treesitter-context",
+	-- 	event = { "BufRead", "BufNew" },
+	-- },
 
 	-- trouble
 	{
