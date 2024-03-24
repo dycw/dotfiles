@@ -31,6 +31,10 @@
     "branch": "main",
     "commit": "078041e9d060a386b0c9d3a8c7a7b019a35d3fb0"
   },
+  "indent-blankline.nvim": {
+    "branch": "master",
+    "commit": "3d08501caef2329aba5121b753e903904088f7e6"
+  },
   "lazy.nvim": {
     "branch": "main",
     "commit": "08954f723bf2d442ea020551e3acc956f4dc6dc7"
@@ -78,6 +82,10 @@
   "plenary.nvim": {
     "branch": "master",
     "commit": "f7adfc4b3f4f91aab6caebf42b3682945fbc35be"
+  },
+  "rainbow-delimiters.nvim": {
+    "branch": "master",
+    "commit": "580bc045c7ab3ab3ebd267774038c0d8cc19c789"
   },
   "telescope-fzf-native.nvim": {
     "branch": "main",
