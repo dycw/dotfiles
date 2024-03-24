@@ -3,6 +3,3 @@
 
 # prettier
 node_modules/
-
-# ruff
-.ruff_cache/

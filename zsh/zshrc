@@ -12,14 +12,15 @@ if command -v btm >/dev/null 2>&1; then
 fi
 
 # cd
-alias ~='cd "$HOME"'
+alias ~='cd "${HOME}"'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias cddb='cd "$HOME"/Dropbox'
-alias cddf='cd "$HOME"/dotfiles'
-alias cddl='cd "$HOME"/Downloads'
-alias cdw='cd "$HOME"/work'
+alias cdcache='cd "${HOME}"/.cache'
+alias cdconfig='cd "${HOME}"/.config'
+alias cddf='cd "${HOME}"/dotfiles'
+alias cddl='cd "${HOME}"/Downloads'
+alias cdw='cd "${HOME}"/work'
 
 # coverage
 alias open-cov='open .coverage/html/index.html'
@@ -65,20 +66,20 @@ if command -v fd >/dev/null 2>&1; then
 fi
 
 # fzf
-__file="${HOME}/.config/fzf/fzf.zsh"
+__file="${HOME}"/.config/fzf/fzf.zsh
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
 if command -v fzf >/dev/null 2>&1; then
-  export FZF_DEFAULT_COMMAND='fd -HL'
-  export FZF_DEFAULT_OPTS="
+	export FZF_DEFAULT_COMMAND='fd -HL'
+	export FZF_DEFAULT_OPTS="
     --height=80%
     --info=inline
     --layout=reverse
     --preview '([[ -f {} ]] && (bat -n --color=always {} || cat {})) || ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
     "
-  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND -tf -td"
-  export FZF_CTRL_T_OPTS="
+	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND -tf -td"
+	export FZF_CTRL_T_OPTS="
     --bind 'ctrl-a:select-all'
     --bind 'ctrl-d:deselect-all'
     --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
@@ -92,7 +93,6 @@ if command -v fzf >/dev/null 2>&1; then
     "
 	export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND -td"
 fi
-
 
 # gh
 if command -v gh >/dev/null 2>&1; then
@@ -122,8 +122,8 @@ if command -v lvim >/dev/null 2>&1; then
 	alias l='lvim'
 	alias n='lvim'
 	alias v='lvim'
-	alias vim='nvim'
-	alias configlua='"$EDITOR" "$HOME"/.config/lvim/config.lua'
+	alias vim='lvim'
+	alias configlua='"$EDITOR" "${HOME}"/.config/lvim/config.lua'
 elif command -v nvim >/dev/null 2>&1; then
 	alias n='nvim'
 	alias v='nvim'
@@ -147,7 +147,7 @@ if command -v pre-commit >/dev/null 2>&1; then
 fi
 
 # pytest
-__file="${HOME}/dotfiles/pytest/aliases.sh"
+__file="${HOME}"/dotfiles/pytest/aliases.sh
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
@@ -157,6 +157,13 @@ if command -v ruff >/dev/null 2>&1; then
 	alias rw='ruff check -w'
 fi
 
+# tmux
+if command -v tmux >/dev/null 2>&1; then
+	if [ -z "$TMUX" ]; then
+		tmux new-session -c $PWD
+	fi
+	alias tmuxconf='$EDITOR "${HOME}"/.config/tmux/tmux.conf.local'
+fi
 # uv
 if command -v uv >/dev/null 2>&1; then
 	alias uvpi='uv pip install'
@@ -166,22 +173,22 @@ fi
 
 # zim
 export ZIM_HOME="${HOME}"/.zim
-if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
+if [[ ! -e "${ZIM_HOME}"/zimfw.zsh ]]; then
 	# Download zimfw plugin manager if missing.
 	curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
 		https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
 fi
-if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
+if [[ ! "${ZIM_HOME}"/init.zsh -nt "${ZDOTDIR:-${HOME}}"/.zimrc ]]; then
 	# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
-	source ${ZIM_HOME}/zimfw.zsh init -q
+	source "${ZIM_HOME}"/zimfw.zsh init -q
 fi
-__file="${ZIM_HOME}/init.zsh"
+__file="${ZIM_HOME}"/init.zsh
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
 
 # zsh
-alias zshrc='"$EDITOR" "$HOME"/.zshrc'
+alias zshrc='"$EDITOR" "${HOME}"/.zshrc'
 
 # ---- end ----
 

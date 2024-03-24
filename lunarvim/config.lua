@@ -12,6 +12,9 @@ vim.opt.wrap = true
 -------------------------------------------------------------------------------
 -- key bindings
 -------------------------------------------------------------------------------
+-- buffers
+lvim.keys.normal_mode["gb"] = "<Cmd>Telescope buffers<CR>"
+
 -- command mode
 lvim.keys.normal_mode["<CR>"] = ":"
 lvim.keys.visual_mode["<CR>"] = ":"
@@ -84,7 +87,6 @@ lvim.builtin.which_key.vmappings = {}
 lvim.builtin.which_key.mappings["as"] = { "<Cmd>ASToggle<CR>", "Toggle AutoSave" }
 
 -- buffers
-lvim.builtin.which_key.mappings["b"] = { "<Cmd>Telescope buffers<CR>", "Buffers" }
 lvim.builtin.which_key.mappings["x"] = { "BDelete this<CR>", "Delete buffer" }
 
 -- commands
@@ -113,11 +115,10 @@ lvim.builtin.which_key.vmappings["/"] = { "<Plug>(comment_toggle_linewise_visual
 
 -- diagnostics
 lvim.builtin.which_key.mappings["e"] = { "<Cmd>TroubleToggle document_diagnostics<CR>", "Diagnostics (doc)" }
-lvim.builtin.which_key.mappings["E"] = { "<Cmd>TroubleToggle workspace_diagnostics<CR>", "Diagnostics (ws)" }
+lvim.builtin.which_key.mappings["w"] = { "<Cmd>TroubleToggle workspace_diagnostics<CR>", "Diagnostics (ws)" }
 
 -- files
 lvim.builtin.which_key.mappings["f"] = { "<Cmd>Telescope find_files<CR>", "Files" }
-lvim.builtin.which_key.mappings["gs"] = { "<Cmd>Telescope git_status<CR>", "Git status" }
 lvim.builtin.which_key.mappings["F"] = { "<Cmd>Telescope oldfiles<CR>", "Old files" }
 
 -- iswap
@@ -151,6 +152,7 @@ lvim.builtin.which_key.mappings["t"] = { "<Cmd>NvimTreeToggle<CR>", "NvimTree" }
 lvim.builtin.which_key.mappings["lq"] = { "<Cmd>TroubleToggle quickfix<CR>", "Quick Fix" }
 
 -- search text
+lvim.builtin.which_key.mappings["b"] = { "<Cmd>Telescope current_buffer_fuzzy_find<CR>", "Fuzzy" }
 lvim.builtin.which_key.mappings["g"] = {
 	function()
 		require("telescope.builtin").grep_string({
@@ -162,7 +164,6 @@ lvim.builtin.which_key.mappings["g"] = {
 	end,
 	"Grep",
 }
-lvim.builtin.which_key.mappings["z"] = { "<Cmd>Telescope current_buffer_fuzzy_find<CR>", "Fuzzy" }
 
 -- sort
 lvim.builtin.which_key.mappings["s"] = { "<Cmd>Sort<CR>", "Sort" }
@@ -582,11 +583,10 @@ lvim.plugins = {
 	},
 
 	-- treesitter context
-	-- https://github.com/LunarVim/LunarVim/issues/4386#issuecomment-1916835688
-	-- {
-	-- 	"nvim-treesitter/nvim-treesitter-context",
-	-- 	event = { "BufRead", "BufNew" },
-	-- },
+	{
+		"nvim-treesitter/nvim-treesitter-context",
+		event = { "BufRead", "BufNew" },
+	},
 
 	-- trouble
 	{

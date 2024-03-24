@@ -32,7 +32,6 @@ esac
 # ripgrep
 export RIPGREP_CONFIG_PATH="${HOME}/.config/ripgreprc"
 
-
 # rust
 __dir="${HOME}"/.cargo/bin
 case ":${PATH}:" in

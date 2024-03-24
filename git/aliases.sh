@@ -102,6 +102,9 @@ if command -v git >/dev/null 2>&1; then
 	alias gd='git diff'
 	alias gdc='git diff --cached'
 	alias gdm='git diff origin/master'
+	# fetch
+	alias gf='__git_fetch'
+	__git_fetch() { git fetch --all --atomic; }
 	# log
 	alias gl='git log --oneline --decorate --graph'
 	# mv
@@ -112,10 +115,11 @@ if command -v git >/dev/null 2>&1; then
 	alias gp='git push -u origin "$(gcurr)"'
 	alias gpf='git push -fu origin "$(gcurr)"'
 	# rebase
-	alias grb='git rebase'
-	alias grbi='git rebase -i'
-	alias grbim='git rebase -i origin/master'
-	alias grbm='git rebase -s recursive -X theirs origin/master'
+	alias grb='__git_fetch && git rebase'
+	alias grbi='__git_fetch && git rebase -i'
+	grbih() { __git_fetch && git rebase -i HEAD~"$1"; }
+	alias grbim='__git_fetch && git rebase -i origin/master'
+	alias grbm='__git_fetch && git rebase -s recursive -X theirs origin/master'
 	# reset
 	alias gr='git reset'
 	alias grp='git reset --patch'
