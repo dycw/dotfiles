@@ -9,6 +9,8 @@
     - ~/.config
     - ~/.config/direnv
     - ~/.config/lvim
+    - ~/.config/nvim
+    - ~/.config/nvim/lua/kickstart
     - ~/.config/pip
     - ~/.config/tmux
     - ~/.config/zellij
@@ -21,6 +23,11 @@
     ~/.config/direnv/direnvrc: direnv/direnvrc
     ~/.config/lvim/config.lua: lunarvim/config.lua
     ~/.config/lvim/lazy-lock.json: lunarvim/lazy-lock.json
+    ~/.config/nvim/init.lua: nvim/kickstart.nvim/init.lua
+    ~/.config/nvim/lua/kickstart/health.lua: nvim/kickstart.nvim/lua/kickstart/health.lua
+    ~/.config/nvim/lua/kickstart/plugins/debug.lua: nvim/kickstart.nvim/lua/kickstart/plugins/debug.lua
+    ~/.config/nvim/lua/kickstart/plugins/indent_line.lua: nvim/kickstart.nvim/lua/kickstart/plugins/indent_line.lua
+    ~/.config/nvim/lua/kickstart/plugins/init.lua: nvim/kickstart.nvim/lua/kickstart/plugins/init.lua
     ~/.config/pip/pip.conf: pip/pip.conf
     ~/.config/ripgreprc: ripgrep/ripgreprc
     ~/.config/starship.toml: starship/starship.toml
