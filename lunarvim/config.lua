@@ -148,7 +148,7 @@ lvim.builtin.which_key.mappings["mq"] = { "<Cmd>MergetoolStop<CR>", "Stop" }
 lvim.builtin.which_key.mappings["t"] = { "<Cmd>NvimTreeToggle<CR>", "NvimTree" }
 
 -- quickfix
-lvim.builtin.which_key.mappings["lq"] = "<Cmd>TroubleToggle quickfix<CR>"
+lvim.builtin.which_key.mappings["lq"] = { "<Cmd>TroubleToggle quickfix<CR>", "Quick Fix" }
 
 -- search text
 lvim.builtin.which_key.mappings["g"] = {
@@ -174,12 +174,12 @@ lvim.builtin.which_key.vmappings["sn"] = { "<Esc><Cmd>Sort n<CR>", "Sort (number
 lvim.builtin.which_key.mappings["<Leader>sp"] = { "<Cmd>lua require('spectre').open()<CR>", "Spectre" }
 lvim.builtin.which_key.mappings["<Leader>sf"] =
 	{ "<Cmd>lua require('spectre').open_file_search()<CR>", "Spectre (file)" }
-lvim.keys.visual_mode["<Leader>sp"] = { "<Esc><Cmd>lua require('spectre').open_visual()<CR>", "Spectre" }
-lvim.keys.visual_mode["<Leader>sf"] =
+lvim.builtin.which_key.vmappings["<Leader>sp"] = { "<Esc><Cmd>lua require('spectre').open_visual()<CR>", "Spectre" }
+lvim.builtin.which_key.vmappings["<Leader>sf"] =
 	{ "<Esc><Cmd>lua require('spectre').open_file_search({select_word=true})<CR>", "Spectre (file)" }
 
 -- symbols
-lvim.keys.normal_mode["<Leader>s"] = { "<Cmd>SymbolsOutline<CR>", "Symbols" }
+lvim.builtin.which_key.mappings["<Leader>s"] = { "<Cmd>SymbolsOutline<CR>", "Symbols" }
 
 -------------------------------------------------------------------------------
 -- formatters
