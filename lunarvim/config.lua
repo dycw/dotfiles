@@ -300,15 +300,6 @@ lvim.plugins = {
 		event = { "BufRead", "BufNew" },
 	},
 
-	-- better quick fix
-	{
-		"kevinhwang91/nvim-bqf",
-		config = function()
-			require("bqf").setup({ auto_resize_height = true })
-		end,
-		event = { "BufRead", "BufNew" },
-	},
-
 	-- bracey
 	{
 		"turbio/bracey.vim",
@@ -322,12 +313,6 @@ lvim.plugins = {
 	-- caser
 	{
 		"arthurxavierx/vim-caser",
-		event = { "BufRead", "BufNew" },
-	},
-
-	-- close buffers
-	{
-		"kazhala/close-buffers.nvim",
 		event = { "BufRead", "BufNew" },
 	},
 
@@ -478,15 +463,6 @@ lvim.plugins = {
 		event = { "BufRead", "BufNew" },
 	},
 
-	-- mkdir
-	{
-		"jghauser/mkdir.nvim",
-		config = function()
-			require("mkdir")
-		end,
-		event = { "BufRead", "BufNew" },
-	},
-
 	-- neoscroll
 	{
 		"karb94/neoscroll.nvim",
@@ -514,15 +490,6 @@ lvim.plugins = {
 	-- sort
 	{
 		"sqve/sort.nvim",
-		event = { "BufRead", "BufNew" },
-	},
-
-	-- spectre
-	{
-		"windwp/nvim-spectre",
-		config = function()
-			require("spectre").setup({ live_update = true })
-		end,
 		event = { "BufRead", "BufNew" },
 	},
 
@@ -570,15 +537,6 @@ lvim.plugins = {
 	-- tmux
 	{
 		"christoomey/vim-tmux-navigator",
-		event = { "BufRead", "BufNew" },
-	},
-
-	-- treesitter autotag
-	{
-		"windwp/nvim-ts-autotag",
-		config = function()
-			require("nvim-ts-autotag").setup()
-		end,
 		event = { "BufRead", "BufNew" },
 	},
 
