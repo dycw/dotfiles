@@ -149,9 +149,18 @@ lvim.keys.normal_mode["<Leader>q"] = "<Cmd>Telescope quickfix<CR>"
 lvim.keys.normal_mode["<Leader>lq"] = "<Cmd>TroubleToggle quickfix<CR>"
 
 -- search text
-lvim.keys.normal_mode["<Leader>bf"] = "<Cmd>Telescope current_buffer_fuzzy_find<CR>"
-lvim.keys.normal_mode["<Leader>gr"] = "<Cmd>Telescope grep_string<CR>"
-lvim.keys.normal_mode["<Leader>lg"] = "<Cmd>Telescope live_grep<CR>"
+lvim.builtin.which_key.mappings["g"] = {
+	function()
+		require("telescope.builtin").grep_string({
+			shorten_path = true,
+			word_match = "-w",
+			only_sort_text = true,
+			search = "",
+		})
+	end,
+	"Grep",
+}
+lvim.builtin.which_key.mappings["z"] = { "<Cmd>Telescope current_buffer_fuzzy_find<CR>", "Fuzzy" }
 
 -- sort
 lvim.keys.normal_mode["<Leader>so"] = "<Cmd>Sort<CR>"
