@@ -120,17 +120,16 @@ lvim.builtin.which_key.mappings["e"] = { "<Cmd>TroubleToggle document_diagnostic
 lvim.builtin.which_key.mappings["E"] = { "<Cmd>TroubleToggle workspace_diagnostics<CR>", "Diagnostics (ws)" }
 
 -- files
-lvim.builtin.which_key.mappings["f"] = "<Cmd>Telescope find_files<CR>"
-lvim.keys.normal_mode["<Leader>gf"] = "<Cmd>Telescope git_files<CR>"
-lvim.keys.normal_mode["<Leader>gs"] = "<Cmd>Telescope git_status<CR>"
-lvim.keys.normal_mode["<Leader>of"] = "<Cmd>Telescope oldfiles<CR>"
+lvim.builtin.which_key.mappings["f"] = { "<Cmd>Telescope find_files<CR>", "Files" }
+lvim.builtin.which_key.mappings["gs"] = { "<Cmd>Telescope git_status<CR>", "Git status" }
+lvim.builtin.which_key.mappings["F"] = { "<Cmd>Telescope oldfiles<CR>", "Old files" }
 
 -- iswap
 lvim.keys.normal_mode["<Leader>i"] = "<Cmd>ISwapWith<CR>"
 lvim.keys.normal_mode["<Leader>is"] = "<Cmd>ISwap<CR>"
 
 -- jump list
-lvim.keys.normal_mode["<Leader>j"] = "<Cmd>Telescope jumplist<CR>"
+lvim.builtin.which_key.mappings["j"] = { "<Cmd>Telescope jumplist<CR>", "Jump list" }
 
 -- lazy
 lvim.keys.normal_mode["<Leader>lu"] = "<Cmd>Lazy update<CR>"
