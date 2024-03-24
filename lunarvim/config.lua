@@ -307,11 +307,10 @@ lvim.plugins = {
 			require("bqf").setup({ auto_resize_height = true })
 		end,
 		event = { "BufRead", "BufNew" },
-	},
+
 
 	-- bracey
 	{
-		"turbio/bracey.vim",
 		build = "npm install --prefix server",
 		cmd = { "Bracey", "BracyStop", "BraceyReload", "BraceyEval" },
 		config = function()
@@ -322,6 +321,12 @@ lvim.plugins = {
 	-- caser
 	{
 		"arthurxavierx/vim-caser",
+		event = { "BufRead", "BufNew" },
+	},
+
+	-- close buffers
+	{
+		"kazhala/close-buffers.nvim",
 		event = { "BufRead", "BufNew" },
 	},
 
@@ -501,6 +506,16 @@ lvim.plugins = {
 		"sqve/sort.nvim",
 		event = { "BufRead", "BufNew" },
 	},
+
+    	-- spectre
+	{
+		"windwp/nvim-spectre",
+		config = function()
+			require("spectre").setup({ live_update = true })
+		end,
+		event = { "BufRead", "BufNew" },
+	},
+
 
 	-- surround
 	{
