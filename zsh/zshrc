@@ -37,7 +37,6 @@ if command -v eza >/dev/null 2>&1; then
 	alias lsa='__eza_short -a'
 	__eza_long() { __eza_base -ghl --git --time-style=long-iso "$@"; }
 	__eza_long_default() { __eza_long -a --git-ignore "$@"; }
-	alias l='__eza_long_default'
 	alias ll='__eza_long_default'
 	alias la='__eza_long -a'
 
@@ -94,8 +93,14 @@ alias hypothesis-dev='export HYPOTHESIS_PROFILE=dev'
 set bell-style none
 set editing-mode vi
 
-# neovim
-if command -v nvim >/dev/null 2>&1; then
+# lunarvim
+if command -v lvim >/dev/null 2>&1; then
+	alias l='lvim'
+	alias n='lvim'
+	alias v='lvim'
+	alias vim='nvim'
+	alias configlua='"$EDITOR" "$HOME"/.config/lvim/config.lua'
+elif command -v nvim >/dev/null 2>&1; then
 	alias n='nvim'
 	alias v='nvim'
 	alias vim='nvim'
