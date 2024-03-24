@@ -19,6 +19,12 @@ lvim.keys.visual_mode["<CR>"] = ":"
 -- ex-mode
 lvim.keys.normal_mode["Q"] = "<Nop>"
 
+-- LSP
+lvim.lsp.buffer_mappings.normal_mode["gr"] = { "<Cmd>Telescope lsp_references<CR>", "References" }
+lvim.keys.normal_mode["ge"] = "<Cmd>Telescope diagnostics<CR>"
+lvim.keys.normal_mode["`j"] = "<Cmd>lua vim.diagnostic.goto_next()<CR>"
+lvim.keys.normal_mode["`k"] = "<Cmd>lua vim.diagnostic.goto_prev()<CR>"
+
 -- marks
 local prefixes = "m'"
 local letters = "abcdefghijklmnopqrstuvwxyz"
@@ -30,12 +36,6 @@ for i = 1, #prefixes do
 		lvim.keys.normal_mode[prefix .. lower_letter] = prefix .. upper_letter
 	end
 end
-
--- LSP
-lvim.lsp.buffer_mappings.normal_mode["gr"] = { "<Cmd>Telescope lsp_references<CR>", "References" }
-lvim.keys.normal_mode["ge"] = "<Cmd>Telescope diagnostics<CR>"
-lvim.keys.normal_mode["gej"] = "<Cmd>lua vim.diagnostic.goto_next()<CR>"
-lvim.keys.normal_mode["gek"] = "<Cmd>lua vim.diagnostic.goto_prev()<CR>"
 
 -- navigation
 lvim.keys.insert_mode["<C-h>"] = "<Left>"
@@ -110,18 +110,14 @@ lvim.builtin.which_key.mappings["/"] = { "<Plug>(comment_toggle_linewise_current
 lvim.builtin.which_key.vmappings["/"] = { "<Plug>(comment_toggle_linewise_visual)", "Comment" }
 
 -- diagnostics
-lvim.builtin.which_key.mappings["d"] = { "<Cmd>TroubleToggle document_diagnostics<CR>", "Diagnostics (doc)" }
-lvim.builtin.which_key.mappings["D"] = { "<Cmd>TroubleToggle workspace_diagnostics<CR>", "Diagnostics (ws)" }
+lvim.builtin.which_key.mappings["e"] = { "<Cmd>TroubleToggle document_diagnostics<CR>", "Diagnostics (doc)" }
+lvim.builtin.which_key.mappings["E"] = { "<Cmd>TroubleToggle workspace_diagnostics<CR>", "Diagnostics (ws)" }
 
 -- files
 lvim.keys.normal_mode["<Leader>f"] = "<Cmd>Telescope find_files<CR>"
 lvim.keys.normal_mode["<Leader>gf"] = "<Cmd>Telescope git_files<CR>"
 lvim.keys.normal_mode["<Leader>gs"] = "<Cmd>Telescope git_status<CR>"
 lvim.keys.normal_mode["<Leader>of"] = "<Cmd>Telescope oldfiles<CR>"
-
--- git
-lvim.keys.normal_mode["<Leader>gj"] = "<Cmd>lua require('gitsigns').next_hunk({navigation_message = false})<CR>"
-lvim.keys.normal_mode["<Leader>gk"] = "<Cmd>lua require('gitsigns').prev_hunk({navigation_message = false})<CR>"
 
 -- iswap
 lvim.keys.normal_mode["<Leader>i"] = "<Cmd>ISwapWith<CR>"
@@ -134,18 +130,17 @@ lvim.keys.normal_mode["<Leader>j"] = "<Cmd>Telescope jumplist<CR>"
 lvim.keys.normal_mode["<Leader>lu"] = "<Cmd>Lazy update<CR>"
 
 -- LSP
-lvim.keys.normal_mode["gr"] = "<Cmd>Telescope lsp_references<CR>"
-lvim.keys.normal_mode["<Leader>lr"] = "<Cmd>TroubleToggle lsp_references<CR>"
-lvim.keys.normal_mode["<Leader>rn"] = {
-	function()
-		return ":IncRename " .. vim.fn.expand("<cword>")
-	end,
-	{ expr = true, noremap = true },
-}
-lvim.keys.normal_mode["<Leader>lR"] = "<Cmd>LspRestart<CR>"
+lvim.builtin.which_key.mappings["r"] = { "<Cmd>TroubleToggle lsp_references<CR>", "References" }
+-- lvim.builtin.which_key.mappings["R"] = {
+-- 	function()
+-- 		return ":IncRename " .. vim.fn.expand("<cword>")
+-- 	end,
+-- 	"Rename",
+-- }
+lvim.builtin.which_key.mappings["lR"] = { "<Cmd>LspRestart<CR>", "Restart LSP" }
 
 -- marks
-lvim.keys.normal_mode["<Leader>m"] = "<Cmd>Telescope marks<CR>"
+lvim.builtin.which_key.mappings["m"] = { "<Cmd>Telescope marks<CR>", "Marks" }
 
 -- mergetool
 lvim.keys.normal_mode["<Leader>mj"] = "<Cmd>MergetoolDiffExchangeLeft<CR>"
@@ -155,7 +150,7 @@ lvim.keys.normal_mode["<Leader>mr"] = "<Cmd>MergetoolPreferRemote<CR>"
 lvim.keys.normal_mode["<Leader>mq"] = "<Cmd>MergetoolStop<CR>"
 
 -- nvim tree
-lvim.keys.normal_mode["<Leader>e"] = "<Cmd>NvimTreeToggle<CR>"
+lvim.builtin.which_key.mappings["t"] = { "<Cmd>NvimTreeToggle<CR>", "NvimTree" }
 
 -- quickfix
 lvim.keys.normal_mode["<Leader>q"] = "<Cmd>Telescope quickfix<CR>"
