@@ -156,7 +156,7 @@
     - [brew install --cask protonvpn, Installing ProtonVPN]
     - [brew install --cask whatsapp, Installing WhatsApp]
     - [
-        $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish,
+        "[ -f ${HOME}/.config/fzf/fzf.zsh ] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
         Configuring fzf,
       ]
     - [brew services start postgresql, Configuring postgresql]
