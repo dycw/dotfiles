@@ -20,12 +20,10 @@ zmodule input
 zmodule termtitle
 # Utility aliases and functions. Adds colour to ls, grep and less.
 zmodule utility
-# fzf
-zmodule fzf
 # homebrew
 zmodule homebrew
 # vim
-zmodule jeffreytse/zsh-vi-mode
+# zmodule jeffreytse/zsh-vi-mode  # blocks ctrl-r
 
 #
 # Prompt

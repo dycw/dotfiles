@@ -253,7 +253,7 @@ lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 lvim.builtin.dap.active = false
 lvim.builtin.illuminate.active = false
 lvim.builtin.lir.active = false
-lvim.builtin.which_key.active = false
+-- lvim.builtin.which_key.active = false
 lvim.plugins = {
 	-- auto save
 	{

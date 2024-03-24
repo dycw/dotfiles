@@ -69,6 +69,27 @@ __file="${HOME}/.config/fzf/fzf.zsh"
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
+if command -v fzf >/dev/null 2>&1; then
+  export FZF_DEFAULT_COMMAND='fd -HL'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND -tf -td"
+  export FZF_CTRL_T_OPTS="
+    --walker-skip .git,node_modules,target
+    --preview 'bat -n --color=always {}'
+    --preview-window 'right:60%:wrap'
+    --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+  export FZF_CTRL_R_OPTS="
+    --preview 'echo {}'
+    --preview-window up:3:hidden:wrap
+    --bind 'ctrl-/:toggle-preview'
+    --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+    --color header:italic
+    --header 'Press CTRL-Y to copy command into clipboard'"
+	export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND -td"
+  export FZF_ALT_C_OPTS="
+    --walker-skip .git,node_modules,target
+    --preview 'tree -C {}'"
+fi
+
 
 # gh
 if command -v gh >/dev/null 2>&1; then
