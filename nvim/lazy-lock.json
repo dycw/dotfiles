@@ -27,6 +27,10 @@
     "branch": "main",
     "commit": "933db4596e4bab1b09b6d48a10e21819e4cc458f"
   },
+  "flit.nvim": {
+    "branch": "main",
+    "commit": "04f744bbb2b91fb2ad2c702b5eb8e23d17924fa6"
+  },
   "gitsigns.nvim": {
     "branch": "main",
     "commit": "078041e9d060a386b0c9d3a8c7a7b019a35d3fb0"
@@ -102,10 +106,6 @@
   "tint.nvim": {
     "branch": "master",
     "commit": "862835626941d263466754b9c8e2ce2cb004f5ac"
-  },
-  "todo-comments.nvim": {
-    "branch": "main",
-    "commit": "833d8dd8b07eeda37a09e99460f72a02616935cb"
   },
   "tokyonight.nvim": {
     "branch": "main",

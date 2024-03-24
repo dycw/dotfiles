@@ -22,6 +22,9 @@ vim.opt.relativenumber = true
 -- If in Insert, Replace or Visual mode put a message on the last line?
 vim.opt.showmode = false
 
+-- When and how to draw the sign column
+vim.opt.signcolumn = "yes"
+
 -- Use a swapfile for the buffer?
 vim.opt.swapfile = false
 

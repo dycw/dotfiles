@@ -8,6 +8,9 @@ set("n", "<C-q>", ":confirm q<CR>", opts)
 set("n", "<C-s>", "<Cmd>:w<CR>", opts)
 set("v", "<C-s>", "<Cmd>:w<CR>", opts)
 
--- stay in indent mode
+-- search highlight
+set("n", "<Esc>", "<Cmd>nohlsearch<CR>", opts)
+
+-- visual indents
 set("v", "<", "<gv", opts)
 set("v", ">", ">gv", opts)
