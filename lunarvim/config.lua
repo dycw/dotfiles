@@ -300,6 +300,15 @@ lvim.plugins = {
 		event = { "BufRead", "BufNew" },
 	},
 
+	-- better quick fix
+	{
+		"kevinhwang91/nvim-bqf",
+		config = function()
+			require("bqf").setup({ auto_resize_height = true })
+		end,
+		event = { "BufRead", "BufNew" },
+	},
+
 	-- bracey
 	{
 		"turbio/bracey.vim",

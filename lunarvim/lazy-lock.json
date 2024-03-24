@@ -127,6 +127,10 @@
     "branch": "master",
     "commit": "0f04d78619cce9a5af4f355968040f7d675854a1"
   },
+  "nvim-bqf": {
+    "branch": "main",
+    "commit": "b51a37fcd808edafd52511458467c8c9a701ea8d"
+  },
   "nvim-cmp": {
     "branch": "main",
     "commit": "0b751f6beef40fd47375eaf53d3057e0bfa317e4"
