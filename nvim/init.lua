@@ -1,17 +1,15 @@
+--  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
 require("keymaps")
 require("opt")
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
---  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
 
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = false
-
--- Don't show the mode, since it's already in the status line
-vim.opt.showmode = false
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -55,6 +53,7 @@ vim.opt.scrolloff = 10
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+vim.keymap.set("n", "<C-s>", "<Cmd>:w<CR>")
 
 -- Diagnostic keymaps
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })

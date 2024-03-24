@@ -1,6 +1,9 @@
 -- Make a backup before overwriting a file?
 vim.opt.backup = false
 
+-- Every wrapped line with continue visually indended?
+vim.opt.breakindent = true
+
 -- Sync clipboard between OS and Neovim
 vim.opt.clipboard = "unnamedplus"
 
@@ -10,11 +13,14 @@ vim.opt.expandtab = true
 -- Enables mouse support
 vim.opt.mouse = "a"
 
--- Print the line number in front of each line
+-- Print the line number in front of each line?
 vim.opt.number = true
 
--- Sohw the line number relative to the line with the cursor in front of each line
+-- Show the line number relative to the line with the cursor in front of each line?
 vim.opt.relativenumber = true
+
+-- If in Insert, Replace or Visual mode put a message on the last line?
+vim.opt.showmode = false
 
 -- Use a swapfile for the buffer?
 vim.opt.swapfile = false
