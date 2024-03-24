@@ -1,3 +1,3 @@
-# `template`
+# `dotfiles`
 
-Template for generic repositories
+My dotfiles, powered by [`dotbot`](https://github.com/anishathalye/dotbot).
