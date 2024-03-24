@@ -583,10 +583,7 @@ lvim.plugins = {
 
 	-- treesitter context
 	{
-		"romgrk/nvim-treesitter-context",
-		config = function()
-			require("treesitter-context").setup()
-		end,
+		"nvim-treesitter/nvim-treesitter-context",
 		event = { "BufRead", "BufNew" },
 	},
 
