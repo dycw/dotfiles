@@ -44,46 +44,121 @@
         Configuring local host name,
       ]
     - [git submodule update --init --recursive, Installing submodules]
-    - [brew install bat, Installing bat]
-    - [brew install bottom, Installing bottom]
-    - [brew install cmake, Installing cmake] # for qdldl
-    - [brew install direnv, Installing direnv]
-    - [brew install dust, Installing dust]
-    - [brew install eza, Installing eza]
-    - [brew install fd, Installing fd]
-    - [brew install ffmpeg, Installing ffmpeg]
-    - [brew install fzf, Installing fzf]
+    - ["command -v bat >/dev/null 2>&1 || brew install bat", Installing bat]
+    - [
+        "command -v btm >/dev/null 2>&1 || brew install bottom",
+        Installing bottom,
+      ]
+    - [
+        "command -v cmake >/dev/null 2>&1 || brew install cmake",
+        Installing cmake,
+      ]
+    - [
+        "command -v delta >/dev/null 2>&1 || brew install git-delta",
+        Installing delta,
+      ]
+    - [
+        "command -v direnv >/dev/null 2>&1 || brew install direnv",
+        Installing direnv,
+      ]
+    - ["command -v dust >/dev/null 2>&1 || brew install dust", Installing dust]
+    - ["command -v eza >/dev/null 2>&1 || brew install eza", Installing eza]
+    - ["command -v fd >/dev/null 2>&1 || brew install fd", Installing fd]
+    - [
+        "command -v ffmpeg >/dev/null 2>&1 || brew install ffmpeg",
+        Installing ffmpeg,
+      ]
+    - ["command -v fzf >/dev/null 2>&1 || brew install fzf", Installing fzf]
+    - ["command -v gh >/dev/null 2>&1 || brew install gh", Installing gh]
+    - [
+        "command -v gitweb >/dev/null 2>&1 || brew install yoannfleurydev/gitweb/gitweb
+        ",
+        Installing gitweb,
+      ]
+    - [
+        "command -v gsed >/dev/null 2>&1 || brew install gnu-sed",
+        Installing gnu-sed,
+      ]
+    - ["command -v just >/dev/null 2>&1 || brew install just", Installing just]
+    - [
+        "command -v luacheck >/dev/null 2>&1 || brew install luacheck",
+        Installing luacheck,
+      ]
+    - [
+        "command -v nvim >/dev/null 2>&1 || brew install neovim",
+        Installing neovim,
+      ]
+    - [
+        "command -v node >/dev/null 2>&1 || brew install node@20",
+        Installing node,
+      ]
+    - [
+        "command -v nu >/dev/null 2>&1 || brew install nushell",
+        Installing nushell,
+      ]
+    - ["command -v pipx >/dev/null 2>&1 || brew install pipx", Installing pipx]
+    - [
+        "command -v postgres >/dev/null 2>&1 || brew install postgresql",
+        Installing postgresql,
+      ]
+    - [
+        "command -v pre-commit >/dev/null 2>&1 || brew install pre-commit",
+        Installing pre-commit,
+      ]
+    - [
+        "command -v prettier >/dev/null 2>&1 || brew install prettier",
+        Installing prettier,
+      ]
+    - [
+        "command -v restic >/dev/null 2>&1 || brew install restic",
+        Installing restic,
+      ]
+    - [
+        "command -v rg >/dev/null 2>&1 || brew install ripgrep",
+        Installing ripgrep,
+      ]
+    - ["command -v ruff >/dev/null 2>&1 || brew install ruff", Installing ruff]
+    - [
+        "command -v shellcheck >/dev/null 2>&1 || brew install shellcheck",
+        Installing shellcheck,
+      ]
+    - [
+        "command -v shfmt >/dev/null 2>&1 || brew install shfmt",
+        Installing shfmt,
+      ]
+    - [
+        "command -v starship >/dev/null 2>&1 || brew install starship",
+        Installing starship,
+      ]
+    - ["command -v uv >/dev/null 2>&1 || brew install uv", Installing uv]
+    - [
+        "command -v watch >/dev/null 2>&1 || brew install watch",
+        Installing watch,
+      ]
+    - [
+        "command -v watchexec >/dev/null 2>&1 || brew install watchexec",
+        Installing watchexec,
+      ]
+    - [
+        "command -v wezterm >/dev/null 2>&1 || brew install --cask wezterm",
+        Installing wezterm,
+      ]
+    - [
+        "command -v zellij >/dev/null 2>&1 || brew install zellij",
+        Installing zellij,
+      ]
+    - [
+        "command -v zoxide >/dev/null 2>&1 || brew install zoxide",
+        Installing zoxide,
+      ]
+    - [brew install --cask 1password, Installing 1Password]
+    - [brew install --cask dropbox, Installing Dropbox]
+    - [brew install --cask protonvpn, Installing ProtonVPN]
+    - [brew install --cask whatsapp, Installing WhatsApp]
     - [
         $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish,
         Configuring fzf,
       ]
-    - [brew install gh, Installing gh]
-    - [brew install git-delta, Installing delta]
-    - [brew install just, Installing just]
-    - [brew install neovim, Installing neovim]
-    - [brew install node@20, Installing node@20]
-    - [brew install nushell, Installing nushell]
-    - [brew install pipx, Installing pipx]
-    - [brew install postgresql, Installing postgresql]
-    - [brew install pre-commit, Installing pre-commit]
-    - [brew install prettier, Installing prettier]
-    - [brew install restic, Installing restic]
-    - [brew install ripgrep, Installing ripgrep]
-    - [brew install ruff, Installing ruff]
-    - [brew install shellcheck, Installing shellcheck]
-    - [brew install shfmt, Installing shfmt]
-    - [brew install starship, Installing starship]
-    - [brew install uv, Installing uv]
-    - [brew install watch, Installing watch]
-    - [brew install watchexec, Installing watchexec]
-    - [brew install yoannfleurydev/gitweb/gitweb, Installing gitweb]
-    - [brew install zoxide, Installing zoxide]
-    - [brew install zsh-vi-mode, Installing zsh-vi-mode]
-    - [brew install --cask 1password, Installing 1Password]
-    - [brew install --cask dropbox, Installing Dropbox]
-    - [brew install --cask protonvpn, Installing ProtonVPN]
-    - [brew install --cask wezterm, Installing WezTerm]
-    - [brew install --cask whatsapp, Installing WhatsApp]
     - [brew services start postgresql, Configuring postgresql]
     - [pipx install bump2version, Installing bump2version]
     - [
