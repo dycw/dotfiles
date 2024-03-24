@@ -99,6 +99,7 @@ if command -v lvim >/dev/null 2>&1; then
 	alias n='lvim'
 	alias v='lvim'
 	alias vim='nvim'
+	alias configlua='"$EDITOR" "$HOME"/.config/lvim/config.lua'
 elif command -v nvim >/dev/null 2>&1; then
 	alias n='nvim'
 	alias v='nvim'
