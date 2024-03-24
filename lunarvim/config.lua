@@ -56,8 +56,13 @@ lvim.keys.insert_mode["<C-s>"] = "<Esc><Cmd>w<CR>"
 -------------------------------------------------------------------------------
 -- key bindings (leader)
 -------------------------------------------------------------------------------
+local wk = require("which-key")
+
 -- auto-save
-lvim.keys.normal_mode["<Leader>a"] = "<Cmd>ASToggle<CR>"
+-- lvim.keys.normal_mode["<Leader>a"] = "<Cmd>ASToggle<CR>"
+wk.register({
+	["<Leader>as"] = { "<Cmd>ASToggle<CR>", "Toggle AutoSave" },
+})
 
 -- buffers
 lvim.keys.normal_mode["<Leader>b"] = "<Cmd>Telescope buffers<CR>"
@@ -161,12 +166,14 @@ lvim.keys.visual_mode["<Leader>te"] = "<Esc><Cmd>Telescope<CR>"
 lvim.keys.normal_mode["<Leader>t"] = "<Cmd>TroubleToggle<CR>"
 
 -- windows
-lvim.keys.normal_mode["<Leader>wh"] = "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>"
-lvim.keys.normal_mode["<Leader>wj"] = "<Cmd>set splitbelow<CR><Cmd>split<CR>"
-lvim.keys.normal_mode["<Leader>wk"] = "<Cmd>set nosplitbelow<CR><Cmd>split<CR>"
-lvim.keys.normal_mode["<Leader>wl"] = "<Cmd>set splitright<CR><Cmd>vsplit<CR>"
-lvim.keys.normal_mode["<Leader>-"] = "<Cmd>split<CR>"
-lvim.keys.normal_mode["<Leader>\\"] = "<Cmd>vsplit<CR>"
+wk.register({
+	["<Leader>wh"] = { "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>", "Split left" },
+	["<Leader>wj"] = { "<Cmd>set splitbelow<CR><Cmd>split<CR>", "Split down" },
+	["<Leader>wk"] = { "<Cmd>set nosplitbelow<CR><Cmd>split<CR>", "Split up" },
+	["<Leader>wl"] = { "<Cmd>set splitright<CR><Cmd>vsplit<CR>", "Split right" },
+	["<Leader>-"] = { "<Cmd>split<CR>", "Split down" },
+	["<Leader>\\"] = { "<Cmd>vsplit<CR>", "Split right" },
+})
 
 -------------------------------------------------------------------------------
 -- formatters
