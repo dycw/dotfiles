@@ -28,9 +28,8 @@ return {
 
         hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
     end,
-    main = "ibl",
-    opts = {},
     dependencies = {
         "https://gitlab.com/HiPhish/rainbow-delimiters.nvim",
     },
+    main = "ibl",
 }
