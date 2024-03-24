@@ -141,6 +141,7 @@ if command -v git >/dev/null 2>&1; then
 	# gitweb
 	if command -v gitweb >/dev/null 2>&1; then
 		alias gw='gitweb'
+		# add + commit + push
 		gacw() {
 			if [ $# -eq 0 ]; then
 				git add -A && git commit && git push -u origin "$(gcurr)" && gitweb
@@ -178,5 +179,7 @@ if command -v git >/dev/null 2>&1; then
 			fi
 		}
 	fi
-
+	# push
+	alias gpw='git push -u origin "$(gcurr)" && gitweb'
+	alias gpfw='git push -fu origin "$(gcurr)" && gitweb'
 fi
