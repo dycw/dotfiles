@@ -75,6 +75,10 @@
     "branch": "master",
     "commit": "21d52973bde32db998fc8b6590f87eb3c3c6d8e4"
   },
+  "nui.nvim": {
+    "branch": "main",
+    "commit": "cbd2668414331c10039278f558630ed19b93e69b"
+  },
   "nvim-autopairs": {
     "branch": "master",
     "commit": "dbfc1c34bed415906395db8303c71039b3a3ffb4"
@@ -91,6 +95,10 @@
     "branch": "master",
     "commit": "6e5c78ebc9936ca74add66bda22c566f951b6ee5"
   },
+  "nvim-spider": {
+    "branch": "main",
+    "commit": "bcc9fa38a62637491b75b02e364191553fd858a2"
+  },
   "nvim-surround": {
     "branch": "main",
     "commit": "84a26afce16cffa7e3322cfa80a42cddf60616eb"
@@ -106,6 +114,10 @@
   "rainbow-delimiters.nvim": {
     "branch": "master",
     "commit": "580bc045c7ab3ab3ebd267774038c0d8cc19c789"
+  },
+  "searchbox.nvim": {
+    "branch": "main",
+    "commit": "110949af8963185b4e732b45ae57beb731bfcede"
   },
   "telescope-fzf-native.nvim": {
     "branch": "main",
@@ -130,5 +142,9 @@
   "which-key.nvim": {
     "branch": "main",
     "commit": "4433e5ec9a507e5097571ed55c02ea9658fb268a"
+  },
+  "wildfire.nvim": {
+    "branch": "master",
+    "commit": "1729faca1c6ae34520a6e531983a3737d3654ee1"
   }
 }
