@@ -262,6 +262,11 @@ lvim.builtin.nvimtree.setup.git.ignore = true
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 
 -------------------------------------------------------------------------------
+-- telescope
+-------------------------------------------------------------------------------
+lvim.builtin.telescope.pickers.find_files["find_command"] = { "fd", "-H", "-tf" }
+
+-------------------------------------------------------------------------------
 -- plugins
 -------------------------------------------------------------------------------
 lvim.builtin.dap.active = false
