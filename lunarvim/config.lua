@@ -31,6 +31,9 @@ for i = 1, #prefixes do
 	end
 end
 
+-- LSP
+lvim.lsp.buffer_mappings.normal_mode["gr"] = { "<Cmd>Telescope lsp_references<CR>", "References" }
+
 -- navigation
 lvim.keys.insert_mode["<C-h>"] = "<Left>"
 lvim.keys.insert_mode["<C-j>"] = "<Down>"
@@ -62,36 +65,43 @@ lvim.keys.normal_mode["<C-w>l"] = "<Cmd>set splitright<CR><Cmd>vsplit<CR>"
 -------------------------------------------------------------------------------
 -- key bindings (leader)
 -------------------------------------------------------------------------------
-lvim.builtin.which_key.mappings = {
-	-- auto-save
-	["as"] = { "<Cmd>ASToggle<CR>", "Toggle AutoSave" },
+lvim.builtin.which_key.mappings = {}
+lvim.builtin.which_key.vmappings = {}
 
-	-- buffers
-	["b"] = { "<Cmd>Telescope buffers<CR>" },
-	["d"] = { "BDelete this<CR>" },
+-- auto-save
+lvim.builtin.which_key.mappings["as"] = { "<Cmd>ASToggle<CR>", "Toggle AutoSave" }
 
-	-- trouble
-	["t"] = { "<Cmd>TroubleToggle<CR>" },
-
-	-- windows
-	["wh"] = { "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>", "Split left" },
-	["wj"] = { "<Cmd>set splitbelow<CR><Cmd>split<CR>", "Split down" },
-	["wk"] = { "<Cmd>set nosplitbelow<CR><Cmd>split<CR>", "Split up" },
-	["wl"] = { "<Cmd>set splitright<CR><Cmd>vsplit<CR>", "Split right" },
-	["-"] = { "<Cmd>split<CR>", "Split down" },
-	["\\"] = { "<Cmd>vsplit<CR>", "Split right" },
-}
-
-lvim.keys.normal_mode["<Leader>bD"] = "<Cmd>BDelete other<CR>"
+-- buffers
+lvim.builtin.which_key.mappings["b"] = { "<Cmd>Telescope buffers<CR>", "Buffers" }
+lvim.builtin.which_key.mappings["x"] = { "BDelete this<CR>", "Delete buffer" }
 
 -- commands
-lvim.keys.normal_mode["<Leader>c"] = "<Cmd>Telescope commands<CR>"
-lvim.keys.normal_mode["<Leader>ch"] = "<Cmd>Telescope command_history<CR>"
-lvim.keys.visual_mode["<Leader>c"] = "<Cmd>Telescope commands<CR>"
+lvim.builtin.which_key.mappings["c"] = { "<Cmd>Telescope commands<CR>", "Commands" }
+lvim.builtin.which_key.mappings["C"] = { "<Cmd>Telescope commands_history<CR>", "Command history" }
+lvim.builtin.which_key.vmappings["c"] = { "<Cmd>Telescope commands<CR>", "Commands" }
+lvim.builtin.which_key.vmappings["C"] = { "<Cmd>Telescope commands_history<CR>", "Command history" }
+
+-- trouble
+lvim.builtin.which_key.mappings["t"] = { "<Cmd>TroubleToggle<CR>", "Trouble" }
+lvim.builtin.which_key.vmappings["t"] = { "<Cmd>TroubleToggle<CR>", "Trouble" }
+
+-- windows
+lvim.builtin.which_key.mappings["wh"] = { "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>", "Split left" }
+lvim.builtin.which_key.mappings["wj"] = { "<Cmd>set splitbelow<CR><Cmd>split<CR>", "Split down" }
+lvim.builtin.which_key.mappings["wk"] = { "<Cmd>set nosplitbelow<CR><Cmd>split<CR>", "Split up" }
+lvim.builtin.which_key.mappings["wl"] = { "<Cmd>set splitright<CR><Cmd>vsplit<CR>", "Split right" }
+lvim.builtin.which_key.mappings["-"] = { "<Cmd>split<CR>", "Split down" }
+lvim.builtin.which_key.mappings["\\"] = { "<Cmd>vsplit<CR>", "Split right" }
+lvim.builtin.which_key.vmappings["wh"] = { "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>", "Split left" }
+lvim.builtin.which_key.vmappings["wj"] = { "<Cmd>set splitbelow<CR><Cmd>split<CR>", "Split down" }
+lvim.builtin.which_key.vmappings["wk"] = { "<Cmd>set nosplitbelow<CR><Cmd>split<CR>", "Split up" }
+lvim.builtin.which_key.vmappings["wl"] = { "<Cmd>set splitright<CR><Cmd>vsplit<CR>", "Split right" }
+lvim.builtin.which_key.vmappings["-"] = { "<Cmd>split<CR>", "Split down" }
+lvim.builtin.which_key.vmappings["\\"] = { "<Cmd>vsplit<CR>", "Split right" }
 
 -- comment
-lvim.keys.normal_mode["<Leader>/"] = "<Plug>(comment_toggle_linewise_current)"
-lvim.keys.visual_mode["<Leader>/"] = "<Plug>(comment_toggle_linewise_visual)"
+lvim.builtin.which_key.mappings["/"] = { "<Plug>(comment_toggle_linewise_current)", "Comment" }
+lvim.builtin.which_key.vmappings["/"] = { "<Plug>(comment_toggle_linewise_visual)", "Comment" }
 
 -- diagnostics
 lvim.keys.normal_mode["<Leader>d"] = "<Cmd>Telescope diagnostics<CR>"
@@ -121,7 +131,7 @@ lvim.keys.normal_mode["<Leader>j"] = "<Cmd>Telescope jumplist<CR>"
 lvim.keys.normal_mode["<Leader>lu"] = "<Cmd>Lazy update<CR>"
 
 -- LSP
-lvim.keys.normal_mode["<Leader>r"] = "<Cmd>Telescope lsp_references<CR>"
+lvim.keys.normal_mode["gr"] = "<Cmd>Telescope lsp_references<CR>"
 lvim.keys.normal_mode["<Leader>lr"] = "<Cmd>TroubleToggle lsp_references<CR>"
 lvim.keys.normal_mode["<Leader>rn"] = {
 	function()
