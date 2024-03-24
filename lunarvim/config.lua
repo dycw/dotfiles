@@ -22,6 +22,8 @@ lvim.keys.normal_mode["Q"] = "<Nop>"
 -- LSP
 lvim.lsp.buffer_mappings.normal_mode["gr"] = { "<Cmd>Telescope lsp_references<CR>", "References" }
 lvim.keys.normal_mode["ge"] = "<Cmd>Telescope diagnostics<CR>"
+lvim.keys.normal_mode["gs"] = "<Cmd>Telescope lsp_document_symbols<CR>"
+lvim.keys.normal_mode["gS"] = "<Cmd>Telescope lsp_dynamic_workspace_symbols<CR>"
 lvim.keys.normal_mode["`j"] = "<Cmd>lua vim.diagnostic.goto_next()<CR>"
 lvim.keys.normal_mode["`k"] = "<Cmd>lua vim.diagnostic.goto_prev()<CR>"
 lvim.keys.normal_mode["R"] = {
@@ -54,6 +56,7 @@ lvim.keys.normal_mode["<F2>"] = "<Cmd>set invpaste paste?<CR>"
 lvim.keys.insert_mode["<F2>"] = "<C-o><Cmd>set invpaste paste?<CR>"
 
 -- quickfix
+lvim.keys.normal_mode["<Leader>q"] = "<Cmd>Telescope quickfix<CR>"
 lvim.keys.normal_mode["]"] = "<Cmd>cnext<CR>"
 lvim.keys.normal_mode["["] = "<Cmd>cprev<CR>"
 
@@ -118,14 +121,14 @@ lvim.builtin.which_key.mappings["gs"] = { "<Cmd>Telescope git_status<CR>", "Git 
 lvim.builtin.which_key.mappings["F"] = { "<Cmd>Telescope oldfiles<CR>", "Old files" }
 
 -- iswap
-lvim.keys.normal_mode["<Leader>i"] = "<Cmd>ISwapWith<CR>"
-lvim.keys.normal_mode["<Leader>is"] = "<Cmd>ISwap<CR>"
+lvim.builtin.which_key.mappings["i"] = { "<Cmd>ISwap<CR>", "ISwap" }
+lvim.builtin.which_key.mappings["iw"] = { "<Cmd>ISwapWith<CR>", "ISwapWith" }
 
 -- jump list
 lvim.builtin.which_key.mappings["j"] = { "<Cmd>Telescope jumplist<CR>", "Jump list" }
 
 -- lazy
-lvim.keys.normal_mode["<Leader>lu"] = "<Cmd>Lazy update<CR>"
+lvim.builtin.which_key.mappings["lu"] = { "<Cmd>Lazy update<CR>", "Lazy update" }
 
 -- LSP
 lvim.builtin.which_key.mappings["r"] = { "<Cmd>TroubleToggle lsp_references<CR>", "References" }
@@ -135,18 +138,17 @@ lvim.builtin.which_key.mappings["lR"] = { "<Cmd>LspRestart<CR>", "Restart LSP" }
 lvim.builtin.which_key.mappings["m"] = { "<Cmd>Telescope marks<CR>", "Marks" }
 
 -- mergetool
-lvim.keys.normal_mode["<Leader>mj"] = "<Cmd>MergetoolDiffExchangeLeft<CR>"
-lvim.keys.normal_mode["<Leader>mk"] = "<Cmd>MergetoolDiffExchangeRight<CR>"
-lvim.keys.normal_mode["<Leader>ml"] = "<Cmd>MergetoolPreferLocal<CR>"
-lvim.keys.normal_mode["<Leader>mr"] = "<Cmd>MergetoolPreferRemote<CR>"
-lvim.keys.normal_mode["<Leader>mq"] = "<Cmd>MergetoolStop<CR>"
+lvim.builtin.which_key.mappings["mj"] = { "<Cmd>MergetoolDiffExchangeLeft<CR>", "Exchange left" }
+lvim.builtin.which_key.mappings["mk"] = { "<Cmd>MergetoolDiffExchangeRight<CR>", "Exchange right" }
+lvim.builtin.which_key.mappings["ml"] = { "<Cmd>MergetoolPreferLocal<CR>", "Prefer local" }
+lvim.builtin.which_key.mappings["mr"] = { "<Cmd>MergetoolPreferRemote<CR>", "Prefer right" }
+lvim.builtin.which_key.mappings["mq"] = { "<Cmd>MergetoolStop<CR>", "Stop" }
 
 -- nvim tree
 lvim.builtin.which_key.mappings["t"] = { "<Cmd>NvimTreeToggle<CR>", "NvimTree" }
 
 -- quickfix
-lvim.keys.normal_mode["<Leader>q"] = "<Cmd>Telescope quickfix<CR>"
-lvim.keys.normal_mode["<Leader>lq"] = "<Cmd>TroubleToggle quickfix<CR>"
+lvim.builtin.which_key.mappings["lq"] = "<Cmd>TroubleToggle quickfix<CR>"
 
 -- search text
 lvim.builtin.which_key.mappings["g"] = {
@@ -163,25 +165,21 @@ lvim.builtin.which_key.mappings["g"] = {
 lvim.builtin.which_key.mappings["z"] = { "<Cmd>Telescope current_buffer_fuzzy_find<CR>", "Fuzzy" }
 
 -- sort
-lvim.keys.normal_mode["<Leader>so"] = "<Cmd>Sort<CR>"
-lvim.keys.normal_mode["<Leader>sn"] = "<Cmd>Sort n<CR>"
-lvim.keys.visual_mode["<Leader>so"] = "<Esc><Cmd>Sort<CR>"
-lvim.keys.visual_mode["<Leader>sn"] = "<Esc><Cmd>Sort n<CR>"
+lvim.builtin.which_key.mappings["s"] = { "<Cmd>Sort<CR>", "Sort" }
+lvim.builtin.which_key.mappings["sn"] = { "<Cmd>Sort n<CR>", "Sort (numbers)" }
+lvim.builtin.which_key.vmappings["s"] = { "<Esc><Cmd>Sort<CR>", "Sort" }
+lvim.builtin.which_key.vmappings["sn"] = { "<Esc><Cmd>Sort n<CR>", "Sort (numbers)" }
 
 -- spectre
-lvim.keys.normal_mode["<Leader>sp"] = "<Cmd>lua require('spectre').open()<CR>"
-lvim.keys.normal_mode["<Leader>sf"] = "<Cmd>lua require('spectre').open_file_search()<CR>"
-lvim.keys.visual_mode["<Leader>sp"] = "<Esc><Cmd>lua require('spectre').open_visual()<CR>"
-lvim.keys.visual_mode["<Leader>sf"] = "<Esc><Cmd>lua require('spectre').open_file_search({select_word=true})<CR>"
+lvim.builtin.which_key.mappings["<Leader>sp"] = { "<Cmd>lua require('spectre').open()<CR>", "Spectre" }
+lvim.builtin.which_key.mappings["<Leader>sf"] =
+	{ "<Cmd>lua require('spectre').open_file_search()<CR>", "Spectre (file)" }
+lvim.keys.visual_mode["<Leader>sp"] = { "<Esc><Cmd>lua require('spectre').open_visual()<CR>", "Spectre" }
+lvim.keys.visual_mode["<Leader>sf"] =
+	{ "<Esc><Cmd>lua require('spectre').open_file_search({select_word=true})<CR>", "Spectre (file)" }
 
 -- symbols
-lvim.keys.normal_mode["<Leader>s"] = "<Cmd>Telescope lsp_document_symbols<CR>"
-lvim.keys.normal_mode["<Leader>sy"] = "<Cmd>SymbolsOutline<CR>"
-lvim.keys.normal_mode["<Leader>ws"] = "<Cmd>Telescope lsp_dynamic_workspace_symbols<CR>"
-
--- telescope
-lvim.keys.normal_mode["<Leader>te"] = "<Cmd>Telescope<CR>"
-lvim.keys.visual_mode["<Leader>te"] = "<Esc><Cmd>Telescope<CR>"
+lvim.keys.normal_mode["<Leader>s"] = { "<Cmd>SymbolsOutline<CR>", "Symbols" }
 
 -------------------------------------------------------------------------------
 -- formatters
@@ -280,7 +278,6 @@ lvim.builtin.telescope.pickers.find_files.find_command = { "fd", "-H", "-tf" }
 lvim.builtin.dap.active = false
 lvim.builtin.illuminate.active = false
 lvim.builtin.lir.active = false
--- lvim.builtin.which_key.active = false
 lvim.plugins = {
 	-- auto save
 	{
