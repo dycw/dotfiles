@@ -1,11 +1,11 @@
 {
-  "Comment.nvim": {
-    "branch": "master",
-    "commit": "0236521ea582747b58869cb72f70ccfa967d2e89"
-  },
   "LuaSnip": {
     "branch": "master",
     "commit": "a7a4b4682c4b3e2ba82b82a4e6e5f5a0e79dec32"
+  },
+  "auto-session": {
+    "branch": "main",
+    "commit": "29a8c77a0579636d5520aebd38bdbc2e6079f2f5"
   },
   "cmp-nvim-lsp": {
     "branch": "main",
@@ -18,6 +18,10 @@
   "cmp_luasnip": {
     "branch": "master",
     "commit": "05a9ab28b53f71d1aece421ef32fee2cb857a843"
+  },
+  "comment.nvim": {
+    "branch": "master",
+    "commit": "0236521ea582747b58869cb72f70ccfa967d2e89"
   },
   "conform.nvim": {
     "branch": "master",
@@ -79,6 +83,10 @@
     "branch": "master",
     "commit": "6e5c78ebc9936ca74add66bda22c566f951b6ee5"
   },
+  "nvim-surround": {
+    "branch": "main",
+    "commit": "84a26afce16cffa7e3322cfa80a42cddf60616eb"
+  },
   "nvim-treesitter": {
     "branch": "master",
     "commit": "5e4f959d5979730ddb2ee9ae60f5133081502b23"
@@ -110,10 +118,6 @@
   "tokyonight.nvim": {
     "branch": "main",
     "commit": "623c3cd60a8081b68edcaf544856c053249a659e"
-  },
-  "vim-sleuth": {
-    "branch": "master",
-    "commit": "1cc4557420f215d02c4d2645a748a816c220e99b"
   },
   "which-key.nvim": {
     "branch": "main",
