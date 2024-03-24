@@ -9,7 +9,6 @@
     - ~/.config
     - ~/.config/direnv
     - ~/.config/lvim
-    - ~/.config/nvim/lua/kickstart
     - ~/.config/pip
     - ~/.config/tmux
     - ~/.config/zellij
