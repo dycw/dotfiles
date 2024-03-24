@@ -8,7 +8,6 @@
 - create:
     - ~/.config
     - ~/.config/direnv
-    - ~/.config/lvim
     - ~/.config/pip
     - ~/.config/tmux
     - ~/.config/zellij
@@ -19,8 +18,6 @@
     /Users/derekwan/Library/Application Support/nushell/config.nu: nushell/config.nu
     /Users/derekwan/Library/Application Support/nushell/env.nu: nushell/env.nu
     ~/.config/direnv/direnvrc: direnv/direnvrc
-    ~/.config/lvim/config.lua: lunarvim/config.lua
-    ~/.config/lvim/lazy-lock.json: lunarvim/lazy-lock.json
     ~/.config/nvim: nvim
     ~/.config/pip/pip.conf: pip/pip.conf
     ~/.config/ripgreprc: ripgrep/ripgreprc
