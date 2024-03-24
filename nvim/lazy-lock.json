@@ -31,6 +31,10 @@
     "branch": "main",
     "commit": "933db4596e4bab1b09b6d48a10e21819e4cc458f"
   },
+  "fine-cmdline.nvim": {
+    "branch": "main",
+    "commit": "dd676584145d62b30d7e8dbdd011796a8f0a065f"
+  },
   "flit.nvim": {
     "branch": "main",
     "commit": "04f744bbb2b91fb2ad2c702b5eb8e23d17924fa6"
