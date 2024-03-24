@@ -16,6 +16,7 @@ return {
 			javascript = { "prettier" },
 			python = { "ruff_fix", "ruff_format" },
 			lua = { "stylua" },
+			["*"] = { "trim_whitespace", "trim_newlines" },
 		},
 	},
 }

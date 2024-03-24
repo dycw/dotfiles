@@ -7,6 +7,9 @@ vim.opt.clipboard = "unnamedplus"
 -- Use the appropriate number of spaces to insert a <Tab>?
 vim.opt.expandtab = true
 
+-- Enables mouse support
+vim.opt.mouse = "a"
+
 -- Print the line number in front of each line
 vim.opt.number = true
 
