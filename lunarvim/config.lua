@@ -309,15 +309,6 @@ lvim.plugins = {
 		event = { "BufRead", "BufNew" },
 	},
 
-	-- bracey
-	{
-		build = "npm install --prefix server",
-		cmd = { "Bracey", "BracyStop", "BraceyReload", "BraceyEval" },
-		config = function()
-			vim.api.nvim_set_var("g:bracey_refresh_on_save", 1)
-		end,
-	},
-
 	-- caser
 	{
 		"arthurxavierx/vim-caser",
@@ -473,6 +464,15 @@ lvim.plugins = {
 		config = function()
 			vim.g.mergetool_layout = "rml,b"
 			vim.g.mergetool_prefer_revision = "unmodified"
+		end,
+		event = { "BufRead", "BufNew" },
+	},
+
+	-- mkdir
+	{
+		"jghauser/mkdir.nvim",
+		config = function()
+			require("mkdir")
 		end,
 		event = { "BufRead", "BufNew" },
 	},
