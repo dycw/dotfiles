@@ -71,23 +71,26 @@ if [ -f "$__file" ]; then
 fi
 if command -v fzf >/dev/null 2>&1; then
   export FZF_DEFAULT_COMMAND='fd -HL'
+  export FZF_DEFAULT_OPTS="
+    --height=80%
+    --info=inline
+    --layout=reverse
+    --preview '([[ -f {} ]] && (bat -n --color=always {} || cat {})) || ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
+    "
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND -tf -td"
   export FZF_CTRL_T_OPTS="
-    --walker-skip .git,node_modules,target
-    --preview 'bat -n --color=always {}'
-    --preview-window 'right:60%:wrap'
-    --bind 'ctrl-/:change-preview-window(down|hidden|)'"
-  export FZF_CTRL_R_OPTS="
-    --preview 'echo {}'
-    --preview-window up:3:hidden:wrap
-    --bind 'ctrl-/:toggle-preview'
+    --bind 'ctrl-a:select-all'
+    --bind 'ctrl-d:deselect-all'
     --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
-    --color header:italic
-    --header 'Press CTRL-Y to copy command into clipboard'"
+    --bind 'ctrl-/:change-preview-window(down|hidden|)'
+    --header 'Ctrl-{a,d,y,/}'
+    --multi
+    --preview-window right:60%:wrap
+    "
+	export FZF_CTRL_R_OPTS="
+    --preview-window up:3:wrap
+    "
 	export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND -td"
-  export FZF_ALT_C_OPTS="
-    --walker-skip .git,node_modules,target
-    --preview 'tree -C {}'"
 fi
 
 

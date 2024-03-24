@@ -19,6 +19,20 @@ lvim.keys.visual_mode["<CR>"] = ":"
 -- ex-mode
 lvim.keys.normal_mode["Q"] = "<Nop>"
 
+-- LSP
+lvim.lsp.buffer_mappings.normal_mode["gr"] = { "<Cmd>Telescope lsp_references<CR>", "References" }
+lvim.keys.normal_mode["ge"] = "<Cmd>Telescope diagnostics<CR>"
+lvim.keys.normal_mode["gs"] = "<Cmd>Telescope lsp_document_symbols<CR>"
+lvim.keys.normal_mode["gS"] = "<Cmd>Telescope lsp_dynamic_workspace_symbols<CR>"
+lvim.keys.normal_mode["`j"] = "<Cmd>lua vim.diagnostic.goto_next()<CR>"
+lvim.keys.normal_mode["`k"] = "<Cmd>lua vim.diagnostic.goto_prev()<CR>"
+lvim.keys.normal_mode["R"] = {
+	function()
+		return ":IncRename " .. vim.fn.expand("<cword>")
+	end,
+	{ expr = true, noremap = true },
+}
+
 -- marks
 local prefixes = "m'"
 local letters = "abcdefghijklmnopqrstuvwxyz"
@@ -42,6 +56,7 @@ lvim.keys.normal_mode["<F2>"] = "<Cmd>set invpaste paste?<CR>"
 lvim.keys.insert_mode["<F2>"] = "<C-o><Cmd>set invpaste paste?<CR>"
 
 -- quickfix
+lvim.keys.normal_mode["<Leader>q"] = "<Cmd>Telescope quickfix<CR>"
 lvim.keys.normal_mode["]"] = "<Cmd>cnext<CR>"
 lvim.keys.normal_mode["["] = "<Cmd>cprev<CR>"
 
@@ -53,120 +68,118 @@ lvim.keys.normal_mode["<C-s>"] = "<Cmd>w<CR>"
 lvim.keys.visual_mode["<C-s>"] = "<Esc><Cmd>w<CR>"
 lvim.keys.insert_mode["<C-s>"] = "<Esc><Cmd>w<CR>"
 
+-- windows
+lvim.keys.normal_mode["<C-w>h"] = "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>"
+lvim.keys.normal_mode["<C-w>j"] = "<Cmd>set splitbelow<CR><Cmd>split<CR>"
+lvim.keys.normal_mode["<C-w>k"] = "<Cmd>set nosplitbelow<CR><Cmd>split<CR>"
+lvim.keys.normal_mode["<C-w>l"] = "<Cmd>set splitright<CR><Cmd>vsplit<CR>"
+
 -------------------------------------------------------------------------------
 -- key bindings (leader)
 -------------------------------------------------------------------------------
+lvim.builtin.which_key.mappings = {}
+lvim.builtin.which_key.vmappings = {}
+
 -- auto-save
-lvim.keys.normal_mode["<Leader>a"] = "<Cmd>ASToggle<CR>"
+lvim.builtin.which_key.mappings["as"] = { "<Cmd>ASToggle<CR>", "Toggle AutoSave" }
 
 -- buffers
-lvim.keys.normal_mode["<Leader>b"] = "<Cmd>Telescope buffers<CR>"
-lvim.keys.normal_mode["<Leader>bd"] = "<Cmd>BDelete this<CR>"
-lvim.keys.normal_mode["<Leader>bD"] = "<Cmd>BDelete other<CR>"
-lvim.keys.normal_mode["<Leader>bj"] = "<Cmd>BufferLineCycleNext<CR>"
-lvim.keys.normal_mode["<Leader>bk"] = "<Cmd>BufferLineCyclePrev<CR>"
-lvim.keys.normal_mode["<Leader>bp"] = "<Cmd>BufferLinePick<CR>"
+lvim.builtin.which_key.mappings["b"] = { "<Cmd>Telescope buffers<CR>", "Buffers" }
+lvim.builtin.which_key.mappings["x"] = { "BDelete this<CR>", "Delete buffer" }
 
 -- commands
-lvim.keys.normal_mode["<Leader>c"] = "<Cmd>Telescope commands<CR>"
-lvim.keys.normal_mode["<Leader>ch"] = "<Cmd>Telescope command_history<CR>"
-lvim.keys.visual_mode["<Leader>c"] = "<Cmd>Telescope commands<CR>"
+lvim.builtin.which_key.mappings["c"] = { "<Cmd>Telescope commands<CR>", "Commands" }
+lvim.builtin.which_key.mappings["C"] = { "<Cmd>Telescope commands_history<CR>", "Command history" }
+lvim.builtin.which_key.vmappings["c"] = { "<Cmd>Telescope commands<CR>", "Commands" }
 
--- comment
-lvim.keys.normal_mode["<Leader>/"] = "<Plug>(comment_toggle_linewise_current)"
-lvim.keys.visual_mode["<Leader>/"] = "<Plug>(comment_toggle_linewise_visual)"
-
--- diagnostics
-lvim.keys.normal_mode["<Leader>d"] = "<Cmd>Telescope diagnostics<CR>"
-lvim.keys.normal_mode["<Leader>dj"] = "<Cmd>lua vim.diagnostic.goto_next()<CR>"
-lvim.keys.normal_mode["<Leader>dk"] = "<Cmd>lua vim.diagnostic.goto_prev()<CR>"
-lvim.keys.normal_mode["<Leader>dd"] = "<Cmd>TroubleToggle document_diagnostics<CR>"
-lvim.keys.normal_mode["<Leader>wd"] = "<Cmd>TroubleToggle workspace_diagnostics<CR>"
-
--- files
-lvim.keys.normal_mode["<Leader>f"] = "<Cmd>Telescope find_files<CR>"
-lvim.keys.normal_mode["<Leader>gf"] = "<Cmd>Telescope git_files<CR>"
-lvim.keys.normal_mode["<Leader>gs"] = "<Cmd>Telescope git_status<CR>"
-lvim.keys.normal_mode["<Leader>of"] = "<Cmd>Telescope oldfiles<CR>"
-
--- git
-lvim.keys.normal_mode["<Leader>gj"] = "<Cmd>lua require('gitsigns').next_hunk({navigation_message = false})<CR>"
-lvim.keys.normal_mode["<Leader>gk"] = "<Cmd>lua require('gitsigns').prev_hunk({navigation_message = false})<CR>"
-
--- iswap
-lvim.keys.normal_mode["<Leader>i"] = "<Cmd>ISwapWith<CR>"
-lvim.keys.normal_mode["<Leader>is"] = "<Cmd>ISwap<CR>"
-
--- jump list
-lvim.keys.normal_mode["<Leader>j"] = "<Cmd>Telescope jumplist<CR>"
-
--- lazy
-lvim.keys.normal_mode["<Leader>lu"] = "<Cmd>Lazy update<CR>"
-
--- LSP
-lvim.keys.normal_mode["<Leader>r"] = "<Cmd>Telescope lsp_references<CR>"
-lvim.keys.normal_mode["<Leader>lr"] = "<Cmd>TroubleToggle lsp_references<CR>"
-lvim.keys.normal_mode["<Leader>rn"] = {
-	function()
-		return ":IncRename " .. vim.fn.expand("<cword>")
-	end,
-	{ expr = true, noremap = true },
-}
-lvim.keys.normal_mode["<Leader>lR"] = "<Cmd>LspRestart<CR>"
-
--- marks
-lvim.keys.normal_mode["<Leader>m"] = "<Cmd>Telescope marks<CR>"
-
--- mergetool
-lvim.keys.normal_mode["<Leader>mj"] = "<Cmd>MergetoolDiffExchangeLeft<CR>"
-lvim.keys.normal_mode["<Leader>mk"] = "<Cmd>MergetoolDiffExchangeRight<CR>"
-lvim.keys.normal_mode["<Leader>ml"] = "<Cmd>MergetoolPreferLocal<CR>"
-lvim.keys.normal_mode["<Leader>mr"] = "<Cmd>MergetoolPreferRemote<CR>"
-lvim.keys.normal_mode["<Leader>mq"] = "<Cmd>MergetoolStop<CR>"
-
--- nvim tree
-lvim.keys.normal_mode["<Leader>e"] = "<Cmd>NvimTreeToggle<CR>"
-
--- quickfix
-lvim.keys.normal_mode["<Leader>q"] = "<Cmd>Telescope quickfix<CR>"
-lvim.keys.normal_mode["<Leader>lq"] = "<Cmd>TroubleToggle quickfix<CR>"
-
--- search text
-lvim.keys.normal_mode["<Leader>bf"] = "<Cmd>Telescope current_buffer_fuzzy_find<CR>"
-lvim.keys.normal_mode["<Leader>gr"] = "<Cmd>Telescope grep_string<CR>"
-lvim.keys.normal_mode["<Leader>lg"] = "<Cmd>Telescope live_grep<CR>"
-
--- sort
-lvim.keys.normal_mode["<Leader>so"] = "<Cmd>Sort<CR>"
-lvim.keys.normal_mode["<Leader>sn"] = "<Cmd>Sort n<CR>"
-lvim.keys.visual_mode["<Leader>so"] = "<Esc><Cmd>Sort<CR>"
-lvim.keys.visual_mode["<Leader>sn"] = "<Esc><Cmd>Sort n<CR>"
-
--- spectre
-lvim.keys.normal_mode["<Leader>sp"] = "<Cmd>lua require('spectre').open()<CR>"
-lvim.keys.normal_mode["<Leader>sf"] = "<Cmd>lua require('spectre').open_file_search()<CR>"
-lvim.keys.visual_mode["<Leader>sp"] = "<Esc><Cmd>lua require('spectre').open_visual()<CR>"
-lvim.keys.visual_mode["<Leader>sf"] = "<Esc><Cmd>lua require('spectre').open_file_search({select_word=true})<CR>"
-
--- symbols
-lvim.keys.normal_mode["<Leader>s"] = "<Cmd>Telescope lsp_document_symbols<CR>"
-lvim.keys.normal_mode["<Leader>sy"] = "<Cmd>SymbolsOutline<CR>"
-lvim.keys.normal_mode["<Leader>ws"] = "<Cmd>Telescope lsp_dynamic_workspace_symbols<CR>"
-
--- telescope
-lvim.keys.normal_mode["<Leader>te"] = "<Cmd>Telescope<CR>"
-lvim.keys.visual_mode["<Leader>te"] = "<Esc><Cmd>Telescope<CR>"
+-- keymaps
+lvim.builtin.which_key.mappings["K"] = { "<Cmd>Telescope keymaps<CR>", "Key maps" }
 
 -- trouble
-lvim.keys.normal_mode["<Leader>t"] = "<Cmd>TroubleToggle<CR>"
+lvim.builtin.which_key.mappings["t"] = { "<Cmd>TroubleToggle<CR>", "Trouble" }
+lvim.builtin.which_key.vmappings["t"] = { "<Cmd>TroubleToggle<CR>", "Trouble" }
 
 -- windows
-lvim.keys.normal_mode["<Leader>wh"] = "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>"
-lvim.keys.normal_mode["<Leader>wj"] = "<Cmd>set splitbelow<CR><Cmd>split<CR>"
-lvim.keys.normal_mode["<Leader>wk"] = "<Cmd>set nosplitbelow<CR><Cmd>split<CR>"
-lvim.keys.normal_mode["<Leader>wl"] = "<Cmd>set splitright<CR><Cmd>vsplit<CR>"
-lvim.keys.normal_mode["<Leader>-"] = "<Cmd>split<CR>"
-lvim.keys.normal_mode["<Leader>\\"] = "<Cmd>vsplit<CR>"
+lvim.builtin.which_key.mappings["wh"] = { "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>", "Split left" }
+lvim.builtin.which_key.mappings["wj"] = { "<Cmd>set splitbelow<CR><Cmd>split<CR>", "Split down" }
+lvim.builtin.which_key.mappings["wk"] = { "<Cmd>set nosplitbelow<CR><Cmd>split<CR>", "Split up" }
+lvim.builtin.which_key.mappings["wl"] = { "<Cmd>set splitright<CR><Cmd>vsplit<CR>", "Split right" }
+lvim.builtin.which_key.mappings["-"] = { "<Cmd>split<CR>", "Split down" }
+lvim.builtin.which_key.mappings["\\"] = { "<Cmd>vsplit<CR>", "Split right" }
+
+-- comment
+lvim.builtin.which_key.mappings["/"] = { "<Plug>(comment_toggle_linewise_current)", "Comment" }
+lvim.builtin.which_key.vmappings["/"] = { "<Plug>(comment_toggle_linewise_visual)", "Comment" }
+
+-- diagnostics
+lvim.builtin.which_key.mappings["e"] = { "<Cmd>TroubleToggle document_diagnostics<CR>", "Diagnostics (doc)" }
+lvim.builtin.which_key.mappings["E"] = { "<Cmd>TroubleToggle workspace_diagnostics<CR>", "Diagnostics (ws)" }
+
+-- files
+lvim.builtin.which_key.mappings["f"] = { "<Cmd>Telescope find_files<CR>", "Files" }
+lvim.builtin.which_key.mappings["gs"] = { "<Cmd>Telescope git_status<CR>", "Git status" }
+lvim.builtin.which_key.mappings["F"] = { "<Cmd>Telescope oldfiles<CR>", "Old files" }
+
+-- iswap
+lvim.builtin.which_key.mappings["i"] = { "<Cmd>ISwap<CR>", "ISwap" }
+lvim.builtin.which_key.mappings["iw"] = { "<Cmd>ISwapWith<CR>", "ISwapWith" }
+
+-- jump list
+lvim.builtin.which_key.mappings["j"] = { "<Cmd>Telescope jumplist<CR>", "Jump list" }
+
+-- lazy
+lvim.builtin.which_key.mappings["lu"] = { "<Cmd>Lazy update<CR>", "Lazy update" }
+
+-- LSP
+lvim.builtin.which_key.mappings["r"] = { "<Cmd>TroubleToggle lsp_references<CR>", "References" }
+lvim.builtin.which_key.mappings["lR"] = { "<Cmd>LspRestart<CR>", "Restart LSP" }
+
+-- marks
+lvim.builtin.which_key.mappings["m"] = { "<Cmd>Telescope marks<CR>", "Marks" }
+
+-- mergetool
+lvim.builtin.which_key.mappings["mj"] = { "<Cmd>MergetoolDiffExchangeLeft<CR>", "Exchange left" }
+lvim.builtin.which_key.mappings["mk"] = { "<Cmd>MergetoolDiffExchangeRight<CR>", "Exchange right" }
+lvim.builtin.which_key.mappings["ml"] = { "<Cmd>MergetoolPreferLocal<CR>", "Prefer local" }
+lvim.builtin.which_key.mappings["mr"] = { "<Cmd>MergetoolPreferRemote<CR>", "Prefer right" }
+lvim.builtin.which_key.mappings["mq"] = { "<Cmd>MergetoolStop<CR>", "Stop" }
+
+-- nvim tree
+lvim.builtin.which_key.mappings["t"] = { "<Cmd>NvimTreeToggle<CR>", "NvimTree" }
+
+-- quickfix
+lvim.builtin.which_key.mappings["lq"] = { "<Cmd>TroubleToggle quickfix<CR>", "Quick Fix" }
+
+-- search text
+lvim.builtin.which_key.mappings["g"] = {
+	function()
+		require("telescope.builtin").grep_string({
+			shorten_path = true,
+			word_match = "-w",
+			only_sort_text = true,
+			search = "",
+		})
+	end,
+	"Grep",
+}
+lvim.builtin.which_key.mappings["z"] = { "<Cmd>Telescope current_buffer_fuzzy_find<CR>", "Fuzzy" }
+
+-- sort
+lvim.builtin.which_key.mappings["s"] = { "<Cmd>Sort<CR>", "Sort" }
+lvim.builtin.which_key.mappings["sn"] = { "<Cmd>Sort n<CR>", "Sort (numbers)" }
+lvim.builtin.which_key.vmappings["s"] = { "<Esc><Cmd>Sort<CR>", "Sort" }
+lvim.builtin.which_key.vmappings["sn"] = { "<Esc><Cmd>Sort n<CR>", "Sort (numbers)" }
+
+-- spectre
+lvim.builtin.which_key.mappings["<Leader>sp"] = { "<Cmd>lua require('spectre').open()<CR>", "Spectre" }
+lvim.builtin.which_key.mappings["<Leader>sf"] =
+	{ "<Cmd>lua require('spectre').open_file_search()<CR>", "Spectre (file)" }
+lvim.builtin.which_key.vmappings["<Leader>sp"] = { "<Esc><Cmd>lua require('spectre').open_visual()<CR>", "Spectre" }
+lvim.builtin.which_key.vmappings["<Leader>sf"] =
+	{ "<Esc><Cmd>lua require('spectre').open_file_search({select_word=true})<CR>", "Spectre (file)" }
+
+-- symbols
+lvim.builtin.which_key.mappings["<Leader>s"] = { "<Cmd>SymbolsOutline<CR>", "Symbols" }
 
 -------------------------------------------------------------------------------
 -- formatters
@@ -248,12 +261,23 @@ lvim.builtin.nvimtree.setup.git.ignore = true
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 
 -------------------------------------------------------------------------------
+-- telescope
+-------------------------------------------------------------------------------
+lvim.builtin.telescope.defaults.layout_config.height = 0.8
+lvim.builtin.telescope.defaults.layout_config.preview_cutoff = 40
+lvim.builtin.telescope.defaults.layout_config.preview_height = 0.6
+lvim.builtin.telescope.defaults.layout_config.prompt_position = "bottom"
+lvim.builtin.telescope.defaults.layout_config.width = 0.8
+lvim.builtin.telescope.defaults.layout_strategy = "vertical"
+lvim.builtin.telescope.defaults.path_display = { "smart" }
+lvim.builtin.telescope.pickers.find_files.find_command = { "fd", "-H", "-tf" }
+
+-------------------------------------------------------------------------------
 -- plugins
 -------------------------------------------------------------------------------
 lvim.builtin.dap.active = false
 lvim.builtin.illuminate.active = false
 lvim.builtin.lir.active = false
--- lvim.builtin.which_key.active = false
 lvim.plugins = {
 	-- auto save
 	{
@@ -548,16 +572,6 @@ lvim.plugins = {
 		event = { "BufRead", "BufNew" },
 	},
 
-	-- treesj
-	{
-		"wansmer/treesj",
-		config = function()
-			require("treesj").setup()
-		end,
-		keys = { "<space>m", "<space>j", "<space>s" },
-		dependencies = { "nvim-treesitter/nvim-treesitter" },
-	},
-
 	-- treesitter autotag
 	{
 		"windwp/nvim-ts-autotag",
@@ -568,13 +582,11 @@ lvim.plugins = {
 	},
 
 	-- treesitter context
-	{
-		"romgrk/nvim-treesitter-context",
-		config = function()
-			require("treesitter-context").setup()
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+	-- https://github.com/LunarVim/LunarVim/issues/4386#issuecomment-1916835688
+	-- {
+	-- 	"nvim-treesitter/nvim-treesitter-context",
+	-- 	event = { "BufRead", "BufNew" },
+	-- },
 
 	-- trouble
 	{
