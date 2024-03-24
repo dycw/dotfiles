@@ -51,10 +51,6 @@
     "branch": "main",
     "commit": "96584866b9c5e998cbae300594d0ccfd0c464627"
   },
-  "lir.nvim": {
-    "branch": "master",
-    "commit": "969e95bd07ec315b5efc53af69c881278c2b74fa"
-  },
   "lualine.nvim": {
     "branch": "master",
     "commit": "2248ef254d0a1488a72041cfb45ca9caada6d994"
@@ -90,14 +86,6 @@
   "nvim-cmp": {
     "branch": "main",
     "commit": "0b751f6beef40fd47375eaf53d3057e0bfa317e4"
-  },
-  "nvim-dap": {
-    "branch": "master",
-    "commit": "13ce59d4852be2bb3cd4967947985cb0ceaff460"
-  },
-  "nvim-dap-ui": {
-    "branch": "master",
-    "commit": "34160a7ce6072ef332f350ae1d4a6a501daf0159"
   },
   "nvim-lspconfig": {
     "branch": "master",
@@ -158,10 +146,6 @@
   "tokyonight.nvim": {
     "branch": "main",
     "commit": "f247ee700b569ed43f39320413a13ba9b0aef0db"
-  },
-  "vim-illuminate": {
-    "branch": "master",
-    "commit": "3bd2ab64b5d63b29e05691e624927e5ebbf0fb86"
   },
   "which-key.nvim": {
     "branch": "main",

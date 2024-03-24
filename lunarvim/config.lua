@@ -307,7 +307,7 @@ lvim.plugins = {
 			require("bqf").setup({ auto_resize_height = true })
 		end,
 		event = { "BufRead", "BufNew" },
-
+	},
 
 	-- bracey
 	{
@@ -507,7 +507,7 @@ lvim.plugins = {
 		event = { "BufRead", "BufNew" },
 	},
 
-    	-- spectre
+	-- spectre
 	{
 		"windwp/nvim-spectre",
 		config = function()
@@ -515,7 +515,6 @@ lvim.plugins = {
 		end,
 		event = { "BufRead", "BufNew" },
 	},
-
 
 	-- surround
 	{
@@ -561,6 +560,15 @@ lvim.plugins = {
 	-- tmux
 	{
 		"christoomey/vim-tmux-navigator",
+		event = { "BufRead", "BufNew" },
+	},
+
+	-- treesitter autotag
+	{
+		"windwp/nvim-ts-autotag",
+		config = function()
+			require("nvim-ts-autotag").setup()
+		end,
 		event = { "BufRead", "BufNew" },
 	},
 
