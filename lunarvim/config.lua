@@ -53,6 +53,12 @@ lvim.keys.normal_mode["<C-s>"] = "<Cmd>w<CR>"
 lvim.keys.visual_mode["<C-s>"] = "<Esc><Cmd>w<CR>"
 lvim.keys.insert_mode["<C-s>"] = "<Esc><Cmd>w<CR>"
 
+-- windows
+lvim.keys.normal_mode["<C-w>h"] = "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>"
+lvim.keys.normal_mode["<C-w>j"] = "<Cmd>set splitbelow<CR><Cmd>split<CR>"
+lvim.keys.normal_mode["<C-w>k"] = "<Cmd>set nosplitbelow<CR><Cmd>split<CR>"
+lvim.keys.normal_mode["<C-w>l"] = "<Cmd>set splitright<CR><Cmd>vsplit<CR>"
+
 -------------------------------------------------------------------------------
 -- key bindings (leader)
 -------------------------------------------------------------------------------
@@ -162,11 +168,12 @@ lvim.keys.normal_mode["<Leader>ws"] = "<Cmd>Telescope lsp_dynamic_workspace_symb
 lvim.keys.normal_mode["<Leader>te"] = "<Cmd>Telescope<CR>"
 lvim.keys.visual_mode["<Leader>te"] = "<Esc><Cmd>Telescope<CR>"
 
--- trouble
-lvim.keys.normal_mode["<Leader>t"] = "<Cmd>TroubleToggle<CR>"
-
 -- windows
 wk.register({
+	-- trouble
+	["<Leader>t"] = { "<Cmd>TroubleToggle<CR>" },
+
+	-- windows
 	["<Leader>wh"] = { "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>", "Split left" },
 	["<Leader>wj"] = { "<Cmd>set splitbelow<CR><Cmd>split<CR>", "Split down" },
 	["<Leader>wk"] = { "<Cmd>set nosplitbelow<CR><Cmd>split<CR>", "Split up" },
