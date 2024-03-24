@@ -62,21 +62,27 @@ lvim.keys.normal_mode["<C-w>l"] = "<Cmd>set splitright<CR><Cmd>vsplit<CR>"
 -------------------------------------------------------------------------------
 -- key bindings (leader)
 -------------------------------------------------------------------------------
-local wk = require("which-key")
+lvim.builtin.which_key.mappings = {
+	-- auto-save
+	["as"] = { "<Cmd>ASToggle<CR>", "Toggle AutoSave" },
 
--- auto-save
--- lvim.keys.normal_mode["<Leader>a"] = "<Cmd>ASToggle<CR>"
-wk.register({
-	["<Leader>as"] = { "<Cmd>ASToggle<CR>", "Toggle AutoSave" },
-})
+	-- buffers
+	["b"] = { "<Cmd>Telescope buffers<CR>" },
+	["d"] = { "BDelete this<CR>" },
 
--- buffers
-lvim.keys.normal_mode["<Leader>b"] = "<Cmd>Telescope buffers<CR>"
-lvim.keys.normal_mode["<Leader>bd"] = "<Cmd>BDelete this<CR>"
+	-- trouble
+	["t"] = { "<Cmd>TroubleToggle<CR>" },
+
+	-- windows
+	["wh"] = { "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>", "Split left" },
+	["wj"] = { "<Cmd>set splitbelow<CR><Cmd>split<CR>", "Split down" },
+	["wk"] = { "<Cmd>set nosplitbelow<CR><Cmd>split<CR>", "Split up" },
+	["wl"] = { "<Cmd>set splitright<CR><Cmd>vsplit<CR>", "Split right" },
+	["-"] = { "<Cmd>split<CR>", "Split down" },
+	["\\"] = { "<Cmd>vsplit<CR>", "Split right" },
+}
+
 lvim.keys.normal_mode["<Leader>bD"] = "<Cmd>BDelete other<CR>"
-lvim.keys.normal_mode["<Leader>bj"] = "<Cmd>BufferLineCycleNext<CR>"
-lvim.keys.normal_mode["<Leader>bk"] = "<Cmd>BufferLineCyclePrev<CR>"
-lvim.keys.normal_mode["<Leader>bp"] = "<Cmd>BufferLinePick<CR>"
 
 -- commands
 lvim.keys.normal_mode["<Leader>c"] = "<Cmd>Telescope commands<CR>"
@@ -167,20 +173,6 @@ lvim.keys.normal_mode["<Leader>ws"] = "<Cmd>Telescope lsp_dynamic_workspace_symb
 -- telescope
 lvim.keys.normal_mode["<Leader>te"] = "<Cmd>Telescope<CR>"
 lvim.keys.visual_mode["<Leader>te"] = "<Esc><Cmd>Telescope<CR>"
-
--- windows
-wk.register({
-	-- trouble
-	["<Leader>t"] = { "<Cmd>TroubleToggle<CR>" },
-
-	-- windows
-	["<Leader>wh"] = { "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>", "Split left" },
-	["<Leader>wj"] = { "<Cmd>set splitbelow<CR><Cmd>split<CR>", "Split down" },
-	["<Leader>wk"] = { "<Cmd>set nosplitbelow<CR><Cmd>split<CR>", "Split up" },
-	["<Leader>wl"] = { "<Cmd>set splitright<CR><Cmd>vsplit<CR>", "Split right" },
-	["<Leader>-"] = { "<Cmd>split<CR>", "Split down" },
-	["<Leader>\\"] = { "<Cmd>vsplit<CR>", "Split right" },
-})
 
 -------------------------------------------------------------------------------
 -- formatters
