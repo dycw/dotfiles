@@ -30,22 +30,22 @@ lvim.keys.normal_mode["gS"] = "<Cmd>Telescope lsp_dynamic_workspace_symbols<CR>"
 lvim.keys.normal_mode["`j"] = "<Cmd>lua vim.diagnostic.goto_next()<CR>"
 lvim.keys.normal_mode["`k"] = "<Cmd>lua vim.diagnostic.goto_prev()<CR>"
 lvim.keys.normal_mode["R"] = {
-	function()
-		return ":IncRename " .. vim.fn.expand("<cword>")
-	end,
-	{ expr = true, noremap = true },
+    function()
+        return ":IncRename " .. vim.fn.expand("<cword>")
+    end,
+    { expr = true, noremap = true },
 }
 
 -- marks
 local prefixes = "m'"
 local letters = "abcdefghijklmnopqrstuvwxyz"
 for i = 1, #prefixes do
-	for j = 1, #letters do
-		local prefix = prefixes:sub(i, i)
-		local lower_letter = letters:sub(j, j)
-		local upper_letter = string.upper(lower_letter)
-		lvim.keys.normal_mode[prefix .. lower_letter] = prefix .. upper_letter
-	end
+    for j = 1, #letters do
+        local prefix = prefixes:sub(i, i)
+        local lower_letter = letters:sub(j, j)
+        local upper_letter = string.upper(lower_letter)
+        lvim.keys.normal_mode[prefix .. lower_letter] = prefix .. upper_letter
+    end
 end
 
 -- navigation
@@ -154,15 +154,15 @@ lvim.builtin.which_key.mappings["lq"] = { "<Cmd>TroubleToggle quickfix<CR>", "Qu
 -- search text
 lvim.builtin.which_key.mappings["b"] = { "<Cmd>Telescope current_buffer_fuzzy_find<CR>", "Fuzzy" }
 lvim.builtin.which_key.mappings["g"] = {
-	function()
-		require("telescope.builtin").grep_string({
-			shorten_path = true,
-			word_match = "-w",
-			only_sort_text = true,
-			search = "",
-		})
-	end,
-	"Grep",
+    function()
+        require("telescope.builtin").grep_string({
+            shorten_path = true,
+            word_match = "-w",
+            only_sort_text = true,
+            search = "",
+        })
+    end,
+    "Grep",
 }
 
 -- sort
@@ -174,10 +174,10 @@ lvim.builtin.which_key.vmappings["sn"] = { "<Esc><Cmd>Sort n<CR>", "Sort (number
 -- spectre
 lvim.builtin.which_key.mappings["<Leader>sp"] = { "<Cmd>lua require('spectre').open()<CR>", "Spectre" }
 lvim.builtin.which_key.mappings["<Leader>sf"] =
-	{ "<Cmd>lua require('spectre').open_file_search()<CR>", "Spectre (file)" }
+    { "<Cmd>lua require('spectre').open_file_search()<CR>", "Spectre (file)" }
 lvim.builtin.which_key.vmappings["<Leader>sp"] = { "<Esc><Cmd>lua require('spectre').open_visual()<CR>", "Spectre" }
 lvim.builtin.which_key.vmappings["<Leader>sf"] =
-	{ "<Esc><Cmd>lua require('spectre').open_file_search({select_word=true})<CR>", "Spectre (file)" }
+    { "<Esc><Cmd>lua require('spectre').open_file_search({select_word=true})<CR>", "Spectre (file)" }
 
 -- symbols
 lvim.builtin.which_key.mappings["<Leader>s"] = { "<Cmd>SymbolsOutline<CR>", "Symbols" }
@@ -186,67 +186,67 @@ lvim.builtin.which_key.mappings["<Leader>s"] = { "<Cmd>SymbolsOutline<CR>", "Sym
 -- formatters
 -------------------------------------------------------------------------------
 require("lvim.lsp.null-ls.formatters").setup({
-	-- lua
-	{ name = "stylua", filetypes = { "lua" } },
-	-- python
-	{ name = "black", filetypes = { "ruff" } },
-	-- sh
-	{ name = "shfmt", filetypes = { "sh" } },
-	-- prettier
-	{
-		name = "prettier",
-		filetypes = {
-			"css",
-			"html",
-			"htmldjango",
-			"javascript",
-			"javascriptreact",
-			"json",
-			"markdown",
-			"scss",
-			"toml",
-			"typescript",
-			"typescriptreact",
-			"vue",
-			"yaml",
-		},
-	},
+    -- lua
+    { name = "stylua", filetypes = { "lua" } },
+    -- python
+    { name = "black", filetypes = { "ruff" } },
+    -- sh
+    { name = "shfmt", filetypes = { "sh" } },
+    -- prettier
+    {
+        name = "prettier",
+        filetypes = {
+            "css",
+            "html",
+            "htmldjango",
+            "javascript",
+            "javascriptreact",
+            "json",
+            "markdown",
+            "scss",
+            "toml",
+            "typescript",
+            "typescriptreact",
+            "vue",
+            "yaml",
+        },
+    },
 })
 
 -------------------------------------------------------------------------------
 -- linters
 -------------------------------------------------------------------------------
 require("lvim.lsp.null-ls.linters").setup({
-	-- lua
-	{ name = "luacheck", filetypes = { "lua" } },
-	-- python
-	{ name = "ruff", filetypes = { "python" } },
-	-- sh
-	{ name = "shellcheck", filetypes = { "sh" } },
+    -- lua
+    { name = "luacheck", filetypes = { "lua" } },
+    -- python
+    { name = "ruff", filetypes = { "python" } },
+    -- sh
+    { name = "shellcheck", filetypes = { "sh" } },
 })
 
 -------------------------------------------------------------------------------
 -- LSP
 -------------------------------------------------------------------------------
 lvim.builtin.treesitter.ensure_installed = {
-	"bash",
-	"dart",
-	"elm",
-	"go",
-	"graphql",
-	"haskell",
-	"javascript",
-	"json",
-	"lua",
-	"prisma",
-	"python",
-	"rust",
-	"sql",
-	"swift",
-	"tsx",
-	"typescript",
-	"vue",
-	"yaml",
+    "bash",
+    "dart",
+    "elm",
+    "go",
+    "graphql",
+    "haskell",
+    "javascript",
+    "json",
+    "lua",
+    "prisma",
+    "python",
+    "rust",
+    "sql",
+    "swift",
+    "tsx",
+    "typescript",
+    "vue",
+    "yaml",
 }
 
 -------------------------------------------------------------------------------
@@ -280,314 +280,314 @@ lvim.builtin.dap.active = false
 lvim.builtin.illuminate.active = false
 lvim.builtin.lir.active = false
 lvim.plugins = {
-	-- auto save
-	{
-		"okuuva/auto-save.nvim",
-		config = function()
-			require("auto-save").setup()
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- auto save
+    {
+        "okuuva/auto-save.nvim",
+        config = function()
+            require("auto-save").setup()
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- better escape
-	{
-		"max397574/better-escape.nvim",
-		config = function()
-			require("better_escape").setup({
-				mapping = { "jj", "jk", "kj", "kk" },
-			})
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- better escape
+    {
+        "max397574/better-escape.nvim",
+        config = function()
+            require("better_escape").setup({
+                mapping = { "jj", "jk", "kj", "kk" },
+            })
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- better quick fix
-	{
-		"kevinhwang91/nvim-bqf",
-		config = function()
-			require("bqf").setup({ auto_resize_height = true })
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- better quick fix
+    {
+        "kevinhwang91/nvim-bqf",
+        config = function()
+            require("bqf").setup({ auto_resize_height = true })
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- caser
-	{
-		"arthurxavierx/vim-caser",
-		event = { "BufRead", "BufNew" },
-	},
+    -- caser
+    {
+        "arthurxavierx/vim-caser",
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- close buffers
-	{
-		"kazhala/close-buffers.nvim",
-		event = { "BufRead", "BufNew" },
-	},
+    -- close buffers
+    {
+        "kazhala/close-buffers.nvim",
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- colorizer
-	{
-		"norcalli/nvim-colorizer.lua",
-		config = function()
-			require("colorizer").setup({ "css", "scss", "html", "javascript" }, {
-				RGB = true, -- #RGB hex codes
-				RRGGBB = true, -- #RRGGBB hex codes
-				RRGGBBAA = true, -- #RRGGBBAA hex codes
-				rgb_fn = true, -- CSS rgb() and rgba() functions
-				hsl_fn = true, -- CSS hsl() and hsla() functions
-				css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
-				css_fn = true, -- Enable all CSS *functions*: rgb_fn, hsl_fn
-			})
-		end,
-	},
+    -- colorizer
+    {
+        "norcalli/nvim-colorizer.lua",
+        config = function()
+            require("colorizer").setup({ "css", "scss", "html", "javascript" }, {
+                RGB = true, -- #RGB hex codes
+                RRGGBB = true, -- #RRGGBB hex codes
+                RRGGBBAA = true, -- #RRGGBBAA hex codes
+                rgb_fn = true, -- CSS rgb() and rgba() functions
+                hsl_fn = true, -- CSS hsl() and hsla() functions
+                css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+                css_fn = true, -- Enable all CSS *functions*: rgb_fn, hsl_fn
+            })
+        end,
+    },
 
-	-- cool
-	{
-		"romainl/vim-cool",
-		event = { "BufRead", "BufNew" },
-	},
+    -- cool
+    {
+        "romainl/vim-cool",
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- dial
-	{
-		"monaqa/dial.nvim",
-		config = function()
-			vim.keymap.set("n", "<C-a>", require("dial.map").inc_normal(), { noremap = true })
-			vim.keymap.set("n", "<C-x>", require("dial.map").dec_normal(), { noremap = true })
-			vim.keymap.set("v", "<C-a>", require("dial.map").inc_visual(), { noremap = true })
-			vim.keymap.set("v", "<C-x>", require("dial.map").dec_visual(), { noremap = true })
-			vim.keymap.set("v", "g<C-a>", require("dial.map").inc_gvisual(), { noremap = true })
-			vim.keymap.set("v", "g<C-x>", require("dial.map").dec_gvisual(), { noremap = true })
-			local augend = require("dial.augend")
-			require("dial.config").augends:register_group({
-				default = {
-					augend.integer.alias.decimal,
-					augend.integer.alias.decimal_int,
-					augend.integer.alias.hex,
-					augend.integer.alias.octal,
-					augend.integer.alias.binary,
-					augend.date.alias["%Y/%m/%d"],
-					augend.date.alias["%Y-%m-%d"],
-					augend.date.alias["%H:%M:%S"],
-					augend.date.alias["%H:%M"],
-					augend.constant.alias.bool,
-					augend.semver.alias.semver,
-					augend.constant.new({
-						elements = { "True", "False" },
-						word = true,
-						cyclic = true,
-					}),
-					augend.constant.new({
-						elements = { "true", "false" },
-						word = true,
-						cyclic = true,
-					}),
-					augend.constant.new({
-						elements = { "and", "or" },
-						word = true,
-						cyclic = true,
-					}),
-					augend.constant.new({
-						elements = { "&&", "||" },
-						word = true,
-						cyclic = true,
-					}),
-				},
-			})
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- dial
+    {
+        "monaqa/dial.nvim",
+        config = function()
+            vim.keymap.set("n", "<C-a>", require("dial.map").inc_normal(), { noremap = true })
+            vim.keymap.set("n", "<C-x>", require("dial.map").dec_normal(), { noremap = true })
+            vim.keymap.set("v", "<C-a>", require("dial.map").inc_visual(), { noremap = true })
+            vim.keymap.set("v", "<C-x>", require("dial.map").dec_visual(), { noremap = true })
+            vim.keymap.set("v", "g<C-a>", require("dial.map").inc_gvisual(), { noremap = true })
+            vim.keymap.set("v", "g<C-x>", require("dial.map").dec_gvisual(), { noremap = true })
+            local augend = require("dial.augend")
+            require("dial.config").augends:register_group({
+                default = {
+                    augend.integer.alias.decimal,
+                    augend.integer.alias.decimal_int,
+                    augend.integer.alias.hex,
+                    augend.integer.alias.octal,
+                    augend.integer.alias.binary,
+                    augend.date.alias["%Y/%m/%d"],
+                    augend.date.alias["%Y-%m-%d"],
+                    augend.date.alias["%H:%M:%S"],
+                    augend.date.alias["%H:%M"],
+                    augend.constant.alias.bool,
+                    augend.semver.alias.semver,
+                    augend.constant.new({
+                        elements = { "True", "False" },
+                        word = true,
+                        cyclic = true,
+                    }),
+                    augend.constant.new({
+                        elements = { "true", "false" },
+                        word = true,
+                        cyclic = true,
+                    }),
+                    augend.constant.new({
+                        elements = { "and", "or" },
+                        word = true,
+                        cyclic = true,
+                    }),
+                    augend.constant.new({
+                        elements = { "&&", "||" },
+                        word = true,
+                        cyclic = true,
+                    }),
+                },
+            })
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- flit
-	{
-		"ggandor/flit.nvim",
-		config = function()
-			require("flit").setup()
-		end,
-		dependencies = { "ggandor/leap.nvim" },
-		event = { "BufRead", "BufNew" },
-	},
+    -- flit
+    {
+        "ggandor/flit.nvim",
+        config = function()
+            require("flit").setup()
+        end,
+        dependencies = { "ggandor/leap.nvim" },
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- glow
-	{
-		"npxbr/glow.nvim",
-		event = { "BufRead", "BufNew" },
-		ft = { "markdown" },
-	},
+    -- glow
+    {
+        "npxbr/glow.nvim",
+        event = { "BufRead", "BufNew" },
+        ft = { "markdown" },
+    },
 
-	-- hlslens
-	{
-		"kevinhwang91/nvim-hlslens",
-		config = function()
-			require("hlslens").setup()
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- hlslens
+    {
+        "kevinhwang91/nvim-hlslens",
+        config = function()
+            require("hlslens").setup()
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- inc rename
-	{
-		"smjonas/inc-rename.nvim",
-		config = function()
-			require("inc_rename").setup()
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- inc rename
+    {
+        "smjonas/inc-rename.nvim",
+        config = function()
+            require("inc_rename").setup()
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- iswap
-	{
-		"mizlan/iswap.nvim",
-		event = { "BufRead", "BufNew" },
-	},
+    -- iswap
+    {
+        "mizlan/iswap.nvim",
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- last place
-	{
-		"ethanholz/nvim-lastplace",
-		config = function()
-			require("nvim-lastplace").setup()
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- last place
+    {
+        "ethanholz/nvim-lastplace",
+        config = function()
+            require("nvim-lastplace").setup()
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- leap
-	{
-		"ggandor/leap.nvim",
-		config = function()
-			require("leap").add_default_mappings()
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- leap
+    {
+        "ggandor/leap.nvim",
+        config = function()
+            require("leap").add_default_mappings()
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- match quote
-	{
-		"airblade/vim-matchquote",
-		event = { "BufRead", "BufNew" },
-	},
+    -- match quote
+    {
+        "airblade/vim-matchquote",
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- mergetool
-	{
-		"samoshkin/vim-mergetool",
-		config = function()
-			vim.g.mergetool_layout = "rml,b"
-			vim.g.mergetool_prefer_revision = "unmodified"
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- mergetool
+    {
+        "samoshkin/vim-mergetool",
+        config = function()
+            vim.g.mergetool_layout = "rml,b"
+            vim.g.mergetool_prefer_revision = "unmodified"
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- mkdir
-	{
-		"jghauser/mkdir.nvim",
-		config = function()
-			require("mkdir")
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- mkdir
+    {
+        "jghauser/mkdir.nvim",
+        config = function()
+            require("mkdir")
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- neoscroll
-	{
-		"karb94/neoscroll.nvim",
-		config = function()
-			require("neoscroll").setup()
-		end,
-		event = "WinScrolled",
-	},
+    -- neoscroll
+    {
+        "karb94/neoscroll.nvim",
+        config = function()
+            require("neoscroll").setup()
+        end,
+        event = "WinScrolled",
+    },
 
-	-- number toggle
-	{
-		"jeffkreeftmeijer/vim-numbertoggle",
-		event = { "BufRead", "BufNew" },
-	},
+    -- number toggle
+    {
+        "jeffkreeftmeijer/vim-numbertoggle",
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- signature
-	{
-		"ray-x/lsp_signature.nvim",
-		config = function()
-			require("lsp_signature").on_attach()
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- signature
+    {
+        "ray-x/lsp_signature.nvim",
+        config = function()
+            require("lsp_signature").on_attach()
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- sort
-	{
-		"sqve/sort.nvim",
-		event = { "BufRead", "BufNew" },
-	},
+    -- sort
+    {
+        "sqve/sort.nvim",
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- spectre
-	{
-		"windwp/nvim-spectre",
-		config = function()
-			require("spectre").setup({ live_update = true })
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- spectre
+    {
+        "windwp/nvim-spectre",
+        config = function()
+            require("spectre").setup({ live_update = true })
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- surround
-	{
-		"kylechui/nvim-surround",
-		config = function()
-			require("nvim-surround").setup()
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- surround
+    {
+        "kylechui/nvim-surround",
+        config = function()
+            require("nvim-surround").setup()
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- symbols outline
-	{
-		"simrat39/symbols-outline.nvim",
-		config = function()
-			require("symbols-outline").setup()
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- symbols outline
+    {
+        "simrat39/symbols-outline.nvim",
+        config = function()
+            require("symbols-outline").setup()
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- targets
-	{
-		"wellle/targets.vim",
-		event = { "BufRead", "BufNew" },
-	},
+    -- targets
+    {
+        "wellle/targets.vim",
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- text objects
-	{
-		"chrisgrieser/nvim-various-textobjs",
-		config = function()
-			require("various-textobjs").setup({ useDefaultKeymaps = true })
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- text objects
+    {
+        "chrisgrieser/nvim-various-textobjs",
+        config = function()
+            require("various-textobjs").setup({ useDefaultKeymaps = true })
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- tidy
-	{
-		"mcauley-penney/tidy.nvim",
-		config = function()
-			require("tidy").setup()
-		end,
-	},
+    -- tidy
+    {
+        "mcauley-penney/tidy.nvim",
+        config = function()
+            require("tidy").setup()
+        end,
+    },
 
-	-- tmux
-	{
-		"christoomey/vim-tmux-navigator",
-		event = { "BufRead", "BufNew" },
-	},
+    -- tmux
+    {
+        "christoomey/vim-tmux-navigator",
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- treesitter autotag
-	{
-		"windwp/nvim-ts-autotag",
-		config = function()
-			require("nvim-ts-autotag").setup()
-		end,
-		event = { "BufRead", "BufNew" },
-	},
+    -- treesitter autotag
+    {
+        "windwp/nvim-ts-autotag",
+        config = function()
+            require("nvim-ts-autotag").setup()
+        end,
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- treesitter context
-	{
-		"nvim-treesitter/nvim-treesitter-context",
-		event = { "BufRead", "BufNew" },
-	},
+    -- treesitter context
+    {
+        "nvim-treesitter/nvim-treesitter-context",
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- trouble
-	{
-		"folke/trouble.nvim",
-		cmd = "TroubleToggle",
-		event = { "BufRead", "BufNew" },
-	},
+    -- trouble
+    {
+        "folke/trouble.nvim",
+        cmd = "TroubleToggle",
+        event = { "BufRead", "BufNew" },
+    },
 
-	-- visual multi
-	{
-		"mg979/vim-visual-multi",
-		event = { "BufRead", "BufNew" },
-	},
+    -- visual multi
+    {
+        "mg979/vim-visual-multi",
+        event = { "BufRead", "BufNew" },
+    },
 }
