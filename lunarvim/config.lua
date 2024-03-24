@@ -33,6 +33,9 @@ end
 
 -- LSP
 lvim.lsp.buffer_mappings.normal_mode["gr"] = { "<Cmd>Telescope lsp_references<CR>", "References" }
+lvim.keys.normal_mode["ge"] = "<Cmd>Telescope diagnostics<CR>"
+lvim.keys.normal_mode["gej"] = "<Cmd>lua vim.diagnostic.goto_next()<CR>"
+lvim.keys.normal_mode["gek"] = "<Cmd>lua vim.diagnostic.goto_prev()<CR>"
 
 -- navigation
 lvim.keys.insert_mode["<C-h>"] = "<Left>"
@@ -81,6 +84,9 @@ lvim.builtin.which_key.mappings["C"] = { "<Cmd>Telescope commands_history<CR>", 
 lvim.builtin.which_key.vmappings["c"] = { "<Cmd>Telescope commands<CR>", "Commands" }
 lvim.builtin.which_key.vmappings["C"] = { "<Cmd>Telescope commands_history<CR>", "Command history" }
 
+-- keymaps
+lvim.builtin.which_key.mappings["K"] = { "<Cmd>Telescope keymaps<CR>", "Key maps" }
+
 -- trouble
 lvim.builtin.which_key.mappings["t"] = { "<Cmd>TroubleToggle<CR>", "Trouble" }
 lvim.builtin.which_key.vmappings["t"] = { "<Cmd>TroubleToggle<CR>", "Trouble" }
@@ -104,11 +110,8 @@ lvim.builtin.which_key.mappings["/"] = { "<Plug>(comment_toggle_linewise_current
 lvim.builtin.which_key.vmappings["/"] = { "<Plug>(comment_toggle_linewise_visual)", "Comment" }
 
 -- diagnostics
-lvim.keys.normal_mode["<Leader>d"] = "<Cmd>Telescope diagnostics<CR>"
-lvim.keys.normal_mode["<Leader>dj"] = "<Cmd>lua vim.diagnostic.goto_next()<CR>"
-lvim.keys.normal_mode["<Leader>dk"] = "<Cmd>lua vim.diagnostic.goto_prev()<CR>"
-lvim.keys.normal_mode["<Leader>dd"] = "<Cmd>TroubleToggle document_diagnostics<CR>"
-lvim.keys.normal_mode["<Leader>wd"] = "<Cmd>TroubleToggle workspace_diagnostics<CR>"
+lvim.builtin.which_key.mappings["d"] = { "<Cmd>TroubleToggle document_diagnostics<CR>", "Diagnostics (doc)" }
+lvim.builtin.which_key.mappings["D"] = { "<Cmd>TroubleToggle workspace_diagnostics<CR>", "Diagnostics (ws)" }
 
 -- files
 lvim.keys.normal_mode["<Leader>f"] = "<Cmd>Telescope find_files<CR>"
