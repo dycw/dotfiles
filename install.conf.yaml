@@ -130,6 +130,10 @@
         "command -v starship >/dev/null 2>&1 || brew install starship",
         Installing starship,
       ]
+    - [
+        "command -v stylua >/dev/null 2>&1 || brew install stylua",
+        Installing stylua,
+      ]
     - ["command -v uv >/dev/null 2>&1 || brew install uv", Installing uv]
     - [
         "command -v watch >/dev/null 2>&1 || brew install watch",
