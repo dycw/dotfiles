@@ -88,7 +88,6 @@ lvim.builtin.which_key.mappings["x"] = { "BDelete this<CR>", "Delete buffer" }
 lvim.builtin.which_key.mappings["c"] = { "<Cmd>Telescope commands<CR>", "Commands" }
 lvim.builtin.which_key.mappings["C"] = { "<Cmd>Telescope commands_history<CR>", "Command history" }
 lvim.builtin.which_key.vmappings["c"] = { "<Cmd>Telescope commands<CR>", "Commands" }
-lvim.builtin.which_key.vmappings["C"] = { "<Cmd>Telescope commands_history<CR>", "Command history" }
 
 -- keymaps
 lvim.builtin.which_key.mappings["K"] = { "<Cmd>Telescope keymaps<CR>", "Key maps" }
@@ -104,12 +103,6 @@ lvim.builtin.which_key.mappings["wk"] = { "<Cmd>set nosplitbelow<CR><Cmd>split<C
 lvim.builtin.which_key.mappings["wl"] = { "<Cmd>set splitright<CR><Cmd>vsplit<CR>", "Split right" }
 lvim.builtin.which_key.mappings["-"] = { "<Cmd>split<CR>", "Split down" }
 lvim.builtin.which_key.mappings["\\"] = { "<Cmd>vsplit<CR>", "Split right" }
-lvim.builtin.which_key.vmappings["wh"] = { "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>", "Split left" }
-lvim.builtin.which_key.vmappings["wj"] = { "<Cmd>set splitbelow<CR><Cmd>split<CR>", "Split down" }
-lvim.builtin.which_key.vmappings["wk"] = { "<Cmd>set nosplitbelow<CR><Cmd>split<CR>", "Split up" }
-lvim.builtin.which_key.vmappings["wl"] = { "<Cmd>set splitright<CR><Cmd>vsplit<CR>", "Split right" }
-lvim.builtin.which_key.vmappings["-"] = { "<Cmd>split<CR>", "Split down" }
-lvim.builtin.which_key.vmappings["\\"] = { "<Cmd>vsplit<CR>", "Split right" }
 
 -- comment
 lvim.builtin.which_key.mappings["/"] = { "<Plug>(comment_toggle_linewise_current)", "Comment" }
@@ -263,7 +256,14 @@ lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 -------------------------------------------------------------------------------
 -- telescope
 -------------------------------------------------------------------------------
-lvim.builtin.telescope.pickers.find_files["find_command"] = { "fd", "-H", "-tf" }
+lvim.builtin.telescope.defaults.layout_config.height = 0.8
+lvim.builtin.telescope.defaults.layout_config.preview_cutoff = 40
+lvim.builtin.telescope.defaults.layout_config.preview_height = 0.6
+lvim.builtin.telescope.defaults.layout_config.prompt_position = "bottom"
+lvim.builtin.telescope.defaults.layout_config.width = 0.8
+lvim.builtin.telescope.defaults.layout_strategy = "vertical"
+lvim.builtin.telescope.defaults.path_display = { "smart" }
+lvim.builtin.telescope.pickers.find_files.find_command = { "fd", "-H", "-tf" }
 
 -------------------------------------------------------------------------------
 -- plugins
