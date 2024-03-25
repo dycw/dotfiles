@@ -30,7 +30,7 @@ case ":${PATH}:" in
 esac
 
 # ripgrep
-export RIPGREP_CONFIG_PATH="${HOME}/.config/ripgreprc"
+export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/ripgreprc"
 
 # rust
 __dir="${HOME}"/.cargo/bin
@@ -40,3 +40,7 @@ case ":${PATH}:" in
 	export PATH="${__dir}:${PATH}"
 	;;
 esac
+
+# xdg
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
