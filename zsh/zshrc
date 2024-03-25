@@ -158,6 +158,7 @@ if command -v tmux >/dev/null 2>&1; then
 	fi
 	alias tmuxconf='$EDITOR "${HOME}"/.config/tmux/tmux.conf.local'
 fi
+
 # uv
 if command -v uv >/dev/null 2>&1; then
 	alias uvpi='uv pip install'
