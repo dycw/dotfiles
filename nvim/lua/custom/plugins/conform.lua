@@ -1,3 +1,7 @@
+-- luacheck: push ignore vim
+local bo = vim.bo
+-- luacheck: pop
+
 return {
     "stevearc/conform.nvim",
     opts = {
@@ -9,7 +13,7 @@ return {
             local disable_filetypes = { c = true, cpp = true }
             return {
                 timeout_ms = 500,
-                lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+                lsp_fallback = not disable_filetypes[bo[bufnr].filetype],
             }
         end,
         formatters_by_ft = {

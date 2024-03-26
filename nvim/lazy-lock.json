@@ -3,9 +3,21 @@
     "branch": "master",
     "commit": "a7a4b4682c4b3e2ba82b82a4e6e5f5a0e79dec32"
   },
+  "auto-save.nvim": {
+    "branch": "main",
+    "commit": "42fce87ab468efd080c74759b425be430d636d15"
+  },
   "auto-session": {
     "branch": "main",
     "commit": "29a8c77a0579636d5520aebd38bdbc2e6079f2f5"
+  },
+  "better-escape.nvim": {
+    "branch": "master",
+    "commit": "7e86edafb8c7e73699e0320f225464a298b96d12"
+  },
+  "close-buffers.nvim": {
+    "branch": "master",
+    "commit": "3acbcad1211572342632a6c0151f839e7dead27f"
   },
   "cmp-nvim-lsp": {
     "branch": "main",
@@ -25,7 +37,11 @@
   },
   "conform.nvim": {
     "branch": "master",
-    "commit": "bf109f061fc3cd75394b7823923187ae045cbf22"
+    "commit": "f9523f75134614fc0eff29c2377ed36603a1b0aa"
+  },
+  "dial.nvim": {
+    "branch": "master",
+    "commit": "27eb570085db2ef44bff4f620d3806039184651c"
   },
   "fidget.nvim": {
     "branch": "main",
@@ -91,6 +107,10 @@
     "branch": "main",
     "commit": "97dc716fc914c46577a4f254035ebef1aa72558a"
   },
+  "nvim-colorizer.lua": {
+    "branch": "master",
+    "commit": "36c610a9717cc9ec426a07c8e6bf3b3abcb139d6"
+  },
   "nvim-lint": {
     "branch": "master",
     "commit": "2669aabb8362fdc36aced5ba864b7135636ea863"
@@ -109,11 +129,11 @@
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "5e4f959d5979730ddb2ee9ae60f5133081502b23"
+    "commit": "1c3fb9eac2a04230e4af23715fa2c190cbeacd70"
   },
   "plenary.nvim": {
     "branch": "master",
-    "commit": "f7adfc4b3f4f91aab6caebf42b3682945fbc35be"
+    "commit": "8aad4396840be7fc42896e3011751b7609ca4119"
   },
   "rainbow-delimiters.nvim": {
     "branch": "master",
@@ -141,7 +161,15 @@
   },
   "tokyonight.nvim": {
     "branch": "main",
-    "commit": "623c3cd60a8081b68edcaf544856c053249a659e"
+    "commit": "f4b415bfbce390866a83277db42cf6aa94230728"
+  },
+  "vim-caser": {
+    "branch": "master",
+    "commit": "6bc9f41d170711c58e0157d882a5fe8c30f34bf6"
+  },
+  "vim-cool": {
+    "branch": "master",
+    "commit": "662e7b11064cbeedad17c45d2fe926e78d3cd0b6"
   },
   "which-key.nvim": {
     "branch": "main",
