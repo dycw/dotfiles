@@ -214,18 +214,6 @@ require("lvim.lsp.null-ls.formatters").setup({
 })
 
 -------------------------------------------------------------------------------
--- linters
--------------------------------------------------------------------------------
-require("lvim.lsp.null-ls.linters").setup({
-    -- lua
-    { name = "luacheck", filetypes = { "lua" } },
-    -- python
-    { name = "ruff", filetypes = { "python" } },
-    -- sh
-    { name = "shellcheck", filetypes = { "sh" } },
-})
-
--------------------------------------------------------------------------------
 -- LSP
 -------------------------------------------------------------------------------
 lvim.builtin.treesitter.ensure_installed = {
@@ -280,25 +268,6 @@ lvim.builtin.dap.active = false
 lvim.builtin.illuminate.active = false
 lvim.builtin.lir.active = false
 lvim.plugins = {
-    -- auto save
-    {
-        "okuuva/auto-save.nvim",
-        config = function()
-            require("auto-save").setup()
-        end,
-        event = { "BufRead", "BufNew" },
-    },
-
-    -- better escape
-    {
-        "max397574/better-escape.nvim",
-        config = function()
-            require("better_escape").setup({
-                mapping = { "jj", "jk", "kj", "kk" },
-            })
-        end,
-        event = { "BufRead", "BufNew" },
-    },
 
     -- better quick fix
     {
@@ -306,18 +275,6 @@ lvim.plugins = {
         config = function()
             require("bqf").setup({ auto_resize_height = true })
         end,
-        event = { "BufRead", "BufNew" },
-    },
-
-    -- caser
-    {
-        "arthurxavierx/vim-caser",
-        event = { "BufRead", "BufNew" },
-    },
-
-    -- close buffers
-    {
-        "kazhala/close-buffers.nvim",
         event = { "BufRead", "BufNew" },
     },
 
