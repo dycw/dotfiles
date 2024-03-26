@@ -1,1 +1,4 @@
-return { "kazhala/close-buffers.nvim" }
+return {
+    "kazhala/close-buffers.nvim",
+    event = "VeryLazy",
+}
