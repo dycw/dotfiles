@@ -227,6 +227,10 @@
     "branch": "master",
     "commit": "662e7b11064cbeedad17c45d2fe926e78d3cd0b6"
   },
+  "vim-just": {
+    "branch": "main",
+    "commit": "9506b055bcdbb9263cbf9648005a6869ae0df523"
+  },
   "vim-matchquote": {
     "branch": "master",
     "commit": "c4c70010ddb62607e03f84b68262ce9d0c2c82fe"
