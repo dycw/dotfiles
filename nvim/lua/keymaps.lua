@@ -1,4 +1,6 @@
+-- luacheck: push ignore vim
 local set = vim.keymap.set
+-- luacheck: pop
 local opts = { noremap = true, silent = true }
 
 -- quit

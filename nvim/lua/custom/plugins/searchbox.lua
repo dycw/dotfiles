@@ -1,7 +1,12 @@
+-- luacheck: push ignore vim
+local set = vim.keymap.set
+-- luacheck: pop
+local opts = { noremap = true, silent = true }
+
 return {
     "vonheikemen/searchbox.nvim",
     config = function()
-        vim.keymap.set("n", "/", "<Cmd>SearchBoxIncSearch<CR>", { noremap = true, silent = true })
+        set("n", "/", "<Cmd>SearchBoxIncSearch<CR>", opts)
         require("searchbox").setup({
             popup = {
                 position = { row = "10%", col = "50%" },
