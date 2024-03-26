@@ -1,7 +1,7 @@
 return {
-    "karb94/neoscroll.nvim",
+    "jghauser/mkdir.nvim",
     config = function()
-        require("neoscroll").setup()
+        require("mkdir")
     end,
     event = "VeryLazy",
 }
