@@ -1,7 +1,7 @@
 return {
-    "karb94/neoscroll.nvim",
+    "kevinhwang91/nvim-hlslens",
     config = function()
-        require("neoscroll").setup()
+        require("hlslens").setup()
     end,
     event = "VeryLazy",
 }

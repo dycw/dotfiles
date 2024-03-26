@@ -4,9 +4,10 @@ local cmd = vim.cmd
 
 return {
     "folke/tokyonight.nvim",
-    priority = 1000, -- Make sure to load this before all the other start plugins.
+    event = "VeryLazy",
     init = function()
         cmd.colorscheme("tokyonight-night")
         cmd.hi("Comment gui=none")
     end,
+    priority = 1000, -- Make sure to load this before all the other start plugins.
 }
