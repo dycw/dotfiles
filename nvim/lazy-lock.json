@@ -155,6 +155,10 @@
     "branch": "main",
     "commit": "84a26afce16cffa7e3322cfa80a42cddf60616eb"
   },
+  "nvim-tree.lua": {
+    "branch": "master",
+    "commit": "e508bdc4184c33c6d9705c503cf7f0e029601788"
+  },
   "nvim-treesitter": {
     "branch": "master",
     "commit": "1c3fb9eac2a04230e4af23715fa2c190cbeacd70"
@@ -226,6 +230,10 @@
   "vim-cool": {
     "branch": "master",
     "commit": "662e7b11064cbeedad17c45d2fe926e78d3cd0b6"
+  },
+  "vim-illuminate": {
+    "branch": "master",
+    "commit": "305bf07b919ac526deb5193280379e2f8b599926"
   },
   "vim-just": {
     "branch": "main",
