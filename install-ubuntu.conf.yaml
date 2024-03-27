@@ -7,14 +7,13 @@
 
 - create:
     - ~/.config
-    # - ~/.config/direnv
-    # - ~/.config/git
-    # - ~/.config/pip
-    # - ~/.config/tmux
-    # - ~/.config/wezterm
-    # - ~/.config/zellij
-    # - ~/.ipython/profile_default
-    # - ~/.ipython/profile_default/startup
+    - ~/.config/direnv
+    - ~/.config/git
+    - ~/.config/pip
+    - ~/.config/tmux
+    - ~/.config/wezterm
+    - ~/.ipython/profile_default
+    - ~/.ipython/profile_default/startup
 
 - link:
     # /Users/derekwan/Library/Application Support/nushell/config.nu: nushell/config.nu
@@ -36,7 +35,18 @@
     # ~/.zprofile: zsh/zprofile
     # ~/.zshenv: zsh/zshenv
     # ~/.zshrc: zsh/zshrc
-# - shell:
+
+- shell:
+    - [git submodule update --init --recursive, Installing submodules]
+    - [
+        "command -v curl dev/null 2>&1 || sudo apt install -y curl",
+        Installing curl,
+      ]
+    - [
+        "command -v git >/dev/null 2>&1 || sudo apt install -y git",
+        Installing git,
+      ]
+
 #- [
 #'[ "$(scutil --get ComputerName)" = DW-Mac ] || sudo scutil --set ComputerName DW-Mac',
 #Configuring computer name,
@@ -49,8 +59,12 @@
 #'[ "$(scutil --get LocalHostName)" = DW-Mac ] || sudo scutil --set LocalHostName DW-Mac',
 #Configuring local host name,
 #]
-#- [git submodule update --init --recursive, Installing submodules]
-#- ["command -v bat >/dev/null 2>&1 || brew install bat", Installing bat]
+
+    - [
+        'command -v brew >/dev/null 2>&1 || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
+        Installing brew,
+    ]
+    - ["command -v bat >/dev/null 2>&1 || brew install bat", Installing bat]
 #- [
 #"command -v btm >/dev/null 2>&1 || brew install bottom",
 #Installing bottom,
@@ -75,6 +89,7 @@
 #Installing ffmpeg,
 #]
 #- ["command -v fzf >/dev/null 2>&1 || brew install fzf", Installing fzf]
+    - ["command -v gcc dev/null 2>&1 || brew install gcc", Installing gcc]
 #- ["command -v gh >/dev/null 2>&1 || brew install gh", Installing gh]
 #- [
 #"command -v gitweb >/dev/null 2>&1 || brew install yoannfleurydev/gitweb/gitweb
@@ -90,10 +105,10 @@
 #"command -v luacheck >/dev/null 2>&1 || brew install luacheck",
 #Installing luacheck,
 #]
-#- [
-#"command -v nvim >/dev/null 2>&1 || brew install neovim",
-#Installing neovim,
-#]
+    - [
+        "command -v nvim >/dev/null 2>&1 || brew install neovim",
+        Installing neovim,
+      ]
 #- [
 #"command -v node >/dev/null 2>&1 || brew install node@20",
 #Installing node,
