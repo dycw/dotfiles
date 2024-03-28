@@ -117,6 +117,11 @@ alias hypothesis-dev='export HYPOTHESIS_PROFILE=dev'
 set bell-style none
 set editing-mode vi
 
+# neovim 
+if command -v nvim >/dev/null 2>&1; then
+  alias n='nvim'
+fi
+
 # pip
 alias pi='pip install'
 alias pie='pip install --editable .'
@@ -147,7 +152,7 @@ fi
 # tmux
 if command -v tmux >/dev/null 2>&1; then
 	if [ -z "$TMUX" ]; then
-		tmux new-session -c $PWD
+		tmux new-session -c "${PWD}"
 	fi
 	alias tmuxconf='$EDITOR "${HOME}"/.config/tmux/tmux.conf.local'
 fi

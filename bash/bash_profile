@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# shellcheck source=/dev/null
+
+__file="${HOME}/dotfiles/shell/env.sh"
+if [ -f "${__file}" ]; then
+  . "${__file}"
+fi
+
+__file="${HOME}/.bashrc"
+if [ -f "${__file}" ]; then
+  . "${__file}"
+fi

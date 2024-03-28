@@ -1,4 +1,10 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env sh
+
+# brew
+__file='/opt/homebrew/bin/brew'
+if [ -f "${__file}" ]; then
+  eval "$(${__file} shellenv)"
+fi
 
 # flutter
 __dir="$HOME"/development/flutter/bin
@@ -9,10 +15,17 @@ case ":${PATH}:" in
 	;;
 esac
 
+# neovim
+if command -v nvim >/dev/null 2>&1; then
+	export EDITOR=nvim
+else
+	export EDITOR=vim
+fi
+
 # node
 if command -v brew >/dev/null 2>&1; then
 	__dir="$(brew --prefix)"/opt/node@20/bin
-	case ":rc${PATH}:" in
+	case ":${PATH}:" in
 	*:"$__dir":*) ;;
 	*)
 		export PATH="${__dir}:${PATH}"
