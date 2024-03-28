@@ -11,9 +11,6 @@ require("opt")
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = false
 
--- Enable break indent
-vim.opt.breakindent = true
-
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
