@@ -46,20 +46,7 @@
         "command -v git >/dev/null 2>&1 || sudo apt install -y git",
         Installing git,
       ]
-
-#- [
-#'[ "$(scutil --get ComputerName)" = DW-Mac ] || sudo scutil --set ComputerName DW-Mac',
-#Configuring computer name,
-#]
-#- [
-#'[ "$(scutil --get HostName)" = DW-Mac ] || sudo scutil --set HostName DW-Mac',
-#Configuring host name,
-#]
-#- [
-#'[ "$(scutil --get LocalHostName)" = DW-Mac ] || sudo scutil --set LocalHostName DW-Mac',
-#Configuring local host name,
-#]
-
+    - [ sudo apt-get install -y build-essential procps curl file git, Install brew pre-requisites ]
     - [
         'command -v brew >/dev/null 2>&1 || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
         Installing brew,
@@ -88,14 +75,9 @@
     - ["command -v gcc dev/null 2>&1 || brew install gcc", Installing gcc]
     - ["command -v gh >/dev/null 2>&1 || brew install gh", Installing gh]
     - [
-      "command -v gitweb >/dev/null 2>&1 || brew install yoannfleurydev/gitweb/gitweb
-      ",
-    Installing gitweb,
-]
-#- [
-#"command -v gsed >/dev/null 2>&1 || brew install gnu-sed",
-#Installing gnu-sed,
-#]
+        "command -v gitweb >/dev/null 2>&1 || brew install yoannfleurydev/gitweb/gitweb",
+        Installing gitweb,
+      ]
     - ["command -v just >/dev/null 2>&1 || brew install just", Installing just]
     - [
       "command -v luacheck >/dev/null 2>&1 || brew install luacheck",
@@ -109,15 +91,7 @@
       "command -v node >/dev/null 2>&1 || brew install node@20",
       Installing node,
     ]
-#- [
-#"command -v nu >/dev/null 2>&1 || brew install nushell",
-#Installing nushell,
-#]
     - ["command -v pipx >/dev/null 2>&1 || brew install pipx", Installing pipx]
-#- [
-#"command -v postgres >/dev/null 2>&1 || brew install postgresql",
-#Installing postgresql,
-#]
     - [
         "command -v pre-commit >/dev/null 2>&1 || brew install pre-commit",
         Installing pre-commit,
@@ -153,22 +127,13 @@
     Installing watchexec,
     ]
     - [
-    "command -v wezterm >/dev/null 2>&1 || brew install --cask wezterm",
-    Installing wezterm,
-    ]
-    - [
     "command -v zoxide >/dev/null 2>&1 || brew install zoxide",
     Installing zoxide,
     ]
-#- [brew install --cask 1password, Installing 1Password]
-#- [brew install --cask dropbox, Installing Dropbox]
-#- [brew install --cask protonvpn, Installing ProtonVPN]
-#- [brew install --cask whatsapp, Installing WhatsApp]
     - [
     "[ -f ${HOME}/.config/fzf/fzf.bash] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
     Configuring fzf,
     ]
-#- [brew services start postgresql, Configuring postgresql]
     - [
     "command -v bump2version >/dev/null 2>&1 || pipx install bump2version",
     Installing bump2version,
