@@ -1,4 +1,4 @@
-#!/usr/bin/env bash 
+#!/usr/bin/env bash
 # shellcheck source=/dev/null
 
 # shell
@@ -6,6 +6,9 @@ __file="${HOME}/dotfiles/shell/common.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
+
+# bash
+alias bashrc='"$EDITOR" "${HOME}"/.bashrc'
 
 # fzf
 __file="${HOME}"/.config/fzf/fzf.bash
@@ -132,4 +135,3 @@ if ! shopt -oq posix; then
 fi
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
