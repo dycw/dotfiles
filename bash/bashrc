@@ -1,6 +1,7 @@
 #!/usr/bin/env bash 
 # shellcheck source=/dev/null
 
+# shell
 __file="${HOME}/dotfiles/shell/common.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
@@ -10,6 +11,45 @@ fi
 __file="${HOME}"/.config/fzf/fzf.bash
 if [ -f "$__file" ]; then
 	. "$__file"
+fi
+
+# ---- end ----
+
+# conda
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
+# shellcheck disable=SC2181
+if [ $? -eq 0 ]; then
+	eval "$__conda_setup"
+else
+	if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
+		. "/opt/miniconda3/etc/profile.d/conda.sh"
+	else
+		export PATH="/opt/miniconda3/bin:$PATH"
+	fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+# direnv
+if command -v starship >/dev/null 2>&1; then
+	eval "$(direnv hook bash)"
+fi
+
+# fzf
+if command -v fzf >/dev/null 2>&1; then
+	eval "$(fzf --bash)"
+fi
+
+# starship
+if command -v starship >/dev/null 2>&1; then
+	eval "$(starship init bash)"
+fi
+
+# zoxide
+if command -v zoxide >/dev/null 2>&1; then
+	eval "$(zoxide init bash --cmd j --hook prompt)"
 fi
 
 ################################################################################
@@ -93,4 +133,3 @@ fi
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"

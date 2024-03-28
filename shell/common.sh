@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
-#
+# shellcheck source=/dev/null
+
 # bat
 if command -v bat >/dev/null 2>&1; then
 	alias cat='bat'
@@ -36,6 +37,7 @@ fi
 if command -v eza >/dev/null 2>&1; then
 	__eza_base() { eza -F --group-directories-first --ignore-glob=node_modules "$@"; }
 	__eza_short() { __eza_base -x "$@"; }
+	alias l='__eza_short --git-ignore'
 	alias ls='__eza_short --git-ignore'
 	alias lsa='__eza_short -a'
 	__eza_long() { __eza_base -ghl --git --time-style=long-iso "$@"; }
@@ -90,4 +92,69 @@ if command -v fzf >/dev/null 2>&1; then
     --preview-window up:3:wrap
     "
 	export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND -td"
+fi
+
+# gh
+if command -v gh >/dev/null 2>&1; then
+	alias ghc='gh pr create'
+	alias ghm='gh pr merge --auto'
+	alias ghcm='gh pr create && gh pr merge --auto'
+fi
+
+# git
+__file="${HOME}/dotfiles/git/aliases.sh"
+if [ -f "$__file" ]; then
+	. "$__file"
+fi
+
+# hypothesis
+alias hypothesis-ci='export HYPOTHESIS_PROFILE=ci'
+alias hypothesis-debug='export HYPOTHESIS_PROFILE=debug'
+alias hypothesis-default='export HYPOTHESIS_PROFILE=default'
+alias hypothesis-dev='export HYPOTHESIS_PROFILE=dev'
+
+# input
+set bell-style none
+set editing-mode vi
+
+# pip
+alias pi='pip install'
+alias pie='pip install --editable .'
+alias piip='pip install ipython'
+alias pijl='pip install jupyterlab jupyterlab-vim'
+alias plo='pip list --outdated'
+alias pui='pip uninstall'
+
+# pre-commit
+if command -v pre-commit >/dev/null 2>&1; then
+	alias pca='pre-commit run -a'
+	alias pcav='pre-commit run -av'
+	alias pcau='pre-commit autoupdate'
+	alias pci='pre-commit install'
+fi
+
+# pytest
+__file="${HOME}"/dotfiles/pytest/aliases.sh
+if [ -f "$__file" ]; then
+	. "$__file"
+fi
+
+# ruff
+if command -v ruff >/dev/null 2>&1; then
+	alias rw='ruff check -w'
+fi
+
+# tmux
+if command -v tmux >/dev/null 2>&1; then
+	if [ -z "$TMUX" ]; then
+		tmux new-session -c $PWD
+	fi
+	alias tmuxconf='$EDITOR "${HOME}"/.config/tmux/tmux.conf.local'
+fi
+
+# uv
+if command -v uv >/dev/null 2>&1; then
+	alias uvpi='uv pip install'
+	alias uvpie='uv pip install --editable .'
+	alias uvps='uv pip sync --strict requirements.txt'
 fi
