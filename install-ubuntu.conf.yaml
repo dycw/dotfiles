@@ -40,27 +40,30 @@
         "command -v git >/dev/null 2>&1 || sudo apt install -y git",
         Installing git,
       ]
-    - [ sudo apt-get install -y build-essential procps curl file git, Install brew pre-requisites ]
+    - [
+        sudo apt-get install -y build-essential procps curl file git,
+        Install brew pre-requisites,
+      ]
     - [
         'command -v brew >/dev/null 2>&1 || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
         Installing brew,
-    ]
+      ]
     - ["command -v bat >/dev/null 2>&1 || brew install bat", Installing bat]
     - [
         "command -v btm >/dev/null 2>&1 || brew install bottom",
         Installing bottom,
-    ]
+      ]
     - [
-    "command -v cmake >/dev/null 2>&1 || brew install cmake",
-    Installing cmake,
-    ]
+        "command -v cmake >/dev/null 2>&1 || brew install cmake",
+        Installing cmake,
+      ]
     - [
         "command -v delta >/dev/null 2>&1 || brew install git-delta",
         Installing delta,
-    ]
+      ]
     - [
-      "command -v direnv >/dev/null 2>&1 || brew install direnv",
-      Installing direnv,
+        "command -v direnv >/dev/null 2>&1 || brew install direnv",
+        Installing direnv,
       ]
     - ["command -v dust >/dev/null 2>&1 || brew install dust", Installing dust]
     - ["command -v eza >/dev/null 2>&1 || brew install eza", Installing eza]
@@ -74,64 +77,64 @@
       ]
     - ["command -v just >/dev/null 2>&1 || brew install just", Installing just]
     - [
-      "command -v luacheck >/dev/null 2>&1 || brew install luacheck",
-      Installing luacheck,
-    ]
+        "command -v luacheck >/dev/null 2>&1 || brew install luacheck",
+        Installing luacheck,
+      ]
     - [
         "command -v nvim >/dev/null 2>&1 || brew install neovim",
         Installing neovim,
       ]
     - [
-      "command -v node >/dev/null 2>&1 || brew install node@20",
-      Installing node,
-    ]
+        "command -v node >/dev/null 2>&1 || brew install node@20",
+        Installing node,
+      ]
     - ["command -v pipx >/dev/null 2>&1 || brew install pipx", Installing pipx]
     - [
         "command -v pre-commit >/dev/null 2>&1 || brew install pre-commit",
         Installing pre-commit,
-    ]
+      ]
     - [
         "command -v prettier >/dev/null 2>&1 || brew install prettier",
         Installing prettier,
-    ]
+      ]
     - [
-    "command -v rg >/dev/null 2>&1 || brew install ripgrep",
-    Installing ripgrep,
-    ]
+        "command -v rg >/dev/null 2>&1 || brew install ripgrep",
+        Installing ripgrep,
+      ]
     - ["command -v ruff >/dev/null 2>&1 || brew install ruff", Installing ruff]
     - [
-    "command -v shellcheck >/dev/null 2>&1 || brew install shellcheck",
-    Installing shellcheck,
-    ]
+        "command -v shellcheck >/dev/null 2>&1 || brew install shellcheck",
+        Installing shellcheck,
+      ]
     - [
-    "command -v shfmt >/dev/null 2>&1 || brew install shfmt",
-    Installing shfmt,
-    ]
+        "command -v shfmt >/dev/null 2>&1 || brew install shfmt",
+        Installing shfmt,
+      ]
     - [
-    "command -v starship >/dev/null 2>&1 || brew install starship",
-    Installing starship,
-    ]
+        "command -v starship >/dev/null 2>&1 || brew install starship",
+        Installing starship,
+      ]
     - [
-    "command -v stylua >/dev/null 2>&1 || brew install stylua",
-    Installing stylua,
-    ]
+        "command -v stylua >/dev/null 2>&1 || brew install stylua",
+        Installing stylua,
+      ]
     - ["command -v uv >/dev/null 2>&1 || brew install uv", Installing uv]
     - [
-    "command -v watchexec >/dev/null 2>&1 || brew install watchexec",
-    Installing watchexec,
-    ]
+        "command -v watchexec >/dev/null 2>&1 || brew install watchexec",
+        Installing watchexec,
+      ]
     - [
-    "command -v zoxide >/dev/null 2>&1 || brew install zoxide",
-    Installing zoxide,
-    ]
+        "command -v zoxide >/dev/null 2>&1 || brew install zoxide",
+        Installing zoxide,
+      ]
     - [
-    "[ -f ${HOME}/.config/fzf/fzf.bash] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
-    Configuring fzf,
-    ]
+        "[ -f ${HOME}/.config/fzf/fzf.bash] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
+        Configuring fzf,
+      ]
     - [
-    "command -v bump2version >/dev/null 2>&1 || pipx install bump2version",
-    Installing bump2version,
-    ]
+        "command -v bump2version >/dev/null 2>&1 || pipx install bump2version",
+        Installing bump2version,
+      ]
 #- [
 #"[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh",
 #Installing rust,
