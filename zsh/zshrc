@@ -1,69 +1,10 @@
 #!/usr/bin/env sh
 # shellcheck source=/dev/null
 
-# bat
-if command -v bat >/dev/null 2>&1; then
-	alias cat='bat'
-fi
-
-# bottom
-if command -v btm >/dev/null 2>&1; then
-	alias htop='btm'
-fi
-
-# cd
-alias ~='cd "${HOME}"'
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias cdcache='cd "${HOME}"/.cache'
-alias cdconfig='cd "${HOME}"/.config'
-alias cddb='cd "${HOME}"/Dropbox'
-alias cddf='cd "${HOME}"/dotfiles'
-alias cddl='cd "${HOME}"/Downloads'
-alias cdw='cd "${HOME}"/work'
-
-# coverage
-alias open-cov='open .coverage/html/index.html'
-
-# direnv
-if command -v direnv >/dev/null 2>&1; then
-	alias dea='direnv allow'
-fi
-
-# eza
-if command -v eza >/dev/null 2>&1; then
-	__eza_base() { eza -F --group-directories-first --ignore-glob=node_modules "$@"; }
-	__eza_short() { __eza_base -x "$@"; }
-	alias ls='__eza_short --git-ignore'
-	alias lsa='__eza_short -a'
-	__eza_long() { __eza_base -ghl --git --time-style=long-iso "$@"; }
-	__eza_long_default() { __eza_long -a --git-ignore "$@"; }
-	alias ll='__eza_long_default'
-	alias la='__eza_long -a'
-
-	if command -v watch >/dev/null 2>&1; then
-		__watch_eza_base() {
-			watch -d -n 0.1 --color -- \
-				eza -aF --color=always --group-directories-first --ignore-glob=node_modules "$@"
-		}
-		__watch_eza_short() { __watch_eza_base -x "$@"; }
-		alias wls='__watch_eza_short --git-ignore'
-		alias wlsa='__watch_eza_short -a'
-		__watch_eza_long() { __watch_eza_base -ghl --git --time-style=long-iso "$@"; }
-		__watch_eza_long_default() { __watch_eza_long -a --git-ignore "$@"; }
-		alias wl='__watch_eza_long_default'
-		alias wll='__watch_eza_long_default'
-		alias wla='__watch_eza_long -a'
-	fi
-fi
-
-# fd
-if command -v fd >/dev/null 2>&1; then
-	alias fdd='fd -Htd'
-	alias fde='fd -Hte'
-	alias fdf='fd -Htf'
-	alias fds='fd -Hts'
+# shell
+__file="${HOME}/dotfiles/shell/common.sh"
+if [ -f "$__file" ]; then
+	. "$__file"
 fi
 
 # fzf
