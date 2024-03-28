@@ -14,14 +14,30 @@ opt.clipboard = "unnamedplus"
 -- Comma-separated list of screen columns that are highlighted with ColorColumn
 opt.colorcolumn = "80"
 
+-- Highlight the text line of the cursor with CursorLine
+opt.cursorline = true
+
 -- Use the appropriate number of spaces to insert a <Tab>?
 opt.expandtab = true
 
 -- The ":substitute" flag `'g'`?
 opt.gdefault = true
 
+-- When there is a previous search pattern, highlight all its matches
+opt.hlsearch = true
+
 -- Ignore case in search patterns
 opt.ignorecase = true
+
+-- When nonempty, shows the effects of |:substitute|, |:smagic|, |:snomagic| and user commands with the
+-- |:command-preview| flag as you type
+opt.inccommand = "split"
+
+-- By default, show tabs as ">", trailing spaces as "-", and non-breakable space characters as "+".
+opt.list = true
+
+-- Strings to use in `'list'`  mode and for the |:list| command
+opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 -- Enables mouse support
 opt.mouse = "a"
@@ -31,6 +47,9 @@ opt.number = true
 
 -- Show the line number relative to the line with the cursor in front of each line?
 opt.relativenumber = true
+
+-- Minimal number of screen lines to keep above and below the cursor
+opt.scrolloff = 10
 
 -- If in Insert, Replace or Visual mode put a message on the last line?
 opt.showmode = false
