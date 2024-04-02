@@ -51,6 +51,10 @@
         Configuring local host name,
       ]
     - [git submodule update --init --recursive, Installing submodules]
+    - [
+        "[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
+        Installing rust,
+      ]
     - ["command -v bat >/dev/null 2>&1 || brew install bat", Installing bat]
     - [
         "command -v btm >/dev/null 2>&1 || brew install bottom",
@@ -174,8 +178,4 @@
     - [
         "command -v bump2version >/dev/null 2>&1 || pipx install bump2version",
         Installing bump2version,
-      ]
-    - [
-        "[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh",
-        Installing rust,
       ]
