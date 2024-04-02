@@ -117,9 +117,9 @@ alias hypothesis-dev='export HYPOTHESIS_PROFILE=dev'
 set bell-style none
 set editing-mode vi
 
-# neovim 
+# neovim
 if command -v nvim >/dev/null 2>&1; then
-  alias n='nvim'
+	alias n='nvim'
 fi
 
 # pip

@@ -3,7 +3,7 @@
 # brew
 __file='/opt/homebrew/bin/brew'
 if [ -f "${__file}" ]; then
-  eval "$(${__file} shellenv)"
+	eval "$(${__file} shellenv)"
 fi
 
 # flutter
