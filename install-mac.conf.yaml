@@ -35,6 +35,18 @@
     ~/.zshrc: zsh/zshrc
 
 - shell:
+    # - [
+    #     '[ "$(scutil --get ComputerName)" = DW-Mac ] || sudo scutil --set ComputerName DW-Mac',
+    #     Configuring computer name,
+    #   ]
+    # - [
+    #     '[ "$(scutil --get HostName)" = DW-Mac ] || sudo scutil --set HostName DW-Mac',
+    #     Configuring host name,
+    #   ]
+    # - [
+    #     '[ "$(scutil --get LocalHostName)" = DW-Mac ] || sudo scutil --set LocalHostName DW-Mac',
+    #     Configuring local host name,
+    #   ]
     - [git submodule update --init --recursive, Installing submodules]
     - [
         "[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
