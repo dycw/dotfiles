@@ -134,6 +134,7 @@
         "command -v stylua >/dev/null 2>&1 || brew install stylua",
         Installing stylua,
       ]
+    - ["command -v tmux >/dev/null 2>&1 || brew install tmux", Installing tmux]
     - ["command -v uv >/dev/null 2>&1 || brew install uv", Installing uv]
     - [
         "command -v watch >/dev/null 2>&1 || brew install watch",
