@@ -63,6 +63,10 @@
     "branch": "main",
     "commit": "238070a686c1da3bccccf1079700eb4b5e19aea4"
   },
+  "inc-rename.nvim": {
+    "branch": "main",
+    "commit": "5e03e986625961d1fac296d1bf332a6510c3add6"
+  },
   "indent-blankline.nvim": {
     "branch": "master",
     "commit": "3d08501caef2329aba5121b753e903904088f7e6"
