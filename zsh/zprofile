@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-
-echo "Deprecate zprofile in favour of zshenv..."
