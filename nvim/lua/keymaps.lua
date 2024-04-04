@@ -40,6 +40,12 @@ set({ "n", "v" }, "<C-s>", "<Cmd>:w<CR>", opts)
 -- search highlight
 set("n", "<Esc>", "<Cmd>nohlsearch<CR>", opts)
 
+-- split windows
+set("n", "<C-w>h", ":set nosplitright<CR> :vsplit<CR> :set splitright<CR>", opts)
+set("n", "<C-w>j", ":set splitbelow<CR> :split<CR>", opts)
+set("n", "<C-w>k", ":set nosplitbelow<CR> :split<CR> :set splitbelow<CR>", opts)
+set("n", "<C-w>l", ":set splitright<CR> :vsplit<CR>", opts)
+
 -- visual indents
 set("v", "<", "<gv", opts)
 set("v", ">", ">gv", opts)
