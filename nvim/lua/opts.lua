@@ -64,6 +64,9 @@ opt.mouse = "a"
 -- Print the line number in front of each line?
 opt.number = true
 
+-- Maximum number of items to show in the popup menu
+opt.pumheight = 10
+
 -- Show the line number relative to the line with the cursor in front of each line?
 opt.relativenumber = true
 
@@ -101,31 +104,22 @@ opt.timeoutlen = 300
 opt.undofile = true
 
 -- If this many milliseconds nothing is typed the swap file will be written to disk
-opt.updatetime = 250
+opt.updatetime = 100
 
 -- When on, lines longer than the width of the window will wrap and displaying continues on the next line
 opt.wrap = true
+
+-- Make a backup before overwriting a file
+opt.writebackup = true
 
 local default_options = {
     cmdheight = 1, -- more space in the neovim command line for displaying messages
     foldexpr = "", -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
     hidden = true, -- required to keep multiple buffers and open multiple buffers
-    hlsearch = true, -- highlight all matches on previous search pattern
-    ignorecase = true, -- ignore case in search patterns
-    mouse = "a", -- allow the mouse to be used in neovim
-    pumheight = 10, -- pop up menu height
-    showmode = false, -- we don't need to see things like -- INSERT -- anymore
-    smartcase = true, -- smart case
-    splitbelow = true, -- force all horizontal splits to go below current window
-    splitright = true, -- force all vertical splits to go to the right of current window
-    swapfile = false, -- creates a swapfile
     termguicolors = true, -- set term gui colors (most terminals support this)
-    timeoutlen = 1000, -- time to wait for a mapped sequence to complete (in milliseconds)
     title = true, -- set the title of window to the value of the titlestring
     -- opt.titlestring = "%<%F%=%l/%L - nvim" -- what the title of the window will be set to
     -- undodir = undodir, -- set an undo directory
-    undofile = true, -- enable persistent undo
-    updatetime = 100, -- faster completion
     writebackup = false, -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
     expandtab = true, -- convert tabs to spaces
     shiftwidth = 2, -- the number of spaces inserted for each indentation
