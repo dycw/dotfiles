@@ -1,7 +1,7 @@
 {
   "LuaSnip": {
     "branch": "master",
-    "commit": "79cc25c39878401d4e8b6ec42fcf14639426bafc"
+    "commit": "825a61bad1d60d917a7962d73cf3c683f4e0407e"
   },
   "auto-save.nvim": {
     "branch": "main",
@@ -57,7 +57,7 @@
   },
   "gitsigns.nvim": {
     "branch": "main",
-    "commit": "a4db718c78bff65198e3b63f1043f1e7bb5e05c8"
+    "commit": "1389134ba94643dd3b8ce2e1bf142d1c0432a4f2"
   },
   "glow.nvim": {
     "branch": "main",
@@ -137,11 +137,11 @@
   },
   "nvim-lint": {
     "branch": "master",
-    "commit": "6670b3ac73fa4caf720f017b91c619e9424d955e"
+    "commit": "ffa213532e7a921f03262004b87d93e50c5b5275"
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "f4619ab31fc4676001ea05ae8200846e6e7700c7"
+    "commit": "96e5711040df23583591391ce49e556b8cd248d8"
   },
   "nvim-spectre": {
     "branch": "master",
@@ -161,7 +161,7 @@
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "54cf9180a36299265e217858e6e531245074c3f4"
+    "commit": "8f444c9fcb7f9610184a34b44e922fa30989c96f"
   },
   "nvim-treesitter-context": {
     "branch": "master",
@@ -237,7 +237,7 @@
   },
   "vim-just": {
     "branch": "main",
-    "commit": "9506b055bcdbb9263cbf9648005a6869ae0df523"
+    "commit": "4f6eea3d5ad64236549411bb2e2fd8f1c7926abc"
   },
   "vim-matchquote": {
     "branch": "master",
@@ -261,7 +261,7 @@
   },
   "vim-visual-multi": {
     "branch": "master",
-    "commit": "fe1ec7e430013b83c8c2dee85ae496251b71e253"
+    "commit": "e2ff111f123da6cf97f95b96b10eb95854f953c9"
   },
   "which-key.nvim": {
     "branch": "main",

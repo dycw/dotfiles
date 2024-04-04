@@ -128,6 +128,11 @@
         Installing watchexec,
       ]
     - [
+        "command -v xclip >/dev/null 2>&1 || brew install xclip",
+        Installing xclip,
+      ]
+    - ["command -v xsel >/dev/null 2>&1 || brew install xsel", Installing xsel]
+    - [
         "command -v zoxide >/dev/null 2>&1 || brew install zoxide",
         Installing zoxide,
       ]
