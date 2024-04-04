@@ -32,6 +32,10 @@ opt.expandtab = true
 -- File-content encoding for the current buffer
 opt.fileencoding = "utf-8"
 
+-- The expression used for when `'foldmethod'`  is "expr"
+-- Lunarvim: set to "nvim_treesitter#foldexpr()" for treesitter based folding
+opt.foldexpr = ""
+
 -- The kind of folding used for the current window
 opt.foldmethod = "manual"
 
@@ -104,7 +108,6 @@ opt.wrap = true
 
 local default_options = {
     cmdheight = 1, -- more space in the neovim command line for displaying messages
-    foldmethod = "manual", -- folding, set to "expr" for treesitter based folding
     foldexpr = "", -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
     hidden = true, -- required to keep multiple buffers and open multiple buffers
     hlsearch = true, -- highlight all matches on previous search pattern

@@ -24,7 +24,10 @@ set("i", "<C-j>", "<Down>", opts)
 set("i", "<C-k>", "<Up>", opts)
 set("i", "<C-l>", "<Right>", opts) -- doesn't seem to work
 
--- paste
+-- paste in insert mode
+set("i", "<C-v>", "<C-o>p", opts)
+
+-- paste mode
 set({ "n", "v", "i" }, "<F2>", "<Cmd>set invpaste paste?<CR>", opts)
 
 -- quickfix
@@ -36,6 +39,7 @@ set("n", "<C-q>", ":confirm q<CR>", opts)
 
 -- save
 set({ "n", "v" }, "<C-s>", "<Cmd>:w<CR>", opts)
+set("i", "<C-s>", "<Esc><Cmd>:w<CR>a", opts)
 
 -- search highlight
 set("n", "<Esc>", "<Cmd>nohlsearch<CR>", opts)
