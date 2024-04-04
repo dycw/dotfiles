@@ -20,11 +20,20 @@ opt.colorcolumn = "80"
 -- A comma-separated list of options for Insert mode completion
 opt.completeopt = { "menuone", "preview" }
 
+-- Determine how text with the "conceal" syntax attribute is shown
+opt.conceallevel = 0
+
 -- Highlight the text line of the cursor with CursorLine
 opt.cursorline = true
 
 -- Use the appropriate number of spaces to insert a <Tab>?
 opt.expandtab = true
+
+-- File-content encoding for the current buffer
+opt.fileencoding = "utf-8"
+
+-- The kind of folding used for the current window
+opt.foldmethod = "manual"
 
 -- The ":substitute" flag `'g'`?
 opt.gdefault = true
@@ -95,9 +104,6 @@ opt.wrap = true
 
 local default_options = {
     cmdheight = 1, -- more space in the neovim command line for displaying messages
-    completeopt = { "menuone", "noselect" },
-    conceallevel = 0, -- so that `` is visible in markdown files
-    fileencoding = "utf-8", -- the encoding written to a file
     foldmethod = "manual", -- folding, set to "expr" for treesitter based folding
     foldexpr = "", -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
     hidden = true, -- required to keep multiple buffers and open multiple buffers
