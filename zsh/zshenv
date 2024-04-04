@@ -5,3 +5,4 @@ __file="${HOME}/dotfiles/shell/env.sh"
 if [ -f "${__file}" ]; then
   . "${__file}"
 fi
+. "$HOME/.cargo/env"
