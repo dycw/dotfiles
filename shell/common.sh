@@ -120,6 +120,7 @@ set editing-mode vi
 # neovim
 if command -v nvim >/dev/null 2>&1; then
 	alias n='nvim'
+	alias cdplugins='cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/plugins"'
 fi
 
 # pip
