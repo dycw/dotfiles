@@ -34,12 +34,6 @@ set("n", "[", "<Cmd>cprev<CR>", opts)
 -- quit
 set("n", "<C-q>", ":confirm q<CR>", opts)
 
--- resize windows
-set("i", "<C-Up>", ":resize -2<CR>", opts)
-set("i", "<C-Down>", ":resize +2<CR>", opts)
-set("i", "<C-Left>", ":vertical resize -2<CR>", opts)
-set("i", "<C-Right>", ":vertical resize +2<CR>", opts)
-
 -- save
 set({ "n", "v" }, "<C-s>", "<Cmd>:w<CR>", opts)
 
