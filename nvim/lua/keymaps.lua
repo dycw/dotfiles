@@ -35,7 +35,8 @@ set("n", "]", "<Cmd>cnext<CR>", opts)
 set("n", "[", "<Cmd>cprev<CR>", opts)
 
 -- quit
-set("n", "<C-q>", ":confirm q<CR>", opts)
+set({ "n", "v" }, "<C-q>", ":confirm q<CR>", opts)
+set("i", "<C-q>", ":confirm q<CR>", opts)
 
 -- save
 set({ "n", "v" }, "<C-s>", "<Cmd>:w<CR>", opts)
