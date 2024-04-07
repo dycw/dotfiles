@@ -42,6 +42,9 @@ opt.foldmethod = "manual"
 -- The ":substitute" flag `'g'`?
 opt.gdefault = true
 
+-- When off a buffer is unloaded when it is abandoned?
+opt.hidden = true
+
 -- When there is a previous search pattern, highlight all its matches
 opt.hlsearch = true
 
@@ -97,8 +100,14 @@ opt.swapfile = false
 -- Number of spaces that a <Tab> int he file counts for
 opt.tabstop = 2
 
+-- Enables 24-bit RGB color in the TUI
+opt.termguicolors = true
+
 -- Time in milliseconds to wait for a mapped sequence to complete
 opt.timeoutlen = 300
+
+-- When on, the title of the window will be set to the value of `titlestring`
+opt.title = true
 
 -- When on, Vim automatically saves undo history to an undo file when writing a buffer to a file
 opt.undofile = true
@@ -113,10 +122,6 @@ opt.wrap = true
 opt.writebackup = true
 
 local default_options = {
-    cmdheight = 1, -- more space in the neovim command line for displaying messages
-    foldexpr = "", -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
-    hidden = true, -- required to keep multiple buffers and open multiple buffers
-    termguicolors = true, -- set term gui colors (most terminals support this)
     title = true, -- set the title of window to the value of the titlestring
     -- opt.titlestring = "%<%F%=%l/%L - nvim" -- what the title of the window will be set to
     -- undodir = undodir, -- set an undo directory
