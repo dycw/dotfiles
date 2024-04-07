@@ -124,6 +124,9 @@ opt.timeoutlen = 300
 -- When on, the title of the window will be set to the value of `titlestring`
 opt.title = true
 
+-- When this option is not empty, it will be used for the title of the window
+opt.titlestring = "%<%F%=%l/%L - nvim"
+
 -- When on, Vim automatically saves undo history to an undo file when writing a buffer to a file
 opt.undofile = true
 
@@ -135,24 +138,3 @@ opt.wrap = true
 
 -- Make a backup before overwriting a file
 opt.writebackup = true
-
-local default_options = {
-    title = true, -- set the title of window to the value of the titlestring
-    -- opt.titlestring = "%<%F%=%l/%L - nvim" -- what the title of the window will be set to
-    -- undodir = undodir, -- set an undo directory
-    writebackup = false, -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
-    expandtab = true, -- convert tabs to spaces
-    shiftwidth = 2, -- the number of spaces inserted for each indentation
-    tabstop = 2, -- insert 2 spaces for a tab
-    cursorline = true, -- highlight the current line
-    number = true, -- set numbered lines
-    numberwidth = 4, -- set number column width to 2 {default 4}
-    signcolumn = "yes", -- always show the sign column, otherwise it would shift the text each time
-    wrap = false, -- display lines as one long line
-    -- shadafile = join_paths(get_cache_dir(), "lvim.shada"),
-    scrolloff = 8, -- minimal number of screen lines to keep above and below the cursor.
-    sidescrolloff = 8, -- minimal number of screen lines to keep left and right of the cursor.
-    showcmd = false,
-    ruler = false,
-    laststatus = 3,
-}
