@@ -81,7 +81,7 @@
   },
   "leap.nvim": {
     "branch": "main",
-    "commit": "3fc5e8344eac8a306baca09634fd613d1aa2c388"
+    "commit": "9eeb0a8241cb9521e68a04124f498df1b502954f"
   },
   "lsp_signature.nvim": {
     "branch": "master",
@@ -145,7 +145,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "e25c4cdecd3d58c0deccce0f372426c8c480bcce"
+    "commit": "9619e53d3f99f0ca4ea3b88f5d97fce703131820"
   },
   "nvim-spectre": {
     "branch": "master",
@@ -161,7 +161,7 @@
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "fbe76211f45413feadb155a89073bf65b5766b2e"
+    "commit": "11a3584b81c3249d2b6279305aee1c7ad273985a"
   },
   "nvim-treesitter-context": {
     "branch": "master",
@@ -237,7 +237,7 @@
   },
   "vim-just": {
     "branch": "main",
-    "commit": "a9ee95f9baa37f0f290862f0055a661f6b4036ef"
+    "commit": "a40cc97179ff491f5f85a6799c09f5bdc792a9f5"
   },
   "vim-matchquote": {
     "branch": "master",
