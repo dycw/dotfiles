@@ -81,7 +81,7 @@
   },
   "leap.nvim": {
     "branch": "main",
-    "commit": "9eeb0a8241cb9521e68a04124f498df1b502954f"
+    "commit": "3fc5e8344eac8a306baca09634fd613d1aa2c388"
   },
   "lsp_signature.nvim": {
     "branch": "master",
