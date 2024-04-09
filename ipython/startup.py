@@ -56,7 +56,6 @@ import tempfile
 import textwrap
 import threading
 import time
-import tomllib
 import types
 import typing
 import unittest
@@ -90,7 +89,7 @@ from dataclasses import (
     make_dataclass,
     replace,
 )
-from enum import Enum, IntEnum, StrEnum, auto
+from enum import Enum, IntEnum, auto
 from functools import lru_cache, partial, reduce, wraps
 from hashlib import md5
 from itertools import (
@@ -163,7 +162,6 @@ _ = [
     Protocol,
     Sequence,
     Sized,
-    StrEnum,
     TemporaryDirectory,
     TextIO,
     TypeAlias,
@@ -268,7 +266,6 @@ _ = [
     textwrap,
     threading,
     time,
-    tomllib,
     types,
     typing,
     typing,
@@ -286,11 +283,27 @@ _ = [
 
 
 try:
-    from collections.abc import Buffer
+    from collections.abc import Buffer  # python 3.11
 except ImportError:
     pass
 else:
     _ = [Buffer]
+
+
+try:
+    from enum import StrEnum  # python 3.11
+except ImportError:
+    pass
+else:
+    _ = [StrEnum]
+
+
+try:
+    import tomllib  # python 3.11
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [tomllib]
 
 
 # third party imports
@@ -739,8 +752,6 @@ try:
         UInt32,
         UInt64,
         Utf8,
-        assert_frame_equal,
-        assert_series_equal,
         col,
         concat,
         lit,
@@ -759,7 +770,9 @@ try:
     )
     from polars.datatypes import DataTypeClass  # type: ignore[]
     from polars.testing import (  # type: ignore[]
+        assert_frame_equal,
         assert_frame_not_equal,
+        assert_series_equal,
         assert_series_not_equal,
     )
     from polars.type_aliases import SchemaDict  # type: ignore[]
