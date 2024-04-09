@@ -3,9 +3,6 @@ local set = vim.keymap.set
 -- luacheck: pop
 local opts = { noremap = true, silent = true }
 
--- command mode
-set({ "n", "v" }, "<CR>", "<Cmd>", opts)
-
 -- global marks
 local prefixes = "m'"
 local letters = "abcdefghijklmnopqrstuvwxyz"
@@ -28,7 +25,7 @@ set("i", "<C-l>", "<Right>", opts) -- doesn't seem to work
 set("i", "<C-v>", "<C-o>p", opts)
 
 -- paste mode
-set({ "n", "v", "i" }, "<F2>", "<Cmd>set invpaste paste?<CR>", opts)
+set({ "n", "v" }, "<F2>", "<Cmd>set invpaste paste?<CR>", opts)
 
 -- quickfix
 set("n", "]", "<Cmd>cnext<CR>", opts)
