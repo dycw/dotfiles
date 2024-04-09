@@ -16,10 +16,10 @@ for i = 1, #prefixes do
 end
 
 -- navigation
-set("i", "<C-h>", "<Left>", opts) -- doesn't seem to work
+set("i", "<C-h>", "<Left>", opts)
 set("i", "<C-j>", "<Down>", opts)
 set("i", "<C-k>", "<Up>", opts)
-set("i", "<C-l>", "<Right>", opts) -- doesn't seem to work
+set("i", "<C-l>", "<Right>", opts)
 
 -- paste in insert mode
 set("i", "<C-v>", "<C-o>p", opts)
