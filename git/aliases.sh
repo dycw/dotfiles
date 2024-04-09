@@ -104,7 +104,7 @@ if command -v git >/dev/null 2>&1; then
 	alias gdm='git diff origin/master'
 	# fetch
 	alias gf='__git_fetch'
-	__git_fetch() { git fetch --all --atomic; }
+	__git_fetch() { git fetch --all; }
 	# log
 	alias gl='git log --oneline --decorate --graph'
 	# mv
