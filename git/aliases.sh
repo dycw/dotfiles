@@ -46,7 +46,7 @@ if command -v git >/dev/null 2>&1; then
 	alias gb='git branch'
 	alias gba='git branch -a'
 	alias gbd='git branch -d'
-	alias gbdd='git branch -D dev'
+	alias gbdd='git branch -D'
 	# checkout
 	alias gco='git checkout'
 	alias gcob='git checkout -b'

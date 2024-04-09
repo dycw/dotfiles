@@ -10,3 +10,11 @@ api.nvim_create_autocmd("TextYankPost", {
         v.highlight.on_yank()
     end,
 })
+
+api.nvim_create_autocmd("VimResized", {
+    desc = "Auto resize windows when Vim is resized",
+    group = api.nvim_create_augroup("auto-resize-windows", { clear = true }),
+    callback = function()
+        v.cmd("wincmd =")
+    end,
+})
