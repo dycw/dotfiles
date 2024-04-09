@@ -6,7 +6,8 @@ local opts = { noremap = true, silent = true }
 return {
     "vonheikemen/fine-cmdline.nvim",
     config = function()
-        set("n", ":", "<Cmd>FineCmdline<CR>", opts)
+        set({ "n", "v" }, ":", "<Cmd>FineCmdline<CR>", opts)
+        set({ "n", "v" }, ";", "<Cmd>FineCmdline<CR>", opts)
         require("fine-cmdline").setup({
             cmdline = { prompt = " " },
             popup = {
@@ -18,5 +19,5 @@ return {
             },
         })
     end,
-    dependencies = { "MunifTanjim/nui.nvim" },
+    dependencies = { "muniftanjim/nui.nvim" },
 }
