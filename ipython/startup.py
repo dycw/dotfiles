@@ -1,39 +1,70 @@
 from __future__ import annotations  # noqa: INP001
 
 import abc
+import ast
+import asyncio
+import base64
+import bisect
+import calendar
+import cmath
+import concurrent.futures
+import contextvars
+import copy
 import csv
+import datetime
 import datetime as dt
+import decimal
 import enum
+import fractions
+import ftplib
 import functools
+import gettext
+import glob
 import gzip
 import hashlib
+import heapq
+import imaplib
 import io
+import itertools
 import itertools as it
 import json
+import locale
+import logging
 import math
 import multiprocessing
 import numbers
+import operator
 import operator as op
 import os
 import pathlib
 import pickle
 import platform
+import poplib
 import pprint
 import random
 import re
+import secrets
 import shutil
+import smtplib
 import socket
 import stat
+import statistics
 import string
 import subprocess
 import sys
 import tempfile
 import textwrap
+import threading
 import time
+import tomllib
 import types
 import typing
+import unittest
 import urllib
+import uuid
+import wave
 import zipfile
+import zoneinfo
 from collections import Counter, defaultdict, deque
 from collections.abc import (
     Callable,
@@ -59,7 +90,7 @@ from dataclasses import (
     make_dataclass,
     replace,
 )
-from enum import Enum, auto
+from enum import Enum, IntEnum, StrEnum, auto
 from functools import lru_cache, partial, reduce, wraps
 from hashlib import md5
 from itertools import (
@@ -102,99 +133,114 @@ from typing import (
 )
 
 _ = [
-    tempfile,
-    TemporaryDirectory,
-    time,
-    sleep,
     AbstractSet,
-    textwrap,
+    Annotated,
+    Any,
+    BinaryIO,
     Callable,
     CalledProcessError,
-    wraps,
+    ClassVar,
     Collection,
     Container,
     Coroutine,
     Counter,
-    typing,
-    IO,
-    Annotated,
-    functools,
-    Any,
-    BinaryIO,
-    ClassVar,
+    Enum,
+    Generator,
     Generic,
+    Hashable,
+    IO,
+    IntEnum,
+    Iterable,
+    Iterator,
     Literal,
-    zipfile,
+    Mapping,
     NewType,
     NoReturn,
     ParamSpec,
+    Path,
+    Pool,
     Protocol,
+    Sequence,
+    Sized,
+    StrEnum,
+    TemporaryDirectory,
     TextIO,
     TypeAlias,
     TypeGuard,
     TypeVar,
     Union,
-    Enum,
-    Generator,
-    Hashable,
-    Iterable,
-    Iterator,
-    csv,
-    enum,
-    Mapping,
-    Path,
-    Pool,
-    Sequence,
-    Sized,
     abc,
-    math,
+    ast,
     astuple,
+    asyncio,
     auto,
-    types,
-    typing,
+    base64,
+    calendar,
     chain,
-    urllib,
     check_call,
     check_output,
+    cmath,
+    concurrent.futures,
+    contextvars,
     copyfile,
     cpu_count,
+    csv,
     dataclass,
+    datetime,
+    decimal,
     defaultdict,
     deque,
     dropwhile,
     dt,
-    io,
+    enum,
     environ,
     escape,
     field,
     fields,
     findall,
+    fractions,
+    ftplib,
+    functools,
     getenv,
+    gettext,
+    glob,
     groupby,
     gzip,
     hashlib,
-    random,
+    heapq,
+    bisect,
+    copy,
+    imaplib,
+    io,
     is_dataclass,
     islice,
     it,
+    itertools,
     json,
     json,
+    json,
+    locale,
+    logging,
     lru_cache,
     make_dataclass,
+    math,
     md5,
     multiprocessing,
     numbers,
-    os,
     op,
+    operator,
+    os,
     pairwise,
     partial,
     pathlib,
     permutations,
     pickle,
     platform,
+    poplib,
     pprint,
     pprint,
     product,
+    random,
     re,
     reduce,
     repeat,
@@ -202,17 +248,36 @@ _ = [
     rmtree,
     run,
     search,
+    secrets,
     shutil,
+    sleep,
+    smtplib,
     socket,
     socket,
     starmap,
     stat,
+    statistics,
     string,
     subprocess,
     suppress,
     sys,
     sys,
     takewhile,
+    tempfile,
+    textwrap,
+    threading,
+    time,
+    tomllib,
+    types,
+    typing,
+    typing,
+    unittest,
+    urllib,
+    uuid,
+    wave,
+    wraps,
+    zipfile,
+    zoneinfo,
 ]
 
 
@@ -228,6 +293,14 @@ else:
 
 
 # third party imports
+
+
+try:
+    import altair as alt  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [alt]
 
 
 try:
@@ -549,6 +622,7 @@ try:
         bdate_range,
         date_range,
         qcut,
+        read_pickle,
         read_sql,
         read_table,
         set_option,
@@ -570,7 +644,13 @@ try:
         Week,
     )
 except ModuleNotFoundError:
-    pass
+    try:
+        from utilities.pickle import read_pickle  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [read_pickle]
+
 else:
     _ = [
         BDay,
@@ -602,18 +682,13 @@ else:
         date_range,
         pd,
         qcut,
+        read_pickle,
         read_sql,
         read_table,
         set_option,
         to_datetime,
         to_pickle,
     ]
-    try:
-        from utilities.pickle import read_pickle  # type: ignore[]
-    except ModuleNotFoundError:
-        from pandas import read_pickle  # type: ignore[]
-    else:
-        _ = [read_pickle]
 
     _min_max_rows = 7
     set_option(
@@ -636,6 +711,7 @@ try:
         Boolean,
         Categorical,
         Config,
+        DataFrame,
         DataType,
         Date,
         Datetime,
@@ -651,6 +727,7 @@ try:
         Null,
         Object,
         PolarsDataType,
+        Series,
         Struct,
         Time,
         UInt8,
@@ -658,19 +735,22 @@ try:
         UInt32,
         UInt64,
         Utf8,
+        assert_frame_equal,
+        assert_series_equal,
         col,
+        concat,
         lit,
         read_avro,
+        read_csv,
         read_csv_batched,
         read_database,
         read_database_uri,
         read_delta,
-        read_ipc,
-        read_ipc_schema,
-        read_ipc_stream,
+        read_excel,
         read_json,
         read_ndjson,
         read_ods,
+        read_parquet,
         when,
     )
     from polars.datatypes import DataTypeClass  # type: ignore[]
@@ -683,7 +763,32 @@ try:
     Config(tbl_rows=7, tbl_cols=100)
 
 except ModuleNotFoundError:
-    pass
+    try:
+        from pandas import (  # type: ignore[]
+            DataFrame,
+            Series,
+            concat,
+            read_csv,
+            read_excel,
+            read_parquet,
+        )
+        from pandas.testing import (  # type: ignore[]
+            assert_frame_equal,
+            assert_series_equal,
+        )
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [
+            DataFrame,
+            Series,
+            assert_frame_equal,
+            assert_series_equal,
+            concat,
+            read_csv,
+            read_excel,
+            read_parquet,
+        ]
 else:
     _ = [
         Array,
@@ -691,6 +796,7 @@ else:
         Boolean,
         Categorical,
         Config,
+        DataFrame,
         DataType,
         DataTypeClass,
         Date,
@@ -708,6 +814,8 @@ else:
         Object,
         PolarsDataType,
         SchemaDict,
+        SchemaDict,
+        Series,
         Struct,
         Time,
         UInt16,
@@ -715,62 +823,27 @@ else:
         UInt64,
         UInt8,
         Utf8,
+        assert_frame_equal,
         assert_frame_not_equal,
+        assert_series_equal,
         assert_series_not_equal,
         col,
+        concat,
         lit,
         pl,
         read_avro,
+        read_csv,
         read_csv_batched,
         read_database,
         read_database_uri,
         read_delta,
-        read_ipc,
-        read_ipc_schema,
-        read_ipc_stream,
+        read_excel,
         read_json,
         read_ndjson,
         read_ods,
+        read_parquet,
         when,
-        SchemaDict,
     ]
-    try:
-        from pandas import (  # type: ignore[]
-            DataFrame,
-            Series,
-            concat,
-            read_csv,
-            read_excel,
-            read_parquet,
-        )
-        from pandas.testing import (  # type: ignore[]
-            assert_frame_equal,
-            assert_series_equal,
-        )
-    except ModuleNotFoundError:
-        from polars import (  # type: ignore[]
-            DataFrame,
-            Series,
-            concat,
-            read_csv,
-            read_excel,
-            read_parquet,
-        )
-        from polars.testing import (  # type: ignore[]
-            assert_frame_equal,
-            assert_series_equal,
-        )
-    else:
-        _ = [
-            DataFrame,
-            Series,
-            assert_frame_equal,
-            assert_series_equal,
-            concat,
-            read_csv,
-            read_excel,
-            read_parquet,
-        ]
 
 
 try:
