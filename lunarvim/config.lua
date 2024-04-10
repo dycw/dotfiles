@@ -51,18 +51,6 @@ lvim.builtin.which_key.mappings["K"] = { "<Cmd>Telescope keymaps<CR>", "Key maps
 lvim.builtin.which_key.mappings["t"] = { "<Cmd>TroubleToggle<CR>", "Trouble" }
 lvim.builtin.which_key.vmappings["t"] = { "<Cmd>TroubleToggle<CR>", "Trouble" }
 
--- windows
-lvim.builtin.which_key.mappings["wh"] = { "<Cmd>set nosplitright<CR><Cmd>vsplit<CR>", "Split left" }
-lvim.builtin.which_key.mappings["wj"] = { "<Cmd>set splitbelow<CR><Cmd>split<CR>", "Split down" }
-lvim.builtin.which_key.mappings["wk"] = { "<Cmd>set nosplitbelow<CR><Cmd>split<CR>", "Split up" }
-lvim.builtin.which_key.mappings["wl"] = { "<Cmd>set splitright<CR><Cmd>vsplit<CR>", "Split right" }
-lvim.builtin.which_key.mappings["-"] = { "<Cmd>split<CR>", "Split down" }
-lvim.builtin.which_key.mappings["\\"] = { "<Cmd>vsplit<CR>", "Split right" }
-
--- comment
-lvim.builtin.which_key.mappings["/"] = { "<Plug>(comment_toggle_linewise_current)", "Comment" }
-lvim.builtin.which_key.vmappings["/"] = { "<Plug>(comment_toggle_linewise_visual)", "Comment" }
-
 -- diagnostics
 lvim.builtin.which_key.mappings["e"] = { "<Cmd>TroubleToggle document_diagnostics<CR>", "Diagnostics (doc)" }
 lvim.builtin.which_key.mappings["w"] = { "<Cmd>TroubleToggle workspace_diagnostics<CR>", "Diagnostics (ws)" }
@@ -114,12 +102,6 @@ lvim.builtin.which_key.mappings["g"] = {
     end,
     "Grep",
 }
-
--- sort
-lvim.builtin.which_key.mappings["s"] = { "<Cmd>Sort<CR>", "Sort" }
-lvim.builtin.which_key.mappings["sn"] = { "<Cmd>Sort n<CR>", "Sort (numbers)" }
-lvim.builtin.which_key.vmappings["s"] = { "<Esc><Cmd>Sort<CR>", "Sort" }
-lvim.builtin.which_key.vmappings["sn"] = { "<Esc><Cmd>Sort n<CR>", "Sort (numbers)" }
 
 -- spectre
 lvim.builtin.which_key.mappings["<Leader>sp"] = { "<Cmd>lua require('spectre').open()<CR>", "Spectre" }
