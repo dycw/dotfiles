@@ -2,7 +2,6 @@
 local v = vim
 -- luacheck: pop
 local fn = v.fn
-local set = v.keymap.set
 
 return {
     "nvim-telescope/telescope.nvim",
@@ -31,39 +30,40 @@ return {
 
         -- See `:help telescope.builtin`
         local builtin = require("telescope.builtin")
-        set("n", "<Leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
-        set("n", "<Leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
-        set("n", "<Leader>ff", builtin.find_files, { desc = "[F]ind [F]iles" })
-        set("n", "<Leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
-        set("n", "<Leader>so", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-        set("n", "<Leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
-        set("n", "<Leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
-        set("n", "<Leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
-        set("n", "<Leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
-        set("n", "<Leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+        local keymap_set = require("utilities").keymap_set
+        keymap_set("n", "<Leader><Leader>", builtin.buffers, "Buffers")
+        keymap_set("n", "<Leader>ht", builtin.help_tags, "Help Tags")
+        keymap_set("n", "<Leader>km", builtin.keymaps, "Keymaps")
+        keymap_set("n", "<Leader>ff", builtin.find_files, "Find Files")
+        keymap_set("n", "<Leader>gf", builtin.git_files, "Git Files")
+        keymap_set("n", "<Leader>te", builtin.builtin, "Telescope")
+        keymap_set("n", "<Leader>of", builtin.oldfiles, "Old Files")
+        keymap_set("n", "<Leader>gs", builtin.grep_string, "Grep String")
+        keymap_set("n", "<Leader>lg", builtin.live_grep, "Live Grep")
+        keymap_set("n", "<Leader>dd", builtin.diagnostics, "Diagnostics")
 
         -- Slightly advanced example of overriding default behavior and theme
-        set("n", "<Leader>/", function()
+        keymap_set("n", "<Leader>/", function()
             -- You can pass additional configuration to Telescope to change the theme, layout, etc.
             builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
                 winblend = 10,
                 previewer = false,
             }))
-        end, { desc = "Current buffer fuzzy find" })
+        end, "Current buffer fuzzy find")
 
         -- It's also possible to pass additional configuration options.
         --  See `:help telescope.builtin.live_grep()` for information about particular keys
-        set("n", "<leader>s/", function()
+        keymap_set("n", "<leader>s/", function()
             builtin.live_grep({
                 grep_open_files = true,
                 prompt_title = "Live Grep in Open Files",
             })
-        end, { desc = "[S]earch [/] in Open Files" })
+        end, "[S]earch [/] in Open Files")
 
         -- Shortcut for searching your Neovim configuration files
-        set("n", "<Leader>sn", function()
+        keymap_set("n", "<Leader>sn", function()
             builtin.find_files({ cwd = fn.stdpath("config") })
-        end, { desc = "[S]earch [N]eovim files" })
+        end, "[S]earch [N]eovim files")
     end,
     dependencies = {
         "nvim-lua/plenary.nvim",

@@ -103,12 +103,6 @@ lvim.builtin.which_key.mappings["g"] = {
     "Grep",
 }
 
--- sort
-lvim.builtin.which_key.mappings["s"] = { "<Cmd>Sort<CR>", "Sort" }
-lvim.builtin.which_key.mappings["sn"] = { "<Cmd>Sort n<CR>", "Sort (numbers)" }
-lvim.builtin.which_key.vmappings["s"] = { "<Esc><Cmd>Sort<CR>", "Sort" }
-lvim.builtin.which_key.vmappings["sn"] = { "<Esc><Cmd>Sort n<CR>", "Sort (numbers)" }
-
 -- spectre
 lvim.builtin.which_key.mappings["<Leader>sp"] = { "<Cmd>lua require('spectre').open()<CR>", "Spectre" }
 lvim.builtin.which_key.mappings["<Leader>sf"] =
