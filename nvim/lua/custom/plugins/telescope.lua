@@ -32,15 +32,15 @@ return {
         local builtin = require("telescope.builtin")
         local keymap_set = require("utilities").keymap_set
         keymap_set("n", "<Leader><Leader>", builtin.buffers, "Buffers")
-        keymap_set("n", "<Leader>ht", builtin.help_tags, "Help Tags")
-        keymap_set("n", "<Leader>km", builtin.keymaps, "Keymaps")
+        keymap_set("n", "<Leader>dd", builtin.diagnostics, "Diagnostics")
+        keymap_set("n", "<Leader>te", builtin.builtin, "Telescope")
         keymap_set("n", "<Leader>ff", builtin.find_files, "Find Files")
         keymap_set("n", "<Leader>gf", builtin.git_files, "Git Files")
-        keymap_set("n", "<Leader>te", builtin.builtin, "Telescope")
-        keymap_set("n", "<Leader>of", builtin.oldfiles, "Old Files")
         keymap_set("n", "<Leader>gs", builtin.grep_string, "Grep String")
+        keymap_set("n", "<Leader>ht", builtin.help_tags, "Help Tags")
+        keymap_set("n", "<Leader>km", builtin.keymaps, "Keymaps")
         keymap_set("n", "<Leader>lg", builtin.live_grep, "Live Grep")
-        keymap_set("n", "<Leader>dd", builtin.diagnostics, "Diagnostics")
+        keymap_set("n", "<Leader>of", builtin.oldfiles, "Old Files")
 
         -- Slightly advanced example of overriding default behavior and theme
         keymap_set("n", "<Leader>/", function()
