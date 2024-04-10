@@ -4,7 +4,7 @@ local v = vim
 local fn = v.fn
 local set = v.keymap.set
 
-return { -- Fuzzy Finder (files, lsp, etc)
+return {
     "nvim-telescope/telescope.nvim",
     branch = "0.1.x",
     config = function()
@@ -31,25 +31,25 @@ return { -- Fuzzy Finder (files, lsp, etc)
 
         -- See `:help telescope.builtin`
         local builtin = require("telescope.builtin")
-        set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
-        set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
-        set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
-        set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
-        set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
-        set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
-        set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
-        set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
-        set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-        set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+        set("n", "<Leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
+        set("n", "<Leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
+        set("n", "<Leader>ff", builtin.find_files, { desc = "[F]ind [F]iles" })
+        set("n", "<Leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
+        set("n", "<Leader>so", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+        set("n", "<Leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
+        set("n", "<Leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
+        set("n", "<Leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
+        set("n", "<Leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
+        set("n", "<Leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
 
         -- Slightly advanced example of overriding default behavior and theme
-        set("n", "<leader>/", function()
+        set("n", "<Leader>/", function()
             -- You can pass additional configuration to Telescope to change the theme, layout, etc.
             builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
                 winblend = 10,
                 previewer = false,
             }))
-        end, { desc = "[/] Fuzzily search in current buffer" })
+        end, { desc = "Current buffer fuzzy find" })
 
         -- It's also possible to pass additional configuration options.
         --  See `:help telescope.builtin.live_grep()` for information about particular keys
@@ -61,7 +61,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
         end, { desc = "[S]earch [/] in Open Files" })
 
         -- Shortcut for searching your Neovim configuration files
-        set("n", "<leader>sn", function()
+        set("n", "<Leader>sn", function()
             builtin.find_files({ cwd = fn.stdpath("config") })
         end, { desc = "[S]earch [N]eovim files" })
     end,

@@ -118,6 +118,9 @@ opt.tabstop = 2
 -- Enables 24-bit RGB color in the TUI
 opt.termguicolors = true
 
+-- This option and `'timeoutlen'`  determine the behavior when part of a mapped key sequence has been received
+opt.timeout = true
+
 -- Time in milliseconds to wait for a mapped sequence to complete
 opt.timeoutlen = 300
 
