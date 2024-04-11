@@ -44,21 +44,6 @@ lvim.builtin.which_key.mappings["c"] = { "<Cmd>Telescope commands<CR>", "Command
 lvim.builtin.which_key.mappings["C"] = { "<Cmd>Telescope commands_history<CR>", "Command history" }
 lvim.builtin.which_key.vmappings["c"] = { "<Cmd>Telescope commands<CR>", "Commands" }
 
--- keymaps
-lvim.builtin.which_key.mappings["K"] = { "<Cmd>Telescope keymaps<CR>", "Key maps" }
-
--- trouble
-lvim.builtin.which_key.mappings["t"] = { "<Cmd>TroubleToggle<CR>", "Trouble" }
-lvim.builtin.which_key.vmappings["t"] = { "<Cmd>TroubleToggle<CR>", "Trouble" }
-
--- diagnostics
-lvim.builtin.which_key.mappings["e"] = { "<Cmd>TroubleToggle document_diagnostics<CR>", "Diagnostics (doc)" }
-lvim.builtin.which_key.mappings["w"] = { "<Cmd>TroubleToggle workspace_diagnostics<CR>", "Diagnostics (ws)" }
-
--- files
-lvim.builtin.which_key.mappings["f"] = { "<Cmd>Telescope find_files<CR>", "Files" }
-lvim.builtin.which_key.mappings["F"] = { "<Cmd>Telescope oldfiles<CR>", "Old files" }
-
 -- iswap
 lvim.builtin.which_key.mappings["i"] = { "<Cmd>ISwap<CR>", "ISwap" }
 lvim.builtin.which_key.mappings["iw"] = { "<Cmd>ISwapWith<CR>", "ISwapWith" }
