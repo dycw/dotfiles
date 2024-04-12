@@ -42,7 +42,11 @@ return {
         local builtin = require("telescope.builtin")
         local keymap_set = require("utilities").keymap_set
         keymap_set("n", "<Leader><Leader>", builtin.buffers, "Buffers")
-        keymap_set("n", "<Leader>dd", builtin.diagnostics, "Diagnostics")
+        keymap_set("n", "<Leader>dd", function()
+            require("telescope.builtin").diagnostics({ bufnr = 0 })
+        end, "Document diagnostics (Search)")
+        keymap_set("n", "<Leader>c", builtin.commands, "Commands")
+        keymap_set("n", "<Leader>wd", builtin.diagnostics, "Workspace diagnostics (Search)")
         keymap_set("n", "<Leader>te", builtin.builtin, "Telescope")
         keymap_set("n", "<Leader>ff", builtin.find_files, "Find Files")
         keymap_set("n", "<Leader>gf", builtin.git_files, "Git Files")
@@ -71,9 +75,9 @@ return {
         end, "[S]earch [/] in Open Files")
 
         -- Shortcut for searching your Neovim configuration files
-        keymap_set("n", "<Leader>sn", function()
+        keymap_set("n", "<Leader>sN", function()
             builtin.find_files({ cwd = fn.stdpath("config") })
-        end, "[S]earch [N]eovim files")
+        end, "Search Neovim files")
 
         -- Live Grep args
         keymap_set("n", "<Leader>lG", function()
