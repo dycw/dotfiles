@@ -25,6 +25,9 @@ return {
             -- },
             -- pickers = {}
             extensions = {
+                ["live_grep_args"] = {
+                    require("telescope").load_extension("live_grep_args"),
+                },
                 ["ui-select"] = {
                     require("telescope.themes").get_dropdown(),
                 },
@@ -71,6 +74,11 @@ return {
         keymap_set("n", "<Leader>sn", function()
             builtin.find_files({ cwd = fn.stdpath("config") })
         end, "[S]earch [N]eovim files")
+
+        -- Live Grep args
+        keymap_set("n", "<Leader>lG", function()
+            require("telescope").extensions.live_grep_args.live_grep_args()
+        end, "Live Grep (args)")
     end,
     dependencies = {
         "nvim-lua/plenary.nvim",
@@ -80,6 +88,10 @@ return {
             cond = function()
                 return fn.executable("make") == 1
             end,
+        },
+        {
+            "nvim-telescope/telescope-live-grep-args.nvim",
+            version = "^1.0.0",
         },
         { "nvim-telescope/telescope-ui-select.nvim" },
         { "nvim-tree/nvim-web-devicons", enabled = v.g.have_nerd_font },
