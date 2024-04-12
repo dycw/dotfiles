@@ -64,6 +64,10 @@
         Installing cmake,
       ]
     - [
+        "command -v cocoapods >/dev/null 2>&1 || brew install cocoapods",
+        Installing cocoapods,
+      ]
+    - [
         "command -v delta >/dev/null 2>&1 || brew install git-delta",
         Installing delta,
       ]
@@ -167,6 +171,7 @@
         Installing zoxide,
       ]
     - [brew install --cask 1password, Installing 1Password]
+    - [brew install --cask google-chrome, Installing Google Chrome]
     - [brew install --cask dropbox, Installing Dropbox]
     - [brew install --cask protonvpn, Installing ProtonVPN]
     - [brew install --cask whatsapp, Installing WhatsApp]
