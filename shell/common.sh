@@ -102,6 +102,9 @@ if command -v gh >/dev/null 2>&1; then
 fi
 
 # git
+if command -v git >/dev/null 2>&1; then
+	alias cdr='cd "$(git rev-parse --show-toplevel)"'
+fi
 __file="${HOME}/dotfiles/git/aliases.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
