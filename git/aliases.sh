@@ -3,43 +3,43 @@
 if command -v git >/dev/null 2>&1; then
 	# add
 	alias ga='git add'
-	alias gaa='git add -A'
+	gaa() { git add -A; }
 	alias gap='git add -p'
 	# add + commit + push
 	gac() {
 		if [ $# -eq 0 ]; then
-			git add -A && git commit && git push -u origin "$(gcurr)"
+			gaa && git commit && gp
 		elif [ $# -eq 1 ]; then
-			git add -A && git commit -m "$1" && git push -u origin "$(gcurr)"
+			gaa && git commit -m "$1" && gp
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
-	alias gaca='git add -A && git commit --amend --no-edit && git push -fu origin "$(gcurr)"'
-	alias gacan='git add -A && git commit -n --amend --no-edit && git push -fu origin "$(gcurr)"'
+	alias gaca='gaa && git commit --amend --no-edit && gpf'
+	alias gacan='gaa && git commit -n --amend --no-edit && gpf'
 	gacf() {
 		if [ $# -eq 0 ]; then
-			git add -A && git commit && git push -fu origin "$(gcurr)"
+			gaa && git commit && gpf
 		elif [ $# -eq 1 ]; then
-			git add -A && git commit -m "$1" && git push -fu origin "$(gcurr)"
+			gaa && git commit -m "$1" && gpf
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
 	gacn() {
 		if [ $# -eq 0 ]; then
-			git add -A && git commit -n && git push -u origin "$(gcurr)"
+			gaa && git commit -n && gp
 		elif [ $# -eq 1 ]; then
-			git add -A && git commit -nm "$1" && git push -u origin "$(gcurr)"
+			gaa && git commit -nm "$1" && gp
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
 	gacnf() {
 		if [ $# -eq 0 ]; then
-			git add -A && git commit -n && git push -fu origin "$(gcurr)"
+			gaa && git commit -n && git push -fu origin "$(gcurr)"
 		elif [ $# -eq 1 ]; then
-			git add -A && git commit -nm "$1" && git push -fu origin "$(gcurr)"
+			gaa && git commit -nm "$1" && git push -fu origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
@@ -53,7 +53,13 @@ if command -v git >/dev/null 2>&1; then
 	alias gco='git checkout'
 	alias gcob='git checkout -b'
 	alias gcobd='git checkout -b dev'
-	gcobt() { git checkout -b "$1" -t "origin/$1"; }
+	gcobt() {
+		if [ $# -eq 1 ]; then
+			git checkout -b "$1" -t "origin/$1"
+		else
+			echo "Expected exactly 1 argument; got $#"
+		fi
+	}
 	alias gcom='git checkout master'
 	alias gcomp='git checkout master && git pull --force'
 	alias gcompd='git checkout master && git pull --force && git branch -D dev'
@@ -66,20 +72,25 @@ if command -v git >/dev/null 2>&1; then
 	# commit
 	gc() {
 		if [ $# -eq 0 ]; then
-			git commit && git push -u origin "$(gcurr)"
+			git commit && gp
 		elif [ $# -eq 1 ]; then
-			git commit -m "$1" && git push -u origin "$(gcurr)"
+			git commit -m "$1" && gp
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
 	gca() {
-		if [ $# -eq 0 ]; then
-			git commit --amend --no-edit && git push -fu origin "$(gcurr)"
-		elif [ $# -eq 1 ]; then
+		if [ $# -eq 1 ]; then
 			git commit -m "$1" --amend && git push -fu origin "$(gcurr)"
 		else
-			echo "Expected 0 or 1 argument; got $#"
+			echo "Expected 1 argument; got $#"
+		fi
+	}
+	gcan() {
+		if [ $# -eq 1 ]; then
+			git commit -nm "$1" --amend && git push -fu origin "$(gcurr)"
+		else
+			echo "Expected 1 argument; got $#"
 		fi
 	}
 	gcf() {
@@ -93,9 +104,9 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gcn() {
 		if [ $# -eq 0 ]; then
-			git commit -n && git push -u origin "$(gcurr)"
+			git commit -n && gp
 		elif [ $# -eq 1 ]; then
-			git commit -nm "$1" && git push -u origin "$(gcurr)"
+			git commit -nm "$1" && gp
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
@@ -123,8 +134,8 @@ if command -v git >/dev/null 2>&1; then
 	# pull
 	alias gpl='git pull --force'
 	# push
-	alias gp='git push -u origin "$(gcurr)"'
-	alias gpf='git push -fu origin "$(gcurr)"'
+	gp() { git push -u origin "$(gcurr)"; }
+	gpf() { gp -f; }
 	# rebase
 	alias grb='__git_fetch && git rebase'
 	alias grbi='__git_fetch && git rebase -i'
@@ -157,46 +168,46 @@ if command -v git >/dev/null 2>&1; then
 	if command -v gitweb >/dev/null 2>&1; then
 		alias gw='gitweb'
 		# add + commit + push
-		alias gacaw='git add -A && git commit --amend --no-edit && git push -fu origin "$(gcurr)" && gitweb'
-		alias gacanw='git add -A && git commit -n --amend --no-edit && git push -fu origin "$(gcurr)" && gitweb'
+		alias gacaw='gaa && git commit --amend --no-edit && git push -fu origin "$(gcurr)" && gitweb'
+		alias gacanw='gaa && git commit -n --amend --no-edit && git push -fu origin "$(gcurr)" && gitweb'
 		gacw() {
 			if [ $# -eq 0 ]; then
-				git add -A && git commit && git push -u origin "$(gcurr)" && gitweb
+				gaa && git commit && gp && gitweb
 			elif [ $# -eq 1 ]; then
-				git add -A && git commit -m "$1" && git push -u origin "$(gcurr)" && gitweb
+				gaa && git commit -m "$1" && gp && gitweb
 			else
 				echo "Expected 0 or 1 argument; got $#"
 			fi
 		}
 		gacfw() {
 			if [ $# -eq 0 ]; then
-				git add -A && git commit && git push -fu origin "$(gcurr)" && gitweb
+				gaa && git commit && git push -fu origin "$(gcurr)" && gitweb
 			elif [ $# -eq 1 ]; then
-				git add -A && git commit -m "$1" && git push -fu origin "$(gcurr)" && gitweb
+				gaa && git commit -m "$1" && git push -fu origin "$(gcurr)" && gitweb
 			else
 				echo "Expected 0 or 1 argument; got $#"
 			fi
 		}
 		gacnw() {
 			if [ $# -eq 0 ]; then
-				git add -A && git commit -n && git push -u origin "$(gcurr)" && gitweb
+				gaa && git commit -n && gp && gitweb
 			elif [ $# -eq 1 ]; then
-				git add -A && git commit -nm "$1" && git push -u origin "$(gcurr)" && gitweb
+				gaa && git commit -nm "$1" && gp && gitweb
 			else
 				echo "Expected 0 or 1 argument; got $#"
 			fi
 		}
 		gacnfw() {
 			if [ $# -eq 0 ]; then
-				git add -A && git commit -n && git push -fu origin "$(gcurr)" && gitweb
+				gaa && git commit -n && git push -fu origin "$(gcurr)" && gitweb
 			elif [ $# -eq 1 ]; then
-				git add -A && git commit -nm "$1" && git push -fu origin "$(gcurr)" && gitweb
+				gaa && git commit -nm "$1" && git push -fu origin "$(gcurr)" && gitweb
 			else
 				echo "Expected 0 or 1 argument; got $#"
 			fi
 		}
 	fi
 	# push
-	alias gpw='git push -u origin "$(gcurr)" && gitweb'
+	alias gpw='gp && gitweb'
 	alias gpfw='git push -fu origin "$(gcurr)" && gitweb'
 fi
