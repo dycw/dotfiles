@@ -7,7 +7,14 @@ return {
     "nvim-telescope/telescope.nvim",
     branch = "0.1.x",
     config = function()
+        local telescope_config = require("telescope.config")
+        local vimgrep_arguments = { unpack(telescope_config.values.vimgrep_arguments) }
+        table.insert(vimgrep_arguments, "--context=0")
+
         require("telescope").setup({
+            defaults = {
+                vimgrep_arguments = vimgrep_arguments,
+            },
             -- You can put your default mappings / updates / etc. in here
             --  All the info you're looking for is in `:help telescope.setup()`
             --
