@@ -15,6 +15,7 @@ if command -v git >/dev/null 2>&1; then
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
+	alias gaca='git add -A && git commit --amend --no-edit && git push -fu origin "$(gcurr)"'
 	gacf() {
 		if [ $# -eq 0 ]; then
 			git add -A && git commit && git push -fu origin "$(gcurr)"
@@ -26,18 +27,18 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gacn() {
 		if [ $# -eq 0 ]; then
-			git add -A && git commit --no-verify && git push -u origin "$(gcurr)"
+			git add -A && git commit -n && git push -u origin "$(gcurr)"
 		elif [ $# -eq 1 ]; then
-			git add -A && git commit -m "$1" --no-verify && git push -u origin "$(gcurr)"
+			git add -A && git commit -nm "$1" && git push -u origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
 	gacnf() {
 		if [ $# -eq 0 ]; then
-			git add -A && git commit --no-verify && git push -fu origin "$(gcurr)"
+			git add -A && git commit -n && git push -fu origin "$(gcurr)"
 		elif [ $# -eq 1 ]; then
-			git add -A && git commit -m "$1" --no-verify && git push -fu origin "$(gcurr)"
+			git add -A && git commit -nm "$1" && git push -fu origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
@@ -82,18 +83,18 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gcn() {
 		if [ $# -eq 0 ]; then
-			git commit --no-verify && git push -u origin "$(gcurr)"
+			git commit -n && git push -u origin "$(gcurr)"
 		elif [ $# -eq 1 ]; then
-			git commit -m "$1" --no-verify && git push -u origin "$(gcurr)"
+			git commit -nm "$1" && git push -u origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
 	}
 	gcnf() {
 		if [ $# -eq 0 ]; then
-			git commit --no-verify && git push -fu origin "$(gcurr)"
+			git commit -n && git push -fu origin "$(gcurr)"
 		elif [ $# -eq 1 ]; then
-			git commit -m "$1" --no-verify && git push -fu origin "$(gcurr)"
+			git commit -nm "$1" && git push -fu origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
@@ -146,6 +147,7 @@ if command -v git >/dev/null 2>&1; then
 	if command -v gitweb >/dev/null 2>&1; then
 		alias gw='gitweb'
 		# add + commit + push
+		alias gacaw='git add -A && git commit --amend --no-edit && git push -fu origin "$(gcurr)" && gitweb'
 		gacw() {
 			if [ $# -eq 0 ]; then
 				git add -A && git commit && git push -u origin "$(gcurr)" && gitweb
@@ -166,18 +168,18 @@ if command -v git >/dev/null 2>&1; then
 		}
 		gacnw() {
 			if [ $# -eq 0 ]; then
-				git add -A && git commit --no-verify && git push -u origin "$(gcurr)" && gitweb
+				git add -A && git commit -n && git push -u origin "$(gcurr)" && gitweb
 			elif [ $# -eq 1 ]; then
-				git add -A && git commit -m "$1" --no-verify && git push -u origin "$(gcurr)" && gitweb
+				git add -A && git commit -nm "$1" && git push -u origin "$(gcurr)" && gitweb
 			else
 				echo "Expected 0 or 1 argument; got $#"
 			fi
 		}
 		gacnfw() {
 			if [ $# -eq 0 ]; then
-				git add -A && git commit --no-verify && git push -fu origin "$(gcurr)" && gitweb
+				git add -A && git commit -n && git push -fu origin "$(gcurr)" && gitweb
 			elif [ $# -eq 1 ]; then
-				git add -A && git commit -m "$1" --no-verify && git push -fu origin "$(gcurr)" && gitweb
+				git add -A && git commit -nm "$1" && git push -fu origin "$(gcurr)" && gitweb
 			else
 				echo "Expected 0 or 1 argument; got $#"
 			fi
