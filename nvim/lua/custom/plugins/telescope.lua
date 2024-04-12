@@ -75,9 +75,9 @@ return {
         end, "[S]earch [/] in Open Files")
 
         -- Shortcut for searching your Neovim configuration files
-        keymap_set("n", "<Leader>sn", function()
+        keymap_set("n", "<Leader>sN", function()
             builtin.find_files({ cwd = fn.stdpath("config") })
-        end, "[S]earch [N]eovim files")
+        end, "Search Neovim files")
 
         -- Live Grep args
         keymap_set("n", "<Leader>lG", function()
