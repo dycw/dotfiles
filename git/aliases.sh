@@ -16,6 +16,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	alias gaca='git add -A && git commit --amend --no-edit && git push -fu origin "$(gcurr)"'
+	alias gacan='git add -A && git commit -n --amend --no-edit && git push -fu origin "$(gcurr)"'
 	gacf() {
 		if [ $# -eq 0 ]; then
 			git add -A && git commit && git push -fu origin "$(gcurr)"
@@ -68,6 +69,15 @@ if command -v git >/dev/null 2>&1; then
 			git commit && git push -u origin "$(gcurr)"
 		elif [ $# -eq 1 ]; then
 			git commit -m "$1" && git push -u origin "$(gcurr)"
+		else
+			echo "Expected 0 or 1 argument; got $#"
+		fi
+	}
+	gca() {
+		if [ $# -eq 0 ]; then
+			git commit --amend --no-edit && git push -fu origin "$(gcurr)"
+		elif [ $# -eq 1 ]; then
+			git commit -m "$1" --amend && git push -fu origin "$(gcurr)"
 		else
 			echo "Expected 0 or 1 argument; got $#"
 		fi
@@ -148,6 +158,7 @@ if command -v git >/dev/null 2>&1; then
 		alias gw='gitweb'
 		# add + commit + push
 		alias gacaw='git add -A && git commit --amend --no-edit && git push -fu origin "$(gcurr)" && gitweb'
+		alias gacanw='git add -A && git commit -n --amend --no-edit && git push -fu origin "$(gcurr)" && gitweb'
 		gacw() {
 			if [ $# -eq 0 ]; then
 				git add -A && git commit && git push -u origin "$(gcurr)" && gitweb

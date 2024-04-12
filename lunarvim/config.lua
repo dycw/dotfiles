@@ -3,13 +3,6 @@
 -------------------------------------------------------------------------------
 -- key bindings
 -------------------------------------------------------------------------------
--- buffers
-lvim.keys.normal_mode["gb"] = "<Cmd>Telescope buffers<CR>"
-
--- command mode
-lvim.keys.normal_mode["<CR>"] = ":"
-lvim.keys.visual_mode["<CR>"] = ":"
-
 -- ex-mode
 lvim.keys.normal_mode["Q"] = "<Nop>"
 
@@ -30,12 +23,6 @@ lvim.keys.normal_mode["R"] = {
 -------------------------------------------------------------------------------
 -- key bindings (leader)
 -------------------------------------------------------------------------------
-lvim.builtin.which_key.mappings = {}
-lvim.builtin.which_key.vmappings = {}
-
--- auto-save
-lvim.builtin.which_key.mappings["as"] = { "<Cmd>ASToggle<CR>", "Toggle AutoSave" }
-
 -- buffers
 lvim.builtin.which_key.mappings["x"] = { "BDelete this<CR>", "Delete buffer" }
 
@@ -55,7 +42,6 @@ lvim.builtin.which_key.mappings["j"] = { "<Cmd>Telescope jumplist<CR>", "Jump li
 lvim.builtin.which_key.mappings["lu"] = { "<Cmd>Lazy update<CR>", "Lazy update" }
 
 -- LSP
-lvim.builtin.which_key.mappings["r"] = { "<Cmd>TroubleToggle lsp_references<CR>", "References" }
 lvim.builtin.which_key.mappings["lR"] = { "<Cmd>LspRestart<CR>", "Restart LSP" }
 
 -- marks
@@ -70,9 +56,6 @@ lvim.builtin.which_key.mappings["mq"] = { "<Cmd>MergetoolStop<CR>", "Stop" }
 
 -- nvim tree
 lvim.builtin.which_key.mappings["t"] = { "<Cmd>NvimTreeToggle<CR>", "NvimTree" }
-
--- quickfix
-lvim.builtin.which_key.mappings["lq"] = { "<Cmd>TroubleToggle quickfix<CR>", "Quick Fix" }
 
 -- search text
 lvim.builtin.which_key.mappings["b"] = { "<Cmd>Telescope current_buffer_fuzzy_find<CR>", "Fuzzy" }
