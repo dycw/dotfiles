@@ -24,7 +24,6 @@
 [fetch]
   prune = true
   pruneTags = true
-  recurseSubmodules = true
 
 [help]
   autoCorrect = 1
