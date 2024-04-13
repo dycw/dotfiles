@@ -36,13 +36,12 @@ if command -v git >/dev/null 2>&1; then
 	gcobr() { gbk "$1" && gcob "$1"; }
 	gcobrd() { gcobr dev; }
 	gcobt() { git checkout -b "$1" -t "origin/$1"; }
-	gcom() { git checkout master; }
-	gcomp() { gcom && gpl; }
-	gcompk() { gcomp && gbk "$1"; }
-	gcompkd() { gcompk dev; }
-	gcompr() { gcomp && gcor "$1"; }
-	gcomprd() { gcompr dev; }
-	alias gcop='git checkout --patch'
+	gcom() { git checkout master && git pull --force; }
+	gcomk() { gcom && gbk "$1"; }
+	gcomkd() { gcomkk dev; }
+	gcomr() { gcom && gcor "$1"; }
+	gcomrd() { gcompr dev; }
+	gcop() { git checkout --patch; }
 	# cherry-pick
 	alias gcp='git cherry-pick'
 	# clone
