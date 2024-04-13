@@ -59,6 +59,10 @@ if command -v git >/dev/null 2>&1; then
 				no_verify=1
 				shift
 				;;
+			-r)
+				reuse=1
+				shift
+				;;
 			-f)
 				force=1
 				shift
@@ -66,7 +70,10 @@ if command -v git >/dev/null 2>&1; then
 			*) break ;;
 			esac
 		done
-		if [ -n "${amend}" ]; then
+		if [ -n "${amend}" ] && [ -n "${reuse}" ]; then
+			echo "Expected at most one of --amend or --reuse; got both"
+		elif [ -n "${amend}" ] && [ -z "${reuse}" ]; then
+			# amend, not reuse
 			if [ -n "${force}" ]; then
 				if [ -n "${no_verify}" ] && [ $# -eq 0 ]; then
 					git commit -n --amend
@@ -77,13 +84,24 @@ if command -v git >/dev/null 2>&1; then
 				elif [ -z "${no_verify}" ] && [ $# -eq 1 ]; then
 					git commit -m "$1" --amend
 				else
-					echo "Expected 0 or 1 argument; got $#"
+					echo "Since --amend, expected at most 1 argument; got $#"
 				fi
 			else
-				echo "Expected --force; since --amend was given"
+				echo "Since --amend, expected --force"
 			fi
-			gpf
+		elif [ -z "${amend}" ] && [ -n "${reuse}" ]; then
+			# reuse, not amend
+			if [ $# -eq 0 ]; then
+				if [ -n "${no_verify}" ]; then
+					git commit -n --amend --no-edit
+				else
+					git commit --amend --no-edit
+				fi
+			else
+				echo "Since --reuse, expected no arguments; got $#"
+			fi
 		else
+			# not amend, not reuse
 			if [ -n "${no_verify}" ] && [ $# -eq 0 ]; then
 				git commit -n
 			elif [ -n "${no_verify}" ] && [ $# -eq 1 ]; then
@@ -93,7 +111,7 @@ if command -v git >/dev/null 2>&1; then
 			elif [ -z "${no_verify}" ] && [ $# -eq 1 ]; then
 				git commit -m "$1"
 			else
-				echo "Expected 0 or 1 argument; got $#"
+				echo "Basic case expected at most 1 argument; got $#"
 			fi
 			if [ -n "${force}" ]; then
 				gpf
