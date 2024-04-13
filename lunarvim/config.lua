@@ -16,18 +16,9 @@ lvim.keys.normal_mode["R"] = {
 -------------------------------------------------------------------------------
 -- key bindings (leader)
 -------------------------------------------------------------------------------
--- buffers
-lvim.builtin.which_key.mappings["x"] = { "BDelete this<CR>", "Delete buffer" }
-
--- commands
-lvim.builtin.which_key.vmappings["c"] = { "<Cmd>Telescope commands<CR>", "Commands" }
-
 -- iswap
 lvim.builtin.which_key.mappings["i"] = { "<Cmd>ISwap<CR>", "ISwap" }
 lvim.builtin.which_key.mappings["iw"] = { "<Cmd>ISwapWith<CR>", "ISwapWith" }
-
--- lazy
-lvim.builtin.which_key.mappings["lu"] = { "<Cmd>Lazy update<CR>", "Lazy update" }
 
 -- LSP
 lvim.builtin.which_key.mappings["lR"] = { "<Cmd>LspRestart<CR>", "Restart LSP" }
@@ -59,10 +50,3 @@ lvim.builtin.which_key.mappings["<Leader>sf"] =
 lvim.builtin.which_key.vmappings["<Leader>sp"] = { "<Esc><Cmd>lua require('spectre').open_visual()<CR>", "Spectre" }
 lvim.builtin.which_key.vmappings["<Leader>sf"] =
     { "<Esc><Cmd>lua require('spectre').open_file_search({select_word=true})<CR>", "Spectre (file)" }
-
--------------------------------------------------------------------------------
--- plugins
--------------------------------------------------------------------------------
-lvim.builtin.dap.active = false
-lvim.builtin.illuminate.active = false
-lvim.builtin.lir.active = false
