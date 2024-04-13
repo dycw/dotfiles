@@ -15,15 +15,6 @@ return {
             defaults = {
                 vimgrep_arguments = vimgrep_arguments,
             },
-            -- You can put your default mappings / updates / etc. in here
-            --  All the info you're looking for is in `:help telescope.setup()`
-            --
-            -- defaults = {
-            --   mappings = {
-            --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-            --   },
-            -- },
-            -- pickers = {}
             extensions = {
                 file_browser = {
                     hidden = { file_browser = true, folder_browser = true },
@@ -34,12 +25,6 @@ return {
             },
         })
 
-        -- Enable Telescope extensions if they are installed
-        pcall(require("telescope").load_extension, "fzf")
-        pcall(require("telescope").load_extension, "live_grep_args")
-        pcall(require("telescope").load_extension, "recent-files")
-        pcall(require("telescope").load_extension, "ui-select")
-
         -- See `:help telescope.builtin`
         local builtin = require("telescope.builtin")
         local keymap_set = require("utilities").keymap_set
@@ -47,25 +32,18 @@ return {
         keymap_set("n", "<Leader>dd", function()
             require("telescope.builtin").diagnostics({ bufnr = 0 })
         end, "Document diagnostics (Search)")
-        keymap_set("n", "<Leader>c", builtin.commands, "Commands")
-        keymap_set("n", "<Leader>wd", builtin.diagnostics, "Workspace diagnostics (Search)")
-        keymap_set("n", "<Leader>te", builtin.builtin, "Telescope")
-        keymap_set("n", "<Leader>ff", builtin.find_files, "Find Files")
-        keymap_set("n", "<Leader>gf", builtin.git_files, "Git Files")
-        keymap_set("n", "<Leader>gs", builtin.grep_string, "Grep String")
-        keymap_set("n", "<Leader>ht", builtin.help_tags, "Help Tags")
-        keymap_set("n", "<Leader>km", builtin.keymaps, "Keymaps")
-        keymap_set("n", "<Leader>lg", builtin.live_grep, "Live Grep")
-        keymap_set("n", "<Leader>of", builtin.oldfiles, "Old Files")
-
-        -- Slightly advanced example of overriding default behavior and theme
-        keymap_set("n", "<Leader>/", function()
-            -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-            builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-                winblend = 10,
-                previewer = false,
-            }))
-        end, "Current buffer fuzzy find")
+        keymap_set("n", "<Leader>c", builtin.commands, "[C]ommands")
+        keymap_set("n", "<Leader>ch", builtin.command_history, "Command [History]")
+        keymap_set("n", "<Leader>wd", builtin.diagnostics, "Workspace [D]iagnostics (Search)")
+        keymap_set("n", "<Leader>te", builtin.builtin, "T[e]lescope")
+        keymap_set("n", "<Leader>ff", builtin.find_files, "Find [F]iles")
+        keymap_set("n", "<Leader>gf", builtin.git_files, "Git [F]iles")
+        keymap_set("n", "<Leader>gs", builtin.grep_string, "Grep [S]tring")
+        keymap_set("n", "<Leader>ht", builtin.help_tags, "Help [T]ags")
+        keymap_set("n", "<Leader>km", builtin.keymaps, "Key[M]aps")
+        keymap_set("n", "<Leader>lg", builtin.live_grep, "Live [G]rep")
+        keymap_set("n", "<Leader>of", builtin.oldfiles, "Old [F]iles")
+        keymap_set("n", "<Leader>/", builtin.current_buffer_fuzzy_find, "Buffer fuzzy find")
 
         -- It's also possible to pass additional configuration options.
         --  See `:help telescope.builtin.live_grep()` for information about particular keys
@@ -97,8 +75,9 @@ return {
         end, "Recent [F]iles")
     end,
     dependencies = {
+        "mollerhoj/telescope-recent-files.nvim",
         "nvim-lua/plenary.nvim",
-        { "nvim-telescope/telescope-file-browser.nvim" },
+        "nvim-telescope/telescope-file-browser.nvim",
         {
             "nvim-telescope/telescope-fzf-native.nvim",
             build = "make",
@@ -110,8 +89,7 @@ return {
             "nvim-telescope/telescope-live-grep-args.nvim",
             version = "^1.0.0",
         },
-        { "mollerhoj/telescope-recent-files.nvim" },
-        { "nvim-telescope/telescope-ui-select.nvim" },
+        "nvim-telescope/telescope-ui-select.nvim",
         { "nvim-tree/nvim-web-devicons", enabled = v.g.have_nerd_font },
     },
     event = "VimEnter",
