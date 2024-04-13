@@ -15,28 +15,38 @@ if command -v git >/dev/null 2>&1; then
 	# branch
 	alias gb='git branch'
 	alias gba='git branch -a'
-	alias gbd='git branch -d'
-	alias gbdd='git branch -D'
-	# checkout
-	alias gco='git checkout'
-	alias gcob='git checkout -b'
-	alias gcobd='git checkout -b dev'
-	gcobt() {
-		if [ $# -eq 1 ]; then
-			git checkout -b "$1" -t "origin/$1"
+	gbd() { git branch -d "$1"; }
+	gbexists() {
+		if git rev-parse --verify "$1" >/dev/null 2>&1; then
+			true
 		else
-			echo "Expected exactly 1 argument; got $#"
+			false
 		fi
 	}
-	alias gcom='git checkout master'
-	alias gcomp='git checkout master && git pull --force'
-	alias gcompd='git checkout master && git pull --force && git branch -D dev'
-	alias gcompr='git checkout master && git pull --force && git branch -D dev && git checkout -b dev'
+	gbk() {
+		if gbexists "$1"; then
+			git branch -D "$1"
+		fi
+	}
+	gbkd() { gbk dev; }
+	# checkout
+	alias gco='git checkout'
+	gcob() { git checkout -b "$1"; }
+	gcobd() { gcob dev; }
+	gcobr() { gbk "$1" && gcob "$1"; }
+	gcobrd() { gcobr dev; }
+	gcobt() { git checkout -b "$1" -t "origin/$1"; }
+	gcom() { git checkout master; }
+	gcomp() { gcom && gpl; }
+	gcompk() { gcomp && gbk "$1"; }
+	gcompkd() { gcompk dev; }
+	gcompr() { gcomp && gcor "$1"; }
+	gcomprd() { gcompr dev; }
 	alias gcop='git checkout --patch'
 	# cherry-pick
 	alias gcp='git cherry-pick'
 	# clone
-	alias gcl='git clone'
+	gcl() { git clone --recurse-submodules "$@"; }
 	# commit + push
 	__git_commit() {
 		while test $# != 0; do
@@ -110,7 +120,7 @@ if command -v git >/dev/null 2>&1; then
 	# mv
 	alias gmv='git mv'
 	# pull
-	alias gpl='git pull --force'
+	gpl() { git pull --force; }
 	# push
 	gp() { git push -u origin "$(gcurr)"; }
 	gpf() { git push -fu origin "$(gcurr)"; }
