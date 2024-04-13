@@ -3,7 +3,7 @@ return {
     config = function()
         require("Comment").setup({
             toggler = {
-                line = "<Leader>cc",
+                line = "<Leader>c",
                 block = "<Leader>cb",
             },
             opleader = {

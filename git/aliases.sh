@@ -6,12 +6,13 @@ if command -v git >/dev/null 2>&1; then
 	gaa() { git add -A; }
 	alias gap='git add -p'
 	# add + commit + push
-	gac() { gaa && __git_commit "$@"; }
-	gaca() { gaa && __git_commit -a -f "$@"; }
-	gacan() { gaa && __git_commit -a -n -f "$@"; }
-	gacf() { gaa && __git_commit -f "$@"; }
-	gacn() { gaa && __git_commit -n "$@"; }
-	gacnf() { gaa && __git_commit -n -f "$@"; }
+	gac() { gaa && gc "$@"; }
+	gaca() { gaa && gca "$@"; }
+	gacan() { gaa && gcan "$@"; }
+	gacf() { gaa && gcaf "$@"; }
+	gacn() { gaa && gcn "$@"; }
+	gacnf() { gaa && gcnf "$@"; }
+	gacr() { gaa && gcr "$@"; }
 	# branch
 	alias gb='git branch'
 	alias gba='git branch -a'
@@ -59,6 +60,10 @@ if command -v git >/dev/null 2>&1; then
 				no_verify=1
 				shift
 				;;
+			-r)
+				reuse=1
+				shift
+				;;
 			-f)
 				force=1
 				shift
@@ -66,7 +71,10 @@ if command -v git >/dev/null 2>&1; then
 			*) break ;;
 			esac
 		done
-		if [ -n "${amend}" ]; then
+		if [ -n "${amend}" ] && [ -n "${reuse}" ]; then
+			echo "Expected at most one of --amend or --reuse; got both"
+		elif [ -n "${amend}" ] && [ -z "${reuse}" ]; then
+			# amend, not reuse
 			if [ -n "${force}" ]; then
 				if [ -n "${no_verify}" ] && [ $# -eq 0 ]; then
 					git commit -n --amend
@@ -77,13 +85,28 @@ if command -v git >/dev/null 2>&1; then
 				elif [ -z "${no_verify}" ] && [ $# -eq 1 ]; then
 					git commit -m "$1" --amend
 				else
-					echo "Expected 0 or 1 argument; got $#"
+					echo "Since --amend, expected at most 1 argument; got $#"
 				fi
+				gpf
 			else
-				echo "Expected --force; since --amend was given"
+				echo "Since --amend, expected --force"
 			fi
-			gpf
+		elif [ -z "${amend}" ] && [ -n "${reuse}" ]; then
+			# reuse, not amend
+			if [ $# -ge 1 ]; then
+				echo "Since --reuse, expected no arguments; got $#"
+			elif [ -z "${force}" ]; then
+				echo "Since --reuse, expected --force"
+			else
+				if [ -n "${no_verify}" ]; then
+					git commit -n --amend --no-edit
+				else
+					git commit --amend --no-edit
+				fi
+				gpf
+			fi
 		else
+			# not amend, not reuse
 			if [ -n "${no_verify}" ] && [ $# -eq 0 ]; then
 				git commit -n
 			elif [ -n "${no_verify}" ] && [ $# -eq 1 ]; then
@@ -93,7 +116,7 @@ if command -v git >/dev/null 2>&1; then
 			elif [ -z "${no_verify}" ] && [ $# -eq 1 ]; then
 				git commit -m "$1"
 			else
-				echo "Expected 0 or 1 argument; got $#"
+				echo "Basic case expected at most 1 argument; got $#"
 			fi
 			if [ -n "${force}" ]; then
 				gpf
@@ -108,6 +131,7 @@ if command -v git >/dev/null 2>&1; then
 	gcf() { __git_commit -f "$@"; }
 	gcn() { __git_commit -n "$@"; }
 	gcnf() { __git_commit -n -f "$@"; }
+	gcr() { __git_commit -r -f; }
 	# diff
 	alias gd='git diff'
 	alias gdc='git diff --cached'
@@ -166,13 +190,15 @@ if command -v git >/dev/null 2>&1; then
 		gacfw() { gacf "$@" && gitweb; }
 		gacnw() { gacn "$@" && gitweb; }
 		gacnfw() { gacnf "$@" && gitweb; }
+		gacrw() { gacr "$@" && gitweb; }
 		# commit + push
-		gcw() { __git_commit "$@" && gitweb; }
-		gcaw() { __git_commit -a -f "$@" && gitweb; }
-		gcanw() { __git_commit -a -n -f "$@" && gitweb; }
-		gcfw() { __git_commit -f "$@" && gitweb; }
-		gcnw() { __git_commit -n "$@" && gitweb; }
-		gcnfw() { __git_commit -n -f "$@" && gitweb; }
+		gcw() { gc "$@" && gitweb; }
+		gcaw() { gca "$@" && gitweb; }
+		gcanw() { gcan "$@" && gitweb; }
+		gcfw() { gcf "$@" && gitweb; }
+		gcnw() { gcn "$@" && gitweb; }
+		gcnfw() { gcnf "$@" && gitweb; }
+		gcrw() { gc "$@" && gitweb; }
 	fi
 	# push
 	alias gpw='gp && gitweb'
