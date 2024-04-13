@@ -171,6 +171,10 @@
     "branch": "main",
     "commit": "798cd0592a81c185465db3a091a0ff8a21af60fd"
   },
+  "nvim-pasta": {
+    "branch": "main",
+    "commit": "fb0f9a7f214d9b21131b44c8ce2504dbd30f66bd"
+  },
   "nvim-spectre": {
     "branch": "master",
     "commit": "2b012554a2536465243c0dff3605b5927c49ed23"
