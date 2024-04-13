@@ -3,5 +3,5 @@
 # env
 __file="${HOME}/dotfiles/shell/env.sh"
 if [ -f "${__file}" ]; then
-  . "${__file}"
+	. "${__file}"
 fi

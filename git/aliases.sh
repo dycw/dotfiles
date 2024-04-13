@@ -6,12 +6,12 @@ if command -v git >/dev/null 2>&1; then
 	gaa() { git add -A; }
 	alias gap='git add -p'
 	# add + commit + push
-	gac() { gaa &&  __git_commit "$@"; }
-	gaca() { gaa &&  __git_commit -a -f "$@"; }
-	gacan() { gaa &&  __git_commit -a -n -f "$@"; }
-	gacf() { gaa &&  __git_commit -f "$@"; }
-	gacn() { gaa &&  __git_commit -n "$@"; }
-	gacnf() { gaa &&  __git_commit -n -f "$@"; }
+	gac() { gaa && __git_commit "$@"; }
+	gaca() { gaa && __git_commit -a -f "$@"; }
+	gacan() { gaa && __git_commit -a -n -f "$@"; }
+	gacf() { gaa && __git_commit -f "$@"; }
+	gacn() { gaa && __git_commit -n "$@"; }
+	gacnf() { gaa && __git_commit -n -f "$@"; }
 	# branch
 	alias gb='git branch'
 	alias gba='git branch -a'
@@ -185,12 +185,12 @@ if command -v git >/dev/null 2>&1; then
 			fi
 		}
 		# commit + push
-	gcw() { __git_commit "$@" && gitweb; }
-	gcaw() { __git_commit -a -f "$@" && gitweb; }
-	gcanw() { __git_commit -a -n -f "$@" && gitweb; }
-	gcfw() { __git_commit -f "$@" && gitweb; }
-	gcnw() { __git_commit -n "$@" && gitweb; }
-	gcnfw() { __git_commit -n -f "$@" && gitweb; }
+		gcw() { __git_commit "$@" && gitweb; }
+		gcaw() { __git_commit -a -f "$@" && gitweb; }
+		gcanw() { __git_commit -a -n -f "$@" && gitweb; }
+		gcfw() { __git_commit -f "$@" && gitweb; }
+		gcnw() { __git_commit -n "$@" && gitweb; }
+		gcnfw() { __git_commit -n -f "$@" && gitweb; }
 	fi
 	# push
 	alias gpw='gp && gitweb'
