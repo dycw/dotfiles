@@ -19,4 +19,5 @@ return {
         { "nvim-telescope/telescope.nvim" },
         { "kkharji/sqlite.lua", module = "sqlite" },
     },
+    event = "VeryLazy",
 }

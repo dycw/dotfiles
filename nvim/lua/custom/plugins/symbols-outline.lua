@@ -1,9 +1,10 @@
 return {
     "simrat39/symbols-outline.nvim",
     config = function()
-        require("symbols-outline").setup()
+        local symbols_outline = require("symbols-outline")
+        symbols_outline.setup()
         require("utilities").keymap_set("n", "<Leader>ls", function()
-            require("symbols-outline").toggle_outline()
+            symbols_outline.toggle_outline()
         end, "Document [S]ymbols (list)")
     end,
     event = "VeryLazy",

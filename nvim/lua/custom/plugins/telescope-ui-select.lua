@@ -5,4 +5,5 @@ return {
         require("telescope.themes").get_dropdown({})
     end,
     dependencies = "nvim-telescope/telescope.nvim",
+    event = "VeryLazy",
 }
