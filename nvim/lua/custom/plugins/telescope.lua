@@ -1,4 +1,4 @@
--- luacheck: push ignore vim
+-- luacheck: push ignore
 local v = vim
 -- luacheck: pop
 local fn = v.fn
@@ -14,22 +14,6 @@ return {
         require("telescope").setup({
             defaults = {
                 vimgrep_arguments = vimgrep_arguments,
-            },
-            extensions = {
-                file_browser = {
-                    hidden = { file_browser = true, folder_browser = true },
-                },
-                project = {
-                    base_dirs = {
-                        { "~/dotfiles", max_depth = 1 },
-                        { "~/work", max_depth = 1 },
-                    },
-                    hidden_files = true,
-                    sync_with_nvim_tree = true,
-                },
-                ["ui-select"] = {
-                    require("telescope.themes").get_dropdown(),
-                },
             },
         })
 
@@ -66,44 +50,9 @@ return {
         keymap_set("n", "<Leader>sN", function()
             builtin.find_files({ cwd = fn.stdpath("config") })
         end, "Search [N]eovim files")
-
-        -- Extension: File Browser
-        keymap_set("n", "<Leader>fb", function()
-            require("telescope").extensions.file_browser.file_browser()
-        end, "File [B]rowser")
-
-        -- Extension: Live Grep args
-        keymap_set("n", "<Leader>lG", function()
-            require("telescope").extensions.live_grep_args.live_grep_args()
-        end, "Live [G]rep (args)")
-
-        -- Extension: Project
-        keymap_set("n", "<Leader>pr", function()
-            require("telescope").extensions.project.project()
-        end, "P[r]oject")
-
-        -- Extension: Recent Files
-        keymap_set("n", "<Leader>rf", function()
-            require("telescope").extensions["recent-files"].recent_files({})
-        end, "Recent [F]iles")
     end,
     dependencies = {
-        "mollerhoj/telescope-recent-files.nvim",
         "nvim-lua/plenary.nvim",
-        "nvim-telescope/telescope-file-browser.nvim",
-        {
-            "nvim-telescope/telescope-fzf-native.nvim",
-            build = "make",
-            cond = function()
-                return fn.executable("make") == 1
-            end,
-        },
-        {
-            "nvim-telescope/telescope-live-grep-args.nvim",
-            version = "^1.0.0",
-        },
-        "nvim-telescope/telescope-project.nvim",
-        "nvim-telescope/telescope-ui-select.nvim",
         { "nvim-tree/nvim-web-devicons", enabled = v.g.have_nerd_font },
     },
     event = "VimEnter",
