@@ -28,9 +28,6 @@ return {
                 file_browser = {
                     hidden = { file_browser = true, folder_browser = true },
                 },
-                live_grep_args = {
-                    require("telescope").load_extension("live_grep_args"),
-                },
                 ["ui-select"] = {
                     require("telescope.themes").get_dropdown(),
                 },
@@ -39,6 +36,8 @@ return {
 
         -- Enable Telescope extensions if they are installed
         pcall(require("telescope").load_extension, "fzf")
+        pcall(require("telescope").load_extension, "live_grep_args")
+        pcall(require("telescope").load_extension, "recent-files")
         pcall(require("telescope").load_extension, "ui-select")
 
         -- See `:help telescope.builtin`
@@ -80,7 +79,7 @@ return {
         -- Shortcut for searching your Neovim configuration files
         keymap_set("n", "<Leader>sN", function()
             builtin.find_files({ cwd = fn.stdpath("config") })
-        end, "Search Neovim files")
+        end, "Search [N]eovim files")
 
         -- Extension: File Browser
         keymap_set("n", "<Leader>fb", function()
@@ -90,7 +89,12 @@ return {
         -- Extension: Live Grep args
         keymap_set("n", "<Leader>lG", function()
             require("telescope").extensions.live_grep_args.live_grep_args()
-        end, "Live Grep (args)")
+        end, "Live [G]rep (args)")
+
+        -- Extension: File Browser
+        keymap_set("n", "<Leader>rf", function()
+            require("telescope").extensions["recent-files"].recent_files({})
+        end, "Recent [F]iles")
     end,
     dependencies = {
         "nvim-lua/plenary.nvim",
@@ -106,6 +110,7 @@ return {
             "nvim-telescope/telescope-live-grep-args.nvim",
             version = "^1.0.0",
         },
+        { "mollerhoj/telescope-recent-files.nvim" },
         { "nvim-telescope/telescope-ui-select.nvim" },
         { "nvim-tree/nvim-web-devicons", enabled = v.g.have_nerd_font },
     },
