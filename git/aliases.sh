@@ -59,11 +59,11 @@ if command -v git >/dev/null 2>&1; then
 		if [ -n "${amend}" ]; then
 			if [ -n "${force}" ]; then
 				if [ -n "${no_verify}" ] && [ $# -eq 0 ]; then
-					git commit -n --amend --no-edit
+					git commit -n --amend
 				elif [ -n "${no_verify}" ] && [ $# -eq 1 ]; then
 					git commit -nm "$1" --amend
 				elif [ -z "${no_verify}" ] && [ $# -eq 0 ]; then
-					git commit --amend --no-edit
+					git commit --amend
 				elif [ -z "${no_verify}" ] && [ $# -eq 1 ]; then
 					git commit -m "$1" --amend
 				else
