@@ -219,6 +219,10 @@
     "branch": "master",
     "commit": "20656efd7a0dbb4483290649c9671af14b0cfb0d"
   },
+  "telescope-recent-files.nvim": {
+    "branch": "main",
+    "commit": "9f8cb7d22b999346ce819390e75a509e4048f4de"
+  },
   "telescope-ui-select.nvim": {
     "branch": "master",
     "commit": "6e51d7da30bd139a6950adf2a47fda6df9fa06d2"
