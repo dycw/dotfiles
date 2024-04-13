@@ -38,9 +38,9 @@ if command -v git >/dev/null 2>&1; then
 	gcobt() { git checkout -b "$1" -t "origin/$1"; }
 	gcom() { git checkout master && git pull --force; }
 	gcomk() { gcom && gbk "$1"; }
-	gcomkd() { gcomkk dev; }
-	gcomr() { gcom && gcor "$1"; }
-	gcomrd() { gcompr dev; }
+	gcomkd() { gcomk dev; }
+	gcomr() { gcom && gcobr "$1"; }
+	gcomrd() { gcomr dev; }
 	gcop() { git checkout --patch; }
 	# cherry-pick
 	alias gcp='git cherry-pick'
