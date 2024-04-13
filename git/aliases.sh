@@ -6,12 +6,13 @@ if command -v git >/dev/null 2>&1; then
 	gaa() { git add -A; }
 	alias gap='git add -p'
 	# add + commit + push
-	gac() { gaa && __git_commit "$@"; }
-	gaca() { gaa && __git_commit -a -f "$@"; }
-	gacan() { gaa && __git_commit -a -n -f "$@"; }
-	gacf() { gaa && __git_commit -f "$@"; }
-	gacn() { gaa && __git_commit -n "$@"; }
-	gacnf() { gaa && __git_commit -n -f "$@"; }
+	gac() { gaa && gc "$@"; }
+	gaca() { gaa && gca "$@"; }
+	gacan() { gaa && gcan "$@"; }
+	gacf() { gaa && gcaf "$@"; }
+	gacn() { gaa && gcn "$@"; }
+	gacnf() { gaa && gcnf "$@"; }
+	gacr() { gaa && gcr "$@"; }
 	# branch
 	alias gb='git branch'
 	alias gba='git branch -a'
@@ -86,19 +87,23 @@ if command -v git >/dev/null 2>&1; then
 				else
 					echo "Since --amend, expected at most 1 argument; got $#"
 				fi
+				gpf
 			else
 				echo "Since --amend, expected --force"
 			fi
 		elif [ -z "${amend}" ] && [ -n "${reuse}" ]; then
 			# reuse, not amend
-			if [ $# -eq 0 ]; then
+			if [ $# -ge 1 ]; then
+				echo "Since --reuse, expected no arguments; got $#"
+			elif [ -z "${force}" ]; then
+				echo "Since --reuse, expected --force"
+			else
 				if [ -n "${no_verify}" ]; then
 					git commit -n --amend --no-edit
 				else
 					git commit --amend --no-edit
 				fi
-			else
-				echo "Since --reuse, expected no arguments; got $#"
+				gpf
 			fi
 		else
 			# not amend, not reuse
@@ -126,6 +131,7 @@ if command -v git >/dev/null 2>&1; then
 	gcf() { __git_commit -f "$@"; }
 	gcn() { __git_commit -n "$@"; }
 	gcnf() { __git_commit -n -f "$@"; }
+	gcr() { __git_commit -r -f; }
 	# diff
 	alias gd='git diff'
 	alias gdc='git diff --cached'
@@ -184,13 +190,15 @@ if command -v git >/dev/null 2>&1; then
 		gacfw() { gacf "$@" && gitweb; }
 		gacnw() { gacn "$@" && gitweb; }
 		gacnfw() { gacnf "$@" && gitweb; }
+		gacrw() { gacr "$@" && gitweb; }
 		# commit + push
-		gcw() { __git_commit "$@" && gitweb; }
-		gcaw() { __git_commit -a -f "$@" && gitweb; }
-		gcanw() { __git_commit -a -n -f "$@" && gitweb; }
-		gcfw() { __git_commit -f "$@" && gitweb; }
-		gcnw() { __git_commit -n "$@" && gitweb; }
-		gcnfw() { __git_commit -n -f "$@" && gitweb; }
+		gcw() { gc "$@" && gitweb; }
+		gcaw() { gca "$@" && gitweb; }
+		gcanw() { gcan "$@" && gitweb; }
+		gcfw() { gcf "$@" && gitweb; }
+		gcnw() { gcn "$@" && gitweb; }
+		gcnfw() { gcnf "$@" && gitweb; }
+		gcrw() { gc "$@" && gitweb; }
 	fi
 	# push
 	alias gpw='gp && gitweb'
