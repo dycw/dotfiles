@@ -6,42 +6,12 @@ if command -v git >/dev/null 2>&1; then
 	gaa() { git add -A; }
 	alias gap='git add -p'
 	# add + commit + push
-	gac() {
-		if [ $# -le 1 ]; then
-			gaa && gc "$@" && gp
-		else
-			echo "Expected 0 or 1 argument; got $#"
-		fi
-	}
-	alias gaca='gaa && git commit --amend --no-edit && gpf'
-	alias gacan='gaa && git commit -n --amend --no-edit && gpf'
-	gacf() {
-		if [ $# -eq 0 ]; then
-			gaa && git commit && gpf
-		elif [ $# -eq 1 ]; then
-			gaa && git commit -m "$1" && gpf
-		else
-			echo "Expected 0 or 1 argument; got $#"
-		fi
-	}
-	gacn() {
-		if [ $# -eq 0 ]; then
-			gaa && git commit -n && gp
-		elif [ $# -eq 1 ]; then
-			gaa && git commit -nm "$1" && gp
-		else
-			echo "Expected 0 or 1 argument; got $#"
-		fi
-	}
-	gacnf() {
-		if [ $# -eq 0 ]; then
-			gaa && git commit -n && gpf
-		elif [ $# -eq 1 ]; then
-			gaa && git commit -nm "$1" && gpf
-		else
-			echo "Expected 0 or 1 argument; got $#"
-		fi
-	}
+	gac() { gaa &&  __git_commit "$@"; }
+	gaca() { gaa &&  __git_commit -a -f "$@"; }
+	gacan() { gaa &&  __git_commit -a -n -f "$@"; }
+	gacf() { gaa &&  __git_commit -f "$@"; }
+	gacn() { gaa &&  __git_commit -n "$@"; }
+	gacnf() { gaa &&  __git_commit -n -f "$@"; }
 	# branch
 	alias gb='git branch'
 	alias gba='git branch -a'
@@ -67,57 +37,67 @@ if command -v git >/dev/null 2>&1; then
 	alias gcp='git cherry-pick'
 	# clone
 	alias gcl='git clone'
-	# commit
-	gc() {
-		if [ $# -eq 0 ]; then
-			git commit && gp
-		elif [ $# -eq 1 ]; then
-			git commit -m "$1" && gp
+	# commit + push
+	__git_commit() {
+		while test $# != 0; do
+			case "$1" in
+			-a)
+				amend=1
+				shift
+				;;
+			-n)
+				no_verify=1
+				shift
+				;;
+			-f)
+				force=1
+				shift
+				;;
+			*) break ;;
+			esac
+		done
+		if [ -n "${amend}" ]; then
+			if [ -n "${force}" ]; then
+				if [ -n "${no_verify}" ] && [ $# -eq 0 ]; then
+					git commit -n --amend
+				elif [ -n "${no_verify}" ] && [ $# -eq 1 ]; then
+					git commit -nm "$1" --amend --no-edit
+				elif [ -z "${no_verify}" ] && [ $# -eq 0 ]; then
+					git commit --amend
+				elif [ -z "${no_verify}" ] && [ $# -eq 1 ]; then
+					git commit -m "$1" --amend --no-edit
+				else
+					echo "Expected 0 or 1 argument; got $#"
+				fi
+			else
+				echo "Expected --force; since --amend was given"
+			fi
+			gpf
 		else
-			echo "Expected 0 or 1 argument; got $#"
+			if [ -n "${no_verify}" ] && [ $# -eq 0 ]; then
+				git commit -n
+			elif [ -n "${no_verify}" ] && [ $# -eq 1 ]; then
+				git commit -nm "$1"
+			elif [ -z "${no_verify}" ] && [ $# -eq 0 ]; then
+				git commit
+			elif [ -z "${no_verify}" ] && [ $# -eq 1 ]; then
+				git commit -m "$1"
+			else
+				echo "Expected 0 or 1 argument; got $#"
+			fi
+			if [ -n "${force}" ]; then
+				gpf
+			else
+				gp
+			fi
 		fi
 	}
-	gca() {
-		if [ $# -eq 1 ]; then
-			git commit -m "$1" --amend && gpf
-		else
-			echo "Expected exactly 1 argument; got $#"
-		fi
-	}
-	gcan() {
-		if [ $# -eq 1 ]; then
-			git commit -nm "$1" --amend && gpf
-		else
-			echo "Expected exactly 1 argument; got $#"
-		fi
-	}
-	gcf() {
-		if [ $# -eq 0 ]; then
-			git commit && gpf
-		elif [ $# -eq 1 ]; then
-			git commit -m "$1" && gpf
-		else
-			echo "Expected 0 or 1 argument; got $#"
-		fi
-	}
-	gcn() {
-		if [ $# -eq 0 ]; then
-			git commit -n && gp
-		elif [ $# -eq 1 ]; then
-			git commit -nm "$1" && gp
-		else
-			echo "Expected 0 or 1 argument; got $#"
-		fi
-	}
-	gcnf() {
-		if [ $# -eq 0 ]; then
-			git commit -n && gpf
-		elif [ $# -eq 1 ]; then
-			git commit -nm "$1" && gpf
-		else
-			echo "Expected 0 or 1 argument; got $#"
-		fi
-	}
+	gc() { __git_commit "$@"; }
+	gca() { __git_commit -a -f "$@"; }
+	gcan() { __git_commit -a -n -f "$@"; }
+	gcf() { __git_commit -f "$@"; }
+	gcn() { __git_commit -n "$@"; }
+	gcnf() { __git_commit -n -f "$@"; }
 	# diff
 	alias gd='git diff'
 	alias gdc='git diff --cached'
@@ -133,7 +113,7 @@ if command -v git >/dev/null 2>&1; then
 	alias gpl='git pull --force'
 	# push
 	gp() { git push -u origin "$(gcurr)"; }
-	gpf() { gp -f; }
+	gpf() { git push -fu origin "$(gcurr)"; }
 	# rebase
 	alias grb='__git_fetch && git rebase'
 	alias grbi='__git_fetch && git rebase -i'
@@ -204,6 +184,13 @@ if command -v git >/dev/null 2>&1; then
 				echo "Expected 0 or 1 argument; got $#"
 			fi
 		}
+		# commit + push
+	gcw() { __git_commit "$@" && gitweb; }
+	gcaw() { __git_commit -a -f "$@" && gitweb; }
+	gcanw() { __git_commit -a -n -f "$@" && gitweb; }
+	gcfw() { __git_commit -f "$@" && gitweb; }
+	gcnw() { __git_commit -n "$@" && gitweb; }
+	gcnfw() { __git_commit -n -f "$@" && gitweb; }
 	fi
 	# push
 	alias gpw='gp && gitweb'
