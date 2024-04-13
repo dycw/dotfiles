@@ -1,10 +1,10 @@
 return {
     "vonheikemen/fine-cmdline.nvim",
     config = function()
+        local fine_cmdline = require("fine-cmdline")
         local keymap_set = require("utilities").keymap_set
-        keymap_set({ "n", "v" }, ":", "<Cmd>FineCmdline<CR>", "Command")
-        keymap_set({ "n", "v" }, ";", "<Cmd>FineCmdline<CR>", "Command")
-        require("fine-cmdline").setup({
+
+        fine_cmdline.setup({
             cmdline = { prompt = " " },
             popup = {
                 relative = "editor",
@@ -14,6 +14,14 @@ return {
                 },
             },
         })
+
+        keymap_set({ "n", "v" }, ":", function()
+            fine_cmdline.open()
+        end, "Command")
+        keymap_set({ "n", "v" }, ";", function()
+            fine_cmdline.open()
+        end, "Command")
     end,
     dependencies = { "muniftanjim/nui.nvim" },
+    event = "VeryLazy",
 }

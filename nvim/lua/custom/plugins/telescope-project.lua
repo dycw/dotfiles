@@ -16,8 +16,9 @@ return {
         })
         telescope.load_extension("recent-files")
         require("utilities").keymap_set("n", "<Leader>pr", function()
-            require("telescope").extensions.project.project()
+            telescope.extensions.project.project()
         end, "P[r]oject")
     end,
     dependencies = "nvim-telescope/telescope.nvim",
+    event = "VeryLazy",
 }

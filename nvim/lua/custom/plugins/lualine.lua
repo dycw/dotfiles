@@ -4,4 +4,5 @@ return {
         require("lualine").setup({})
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "VeryLazy",
 }
