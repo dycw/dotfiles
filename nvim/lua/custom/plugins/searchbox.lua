@@ -16,5 +16,4 @@ return {
         })
     end,
     dependencies = { "muniftanjim/nui.nvim" },
-    event = "VeryLazy",
 }

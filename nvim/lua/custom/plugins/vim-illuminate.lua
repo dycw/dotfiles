@@ -3,5 +3,4 @@ return {
     config = function()
         require("illuminate").configure()
     end,
-    event = "VeryLazy",
 }

@@ -1,4 +1,4 @@
--- luacheck: push ignore vim
+-- luacheck: push ignore
 local v = vim
 -- luacheck: pop
 local api = v.api

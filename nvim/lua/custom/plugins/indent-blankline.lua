@@ -1,4 +1,4 @@
--- luacheck: push ignore vim
+-- luacheck: push ignore
 local v = vim
 -- luacheck: pop
 local nvim_set_hl = v.api.nvim_set_hl
@@ -36,6 +36,5 @@ return {
     dependencies = {
         "https://gitlab.com/hiphish/rainbow-delimiters.nvim",
     },
-    event = "VeryLazy",
     main = "ibl",
 }

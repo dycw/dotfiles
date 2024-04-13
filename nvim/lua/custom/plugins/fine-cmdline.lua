@@ -23,5 +23,4 @@ return {
         end, "Command")
     end,
     dependencies = { "muniftanjim/nui.nvim" },
-    event = "VeryLazy",
 }

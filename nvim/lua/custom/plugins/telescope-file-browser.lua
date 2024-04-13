@@ -15,5 +15,4 @@ return {
         end, "File [B]rowser")
     end,
     dependencies = "nvim-telescope/telescope.nvim",
-    event = "VeryLazy",
 }

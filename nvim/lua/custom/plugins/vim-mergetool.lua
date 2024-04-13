@@ -1,4 +1,4 @@
--- luacheck: push ignore vim
+-- luacheck: push ignore
 local g = vim.g
 -- luacheck: pop
 
@@ -8,5 +8,4 @@ return {
         g.mergetool_layout = "rml,b"
         g.mergetool_prefer_revision = "unmodified"
     end,
-    event = "VeryLazy",
 }

@@ -8,5 +8,4 @@ return {
         end, "Live [G]rep (args)")
     end,
     dependencies = "nvim-telescope/telescope.nvim",
-    event = "VeryLazy",
 }

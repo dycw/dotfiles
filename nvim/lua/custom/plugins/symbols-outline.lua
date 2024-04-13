@@ -7,5 +7,4 @@ return {
             symbols_outline.toggle_outline()
         end, "Document [S]ymbols (list)")
     end,
-    event = "VeryLazy",
 }

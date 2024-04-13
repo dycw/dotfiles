@@ -4,5 +4,4 @@ return {
         require("wildfire").setup()
     end,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
-    event = "VeryLazy",
 }

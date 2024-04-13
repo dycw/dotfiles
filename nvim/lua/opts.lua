@@ -1,4 +1,4 @@
--- luacheck: push ignore vim
+-- luacheck: push ignore
 local opt = vim.opt
 -- luacheck: pop
 

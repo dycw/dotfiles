@@ -5,5 +5,4 @@ return {
             mapping = { "jj", "jk", "kj", "kk" },
         })
     end,
-    event = "VeryLazy",
 }

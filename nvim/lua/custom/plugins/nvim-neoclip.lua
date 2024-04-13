@@ -11,13 +11,12 @@ return {
                 },
             },
         })
-        require("utilities").keymap_set("n", "<Leader>p", function()
+        require("utilities").keymap_set("n", "<Leader>nc", function()
             require("telescope").extensions.neoclip.neoclip()
-        end, "Neoclip")
+        end, "Neo[C]lip")
     end,
     dependencies = {
         { "nvim-telescope/telescope.nvim" },
         { "kkharji/sqlite.lua", module = "sqlite" },
     },
-    event = "VeryLazy",
 }

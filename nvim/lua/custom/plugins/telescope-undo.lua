@@ -8,5 +8,4 @@ return {
         end, "Undo [H]istory")
     end,
     dependencies = "nvim-telescope/telescope.nvim",
-    event = "VeryLazy",
 }
