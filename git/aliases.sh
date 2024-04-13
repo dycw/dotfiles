@@ -59,13 +59,13 @@ if command -v git >/dev/null 2>&1; then
 		if [ -n "${amend}" ]; then
 			if [ -n "${force}" ]; then
 				if [ -n "${no_verify}" ] && [ $# -eq 0 ]; then
-					git commit -n --amend
+					git commit -n --amend --no-edit
 				elif [ -n "${no_verify}" ] && [ $# -eq 1 ]; then
-					git commit -nm "$1" --amend --no-edit
+					git commit -nm "$1" --amend
 				elif [ -z "${no_verify}" ] && [ $# -eq 0 ]; then
-					git commit --amend
+					git commit --amend --no-edit
 				elif [ -z "${no_verify}" ] && [ $# -eq 1 ]; then
-					git commit -m "$1" --amend --no-edit
+					git commit -m "$1" --amend
 				else
 					echo "Expected 0 or 1 argument; got $#"
 				fi
@@ -146,44 +146,12 @@ if command -v git >/dev/null 2>&1; then
 	if command -v gitweb >/dev/null 2>&1; then
 		alias gw='gitweb'
 		# add + commit + push
-		alias gacaw='gaa && git commit --amend --no-edit && gpf && gitweb'
-		alias gacanw='gaa && git commit -n --amend --no-edit && gpf && gitweb'
-		gacw() {
-			if [ $# -eq 0 ]; then
-				gaa && git commit && gp && gitweb
-			elif [ $# -eq 1 ]; then
-				gaa && git commit -m "$1" && gp && gitweb
-			else
-				echo "Expected 0 or 1 argument; got $#"
-			fi
-		}
-		gacfw() {
-			if [ $# -eq 0 ]; then
-				gaa && git commit && gpf && gitweb
-			elif [ $# -eq 1 ]; then
-				gaa && git commit -m "$1" && gpf && gitweb
-			else
-				echo "Expected 0 or 1 argument; got $#"
-			fi
-		}
-		gacnw() {
-			if [ $# -eq 0 ]; then
-				gaa && git commit -n && gp && gitweb
-			elif [ $# -eq 1 ]; then
-				gaa && git commit -nm "$1" && gp && gitweb
-			else
-				echo "Expected 0 or 1 argument; got $#"
-			fi
-		}
-		gacnfw() {
-			if [ $# -eq 0 ]; then
-				gaa && git commit -n && gpf && gitweb
-			elif [ $# -eq 1 ]; then
-				gaa && git commit -nm "$1" && gpf && gitweb
-			else
-				echo "Expected 0 or 1 argument; got $#"
-			fi
-		}
+		gacw() { gac "$@" && gitweb; }
+		gacaw() { gaca "$@" && gitweb; }
+		gacanw() { gacan "$@" && gitweb; }
+		gacfw() { gacf "$@" && gitweb; }
+		gacnw() { gacn "$@" && gitweb; }
+		gacnfw() { gacnf "$@" && gitweb; }
 		# commit + push
 		gcw() { __git_commit "$@" && gitweb; }
 		gcaw() { __git_commit -a -f "$@" && gitweb; }
