@@ -153,7 +153,7 @@ if command -v git >/dev/null 2>&1; then
 	grbim() { gf && git rebase -i origin/master; }
 	grbm() { gf && git rebase -s recursive -X theirs origin/master; }
 	# rebase (squash)
-	gsm() {
+	gsqm() {
 		gf
 		git reset --soft "$(git merge-base HEAD master)"
 		gcf "$1"
