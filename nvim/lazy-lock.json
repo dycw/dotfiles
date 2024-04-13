@@ -239,6 +239,10 @@
     "branch": "master",
     "commit": "6e51d7da30bd139a6950adf2a47fda6df9fa06d2"
   },
+  "telescope-undo.nvim": {
+    "branch": "main",
+    "commit": "d19e2edc8b18d03283bd91f67310ac300ad003ce"
+  },
   "telescope.nvim": {
     "branch": "0.1.x",
     "commit": "6312868392331c9c0f22725041f1ec2bef57c751"
