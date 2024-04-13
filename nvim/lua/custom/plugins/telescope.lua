@@ -25,7 +25,10 @@ return {
             -- },
             -- pickers = {}
             extensions = {
-                ["live_grep_args"] = {
+                file_browser = {
+                    hidden = { file_browser = true, folder_browser = true },
+                },
+                live_grep_args = {
                     require("telescope").load_extension("live_grep_args"),
                 },
                 ["ui-select"] = {
@@ -79,13 +82,19 @@ return {
             builtin.find_files({ cwd = fn.stdpath("config") })
         end, "Search Neovim files")
 
-        -- Live Grep args
+        -- Extension: File Browser
+        keymap_set("n", "<Leader>fb", function()
+            require("telescope").extensions.file_browser.file_browser()
+        end, "File [B]rowser")
+
+        -- Extension: Live Grep args
         keymap_set("n", "<Leader>lG", function()
             require("telescope").extensions.live_grep_args.live_grep_args()
         end, "Live Grep (args)")
     end,
     dependencies = {
         "nvim-lua/plenary.nvim",
+        { "nvim-telescope/telescope-file-browser.nvim" },
         {
             "nvim-telescope/telescope-fzf-native.nvim",
             build = "make",
