@@ -7,14 +7,28 @@ return {
     config = function()
         local lint = require("lint")
         lint.linters_by_ft = {
+            css = { "biomejs" },
+            dockerfile = { "hadolint" },
+            haskell = { "hlint" },
+            html = { "biomejs" },
+            htmldjango = { "biomejs" },
+            javascript = { "biomejs" },
+            javascriptreact = { "biomejs" },
+            json = { "biomejs" },
+            jsonc = { "biomejs" },
             lua = { "luacheck" },
-            -- markdown = { "markdownlint" },
+            markdown = { "biomejs" },
             python = { "ruff" },
             sh = { "shellcheck" },
+            sql = { "sqlfluff" },
+            svelte = { "biomejs" },
+            typescript = { "biomejs" },
+            typescriptreact = { "biomejs" },
+            vue = { "biomejs" },
+            yaml = { "yamllint" },
+            zsh = { "shellcheck" },
         }
 
-        -- Create autocommand which carries out the actual linting
-        -- on the specified events.
         local lint_augroup = api.nvim_create_augroup("lint", { clear = true })
         api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
             group = lint_augroup,
