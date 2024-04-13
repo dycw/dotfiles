@@ -19,6 +19,14 @@ return {
                 file_browser = {
                     hidden = { file_browser = true, folder_browser = true },
                 },
+                project = {
+                    base_dirs = {
+                        { "~/dotfiles", max_depth = 1 },
+                        { "~/work", max_depth = 1 },
+                    },
+                    hidden_files = true,
+                    sync_with_nvim_tree = true,
+                },
                 ["ui-select"] = {
                     require("telescope.themes").get_dropdown(),
                 },
@@ -69,7 +77,12 @@ return {
             require("telescope").extensions.live_grep_args.live_grep_args()
         end, "Live [G]rep (args)")
 
-        -- Extension: File Browser
+        -- Extension: Project
+        keymap_set("n", "<Leader>pr", function()
+            require("telescope").extensions.project.project()
+        end, "P[r]oject")
+
+        -- Extension: Recent Files
         keymap_set("n", "<Leader>rf", function()
             require("telescope").extensions["recent-files"].recent_files({})
         end, "Recent [F]iles")
@@ -89,6 +102,7 @@ return {
             "nvim-telescope/telescope-live-grep-args.nvim",
             version = "^1.0.0",
         },
+        "nvim-telescope/telescope-project.nvim",
         "nvim-telescope/telescope-ui-select.nvim",
         { "nvim-tree/nvim-web-devicons", enabled = v.g.have_nerd_font },
     },
