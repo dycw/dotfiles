@@ -10,9 +10,19 @@ return {
         local telescope_config = require("telescope.config")
         local vimgrep_arguments = { unpack(telescope_config.values.vimgrep_arguments) }
         table.insert(vimgrep_arguments, "--context=0")
+        table.insert(vimgrep_arguments, "--trim")
 
         require("telescope").setup({
             defaults = {
+                layout_config = {
+                    height = 0.8,
+                    preview_cutoff = 40,
+                    preview_height = 0.6,
+                    prompt_position = "bottom",
+                    width = 0.8,
+                },
+                layout_strategy = "vertical",
+                path_display = "smart",
                 vimgrep_arguments = vimgrep_arguments,
             },
         })

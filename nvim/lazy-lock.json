@@ -223,9 +223,13 @@
     "branch": "main",
     "commit": "9ef21b2e6bb6ebeaf349a0781745549bbb870d27"
   },
+  "telescope-git-conflicts.nvim": {
+    "branch": "main",
+    "commit": "1ac7040f601d16ab3800bdda6f5912a0e385cb29"
+  },
   "telescope-live-grep-args.nvim": {
     "branch": "master",
-    "commit": "20656efd7a0dbb4483290649c9671af14b0cfb0d"
+    "commit": "731a046da7dd3adff9de871a42f9b7fb85f60f47"
   },
   "telescope-project.nvim": {
     "branch": "master",
