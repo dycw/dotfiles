@@ -1,10 +1,14 @@
+-- luacheck: push ignore
+local v = vim
+-- luacheck: pop
+
 local function merge_tables(t1, t2)
     local result = {}
-    for k, v in pairs(t1) do
-        result[k] = v
+    for key, value in pairs(t1) do
+        result[key] = value
     end
-    for k, v in pairs(t2) do
-        result[k] = v
+    for key, value in pairs(t2) do
+        result[key] = value
     end
     return result
 end
@@ -12,9 +16,6 @@ end
 local keymap_opts = { noremap = true, silent = true }
 
 local keymap_set = function(mode, lhs, rhs, desc)
-    -- luacheck: push ignore
-    local v = vim
-    -- luacheck: pop
     v.keymap.set(mode, lhs, rhs, merge_tables(keymap_opts, { desc = desc }))
 end
 

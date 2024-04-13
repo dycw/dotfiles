@@ -8,5 +8,4 @@ return {
         end, "Git [C]onflicts")
     end,
     dependencies = "nvim-telescope/telescope.nvim",
-    event = "VeryLazy",
 }

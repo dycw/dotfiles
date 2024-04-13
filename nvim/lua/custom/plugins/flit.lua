@@ -4,5 +4,4 @@ return {
         require("flit").setup()
     end,
     dependencies = { "ggandor/leap.nvim" },
-    event = "VeryLazy",
 }

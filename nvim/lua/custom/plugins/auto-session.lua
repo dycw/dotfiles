@@ -5,5 +5,4 @@ return {
             log_level = "error",
         })
     end,
-    event = "VeryLazy",
 }

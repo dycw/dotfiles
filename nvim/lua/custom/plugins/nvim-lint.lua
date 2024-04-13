@@ -1,4 +1,4 @@
--- luacheck: push ignore vim
+-- luacheck: push ignore
 local api = vim.api
 -- luacheck: pop
 
@@ -37,5 +37,4 @@ return {
             end,
         })
     end,
-    event = "VeryLazy",
 }

@@ -9,5 +9,4 @@ return {
         )
         require("nvim-tree").setup()
     end,
-    event = "VeryLazy",
 }

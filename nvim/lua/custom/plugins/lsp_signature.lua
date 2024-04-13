@@ -3,5 +3,4 @@ return {
     config = function()
         require("lsp_signature").on_attach()
     end,
-    event = "VeryLazy",
 }

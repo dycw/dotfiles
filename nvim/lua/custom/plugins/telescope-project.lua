@@ -20,5 +20,4 @@ return {
         end, "P[r]oject")
     end,
     dependencies = "nvim-telescope/telescope.nvim",
-    event = "VeryLazy",
 }

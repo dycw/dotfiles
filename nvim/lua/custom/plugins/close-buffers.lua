@@ -5,5 +5,4 @@ return {
             require("close_buffers").delete({ type = "this" })
         end, "Buffer [D]elete")
     end,
-    event = "VeryLazy",
 }

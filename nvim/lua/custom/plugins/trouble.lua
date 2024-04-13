@@ -21,5 +21,4 @@ return {
         end, "Workspace diagnostics (list)")
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    event = "VeryLazy",
 }

@@ -1,10 +1,9 @@
--- luacheck: push ignore vim
+-- luacheck: push ignore
 local cmd = vim.cmd
 -- luacheck: pop
 
 return {
     "folke/tokyonight.nvim",
-    event = "VeryLazy",
     init = function()
         cmd.colorscheme("tokyonight-night")
         cmd.hi("Comment gui=none")

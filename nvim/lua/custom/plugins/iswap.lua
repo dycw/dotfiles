@@ -10,5 +10,4 @@ return {
             iswap.iswap_with()
         end, "ISwap [W]ith")
     end,
-    event = "VeryLazy",
 }

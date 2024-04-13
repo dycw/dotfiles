@@ -8,5 +8,4 @@ return {
         end, "Recent [F]iles")
     end,
     dependencies = "nvim-telescope/telescope.nvim",
-    event = "VeryLazy",
 }
