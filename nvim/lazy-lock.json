@@ -1,8 +1,4 @@
 {
-  "LuaSnip": {
-    "branch": "master",
-    "commit": "be7be2ca7f55bb881a7ffc16b2efa5af034ab06b"
-  },
   "auto-save.nvim": {
     "branch": "main",
     "commit": "213f92ad96e366f2bf95193a8948ed097faf810d"
@@ -63,6 +59,10 @@
     "branch": "main",
     "commit": "4f18033c3b78aa5450e538d81dfbbb3e67aeadec"
   },
+  "friendly-snippets": {
+    "branch": "main",
+    "commit": "ea068f1becd91bcd4591fceb6420d4335e2e14d3"
+  },
   "gitsigns.nvim": {
     "branch": "main",
     "commit": "d96ef3bbff0bdbc3916a220f5c74a04c4db033f2"
@@ -98,6 +98,10 @@
   "lualine.nvim": {
     "branch": "master",
     "commit": "0a5a66803c7407767b799067986b4dc3036e1983"
+  },
+  "luasnip": {
+    "branch": "master",
+    "commit": "be7be2ca7f55bb881a7ffc16b2efa5af034ab06b"
   },
   "marks.nvim": {
     "branch": "master",
