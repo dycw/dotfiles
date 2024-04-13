@@ -3,7 +3,7 @@ return {
     config = function()
         local telescope = require("telescope")
         telescope.load_extension("conflicts")
-        require("utilities").keymap_set("n", "<Leader>gc", function()
+        require("utilities").keymap_set("n", "<Leader>gC", function()
             telescope.extensions.conflicts.conflicts({})
         end, "Git [C]onflicts")
     end,
