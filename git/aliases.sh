@@ -30,12 +30,13 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gbkd() { gbk dev; }
 	# checkout
-	alias gco='git checkout'
+	gco() { git checkout "$1"; }
 	gcob() { git checkout -b "$1"; }
 	gcobd() { gcob dev; }
 	gcobr() { gbk "$1" && gcob "$1"; }
 	gcobrd() { gcobr dev; }
 	gcobt() { git checkout -b "$1" -t "origin/$1"; }
+	gcod() { gco dev; }
 	gcom() { git checkout master && git pull --force; }
 	gcomk() { gcom && gbk "$1"; }
 	gcomkd() { gcomk dev; }
@@ -112,8 +113,7 @@ if command -v git >/dev/null 2>&1; then
 	alias gdc='git diff --cached'
 	alias gdm='git diff origin/master'
 	# fetch
-	alias gf='__git_fetch'
-	__git_fetch() { git fetch --all; }
+	gf() { git fetch --all; }
 	# log
 	alias gl='git log --oneline --decorate --graph'
 	# mv
@@ -124,11 +124,16 @@ if command -v git >/dev/null 2>&1; then
 	gp() { git push -u origin "$(gcurr)"; }
 	gpf() { git push -fu origin "$(gcurr)"; }
 	# rebase
-	alias grb='__git_fetch && git rebase'
-	alias grbi='__git_fetch && git rebase -i'
-	grbih() { __git_fetch && git rebase -i HEAD~"$1"; }
-	alias grbim='__git_fetch && git rebase -i origin/master'
-	alias grbm='__git_fetch && git rebase -s recursive -X theirs origin/master'
+	grb() { gf && git rebase "$1"; }
+	grbi() { gf && git rebase -i "$1"; }
+	grbim() { gf && git rebase -i origin/master; }
+	grbm() { gf && git rebase -s recursive -X theirs origin/master; }
+	# rebase (squash)
+	gsm() {
+		gf
+		git reset --soft "$(git merge-base HEAD master)"
+		gcf "$1"
+	}
 	# reset
 	alias gr='git reset'
 	alias grp='git reset --patch'
