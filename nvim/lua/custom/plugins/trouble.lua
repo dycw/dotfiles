@@ -3,18 +3,22 @@ return {
     config = function()
         local keymap_set = require("utilities").keymap_set
         local trouble = require("trouble")
+        trouble.setup({
+            auto_open = true,
+            auto_close = true,
+        })
 
         keymap_set("n", "<Leader>ld", function()
-            trouble.open("document_diagnostics")
+            trouble.open({ mode = "document_diagnostics", focus = false })
         end, "list [d]ocument diagnostics")
         keymap_set("n", "<Leader>lq", function()
-            trouble.open("quickfix")
+            trouble.open({ mode = "quickfix", focus = false })
         end, "list [q]uick fix")
         keymap_set("n", "<Leader>lr", function()
-            trouble.open("lsp_references")
+            trouble.open({ mode = "lsp_references", focus = false })
         end, "list [r]eferences")
         keymap_set("n", "<Leader>lw", function()
-            trouble.open("workspace_diagnostics")
+            trouble.open({ mode = "workspace_diagnostics", focus = false })
         end, "list [w]orkspace diagnostics")
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
