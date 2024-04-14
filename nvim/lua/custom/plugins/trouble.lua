@@ -3,7 +3,9 @@ return {
     config = function()
         local keymap_set = require("utilities").keymap_set
         local trouble = require("trouble")
+
         trouble.setup({
+            height = 5,
             auto_open = true,
             auto_close = true,
         })

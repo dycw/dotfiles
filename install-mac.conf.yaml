@@ -14,12 +14,14 @@
     - ~/.config/wezterm
     - ~/.ipython/profile_default
     - ~/.ipython/profile_default/startup
+    - ~/.jupyter
     - ~/.jupyter/lab/user-settings/@jupyterlab/apputils-extension
     - ~/.jupyter/lab/user-settings/@jupyterlab/codemirror-extension
     - ~/.jupyter/lab/user-settings/@jupyterlab/docmanager-extension
     - ~/.jupyter/lab/user-settings/@jupyterlab/filebrowser-extension
     - ~/.jupyter/lab/user-settings/@jupyterlab/notebook-extension
     - ~/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension
+    - ~/.jupyter/lab/user-settings/jupyterlab_code_formatter/
 
 - link:
     ~/.config/direnv/direnvrc: direnv/direnvrc
@@ -34,12 +36,14 @@
     ~/.config/wezterm/wezterm.lua: wezterm/wezterm.lua
     ~/.ipython/profile_default/ipython_config.py: ipython/ipython_config.py
     ~/.ipython/profile_default/startup/startup.py: ipython/startup.py
+    ~/.jupyter/jupyter_lab_config.py: jupyter/jupyter_lab_config.py
     ~/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/notification.jupyterlab-settings: jupyter/apputils.jsonc
     ~/.jupyter/lab/user-settings/@jupyterlab/codemirror-extension/plugin.jupyterlab-settings: jupyter/codemirror.jsonc
     ~/.jupyter/lab/user-settings/@jupyterlab/docmanager-extension/plugin.jupyterlab-settings: jupyter/docmanager.jsonc
-    ~/.jupyter/lab/user-settings/@jupyterlab/filebrowser-extension/notification.jupyterlab-settings: jupyter/filebrowser.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/filebrowser-extension/browser.jupyterlab-settings: jupyter/filebrowser.jsonc
     ~/.jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings: jupyter/notebook.jsonc
     ~/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings: jupyter/shortcuts.jsonc
+    ~/.jupyter/lab/user-settings/jupyterlab_code_formatter/settings.jupyterlab-settings: jupyter/jupyterlab_code_formatter.jsonc
     ~/.zimrc: zsh/zimrc
     ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
