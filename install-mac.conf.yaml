@@ -17,6 +17,7 @@
     - ~/.jupyter/lab/user-settings/@jupyterlab/apputils-extension
     - ~/.jupyter/lab/user-settings/@jupyterlab/codemirror-extension
     - ~/.jupyter/lab/user-settings/@jupyterlab/docmanager-extension
+    - ~/.jupyter/lab/user-settings/@jupyterlab/notebook-extension
     - ~/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension
 
 - link:
@@ -35,6 +36,7 @@
     ~/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/notification.jupyterlab-settings: jupyter/apputils.json
     ~/.jupyter/lab/user-settings/@jupyterlab/codemirror-extension/plugin.jupyterlab-settings: jupyter/codemirror.json
     ~/.jupyter/lab/user-settings/@jupyterlab/docmanager-extension/plugin.jupyterlab-settings: jupyter/docmanager.json
+    ~/.jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings: jupyter/notebook.json
     ~/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings: jupyter/shortcuts.json
     ~/.zimrc: zsh/zimrc
     ~/.zshenv: zsh/zshenv
