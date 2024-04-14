@@ -45,13 +45,13 @@ if command -v git >/dev/null 2>&1; then
 		if [ "$#" -eq 0 ]; then
 			echo dev
 		else
-			echo "$1"
+			echo "$@"
 		fi
 	}
 	# checkout
 	gco() { git checkout "$(__branch_or_dev "$@")"; }
 	gcob() { git checkout -b "$(__branch_or_dev "$@")"; }
-	gcobr() { gbk "$1" && gcob "$1"; }
+	gcobr() { gbk "$@" && gcob "$@"; }
 	gcobt() { git checkout -b "$1" -t "origin/$1"; }
 	gcom() { git checkout master && git pull --force; }
 	gcomk() { gcom && gbk "$@"; }
@@ -194,7 +194,7 @@ if command -v git >/dev/null 2>&1; then
 	alias gstp='git stash pop'
 	# tag
 	gta() { git tag -a "$1" "$2" -m "$1" && git push -u origin --tags; }
-	gtd() { git tag -d "$1" && git push -d origin "$1"; }
+	gtd() { git tag -d "$@" && git push -d origin "$@"; }
 
 	# gitweb
 	if command -v gitweb >/dev/null 2>&1; then
