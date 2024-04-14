@@ -63,6 +63,10 @@
     "branch": "main",
     "commit": "ea068f1becd91bcd4591fceb6420d4335e2e14d3"
   },
+  "fzf-lua": {
+    "branch": "main",
+    "commit": "8161cb9e0fcaab67dab0b99916932605f11aad6b"
+  },
   "gitsigns.nvim": {
     "branch": "main",
     "commit": "d96ef3bbff0bdbc3916a220f5c74a04c4db033f2"
