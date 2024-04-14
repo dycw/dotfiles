@@ -14,8 +14,6 @@ lvim.keys.normal_mode["R"] = {
 -------------------------------------------------------------------------------
 -- key bindings (leader)
 -------------------------------------------------------------------------------
--- LSP
-lvim.builtin.which_key.mappings["lR"] = { "<Cmd>LspRestart<CR>", "Restart LSP" }
 
 -- mergetool
 lvim.builtin.which_key.mappings["mj"] = { "<Cmd>MergetoolDiffExchangeLeft<CR>", "Exchange left" }
