@@ -1,39 +1,32 @@
 {
   "preferences": {
     "default_formatter": {
-      "python": ["my_ruff_check"],
+      "python": ["ruff", "ruff_format"],
     },
   },
   "formatOnSave": true,
-  "black": {
-    "line_length": 88,
-    "string_normalization": true,
+  "ruff": {
+    "args": [
+      "--select=ALL",
+      "--ignore=W191", // tab-indentation
+      "--ignore=E111", // indentation-with-invalid-multiple
+      "--ignore=E114", // indentation-with-invalid-multiple-comment
+      "--ignore=E117", // over-indented
+      "--ignore=D206", // indent-with-spaces
+      "--ignore=D300", // triple-single-quotes
+      "--ignore=Q000", // bad-quotes-inline-string
+      "--ignore=Q001", // bad-quotes-multiline-string
+      "--ignore=Q002", // bad-quotes-docstring
+      "--ignore=Q003", // avoidable-escaped-quote
+      "--ignore=COM812", // missing-trailing-comma
+      "--ignore=COM819", // prohibited-trailing-comma
+      "--ignore=ISC001", // single-line-implicit-string-concatenation
+      "--ignore=ISC002", // multi-line-implicit-string-concatenation
+    ],
   },
-  "yapf": {
-    "style_config": "google",
-  },
-  "autopep8": {},
-  "isort": {
-    "multi_line_output": 3,
-    "include_trailing_comma": true,
-    "force_grid_wrap": 0,
-    "use_parentheses": true,
-    "ensure_newline_before_comments": true,
-    "line_length": 88,
-  },
-  "formatR": {
-    "indent": 2,
-    "arrow": true,
-    "wrap": true,
-    "width_cutoff": 150,
-  },
-  "styler": {},
+  "suppressFormatterErrors": false,
   "cacheFormatters": false,
   "astyle": {
     "args": [],
   },
-  "ruff": {
-    "args": [],
-  },
-  "suppressFormatterErrors": false,
 }
