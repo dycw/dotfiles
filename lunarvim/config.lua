@@ -4,8 +4,6 @@
 -- key bindings
 -------------------------------------------------------------------------------
 -- LSP
-lvim.keys.normal_mode["`j"] = "<Cmd>lua vim.diagnostic.goto_next()<CR>"
-lvim.keys.normal_mode["`k"] = "<Cmd>lua vim.diagnostic.goto_prev()<CR>"
 lvim.keys.normal_mode["R"] = {
     function()
         return ":IncRename " .. vim.fn.expand("<cword>")
@@ -16,10 +14,6 @@ lvim.keys.normal_mode["R"] = {
 -------------------------------------------------------------------------------
 -- key bindings (leader)
 -------------------------------------------------------------------------------
--- iswap
-lvim.builtin.which_key.mappings["i"] = { "<Cmd>ISwap<CR>", "ISwap" }
-lvim.builtin.which_key.mappings["iw"] = { "<Cmd>ISwapWith<CR>", "ISwapWith" }
-
 -- LSP
 lvim.builtin.which_key.mappings["lR"] = { "<Cmd>LspRestart<CR>", "Restart LSP" }
 
@@ -29,24 +23,3 @@ lvim.builtin.which_key.mappings["mk"] = { "<Cmd>MergetoolDiffExchangeRight<CR>",
 lvim.builtin.which_key.mappings["ml"] = { "<Cmd>MergetoolPreferLocal<CR>", "Prefer local" }
 lvim.builtin.which_key.mappings["mr"] = { "<Cmd>MergetoolPreferRemote<CR>", "Prefer right" }
 lvim.builtin.which_key.mappings["mq"] = { "<Cmd>MergetoolStop<CR>", "Stop" }
-
--- search text
-lvim.builtin.which_key.mappings["g"] = {
-    function()
-        require("telescope.builtin").grep_string({
-            shorten_path = true,
-            word_match = "-w",
-            only_sort_text = true,
-            search = "",
-        })
-    end,
-    "Grep",
-}
-
--- spectre
-lvim.builtin.which_key.mappings["<Leader>sp"] = { "<Cmd>lua require('spectre').open()<CR>", "Spectre" }
-lvim.builtin.which_key.mappings["<Leader>sf"] =
-    { "<Cmd>lua require('spectre').open_file_search()<CR>", "Spectre (file)" }
-lvim.builtin.which_key.vmappings["<Leader>sp"] = { "<Esc><Cmd>lua require('spectre').open_visual()<CR>", "Spectre" }
-lvim.builtin.which_key.vmappings["<Leader>sf"] =
-    { "<Esc><Cmd>lua require('spectre').open_file_search({select_word=true})<CR>", "Spectre (file)" }
