@@ -17,6 +17,12 @@ if command -v git >/dev/null 2>&1; then
 	alias gb='git branch'
 	alias gba='git branch -a'
 	gbd() { git branch -d "$1"; }
+	gbdr() {
+		git branch -r --color=never |
+			fzf |
+			sed -En 's/origin\/(.*)/\1/p' |
+			xargs -n 1 git push -d origin
+	}
 	gbexists() {
 		if git rev-parse --verify "$1" >/dev/null 2>&1; then
 			true
@@ -149,9 +155,12 @@ if command -v git >/dev/null 2>&1; then
 	gpf() { git push -fu origin "$(gcurr)"; }
 	# rebase
 	grb() { gf && git rebase "$1"; }
+	grba() { git rebase --abort; }
+	grbc() { git rebase --continue; }
 	grbi() { gf && git rebase -i "$1"; }
 	grbim() { gf && git rebase -i origin/master; }
 	grbm() { gf && git rebase -s recursive -X theirs origin/master; }
+	grbs() { git rebase --skip; }
 	# rebase (squash)
 	gsqm() {
 		gf
