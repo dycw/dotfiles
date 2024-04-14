@@ -14,13 +14,9 @@ return { -- LSP Configuration & Plugins
             callback = function(event)
                 local keymap_set = require("utilities").keymap_set
 
-                -- Direct
-                keymap_set("n", "gD", buf.declaration, "Goto [D]eclaration")
-
                 -- Leader
-                keymap_set("n", "K", buf.hover, "Hover Documentation")
-                keymap_set("n", "<Leader>rn", buf.rename, "Re[n]ame")
-                keymap_set("n", "<Leader>ca", buf.code_action, "Code [A]ction")
+                keymap_set("n", "K", buf.hover, "hover documentation")
+                keymap_set("n", "<Leader>rn", buf.rename, "re[n]ame")
 
                 -- WARN: This is not Goto Definition, this is Goto Declaration.
                 --  For example, in C this would take you to the header.

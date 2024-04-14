@@ -31,51 +31,8 @@ return {
         local builtin = require("telescope.builtin")
         local keymap_set = require("utilities").keymap_set
 
-        -- Direct
-        keymap_set("n", "gd", builtin.lsp_definitions, "[D]efinitions")
-        keymap_set("n", "gI", builtin.lsp_implementations, "[I]mplementations")
-        keymap_set("n", "gr", builtin.lsp_references, "[R]eferences")
-
         -- Leader
-        keymap_set("n", "<Leader><Leader>", builtin.buffers, "Buffers")
-        keymap_set("n", "<Leader>ac", builtin.autocommands, "Auto[C]ommands")
-        keymap_set("n", "<Leader>bt", builtin.current_buffer_tags, "Buffer [T]ags")
-        keymap_set({ "n", "v" }, "<Leader>co", builtin.commands, "[C]ommands")
-        keymap_set({ "n", "v" }, "<Leader>ch", builtin.command_history, "Command [H]istory")
-        keymap_set("n", "<Leader>dd", function()
-            require("telescope.builtin").diagnostics({ bufnr = 0 })
-        end, "Document [D]iagnostics (Search)")
-        keymap_set("n", "<Leader>ds", builtin.lsp_document_symbols, "Document [S]ymbols (search)")
-        keymap_set("n", "<Leader>ff", builtin.find_files, "Find [F]iles")
-        keymap_set("n", "<Leader>ft", builtin.filetypes, "File [T]ypes")
-        keymap_set("n", "<Leader>gb", builtin.git_bcommits, "Git [B]uffer Commits")
-        keymap_set("n", "<Leader>gc", builtin.git_commits, "Git [C]ommits")
-        keymap_set("n", "<Leader>gf", builtin.git_files, "Git [F]iles")
-        keymap_set("n", "<Leader>gs", builtin.grep_string, "Grep [S]tring")
-        keymap_set("n", "<Leader>ht", builtin.help_tags, "Help [T]ags")
-        keymap_set("n", "<Leader>km", builtin.keymaps, "Key [M]aps")
-        keymap_set("n", "<Leader>lg", builtin.live_grep, "Live [G]rep")
-        keymap_set("n", "<Leader>m", builtin.marks, "[M]arks")
-        keymap_set("n", "<Leader>of", builtin.oldfiles, "Old [F]iles")
-        keymap_set("n", "<Leader>qf", builtin.quickfix, "Quick [F]ix")
-        keymap_set("n", "<Leader>re", builtin.registers, "[R]egisters")
-        keymap_set("n", "<Leader>ss", builtin.spell_suggest, "Spell [S]uggest")
-        keymap_set("n", "<Leader>td", builtin.lsp_type_definitions, "Type [D]efinitions")
         keymap_set("n", "<Leader>te", builtin.builtin, "T[e]lescope")
-        keymap_set("n", "<Leader>vo", builtin.vim_options, "Vim [O]ptions")
-        keymap_set("n", "<Leader>wd", builtin.diagnostics, "Workspace [D]iagnostics (Search)")
-        keymap_set("n", "<Leader>ws", builtin.lsp_dynamic_workspace_symbols, "Workspace [S]ymbols (search)")
-        keymap_set("n", "<Leader>/", builtin.current_buffer_fuzzy_find, "Buffer fuzzy find")
-        -- want to add git_status
-
-        -- It's also possible to pass additional configuration options.
-        --  See `:help telescope.builtin.live_grep()` for information about particular keys
-        keymap_set("n", "<leader>s/", function()
-            builtin.live_grep({
-                grep_open_files = true,
-                prompt_title = "Live Grep in Open Files",
-            })
-        end, "[S]earch [/] in Open Files")
 
         -- Shortcut for searching your Neovim configuration files
         keymap_set("n", "<Leader>sN", function()
