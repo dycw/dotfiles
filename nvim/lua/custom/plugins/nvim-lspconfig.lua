@@ -2,6 +2,7 @@
 local v = vim
 -- luacheck: pop
 local api = v.api
+local diagnostic = v.diagnostic
 local lsp = v.lsp
 local buf = lsp.buf
 local tbl_deep_extend = v.tbl_deep_extend
@@ -16,6 +17,9 @@ return { -- LSP Configuration & Plugins
 
                 -- Leader
                 keymap_set("n", "K", buf.hover, "hover documentation")
+                keymap_set("n", "zj", diagnostic.goto_next, "next diagnostic")
+                keymap_set("n", "zk", diagnostic.goto_prev, "previous diagnostic")
+                keymap_set("n", "<Leader>K", diagnostic.open_float, "open float")
                 keymap_set("n", "<Leader>rn", buf.rename, "re[n]ame")
 
                 -- WARN: This is not Goto Definition, this is Goto Declaration.

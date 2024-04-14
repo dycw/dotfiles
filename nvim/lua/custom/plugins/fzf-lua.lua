@@ -6,7 +6,7 @@ return {
 
         fzf_lua.setup()
         -- buffers and files
-        keymap_set("n", "<Leader><Leader>", fzf_lua.buffers, "Buffers")
+        keymap_set("n", "<Leader><Leader>", fzf_lua.buffers, "buffers")
         keymap_set("n", "<Leader>al", fzf_lua.lines, "all [l]ines")
         keymap_set("n", "<Leader>bl", fzf_lua.blines, "Buffer [l]ines")
         keymap_set("n", "<Leader>of", fzf_lua.oldfiles, "old [f]iles")
@@ -14,17 +14,22 @@ return {
         keymap_set("n", "<Leader>ta", fzf_lua.tabs, "T[a]bs")
         -- search
         keymap_set("n", "<Leader>/", fzf_lua.grep_curbuf, "grep buffer")
+        for _, value in ipairs({ { "\\", "grep project" }, { "gf", "g[r]ep project" } }) do
+            keymap_set("n", "<Leader>" .. value[1], fzf_lua.grep_project, value[2])
+            -- don't use grep, no good
+        end
         keymap_set("n", "<Leader>gl", fzf_lua.grep_last, "grep [l]ast")
-        keymap_set("n", "<Leader>gr", fzf_lua.grep_project, "g[r]ep") -- grep no good
         keymap_set("v", "<Leader>gr", fzf_lua.grep_visual, "g[r]ep")
         keymap_set("n", "<Leader>gw", fzf_lua.grep_cword, "grep [w]ord")
         keymap_set("n", "<Leader>gW", fzf_lua.grep_cWORD, "grep [W]ORD")
         -- git
         keymap_set("n", "<Leader>gc", fzf_lua.git_bcommits, "git buffer [c]ommits")
-        keymap_set("n", "<Leader>gf", fzf_lua.git_files, "git [f]iles")
+        for _, value in ipairs({ { "f", "[f]iles" }, { "gf", "git [f]iles" } }) do
+            keymap_set("n", "<Leader>" .. value[1], fzf_lua.git_files, value[2])
+        end
+        keymap_set("n", "<Leader>ga", fzf_lua.git_branches, "git br[a]nches")
         keymap_set("n", "<Leader>gh", fzf_lua.git_status, "git stas[h]")
         keymap_set("n", "<Leader>go", fzf_lua.git_commits, "git c[o]mmits")
-        keymap_set("n", "<Leader>gr", fzf_lua.git_branches, "git b[r]anches")
         keymap_set("n", "<Leader>gs", fzf_lua.git_status, "git [s]tatus")
         keymap_set("n", "<Leader>gt", fzf_lua.git_tags, "git [t]ags")
         -- LSP
