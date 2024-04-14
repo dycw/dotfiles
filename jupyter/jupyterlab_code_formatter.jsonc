@@ -1,11 +1,11 @@
 {
   "preferences": {
     "default_formatter": {
-      "python": ["ruff", "ruff_format"],
+      "python": ["my_ruff_check", "ruff_format"],
     },
   },
   "formatOnSave": true,
-  "ruff": {
+  "my_ruff_check": {
     "args": [
       "--select=ALL",
       "--ignore=W191", // tab-indentation
@@ -23,10 +23,5 @@
       "--ignore=ISC001", // single-line-implicit-string-concatenation
       "--ignore=ISC002", // multi-line-implicit-string-concatenation
     ],
-  },
-  "suppressFormatterErrors": false,
-  "cacheFormatters": false,
-  "astyle": {
-    "args": [],
   },
 }

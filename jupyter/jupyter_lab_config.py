@@ -12,12 +12,29 @@ try:
     from jupyterlab_code_formatter.formatters import (  # type: ignore[]
         SERVER_FORMATTERS,
         BaseFormatter,
+        CommandLineFormatter,
         handle_line_ending_and_magic,
         logger,
     )
 except ModuleNotFoundError:
     pass
 else:
+
+    class MyRuffCheck(CommandLineFormatter):
+        @property
+        def label(self) -> str:
+            return "Apply `ruff check`"
+
+        def __init__(self) -> None:
+            try:
+                from ruff.__main__ import find_ruff_bin  # type: ignore[]
+
+                ruff_command = find_ruff_bin()
+            except (ImportError, FileNotFoundError):
+                ruff_command = "ruff"
+            self.command = [ruff_command, "--fix-only", "--unsafe-fixes", "check", "-"]
+
+    SERVER_FORMATTERS["my_ruff_check"] = MyRuffCheck()
 
     class RuffFormatFormatter(BaseFormatter):
         label = "Apply Ruff Format Formatter - Confirmed working for 0.1.3"
