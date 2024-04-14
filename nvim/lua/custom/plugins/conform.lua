@@ -43,5 +43,13 @@ return {
                 lsp_fallback = not disable_filetypes[bo[bufnr].filetype],
             }
         end,
+        formatters = {
+            ruff_fix = {
+                prepend_args = {
+                    "--unfixable=F401", --unused-import
+                    "--unfixable=F841", --unused-variable
+                },
+            },
+        },
     },
 }
