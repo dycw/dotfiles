@@ -1,3 +1,8 @@
+-- luacheck: push ignore
+local v = vim
+-- luacheck: pop
+local api = v.api
+
 return {
     "ibhagwan/fzf-lua",
     config = function()
@@ -53,14 +58,26 @@ return {
         keymap_set("n", "<Leader>hl", fzf_lua.highlights, "high[l]ights")
         keymap_set("n", "<Leader>ju", fzf_lua.jumps, "j[u]mps")
         keymap_set("n", "<Leader>km", fzf_lua.keymaps, "key [m]aps")
-        keymap_set("n", "<Leader>m", fzf_lua.marks, "[m]arks")
+        keymap_set("n", "<Leader>ma", fzf_lua.marks, "[m]arks")
         keymap_set("n", "<Leader>me", fzf_lua.menus, "m[e]nus")
         keymap_set("n", "<Leader>mp", fzf_lua.manpages, "man [p]ages")
         keymap_set("n", "<Leader>re", fzf_lua.registers, "r[e]gisters")
         keymap_set("n", "<Leader>sh", fzf_lua.search_history, "search [h]istory")
         keymap_set("n", "<Leader>ss", fzf_lua.spell_suggest, "spell [s]uggest")
 
+        -- UI select
         require("fzf-lua.providers.ui_select").register()
+
+        -- autocommands
+        api.nvim_create_autocmd("VimEnter", {
+            callback = function()
+                if v.fn.argv(0) == "" then
+                    fzf_lua.git_files()
+                end
+            end,
+            desc = "git-files upon entering vim",
+            group = api.nvim_create_augroup("git-files-upon-enter", { clear = true }),
+        })
     end,
 
     dependencies = { "nvim-tree/nvim-web-devicons" },

@@ -32,12 +32,12 @@ return {
         local keymap_set = require("utilities").keymap_set
 
         -- Leader
-        keymap_set("n", "<Leader>te", builtin.builtin, "T[e]lescope")
+        keymap_set("n", "<Leader>te", builtin.builtin, "t[e]lescope")
 
         -- Shortcut for searching your Neovim configuration files
-        keymap_set("n", "<Leader>sN", function()
+        keymap_set("n", "<Leader>nf", function()
             builtin.find_files({ cwd = fn.stdpath("config") })
-        end, "Search [N]eovim files")
+        end, "neovim [f]iles")
     end,
     dependencies = {
         "nvim-lua/plenary.nvim",
