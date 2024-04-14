@@ -3,7 +3,7 @@ return {
     config = function()
         require("utilities").keymap_set("n", "<leader>as", function()
             require("auto-save").toggle()
-        end, "Toggle Trouble")
+        end, "auto [s]ave")
         require("auto-save").setup({
             enabled = true,
         })

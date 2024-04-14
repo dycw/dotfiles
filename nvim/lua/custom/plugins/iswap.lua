@@ -5,9 +5,9 @@ return {
         local iswap = require("iswap")
         keymap_set("n", "<Leader>is", function()
             iswap.iswap()
-        end, "I[S]wap")
+        end, "i[s]wap")
         keymap_set("n", "<Leader>iw", function()
             iswap.iswap_with()
-        end, "ISwap [W]ith")
+        end, "iswap [w]ith")
     end,
 }

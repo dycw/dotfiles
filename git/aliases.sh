@@ -53,37 +53,37 @@ if command -v git >/dev/null 2>&1; then
 		while test $# != 0; do
 			case "$1" in
 			-a)
-				amend=1
+				__amend=1
 				shift
 				;;
 			-n)
-				no_verify=1
+				__no_verify=1
 				shift
 				;;
 			-r)
-				reuse=1
+				__reuse=1
 				shift
 				;;
 			-f)
-				force=1
+				__force=1
 				shift
 				;;
 			*) break ;;
 			esac
 		done
-		if [ -n "${amend}" ] && [ -n "${reuse}" ]; then
+		if [ -n "${__amend}" ] && [ -n "${__reuse}" ]; then
 			echo "Expected at most one of --amend or --reuse; got both"
-		elif [ -n "${amend}" ] && [ -z "${reuse}" ]; then
-			# amend, not reuse
-			if [ -n "${force}" ]; then
-				if [ -n "${no_verify}" ] && [ $# -eq 0 ]; then
-					git commit -n --amend
-				elif [ -n "${no_verify}" ] && [ $# -eq 1 ]; then
-					git commit -nm "$1" --amend
-				elif [ -z "${no_verify}" ] && [ $# -eq 0 ]; then
-					git commit --amend
-				elif [ -z "${no_verify}" ] && [ $# -eq 1 ]; then
-					git commit -m "$1" --amend
+		elif [ -n "${__amend}" ] && [ -z "${__reuse}" ]; then
+			# __amend, not reuse
+			if [ -n "${__force}" ]; then
+				if [ -n "${__no_verify}" ] && [ $# -eq 0 ]; then
+					git commit -n --__amend
+				elif [ -n "${__no_verify}" ] && [ $# -eq 1 ]; then
+					git commit -nm "$1" --__amend
+				elif [ -z "${__no_verify}" ] && [ $# -eq 0 ]; then
+					git commit --__amend
+				elif [ -z "${__no_verify}" ] && [ $# -eq 1 ]; then
+					git commit -m "$1" --__amend
 				else
 					echo "Since --amend, expected at most 1 argument; got $#"
 				fi
@@ -91,14 +91,14 @@ if command -v git >/dev/null 2>&1; then
 			else
 				echo "Since --amend, expected --force"
 			fi
-		elif [ -z "${amend}" ] && [ -n "${reuse}" ]; then
+		elif [ -z "${__amend}" ] && [ -n "${__reuse}" ]; then
 			# reuse, not amend
 			if [ $# -ge 1 ]; then
 				echo "Since --reuse, expected no arguments; got $#"
-			elif [ -z "${force}" ]; then
+			elif [ -z "${__force}" ]; then
 				echo "Since --reuse, expected --force"
 			else
-				if [ -n "${no_verify}" ]; then
+				if [ -n "${__no_verify}" ]; then
 					git commit -n --amend --no-edit
 				else
 					git commit --amend --no-edit
@@ -107,18 +107,18 @@ if command -v git >/dev/null 2>&1; then
 			fi
 		else
 			# not amend, not reuse
-			if [ -n "${no_verify}" ] && [ $# -eq 0 ]; then
+			if [ -n "${__no_verify}" ] && [ $# -eq 0 ]; then
 				git commit -n
-			elif [ -n "${no_verify}" ] && [ $# -eq 1 ]; then
+			elif [ -n "${__no_verify}" ] && [ $# -eq 1 ]; then
 				git commit -nm "$1"
-			elif [ -z "${no_verify}" ] && [ $# -eq 0 ]; then
+			elif [ -z "${__no_verify}" ] && [ $# -eq 0 ]; then
 				git commit
-			elif [ -z "${no_verify}" ] && [ $# -eq 1 ]; then
+			elif [ -z "${__no_verify}" ] && [ $# -eq 1 ]; then
 				git commit -m "$1"
 			else
 				echo "Basic case expected at most 1 argument; got $#"
 			fi
-			if [ -n "${force}" ]; then
+			if [ -n "${__force}" ]; then
 				gpf
 			else
 				gp

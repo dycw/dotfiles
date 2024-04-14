@@ -13,7 +13,7 @@ return {
         })
         require("utilities").keymap_set("n", "<Leader>nc", function()
             require("telescope").extensions.neoclip.neoclip()
-        end, "Neo[C]lip")
+        end, "neo[c]lip")
     end,
     dependencies = {
         { "nvim-telescope/telescope.nvim" },

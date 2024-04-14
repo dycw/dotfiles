@@ -8,10 +8,10 @@ return {
         -- buffers and files
         keymap_set("n", "<Leader><Leader>", fzf_lua.buffers, "buffers")
         keymap_set("n", "<Leader>al", fzf_lua.lines, "all [l]ines")
-        keymap_set("n", "<Leader>bl", fzf_lua.blines, "Buffer [l]ines")
+        keymap_set("n", "<Leader>bl", fzf_lua.blines, "buffer [l]ines")
         keymap_set("n", "<Leader>of", fzf_lua.oldfiles, "old [f]iles")
         keymap_set("n", "<Leader>qf", fzf_lua.quickfix, "quick [f]ix")
-        keymap_set("n", "<Leader>ta", fzf_lua.tabs, "T[a]bs")
+        keymap_set("n", "<Leader>ta", fzf_lua.tabs, "t[a]bs")
         -- search
         keymap_set("n", "<Leader>/", fzf_lua.grep_curbuf, "grep buffer")
         for _, value in ipairs({ { "\\", "grep project" }, { "gf", "g[r]ep project" } }) do
@@ -51,14 +51,17 @@ return {
         keymap_set("n", "<Leader>fr", fzf_lua.resume, "fzf-lua [r]esume")
         keymap_set("n", "<Leader>ht", fzf_lua.help_tags, "help [t]ags")
         keymap_set("n", "<Leader>hl", fzf_lua.highlights, "high[l]ights")
-        keymap_set("n", "<Leader>ht", fzf_lua.manpages, "man [p]ages")
         keymap_set("n", "<Leader>ju", fzf_lua.jumps, "j[u]mps")
         keymap_set("n", "<Leader>km", fzf_lua.keymaps, "key [m]aps")
         keymap_set("n", "<Leader>m", fzf_lua.marks, "[m]arks")
         keymap_set("n", "<Leader>me", fzf_lua.menus, "m[e]nus")
+        keymap_set("n", "<Leader>mp", fzf_lua.manpages, "man [p]ages")
         keymap_set("n", "<Leader>re", fzf_lua.registers, "r[e]gisters")
         keymap_set("n", "<Leader>sh", fzf_lua.search_history, "search [h]istory")
         keymap_set("n", "<Leader>ss", fzf_lua.spell_suggest, "spell [s]uggest")
+
+        require("fzf-lua.providers.ui_select").register()
     end,
+
     dependencies = { "nvim-tree/nvim-web-devicons" },
 }

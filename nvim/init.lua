@@ -25,4 +25,7 @@ local opts = {
         enabled = false,
     },
 }
-require("lazy").setup(spec, opts)
+local lazy = require("lazy")
+lazy.setup(spec, opts)
+
+require("utilities").keymap_set("n", "<Leader>lu", lazy.update, "lazy [u]pdate")
