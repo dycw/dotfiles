@@ -31,6 +31,10 @@
     "branch": "master",
     "commit": "0236521ea582747b58869cb72f70ccfa967d2e89"
   },
+  "committia.vim": {
+    "branch": "master",
+    "commit": "a187b8633694027ab5ef8a834527d33093282f95"
+  },
   "conform.nvim": {
     "branch": "master",
     "commit": "820eec990d5f332d30cf939954c8672a43a0459e"
