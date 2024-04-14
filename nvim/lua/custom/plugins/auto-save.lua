@@ -5,7 +5,7 @@ return {
             require("auto-save").toggle()
         end, "Toggle Trouble")
         require("auto-save").setup({
-            enabled = false,
+            enabled = true,
         })
     end,
 }
