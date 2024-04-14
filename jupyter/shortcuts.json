@@ -1,0 +1,9 @@
+{
+  "shortcuts": [
+    {
+      "command": "notebook:restart-and-clear-output",
+      "keys": ["0 C"],
+      "selector": "[data-jp-kernel-user]:not(.jp-mod-readWrite) :focus:not(:read-write)"
+    }
+  ]
+}
