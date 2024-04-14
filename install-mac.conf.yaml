@@ -60,6 +60,10 @@
       ]
     - ["command -v bat >/dev/null 2>&1 || brew install bat", Installing bat]
     - [
+        "command -v biome >/dev/null 2>&1 || brew install biome",
+        Installing biome,
+      ]
+    - [
         "command -v btm >/dev/null 2>&1 || brew install bottom",
         Installing bottom,
       ]

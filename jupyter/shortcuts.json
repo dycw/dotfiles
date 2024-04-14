@@ -23,6 +23,18 @@
       "command": "kernelmenu:shutdown",
       "keys": ["0", "S"],
       "selector": "[data-jp-kernel-user]:not(.jp-mod-readWrite) :focus:not(:read-write)"
+    },
+    {
+      "args": {},
+      "command": "runmenu:run-all",
+      "keys": ["9", "A"],
+      "selector": "[data-jp-code-runner]"
+    },
+    {
+      "args": {},
+      "command": "runmenu:restart-and-run-all",
+      "keys": ["9", "A"],
+      "selector": "[data-jp-code-runner]"
     }
   ]
 }

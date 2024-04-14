@@ -47,10 +47,6 @@
     "branch": "main",
     "commit": "1ba38e4cbb24683973e00c2e36f53ae64da38ef5"
   },
-  "fine-cmdline.nvim": {
-    "branch": "main",
-    "commit": "dd676584145d62b30d7e8dbdd011796a8f0a065f"
-  },
   "flit.nvim": {
     "branch": "main",
     "commit": "56490317983218b09698f8c960c3669958b12b32"
@@ -135,10 +131,6 @@
     "branch": "master",
     "commit": "21d52973bde32db998fc8b6590f87eb3c3c6d8e4"
   },
-  "nui.nvim": {
-    "branch": "main",
-    "commit": "cbd2668414331c10039278f558630ed19b93e69b"
-  },
   "nvim-autopairs": {
     "branch": "master",
     "commit": "4f41e5940bc0443fdbe5f995e2a596847215cd2a"
@@ -193,7 +185,7 @@
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "f08a9d97f7a2ac02115a5c1c8e3973b2634d996b"
+    "commit": "bfa217af767beacc5c8f220c75fa5642d7ef2035"
   },
   "nvim-treesitter-context": {
     "branch": "master",
@@ -218,10 +210,6 @@
   "rainbow-delimiters.nvim": {
     "branch": "master",
     "commit": "0563a31b1f46a911865cb85df3ddde2eff9fdada"
-  },
-  "searchbox.nvim": {
-    "branch": "main",
-    "commit": "110949af8963185b4e732b45ae57beb731bfcede"
   },
   "sort.nvim": {
     "branch": "main",
