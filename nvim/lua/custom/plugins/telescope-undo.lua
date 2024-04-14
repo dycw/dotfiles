@@ -5,7 +5,7 @@ return {
         telescope.load_extension("undo")
         require("utilities").keymap_set("n", "<Leader>uh", function()
             telescope.extensions.undo.undo()
-        end, "Undo [H]istory")
+        end, "undo [h]istory")
     end,
     dependencies = "nvim-telescope/telescope.nvim",
 }

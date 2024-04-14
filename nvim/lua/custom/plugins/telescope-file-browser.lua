@@ -9,10 +9,10 @@ return {
                 },
             },
         })
-        telescope.load_extension("recent-files")
+        telescope.load_extension("file_browser")
         require("utilities").keymap_set("n", "<Leader>fb", function()
             telescope.extensions.file_browser.file_browser()
-        end, "File [B]rowser")
+        end, "file [b]rowser")
     end,
     dependencies = "nvim-telescope/telescope.nvim",
 }

@@ -5,6 +5,6 @@ return {
         symbols_outline.setup()
         require("utilities").keymap_set("n", "<Leader>ls", function()
             symbols_outline.toggle_outline()
-        end, "Document [S]ymbols (list)")
+        end, "list document [s]ymbols")
     end,
 }
