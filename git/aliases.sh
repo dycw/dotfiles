@@ -90,13 +90,13 @@ if command -v git >/dev/null 2>&1; then
 			# __amend, not reuse
 			if [ -n "${__force}" ]; then
 				if [ -n "${__no_verify}" ] && [ $# -eq 0 ]; then
-					git commit -n --__amend
+					git commit -n --amend
 				elif [ -n "${__no_verify}" ] && [ $# -eq 1 ]; then
-					git commit -nm "$1" --__amend
+					git commit -nm "$1" --amend
 				elif [ -z "${__no_verify}" ] && [ $# -eq 0 ]; then
-					git commit --__amend
+					git commit --amend
 				elif [ -z "${__no_verify}" ] && [ $# -eq 1 ]; then
-					git commit -m "$1" --__amend
+					git commit -m "$1" --amend
 				else
 					echo "Since --amend, expected at most 1 argument; got $#"
 				fi
