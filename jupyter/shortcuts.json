@@ -1,8 +1,27 @@
 {
   "shortcuts": [
     {
-      "command": "notebook:restart-and-clear-output",
-      "keys": ["0 C"],
+      "args": {},
+      "command": "kernelmenu:interrupt",
+      "keys": ["0", "I"],
+      "selector": "[data-jp-kernel-user]:not(.jp-mod-readWrite) :focus:not(:read-write)"
+    },
+    {
+      "args": {},
+      "command": "kernelmenu:restart",
+      "keys": ["0", "R"],
+      "selector": "[data-jp-kernel-user]:not(.jp-mod-readWrite) :focus:not(:read-write)"
+    },
+    {
+      "args": {},
+      "command": "kernelmenu:restart-and-clear",
+      "keys": ["0", "C"],
+      "selector": "[data-jp-kernel-user]:not(.jp-mod-readWrite) :focus:not(:read-write)"
+    },
+    {
+      "args": {},
+      "command": "kernelmenu:shutdown",
+      "keys": ["0", "S"],
       "selector": "[data-jp-kernel-user]:not(.jp-mod-readWrite) :focus:not(:read-write)"
     }
   ]
