@@ -3,6 +3,9 @@ local set = vim.keymap.set
 -- luacheck: pop
 local opts = { noremap = true, silent = true }
 
+-- command
+set("n", ";", ":", opts)
+
 -- global marks
 local prefixes = "m'"
 local letters = "abcdefghijklmnopqrstuvwxyz"
