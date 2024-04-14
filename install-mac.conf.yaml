@@ -28,6 +28,7 @@
     ~/.config/wezterm/wezterm.lua: wezterm/wezterm.lua
     ~/.ipython/profile_default/ipython_config.py: ipython/ipython_config.py
     ~/.ipython/profile_default/startup/startup.py: ipython/startup.py
+    ~/.jupyter/lab/user-settings/@jupyterlab: jupyterlab
     ~/.zimrc: zsh/zimrc
     ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
