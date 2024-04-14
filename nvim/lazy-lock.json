@@ -255,10 +255,6 @@
     "branch": "0.1.x",
     "commit": "6312868392331c9c0f22725041f1ec2bef57c751"
   },
-  "tint.nvim": {
-    "branch": "master",
-    "commit": "862835626941d263466754b9c8e2ce2cb004f5ac"
-  },
   "tokyonight.nvim": {
     "branch": "main",
     "commit": "9bf9ec53d5e87b025e2404069b71e7ebdc3a13e5"
