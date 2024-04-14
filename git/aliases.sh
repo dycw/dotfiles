@@ -17,7 +17,7 @@ if command -v git >/dev/null 2>&1; then
 	alias gb='git branch'
 	alias gba='git branch -a'
 	gbd() {
-		__branch=$(__branch_or_dev "$1")
+		__branch=$(__branch_or_dev "$@")
 		if gbexists "${__branch}"; then
 			git branch -D "${__branch}"
 		fi
@@ -29,14 +29,14 @@ if command -v git >/dev/null 2>&1; then
 			xargs -n 1 git push -d origin
 	}
 	gbexists() {
-		if git rev-parse --verify "$1" >/dev/null 2>&1; then
+		if git rev-parse --verify "$@" >/dev/null 2>&1; then
 			true
 		else
 			false
 		fi
 	}
 	gbk() {
-		__branch=$(__branch_or_dev "$1")
+		__branch=$(__branch_or_dev "$@")
 		if gbexists "${__branch}"; then
 			git branch -D "${__branch}"
 		fi
@@ -49,13 +49,13 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	# checkout
-	gco() { git checkout "$(__branch_or_dev "$1")"; }
-	gcob() { git checkout -b "$(__branch_or_dev "$1")"; }
+	gco() { git checkout "$(__branch_or_dev "$@")"; }
+	gcob() { git checkout -b "$(__branch_or_dev "$@")"; }
 	gcobr() { gbk "$1" && gcob "$1"; }
 	gcobt() { git checkout -b "$1" -t "origin/$1"; }
 	gcom() { git checkout master && git pull --force; }
-	gcomk() { gcom && gbk "$1"; }
-	gcomr() { gcom && gcobr "$1"; }
+	gcomk() { gcom && gbk "$@"; }
+	gcomr() { gcom && gcobr "$@"; }
 	gcop() { git checkout --patch; }
 	# cherry-pick
 	alias gcp='git cherry-pick'
@@ -161,10 +161,10 @@ if command -v git >/dev/null 2>&1; then
 	gp() { git push -u origin "$(gcurr)"; }
 	gpf() { git push -fu origin "$(gcurr)"; }
 	# rebase
-	grb() { gf && git rebase "$1"; }
+	grb() { gf && git rebase "$@"; }
 	grba() { git rebase --abort; }
 	grbc() { git rebase --continue; }
-	grbi() { gf && git rebase -i "$1"; }
+	grbi() { gf && git rebase -i "$@"; }
 	grbim() { gf && git rebase -i origin/master; }
 	grbm() { gf && git rebase -s recursive -X theirs origin/master; }
 	grbs() { git rebase --skip; }
@@ -172,7 +172,7 @@ if command -v git >/dev/null 2>&1; then
 	gsqm() {
 		gf
 		git reset --soft "$(git merge-base HEAD master)"
-		gcf "$1"
+		gcf "$@"
 	}
 	# reset
 	alias gr='git reset'
