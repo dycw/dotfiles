@@ -1,0 +1,16 @@
+{
+  "preferences": {
+    "default_formatter": {
+      "python": ["ruff", "ruff_format"],
+    },
+  },
+  "formatOnSave": true,
+  "ruff": {
+    "args": ["--select=I"],
+  },
+  "suppressFormatterErrors": false,
+  "cacheFormatters": false,
+  "astyle": {
+    "args": [],
+  },
+}
