@@ -4,6 +4,8 @@
 # bat
 if command -v bat >/dev/null 2>&1; then
 	alias cat='bat'
+	alias catp='bat --style=plain'
+	tf() { tail -f "$1" | bat --paging=never -l log; }
 fi
 
 # bottom
@@ -24,6 +26,20 @@ alias cddb='cd "${HOME}"/Dropbox'
 alias cddf='cd "${HOME}"/dotfiles'
 alias cddl='cd "${HOME}"/Downloads'
 alias cdw='cd "${HOME}"/work'
+
+# chmod
+chmod_files() {
+	find . -type f -exec chmod "$1" {} \;
+}
+chmod_dirs() {
+	find . -type d -exec chmod "$1" {} \;
+}
+chown_files() {
+	find . -type f -exec chown "$1" {} \;
+}
+chown_dirs() {
+	find . -type d -exec chown "$1" {} \;
+}
 
 # coverage
 alias open-cov='open .coverage/html/index.html'
@@ -123,8 +139,11 @@ set editing-mode vi
 # neovim
 if command -v nvim >/dev/null 2>&1; then
 	alias n='nvim'
-	alias cdplugins='cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/plugins"'
+	alias cdplugins='cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins"'
 fi
+
+# path
+alias echo-path='sed '"'"'s/:/\n/g'"'"' <<< "${PATH}"'
 
 # pip
 alias pi='pip install'
@@ -142,11 +161,22 @@ if command -v pre-commit >/dev/null 2>&1; then
 	alias pci='pre-commit install'
 fi
 
+# ps
+alias pst='ps -fLu "$USER"| wc -l'
+if [ "$(command -v watch)" ]; then
+	alias wpst='watch -d -n0.1 "ps -fLu \"$USER\" | wc -l"'
+fi
+
 # pytest
 __file="${HOME}"/dotfiles/pytest/aliases.sh
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
+
+# rm
+alias rmr='rm -r'
+alias rmf='rm -f'
+alias rmrf='rm -rf'
 
 # ruff
 if command -v ruff >/dev/null 2>&1; then
