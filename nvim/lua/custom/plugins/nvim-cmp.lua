@@ -82,13 +82,7 @@ return {
                 return "make install_jsregexp"
             end)(),
             config = function()
-                local ls = require("luasnip")
-                local s = ls.snippet
-                local t = ls.text_node
-                ls.add_snippets("python", {
-                    s("bp", { t("breakpoint()") }),
-                    s("imdt", { t("import datetime as dt") }),
-                })
+                require("snippets")
             end,
             dependencies = {
                 {
