@@ -134,6 +134,10 @@
         "command -v nu >/dev/null 2>&1 || brew install nushell",
         Installing nushell,
       ]
+    - [
+        "command -v pgcli >/dev/null 2>&1 || brew install pgcli",
+        Installing pgcli,
+      ]
     - ["command -v pipx >/dev/null 2>&1 || brew install pipx", Installing pipx]
     - [
         "command -v postgres >/dev/null 2>&1 || brew install postgresql",
