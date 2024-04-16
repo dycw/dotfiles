@@ -81,6 +81,7 @@ from collections.abc import (
 from collections.abc import Set as AbstractSet
 from contextlib import ExitStack, suppress
 from dataclasses import (
+    asdict,
     astuple,
     dataclass,
     field,
@@ -169,11 +170,13 @@ _ = [
     TypeVar,
     Union,
     abc,
+    asdict,
     ast,
     astuple,
     asyncio,
     auto,
     base64,
+    bisect,
     calendar,
     chain,
     check_call,
@@ -207,7 +210,6 @@ _ = [
     gzip,
     hashlib,
     heapq,
-    bisect,
     copy,
     imaplib,
     io,
