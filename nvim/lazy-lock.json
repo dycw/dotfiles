@@ -105,7 +105,7 @@
   },
   "luasnip": {
     "branch": "master",
-    "commit": "be7be2ca7f55bb881a7ffc16b2efa5af034ab06b"
+    "commit": "1d67ba34e93f74eefffc92a15d148a1bc736190e"
   },
   "marks.nvim": {
     "branch": "master",
@@ -171,10 +171,6 @@
     "branch": "main",
     "commit": "798cd0592a81c185465db3a091a0ff8a21af60fd"
   },
-  "nvim-pasta": {
-    "branch": "main",
-    "commit": "fb0f9a7f214d9b21131b44c8ce2504dbd30f66bd"
-  },
   "nvim-spectre": {
     "branch": "master",
     "commit": "2b012554a2536465243c0dff3605b5927c49ed23"
@@ -189,7 +185,7 @@
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "2a95ff14764af20d32ec1edb27e11c38a84b9478"
+    "commit": "7099c9e5310ec3ef70f99e8c935c061ae9990cdd"
   },
   "nvim-treesitter-context": {
     "branch": "master",
