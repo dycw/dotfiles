@@ -195,10 +195,6 @@
     "branch": "main",
     "commit": "531f48334c422222aebc888fd36e7d109cb354cd"
   },
-  "nvim-various-textobjs": {
-    "branch": "main",
-    "commit": "6597cda458f67da2cec7ae7d43d7abb11d54be82"
-  },
   "nvim-web-devicons": {
     "branch": "master",
     "commit": "b3468391470034353f0e5110c70babb5c62967d3"
@@ -222,10 +218,6 @@
   "symbols-outline.nvim": {
     "branch": "master",
     "commit": "564ee65dfc9024bdde73a6621820866987cbb256"
-  },
-  "targets.vim": {
-    "branch": "master",
-    "commit": "642d3a4ce306264b05ea3219920b13ea80931767"
   },
   "telescope-file-browser.nvim": {
     "branch": "master",
@@ -258,10 +250,6 @@
   "vim-cool": {
     "branch": "master",
     "commit": "662e7b11064cbeedad17c45d2fe926e78d3cd0b6"
-  },
-  "vim-illuminate": {
-    "branch": "master",
-    "commit": "305bf07b919ac526deb5193280379e2f8b599926"
   },
   "vim-just": {
     "branch": "main",
