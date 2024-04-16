@@ -4,11 +4,7 @@ return {
         local keymap_set = require("utilities").keymap_set
         local trouble = require("trouble")
 
-        trouble.setup({
-            height = 5,
-            auto_open = true,
-            auto_close = true,
-        })
+        trouble.setup()
 
         keymap_set("n", "<Leader>ld", function()
             trouble.open({ mode = "document_diagnostics", focus = false })
