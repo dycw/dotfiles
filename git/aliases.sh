@@ -49,7 +49,15 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	# checkout
-	gco() { git checkout "$(__branch_or_dev "$@")"; }
+	gco() {
+		if [ "$#" -eq 0 ]; then
+			git checkout dev
+		elif [ "$#" -eq 1 ]; then
+			git checkout "$1"
+		else
+			git checkout "$@"
+		fi
+	}
 	gcob() { git checkout -b "$(__branch_or_dev "$@")"; }
 	gcobr() { gbk "$@" && gcob "$@"; }
 	gcobt() { git checkout -b "$1" -t "origin/$1"; }
