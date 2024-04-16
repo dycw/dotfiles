@@ -1,6 +1,6 @@
 {
   "autosave": true,
-  "autosaveInterval": 10,
+  "autosaveInterval": 60,
   "confirmClosingDocument": false,
   "lastModifiedCheckMargin": 500,
   "defaultViewers": {},
