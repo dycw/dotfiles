@@ -90,6 +90,7 @@ from dataclasses import (
     make_dataclass,
     replace,
 )
+from datetime import UTC
 from enum import Enum, IntEnum, auto
 from functools import lru_cache, partial, reduce, wraps
 from hashlib import md5
@@ -169,6 +170,7 @@ _ = [
     TypeGuard,
     TypeVar,
     Union,
+    UTC,
     abc,
     asdict,
     ast,
