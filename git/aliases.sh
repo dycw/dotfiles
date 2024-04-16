@@ -2,9 +2,9 @@
 
 if command -v git >/dev/null 2>&1; then
 	# add
-	alias ga='git add'
+	ga() { git add "$@"; }
 	gaa() { git add -A; }
-	alias gap='git add -p'
+	gap() { git add -p "$@"; }
 	# add + commit + push
 	gac() { gaa && gc "$@"; }
 	gaca() { gaa && gca "$@"; }
