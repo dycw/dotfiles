@@ -12,6 +12,7 @@ if command -v git >/dev/null 2>&1; then
 	gacf() { gaa && gcaf "$@"; }
 	gacn() { gaa && gcn "$@"; }
 	gacnf() { gaa && gcnf "$@"; }
+	gacnr() { gaa && gcnr "$@"; }
 	gacr() { gaa && gcr "$@"; }
 	# branch
 	alias gb='git branch'
@@ -152,7 +153,8 @@ if command -v git >/dev/null 2>&1; then
 	gcf() { __git_commit -f "$@"; }
 	gcn() { __git_commit -n "$@"; }
 	gcnf() { __git_commit -n -f "$@"; }
-	gcr() { __git_commit -r -f; }
+	gcnr() { __git_commit -n -r -f "$@"; }
+	gcr() { __git_commit -r -f "$@"; }
 	# diff
 	alias gd='git diff'
 	alias gdc='git diff --cached'
@@ -214,6 +216,7 @@ if command -v git >/dev/null 2>&1; then
 		gacfw() { gacf "$@" && gitweb; }
 		gacnw() { gacn "$@" && gitweb; }
 		gacnfw() { gacnf "$@" && gitweb; }
+		gacnrw() { gacnr "$@" && gitweb; }
 		gacrw() { gacr "$@" && gitweb; }
 		# commit + push
 		gcw() { gc "$@" && gitweb; }
@@ -222,7 +225,8 @@ if command -v git >/dev/null 2>&1; then
 		gcfw() { gcf "$@" && gitweb; }
 		gcnw() { gcn "$@" && gitweb; }
 		gcnfw() { gcnf "$@" && gitweb; }
-		gcrw() { gc "$@" && gitweb; }
+		gcnrw() { gcnr "$@" && gitweb; }
+		gcrw() { gcr "$@" && gitweb; }
 	fi
 	# push
 	alias gpw='gp && gitweb'
