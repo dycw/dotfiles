@@ -72,6 +72,7 @@ if command -v git >/dev/null 2>&1; then
 	gcl() { git clone --recurse-submodules "$@"; }
 	# commit + push
 	__git_commit() {
+		unset __amend __no_verify __reuse __force
 		while test $# != 0; do
 			case "$1" in
 			-a)
