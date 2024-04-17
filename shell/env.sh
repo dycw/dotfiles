@@ -42,6 +42,20 @@ case ":${PATH}:" in
 	;;
 esac
 
+# pyenv
+export PYENV_ROOT="${HOME}/.pyenv"
+__dir="${PYENV_ROOT}/bin"
+case ":${PATH}:" in
+*:"${__dir}":*) ;;
+*)
+	export PATH="${__dir}:${PATH}"
+	;;
+esac
+# pyenv
+if command -v pyenv >/dev/null 2>&1; then
+	eval "$(pyenv init -)"
+fi
+
 # ripgrep
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/ripgreprc"
 
