@@ -3,14 +3,14 @@
 
 # bat
 if command -v bat >/dev/null 2>&1; then
-	alias cat='bat'
-	alias catp='bat --style=plain'
+	cat() { bat "$@"; }
+	catp() { bat --style=plain "$@"; }
 	tf() { tail -f "$1" | bat --paging=never -l log; }
 fi
 
 # bottom
 if command -v btm >/dev/null 2>&1; then
-	alias htop='btm'
+	htop() { btm "$@"; }
 fi
 
 # cd
@@ -79,10 +79,10 @@ fi
 
 # fd
 if command -v fd >/dev/null 2>&1; then
-	alias fdd='fd -Htd'
-	alias fde='fd -Hte'
-	alias fdf='fd -Htf'
-	alias fds='fd -Hts'
+	fdd() { fd -Htd "$@"; }
+	fde() { fd -Hte "$@"; }
+	fdf() { fd -Htf "$@"; }
+	fds() { fd -Hts "$@"; }
 fi
 
 # fzf
@@ -112,9 +112,9 @@ fi
 
 # gh
 if command -v gh >/dev/null 2>&1; then
-	alias ghc='gh pr create'
-	alias ghm='gh pr merge --auto'
-	alias ghcm='gh pr create && gh pr merge --auto'
+	ghc() { gh pr create "$@"; }
+	ghm() { gh pr merge --auto "$@"; }
+	ghcm() { gh pr create && gh pr merge --auto "$@"; }
 fi
 
 # git
