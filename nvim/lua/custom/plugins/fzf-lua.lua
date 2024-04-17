@@ -72,7 +72,7 @@ return {
         api.nvim_create_autocmd("VimEnter", {
             callback = function()
                 if v.fn.argv(0) == "" then
-                    fzf_lua.oldfiles()
+                    fzf_lua.git_files()
                 end
             end,
             desc = "git-files upon entering vim",
