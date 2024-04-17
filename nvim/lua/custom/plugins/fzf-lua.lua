@@ -19,7 +19,7 @@ return {
         keymap_set("n", "<Leader>ta", fzf_lua.tabs, "t[a]bs")
         -- search
         keymap_set("n", "<Leader>/", fzf_lua.grep_curbuf, "grep buffer")
-        for _, value in ipairs({ { "\\", "grep project" }, { "gf", "g[r]ep project" } }) do
+        for _, value in ipairs({ { "\\", "grep project" }, { "gr", "g[r]ep project" } }) do
             keymap_set("n", "<Leader>" .. value[1], fzf_lua.grep_project, value[2])
             -- don't use grep, no good
         end

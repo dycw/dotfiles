@@ -24,7 +24,7 @@ opt.completeopt = { "menuone", "preview" }
 opt.conceallevel = 0
 
 -- Highlight the text line of the cursor with CursorLine
-opt.cursorline = true
+opt.cursorline = false
 
 -- Use the appropriate number of spaces to insert a <Tab>?
 opt.expandtab = true
