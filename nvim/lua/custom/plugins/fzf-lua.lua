@@ -173,7 +173,7 @@ return {
             local core = require("fzf-lua.core")
             core.fzf_exec(files, {
                 actions = { default = open_selected_file },
-                prompt = "Common Git and Old Files> ",
+                prompt = "GitOldMRU> ",
                 previewer = "builtin",
             })
         end
