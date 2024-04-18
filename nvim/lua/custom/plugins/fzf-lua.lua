@@ -71,10 +71,9 @@ return {
         require("fzf-lua.providers.ui_select").register()
 
         -- git files (MRU)
-
         local function get_git_root()
             local git_root = fn.systemlist("git rev-parse --show-toplevel")
-            if vim.v.shell_error ~= 0 then
+            if v.v.shell_error ~= 0 then
                 print("Error: Not a git repository")
                 return nil
             end
@@ -82,77 +81,64 @@ return {
         end
 
         local function get_git_files(git_root)
-            local relative_files = fn.systemlist("git ls-files")
-            if vim.v.shell_error ~= 0 then
+            local rel_files = fn.systemlist("git ls-files")
+            if v.v.shell_error ~= 0 then
                 print("Not a git repository or other error")
                 return {}
             end
-            local absolute_files = {}
-            for _, file in ipairs(relative_files) do
-                table.insert(absolute_files, git_root .. "/" .. file) -- Convert to absolute path
+            local abs_files = {}
+            for _, file in ipairs(rel_files) do
+                table.insert(abs_files, git_root .. "/" .. file) -- Convert to absolute path
             end
-            return absolute_files
+            return abs_files
         end
 
         local function get_old_files()
-            local oldfiles = v.tbl_filter(function(f)
-                return fn.filereadable(f) == 1
+            return v.tbl_filter(function(file)
+                return fn.filereadable(file) == 1
             end, v.v.oldfiles)
-            return oldfiles
         end
 
-        local function sort_git_files_by_oldfiles_presence(git_files, old_files)
+        local function sort_git_files_by_oldness(git_files, old_files)
             local old_files_set = {}
             for _, file in ipairs(old_files) do
                 old_files_set[file] = true
             end
 
-            -- Split git files into those present in old files and those not
-            local sorted_files = {}
-            local rest_files = {}
+            -- partition based on oldness
+            local git_old_files = {}
+            local git_non_old_files = {}
             for _, file in ipairs(git_files) do
                 if old_files_set[file] then
-                    table.insert(sorted_files, file)
+                    table.insert(git_old_files, file)
                 else
-                    table.insert(rest_files, file)
+                    table.insert(git_non_old_files, file)
                 end
             end
-
-            -- Sort the `sorted_files` based on the order in `old_files`
-            table.sort(sorted_files, function(a, b)
-                return vim.fn.index(old_files, a) < vim.fn.index(old_files, b)
+            table.sort(git_old_files, function(a, b)
+                return fn.index(old_files, a) < fn.index(old_files, b)
             end)
 
-            -- Concatenate the sorted files with the rest
-            for _, file in ipairs(rest_files) do
-                table.insert(sorted_files, file)
+            -- concatenate the non-old onto old
+            for _, file in ipairs(git_non_old_files) do
+                table.insert(git_old_files, file)
             end
-
-            return sorted_files
+            return git_old_files
         end
 
-        local function convert_paths_to_relative(common_files, git_root)
-            local relative_paths = {}
-            for _, file in ipairs(common_files) do
+        local function make_paths_relative(abs_files, git_root)
+            local rel_files = {}
+            for _, file in ipairs(abs_files) do
                 local relative_path = file:sub(#git_root + 2) -- Remove git root from the path
-                table.insert(relative_paths, relative_path)
+                table.insert(rel_files, relative_path)
             end
-            return relative_paths
+            return rel_files
         end
 
         local function open_selected_file(selected)
             if selected then
                 v.cmd("edit " .. selected[1])
             end
-        end
-
-        local function fzf_exec_with_open(files)
-            local opts = {
-                actions = { default = open_selected_file },
-                prompt = "GitOldMRU> ",
-                previewer = "builtin",
-            }
-            require("fzf-lua.core").fzf_exec(files, opts)
         end
 
         local function git_and_old_files_intersection()
@@ -163,9 +149,14 @@ return {
 
             local git_files = get_git_files(git_root)
             local old_files = get_old_files()
-            local sorted_files = sort_git_files_by_oldfiles_presence(git_files, old_files)
-            local relative_files = convert_paths_to_relative(sorted_files, git_root)
-            fzf_exec_with_open(relative_files)
+            local abs_files = sort_git_files_by_oldness(git_files, old_files)
+            local rel_files = make_paths_relative(abs_files, git_root)
+            local opts = {
+                actions = { default = open_selected_file },
+                prompt = "GitOldMRU> ",
+                previewer = "builtin",
+            }
+            require("fzf-lua.core").fzf_exec(rel_files, opts)
         end
 
         api.nvim_create_user_command("GitFilesMRU", git_and_old_files_intersection, {})
@@ -174,7 +165,7 @@ return {
         api.nvim_create_autocmd("VimEnter", {
             callback = function()
                 if v.fn.argv(0) == "" then
-                    vim.cmd("GitFilesMRU")
+                    v.cmd("GitFilesMRU")
                 end
             end,
             desc = "git-files upon entering vim",
