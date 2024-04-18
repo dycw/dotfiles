@@ -318,11 +318,12 @@ _PANDAS_POLARS_COLS = 100
 
 
 try:
+    import altair  # type: ignore[] # noqa: ICN001
     import altair as alt  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [alt]
+    _ = [alt, altair]
 
 
 try:
@@ -367,11 +368,12 @@ else:
 
 
 try:
+    import cvxpy  # type: ignore[]
     import cxvpy as cp  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [cp]
+    _ = [cp, cvxpy]
 
 
 try:
@@ -388,6 +390,15 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [humanize]
+
+
+try:
+    import holoviews  # type: ignore[] # noqa: ICN001
+    import holoviews as hv  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [holoviews, hv]
 
 
 try:
@@ -481,14 +492,16 @@ else:
 
 
 try:
+    import more_itertools  # type: ignore[]
     import more_itertools as mi  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [mi]
+    _ = [mi, more_itertools]
 
 
 try:
+    import numpy  # type: ignore[] # noqa: ICN001
     import numpy as np  # type: ignore[]
     from numpy import (  # type: ignore[]
         allclose,
@@ -552,8 +565,6 @@ try:
     from numpy.linalg import LinAlgError, cholesky, inv  # type: ignore[]
     from numpy.random import Generator, RandomState, default_rng  # type: ignore[]
     from numpy.typing import NDArray  # type: ignore[]
-
-
 except ModuleNotFoundError:
     pass
 else:
@@ -613,6 +624,7 @@ else:
         ndarray,
         newaxis,
         nonzero,
+        numpy,
         np,
         ones,
         ones_like,
@@ -627,6 +639,7 @@ else:
 
 
 try:
+    import pandas  # type: ignore[] # noqa: ICN001
     import pandas as pd  # type: ignore[]
     from pandas import (  # type: ignore[]    from pandas import (
         NA,
@@ -702,6 +715,7 @@ else:
         assert_index_equal,
         bdate_range,
         date_range,
+        pandas,
         pd,
         qcut,
         read_pickle,
@@ -725,6 +739,7 @@ else:
 
 
 try:
+    import polars  # type: ignore[] # noqa: ICN001
     import polars as pl  # type: ignore[]
     from polars import (  # type: ignore[]
         Array,
@@ -782,7 +797,6 @@ try:
     from polars.type_aliases import SchemaDict  # type: ignore[]
 
     Config(tbl_rows=_PANDAS_POLARS_ROWS, tbl_cols=_PANDAS_POLARS_COLS)
-
 except ModuleNotFoundError:
     try:
         from pandas import (  # type: ignore[]
@@ -852,6 +866,7 @@ else:
         concat,
         lit,
         pl,
+        polars,
         read_avro,
         read_csv,
         read_csv_batched,
@@ -905,11 +920,12 @@ else:
 
 
 try:
+    import scipy  # type: ignore[]
     import scipy as sp  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [sp]
+    _ = [scipy, sp]
 
 
 try:
@@ -921,21 +937,23 @@ else:
 
 
 try:
+    import sqlalchemy  # type: ignore[]
     import sqlalchemy as sqla  # type: ignore[]
     import sqlalchemy.orm  # type: ignore[]
     from sqlalchemy import create_engine, select  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [sqla, sqlalchemy.orm, create_engine, select]
+    _ = [sqla, sqlalchemy, sqlalchemy.orm, create_engine, select]
 
 
 try:
+    import streamlit  # type: ignore[]
     import streamlit as st  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [st]
+    _ = [st, streamlit]
 
 
 try:
