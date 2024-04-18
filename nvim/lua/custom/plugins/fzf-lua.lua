@@ -124,6 +124,15 @@ return {
             return intersection
         end
 
+        local function convert_paths_to_relative(common_files, git_root)
+            local relative_paths = {}
+            for _, file in ipairs(common_files) do
+                local relative_path = file:sub(#git_root + 2) -- Remove git root from the path
+                table.insert(relative_paths, relative_path)
+            end
+            return relative_paths
+        end
+
         local function git_and_old_files_intersection()
             local git_root = get_git_root()
             if not git_root then
@@ -133,7 +142,8 @@ return {
             local git_files = get_git_files(git_root)
             local old_files = get_old_files()
             local common_files = intersect_files(git_files, old_files)
-            fzf_lua.fzf_exec(common_files, {
+            local relative_files = convert_paths_to_relative(common_files, git_root)
+            fzf_lua.fzf_exec(relative_files, {
                 prompt = "Common Git and Old Files> ",
                 previewer = "builtin", -- Adjust preview settings according to your preference
             })
