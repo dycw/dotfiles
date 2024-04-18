@@ -2,6 +2,7 @@
 local v = vim
 -- luacheck: pop
 local api = v.api
+local fn = v.fn
 
 return {
     "ibhagwan/fzf-lua",
@@ -69,19 +70,10 @@ return {
         -- UI select
         require("fzf-lua.providers.ui_select").register()
 
-        -- autocommands
-        api.nvim_create_autocmd("VimEnter", {
-            callback = function()
-                if v.fn.argv(0) == "" then
-                    vim.cmd("GitFilesMRU")
-                end
-            end,
-            desc = "git-files upon entering vim",
-            group = api.nvim_create_augroup("git-files-upon-enter", { clear = true }),
-        })
+        -- git files (MRU)
 
         local function get_git_root()
-            local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")
+            local git_root = fn.systemlist("git rev-parse --show-toplevel")
             if vim.v.shell_error ~= 0 then
                 print("Error: Not a git repository")
                 return nil
@@ -90,7 +82,7 @@ return {
         end
 
         local function get_git_files(git_root)
-            local relative_files = vim.fn.systemlist("git ls-files")
+            local relative_files = fn.systemlist("git ls-files")
             if vim.v.shell_error ~= 0 then
                 print("Not a git repository or other error")
                 return {}
@@ -103,25 +95,10 @@ return {
         end
 
         local function get_old_files()
-            local oldfiles = vim.tbl_filter(function(f)
-                return vim.fn.filereadable(f) == 1
-            end, vim.v.oldfiles)
+            local oldfiles = v.tbl_filter(function(f)
+                return fn.filereadable(f) == 1
+            end, v.v.oldfiles)
             return oldfiles
-        end
-
-        local function intersect_files(git_files, old_files)
-            local git_files_set = {}
-            for _, file in ipairs(git_files) do
-                git_files_set[file] = true
-            end
-
-            local intersection = {}
-            for _, file in ipairs(old_files) do
-                if git_files_set[file] then
-                    table.insert(intersection, file)
-                end
-            end
-            return intersection
         end
 
         local function sort_git_files_by_oldfiles_presence(git_files, old_files)
@@ -165,17 +142,17 @@ return {
 
         local function open_selected_file(selected)
             if selected then
-                vim.cmd("edit " .. selected[1])
+                v.cmd("edit " .. selected[1])
             end
         end
 
         local function fzf_exec_with_open(files)
-            local core = require("fzf-lua.core")
-            core.fzf_exec(files, {
+            local opts = {
                 actions = { default = open_selected_file },
                 prompt = "GitOldMRU> ",
                 previewer = "builtin",
-            })
+            }
+            require("fzf-lua.core").fzf_exec(files, opts)
         end
 
         local function git_and_old_files_intersection()
@@ -191,7 +168,18 @@ return {
             fzf_exec_with_open(relative_files)
         end
 
-        vim.api.nvim_create_user_command("GitFilesMRU", git_and_old_files_intersection, {})
+        api.nvim_create_user_command("GitFilesMRU", git_and_old_files_intersection, {})
+
+        -- autocommands
+        api.nvim_create_autocmd("VimEnter", {
+            callback = function()
+                if v.fn.argv(0) == "" then
+                    vim.cmd("GitFilesMRU")
+                end
+            end,
+            desc = "git-files upon entering vim",
+            group = api.nvim_create_augroup("git-files-upon-enter", { clear = true }),
+        })
     end,
 
     dependencies = { "nvim-tree/nvim-web-devicons" },
