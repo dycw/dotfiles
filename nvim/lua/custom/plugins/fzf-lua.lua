@@ -79,6 +79,67 @@ return {
             desc = "git-files upon entering vim",
             group = api.nvim_create_augroup("git-files-upon-enter", { clear = true }),
         })
+
+        local function get_git_root()
+            local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")
+            if vim.v.shell_error ~= 0 then
+                print("Error: Not a git repository")
+                return nil
+            end
+            return git_root[1] -- the output is a list, we need the first item
+        end
+
+        local function get_git_files(git_root)
+            local relative_files = vim.fn.systemlist("git ls-files")
+            if vim.v.shell_error ~= 0 then
+                print("Not a git repository or other error")
+                return {}
+            end
+            local absolute_files = {}
+            for _, file in ipairs(relative_files) do
+                table.insert(absolute_files, git_root .. "/" .. file) -- Convert to absolute path
+            end
+            return absolute_files
+        end
+
+        local function get_old_files()
+            local oldfiles = vim.tbl_filter(function(f)
+                return vim.fn.filereadable(f) == 1
+            end, vim.v.oldfiles)
+            return oldfiles
+        end
+
+        local function intersect_files(git_files, old_files)
+            local git_files_set = {}
+            for _, file in ipairs(git_files) do
+                git_files_set[file] = true
+            end
+
+            local intersection = {}
+            for _, file in ipairs(old_files) do
+                if git_files_set[file] then
+                    table.insert(intersection, file)
+                end
+            end
+            return intersection
+        end
+
+        local function git_and_old_files_intersection()
+            local git_root = get_git_root()
+            if not git_root then
+                return
+            end -- exit if not in a git repository
+
+            local git_files = get_git_files(git_root)
+            local old_files = get_old_files()
+            local common_files = intersect_files(git_files, old_files)
+            fzf_lua.fzf_exec(common_files, {
+                prompt = "Common Git and Old Files> ",
+                previewer = "builtin", -- Adjust preview settings according to your preference
+            })
+        end
+
+        vim.api.nvim_create_user_command("GitAndOldFilesIntersection", git_and_old_files_intersection, {})
     end,
 
     dependencies = { "nvim-tree/nvim-web-devicons" },
