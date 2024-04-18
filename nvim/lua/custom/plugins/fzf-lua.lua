@@ -17,7 +17,6 @@ return {
         keymap_set("n", "<Leader><Leader>", fzf_lua.buffers, "buffers")
         keymap_set("n", "<Leader>al", fzf_lua.lines, "all [l]ines")
         keymap_set("n", "<Leader>bl", fzf_lua.blines, "buffer [l]ines")
-        keymap_set("n", "<Leader>fi", fzf_lua.files, "f[i]les")
         keymap_set("n", "<Leader>of", fzf_lua.oldfiles, "old [f]iles")
         keymap_set("n", "<Leader>qf", fzf_lua.quickfix, "quick [f]ix")
         keymap_set("n", "<Leader>ta", fzf_lua.tabs, "t[a]bs")
@@ -74,7 +73,7 @@ return {
         api.nvim_create_autocmd("VimEnter", {
             callback = function()
                 if v.fn.argv(0) == "" then
-                    vim.cmd("GitAndOldFilesIntersection")
+                    vim.cmd("GitFilesMRU")
                 end
             end,
             desc = "git-files upon entering vim",
@@ -125,6 +124,36 @@ return {
             return intersection
         end
 
+        local function sort_git_files_by_oldfiles_presence(git_files, old_files)
+            local old_files_set = {}
+            for _, file in ipairs(old_files) do
+                old_files_set[file] = true
+            end
+
+            -- Split git files into those present in old files and those not
+            local sorted_files = {}
+            local rest_files = {}
+            for _, file in ipairs(git_files) do
+                if old_files_set[file] then
+                    table.insert(sorted_files, file)
+                else
+                    table.insert(rest_files, file)
+                end
+            end
+
+            -- Sort the `sorted_files` based on the order in `old_files`
+            table.sort(sorted_files, function(a, b)
+                return vim.fn.index(old_files, a) < vim.fn.index(old_files, b)
+            end)
+
+            -- Concatenate the sorted files with the rest
+            for _, file in ipairs(rest_files) do
+                table.insert(sorted_files, file)
+            end
+
+            return sorted_files
+        end
+
         local function convert_paths_to_relative(common_files, git_root)
             local relative_paths = {}
             for _, file in ipairs(common_files) do
@@ -141,7 +170,8 @@ return {
         end
 
         local function fzf_exec_with_open(files)
-            fzf_lua.fzf_exec(files, {
+            local core = require("fzf-lua.core")
+            core.fzf_exec(files, {
                 actions = { default = open_selected_file },
                 prompt = "Common Git and Old Files> ",
                 previewer = "builtin",
@@ -156,16 +186,12 @@ return {
 
             local git_files = get_git_files(git_root)
             local old_files = get_old_files()
-            local common_files = intersect_files(git_files, old_files)
-            local relative_files = convert_paths_to_relative(common_files, git_root)
-            fzf_lua.fzf_exec(relative_files, {
-                action = { default = open_selected_file },
-                prompt = "Common Git and Old Files> ",
-                previewer = "builtin", -- Adjust preview settings according to your preference
-            })
+            local sorted_files = sort_git_files_by_oldfiles_presence(git_files, old_files)
+            local relative_files = convert_paths_to_relative(sorted_files, git_root)
+            fzf_exec_with_open(relative_files)
         end
 
-        vim.api.nvim_create_user_command("GitAndOldFilesIntersection", git_and_old_files_intersection, {})
+        vim.api.nvim_create_user_command("GitFilesMRU", git_and_old_files_intersection, {})
     end,
 
     dependencies = { "nvim-tree/nvim-web-devicons" },
