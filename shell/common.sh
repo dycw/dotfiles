@@ -28,18 +28,10 @@ alias cddl='cd "${HOME}"/Downloads'
 alias cdw='cd "${HOME}"/work'
 
 # chmod
-chmod_files() {
-	find . -type f -exec chmod "$1" {} \;
-}
-chmod_dirs() {
-	find . -type d -exec chmod "$1" {} \;
-}
-chown_files() {
-	find . -type f -exec chown "$1" {} \;
-}
-chown_dirs() {
-	find . -type d -exec chown "$1" {} \;
-}
+chmod_files() { find . -type f -exec chmod "$1" {} \;; }
+chmod_dirs() { find . -type d -exec chmod "$1" {} \;; }
+chown_files() { find . -type f -exec chown "$1" {} \;; }
+chown_dirs() { find . -type d -exec chown "$1" {} \;; }
 
 # coverage
 alias open-cov='open .coverage/html/index.html'
@@ -119,7 +111,7 @@ fi
 
 # git
 if command -v git >/dev/null 2>&1; then
-	alias cdr='cd "$(git rev-parse --show-toplevel)"'
+	cdr() { cd "$(git rev-parse --show-toplevel)" || exit; }
 fi
 __file="${HOME}/dotfiles/git/aliases.sh"
 if [ -f "$__file" ]; then
@@ -127,10 +119,10 @@ if [ -f "$__file" ]; then
 fi
 
 # hypothesis
-alias hypothesis-ci='export HYPOTHESIS_PROFILE=ci'
-alias hypothesis-debug='export HYPOTHESIS_PROFILE=debug'
-alias hypothesis-default='export HYPOTHESIS_PROFILE=default'
-alias hypothesis-dev='export HYPOTHESIS_PROFILE=dev'
+hypothesis_ci() { export HYPOTHESIS_PROFILE=ci; }
+hypothesis_debug() { export HYPOTHESIS_PROFILE=debug; }
+hypothesis_default() { export HYPOTHESIS_PROFILE=default; }
+hypothesis_dev() { export HYPOTHESIS_PROFILE=dev; }
 
 # input
 set bell-style none
@@ -172,6 +164,9 @@ __file="${HOME}"/dotfiles/pytest/aliases.sh
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
+
+# python
+pyproject() { ${EDITOR} "$(groot)"/pyproject.toml; }
 
 # rm
 alias rmr='rm -r'
