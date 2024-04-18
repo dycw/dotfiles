@@ -11,6 +11,9 @@ return {
 
         fzf_lua.setup()
         -- buffers and files
+        for _, value in ipairs({ { "f", "[f]iles" }, { "fi", "f[i]les" } }) do
+            keymap_set("n", "<Leader>" .. value[1], fzf_lua.files, value[2])
+        end
         keymap_set("n", "<Leader><Leader>", fzf_lua.buffers, "buffers")
         keymap_set("n", "<Leader>al", fzf_lua.lines, "all [l]ines")
         keymap_set("n", "<Leader>bl", fzf_lua.blines, "buffer [l]ines")
@@ -29,9 +32,7 @@ return {
         keymap_set("n", "<Leader>gW", fzf_lua.grep_cWORD, "grep [W]ORD")
         -- git
         keymap_set("n", "<Leader>gc", fzf_lua.git_bcommits, "git buffer [c]ommits")
-        for _, value in ipairs({ { "f", "[f]iles" }, { "gf", "git [f]iles" } }) do
-            keymap_set("n", "<Leader>" .. value[1], fzf_lua.git_files, value[2])
-        end
+        keymap_set("n", "<Leader>gf", fzf_lua.git_files, "git [f]iles")
         keymap_set("n", "<Leader>ga", fzf_lua.git_branches, "git br[a]nches")
         keymap_set("n", "<Leader>gh", fzf_lua.git_status, "git stas[h]")
         keymap_set("n", "<Leader>go", fzf_lua.git_commits, "git c[o]mmits")
