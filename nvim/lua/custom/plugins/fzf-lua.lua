@@ -17,6 +17,7 @@ return {
         keymap_set("n", "<Leader><Leader>", fzf_lua.buffers, "buffers")
         keymap_set("n", "<Leader>al", fzf_lua.lines, "all [l]ines")
         keymap_set("n", "<Leader>bl", fzf_lua.blines, "buffer [l]ines")
+        keymap_set("n", "<Leader>fi", fzf_lua.files, "f[i]les")
         keymap_set("n", "<Leader>of", fzf_lua.oldfiles, "old [f]iles")
         keymap_set("n", "<Leader>qf", fzf_lua.quickfix, "quick [f]ix")
         keymap_set("n", "<Leader>ta", fzf_lua.tabs, "t[a]bs")
@@ -133,6 +134,20 @@ return {
             return relative_paths
         end
 
+        local function open_selected_file(selected)
+            if selected then
+                vim.cmd("edit " .. selected[1])
+            end
+        end
+
+        local function fzf_exec_with_open(files)
+            fzf_lua.fzf_exec(files, {
+                actions = { default = open_selected_file },
+                prompt = "Common Git and Old Files> ",
+                previewer = "builtin",
+            })
+        end
+
         local function git_and_old_files_intersection()
             local git_root = get_git_root()
             if not git_root then
@@ -144,6 +159,7 @@ return {
             local common_files = intersect_files(git_files, old_files)
             local relative_files = convert_paths_to_relative(common_files, git_root)
             fzf_lua.fzf_exec(relative_files, {
+                action = { default = open_selected_file },
                 prompt = "Common Git and Old Files> ",
                 previewer = "builtin", -- Adjust preview settings according to your preference
             })
