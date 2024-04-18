@@ -153,7 +153,7 @@ return {
             local rel_files = make_paths_relative(abs_files, git_root)
             local opts = {
                 actions = { default = open_selected_file },
-                prompt = "GitOldMRU> ",
+                prompt = "GitFilesMRU> ",
                 previewer = "builtin",
             }
             require("fzf-lua.core").fzf_exec(rel_files, opts)
