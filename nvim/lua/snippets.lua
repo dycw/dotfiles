@@ -15,7 +15,10 @@ ls.add_snippets("python", {
     -- utilities
     s("ut-ensure-str", { t("from utilities.text import ensure_str") }),
     s("ut-index-s", { t("utilities.pandas import IndexS") }),
-    s("ut-one", { t("from utilities.itertools import one") }),
+    s("ut-one", { t("from utilities.iterables import one") }),
     s("ut-partial", { t("from utilities.functools import partial") }),
     s("ut-check-polars-dataframe", { t("from utilities.polars import check_polars_dataframe") }),
+    s("ut-ensure-not-none", { t("from utilities.types import ensure_not_none") }),
+    s("ut-insert-items", { t("from utilities.sqlalchemy import insert_items") }),
+    s("ut-insert-dataframe", { t("from utilities.sqlalchemy_polars import insert_dataframe") }),
 })
