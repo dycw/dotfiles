@@ -15,6 +15,9 @@ ls.add_snippets("python", {
     -- loguru
     s("lo-logger", { t("from loguru import logger") }),
 
+    -- sqlalchemy
+    s("sq-func", { t("from sqlalchemy import func") }),
+
     -- typing
     s("ty-any", { t("from typing import Any") }),
     s("ty-cast", { t("from typing import cast") }),
@@ -35,4 +38,5 @@ ls.add_snippets("python", {
     s("ut-list-dir", { t("from utilities.pathlib import list_dir") }),
     s("ut-one", { t("from utilities.iterables import one") }),
     s("ut-partial", { t("from utilities.functools import partial") }),
+    s("ut-throttle", { t("from utilities.pytest import throttle") }),
 })

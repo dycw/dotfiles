@@ -940,11 +940,11 @@ try:
     import sqlalchemy  # type: ignore[]
     import sqlalchemy as sqla  # type: ignore[]
     import sqlalchemy.orm  # type: ignore[]
-    from sqlalchemy import create_engine, select  # type: ignore[]
+    from sqlalchemy import create_engine, func, select  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [sqla, sqlalchemy, sqlalchemy.orm, create_engine, select]
+    _ = [sqla, sqlalchemy, sqlalchemy.orm, create_engine, select, func]
 
 
 try:
@@ -970,6 +970,7 @@ try:
     from utilities.pandas import IndexS  # type: ignore[]
     from utilities.pathlib import list_dir  # type: ignore[]
     from utilities.polars import check_polars_dataframe  # type: ignore[]
+    from utilities.pytest import throttle  # type: ignore[]
     from utilities.re import extract_group, extract_groups  # type: ignore[]
     from utilities.sqlalchemy import get_table, insert_items  # type: ignore[]
     from utilities.sqlalchemy_polars import (  # type: ignore[]
@@ -997,6 +998,7 @@ else:
         one,
         partial,
         select_to_dataframe,
+        throttle,
     ]
 
 try:
