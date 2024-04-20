@@ -8,6 +8,9 @@ ls.add_snippets("python", {
     -- miscellaneous
     s("fu-annotations", { t("from __future__ import annotations") }),
 
+    -- beartype
+    s("be-beartype", { t("from beartype import beartype") }),
+
     -- dataclasses
     s("da-dataclasses", { t("from dataclasses import dataclass") }),
 
