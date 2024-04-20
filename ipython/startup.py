@@ -494,10 +494,11 @@ else:
 try:
     import more_itertools  # type: ignore[]
     import more_itertools as mi  # type: ignore[]
+    from more_itertools import split_at  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [mi, more_itertools]
+    _ = [mi, more_itertools, split_at]
 
 
 try:
@@ -965,6 +966,7 @@ else:
 
 
 try:
+    from utilities.datetime import date_to_datetime  # type: ignore[]
     from utilities.functools import partial  # type: ignore[]
     from utilities.iterables import one  # type: ignore[]
     from utilities.pandas import IndexS  # type: ignore[]
@@ -987,6 +989,7 @@ else:
         HONG_KONG,
         IndexS,
         check_polars_dataframe,
+        date_to_datetime,
         ensure_not_none,
         ensure_str,
         extract_group,

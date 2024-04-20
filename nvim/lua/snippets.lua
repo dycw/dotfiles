@@ -6,14 +6,23 @@ ls.add_snippets("python", {
     s("bp", { t("breakpoint()") }),
 
     -- miscellaneous
-    s("imdt", { t("import datetime as dt") }),
     s("fu-annotations", { t("from __future__ import annotations") }),
 
     -- dataclasses
     s("da-dataclasses", { t("from dataclasses import dataclass") }),
 
+    -- datetime
+    s("im-dt", { t("import datetime as dt") }),
+    s("da-utc", { t("from datetime import UTC") }),
+
     -- loguru
     s("lo-logger", { t("from loguru import logger") }),
+
+    -- more-itertools
+    s("mi-split-at", { t("from more_itertools import split_after") }),
+
+    -- pytest
+    s("py-fixture", { t("from pytest import fixture") }),
 
     -- sqlalchemy
     s("sq-func", { t("from sqlalchemy import func") }),
@@ -39,4 +48,5 @@ ls.add_snippets("python", {
     s("ut-one", { t("from utilities.iterables import one") }),
     s("ut-partial", { t("from utilities.functools import partial") }),
     s("ut-throttle", { t("from utilities.pytest import throttle") }),
+    s("ut-date-to-datetime", { t("from utilities.datetime import date_to_datetime") }),
 })
