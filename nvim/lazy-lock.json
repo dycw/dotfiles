@@ -57,7 +57,7 @@
   },
   "flutter-tools.nvim": {
     "branch": "main",
-    "commit": "4f18033c3b78aa5450e538d81dfbbb3e67aeadec"
+    "commit": "f04131d6b2c82c2a7624a8843642d6269b50b437"
   },
   "friendly-snippets": {
     "branch": "main",
@@ -65,11 +65,11 @@
   },
   "fzf-lua": {
     "branch": "main",
-    "commit": "62cb8f37b3a017e6b2401726c96e02498f332b70"
+    "commit": "213da0b65bf81e8849d1ebf2a3d47f32a7dc9000"
   },
   "gitsigns.nvim": {
     "branch": "main",
-    "commit": "36181d6484050e085332c9608a32f93e7d96ee3b"
+    "commit": "7e38f07cab0e5387f9f41e92474db174a63a4725"
   },
   "glow.nvim": {
     "branch": "main",
@@ -133,7 +133,7 @@
   },
   "neoscroll.nvim": {
     "branch": "master",
-    "commit": "4fcb1c1d73bc513a6e63bb24e741a7b97472dad9"
+    "commit": "c513218d864d4ccfdaaea991c6de67bdb84bc116"
   },
   "nvim-autopairs": {
     "branch": "master",
@@ -165,7 +165,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "9266dc26862d8f3556c2ca77602e811472b4c5b8"
+    "commit": "ed8b8a15acc441aec669f97d75f2c1f2ac8c8aa5"
   },
   "nvim-neoclip.lua": {
     "branch": "main",
@@ -185,11 +185,11 @@
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "b350369740e885c85f0f62dd8fe645c6f887ddc6"
+    "commit": "d8bf42b2621f5af274ccd4ac3f742caea04723b4"
   },
   "nvim-treesitter-context": {
     "branch": "master",
-    "commit": "c24a7a6dc5fde325af844d165323aa6f7082866e"
+    "commit": "ba4289ad345ececd335a9cdd7b9616fd0bb6be92"
   },
   "nvim-treesitter-textobjects": {
     "branch": "master",
@@ -205,7 +205,7 @@
   },
   "nvim-web-devicons": {
     "branch": "master",
-    "commit": "b3468391470034353f0e5110c70babb5c62967d3"
+    "commit": "31ba3c489e56a7f20881cee013cea1269b6b2f2d"
   },
   "plenary.nvim": {
     "branch": "master",
@@ -213,7 +213,7 @@
   },
   "rainbow-delimiters.nvim": {
     "branch": "master",
-    "commit": "0563a31b1f46a911865cb85df3ddde2eff9fdada"
+    "commit": "7ef0766b5cd2f5cdf4fcb08886f0a2ebf65981fa"
   },
   "sort.nvim": {
     "branch": "main",
@@ -226,6 +226,10 @@
   "symbols-outline.nvim": {
     "branch": "master",
     "commit": "564ee65dfc9024bdde73a6621820866987cbb256"
+  },
+  "targets.vim": {
+    "branch": "master",
+    "commit": "642d3a4ce306264b05ea3219920b13ea80931767"
   },
   "telescope-file-browser.nvim": {
     "branch": "master",
