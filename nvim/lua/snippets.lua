@@ -21,7 +21,12 @@ ls.add_snippets("python", {
 
     -- datetime
     s("im-dt", { t("import datetime as dt") }),
-    s("da-utc", { t("from datetime import UTC") }),
+    s("dt-utc", { t("from datetime import UTC") }),
+
+    -- hypothesis
+    s("hy-given", { t("from hypothesis import given") }),
+    s("hy-integers", { t("from hypothesis.strategies import integers") }),
+    s("hy-reproduce-failure", { t("from hypothesis import reproduce_failure") }),
 
     -- loguru
     s("lo-logger", { t("from loguru import logger") }),
