@@ -171,6 +171,10 @@
     "branch": "main",
     "commit": "798cd0592a81c185465db3a091a0ff8a21af60fd"
   },
+  "nvim-puppeteer": {
+    "branch": "main",
+    "commit": "ea340595967919222f3ba5c6c6def0787a336c82"
+  },
   "nvim-spectre": {
     "branch": "master",
     "commit": "9653847cf2f225648967f6e9363643e327387579"
