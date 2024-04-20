@@ -21,6 +21,7 @@ return { -- LSP Configuration & Plugins
                 keymap_set("n", "zk", diagnostic.goto_prev, "previous diagnostic")
                 keymap_set("n", "<Leader>K", diagnostic.open_float, "open float")
                 keymap_set("n", "<Leader>rn", buf.rename, "re[n]ame")
+                keymap_set("n", "<Leader>lt", "<Cmd>LspRestart<CR>", "lsp res[t]art")
 
                 -- WARN: This is not Goto Definition, this is Goto Declaration.
                 --  For example, in C this would take you to the header.

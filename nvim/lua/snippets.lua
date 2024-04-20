@@ -18,6 +18,7 @@ ls.add_snippets("python", {
     -- typing
     s("ty-any", { t("from typing import Any") }),
     s("ty-cast", { t("from typing import cast") }),
+    s("ty-literal", { t("from typing import Literal") }),
 
     -- utilities
     s("ut-check-polars-dataframe", { t("from utilities.polars import check_polars_dataframe") }),
