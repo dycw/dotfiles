@@ -966,7 +966,7 @@ else:
 
 
 try:
-    from utilities.datetime import date_to_datetime  # type: ignore[]
+    from utilities.datetime import date_to_datetime, get_now  # type: ignore[]
     from utilities.functools import partial  # type: ignore[]
     from utilities.iterables import one  # type: ignore[]
     from utilities.pandas import IndexS  # type: ignore[]
@@ -989,6 +989,7 @@ else:
         HONG_KONG,
         IndexS,
         check_polars_dataframe,
+        get_now,
         date_to_datetime,
         ensure_not_none,
         ensure_str,

@@ -23,6 +23,8 @@ ls.add_snippets("python", {
 
     -- pytest
     s("py-fixture", { t("from pytest import fixture") }),
+    s("py-mark", { t("from pytest import mark") }),
+    s("py-param", { t("from pytest import param") }),
 
     -- sqlalchemy
     s("sq-func", { t("from sqlalchemy import func") }),
@@ -40,6 +42,8 @@ ls.add_snippets("python", {
     s("ut-extract-groups", { t("from utilities.re import extract_groups") }),
     s("ut-get-table", { t("from utilities.sqlalchemy import get_table") }),
     s("ut-hong-kong", { t("from utilities.zoneinfo import HONG_KONG") }),
+    s("ut-get-now", { t("from utilities.datetime import get_now") }),
+
     s("ut-index-s", { t("utilities.pandas import IndexS") }),
     s("ut-insert-dataframe", { t("from utilities.sqlalchemy_polars import insert_dataframe") }),
     s("ut-select-to-dataframe", { t("from utilities.sqlalchemy_polars import select_to_dataframe") }),
