@@ -970,6 +970,7 @@ try:
     from utilities.pandas import IndexS
     from utilities.pathlib import list_dir
     from utilities.polars import check_polars_dataframe
+    from utilities.re import extract_group, extract_groups
     from utilities.sqlalchemy import get_table, insert_items
     from utilities.sqlalchemy_polars import insert_dataframe
     from utilities.text import ensure_str
@@ -982,6 +983,8 @@ else:
         check_polars_dataframe,
         ensure_not_none,
         ensure_str,
+        extract_group,
+        extract_groups,
         get_table,
         insert_dataframe,
         insert_items,
