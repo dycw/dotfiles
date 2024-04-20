@@ -965,6 +965,41 @@ else:
 
 
 try:
+    from utilities.functools import partial  # type: ignore[]
+    from utilities.iterables import one  # type: ignore[]
+    from utilities.pandas import IndexS  # type: ignore[]
+    from utilities.pathlib import list_dir  # type: ignore[]
+    from utilities.polars import check_polars_dataframe  # type: ignore[]
+    from utilities.re import extract_group, extract_groups  # type: ignore[]
+    from utilities.sqlalchemy import get_table, insert_items  # type: ignore[]
+    from utilities.sqlalchemy_polars import (  # type: ignore[]
+        insert_dataframe,
+        select_to_dataframe,
+    )
+    from utilities.text import ensure_str  # type: ignore[]
+    from utilities.types import ensure_not_none  # type: ignore[]
+    from utilities.zoneinfo import HONG_KONG  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [
+        HONG_KONG,
+        IndexS,
+        check_polars_dataframe,
+        ensure_not_none,
+        ensure_str,
+        extract_group,
+        extract_groups,
+        get_table,
+        insert_dataframe,
+        insert_items,
+        list_dir,
+        one,
+        partial,
+        select_to_dataframe,
+    ]
+
+try:
     import xarray  # type: ignore[]
     from xarray import DataArray, Dataset  # type: ignore[]
 except ModuleNotFoundError:
