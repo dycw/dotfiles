@@ -404,6 +404,13 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    HVPLOT_OPTS = {
+        "active_tools": ["box_zoom"],
+        "default_tools": ["box_zoom", "hover"],
+        "show_grid": True,
+        "tools": ["pan", "wheel_zoom", "reset", "save", "fullscreen"],
+    }
+
     _ = [holoviews, hv]
 
 
