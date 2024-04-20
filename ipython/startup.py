@@ -66,6 +66,9 @@ import zipfile
 import zoneinfo
 from collections import Counter, defaultdict, deque
 from collections.abc import (
+    AsyncGenerator,
+    AsyncIterable,
+    AsyncIterator,
     Callable,
     Collection,
     Container,
@@ -138,6 +141,9 @@ _ = [
     AbstractSet,
     Annotated,
     Any,
+    AsyncGenerator,
+    AsyncIterable,
+    AsyncIterator,
     BinaryIO,
     Callable,
     CalledProcessError,
@@ -169,8 +175,8 @@ _ = [
     TypeAlias,
     TypeGuard,
     TypeVar,
-    Union,
     UTC,
+    Union,
     abc,
     asdict,
     ast,
@@ -186,6 +192,7 @@ _ = [
     cmath,
     concurrent.futures,
     contextvars,
+    copy,
     copyfile,
     cpu_count,
     csv,
@@ -212,7 +219,6 @@ _ = [
     gzip,
     hashlib,
     heapq,
-    copy,
     imaplib,
     io,
     is_dataclass,
@@ -398,6 +404,13 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    HVPLOT_OPTS = {
+        "active_tools": ["box_zoom"],
+        "default_tools": ["box_zoom", "hover"],
+        "show_grid": True,
+        "tools": ["pan", "wheel_zoom", "reset", "save", "fullscreen"],
+    }
+
     _ = [holoviews, hv]
 
 
@@ -494,10 +507,11 @@ else:
 try:
     import more_itertools  # type: ignore[]
     import more_itertools as mi  # type: ignore[]
+    from more_itertools import split_at  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [mi, more_itertools]
+    _ = [mi, more_itertools, split_at]
 
 
 try:
@@ -940,11 +954,11 @@ try:
     import sqlalchemy  # type: ignore[]
     import sqlalchemy as sqla  # type: ignore[]
     import sqlalchemy.orm  # type: ignore[]
-    from sqlalchemy import create_engine, select  # type: ignore[]
+    from sqlalchemy import create_engine, func, select  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [sqla, sqlalchemy, sqlalchemy.orm, create_engine, select]
+    _ = [sqla, sqlalchemy, sqlalchemy.orm, create_engine, select, func]
 
 
 try:
@@ -965,11 +979,13 @@ else:
 
 
 try:
+    from utilities.datetime import date_to_datetime, get_now  # type: ignore[]
     from utilities.functools import partial  # type: ignore[]
     from utilities.iterables import one  # type: ignore[]
     from utilities.pandas import IndexS  # type: ignore[]
     from utilities.pathlib import list_dir  # type: ignore[]
     from utilities.polars import check_polars_dataframe  # type: ignore[]
+    from utilities.pytest import throttle  # type: ignore[]
     from utilities.re import extract_group, extract_groups  # type: ignore[]
     from utilities.sqlalchemy import get_table, insert_items  # type: ignore[]
     from utilities.sqlalchemy_polars import (  # type: ignore[]
@@ -986,6 +1002,8 @@ else:
         HONG_KONG,
         IndexS,
         check_polars_dataframe,
+        get_now,
+        date_to_datetime,
         ensure_not_none,
         ensure_str,
         extract_group,
@@ -997,6 +1015,7 @@ else:
         one,
         partial,
         select_to_dataframe,
+        throttle,
     ]
 
 try:
