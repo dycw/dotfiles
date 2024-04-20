@@ -1,10 +1,7 @@
--- luacheck: push ignore
-local set = vim.keymap.set
--- luacheck: pop
-local opts = { noremap = true, silent = true }
+local keymap_set = require("utilities").keymap_set
 
 -- command
-set("n", ";", ":", opts)
+keymap_set("n", ";", ":", "Command")
 
 -- global marks
 local prefixes = "m'"
@@ -14,43 +11,47 @@ for i = 1, #prefixes do
     for j = 1, #letters do
         local lower_letter = letters:sub(j, j)
         local upper_letter = string.upper(lower_letter)
-        set({ "n", "v" }, prefix .. lower_letter, prefix .. upper_letter, { desc = "Mark " .. upper_letter })
+        keymap_set({ "n", "v" }, prefix .. lower_letter, prefix .. upper_letter, "Mark " .. upper_letter)
     end
 end
 
 -- navigation
-set("i", "<C-h>", "<Left>", opts)
-set("i", "<C-j>", "<Down>", opts)
-set("i", "<C-k>", "<Up>", opts)
-set("i", "<C-l>", "<Right>", opts)
+keymap_set("i", "<C-h>", "<Left>", "Move left")
+keymap_set("i", "<C-j>", "<Down>", "Move down")
+keymap_set("i", "<C-k>", "<Up>", "Move up")
+keymap_set("i", "<C-l>", "<Right>", "Move right")
 
 -- paste in insert mode
-set("i", "<C-v>", "<C-o>p", opts)
+keymap_set("i", "<C-v>", "<C-o>p", "Paste")
 
 -- paste mode
-set({ "n", "v" }, "<F2>", "<Cmd>set invpaste paste?<CR>", opts)
+keymap_set({ "n", "v" }, "<F2>", "<Cmd>set invpaste paste?<CR>", "Toggle paste mode")
 
 -- quickfix
-set("n", "]", "<Cmd>cnext<CR>", opts)
-set("n", "[", "<Cmd>cprev<CR>", opts)
+keymap_set("n", "]", "<Cmd>cnext<CR>", "Quickfix next")
+keymap_set("n", "[", "<Cmd>cprev<CR>", "Quickfix prev")
 
 -- quit
-set({ "n", "v" }, "<C-q>", "<Cmd>confirm q<CR>", opts)
-set("i", "<C-q>", "<Esc><Cmd>confirm q<CR>a", opts)
+keymap_set({ "n", "v" }, "<C-q>", "<Cmd>confirm q<CR>", "Quit")
+keymap_set("i", "<C-q>", "<Esc><Cmd>confirm q<CR>a", "Quit")
 
 -- save
-set({ "n", "v" }, "<C-s>", "<Cmd>w<CR>", opts)
-set("i", "<C-s>", "<Esc><Cmd>w<CR>a", opts)
+keymap_set({ "n", "v" }, "<C-s>", "<Cmd>w<CR>", "Save")
+keymap_set("i", "<C-s>", "<Esc><Cmd>w<CR>a", "Save")
 
 -- search highlight
-set("n", "<Esc>", "<Cmd>nohlsearch<CR>", opts)
+keymap_set("n", "<Esc>", "<Cmd>nohlsearch<CR>", "Clear highlight")
 
 -- split windows
-set("n", "<C-w>h", "<Cmd>set nosplitright<CR> <Cmd>vsplit<CR> <Cmd>set splitright<CR>", opts)
-set("n", "<C-w>j", "<Cmd>set splitbelow<CR> <Cmd>split<CR>", opts)
-set("n", "<C-w>k", "<Cmd>set nosplitbelow<CR> <Cmd>split<CR> <Cmd>set splitbelow<CR>", opts)
-set("n", "<C-w>l", "<Cmd>set splitright<CR> <Cmd>vsplit<CR>", opts)
+keymap_set("n", "<C-w>h", "<Cmd>set nosplitright<CR> <Cmd>vsplit<CR> <Cmd>set splitright<CR>", "Split left")
+keymap_set("n", "<C-w>j", "<Cmd>set splitbelow<CR> <Cmd>split<CR>", "Split down")
+keymap_set("n", "<C-w>k", "<Cmd>set nosplitbelow<CR> <Cmd>split<CR> <Cmd>set splitbelow<CR>", "Split up")
+keymap_set("n", "<C-w>l", "<Cmd>set splitright<CR> <Cmd>vsplit<CR>", "Split right")
+keymap_set("n", "<Leader>wh", "<Cmd>set nosplitright<CR> <Cmd>vsplit<CR> <Cmd>set splitright<CR>", "Split left")
+keymap_set("n", "<Leader>wj", "<Cmd>set splitbelow<CR> <Cmd>split<CR>", "Split down")
+keymap_set("n", "<Leader>wk", "<Cmd>set nosplitbelow<CR> <Cmd>split<CR> <Cmd>set splitbelow<CR>", "Split up")
+keymap_set("n", "<Leader>wl", "<Cmd>set splitright<CR> <Cmd>vsplit<CR>", "Split right")
 
 -- visual indents
-set("v", "<", "<gv", opts)
-set("v", ">", ">gv", opts)
+keymap_set("v", "<", "<gv", "Indent left")
+keymap_set("v", ">", ">gv", "Indent right")
