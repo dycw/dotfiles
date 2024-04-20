@@ -11,6 +11,11 @@ ls.add_snippets("python", {
     -- beartype
     s("be-beartype", { t("from beartype import beartype") }),
 
+    --click
+    s("cl-argument", { t("from click import argument") }),
+    s("cl-command", { t("from click import command") }),
+    s("cl-option", { t("from click import option") }),
+
     -- dataclasses
     s("da-dataclasses", { t("from dataclasses import dataclass") }),
 
