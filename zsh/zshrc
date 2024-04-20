@@ -70,3 +70,6 @@ fi
 if command -v zoxide >/dev/null 2>&1; then
 	eval "$(zoxide init zsh --cmd j --hook prompt)"
 fi
+
+eval "$(direnv hook zsh)"
+. "$HOME/.cargo/env"

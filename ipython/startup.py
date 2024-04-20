@@ -965,6 +965,32 @@ else:
 
 
 try:
+    from utilities.functools import partial
+    from utilities.iterables import one
+    from utilities.pandas import IndexS
+    from utilities.pathlib import list_dir
+    from utilities.polars import check_polars_dataframe
+    from utilities.sqlalchemy import get_table, insert_items
+    from utilities.sqlalchemy_polars import insert_dataframe
+    from utilities.text import ensure_str
+    from utilities.types import ensure_not_none
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [
+        IndexS,
+        check_polars_dataframe,
+        ensure_not_none,
+        ensure_str,
+        get_table,
+        insert_dataframe,
+        insert_items,
+        list_dir,
+        one,
+        partial,
+    ]
+
+try:
     import xarray  # type: ignore[]
     from xarray import DataArray, Dataset  # type: ignore[]
 except ModuleNotFoundError:
