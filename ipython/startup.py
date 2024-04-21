@@ -136,6 +136,7 @@ from typing import (
     TypeVar,
     Union,
 )
+from zoneinfo import ZoneInfo
 
 _ = [
     AbstractSet,
@@ -177,6 +178,7 @@ _ = [
     TypeVar,
     UTC,
     Union,
+    ZoneInfo,
     abc,
     asdict,
     ast,
