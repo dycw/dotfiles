@@ -105,7 +105,7 @@
   },
   "luasnip": {
     "branch": "master",
-    "commit": "03c8e67eb7293c404845b3982db895d59c0d1538"
+    "commit": "72eea98b1900013e0cb214f29b898c8d91564930"
   },
   "marks.nvim": {
     "branch": "master",
@@ -183,13 +183,17 @@
     "branch": "main",
     "commit": "a4e30d33add8a9743b4f518b3a788b3c8e5def71"
   },
+  "nvim-tree-pairs": {
+    "branch": "main",
+    "commit": "5859b79ab2104b0970e6a8d21fcc021da8078e6e"
+  },
   "nvim-tree.lua": {
     "branch": "master",
     "commit": "ae8e46e8fabb32fa3ae5319383ea2c8763f14caa"
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "ea4f6d5175812a3f48302d638a766bc18fcbb04a"
+    "commit": "9b1c2096e0b353ab44bc5fb242306dde50761109"
   },
   "nvim-treesitter-context": {
     "branch": "master",
@@ -270,10 +274,6 @@
   "vim-just": {
     "branch": "main",
     "commit": "a2777b4b113dafc639f541ad4f0f7da0adc640f4"
-  },
-  "vim-matchquote": {
-    "branch": "master",
-    "commit": "c4c70010ddb62607e03f84b68262ce9d0c2c82fe"
   },
   "vim-mergetool": {
     "branch": "master",
