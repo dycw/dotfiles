@@ -156,6 +156,10 @@
         Installing pyenv,
       ]
     - [
+        "command -v pyright >/dev/null 2>&1 || brew install pyright",
+        Installing pyright,
+      ]
+    - [
         "command -v restic >/dev/null 2>&1 || brew install restic",
         Installing restic,
       ]
@@ -198,7 +202,7 @@
         "command -v yamllint >/dev/null 2>&1 || brew install yamllint",
         Installing yamllint,
       ]
-    - [brew install yq, Install yq]
+    - ["command -v yq >/dev/null 2>&1 || brew install yq", Installing yq]
     - [
         "command -v zellij >/dev/null 2>&1 || brew install zellij",
         Installing zellij,
