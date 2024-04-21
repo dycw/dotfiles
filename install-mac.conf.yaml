@@ -210,7 +210,7 @@
     - [brew install --cask dropbox, Installing Dropbox]
     - [brew install --cask google-chrome, Installing Google Chrome]
     - [brew install --cask libreoffice, Installing LibreOffice]
-    - [brew install --cask pgadmin4, Installing pgAdmin 4]
+    - [brew install --cask postico, Installing Postico 2]
     - [brew install --cask protonvpn, Installing ProtonVPN]
     - [brew install --cask spotify, Installing Spotify]
     - [brew install --cask visual-studio-code, Installing VS Code]
