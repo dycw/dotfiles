@@ -156,6 +156,10 @@
         Installing pyenv,
       ]
     - [
+        "command -v pyright >/dev/null 2>&1 || brew install pyright",
+        Installing pyright,
+      ]
+    - [
         "command -v restic >/dev/null 2>&1 || brew install restic",
         Installing restic,
       ]
@@ -198,6 +202,7 @@
         "command -v yamllint >/dev/null 2>&1 || brew install yamllint",
         Installing yamllint,
       ]
+    - ["command -v yq >/dev/null 2>&1 || brew install yq", Installing yq]
     - [
         "command -v zellij >/dev/null 2>&1 || brew install zellij",
         Installing zellij,
@@ -210,7 +215,8 @@
     - [brew install --cask dropbox, Installing Dropbox]
     - [brew install --cask google-chrome, Installing Google Chrome]
     - [brew install --cask libreoffice, Installing LibreOffice]
-    - [brew install --cask pgadmin4, Installing pgAdmin 4]
+    - [brew install --cask no-ip-duc, Installing No-IP DUC]
+    - [brew install --cask postico, Installing Postico 2]
     - [brew install --cask protonvpn, Installing ProtonVPN]
     - [brew install --cask spotify, Installing Spotify]
     - [brew install --cask visual-studio-code, Installing VS Code]
