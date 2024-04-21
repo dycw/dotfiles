@@ -44,8 +44,7 @@ fi
 # eza
 if command -v eza >/dev/null 2>&1; then
 	__eza_base() {
-		eza --all --classify=always --group-directories-first \
-			--ignore-glob=node_modules "$@"
+		eza --all --classify=always --group-directories-first "$@"
 	}
 	__eza_long() {
 		__eza_base --git --group --header --long \
@@ -62,8 +61,8 @@ if command -v eza >/dev/null 2>&1; then
 			watch -d -n 0.1 --color -- eza --all \
 				--classify=always --color=always --git \
 				--group --group-directories-first --header \
-				--ignore-glob=node_modules --long --reverse \
-				--sort=modified --time-style=long-iso "$@"
+				--long --reverse --sort=modified \
+				--time-style=long-iso "$@"
 		}
 		wl() { __watch_eza_base --git-ignore "$@"; }
 		wla() { __watch_eza_base "$@"; }
