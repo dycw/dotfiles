@@ -28,6 +28,8 @@ __file="${ZIM_HOME}"/init.zsh
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
+unalias l
+unalias ll
 
 # zsh
 alias zshrc='"$EDITOR" "${HOME}"/.zshrc'

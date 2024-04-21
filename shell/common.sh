@@ -43,15 +43,16 @@ fi
 
 # eza
 if command -v eza >/dev/null 2>&1; then
-	__eza_base() { eza -F --group-directories-first --ignore-glob=node_modules "$@"; }
-	__eza_short() { __eza_base -x "$@"; }
-	alias l='__eza_short --git-ignore'
-	alias ls='__eza_short --git-ignore'
-	alias lsa='__eza_short -a'
+	__eza_base() { eza --classify=always --group-directories-first --ignore-glob=node_modules "$@"; }
+	__eza_short() { __eza_base --across "$@"; }
+	l() { __eza_short --git-ignore "$@"; }
+	ls() { __eza_short --git-ignore "$@"; } #
+	la() { __eza_short --all "$@"; }
 	__eza_long() { __eza_base -ghl --git --time-style=long-iso "$@"; }
 	__eza_long_default() { __eza_long -a --git-ignore "$@"; }
-	alias ll='__eza_long_default'
-	alias la='__eza_long -a'
+	ll() { __eza_long_default "$@"; }
+	lla() { __eza_long --all "$@"; } #  same as lal
+	lal() { __eza_long --all "$@"; }
 
 	if command -v watch >/dev/null 2>&1; then
 		__watch_eza_base() {
