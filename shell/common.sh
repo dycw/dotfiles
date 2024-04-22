@@ -5,7 +5,7 @@
 if command -v bat >/dev/null 2>&1; then
 	cat() { bat "$@"; }
 	catp() { bat --style=plain "$@"; }
-	tf() { tail -f "$@" | bat --paging=never -l log; }
+	tf() { tail -f -n100 "$@" | bat --paging=never -l log; }
 fi
 
 # bottom
