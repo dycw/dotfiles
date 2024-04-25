@@ -159,6 +159,12 @@ if [ "$(command -v watch)" ]; then
 	alias wpst='watch -d -n0.1 "ps -fLu \"$USER\" | wc -l"'
 fi
 
+# pyright
+if [ "$(command -v pyright)" ]; then
+	pyr() { pyright "$@"; }
+	pyrw() { pyr -w "$@"; }
+fi
+
 # pytest
 __file="${HOME}"/dotfiles/pytest/aliases.sh
 if [ -f "$__file" ]; then
