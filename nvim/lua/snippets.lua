@@ -44,6 +44,9 @@ ls.add_snippets("python", {
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
 
+    -- itertools
+    s("it-chain", { t({ "from itertools import chain", "" }) }),
+
     -- loguru
     s("lo-logger", { t({ "from loguru import logger", "" }) }),
 
