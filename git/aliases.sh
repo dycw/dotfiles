@@ -9,7 +9,7 @@ if command -v git >/dev/null 2>&1; then
 	gac() { gaa && gc "$@"; }
 	gaca() { gaa && gca "$@"; }
 	gacan() { gaa && gcan "$@"; }
-	gacf() { gaa && gcaf "$@"; }
+	gacf() { gaa && gcf "$@"; }
 	gacn() { gaa && gcn "$@"; }
 	gacnf() { gaa && gcnf "$@"; }
 	gacnr() { gaa && gcnr "$@"; }
