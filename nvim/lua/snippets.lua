@@ -53,6 +53,9 @@ ls.add_snippets("python", {
     -- more-itertools
     s("mi-split-at", { t({ "from more_itertools import split_after", "" }) }),
 
+    -- pathlib
+    s("pa-path", { t({ "from pathlib import Path", "" }) }),
+
     -- pytest
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
     s("py-mark", { t({ "from pytest import mark", "" }) }),
