@@ -10,7 +10,7 @@ if command -v bat >/dev/null 2>&1; then
 	__tf_base() {
 		__file="$1"
 		shift
-		tail -f -n100 "$__file" | bat --paging=never --style=plain "$@"
+		tail -F --lines=100 "$__file" | bat --paging=never --style=plain "$@"
 	}
 fi
 

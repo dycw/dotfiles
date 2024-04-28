@@ -51,6 +51,7 @@ ls.add_snippets("python", {
     s("lo-logger", { t({ "from loguru import logger", "" }) }),
 
     -- more-itertools
+    s("mi-partition", { t({ "from more_itertools import partition", "" }) }),
     s("mi-split-at", { t({ "from more_itertools import split_after", "" }) }),
 
     -- pathlib
@@ -63,6 +64,11 @@ ls.add_snippets("python", {
 
     -- sqlalchemy
     s("sq-func", { t({ "from sqlalchemy import func", "" }) }),
+
+    -- subprocess
+    s("su-check-call", { t({ "from subprocess import check_call", "" }) }),
+    s("su-check-output", { t({ "from subprocess import check_output", "" }) }),
+    s("su-run", { t({ "from subprocess import run", "" }) }),
 
     -- typing
     s("ty-any", { t({ "from typing import Any", "" }) }),
