@@ -5,7 +5,13 @@
 if command -v bat >/dev/null 2>&1; then
 	cat() { bat "$@"; }
 	catp() { bat --style=plain "$@"; }
-	tf() { tail -f -n100 "$@" | bat --paging=never -l log; }
+	tf() { __tf_base "$1" --language=log; }
+	tfp() { __tf_base "$1"; }
+	__tf_base() {
+		__file="$1"
+		shift
+		tail -f -n100 "$__file" | bat --paging=never --style=plain "$@"
+	}
 fi
 
 # bottom
