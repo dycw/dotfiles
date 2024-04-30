@@ -93,7 +93,6 @@ from dataclasses import (
     make_dataclass,
     replace,
 )
-from datetime import UTC
 from enum import Enum, IntEnum, auto
 from functools import lru_cache, partial, reduce, wraps
 from hashlib import md5
@@ -176,7 +175,6 @@ _ = [
     TypeAlias,
     TypeGuard,
     TypeVar,
-    UTC,
     Union,
     ZoneInfo,
     abc,
@@ -300,6 +298,14 @@ except ImportError:
     pass
 else:
     _ = [Buffer]
+
+
+try:
+    from datetime import UTC  # python 3.11
+except ImportError:
+    pass
+else:
+    _ = [UTC]
 
 
 try:
