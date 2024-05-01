@@ -992,41 +992,79 @@ try:
     from utilities.datetime import date_to_datetime, get_now  # type: ignore[]
     from utilities.functools import partial  # type: ignore[]
     from utilities.iterables import one  # type: ignore[]
-    from utilities.pandas import IndexS  # type: ignore[]
     from utilities.pathlib import list_dir  # type: ignore[]
-    from utilities.polars import check_polars_dataframe  # type: ignore[]
-    from utilities.pytest import throttle  # type: ignore[]
     from utilities.re import extract_group, extract_groups  # type: ignore[]
-    from utilities.sqlalchemy import get_table, insert_items  # type: ignore[]
-    from utilities.sqlalchemy_polars import (  # type: ignore[]
-        insert_dataframe,
-        select_to_dataframe,
-    )
     from utilities.text import ensure_str  # type: ignore[]
-    from utilities.types import ensure_not_none  # type: ignore[]
+    from utilities.types import (  # type: ignore[]
+        ensure_class,
+        ensure_datetime,
+        ensure_float,
+        ensure_int,
+        ensure_not_none,
+    )
     from utilities.zoneinfo import HONG_KONG  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
     _ = [
         HONG_KONG,
-        IndexS,
-        check_polars_dataframe,
-        get_now,
         date_to_datetime,
+        ensure_class,
+        ensure_datetime,
+        ensure_float,
+        ensure_int,
         ensure_not_none,
         ensure_str,
         extract_group,
         extract_groups,
-        get_table,
-        insert_dataframe,
-        insert_items,
+        get_now,
         list_dir,
         one,
         partial,
-        select_to_dataframe,
-        throttle,
     ]
+    try:
+        from utilities.altair import (  # type: ignore[]
+            plot_intraday_dataframe,
+            vconcat_charts,
+        )
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [plot_intraday_dataframe, vconcat_charts]
+    try:
+        from utilities.pandas import IndexS  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [IndexS]
+    try:
+        from utilities.polars import check_polars_dataframe  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [check_polars_dataframe]
+    try:
+        from utilities.pytest import throttle  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [throttle]
+    try:
+        from utilities.sqlalchemy import get_table, insert_items  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [get_table, insert_items]
+    try:
+        from utilities.sqlalchemy_polars import (  # type: ignore[]
+            insert_dataframe,
+            select_to_dataframe,
+        )
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [insert_dataframe, select_to_dataframe]
+
 
 try:
     import xarray  # type: ignore[]

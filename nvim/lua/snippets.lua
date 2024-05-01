@@ -78,6 +78,8 @@ ls.add_snippets("python", {
     -- utilities
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
     s("ut-date-to-datetime", { t({ "from utilities.datetime import date_to_datetime", "" }) }),
+    s("ut-ensure-float", { t({ "from utilities.text import ensure_float", "" }) }),
+    s("ut-ensure-int", { t({ "from utilities.text import ensure_int", "" }) }),
     s("ut-ensure-not-none", { t({ "from utilities.types import ensure_not_none", "" }) }),
     s("ut-ensure-str", { t({ "from utilities.text import ensure_str", "" }) }),
     s("ut-extract-group", { t({ "from utilities.re import extract_group", "" }) }),
