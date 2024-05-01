@@ -410,7 +410,8 @@ else:
 
 try:
     import holoviews  # type: ignore[] # noqa: ICN001
-    import holoviews as hv  # type: ignore[]
+    import holoviews as hv  # type: ignore[]  # type: ignore[]
+    from holoviews import extension  # type: ignore[]  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
@@ -421,7 +422,7 @@ else:
         "tools": ["pan", "wheel_zoom", "reset", "save", "fullscreen"],
     }
 
-    _ = [holoviews, hv]
+    _ = [extension, holoviews, hv]
 
 
 try:
@@ -450,6 +451,15 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [hypothesis]
+
+
+try:
+    import ib_async  # type: ignore[]
+    from ib_async import Contract, Forex  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [Contract, Forex, ib_async]
 
 
 try:
@@ -1096,23 +1106,23 @@ def _add_src_to_sys_path() -> None:
 _ = _add_src_to_sys_path()
 
 
-@dataclass(kw_only=True)
+@dataclass
 class _Show:
     """Context manager which adjusts the display of NDFrames."""
 
-    dp: int | None = None
-    rows: int | None = _PANDAS_POLARS_ROWS
-    columns: int | None = _PANDAS_POLARS_COLS
-    stack: ExitStack = field(default_factory=ExitStack)
+    rows: int | None = field(default=_PANDAS_POLARS_ROWS)
+    columns: int | None = field(default=_PANDAS_POLARS_COLS, kw_only=True)
+    dp: int | None = field(default=None, kw_only=True)
+    stack: ExitStack = field(default_factory=ExitStack, kw_only=True)
 
     def __call__(
         self,
+        rows: int | None = _PANDAS_POLARS_ROWS,
         *,
         dp: int | None = None,
-        rows: int | None = _PANDAS_POLARS_ROWS,
         columns: int | None = _PANDAS_POLARS_COLS,
     ) -> _Show:
-        return replace(self, dp=dp, rows=rows, columns=columns)
+        return replace(self, rows=rows, dp=dp, columns=columns)
 
     def __enter__(self) -> None:
         self._enter_pandas()
