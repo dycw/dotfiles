@@ -99,6 +99,7 @@ ls.add_snippets("python", {
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
+    s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
 
     -- zoneinfo
     s("zo-zoneinfo", { t({ "from zoneinfo import ZoneInfo", "" }) }),

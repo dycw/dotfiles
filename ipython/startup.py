@@ -1003,6 +1003,7 @@ try:
     from utilities.functools import partial  # type: ignore[]
     from utilities.iterables import one  # type: ignore[]
     from utilities.pathlib import list_dir  # type: ignore[]
+    from utilities.pickle import read_pickle, write_pickle  # type: ignore[]
     from utilities.re import extract_group, extract_groups  # type: ignore[]
     from utilities.text import ensure_str  # type: ignore[]
     from utilities.types import (  # type: ignore[]
@@ -1031,6 +1032,8 @@ else:
         list_dir,
         one,
         partial,
+        read_pickle,
+        write_pickle,
     ]
     try:
         from utilities.altair import (  # type: ignore[]
