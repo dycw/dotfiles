@@ -339,6 +339,8 @@ except ModuleNotFoundError:
 else:
     _ = [alt, altair]
 
+    alt.data_transformers.enable("vegafusion")
+
 
 try:
     from beartype import beartype  # type: ignore[]
@@ -408,7 +410,8 @@ else:
 
 try:
     import holoviews  # type: ignore[] # noqa: ICN001
-    import holoviews as hv  # type: ignore[]
+    import holoviews as hv  # type: ignore[]  # type: ignore[]
+    from holoviews import extension  # type: ignore[]  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
@@ -419,7 +422,7 @@ else:
         "tools": ["pan", "wheel_zoom", "reset", "save", "fullscreen"],
     }
 
-    _ = [holoviews, hv]
+    _ = [extension, holoviews, hv]
 
 
 try:
@@ -448,6 +451,15 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [hypothesis]
+
+
+try:
+    import ib_async  # type: ignore[]
+    from ib_async import Contract, Forex  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [Contract, Forex, ib_async]
 
 
 try:
@@ -990,41 +1002,82 @@ try:
     from utilities.datetime import date_to_datetime, get_now  # type: ignore[]
     from utilities.functools import partial  # type: ignore[]
     from utilities.iterables import one  # type: ignore[]
-    from utilities.pandas import IndexS  # type: ignore[]
     from utilities.pathlib import list_dir  # type: ignore[]
-    from utilities.polars import check_polars_dataframe  # type: ignore[]
-    from utilities.pytest import throttle  # type: ignore[]
+    from utilities.pickle import read_pickle, write_pickle  # type: ignore[]
     from utilities.re import extract_group, extract_groups  # type: ignore[]
-    from utilities.sqlalchemy import get_table, insert_items  # type: ignore[]
-    from utilities.sqlalchemy_polars import (  # type: ignore[]
-        insert_dataframe,
-        select_to_dataframe,
-    )
     from utilities.text import ensure_str  # type: ignore[]
-    from utilities.types import ensure_not_none  # type: ignore[]
+    from utilities.types import (  # type: ignore[]
+        ensure_class,
+        ensure_datetime,
+        ensure_float,
+        ensure_int,
+        ensure_not_none,
+    )
     from utilities.zoneinfo import HONG_KONG  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
     _ = [
         HONG_KONG,
-        IndexS,
-        check_polars_dataframe,
-        get_now,
         date_to_datetime,
+        ensure_class,
+        ensure_datetime,
+        ensure_float,
+        ensure_int,
         ensure_not_none,
         ensure_str,
         extract_group,
         extract_groups,
-        get_table,
-        insert_dataframe,
-        insert_items,
+        get_now,
         list_dir,
         one,
         partial,
-        select_to_dataframe,
-        throttle,
+        read_pickle,
+        write_pickle,
     ]
+    try:
+        from utilities.altair import (  # type: ignore[]
+            plot_intraday_dataframe,
+            vconcat_charts,
+        )
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [plot_intraday_dataframe, vconcat_charts]
+    try:
+        from utilities.pandas import IndexS  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [IndexS]
+    try:
+        from utilities.polars import check_polars_dataframe  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [check_polars_dataframe]
+    try:
+        from utilities.pytest import throttle  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [throttle]
+    try:
+        from utilities.sqlalchemy import get_table, insert_items  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [get_table, insert_items]
+    try:
+        from utilities.sqlalchemy_polars import (  # type: ignore[]
+            insert_dataframe,
+            select_to_dataframe,
+        )
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [insert_dataframe, select_to_dataframe]
+
 
 try:
     import xarray  # type: ignore[]
@@ -1056,23 +1109,23 @@ def _add_src_to_sys_path() -> None:
 _ = _add_src_to_sys_path()
 
 
-@dataclass(kw_only=True)
+@dataclass
 class _Show:
     """Context manager which adjusts the display of NDFrames."""
 
-    dp: int | None = None
-    rows: int | None = _PANDAS_POLARS_ROWS
-    columns: int | None = _PANDAS_POLARS_COLS
-    stack: ExitStack = field(default_factory=ExitStack)
+    rows: int | None = field(default=_PANDAS_POLARS_ROWS)
+    columns: int | None = field(default=_PANDAS_POLARS_COLS, kw_only=True)
+    dp: int | None = field(default=None, kw_only=True)
+    stack: ExitStack = field(default_factory=ExitStack, kw_only=True)
 
     def __call__(
         self,
+        rows: int | None = _PANDAS_POLARS_ROWS,
         *,
         dp: int | None = None,
-        rows: int | None = _PANDAS_POLARS_ROWS,
         columns: int | None = _PANDAS_POLARS_COLS,
     ) -> _Show:
-        return replace(self, dp=dp, rows=rows, columns=columns)
+        return replace(self, rows=rows, dp=dp, columns=columns)
 
     def __enter__(self) -> None:
         self._enter_pandas()

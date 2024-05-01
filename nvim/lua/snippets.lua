@@ -40,6 +40,7 @@ ls.add_snippets("python", {
     s("en-enum", { t({ "from enum import Enum", "" }) }),
 
     -- hypothesis
+    s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
@@ -59,8 +60,7 @@ ls.add_snippets("python", {
 
     -- pytest
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
-    s("py-mark", { t({ "from pytest import mark", "" }) }),
-    s("py-param", { t({ "from pytest import param", "" }) }),
+    s("py-mark", { t({ "from pytest import mark, param", "" }) }),
 
     -- sqlalchemy
     s("sq-func", { t({ "from sqlalchemy import func", "" }) }),
@@ -78,8 +78,13 @@ ls.add_snippets("python", {
     -- utilities
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
     s("ut-date-to-datetime", { t({ "from utilities.datetime import date_to_datetime", "" }) }),
+    s("ut-ensure-date", { t({ "from utilities.types import ensure_date", "" }) }),
+    s("ut-ensure-float", { t({ "from utilities.types import ensure_float", "" }) }),
+    s("ut-ensure-int", { t({ "from utilities.types import ensure_int", "" }) }),
+    s("ut-ensure-number", { t({ "from utilities.types import ensure_number", "" }) }),
     s("ut-ensure-not-none", { t({ "from utilities.types import ensure_not_none", "" }) }),
     s("ut-ensure-str", { t({ "from utilities.text import ensure_str", "" }) }),
+    s("ut-impossible-case-erorr", { t({ "from utilities.errors import ImpossibleCaseError", "" }) }),
     s("ut-extract-group", { t({ "from utilities.re import extract_group", "" }) }),
     s("ut-extract-groups", { t({ "from utilities.re import extract_groups", "" }) }),
     s("ut-get-now", { t({ "from utilities.datetime import get_now", "" }) }),
@@ -88,11 +93,13 @@ ls.add_snippets("python", {
     s("ut-index-s", { t({ "utilities.pandas import IndexS", "" }) }),
     s("ut-insert-dataframe", { t({ "from utilities.sqlalchemy_polars import insert_dataframe", "" }) }),
     s("ut-insert-items", { t({ "from utilities.sqlalchemy import insert_items", "" }) }),
+    s("ut-int-arrays", { t({ "from utilities.hypothesis import int_arrays", "" }) }),
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
+    s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
 
     -- zoneinfo
     s("zo-zoneinfo", { t({ "from zoneinfo import ZoneInfo", "" }) }),
