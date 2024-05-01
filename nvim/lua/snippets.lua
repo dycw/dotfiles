@@ -40,6 +40,7 @@ ls.add_snippets("python", {
     s("en-enum", { t({ "from enum import Enum", "" }) }),
 
     -- hypothesis
+    s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
@@ -59,8 +60,7 @@ ls.add_snippets("python", {
 
     -- pytest
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
-    s("py-mark", { t({ "from pytest import mark", "" }) }),
-    s("py-param", { t({ "from pytest import param", "" }) }),
+    s("py-mark", { t({ "from pytest import mark, param", "" }) }),
 
     -- sqlalchemy
     s("sq-func", { t({ "from sqlalchemy import func", "" }) }),
@@ -88,6 +88,7 @@ ls.add_snippets("python", {
     s("ut-index-s", { t({ "utilities.pandas import IndexS", "" }) }),
     s("ut-insert-dataframe", { t({ "from utilities.sqlalchemy_polars import insert_dataframe", "" }) }),
     s("ut-insert-items", { t({ "from utilities.sqlalchemy import insert_items", "" }) }),
+    s("ut-int-arrays", { t({ "from utilities.hypothesis import int_arrays", "" }) }),
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),

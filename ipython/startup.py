@@ -339,6 +339,8 @@ except ModuleNotFoundError:
 else:
     _ = [alt, altair]
 
+    alt.data_transformers.enable("vegafusion")
+
 
 try:
     from beartype import beartype  # type: ignore[]
