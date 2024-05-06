@@ -219,8 +219,11 @@
     - [brew install --cask postico, Installing Postico 2]
     - [brew install --cask protonvpn, Installing ProtonVPN]
     - [brew install --cask spotify, Installing Spotify]
+    - [brew install --cask transmission, Installing Transmission]
     - [brew install --cask visual-studio-code, Installing VS Code]
+    - [brew install --cask vlc, Installing VLC]
     - [brew install --cask whatsapp, Installing WhatsApp]
+    - [brew install --cask zoom, Installing Zoom]
     - [
         "[ -f ${HOME}/.config/fzf/fzf.zsh ] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
         Configuring fzf,
