@@ -79,6 +79,7 @@ ls.add_snippets("python", {
     s("ty-literal", { t({ "from typing import Literal", "" }) }),
 
     -- utilities
+    s("ut-always-iterable", { t({ "from utilities.more_itertools import always_iterable", "" }) }),
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
     s("ut-date-to-datetime", { t({ "from utilities.datetime import date_to_datetime", "" }) }),
     s("ut-ensure-date", { t({ "from utilities.types import ensure_date", "" }) }),
