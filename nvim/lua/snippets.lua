@@ -39,6 +39,9 @@ ls.add_snippets("python", {
     s("en-auto", { t({ "from enum import auto", "" }) }),
     s("en-enum", { t({ "from enum import Enum", "" }) }),
 
+    -- functools
+    s("fu-partial", { t({ "from functools import partial", "" }) }),
+
     -- hypothesis
     s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
