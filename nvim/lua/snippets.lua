@@ -70,6 +70,9 @@ ls.add_snippets("python", {
     s("su-check-output", { t({ "from subprocess import check_output", "" }) }),
     s("su-run", { t({ "from subprocess import run", "" }) }),
 
+    -- time
+    s("ti-sleep", { t({ "from time import sleep", "" }) }),
+
     -- typing
     s("ty-any", { t({ "from typing import Any", "" }) }),
     s("ty-cast", { t({ "from typing import cast", "" }) }),
