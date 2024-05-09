@@ -12,10 +12,13 @@ ls.add_snippets("python", {
     -- beartype
     s("be-beartype", { t({ "from beartype import beartype", "" }) }),
 
-    --click
+    -- click
     s("cl-argument", { t({ "from click import argument", "" }) }),
     s("cl-command", { t({ "from click import command", "" }) }),
     s("cl-option", { t({ "from click import option", "" }) }),
+
+    -- contextlib
+    s("co-suppress", { t({ "from contextlib import suppress", "" }) }),
 
     -- dataclasses
     s("da-dataclass", { t({ "from dataclasses import dataclass", "" }) }),
@@ -43,13 +46,17 @@ ls.add_snippets("python", {
     s("fu-partial", { t({ "from functools import partial", "" }) }),
 
     -- hypothesis
+    s("hy-assume", { t({ "from hypothesis import assume", "" }) }),
     s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
+    s("hy-lists", { t({ "from hypothesis.strategies import lists", "" }) }),
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
 
     -- itertools
+    s("it-accumulate", { t({ "from itertools import accumulate", "" }) }),
     s("it-chain", { t({ "from itertools import chain", "" }) }),
+    s("it-product", { t({ "from itertools import product", "" }) }),
 
     -- loguru
     s("lo-logger", { t({ "from loguru import logger", "" }) }),
@@ -64,6 +71,9 @@ ls.add_snippets("python", {
     -- pytest
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
     s("py-mark", { t({ "from pytest import mark, param", "" }) }),
+
+    -- pytest-benchmark
+    s("py-benchmark-fixture", { t({ "from pytest_benchmark.fixture import BenchmarkFixture", "" }) }),
 
     -- sqlalchemy
     s("sq-func", { t({ "from sqlalchemy import func", "" }) }),
@@ -103,6 +113,7 @@ ls.add_snippets("python", {
     s("ut-insert-items", { t({ "from utilities.sqlalchemy import insert_items", "" }) }),
     s("ut-int-arrays", { t({ "from utilities.hypothesis import int_arrays", "" }) }),
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
+    s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
