@@ -5,6 +5,7 @@ import ast
 import asyncio
 import base64
 import bisect
+import builtins
 import calendar
 import cmath
 import concurrent.futures
@@ -185,6 +186,7 @@ _ = [
     auto,
     base64,
     bisect,
+    builtins,
     calendar,
     chain,
     check_call,
@@ -1044,6 +1046,12 @@ else:
         pass
     else:
         _ = [plot_intraday_dataframe, vconcat_charts]
+    try:
+        from utilities.more_itertools import always_iterable  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [always_iterable]
     try:
         from utilities.pandas import IndexS  # type: ignore[]
     except ModuleNotFoundError:
