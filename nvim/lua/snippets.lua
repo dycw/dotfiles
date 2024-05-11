@@ -69,14 +69,21 @@ ls.add_snippets("python", {
     s("pa-path", { t({ "from pathlib import Path", "" }) }),
 
     -- pytest
+    s("py-approx", { t({ "from pytest import approx", "" }) }),
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
     s("py-mark", { t({ "from pytest import mark, param", "" }) }),
+    s("py-raises", { t({ "from pytest import raises", "" }) }),
 
     -- pytest-benchmark
     s("py-benchmark-fixture", { t({ "from pytest_benchmark.fixture import BenchmarkFixture", "" }) }),
 
+    -- rich
+    s("ri-print", { t({ "from rich import print", "" }) }),
+
     -- sqlalchemy
     s("sq-func", { t({ "from sqlalchemy import func", "" }) }),
+    s("sq-select", { t({ "from sqlalchemy import select", "" }) }),
+    s("sq-text", { t({ "from sqlalchemy import text", "" }) }),
 
     -- subprocess
     s("su-check-call", { t({ "from subprocess import check_call", "" }) }),
@@ -90,6 +97,10 @@ ls.add_snippets("python", {
     s("ty-any", { t({ "from typing import Any", "" }) }),
     s("ty-cast", { t({ "from typing import cast", "" }) }),
     s("ty-literal", { t({ "from typing import Literal", "" }) }),
+    s("ty-overload", { t({ "from typing import overload", "" }) }),
+
+    -- typing-extensions
+    s("ty-override", { t({ "from typing_extensions import override", "" }) }),
 
     -- utilities
     s("ut-always-iterable", { t({ "from utilities.more_itertools import always_iterable", "" }) }),
@@ -107,6 +118,7 @@ ls.add_snippets("python", {
     s("ut-get-repo-root", { t({ "from utilities.git import get_repo_root", "" }) }),
     s("ut-get-table", { t({ "from utilities.sqlalchemy import get_table", "" }) }),
     s("ut-hong-kong", { t({ "from utilities.zoneinfo import HONG_KONG", "" }) }),
+    s("ut-tokyo", { t({ "from utilities.zoneinfo import TOKYO", "" }) }),
     s("ut-impossible-case-error", { t({ "from utilities.errors import ImpossibleCaseError", "" }) }),
     s("ut-index-s", { t({ "utilities.pandas import IndexS", "" }) }),
     s("ut-insert-dataframe", { t({ "from utilities.sqlalchemy_polars import insert_dataframe", "" }) }),
