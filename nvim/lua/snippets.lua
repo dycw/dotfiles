@@ -69,6 +69,13 @@ ls.add_snippets("python", {
     s("pa-path", { t({ "from pathlib import Path", "" }) }),
 
     -- pytest
+    s("mark-parametrize", {
+        t({ '@mark.parametrize("' }),
+        i(1, "arg1"),
+        t({ '"), [param(' }),
+        i(2, "param1"),
+        t(")])"),
+    }),
     s("py-approx", { t({ "from pytest import approx", "" }) }),
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
     s("py-mark", { t({ "from pytest import mark, param", "" }) }),
