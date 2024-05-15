@@ -12,6 +12,7 @@ import concurrent.futures
 import contextvars
 import copy
 import csv
+import dataclasses
 import datetime
 import datetime as dt
 import decimal
@@ -201,6 +202,7 @@ _ = [
     cpu_count,
     csv,
     dataclass,
+    dataclasses,
     datetime,
     decimal,
     defaultdict,
