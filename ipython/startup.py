@@ -12,6 +12,7 @@ import concurrent.futures
 import contextvars
 import copy
 import csv
+import dataclasses
 import datetime
 import datetime as dt
 import decimal
@@ -25,6 +26,7 @@ import gzip
 import hashlib
 import heapq
 import imaplib
+import inspect
 import io
 import itertools
 import itertools as it
@@ -97,6 +99,7 @@ from dataclasses import (
 from enum import Enum, IntEnum, auto
 from functools import lru_cache, partial, reduce, wraps
 from hashlib import md5
+from inspect import signature
 from itertools import (
     chain,
     dropwhile,
@@ -199,6 +202,7 @@ _ = [
     cpu_count,
     csv,
     dataclass,
+    dataclasses,
     datetime,
     decimal,
     defaultdict,
@@ -222,13 +226,12 @@ _ = [
     hashlib,
     heapq,
     imaplib,
+    inspect,
     io,
     is_dataclass,
     islice,
     it,
     itertools,
-    json,
-    json,
     json,
     locale,
     logging,
@@ -261,6 +264,7 @@ _ = [
     search,
     secrets,
     shutil,
+    signature,
     sleep,
     smtplib,
     socket,

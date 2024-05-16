@@ -44,6 +44,7 @@ ls.add_snippets("python", {
 
     -- functools
     s("fu-partial", { t({ "from functools import partial", "" }) }),
+    s("fu-reduce", { t({ "from functools import reduce", "" }) }),
 
     -- hypothesis
     s("hy-assume", { t({ "from hypothesis import assume", "" }) }),
@@ -62,6 +63,7 @@ ls.add_snippets("python", {
     s("lo-logger", { t({ "from loguru import logger", "" }) }),
 
     -- more-itertools
+    s("mi-iterate", { t({ "from more_itertools import iterate", "" }) }),
     s("mi-partition", { t({ "from more_itertools import partition", "" }) }),
     s("mi-split-at", { t({ "from more_itertools import split_after", "" }) }),
 
@@ -69,6 +71,13 @@ ls.add_snippets("python", {
     s("pa-path", { t({ "from pathlib import Path", "" }) }),
 
     -- pytest
+    s("mark-parametrize", {
+        t({ '@mark.parametrize("' }),
+        i(1, "arg1"),
+        t({ '"), [param(' }),
+        i(2, "param1"),
+        t(")])"),
+    }),
     s("py-approx", { t({ "from pytest import approx", "" }) }),
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
     s("py-mark", { t({ "from pytest import mark, param", "" }) }),
@@ -118,7 +127,6 @@ ls.add_snippets("python", {
     s("ut-get-repo-root", { t({ "from utilities.git import get_repo_root", "" }) }),
     s("ut-get-table", { t({ "from utilities.sqlalchemy import get_table", "" }) }),
     s("ut-hong-kong", { t({ "from utilities.zoneinfo import HONG_KONG", "" }) }),
-    s("ut-tokyo", { t({ "from utilities.zoneinfo import TOKYO", "" }) }),
     s("ut-impossible-case-error", { t({ "from utilities.errors import ImpossibleCaseError", "" }) }),
     s("ut-index-s", { t({ "utilities.pandas import IndexS", "" }) }),
     s("ut-insert-dataframe", { t({ "from utilities.sqlalchemy_polars import insert_dataframe", "" }) }),
@@ -130,7 +138,9 @@ ls.add_snippets("python", {
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
+    s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
+    s("ut-tokyo", { t({ "from utilities.zoneinfo import TOKYO", "" }) }),
 
     -- zoneinfo
     s("zo-zoneinfo", { t({ "from zoneinfo import ZoneInfo", "" }) }),
