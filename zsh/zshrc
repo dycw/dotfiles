@@ -58,3 +58,7 @@ fi
 
 eval "$(direnv hook zsh)"
 . "$HOME/.cargo/env"
+
+for _file in "$HOME"/work/dts/scripts/completions/zsh/*.zsh; do
+	source "$_file"
+done

@@ -997,6 +997,14 @@ else:
 
 
 try:
+    import stringcase  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [stringcase]
+
+
+try:
     from tabulate import tabulate  # type: ignore[]
 except ModuleNotFoundError:
     pass

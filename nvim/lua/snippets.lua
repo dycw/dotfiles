@@ -141,6 +141,7 @@ ls.add_snippets("python", {
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
     s("ut-tokyo", { t({ "from utilities.zoneinfo import TOKYO", "" }) }),
+    s("ut-writer", { t({ "from utilities.atomicwrites import writer", "" }) }),
 
     -- zoneinfo
     s("zo-zoneinfo", { t({ "from zoneinfo import ZoneInfo", "" }) }),
