@@ -67,6 +67,10 @@ ls.add_snippets("python", {
     s("mi-partition", { t({ "from more_itertools import partition", "" }) }),
     s("mi-split-at", { t({ "from more_itertools import split_after", "" }) }),
 
+    -- operator
+    s("op-and", { t({ "from operator import and_", "" }) }),
+    s("op-or", { t({ "from operator import or_", "" }) }),
+
     -- pathlib
     s("pa-path", { t({ "from pathlib import Path", "" }) }),
 
@@ -78,7 +82,7 @@ ls.add_snippets("python", {
     s("mark-parametrize", {
         t({ '@mark.parametrize("' }),
         i(1, "arg1"),
-        t({ '"), [param(' }),
+        t({ '", [param(' }),
         i(2, "param1"),
         t(")])"),
     }),
@@ -89,6 +93,9 @@ ls.add_snippets("python", {
 
     -- pytest-benchmark
     s("py-benchmark-fixture", { t({ "from pytest_benchmark.fixture import BenchmarkFixture", "" }) }),
+
+    -- random
+    s("ra-shuffle", { t({ "from random import shuffle", "" }) }),
 
     -- rich
     s("ri-print", { t({ "from rich import print", "" }) }),

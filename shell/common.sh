@@ -200,7 +200,8 @@ fi
 
 # uv
 if command -v uv >/dev/null 2>&1; then
-	alias uvpi='uv pip install'
-	alias uvpie='uv pip install --editable .'
-	alias uvps='uv pip sync --strict requirements.txt'
+	uvpi() { uv pip install "$@"; }
+	uvpie() { uv pip install --editable .; }
+	uvps() { uv pip sync --strict requirements.txt; }
+	uvpse() { uvps && uvpie; }
 fi
