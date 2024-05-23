@@ -67,14 +67,22 @@ ls.add_snippets("python", {
     s("mi-partition", { t({ "from more_itertools import partition", "" }) }),
     s("mi-split-at", { t({ "from more_itertools import split_after", "" }) }),
 
+    -- operator
+    s("op-and", { t({ "from operator import and_", "" }) }),
+    s("op-or", { t({ "from operator import or_", "" }) }),
+
     -- pathlib
     s("pa-path", { t({ "from pathlib import Path", "" }) }),
+
+    -- polars
+    s("po-col", { t({ "from polars import col", "" }) }),
+    s("po-lit", { t({ "from polars import lit", "" }) }),
 
     -- pytest
     s("mark-parametrize", {
         t({ '@mark.parametrize("' }),
         i(1, "arg1"),
-        t({ '"), [param(' }),
+        t({ '", [param(' }),
         i(2, "param1"),
         t(")])"),
     }),
@@ -85,6 +93,9 @@ ls.add_snippets("python", {
 
     -- pytest-benchmark
     s("py-benchmark-fixture", { t({ "from pytest_benchmark.fixture import BenchmarkFixture", "" }) }),
+
+    -- random
+    s("ra-shuffle", { t({ "from random import shuffle", "" }) }),
 
     -- rich
     s("ri-print", { t({ "from rich import print", "" }) }),
@@ -136,11 +147,14 @@ ls.add_snippets("python", {
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
+    s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
     s("ut-tokyo", { t({ "from utilities.zoneinfo import TOKYO", "" }) }),
+    s("ut-write-pickle", { t({ "from utilities.pickle import write_pickle", "" }) }),
+    s("ut-writer", { t({ "from utilities.atomicwrites import writer", "" }) }),
 
     -- zoneinfo
     s("zo-zoneinfo", { t({ "from zoneinfo import ZoneInfo", "" }) }),
