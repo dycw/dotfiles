@@ -57,6 +57,7 @@ ls.add_snippets("python", {
     -- itertools
     s("it-accumulate", { t({ "from itertools import accumulate", "" }) }),
     s("it-chain", { t({ "from itertools import chain", "" }) }),
+    s("it-groupby", { t({ "from itertools import groupby", "" }) }),
     s("it-product", { t({ "from itertools import product", "" }) }),
 
     -- loguru

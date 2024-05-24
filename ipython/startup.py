@@ -1097,6 +1097,12 @@ else:
         pass
     else:
         _ = [insert_dataframe, select_to_dataframe]
+    try:
+        from utilities.timer import Timer  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [Timer]
 
 
 try:
