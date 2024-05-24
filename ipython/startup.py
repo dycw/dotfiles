@@ -461,11 +461,11 @@ else:
 
 try:
     import ib_async  # type: ignore[]
-    from ib_async import Contract, Forex  # type: ignore[]
+    from ib_async import Contract, Crypto, Forex, Stock  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Contract, Forex, ib_async]
+    _ = [Contract, Crypto, Forex, Stock, ib_async]
 
 
 try:
