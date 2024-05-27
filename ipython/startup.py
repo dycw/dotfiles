@@ -118,6 +118,7 @@ from pathlib import Path
 from re import escape, findall, search
 from shutil import copyfile, rmtree
 from subprocess import PIPE, CalledProcessError, check_call, check_output, run
+from sys import stdout
 from tempfile import TemporaryDirectory
 from time import sleep
 from types import TracebackType
@@ -272,6 +273,7 @@ _ = [
     starmap,
     stat,
     statistics,
+    stdout,
     string,
     subprocess,
     suppress,
@@ -1060,6 +1062,12 @@ else:
         pass
     else:
         _ = [plot_intraday_dataframe, vconcat_charts]
+    try:
+        from utilities.atomicwrites import writer  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [writer]
     try:
         from utilities.more_itertools import always_iterable  # type: ignore[]
     except ModuleNotFoundError:
