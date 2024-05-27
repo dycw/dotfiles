@@ -1015,6 +1015,7 @@ else:
 try:
     from utilities.datetime import date_to_datetime, get_now  # type: ignore[]
     from utilities.functools import partial  # type: ignore[]
+    from utilities.git import get_repo_root  # type: ignore[]
     from utilities.iterables import one  # type: ignore[]
     from utilities.pathlib import list_dir  # type: ignore[]
     from utilities.pickle import read_pickle, write_pickle  # type: ignore[]
@@ -1043,6 +1044,7 @@ else:
         extract_group,
         extract_groups,
         get_now,
+        get_repo_root,
         list_dir,
         one,
         partial,

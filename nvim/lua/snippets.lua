@@ -98,6 +98,9 @@ ls.add_snippets("python", {
     -- random
     s("ra-shuffle", { t({ "from random import shuffle", "" }) }),
 
+    -- re
+    s("re-search", { t({ "from re import search", "" }) }),
+
     -- rich
     s("ri-print", { t({ "from rich import print", "" }) }),
 
