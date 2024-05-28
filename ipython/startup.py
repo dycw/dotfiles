@@ -118,6 +118,7 @@ from pathlib import Path
 from re import escape, findall, search
 from shutil import copyfile, rmtree
 from subprocess import PIPE, CalledProcessError, check_call, check_output, run
+from sys import stdout
 from tempfile import TemporaryDirectory
 from time import sleep
 from types import TracebackType
@@ -272,6 +273,7 @@ _ = [
     starmap,
     stat,
     statistics,
+    stdout,
     string,
     subprocess,
     suppress,
@@ -461,11 +463,11 @@ else:
 
 try:
     import ib_async  # type: ignore[]
-    from ib_async import Contract, Forex  # type: ignore[]
+    from ib_async import Contract, Crypto, Forex, Stock  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Contract, Forex, ib_async]
+    _ = [Contract, Crypto, Forex, Stock, ib_async]
 
 
 try:
@@ -1015,6 +1017,7 @@ else:
 try:
     from utilities.datetime import date_to_datetime, get_now  # type: ignore[]
     from utilities.functools import partial  # type: ignore[]
+    from utilities.git import get_repo_root  # type: ignore[]
     from utilities.iterables import one  # type: ignore[]
     from utilities.pathlib import list_dir  # type: ignore[]
     from utilities.pickle import read_pickle, write_pickle  # type: ignore[]
@@ -1043,6 +1046,7 @@ else:
         extract_group,
         extract_groups,
         get_now,
+        get_repo_root,
         list_dir,
         one,
         partial,
@@ -1058,6 +1062,12 @@ else:
         pass
     else:
         _ = [plot_intraday_dataframe, vconcat_charts]
+    try:
+        from utilities.atomicwrites import writer  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [writer]
     try:
         from utilities.more_itertools import always_iterable  # type: ignore[]
     except ModuleNotFoundError:
@@ -1097,6 +1107,12 @@ else:
         pass
     else:
         _ = [insert_dataframe, select_to_dataframe]
+    try:
+        from utilities.timer import Timer  # type: ignore[]
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [Timer]
 
 
 try:

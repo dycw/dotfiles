@@ -42,6 +42,7 @@ if command -v git >/dev/null 2>&1; then
 			git branch -D "${__branch}"
 		fi
 	}
+	gbm() { git branch -m "$@"; }
 	__branch_or_dev() {
 		if [ "$#" -eq 0 ]; then
 			echo dev
