@@ -133,6 +133,7 @@ ls.add_snippets("python", {
     s("ut-ensure-date", { t({ "from utilities.types import ensure_date", "" }) }),
     s("ut-ensure-float", { t({ "from utilities.types import ensure_float", "" }) }),
     s("ut-ensure-int", { t({ "from utilities.types import ensure_int", "" }) }),
+    s("ut-ensure-member", { t({ "from utilities.types import ensure_member", "" }) }),
     s("ut-ensure-not-none", { t({ "from utilities.types import ensure_not_none", "" }) }),
     s("ut-ensure-number", { t({ "from utilities.types import ensure_number", "" }) }),
     s("ut-ensure-str", { t({ "from utilities.text import ensure_str", "" }) }),
