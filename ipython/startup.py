@@ -540,6 +540,14 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [mi, more_itertools, split_at]
+    try:
+        import utilities  # type: ignore[]
+    except ModuleNotFoundError:
+        from more_itertools import always_iterable, one, peekable  # type: ignore[]
+
+        _ = [always_iterable, one, peekable]
+    else:
+        _ = utilities
 
 
 try:
@@ -827,6 +835,7 @@ try:
         read_ndjson,
         read_ods,
         read_parquet,
+        struct,
         when,
     )
     from polars.datatypes import DataTypeClass  # type: ignore[]
@@ -920,6 +929,7 @@ else:
         read_ndjson,
         read_ods,
         read_parquet,
+        struct,
         when,
     ]
 
@@ -1069,11 +1079,11 @@ else:
     else:
         _ = [writer]
     try:
-        from utilities.more_itertools import always_iterable  # type: ignore[]
+        from utilities.more_itertools import always_iterable, peekable  # type: ignore[]
     except ModuleNotFoundError:
         pass
     else:
-        _ = [always_iterable]
+        _ = [always_iterable, peekable]
     try:
         from utilities.pandas import IndexS  # type: ignore[]
     except ModuleNotFoundError:

@@ -77,7 +77,10 @@ ls.add_snippets("python", {
 
     -- polars
     s("po-col", { t({ "from polars import col", "" }) }),
+    s("po-dataframe", { t({ "from polars import DataFrame", "" }) }),
     s("po-lit", { t({ "from polars import lit", "" }) }),
+    s("po-series", { t({ "from polars import Series", "" }) }),
+    s("po-struct", { t({ "from polars import struct", "" }) }),
 
     -- pytest
     s("mark-parametrize", {
