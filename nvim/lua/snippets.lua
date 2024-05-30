@@ -157,6 +157,7 @@ ls.add_snippets("python", {
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
+    s("ut-refresh-memoized", { t({ "from utilities.atools import refresh_memoized", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
