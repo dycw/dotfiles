@@ -21,6 +21,8 @@ ls.add_snippets("python", {
     s("co-suppress", { t({ "from contextlib import suppress", "" }) }),
 
     -- dataclasses
+    s("da-asdict", { t({ "from dataclasses import asdict", "" }) }),
+    s("da-astuple", { t({ "from dataclasses import astuple", "" }) }),
     s("da-dataclass", { t({ "from dataclasses import dataclass", "" }) }),
     s("dataclass-fr-kw", {
         t({ "@dataclass(frozen=True, kw_only=True)", "" }),

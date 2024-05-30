@@ -134,10 +134,14 @@ hypothesis_dev() { export HYPOTHESIS_PROFILE=dev; }
 set bell-style none
 set editing-mode vi
 
+# ipython
+ipython_startup() { ${EDITOR} "${HOME}"/dotfiles/ipython/startup.py; }
+
 # neovim
 if command -v nvim >/dev/null 2>&1; then
-	alias n='nvim'
 	alias cdplugins='cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins"'
+	n() { nvim; }
+	lua_snippets() { ${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua; }
 fi
 
 # path
