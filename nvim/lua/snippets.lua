@@ -80,6 +80,7 @@ ls.add_snippets("python", {
     -- polars
     s("po-col", { t({ "from polars import col", "" }) }),
     s("po-dataframe", { t({ "from polars import DataFrame", "" }) }),
+    s("po-expr", { t({ "from polars import Expr", "" }) }),
     s("po-lit", { t({ "from polars import lit", "" }) }),
     s("po-series", { t({ "from polars import Series", "" }) }),
     s("po-struct", { t({ "from polars import struct", "" }) }),
@@ -125,8 +126,10 @@ ls.add_snippets("python", {
     -- typing
     s("ty-any", { t({ "from typing import Any", "" }) }),
     s("ty-cast", { t({ "from typing import cast", "" }) }),
+    s("ty-generic", { t({ "from typing import Generic", "" }) }),
     s("ty-literal", { t({ "from typing import Literal", "" }) }),
     s("ty-overload", { t({ "from typing import overload", "" }) }),
+    s("ty-type-var", { t({ "from typing import TypeVar", "" }) }),
 
     -- typing-extensions
     s("ty-override", { t({ "from typing_extensions import override", "" }) }),
