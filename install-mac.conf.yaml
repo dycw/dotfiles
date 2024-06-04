@@ -80,10 +80,6 @@
         Installing bottom,
       ]
     - [
-        "command -v chafa >/dev/null 2>&1 || brew install chafa",
-        Installing chafa,
-      ]
-    - [
         "command -v cmake >/dev/null 2>&1 || brew install cmake",
         Installing cmake,
       ]
@@ -129,10 +125,6 @@
     - [
         "command -v node >/dev/null 2>&1 || brew install node@20",
         Installing node,
-      ]
-    - [
-        "command -v nu >/dev/null 2>&1 || brew install nushell",
-        Installing nushell,
       ]
     - [
         "command -v pgcli >/dev/null 2>&1 || brew install pgcli",
@@ -198,15 +190,7 @@
         "command -v wezterm >/dev/null 2>&1 || brew install --cask wezterm",
         Installing wezterm,
       ]
-    - [
-        "command -v yamllint >/dev/null 2>&1 || brew install yamllint",
-        Installing yamllint,
-      ]
     - ["command -v yq >/dev/null 2>&1 || brew install yq", Installing yq]
-    - [
-        "command -v zellij >/dev/null 2>&1 || brew install zellij",
-        Installing zellij,
-      ]
     - [
         "command -v zoxide >/dev/null 2>&1 || brew install zoxide",
         Installing zoxide,
@@ -215,7 +199,6 @@
     - [brew install --cask dropbox, Installing Dropbox]
     - [brew install --cask google-chrome, Installing Google Chrome]
     - [brew install --cask libreoffice, Installing LibreOffice]
-    - [brew install --cask no-ip-duc, Installing No-IP DUC]
     - [brew install --cask postico, Installing Postico 2]
     - [brew install --cask protonvpn, Installing ProtonVPN]
     - [brew install --cask spotify, Installing Spotify]

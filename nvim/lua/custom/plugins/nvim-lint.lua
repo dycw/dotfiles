@@ -25,7 +25,6 @@ return {
             typescript = { "biomejs" },
             typescriptreact = { "biomejs" },
             vue = { "biomejs" },
-            yaml = { "yamllint" },
             zsh = { "shellcheck" },
         }
 
