@@ -161,4 +161,5 @@
         "command -v bump2version >/dev/null 2>&1 || pipx install bump2version",
         Installing bump2version,
       ]
-    - ["sudo snap install whatsapp-for-linux", Installing Whatsapp]
+    - ["sudo snap install pdfarranger", Install pdfarranger]
+    - ["sudo snap install whatsapp-for-linux", Installing whatsapp]
