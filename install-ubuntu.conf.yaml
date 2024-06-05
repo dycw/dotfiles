@@ -54,6 +54,10 @@
       ]
     - ["command -v bat >/dev/null 2>&1 || brew install bat", Installing bat]
     - [
+        "command -v biome >/dev/null 2>&1 || brew install biome",
+        Installing biome,
+      ]
+    - [
         "command -v btm >/dev/null 2>&1 || brew install bottom",
         Installing bottom,
       ]
@@ -92,6 +96,10 @@
         "command -v node >/dev/null 2>&1 || brew install node@20",
         Installing node,
       ]
+    - [
+        "command -v pgcli >/dev/null 2>&1 || brew install pgcli",
+        Installing pgcli,
+      ]
     - ["command -v pipx >/dev/null 2>&1 || brew install pipx", Installing pipx]
     - [
         "command -v pre-commit >/dev/null 2>&1 || brew install pre-commit",
@@ -100,6 +108,10 @@
     - [
         "command -v prettier >/dev/null 2>&1 || brew install prettier",
         Installing prettier,
+      ]
+    - [
+        "command -v pyright >/dev/null 2>&1 || brew install pyright",
+        Installing pyright,
       ]
     - [
         "command -v rg >/dev/null 2>&1 || brew install ripgrep",
@@ -122,6 +134,7 @@
         "command -v stylua >/dev/null 2>&1 || brew install stylua",
         Installing stylua,
       ]
+    - ["command -v tmux >/dev/null 2>&1 || brew install tmux", Installing tmux]
     - ["command -v uv >/dev/null 2>&1 || brew install uv", Installing uv]
     - [
         "command -v watchexec >/dev/null 2>&1 || brew install watchexec",
@@ -144,3 +157,4 @@
         "command -v bump2version >/dev/null 2>&1 || pipx install bump2version",
         Installing bump2version,
       ]
+    - ["sudo snap install whatsapp-for-linux", Installing Whatsapp]
