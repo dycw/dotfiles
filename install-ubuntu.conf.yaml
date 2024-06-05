@@ -110,6 +110,10 @@
         Installing prettier,
       ]
     - [
+        "command -v pyenv >/dev/null 2>&1 || brew install pyenv",
+        Installing pyenv,
+      ]
+    - [
         "command -v pyright >/dev/null 2>&1 || brew install pyright",
         Installing pyright,
       ]
