@@ -36,6 +36,7 @@
         "command -v curl dev/null 2>&1 || sudo apt install -y curl",
         Installing curl,
       ]
+    - ["sudo apt install -y nautilus-dropbox", Installing Dropbox]
     - [
         "command -v git >/dev/null 2>&1 || sudo apt install -y git",
         Installing git,
