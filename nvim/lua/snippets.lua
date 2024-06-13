@@ -53,8 +53,11 @@ ls.add_snippets("python", {
     s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
+    s("hy-invalid-argument", { t({ "from hypothesis.errors import InvalidArgument", "" }) }),
     s("hy-lists", { t({ "from hypothesis.strategies import lists", "" }) }),
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
+    s("hy-settings", { t({ "from hypothesis import settings", "" }) }),
+    s("hypothesis-shc-ftm", { t({ "@settings(suppress_health_check=[HealthCheck.filter_too_much]) ", "" }) }),
 
     -- itertools
     s("it-accumulate", { t({ "from itertools import accumulate", "" }) }),
@@ -78,9 +81,14 @@ ls.add_snippets("python", {
     s("pa-path", { t({ "from pathlib import Path", "" }) }),
 
     -- polars
+    s("im-pl", { t({ "import polars as pl", "" }) }),
+    s("po-assert-frame-equal", { t({ "from polars.testing import assert_frame_equal", "" }) }),
+    s("po-assert-series-equal", { t({ "from polars.testing import assert_series_equal", "" }) }),
     s("po-col", { t({ "from polars import col", "" }) }),
     s("po-dataframe", { t({ "from polars import DataFrame", "" }) }),
     s("po-expr", { t({ "from polars import Expr", "" }) }),
+    s("po-float64", { t({ "from polars import Float64", "" }) }),
+    s("po-int64", { t({ "from polars import Int64", "" }) }),
     s("po-lit", { t({ "from polars import lit", "" }) }),
     s("po-series", { t({ "from polars import Series", "" }) }),
     s("po-struct", { t({ "from polars import struct", "" }) }),
