@@ -21,6 +21,8 @@ ls.add_snippets("python", {
     s("co-suppress", { t({ "from contextlib import suppress", "" }) }),
 
     -- dataclasses
+    s("da-asdict", { t({ "from dataclasses import asdict", "" }) }),
+    s("da-astuple", { t({ "from dataclasses import astuple", "" }) }),
     s("da-dataclass", { t({ "from dataclasses import dataclass", "" }) }),
     s("dataclass-fr-kw", {
         t({ "@dataclass(frozen=True, kw_only=True)", "" }),
@@ -51,8 +53,11 @@ ls.add_snippets("python", {
     s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
+    s("hy-invalid-argument", { t({ "from hypothesis.errors import InvalidArgument", "" }) }),
     s("hy-lists", { t({ "from hypothesis.strategies import lists", "" }) }),
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
+    s("hy-settings", { t({ "from hypothesis import settings", "" }) }),
+    s("hypothesis-shc-ftm", { t({ "@settings(suppress_health_check=[HealthCheck.filter_too_much]) ", "" }) }),
 
     -- itertools
     s("it-accumulate", { t({ "from itertools import accumulate", "" }) }),
@@ -76,8 +81,17 @@ ls.add_snippets("python", {
     s("pa-path", { t({ "from pathlib import Path", "" }) }),
 
     -- polars
+    s("im-pl", { t({ "import polars as pl", "" }) }),
+    s("po-assert-frame-equal", { t({ "from polars.testing import assert_frame_equal", "" }) }),
+    s("po-assert-series-equal", { t({ "from polars.testing import assert_series_equal", "" }) }),
     s("po-col", { t({ "from polars import col", "" }) }),
+    s("po-dataframe", { t({ "from polars import DataFrame", "" }) }),
+    s("po-expr", { t({ "from polars import Expr", "" }) }),
+    s("po-float64", { t({ "from polars import Float64", "" }) }),
+    s("po-int64", { t({ "from polars import Int64", "" }) }),
     s("po-lit", { t({ "from polars import lit", "" }) }),
+    s("po-series", { t({ "from polars import Series", "" }) }),
+    s("po-struct", { t({ "from polars import struct", "" }) }),
 
     -- pytest
     s("mark-parametrize", {
@@ -120,8 +134,10 @@ ls.add_snippets("python", {
     -- typing
     s("ty-any", { t({ "from typing import Any", "" }) }),
     s("ty-cast", { t({ "from typing import cast", "" }) }),
+    s("ty-generic", { t({ "from typing import Generic", "" }) }),
     s("ty-literal", { t({ "from typing import Literal", "" }) }),
     s("ty-overload", { t({ "from typing import overload", "" }) }),
+    s("ty-type-var", { t({ "from typing import TypeVar", "" }) }),
 
     -- typing-extensions
     s("ty-override", { t({ "from typing_extensions import override", "" }) }),
@@ -150,9 +166,11 @@ ls.add_snippets("python", {
     s("ut-int-arrays", { t({ "from utilities.hypothesis import int_arrays", "" }) }),
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
+    s("ut-memoize", { t({ "from utilities.atools import memoize", "" }) }),
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
+    s("ut-refresh-memoized", { t({ "from utilities.atools import refresh_memoized", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),

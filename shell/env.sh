@@ -42,6 +42,17 @@ case ":${PATH}:" in
 	;;
 esac
 
+# postgres
+if command -v brew >/dev/null 2>&1; then
+	__dir="$(brew --prefix)"/opt/postgresql@16/bin
+	case ":${PATH}:" in
+	*:"$__dir":*) ;;
+	*)
+		export PATH="${__dir}:${PATH}"
+		;;
+	esac
+fi
+#
 # pyenv
 export PYENV_ROOT="${HOME}/.pyenv"
 __dir="${PYENV_ROOT}/bin"

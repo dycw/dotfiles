@@ -134,22 +134,26 @@ hypothesis_dev() { export HYPOTHESIS_PROFILE=dev; }
 set bell-style none
 set editing-mode vi
 
+# ipython
+ipython_startup() { ${EDITOR} "${HOME}"/dotfiles/ipython/startup.py; }
+
 # neovim
 if command -v nvim >/dev/null 2>&1; then
-	alias n='nvim'
-	alias cdplugins='cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins"'
+	cdplugins() { cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins" || exit; }
+	n() { nvim "$@"; }
+	lua_snippets() { ${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua; }
 fi
 
 # path
 alias echo-path='sed '"'"'s/:/\n/g'"'"' <<< "${PATH}"'
 
 # pip
-alias pi='pip install'
-alias pie='pip install --editable .'
-alias piip='pip install ipython'
-alias pijl='pip install jupyterlab jupyterlab-vim'
-alias plo='pip list --outdated'
-alias pui='pip uninstall'
+pi() { pip install "$@"; }
+pie() { pi --editable .; }
+pii() { pi ipython; }
+pij() { pi jupyterlab jupyterlab-vim; }
+plo() { pip list --outdated; }
+pui() { pip uninstall "$@"; }
 
 # pre-commit
 if command -v pre-commit >/dev/null 2>&1; then
@@ -201,7 +205,9 @@ fi
 # uv
 if command -v uv >/dev/null 2>&1; then
 	uvpi() { uv pip install "$@"; }
-	uvpie() { uv pip install --editable .; }
+	uvpie() { uvpi --editable .; }
+	uvpii() { uvpi ipython; }
+	uvpij() { uvpi jupyterlab jupyterlab-vim; }
 	uvps() { uv pip sync --strict requirements.txt; }
 	uvpse() { uvps && uvpie; }
 fi
