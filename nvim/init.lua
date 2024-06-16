@@ -4,9 +4,10 @@ local v = vim
 local fn = v.fn
 
 require("globals") -- setting leader must happen before plugins are loaded
+require("autocmds")
 require("keymaps")
 require("opts")
-require("autocmds")
+require("user_commands")
 
 -- https://github.com/folke/lazy.nvim for more info
 local lazypath = fn.stdpath("data") .. "/lazy/lazy.nvim"

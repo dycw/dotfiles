@@ -57,7 +57,6 @@ ls.add_snippets("python", {
     s("hy-lists", { t({ "from hypothesis.strategies import lists", "" }) }),
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
     s("hy-settings", { t({ "from hypothesis import settings", "" }) }),
-    s("hypothesis-shc-ftm", { t({ "@settings(suppress_health_check=[HealthCheck.filter_too_much]) ", "" }) }),
 
     -- itertools
     s("it-accumulate", { t({ "from itertools import accumulate", "" }) }),
@@ -86,6 +85,8 @@ ls.add_snippets("python", {
     s("po-assert-series-equal", { t({ "from polars.testing import assert_series_equal", "" }) }),
     s("po-col", { t({ "from polars import col", "" }) }),
     s("po-dataframe", { t({ "from polars import DataFrame", "" }) }),
+    s("po-datetime", { t({ "from polars import Datetime", "" }) }),
+    s("po-enum", { t({ "from polars import Enum", "" }) }),
     s("po-expr", { t({ "from polars import Expr", "" }) }),
     s("po-float64", { t({ "from polars import Float64", "" }) }),
     s("po-int64", { t({ "from polars import Int64", "" }) }),
@@ -94,6 +95,7 @@ ls.add_snippets("python", {
     s("po-struct", { t({ "from polars import struct", "" }) }),
 
     -- pytest
+    s("mark-only", { t({ "@mark.only", "" }) }),
     s("mark-parametrize", {
         t({ '@mark.parametrize("' }),
         i(1, "arg1"),
@@ -101,6 +103,7 @@ ls.add_snippets("python", {
         i(2, "param1"),
         t(")])"),
     }),
+    s("mark-skip", { t({ "@mark.skip", "" }) }),
     s("py-approx", { t({ "from pytest import approx", "" }) }),
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
     s("py-mark", { t({ "from pytest import mark, param", "" }) }),
