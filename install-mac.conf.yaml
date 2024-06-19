@@ -213,6 +213,6 @@
       ]
     - [brew services start postgresql, Configuring postgresql]
     - [
-        "command -v bump2version >/dev/null 2>&1 || pipx install bump2version",
-        Installing bump2version,
+        "command -v harlequin >/dev/null 2>&1 || pipx install harlequin",
+        Installing harlequin,
       ]
