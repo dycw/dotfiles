@@ -41,6 +41,7 @@ ls.add_snippets("python", {
     s("dt-utc", { t({ "from datetime import UTC", "" }) }),
 
     -- enum
+    s("im-enum", { t({ "import enum", "" }) }),
     s("en-auto", { t({ "from enum import auto", "" }) }),
     s("en-enum", { t({ "from enum import Enum", "" }) }),
 
@@ -83,6 +84,7 @@ ls.add_snippets("python", {
     s("im-pl", { t({ "import polars as pl", "" }) }),
     s("po-assert-frame-equal", { t({ "from polars.testing import assert_frame_equal", "" }) }),
     s("po-assert-series-equal", { t({ "from polars.testing import assert_series_equal", "" }) }),
+    s("po-boolean", { t({ "from polars import Boolean", "" }) }),
     s("po-col", { t({ "from polars import col", "" }) }),
     s("po-dataframe", { t({ "from polars import DataFrame", "" }) }),
     s("po-datetime", { t({ "from polars import Datetime", "" }) }),
@@ -90,9 +92,11 @@ ls.add_snippets("python", {
     s("po-expr", { t({ "from polars import Expr", "" }) }),
     s("po-float64", { t({ "from polars import Float64", "" }) }),
     s("po-int64", { t({ "from polars import Int64", "" }) }),
+    s("po-list", { t({ "from polars import List", "" }) }),
     s("po-lit", { t({ "from polars import lit", "" }) }),
     s("po-series", { t({ "from polars import Series", "" }) }),
     s("po-struct", { t({ "from polars import struct", "" }) }),
+    s("po-utf8", { t({ "from polars import Utf8", "" }) }),
 
     -- pytest
     s("mark-only", { t({ "@mark.only", "" }) }),
@@ -172,6 +176,7 @@ ls.add_snippets("python", {
     s("ut-memoize", { t({ "from utilities.atools import memoize", "" }) }),
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
+    s("ut-parse-date", { t({ "from utilities.datetime import parse_date", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
     s("ut-refresh-memoized", { t({ "from utilities.atools import refresh_memoized", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),

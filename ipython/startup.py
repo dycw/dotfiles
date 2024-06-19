@@ -964,11 +964,12 @@ else:
 try:
     import rich  # type: ignore[]
     from rich import inspect, pretty, print  # type: ignore[]
+    from rich.pretty import pprint, pretty_repr  # type: ignore[]
     from rich.traceback import install as _install  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [rich, inspect, pretty, print]
+    _ = [inspect, pprint, pretty, pretty_repr, print, rich]
 
     _install()
 
@@ -1024,6 +1025,14 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [tabulate]
+
+
+try:
+    from tqdm import tqdm  # type: ignore[]
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [tqdm]
 
 
 try:
