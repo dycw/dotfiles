@@ -59,10 +59,6 @@
     "branch": "main",
     "commit": "8df63f2ddc615feb71fd4aee45a4cee022876df1"
   },
-  "glow.nvim": {
-    "branch": "main",
-    "commit": "238070a686c1da3bccccf1079700eb4b5e19aea4"
-  },
   "inc-rename.nvim": {
     "branch": "main",
     "commit": "535b508c0cb14d00c1836ad901b3c531cb1152bb"
