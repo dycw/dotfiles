@@ -43,10 +43,6 @@
     "branch": "master",
     "commit": "7af2daaaf933b0617ded0f78b49f4d5fc45f9f64"
   },
-  "dressing.nvim": {
-    "branch": "master",
-    "commit": "6741f1062d3dc6e4755367a7e9b347b553623f04"
-  },
   "fidget.nvim": {
     "branch": "main",
     "commit": "ef99df04a1c53a453602421bc0f756997edc8289"
@@ -54,10 +50,6 @@
   "flit.nvim": {
     "branch": "main",
     "commit": "a9be4e76c30a128f1e51af448c8321bf8366bcd4"
-  },
-  "flutter-tools.nvim": {
-    "branch": "main",
-    "commit": "990a1349c29f7d474a0cd51355aba773ccc9deea"
   },
   "fzf-lua": {
     "branch": "main",
@@ -195,10 +187,6 @@
     "branch": "master",
     "commit": "34867c69838078df7d6919b130c0541c0b400c47"
   },
-  "nvim-ts-autotag": {
-    "branch": "main",
-    "commit": "06fe07d7523ba8c755fac7c913fceba43b1720ee"
-  },
   "nvim-various-textobjs": {
     "branch": "main",
     "commit": "bde0481460bfaf0833bd5df7213e6bddcf9b0d8e"
@@ -230,14 +218,6 @@
   "targets.vim": {
     "branch": "master",
     "commit": "642d3a4ce306264b05ea3219920b13ea80931767"
-  },
-  "telescope-file-browser.nvim": {
-    "branch": "master",
-    "commit": "a7ab9a957b17199183388c6f357d614fcaa508e5"
-  },
-  "telescope-git-conflicts.nvim": {
-    "branch": "main",
-    "commit": "1ac7040f601d16ab3800bdda6f5912a0e385cb29"
   },
   "telescope.nvim": {
     "branch": "0.1.x",
