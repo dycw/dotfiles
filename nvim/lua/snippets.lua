@@ -24,6 +24,8 @@ ls.add_snippets("python", {
     s("da-asdict", { t({ "from dataclasses import asdict", "" }) }),
     s("da-astuple", { t({ "from dataclasses import astuple", "" }) }),
     s("da-dataclass", { t({ "from dataclasses import dataclass", "" }) }),
+    s("da-field", { t({ "from dataclasses import field", "" }) }),
+    s("da-replace", { t({ "from dataclasses import replace", "" }) }),
     s("dataclass-fr-kw", {
         t({ "@dataclass(frozen=True, kw_only=True)", "" }),
         t({ "class " }),
