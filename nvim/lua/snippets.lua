@@ -126,6 +126,7 @@ ls.add_snippets("python", {
 
     -- rich
     s("ri-print", { t({ "from rich import print", "" }) }),
+    s("print", { t({ "from rich import print", "" }), t({ "print(" }), i(1, "Values"), t({ ")", "" }) }),
 
     -- sqlalchemy
     s("sq-func", { t({ "from sqlalchemy import func", "" }) }),
