@@ -220,3 +220,7 @@
         "command -v harlequin >/dev/null 2>&1 || pipx install harlequin",
         Installing harlequin,
       ]
+    - [
+        "command -v justpath >/dev/null 2>&1 || pipx install justpath",
+        Installing justpath,
+      ]
