@@ -17,6 +17,11 @@ ls.add_snippets("python", {
     s("cl-command", { t({ "from click import command", "" }) }),
     s("cl-option", { t({ "from click import option", "" }) }),
 
+    -- collections
+    s("co-iterable", { t({ "from collections.abc import Iterable", "" }) }),
+    s("co-iterator", { t({ "from collections.abc import Iterator", "" }) }),
+    s("co-mapping", { t({ "from collections.abc import Mapping", "" }) }),
+
     -- contextlib
     s("co-suppress", { t({ "from contextlib import suppress", "" }) }),
 
@@ -50,6 +55,10 @@ ls.add_snippets("python", {
     -- functools
     s("fu-partial", { t({ "from functools import partial", "" }) }),
     s("fu-reduce", { t({ "from functools import reduce", "" }) }),
+
+    -- humanize
+    s("hu-naturaldelta", { t({ "from humanize import naturaldelta", "" }) }),
+    s("hu-naturaltime", { t({ "from humanize import naturaltime", "" }) }),
 
     -- hypothesis
     s("hy-assume", { t({ "from hypothesis import assume", "" }) }),
@@ -88,17 +97,23 @@ ls.add_snippets("python", {
     s("po-assert-series-equal", { t({ "from polars.testing import assert_series_equal", "" }) }),
     s("po-boolean", { t({ "from polars import Boolean", "" }) }),
     s("po-col", { t({ "from polars import col", "" }) }),
+    s("po-concat", { t({ "from polars import concat", "" }) }),
     s("po-dataframe", { t({ "from polars import DataFrame", "" }) }),
+    s("po-date-range", { t({ "from polars import date_range", "" }) }),
+    s("po-date-ranges", { t({ "from polars import date_ranges", "" }) }),
     s("po-datetime", { t({ "from polars import Datetime", "" }) }),
     s("po-enum", { t({ "from polars import Enum", "" }) }),
     s("po-expr", { t({ "from polars import Expr", "" }) }),
     s("po-float64", { t({ "from polars import Float64", "" }) }),
+    s("po-int-range", { t({ "from polars import int_range", "" }) }),
+    s("po-int-ranges", { t({ "from polars import int_ranges", "" }) }),
     s("po-int64", { t({ "from polars import Int64", "" }) }),
     s("po-list", { t({ "from polars import List", "" }) }),
     s("po-lit", { t({ "from polars import lit", "" }) }),
     s("po-series", { t({ "from polars import Series", "" }) }),
     s("po-struct", { t({ "from polars import struct", "" }) }),
     s("po-utf8", { t({ "from polars import Utf8", "" }) }),
+    s("po-when", { t({ "from polars import when", "" }) }),
 
     -- pytest
     s("mark-only", { t({ "@mark.only", "" }) }),
@@ -125,8 +140,10 @@ ls.add_snippets("python", {
     s("re-search", { t({ "from re import search", "" }) }),
 
     -- rich
-    s("ri-print", { t({ "from rich import print", "" }) }),
-    s("print", { t({ "from rich import print", "" }), t({ "print(" }), i(1, "Values"), t({ ")", "" }) }),
+    s("ri-print", { t({ "from rich import print", "" }), t({ "" }), t({ "print(" }), i(1, "Values"), t({ ")", "" }) }),
+
+    -- shutil
+    s("sh-rmtree", { t({ "from shutil import rmtree", "" }) }),
 
     -- sqlalchemy
     s("sq-func", { t({ "from sqlalchemy import func", "" }) }),
@@ -137,6 +154,9 @@ ls.add_snippets("python", {
     s("su-check-call", { t({ "from subprocess import check_call", "" }) }),
     s("su-check-output", { t({ "from subprocess import check_output", "" }) }),
     s("su-run", { t({ "from subprocess import run", "" }) }),
+
+    -- tempfile
+    s("te-temporary-directory", { t({ "from utilities.tempfile import TemporaryDirectory", "" }) }),
 
     -- time
     s("ti-sleep", { t({ "from time import sleep", "" }) }),
@@ -185,6 +205,7 @@ ls.add_snippets("python", {
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
+    s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
     s("ut-tokyo", { t({ "from utilities.zoneinfo import TOKYO", "" }) }),
     s("ut-write-pickle", { t({ "from utilities.pickle import write_pickle", "" }) }),

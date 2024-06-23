@@ -15,6 +15,16 @@ case ":${PATH}:" in
 	;;
 esac
 
+# kdb
+export QHOME="${HOME}"/q
+__dir="${QHOME}/m64"
+case ":${PATH}:" in
+*:"${__dir}":*) ;;
+*)
+	export PATH="${__dir}:${PATH}"
+	;;
+esac
+
 # neovim
 if command -v nvim >/dev/null 2>&1; then
 	export EDITOR=nvim
