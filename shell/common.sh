@@ -144,9 +144,6 @@ if command -v nvim >/dev/null 2>&1; then
 	lua_snippets() { ${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua; }
 fi
 
-# path
-alias echo-path='sed '"'"'s/:/\n/g'"'"' <<< "${PATH}"'
-
 # pip
 pi() { pip install "$@"; }
 pie() { pi --editable .; }
@@ -183,6 +180,9 @@ fi
 
 # python
 pyproject() { ${EDITOR} "$(groot)"/pyproject.toml; }
+
+# q
+start_q() { QHOME="${HOME}"/q rlwrap -r "$HOME"/q/m64/q "$@"; }
 
 # rm
 alias rmr='rm -r'

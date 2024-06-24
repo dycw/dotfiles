@@ -159,6 +159,10 @@
         "command -v rg >/dev/null 2>&1 || brew install ripgrep",
         Installing ripgrep,
       ]
+    - [
+        "command -v rlwrap >/dev/null 2>&1 || brew install rlwrap",
+        Installing rlwrap,
+      ]
     - ["command -v ruff >/dev/null 2>&1 || brew install ruff", Installing ruff]
     - [
         "command -v shellcheck >/dev/null 2>&1 || brew install shellcheck",
@@ -215,4 +219,8 @@
     - [
         "command -v harlequin >/dev/null 2>&1 || pipx install harlequin",
         Installing harlequin,
+      ]
+    - [
+        "command -v justpath >/dev/null 2>&1 || pipx install justpath",
+        Installing justpath,
       ]
