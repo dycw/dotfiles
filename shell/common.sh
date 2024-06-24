@@ -185,7 +185,7 @@ fi
 pyproject() { ${EDITOR} "$(groot)"/pyproject.toml; }
 
 # q
-q() { QHOME="${HOME}"/q rlwrap -r "$HOME"/q/m64/q "$@"; }
+start_q() { QHOME="${HOME}"/q rlwrap -r "$HOME"/q/m64/q "$@"; }
 
 # rm
 alias rmr='rm -r'
