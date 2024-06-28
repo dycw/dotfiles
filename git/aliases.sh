@@ -199,7 +199,7 @@ if command -v git >/dev/null 2>&1; then
 	alias grmr='git rm -r'
 	alias grmrf='git rm -rf'
 	# status
-	alias gs='git status'
+	gs() { git status "$@"; }
 	# stash
 	alias gst='git stash'
 	alias gstd='git stash drop'
@@ -233,4 +233,9 @@ if command -v git >/dev/null 2>&1; then
 	# push
 	alias gpw='gp && gitweb'
 	alias gpfw='gpf && gitweb'
+
+	# watchexec
+	if command -v gitweb >/dev/null 2>&1; then
+		gsw() { watchexec -- git status "$@"; }
+	fi
 fi

@@ -4,7 +4,13 @@ local s = ls.snippet
 local t = ls.text_node
 
 ls.add_snippets("python", {
+    -- breakpoints
     s("bp", { t({ "breakpoint()", "" }) }),
+    s("index-bp", {
+        t({ "if index == " }),
+        i(1, "Index"),
+        t({ ":", "    breakpoint()" }),
+    }),
 
     -- miscellaneous
     s("fu-annotations", { t({ "from __future__ import annotations", "" }) }),
@@ -110,6 +116,8 @@ ls.add_snippets("python", {
     s("po-int64", { t({ "from polars import Int64", "" }) }),
     s("po-list", { t({ "from polars import List", "" }) }),
     s("po-lit", { t({ "from polars import lit", "" }) }),
+    s("po-max-horizontal", { t({ "from polars import max_horizontal", "" }) }),
+    s("po-min-horizontal", { t({ "from polars import min_horizontal", "" }) }),
     s("po-series", { t({ "from polars import Series", "" }) }),
     s("po-struct", { t({ "from polars import struct", "" }) }),
     s("po-utf8", { t({ "from polars import Utf8", "" }) }),
@@ -128,6 +136,7 @@ ls.add_snippets("python", {
     s("py-approx", { t({ "from pytest import approx", "" }) }),
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
     s("py-mark", { t({ "from pytest import mark, param", "" }) }),
+    s("py-param", { t({ "from pytest import param", "" }) }),
     s("py-raises", { t({ "from pytest import raises", "" }) }),
 
     -- pytest-benchmark

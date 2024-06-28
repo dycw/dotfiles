@@ -162,12 +162,12 @@ fi
 
 # ps
 alias pst='ps -fLu "$USER"| wc -l'
-if [ "$(command -v watch)" ]; then
+if command -v watch >/dev/null 2>&1; then
 	alias wpst='watch -d -n0.1 "ps -fLu \"$USER\" | wc -l"'
 fi
 
 # pyright
-if [ "$(command -v pyright)" ]; then
+if command -v pyright >/dev/null 2>&1; then
 	pyr() { pyright "$@"; }
 	pyrw() { pyr -w "$@"; }
 fi
@@ -183,6 +183,11 @@ pyproject() { ${EDITOR} "$(groot)"/pyproject.toml; }
 
 # q
 start_q() { QHOME="${HOME}"/q rlwrap -r "$HOME"/q/m64/q "$@"; }
+
+# rg
+if command -v pyright >/dev/null 2>&1 && command -v watchexec >/dev/null 2>&1; then
+	rgw() { watchexec rg "$@"; }
+fi
 
 # rm
 alias rmr='rm -r'
