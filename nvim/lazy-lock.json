@@ -207,10 +207,6 @@
     "branch": "master",
     "commit": "d0ffd703b56d090d213b497ed4eb840495f14a11"
   },
-  "symbols-outline.nvim": {
-    "branch": "master",
-    "commit": "564ee65dfc9024bdde73a6621820866987cbb256"
-  },
   "targets.vim": {
     "branch": "master",
     "commit": "642d3a4ce306264b05ea3219920b13ea80931767"
