@@ -1,4 +1,4 @@
-from __future__ import annotations  # noqa: INP001
+from __future__ import annotations  # noqa: INP001, RUF100
 
 import abc
 import ast
@@ -342,7 +342,7 @@ _PANDAS_POLARS_COLS = 100
 try:
     import altair  # type: ignore[] # noqa: ICN001
     import altair as alt  # type: ignore[]
-    from altair import datum
+    from altair import datum  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
@@ -1159,7 +1159,7 @@ def _add_src_to_sys_path() -> None:
     """Add `src/` to `sys.path`."""
     try:
         output = check_output(
-            ["git", "rev-parse", "--show-toplevel"],  # noqa: S603, S607
+            ["git", "rev-parse", "--show-toplevel"],  # noqa: S607
             stderr=PIPE,
             text=True,
         )
