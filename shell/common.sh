@@ -215,4 +215,5 @@ if command -v uv >/dev/null 2>&1; then
 	uvpij() { uvpi jupyterlab jupyterlab-vim; }
 	uvps() { uv pip sync --strict requirements.txt; }
 	uvpse() { uvps && uvpie; }
+	uvpu() { uv pip uninstall "$@"; }
 fi
