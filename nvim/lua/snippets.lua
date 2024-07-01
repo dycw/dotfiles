@@ -11,9 +11,8 @@ ls.add_snippets("python", {
         i(1, "Index"),
         t({ ":", "    breakpoint()" }),
     }),
-
-    -- miscellaneous
-    s("fu-annotations", { t({ "from __future__ import annotations", "" }) }),
+    s("if-name-main", { t({ 'if __name__ == "__main__":', "   main()", "" }) }),
+    s("rnie", { t({ "raise NotImplementedError" }) }),
 
     -- beartype
     s("be-beartype", { t({ "from beartype import beartype", "" }) }),
@@ -62,12 +61,16 @@ ls.add_snippets("python", {
     s("fu-partial", { t({ "from functools import partial", "" }) }),
     s("fu-reduce", { t({ "from functools import reduce", "" }) }),
 
+    -- future
+    s("fu-annotations", { t({ "from __future__ import annotations", "" }) }),
+
     -- humanize
     s("hu-naturaldelta", { t({ "from humanize import naturaldelta", "" }) }),
     s("hu-naturaltime", { t({ "from humanize import naturaltime", "" }) }),
 
     -- hypothesis
     s("hy-assume", { t({ "from hypothesis import assume", "" }) }),
+    s("hy-booleans", { t({ "from hypothesis.strategies import booleans", "" }) }),
     s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
@@ -143,6 +146,7 @@ ls.add_snippets("python", {
     s("py-benchmark-fixture", { t({ "from pytest_benchmark.fixture import BenchmarkFixture", "" }) }),
 
     -- random
+    s("ra-seed", { t({ "from random import seed", "" }) }),
     s("ra-shuffle", { t({ "from random import shuffle", "" }) }),
 
     -- re
@@ -163,6 +167,9 @@ ls.add_snippets("python", {
     s("su-check-call", { t({ "from subprocess import check_call", "" }) }),
     s("su-check-output", { t({ "from subprocess import check_output", "" }) }),
     s("su-run", { t({ "from subprocess import run", "" }) }),
+
+    -- sys
+    s("sy-stdout", { t({ "from sys import stdout", "" }) }),
 
     -- tempfile
     s("te-temporary-directory", { t({ "from utilities.tempfile import TemporaryDirectory", "" }) }),
@@ -194,9 +201,11 @@ ls.add_snippets("python", {
     s("ut-ensure-str", { t({ "from utilities.text import ensure_str", "" }) }),
     s("ut-extract-group", { t({ "from utilities.re import extract_group", "" }) }),
     s("ut-extract-groups", { t({ "from utilities.re import extract_groups", "" }) }),
+    s("ut-get-local-timezone", { t({ "from utilities.datetime import local_timezone", "" }) }),
     s("ut-get-now", { t({ "from utilities.datetime import get_now", "" }) }),
     s("ut-get-repo-root", { t({ "from utilities.git import get_repo_root", "" }) }),
     s("ut-get-table", { t({ "from utilities.sqlalchemy import get_table", "" }) }),
+    s("ut-get-today", { t({ "from utilities.datetime import get_today", "" }) }),
     s("ut-hong-kong", { t({ "from utilities.zoneinfo import HONG_KONG", "" }) }),
     s("ut-impossible-case-error", { t({ "from utilities.errors import ImpossibleCaseError", "" }) }),
     s("ut-index-s", { t({ "utilities.pandas import IndexS", "" }) }),

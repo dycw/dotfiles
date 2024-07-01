@@ -1,4 +1,4 @@
-from __future__ import annotations  # noqa: INP001
+from __future__ import annotations  # noqa: INP001, RUF100
 
 import abc
 import ast
@@ -342,11 +342,11 @@ _PANDAS_POLARS_COLS = 100
 try:
     import altair  # type: ignore[] # noqa: ICN001
     import altair as alt  # type: ignore[]
-    from altair import datum
+    from altair import condition, datum  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [alt, altair, datum]
+    _ = [alt, altair, condition, datum]
 
     alt.data_transformers.enable("vegafusion")
 
@@ -464,11 +464,18 @@ else:
 
 try:
     import ib_async  # type: ignore[]
-    from ib_async import Contract, Crypto, Forex, Stock  # type: ignore[]
+    from ib_async import (  # type: ignore[]
+        ContFuture,
+        Contract,
+        Crypto,
+        Forex,
+        Future,
+        Stock,
+    )
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Contract, Crypto, Forex, Stock, ib_async]
+    _ = [ContFuture, Contract, Crypto, Forex, Future, Stock, ib_async]
 
 
 try:
@@ -811,7 +818,6 @@ try:
         List,
         Null,
         Object,
-        PolarsDataType,
         Series,
         Struct,
         Time,
@@ -841,6 +847,7 @@ try:
         struct,
         when,
     )
+    from polars._typing import PolarsDataType, SchemaDict  # type: ignore []
     from polars.datatypes import DataTypeClass  # type: ignore[]
     from polars.testing import (  # type: ignore[]
         assert_frame_equal,
@@ -848,7 +855,6 @@ try:
         assert_series_equal,
         assert_series_not_equal,
     )
-    from polars.type_aliases import SchemaDict  # type: ignore[]
 
     Config(tbl_rows=_PANDAS_POLARS_ROWS, tbl_cols=_PANDAS_POLARS_COLS)
 except ModuleNotFoundError:
@@ -1157,12 +1163,9 @@ else:
 
 def _add_src_to_sys_path() -> None:
     """Add `src/` to `sys.path`."""
+    cmd = ["git", "rev-parse", "--show-toplevel"]
     try:
-        output = check_output(
-            ["git", "rev-parse", "--show-toplevel"],  # noqa: S603, S607
-            stderr=PIPE,
-            text=True,
-        )
+        output = check_output(cmd, stderr=PIPE, text=True)  # noqa: S603
     except CalledProcessError:
         return
     src = str(Path(output.strip("\n"), "src"))

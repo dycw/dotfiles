@@ -16,8 +16,11 @@ return {
             trouble.open({ mode = "lsp_references", focus = false })
         end, "list [r]eferences")
         keymap_set("n", "<Leader>ls", function()
-            trouble.open({ mode = "lsp_document_symbols", focus = false })
+            trouble.open({ mode = "symbols", focus = false })
         end, "list [s]ymbols")
+        keymap_set("n", "<Leader>ly", function()
+            trouble.open({ mode = "symbols", focus = false })
+        end, "list document s[y]mbols")
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
 }
