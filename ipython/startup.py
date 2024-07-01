@@ -818,7 +818,6 @@ try:
         List,
         Null,
         Object,
-        PolarsDataType,
         Series,
         Struct,
         Time,
@@ -848,6 +847,7 @@ try:
         struct,
         when,
     )
+    from polars._typing import PolarsDataType, SchemaDict  # type: ignore []
     from polars.datatypes import DataTypeClass  # type: ignore[]
     from polars.testing import (  # type: ignore[]
         assert_frame_equal,
@@ -855,7 +855,6 @@ try:
         assert_series_equal,
         assert_series_not_equal,
     )
-    from polars.type_aliases import SchemaDict  # type: ignore[]
 
     Config(tbl_rows=_PANDAS_POLARS_ROWS, tbl_cols=_PANDAS_POLARS_COLS)
 except ModuleNotFoundError:

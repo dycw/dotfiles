@@ -12,6 +12,7 @@ ls.add_snippets("python", {
         t({ ":", "    breakpoint()" }),
     }),
     s("if-name-main", { t({ 'if __name__ == "__main__":', "   main()", "" }) }),
+    s("rnie", { t({ "raise NotImplementedError" }) }),
 
     -- beartype
     s("be-beartype", { t({ "from beartype import beartype", "" }) }),
@@ -69,6 +70,7 @@ ls.add_snippets("python", {
 
     -- hypothesis
     s("hy-assume", { t({ "from hypothesis import assume", "" }) }),
+    s("hy-booleans", { t({ "from hypothesis.strategies import booleans", "" }) }),
     s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
