@@ -19,6 +19,7 @@ ls.add_snippets("python", {
 
     -- click
     s("cl-argument", { t({ "from click import argument", "" }) }),
+    s("cl-cli-runner", { t({ "from click.testing import CliRunner", "" }) }),
     s("cl-command", { t({ "from click import command", "" }) }),
     s("cl-option", { t({ "from click import option", "" }) }),
 
@@ -110,6 +111,7 @@ ls.add_snippets("python", {
     s("po-dataframe", { t({ "from polars import DataFrame", "" }) }),
     s("po-date-range", { t({ "from polars import date_range", "" }) }),
     s("po-date-ranges", { t({ "from polars import date_ranges", "" }) }),
+    s("po-datetime-range", { t({ "from polars import datetime_range", "" }) }),
     s("po-datetime", { t({ "from polars import Datetime", "" }) }),
     s("po-enum", { t({ "from polars import Enum", "" }) }),
     s("po-expr", { t({ "from polars import Expr", "" }) }),
@@ -144,6 +146,12 @@ ls.add_snippets("python", {
 
     -- pytest-benchmark
     s("py-benchmark-fixture", { t({ "from pytest_benchmark.fixture import BenchmarkFixture", "" }) }),
+
+    -- pytest-regressions
+    s(
+        "py-dataframe-regression-fixture",
+        { t({ "from pytest_regressions.dataframe_regression import DataFrameRegressionFixture", "" }) }
+    ),
 
     -- random
     s("ra-seed", { t({ "from random import seed", "" }) }),

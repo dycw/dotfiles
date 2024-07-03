@@ -158,9 +158,9 @@ if command -v git >/dev/null 2>&1; then
 	gcnr() { __git_commit -n -r -f "$@"; }
 	gcr() { __git_commit -r -f "$@"; }
 	# diff
-	alias gd='git diff'
-	alias gdc='git diff --cached'
-	alias gdm='git diff origin/master'
+	gd() { git diff "$@"; }
+	gdc() { git diff --cached "$@"; }
+	gdm() { git diff origin/master "$@"; }
 	# fetch
 	gf() { git fetch --all; }
 	# log
@@ -236,6 +236,7 @@ if command -v git >/dev/null 2>&1; then
 
 	# watchexec
 	if command -v watchexec >/dev/null 2>&1; then
+		gdw() { watchexec -- git diff "$@"; }
 		gsw() { watchexec -- git status "$@"; }
 	fi
 fi

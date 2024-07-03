@@ -335,7 +335,7 @@ else:
 # third party imports
 
 
-_PANDAS_POLARS_ROWS = 7
+_PANDAS_POLARS_ROWS = 6
 _PANDAS_POLARS_COLS = 100
 
 
@@ -1064,12 +1064,20 @@ try:
         ensure_int,
         ensure_not_none,
     )
-    from utilities.zoneinfo import HONG_KONG  # type: ignore[]
+    from utilities.zoneinfo import (  # type: ignore[]
+        HONG_KONG,
+        TOKYO,
+        US_CENTRAL,
+        US_EASTERN,
+    )
 except ModuleNotFoundError:
     pass
 else:
     _ = [
         HONG_KONG,
+        TOKYO,
+        US_CENTRAL,
+        US_EASTERN,
         date_to_datetime,
         ensure_class,
         ensure_datetime,
