@@ -236,7 +236,7 @@ if command -v git >/dev/null 2>&1; then
 
 	# watchexec
 	if command -v watchexec >/dev/null 2>&1; then
-		gsd() { watchexec -- gd "$@"; }
+		gdw() { watchexec -- gd "$@"; }
 		gsw() { watchexec -- gs "$@"; }
 	fi
 fi
