@@ -235,8 +235,8 @@ if command -v git >/dev/null 2>&1; then
 	alias gpfw='gpf && gitweb'
 
 	# watchexec
-	if command -v watchexec >/dev/null 2>&1; then
-		gdw() { watchexec -- git diff "$@"; }
-		gsw() { watchexec -- git status "$@"; }
+	if command -v watch >/dev/null 2>&1; then
+		wgd() { watch -d -n 0.1 -- git diff "$@"; }
+		wgs() { watch -d -n 0.1 -- git status "$@"; }
 	fi
 fi

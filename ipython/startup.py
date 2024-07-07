@@ -309,14 +309,6 @@ else:
 
 
 try:
-    from datetime import UTC  # python 3.11
-except ImportError:
-    pass
-else:
-    _ = [UTC]
-
-
-try:
     from enum import StrEnum  # python 3.11
 except ImportError:
     pass
@@ -1069,6 +1061,7 @@ try:
         TOKYO,
         US_CENTRAL,
         US_EASTERN,
+        UTC,
     )
 except ModuleNotFoundError:
     pass
@@ -1078,6 +1071,7 @@ else:
         TOKYO,
         US_CENTRAL,
         US_EASTERN,
+        UTC,
         date_to_datetime,
         ensure_class,
         ensure_datetime,

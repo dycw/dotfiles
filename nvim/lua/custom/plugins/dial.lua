@@ -26,12 +26,12 @@ return {
                 augend.constant.alias.bool,
                 augend.semver.alias.semver,
                 augend.constant.new({
-                    elements = { "True", "False" },
+                    elements = { "&&", "||" },
                     word = true,
                     cyclic = true,
                 }),
                 augend.constant.new({
-                    elements = { "true", "false" },
+                    elements = { "True", "False" },
                     word = true,
                     cyclic = true,
                 }),
@@ -41,7 +41,57 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
-                    elements = { "&&", "||" },
+                    elements = { "bull", "bear" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "close", "open" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "column", "row" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "down", "up" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "end", "start" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "left", "right" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "low", "high" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "lower", "upper" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "minor", "major" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "on", "off" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "true", "false" },
                     word = true,
                     cyclic = true,
                 }),

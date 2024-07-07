@@ -24,6 +24,7 @@ ls.add_snippets("python", {
     s("cl-option", { t({ "from click import option", "" }) }),
 
     -- collections
+    s("co-callable", { t({ "from collections.abc import Callable", "" }) }),
     s("co-iterable", { t({ "from collections.abc import Iterable", "" }) }),
     s("co-iterator", { t({ "from collections.abc import Iterator", "" }) }),
     s("co-mapping", { t({ "from collections.abc import Mapping", "" }) }),
@@ -51,7 +52,6 @@ ls.add_snippets("python", {
 
     -- datetime
     s("im-dt", { t({ "import datetime as dt", "" }) }),
-    s("dt-utc", { t({ "from datetime import UTC", "" }) }),
 
     -- enum
     s("im-enum", { t({ "import enum", "" }) }),
@@ -220,6 +220,7 @@ ls.add_snippets("python", {
     s("ut-insert-dataframe", { t({ "from utilities.sqlalchemy_polars import insert_dataframe", "" }) }),
     s("ut-insert-items", { t({ "from utilities.sqlalchemy import insert_items", "" }) }),
     s("ut-int-arrays", { t({ "from utilities.hypothesis import int_arrays", "" }) }),
+    s("ut-utc", { t({ "from utilities.zoneinfo import UTC", "" }) }),
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
     s("ut-memoize", { t({ "from utilities.atools import memoize", "" }) }),
