@@ -140,6 +140,10 @@
         Installing stylua,
       ]
     - ["command -v tmux >/dev/null 2>&1 || brew install tmux", Installing tmux]
+    - [
+        "command -v topgrade >/dev/null 2>&1 || brew install topgrade",
+        Installing topgrade,
+      ]
     - ["command -v uv >/dev/null 2>&1 || brew install uv", Installing uv]
     - [
         "command -v watchexec >/dev/null 2>&1 || brew install watchexec",
