@@ -17,14 +17,8 @@ end ---@diagnostic disable-next-line: undefined-field
 v.opt.rtp:prepend(lazypath)
 
 -- plugins
-local spec = {
-    { "lazyvim/lazyvim", import = "custom.plugins" },
-}
-local opts = {
-    change_detection = {
-        enabled = true,
-    },
-}
+local spec = { { import = "plugins" } }
+local opts = { change_detection = { enabled = true } }
 local lazy = require("lazy")
 lazy.setup(spec, opts)
 
