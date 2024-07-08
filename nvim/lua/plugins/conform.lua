@@ -48,8 +48,6 @@ return {
             ruff_fix = {
                 prepend_args = {
                     "check",
-                    "--unfixable=F401", --unused-import
-                    "--unfixable=F841", --unused-variable
                 },
             },
         },

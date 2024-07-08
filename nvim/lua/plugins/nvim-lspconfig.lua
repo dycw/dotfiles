@@ -76,31 +76,17 @@ return { -- LSP Configuration & Plugins
         --  - settings (table): Override the default settings passed when initializing the server.
         --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
         local servers = {
+            basedpyright = {
+                capabilities = capabilities,
+            },
             lua_ls = {
-                -- cmd = {...},
-                -- filetypes = { ...},
-                -- capabilities = {},
                 settings = {
                     Lua = {
                         completion = {
                             callSnippet = "Replace",
                         },
-                        -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-                        -- diagnostics = { disable = { 'missing-fields' } },
                     },
                 },
-            },
-            pyright = {
-                settings = {
-                    python = {
-                        analysis = {
-                            ignore = { "*" },
-                        },
-                    },
-                },
-            },
-            ruff = {
-                capabilities = capabilities,
             },
         }
 
@@ -116,7 +102,7 @@ return { -- LSP Configuration & Plugins
         -- for you, so that they are available from within Neovim.
         local ensure_installed = v.tbl_keys(servers or {})
         v.list_extend(ensure_installed, {
-            "ruff-lsp",
+            "basedpyright",
             "shfmt",
             "stylua",
         })
@@ -134,8 +120,6 @@ return { -- LSP Configuration & Plugins
                 end,
             },
         })
-
-        require("lspconfig").ruff.setup({})
     end,
     dependencies = {
         -- Automatically install LSPs and related tools to stdpath for Neovim
