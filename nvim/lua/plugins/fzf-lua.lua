@@ -1,11 +1,11 @@
 -- luacheck: push ignore
 local v = vim
 -- luacheck: pop
-local api = v.api
-local fn = v.fn
+-- local api = v.api
+-- local fn = v.fn
 
 local function get_git_root()
-    local git_root = fn.systemlist("git rev-parse --show-toplevel")
+    local git_root = v.fn.systemlist("git rev-parse --show-toplevel")
     if v.v.shell_error ~= 0 then
         print("Error: Not a git repository")
         return nil
@@ -14,7 +14,7 @@ local function get_git_root()
 end
 
 local function get_git_files(git_root)
-    local rel_files = fn.systemlist("git ls-files")
+    local rel_files = v.fn.systemlist("git ls-files")
     if v.v.shell_error ~= 0 then
         print("Not a git repository or other error")
         return {}
@@ -28,7 +28,7 @@ end
 
 local function get_old_files()
     return v.tbl_filter(function(file)
-        return fn.filereadable(file) == 1
+        return v.fn.filereadable(file) == 1
     end, v.v.oldfiles)
 end
 
@@ -49,7 +49,7 @@ local function sort_git_files_by_oldness(git_files, old_files)
         end
     end
     table.sort(git_old_files, function(a, b)
-        return fn.index(old_files, a) < fn.index(old_files, b)
+        return v.fn.index(old_files, a) < v.fn.index(old_files, b)
     end)
 
     -- concatenate the non-old onto old
@@ -96,9 +96,21 @@ return {
     "ibhagwan/fzf-lua",
     config = function()
         local fzf_lua = require("fzf-lua")
+        local actions = require("fzf-lua.actions")
         local keymap_set = require("utilities").keymap_set
 
-        fzf_lua.setup()
+        fzf_lua.setup({
+            keymap = {
+                fzf = {
+                    ["ctrl-a"] = "toggle-all",
+                },
+            },
+            actions = {
+                files = {
+                    ["ctrl-q"] = actions.file_sel_to_qf,
+                },
+            },
+        })
         -- buffers and files
         for _, value in ipairs({ { "f", "[f]iles" }, { "fi", "f[i]les" } }) do
             keymap_set("n", "<Leader>" .. value[1], fzf_lua.files, value[2])
@@ -121,7 +133,7 @@ return {
         keymap_set("n", "<Leader>gW", fzf_lua.grep_cWORD, "grep [W]ORD")
         -- git
         keymap_set("n", "<Leader>gc", fzf_lua.git_bcommits, "git buffer [c]ommits")
-        keymap_set("n", "<Leader>gf", git_files_mru, "git [f]iles")
+        keymap_set("n", "<Leader>gf", fzf_lua.git_files, "git [f]iles")
         keymap_set("n", "<Leader>ga", fzf_lua.git_branches, "git br[a]nches")
         keymap_set("n", "<Leader>gh", fzf_lua.git_stash, "git stas[h]")
         keymap_set("n", "<Leader>go", fzf_lua.git_commits, "git c[o]mmits")
@@ -160,19 +172,18 @@ return {
 
         -- git files (MRU)
 
-        api.nvim_create_user_command("GitFilesMRU", git_files_mru, {})
+        v.api.nvim_create_user_command("GitFilesMRU", git_files_mru, {})
 
         -- autocommands
-        api.nvim_create_autocmd("VimEnter", {
+        v.api.nvim_create_autocmd("VimEnter", {
             callback = function()
                 if v.fn.argv(0) == "" then
                     git_files_mru()
                 end
             end,
             desc = "git-files upon entering vim",
-            group = api.nvim_create_augroup("git-files-upon-enter", { clear = true }),
+            group = v.api.nvim_create_augroup("git-files-upon-enter", { clear = true }),
         })
     end,
-
     dependencies = { "nvim-tree/nvim-web-devicons" },
 }

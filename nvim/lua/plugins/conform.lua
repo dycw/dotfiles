@@ -1,10 +1,11 @@
 -- luacheck: push ignore
-local bo = vim.bo
+local v = vim
 -- luacheck: pop
 
 return {
     "stevearc/conform.nvim",
     event = "BufWritePre",
+    lazy = false,
     opts = {
         formatters_by_ft = {
             dart = { "dart_format" },
@@ -40,16 +41,18 @@ return {
             local disable_filetypes = { c = true, cpp = true }
             return {
                 timeout_ms = 500,
-                lsp_fallback = not disable_filetypes[bo[bufnr].filetype],
+                lsp_fallback = not disable_filetypes[v.bo[bufnr].filetype],
             }
         end,
         formatters = {
             ruff_fix = {
                 prepend_args = {
+                    "check",
                     "--unfixable=F401", --unused-import
                     "--unfixable=F841", --unused-variable
                 },
             },
         },
+        notify_on_error = false,
     },
 }
