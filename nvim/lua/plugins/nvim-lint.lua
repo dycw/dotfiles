@@ -42,7 +42,6 @@ return {
             "--output-format",
             "json",
             "--ignore=F401", --unused-import
-            "--ignore=F841", --unused-variable
             "-",
         }
 

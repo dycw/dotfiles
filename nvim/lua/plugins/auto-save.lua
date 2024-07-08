@@ -6,6 +6,8 @@ return {
         end, "auto [s]ave")
         require("auto-save").setup({
             enabled = true,
+            debounce_delay = 10,
+            -- debounce_delay = 1000,
         })
     end,
 }

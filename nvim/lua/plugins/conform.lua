@@ -40,7 +40,7 @@ return {
         format_on_save = function(bufnr)
             local disable_filetypes = { c = true, cpp = true }
             return {
-                timeout_ms = 500,
+                timeout_ms = 1000,
                 lsp_fallback = not disable_filetypes[v.bo[bufnr].filetype],
             }
         end,
@@ -49,7 +49,17 @@ return {
                 prepend_args = {
                     "check",
                     "--ignore=F401", -- unused-import
-                    "--ignore=F841", -- unused-variable
+                    "--unfixable=B007", -- unused-loop-control-variable
+                    "--unfixable=F601", -- multi-value-repeated-key-literal
+                    "--unfixable=F841", -- unused-variable
+                    "--unfixable=PLR5501", -- collapsible-else-if
+                    "--unfixable=PT014", -- pytest-duplicate-parametrize-test-cases
+                    "--unfixable=RET504", -- unnecessary-assign
+                    "--unfixable=SIM102", -- collapsible-if
+                    "--unfixable=SIM105", -- suppressible-exception
+                    "--unfixable=SIM114", -- if-with-same-arms
+                    "--unfixable=SIM114", -- if-with-same-arms
+                    "--unfixable=T201", -- print
                 },
             },
         },
