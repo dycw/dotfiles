@@ -48,9 +48,11 @@ return {
             ruff_fix = {
                 prepend_args = {
                     "check",
+                    "--ignore=F401", -- unused-import
+                    "--ignore=F841", -- unused-variable
                 },
             },
         },
-        notify_on_error = false,
+        notify_on_error = true,
     },
 }
