@@ -1,5 +1,5 @@
 -- luacheck: push ignore
-local api = vim.api
+local v = vim
 -- luacheck: pop
 
 return {
@@ -18,7 +18,7 @@ return {
             jsonc = { "biomejs" },
             lua = { "luacheck" },
             markdown = { "biomejs" },
-            python = { "ruff" },
+            -- python = { "ruff" },
             sh = { "shellcheck" },
             sql = { "sqlfluff" },
             svelte = { "biomejs" },
@@ -28,8 +28,8 @@ return {
             zsh = { "shellcheck" },
         }
 
-        local lint_augroup = api.nvim_create_augroup("lint", { clear = true })
-        api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+        local lint_augroup = v.api.nvim_create_augroup("lint", { clear = true })
+        v.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
             group = lint_augroup,
             callback = function()
                 require("lint").try_lint()
