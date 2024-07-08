@@ -121,7 +121,7 @@ return {
         keymap_set("n", "<Leader>gW", fzf_lua.grep_cWORD, "grep [W]ORD")
         -- git
         keymap_set("n", "<Leader>gc", fzf_lua.git_bcommits, "git buffer [c]ommits")
-        keymap_set("n", "<Leader>gf", git_files_mru, "git [f]iles")
+        keymap_set("n", "<Leader>gf", fzf_lua.git_files, "git [f]iles")
         keymap_set("n", "<Leader>ga", fzf_lua.git_branches, "git br[a]nches")
         keymap_set("n", "<Leader>gh", fzf_lua.git_stash, "git stas[h]")
         keymap_set("n", "<Leader>go", fzf_lua.git_commits, "git c[o]mmits")

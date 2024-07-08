@@ -1,47 +1,60 @@
 -- luacheck: push ignore
 local v = vim
 -- luacheck: pop
-local api = v.api
-local diagnostic = v.diagnostic
-local lsp = v.lsp
-local buf = lsp.buf
-local tbl_deep_extend = v.tbl_deep_extend
 
 return { -- LSP Configuration & Plugins
     "neovim/nvim-lspconfig",
     config = function()
-        api.nvim_create_autocmd("LspAttach", {
-            group = api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
+        v.api.nvim_create_autocmd("LspAttach", {
+            group = v.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
             callback = function(event)
-                local keymap_set = require("utilities").keymap_set
-
-                -- Leader
-                keymap_set("n", "K", buf.hover, "hover documentation")
-                keymap_set("n", "zj", diagnostic.goto_next, "next diagnostic")
-                keymap_set("n", "zk", diagnostic.goto_prev, "previous diagnostic")
-                keymap_set("n", "<Leader>K", diagnostic.open_float, "open float")
-                keymap_set("n", "<Leader>rn", buf.rename, "re[n]ame")
-                keymap_set("n", "<Leader>lt", "<Cmd>LspRestart<CR>", "lsp res[t]art")
-
-                -- WARN: This is not Goto Definition, this is Goto Declaration.
-                --  For example, in C this would take you to the header.
+                local map = function(keys, func, desc)
+                    v.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+                end
+                map("K", v.lsp.buf.hover, "hover documentation")
+                map("zj", v.diagnostic.goto_next, "next diagnostic")
+                map("zk", v.diagnostic.goto_prev, "previous diagnostic")
+                map("<Leader>K", v.diagnostic.open_float, "open float")
+                map("<Leader>rn", v.lsp.buf.rename, "re[n]ame")
+                map("<Leader>lt", "<Cmd>LspRestart<CR>", "lsp res[t]art")
 
                 -- The following two autocommands are used to highlight references of the
                 -- word under your cursor when your cursor rests there for a little while.
                 --    See `:help CursorHold` for information about when this is executed
                 --
                 -- When you move your cursor, the highlights will be cleared (the second autocommand).
-                local client = lsp.get_client_by_id(event.data.client_id)
+                local client = v.lsp.get_client_by_id(event.data.client_id)
                 if client and client.server_capabilities.documentHighlightProvider then
-                    api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+                    local highlight_augroup = v.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+                    v.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
                         buffer = event.buf,
-                        callback = buf.document_highlight,
+                        group = highlight_augroup,
+                        callback = v.lsp.buf.document_highlight,
                     })
 
-                    api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+                    v.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
                         buffer = event.buf,
-                        callback = buf.clear_references,
+                        group = highlight_augroup,
+                        callback = v.lsp.buf.clear_references,
                     })
+
+                    v.api.nvim_create_autocmd("LspDetach", {
+                        group = v.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
+                        callback = function(event2)
+                            v.lsp.buf.clear_references()
+                            v.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = event2.buf })
+                        end,
+                    })
+                end
+
+                -- The following autocommand is used to enable inlay hints in your
+                -- code, if the language server you are using supports them
+                --
+                -- This may be unwanted, since they displace some of your code
+                if client and client.server_capabilities.inlayHintProvider and v.lsp.inlay_hint then
+                    map("<leader>ih", function()
+                        v.lsp.inlay_hint.enable(not v.lsp.inlay_hint.is_enabled())
+                    end, "inlay [h]ints")
                 end
             end,
         })
@@ -51,7 +64,7 @@ return { -- LSP Configuration & Plugins
         --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
         --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
         local capabilities = v.lsp.protocol.make_client_capabilities()
-        capabilities = tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+        capabilities = v.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
         -- Enable the following language servers
         --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -65,19 +78,9 @@ return { -- LSP Configuration & Plugins
         local servers = {
             -- clangd = {},
             -- gopls = {},
-            pyright = {
+            basedpyright = {
                 capabilities = capabilities,
             },
-            -- rust_analyzer = {},
-            -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-            --
-            -- Some languages (like typescript) have entire language plugins that can be useful:
-            --    https://github.com/pmizio/typescript-tools.nvim
-            --
-            -- But for many setups, the LSP (`tsserver`) will work just fine
-            -- tsserver = {},
-            --
-
             lua_ls = {
                 -- cmd = {...},
                 -- filetypes = { ...},
@@ -92,6 +95,18 @@ return { -- LSP Configuration & Plugins
                     },
                 },
             },
+            -- pyright = {
+            --     capabilities = capabilities,
+            -- },
+            -- rust_analyzer = {},
+            -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
+            --
+            -- Some languages (like typescript) have entire language plugins that can be useful:
+            --    https://github.com/pmizio/typescript-tools.nvim
+            --
+            -- But for many setups, the LSP (`tsserver`) will work just fine
+            -- tsserver = {},
+            --
         }
 
         -- Ensure the servers and tools above are installed
@@ -106,7 +121,10 @@ return { -- LSP Configuration & Plugins
         -- for you, so that they are available from within Neovim.
         local ensure_installed = v.tbl_keys(servers or {})
         v.list_extend(ensure_installed, {
-            "stylua", -- Used to format Lua code
+            -- "luacheck",
+            "ruff",
+            "shfmt",
+            "stylua",
         })
         require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -117,7 +135,7 @@ return { -- LSP Configuration & Plugins
                     -- This handles overriding only values explicitly passed
                     -- by the server configuration above. Useful when disabling
                     -- certain features of an LSP (for example, turning off formatting for tsserver)
-                    server.capabilities = tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+                    server.capabilities = v.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
                     require("lspconfig")[server_name].setup(server)
                 end,
             },
@@ -125,7 +143,7 @@ return { -- LSP Configuration & Plugins
     end,
     dependencies = {
         -- Automatically install LSPs and related tools to stdpath for Neovim
-        "williamboman/mason.nvim",
+        { "williamboman/mason.nvim", config = true }, -- NOTE: Must be loaded before dependants
         "williamboman/mason-lspconfig.nvim",
         "whoissethdaniel/mason-tool-installer.nvim",
 
