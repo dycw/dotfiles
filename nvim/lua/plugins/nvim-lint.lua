@@ -18,7 +18,6 @@ return {
             jsonc = { "biomejs" },
             lua = { "luacheck" },
             markdown = { "biomejs" },
-            -- python = { "ruff" },
             sh = { "shellcheck" },
             sql = { "sqlfluff" },
             svelte = { "biomejs" },
