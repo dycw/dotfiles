@@ -64,8 +64,8 @@ opt.list = true
 -- Strings to use in `'list'`  mode and for the |:list| command
 opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
--- Enables mouse support
-opt.mouse = "a"
+-- Disables mouse support
+opt.mouse = ""
 
 -- Print the line number in front of each line?
 opt.number = true

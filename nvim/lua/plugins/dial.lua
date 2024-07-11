@@ -41,6 +41,11 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
+                    elements = { "bottom", "top" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
                     elements = { "bull", "bear" },
                     word = true,
                     cyclic = true,
@@ -52,6 +57,11 @@ return {
                 }),
                 augend.constant.new({
                     elements = { "column", "row" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "disable", "enable" },
                     word = true,
                     cyclic = true,
                 }),
