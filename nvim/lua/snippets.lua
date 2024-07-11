@@ -79,6 +79,8 @@ ls.add_snippets("python", {
     s("hy-lists", { t({ "from hypothesis.strategies import lists", "" }) }),
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
     s("hy-settings", { t({ "from hypothesis import settings", "" }) }),
+    s("settings-max-examples", { t({ "@settings(max_examples=1)", "" }) }),
+    s("settings-generate-only", { t({ "@settings(phases={Phase.generate})", "" }) }),
 
     -- itertools
     s("it-accumulate", { t({ "from itertools import accumulate", "" }) }),
