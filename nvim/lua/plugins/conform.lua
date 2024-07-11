@@ -50,6 +50,7 @@ return {
                     "check",
                     "--ignore=F401", -- unused-import
                     "--unfixable=B007", -- unused-loop-control-variable
+                    "--unfixable=C411", -- unnecessary-list-call
                     "--unfixable=C416", -- unnecessary-comprehension
                     "--unfixable=F601", -- multi-value-repeated-key-literal
                     "--unfixable=F841", -- unused-variable
