@@ -5,7 +5,7 @@
   },
   "better-escape.nvim": {
     "branch": "master",
-    "commit": "7b351629d4f08039977e290961915d916a985aa3"
+    "commit": "7619e1e582d8ae43c8860dfc183455374a11aa85"
   },
   "close-buffers.nvim": {
     "branch": "master",
@@ -57,7 +57,7 @@
   },
   "gitsigns.nvim": {
     "branch": "main",
-    "commit": "375c44bdfdde25585466a966f00c2e291db74f2d"
+    "commit": "7178d1a430dcfff8a4c92d78b9e39e0297a779c0"
   },
   "inc-rename.nvim": {
     "branch": "main",
@@ -73,7 +73,7 @@
   },
   "lazy.nvim": {
     "branch": "main",
-    "commit": "d1de92dffab5a862332fdd1892889d362369c12f"
+    "commit": "1d451b4c2ce957da05e2123ce1a001804fc7ea96"
   },
   "leap.nvim": {
     "branch": "main",
@@ -169,11 +169,11 @@
   },
   "nvim-tree.lua": {
     "branch": "master",
-    "commit": "12a9a995a455d2c2466e47140663275365a5d2fc"
+    "commit": "f9ff00bc06d7cb70548a3847d7a2a05e928bc988"
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "c1ad655b6a0c83ab48e55240f367e2bc0c15af31"
+    "commit": "465840f8c14126e5193d777bbff94036eb875bd5"
   },
   "nvim-treesitter-context": {
     "branch": "master",
@@ -209,7 +209,7 @@
   },
   "targets.vim": {
     "branch": "master",
-    "commit": "642d3a4ce306264b05ea3219920b13ea80931767"
+    "commit": "6325416da8f89992b005db3e4517aaef0242602e"
   },
   "telescope.nvim": {
     "branch": "0.1.x",

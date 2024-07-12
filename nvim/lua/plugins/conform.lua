@@ -54,6 +54,7 @@ return {
                     "--unfixable=C416", -- unnecessary-comprehension
                     "--unfixable=F601", -- multi-value-repeated-key-literal
                     "--unfixable=F841", -- unused-variable
+                    "--unfixable=PIE794", -- duplicated-class-field-definition
                     "--unfixable=PLR5501", -- collapsible-else-if
                     "--unfixable=PT014", -- pytest-duplicate-parametrize-test-cases
                     "--unfixable=RET504", -- unnecessary-assign
