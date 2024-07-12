@@ -5,7 +5,7 @@
   },
   "better-escape.nvim": {
     "branch": "master",
-    "commit": "bbfdf773c41f4f991beecd1d9808b6a3e87828a0"
+    "commit": "7619e1e582d8ae43c8860dfc183455374a11aa85"
   },
   "close-buffers.nvim": {
     "branch": "master",
@@ -57,7 +57,7 @@
   },
   "gitsigns.nvim": {
     "branch": "main",
-    "commit": "220446c8c86a280180d852efac60991eaf1a21d4"
+    "commit": "7178d1a430dcfff8a4c92d78b9e39e0297a779c0"
   },
   "inc-rename.nvim": {
     "branch": "main",
@@ -73,11 +73,11 @@
   },
   "lazy.nvim": {
     "branch": "main",
-    "commit": "1870238cf9c579c5d7eb8ea8b296f10b81978d34"
+    "commit": "1d451b4c2ce957da05e2123ce1a001804fc7ea96"
   },
   "leap.nvim": {
     "branch": "main",
-    "commit": "d9fcd0d9bc877405ece28fef815c8e5b16847cec"
+    "commit": "c099aecaf858574909bd38cbadb8543c4dd16611"
   },
   "lsp_signature.nvim": {
     "branch": "master",
@@ -105,7 +105,7 @@
   },
   "mason.nvim": {
     "branch": "main",
-    "commit": "2af3b574b68dc0273c7fb60369f3a48d5a16a857"
+    "commit": "f96a31855fa8aea55599cea412fe611b85a874ed"
   },
   "mkdir.nvim": {
     "branch": "main",
@@ -169,11 +169,11 @@
   },
   "nvim-tree.lua": {
     "branch": "master",
-    "commit": "12a9a995a455d2c2466e47140663275365a5d2fc"
+    "commit": "f9ff00bc06d7cb70548a3847d7a2a05e928bc988"
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "66ec1b3c4e1828d00f59fb97ebfd33afcd352eb8"
+    "commit": "465840f8c14126e5193d777bbff94036eb875bd5"
   },
   "nvim-treesitter-context": {
     "branch": "master",
@@ -185,7 +185,7 @@
   },
   "nvim-various-textobjs": {
     "branch": "main",
-    "commit": "bde0481460bfaf0833bd5df7213e6bddcf9b0d8e"
+    "commit": "3022dbadd9f0446276b8e169da0f1fc77e081c41"
   },
   "nvim-web-devicons": {
     "branch": "master",
@@ -209,7 +209,7 @@
   },
   "targets.vim": {
     "branch": "master",
-    "commit": "642d3a4ce306264b05ea3219920b13ea80931767"
+    "commit": "6325416da8f89992b005db3e4517aaef0242602e"
   },
   "telescope.nvim": {
     "branch": "0.1.x",
@@ -217,7 +217,7 @@
   },
   "tokyonight.nvim": {
     "branch": "main",
-    "commit": "0a84c2df1dc65610ee0d9b516b2fb342e4b0ed6f"
+    "commit": "66a272ba6cf93bf303c4b7a91b100ca0dd3ec7bd"
   },
   "trouble.nvim": {
     "branch": "main",

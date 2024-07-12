@@ -96,23 +96,12 @@ return {
     "ibhagwan/fzf-lua",
     config = function()
         local fzf_lua = require("fzf-lua")
-        local actions = require("fzf-lua.actions")
         local keymap_set = require("utilities").keymap_set
 
         fzf_lua.setup({
             keymap = {
                 fzf = {
-                    ["ctrl-a"] = "toggle-all",
-                },
-            },
-            actions = {
-                files = {
-                    ["default"] = actions.file_edit_or_qf,
-                    ["ctrl-s"] = actions.file_split,
-                    ["ctrl-v"] = actions.file_vsplit,
-                    ["ctrl-t"] = actions.file_tabedit,
-                    ["ctrl-q"] = actions.file_sel_to_qf,
-                    ["ctrl-l"] = actions.file_sel_to_ll,
+                    ["ctrl-q"] = "select-all+accept",
                 },
             },
         })

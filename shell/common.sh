@@ -1,6 +1,10 @@
 #!/usr/bin/env sh
 # shellcheck source=/dev/null
 
+# basedpyright
+bpyr() { basedpyright "$@"; }
+bpyrw() { bpyr -w "$@"; }
+
 # bat
 if command -v bat >/dev/null 2>&1; then
 	cat() { bat "$@"; }
