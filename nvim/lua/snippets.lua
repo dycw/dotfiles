@@ -4,6 +4,12 @@ local s = ls.snippet
 local t = ls.text_node
 
 ls.add_snippets("python", {
+    -- asyncio
+    s("as-get-event-loop", { t({ "from asyncio import get_event_loop", "" }) }),
+
+    -- beartype
+    s("be-beartype", { t({ "from beartype import beartype", "" }) }),
+
     -- breakpoints
     s("bp", { t({ "breakpoint()", "" }) }),
     s("index-bp", {
@@ -14,8 +20,8 @@ ls.add_snippets("python", {
     s("if-name-main", { t({ 'if __name__ == "__main__":', "   main()", "" }) }),
     s("rnie", { t({ "raise NotImplementedError" }) }),
 
-    -- beartype
-    s("be-beartype", { t({ "from beartype import beartype", "" }) }),
+    -- cachetools
+    s("ca-ttl-cache", { t({ "from cachetools.func import ttl_cache", "" }) }),
 
     -- click
     s("cl-argument", { t({ "from click import argument", "" }) }),
@@ -73,6 +79,7 @@ ls.add_snippets("python", {
     s("hy-assume", { t({ "from hypothesis import assume", "" }) }),
     s("hy-booleans", { t({ "from hypothesis.strategies import booleans", "" }) }),
     s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
+    s("hy-dates", { t({ "from hypothesis.strategies import dates", "" }) }),
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
     s("hy-invalid-argument", { t({ "from hypothesis.errors import InvalidArgument", "" }) }),
@@ -156,6 +163,7 @@ ls.add_snippets("python", {
     ),
 
     -- random
+    s("ra-randint", { t({ "from random import randint", "" }) }),
     s("ra-seed", { t({ "from random import seed", "" }) }),
     s("ra-shuffle", { t({ "from random import shuffle", "" }) }),
 

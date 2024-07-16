@@ -59,8 +59,8 @@ return {
                     "--unfixable=PT014", -- pytest-duplicate-parametrize-test-cases
                     "--unfixable=RET504", -- unnecessary-assign
                     "--unfixable=SIM102", -- collapsible-if
+                    "--unfixable=PYI016", -- duplicate-union-member
                     "--unfixable=SIM105", -- suppressible-exception
-                    "--unfixable=SIM114", -- if-with-same-arms
                     "--unfixable=SIM114", -- if-with-same-arms
                     "--unfixable=T201", -- print
                 },
