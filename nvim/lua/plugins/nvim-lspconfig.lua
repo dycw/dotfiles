@@ -56,6 +56,13 @@ return { -- LSP Configuration & Plugins
                         v.lsp.inlay_hint.enable(not v.lsp.inlay_hint.is_enabled())
                     end, "inlay [h]ints")
                 end
+
+                if client then
+                    require("workspace-diagnostics").populate_workspace_diagnostics(
+                        client,
+                        v.api.nvim_get_current_buf()
+                    )
+                end
             end,
         })
 
@@ -134,5 +141,8 @@ return { -- LSP Configuration & Plugins
         -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
         -- used for completion, annotations and signatures of Neovim apis
         { "folke/neodev.nvim", opts = {} },
+
+        -- artemave
+        { "artemave/workspace-diagnostics.nvim" },
     },
 }
