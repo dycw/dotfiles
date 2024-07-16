@@ -1041,7 +1041,7 @@ else:
 
 
 try:
-    from utilities.datetime import date_to_datetime, get_now  # type: ignore[]
+    from utilities.datetime import Month, date_to_datetime, get_now  # type: ignore[]
     from utilities.functools import partial  # type: ignore[]
     from utilities.git import get_repo_root  # type: ignore[]
     from utilities.iterables import one  # type: ignore[]
@@ -1068,6 +1068,7 @@ except ModuleNotFoundError:
 else:
     _ = [
         HONG_KONG,
+        Month,
         TOKYO,
         US_CENTRAL,
         US_EASTERN,
