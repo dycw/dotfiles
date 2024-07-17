@@ -1,3 +1,7 @@
+-- luacheck: push ignore
+local v = vim
+-- luacheck: pop
+
 return {
     "folke/trouble.nvim",
     config = function()

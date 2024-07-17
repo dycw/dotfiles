@@ -75,6 +75,10 @@
     "branch": "main",
     "commit": "d731a6b005fd239e85e555bd57362382f6c1e461"
   },
+  "lazydev.nvim": {
+    "branch": "main",
+    "commit": "02f1055a777264d4b65896051ec28d0f322f7932"
+  },
   "leap.nvim": {
     "branch": "main",
     "commit": "c099aecaf858574909bd38cbadb8543c4dd16611"
@@ -110,10 +114,6 @@
   "mkdir.nvim": {
     "branch": "main",
     "commit": "c55d1dee4f099528a1853b28bb28caa802eba217"
-  },
-  "neodev.nvim": {
-    "branch": "main",
-    "commit": "46aa467dca16cf3dfe27098042402066d2ae242d"
   },
   "neoscroll.nvim": {
     "branch": "master",
