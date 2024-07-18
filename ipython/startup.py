@@ -1041,7 +1041,21 @@ else:
 
 
 try:
-    from utilities.datetime import Month, date_to_datetime, get_now  # type: ignore[]
+    from utilities.datetime import (  # type: ignore[]
+        Month,
+        date_to_datetime,
+        get_now,
+        parse_date,
+        parse_datetime,
+        parse_month,
+        parse_time,
+        parse_timedelta,
+        serialize_date,
+        serialize_datetime,
+        serialize_month,
+        serialize_time,
+        serialize_timedelta,
+    )
     from utilities.functools import partial  # type: ignore[]
     from utilities.git import get_repo_root  # type: ignore[]
     from utilities.iterables import one  # type: ignore[]
@@ -1086,8 +1100,18 @@ else:
         get_repo_root,
         list_dir,
         one,
+        parse_date,
+        parse_datetime,
+        parse_month,
+        parse_time,
+        parse_timedelta,
         partial,
         read_pickle,
+        serialize_date,
+        serialize_datetime,
+        serialize_month,
+        serialize_time,
+        serialize_timedelta,
         write_pickle,
     ]
     try:
