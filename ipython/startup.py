@@ -334,11 +334,17 @@ _PANDAS_POLARS_COLS = 100
 try:
     import altair  # type: ignore[] # noqa: ICN001
     import altair as alt  # type: ignore[]
-    from altair import condition, datum  # type: ignore[]
+    from altair import Chart, condition, datum  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [alt, altair, condition, datum]
+    _ = [
+        Chart,
+        alt,
+        altair,
+        condition,
+        datum,
+    ]
 
     alt.data_transformers.enable("vegafusion")
 
