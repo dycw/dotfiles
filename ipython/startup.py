@@ -334,11 +334,11 @@ _PANDAS_POLARS_COLS = 100
 try:
     import altair  # type: ignore[] # noqa: ICN001
     import altair as alt  # type: ignore[]
-    from altair import condition, datum  # type: ignore[]
+    from altair import Chart, condition, datum  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [alt, altair, condition, datum]
+    _ = [Chart, alt, altair, condition, datum]
 
     alt.data_transformers.enable("vegafusion")
 
@@ -969,12 +969,13 @@ else:
 try:
     import rich  # type: ignore[]
     from rich import inspect, pretty, print  # type: ignore[]
+    from rich import print as p  # type: ignore[]
     from rich.pretty import pprint, pretty_repr  # type: ignore[]
     from rich.traceback import install as _install  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [inspect, pprint, pretty, pretty_repr, print, rich]
+    _ = [inspect, p, pprint, pretty, pretty_repr, print, rich]
 
     _install()
 
@@ -1041,7 +1042,21 @@ else:
 
 
 try:
-    from utilities.datetime import Month, date_to_datetime, get_now  # type: ignore[]
+    from utilities.datetime import (  # type: ignore[]
+        Month,
+        date_to_datetime,
+        get_now,
+        parse_date,
+        parse_datetime,
+        parse_month,
+        parse_time,
+        parse_timedelta,
+        serialize_date,
+        serialize_datetime,
+        serialize_month,
+        serialize_time,
+        serialize_timedelta,
+    )
     from utilities.functools import partial  # type: ignore[]
     from utilities.git import get_repo_root  # type: ignore[]
     from utilities.iterables import one  # type: ignore[]
@@ -1086,8 +1101,18 @@ else:
         get_repo_root,
         list_dir,
         one,
+        parse_date,
+        parse_datetime,
+        parse_month,
+        parse_time,
+        parse_timedelta,
         partial,
         read_pickle,
+        serialize_date,
+        serialize_datetime,
+        serialize_month,
+        serialize_time,
+        serialize_timedelta,
         write_pickle,
     ]
     try:
