@@ -338,13 +338,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
-    _ = [
-        Chart,
-        alt,
-        altair,
-        condition,
-        datum,
-    ]
+    _ = [Chart, alt, altair, condition, datum]
 
     alt.data_transformers.enable("vegafusion")
 
@@ -975,12 +969,13 @@ else:
 try:
     import rich  # type: ignore[]
     from rich import inspect, pretty, print  # type: ignore[]
+    from rich import print as p  # type: ignore[]
     from rich.pretty import pprint, pretty_repr  # type: ignore[]
     from rich.traceback import install as _install  # type: ignore[]
 except ModuleNotFoundError:
     pass
 else:
-    _ = [inspect, pprint, pretty, pretty_repr, print, rich]
+    _ = [inspect, p, pprint, pretty, pretty_repr, print, rich]
 
     _install()
 
