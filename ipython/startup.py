@@ -1163,12 +1163,11 @@ else:
     try:
         from utilities.sqlalchemy_polars import (  # type: ignore[]
             insert_dataframe,
-            select_to_dataframe,
         )
     except ModuleNotFoundError:
         pass
     else:
-        _ = [insert_dataframe, select_to_dataframe]
+        _ = [insert_dataframe]
     try:
         from utilities.timer import Timer  # type: ignore[]
     except ModuleNotFoundError:

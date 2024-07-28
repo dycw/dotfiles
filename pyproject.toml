@@ -1,3 +1,7 @@
+[tool.basedpyright]
+reportMissingImport = false
+reportUnknownVariableType = false
+
 [tool.ruff]
 extend-exclude = ["dotbot"]
 target-version = "py311"
