@@ -1,6 +1,6 @@
 [tool.basedpyright]
-reportMissingImport = false
-reportUnknownVariableType = false
+exclude = ["ipython/startup.py"]
+ignore = ["ipython/startup.py"]
 
 [tool.ruff]
 extend-exclude = ["dotbot"]

@@ -332,9 +332,9 @@ _PANDAS_POLARS_COLS = 100
 
 
 try:
-    import altair  # type: ignore[] # noqa: ICN001
-    import altair as alt  # type: ignore[]
-    from altair import Chart, condition, datum  # type: ignore[]
+    import altair  # noqa: ICN001
+    import altair as alt
+    from altair import Chart, condition, datum
 except ModuleNotFoundError:
     pass
 else:
@@ -344,7 +344,7 @@ else:
 
 
 try:
-    from beartype import beartype  # type: ignore[]
+    from beartype import beartype
 except ModuleNotFoundError:
     pass
 else:
@@ -352,7 +352,7 @@ else:
 
 
 try:
-    from bidict import bidict  # type: ignore[]
+    from bidict import bidict
 except ModuleNotFoundError:
     pass
 else:
@@ -360,7 +360,7 @@ else:
 
 
 try:
-    import bs4  # type: ignore[]
+    import bs4
 except ModuleNotFoundError:
     pass
 else:
@@ -368,8 +368,8 @@ else:
 
 
 try:
-    import cachetools  # type: ignore[]
-    from cachetools.func import ttl_cache  # type: ignore[]
+    import cachetools
+    from cachetools.func import ttl_cache
 except ModuleNotFoundError:
     pass
 else:
@@ -377,7 +377,7 @@ else:
 
 
 try:
-    import click  # type: ignore[]
+    import click
 except ModuleNotFoundError:
     pass
 else:
@@ -385,8 +385,8 @@ else:
 
 
 try:
-    import cvxpy  # type: ignore[]
-    import cxvpy as cp  # type: ignore[]
+    import cvxpy
+    import cxvpy as cp
 except ModuleNotFoundError:
     pass
 else:
@@ -394,7 +394,7 @@ else:
 
 
 try:
-    from frozendict import frozendict  # type: ignore[]
+    from frozendict import frozendict
 except ModuleNotFoundError:
     pass
 else:
@@ -402,7 +402,7 @@ else:
 
 
 try:
-    import humanize  # type: ignore[]
+    import humanize
 except ModuleNotFoundError:
     pass
 else:
@@ -410,9 +410,9 @@ else:
 
 
 try:
-    import holoviews  # type: ignore[] # noqa: ICN001
-    import holoviews as hv  # type: ignore[]  # type: ignore[]
-    from holoviews import extension  # type: ignore[]  # type: ignore[]
+    import holoviews  # noqa: ICN001
+    import holoviews as hv
+    from holoviews import extension
 except ModuleNotFoundError:
     pass
 else:
@@ -427,19 +427,19 @@ else:
 
 
 try:
-    import hvplot.pandas  # type: ignore[]
+    import hvplot.pandas
 except (AttributeError, ModuleNotFoundError):
     pass
 else:
     _ = [hvplot.pandas]
 try:
-    import hvplot.polars  # type: ignore[]
+    import hvplot.polars
 except (AttributeError, ModuleNotFoundError):
     pass
 else:
     _ = [hvplot.polars]
 try:
-    import hvplot.xarray  # type: ignore[]
+    import hvplot.xarray
 except (AttributeError, ModuleNotFoundError):
     pass
 else:
@@ -447,7 +447,7 @@ else:
 
 
 try:
-    import hypothesis  # type: ignore[]
+    import hypothesis
 except ModuleNotFoundError:
     pass
 else:
@@ -455,15 +455,8 @@ else:
 
 
 try:
-    import ib_async  # type: ignore[]
-    from ib_async import (  # type: ignore[]
-        ContFuture,
-        Contract,
-        Crypto,
-        Forex,
-        Future,
-        Stock,
-    )
+    import ib_async
+    from ib_async import ContFuture, Contract, Crypto, Forex, Future, Stock
 except ModuleNotFoundError:
     pass
 else:
@@ -471,7 +464,7 @@ else:
 
 
 try:
-    import joblib  # type: ignore[]
+    import joblib
 except ModuleNotFoundError:
     pass
 else:
@@ -479,7 +472,7 @@ else:
 
 
 try:
-    from loguru import logger  # type: ignore[]
+    from loguru import logger
 except ModuleNotFoundError:
     pass
 else:
@@ -487,8 +480,8 @@ else:
 
 
 try:
-    import luigi  # type: ignore[]
-    from luigi import (  # type: ignore[]
+    import luigi
+    from luigi import (
         BoolParameter,
         DictParameter,
         EnumParameter,
@@ -523,9 +516,9 @@ else:
 
 
 try:
-    import matplotlib as mpl  # type: ignore[]
-    import matplotlib.pyplot as plt  # type: ignore[]
-    from matplotlib.pyplot import gca, gcf, subplot, twinx, twiny  # type: ignore[]
+    import matplotlib as mpl
+    import matplotlib.pyplot as plt
+    from matplotlib.pyplot import gca, gcf, subplot, twinx, twiny
 except ModuleNotFoundError:
     pass
 else:
@@ -533,17 +526,17 @@ else:
 
 
 try:
-    import more_itertools  # type: ignore[]
-    import more_itertools as mi  # type: ignore[]
-    from more_itertools import split_at  # type: ignore[]
+    import more_itertools
+    import more_itertools as mi
+    from more_itertools import split_at
 except ModuleNotFoundError:
     pass
 else:
     _ = [mi, more_itertools, split_at]
     try:
-        import utilities  # type: ignore[]
+        import utilities
     except ModuleNotFoundError:
-        from more_itertools import always_iterable, one, peekable  # type: ignore[]
+        from more_itertools import always_iterable, one, peekable
 
         _ = [always_iterable, one, peekable]
     else:
@@ -551,9 +544,9 @@ else:
 
 
 try:
-    import numpy  # type: ignore[] # noqa: ICN001
-    import numpy as np  # type: ignore[]
-    from numpy import (  # type: ignore[]
+    import numpy  # noqa: ICN001
+    import numpy as np
+    from numpy import (
         allclose,
         arange,
         array,
@@ -612,9 +605,9 @@ try:
         zeros,
         zeros_like,
     )
-    from numpy.linalg import LinAlgError, cholesky, inv  # type: ignore[]
-    from numpy.random import Generator, RandomState, default_rng  # type: ignore[]
-    from numpy.typing import NDArray  # type: ignore[]
+    from numpy.linalg import LinAlgError, cholesky, inv
+    from numpy.random import Generator, RandomState, default_rng
+    from numpy.typing import NDArray
 except ModuleNotFoundError:
     pass
 else:
@@ -689,9 +682,9 @@ else:
 
 
 try:
-    import pandas  # type: ignore[] # noqa: ICN001
-    import pandas as pd  # type: ignore[]
-    from pandas import (  # type: ignore[]    from pandas import (
+    import pandas  # noqa: ICN001
+    import pandas as pd
+    from pandas import (
         NA,
         BooleanDtype,
         DateOffset,
@@ -713,9 +706,9 @@ try:
         to_datetime,
         to_pickle,
     )
-    from pandas._libs.missing import NAType  # type: ignore[]
-    from pandas.testing import assert_index_equal  # type: ignore[]
-    from pandas.tseries.offsets import (  # type: ignore[]
+    from pandas._libs.missing import NAType
+    from pandas.testing import assert_index_equal
+    from pandas.tseries.offsets import (
         BDay,
         Hour,
         Micro,
@@ -729,7 +722,7 @@ try:
     )
 except ModuleNotFoundError:
     try:
-        from utilities.pickle import read_pickle  # type: ignore[]
+        from utilities.pickle import read_pickle
     except ModuleNotFoundError:
         pass
     else:
@@ -787,9 +780,9 @@ else:
 
 
 try:
-    import polars  # type: ignore[] # noqa: ICN001
-    import polars as pl  # type: ignore[]
-    from polars import (  # type: ignore[]
+    import polars  # noqa: ICN001
+    import polars as pl
+    from polars import (
         Array,
         Binary,
         Boolean,
@@ -840,8 +833,8 @@ try:
         when,
     )
     from polars._typing import PolarsDataType, SchemaDict  # type: ignore []
-    from polars.datatypes import DataTypeClass  # type: ignore[]
-    from polars.testing import (  # type: ignore[]
+    from polars.datatypes import DataTypeClass
+    from polars.testing import (
         assert_frame_equal,
         assert_frame_not_equal,
         assert_series_equal,
@@ -851,7 +844,7 @@ try:
     Config(tbl_rows=_PANDAS_POLARS_ROWS, tbl_cols=_PANDAS_POLARS_COLS)
 except ModuleNotFoundError:
     try:
-        from pandas import (  # type: ignore[]
+        from pandas import (
             DataFrame,
             Series,
             concat,
@@ -860,10 +853,7 @@ except ModuleNotFoundError:
             read_excel,
             read_parquet,
         )
-        from pandas.testing import (  # type: ignore[]
-            assert_frame_equal,
-            assert_series_equal,
-        )
+        from pandas.testing import assert_frame_equal, assert_series_equal
     except ModuleNotFoundError:
         pass
     else:
@@ -942,7 +932,7 @@ else:
 
 
 try:
-    from pqdm.processes import pqdm  # type: ignore[]m
+    from pqdm.processes import pqdm
 except ModuleNotFoundError:
     pass
 else:
@@ -950,8 +940,8 @@ else:
 
 
 try:
-    import pydantic  # type: ignore[]
-    from pydantic import BaseModel  # type: ignore[]
+    import pydantic
+    from pydantic import BaseModel
 except ModuleNotFoundError:
     pass
 else:
@@ -959,7 +949,7 @@ else:
 
 
 try:
-    import requests  # type: ignore[]
+    import requests
 except ModuleNotFoundError:
     pass
 else:
@@ -967,11 +957,11 @@ else:
 
 
 try:
-    import rich  # type: ignore[]
-    from rich import inspect, pretty, print  # type: ignore[]
-    from rich import print as p  # type: ignore[]
-    from rich.pretty import pprint, pretty_repr  # type: ignore[]
-    from rich.traceback import install as _install  # type: ignore[]
+    import rich
+    from rich import inspect, pretty, print
+    from rich import print as p
+    from rich.pretty import pprint, pretty_repr
+    from rich.traceback import install as _install
 except ModuleNotFoundError:
     pass
 else:
@@ -981,8 +971,8 @@ else:
 
 
 try:
-    import scipy  # type: ignore[]
-    import scipy as sp  # type: ignore[]
+    import scipy
+    import scipy as sp
 except ModuleNotFoundError:
     pass
 else:
@@ -990,7 +980,7 @@ else:
 
 
 try:
-    import semver  # type: ignore[]
+    import semver
 except ModuleNotFoundError:
     pass
 else:
@@ -998,10 +988,10 @@ else:
 
 
 try:
-    import sqlalchemy  # type: ignore[]
-    import sqlalchemy as sqla  # type: ignore[]
-    import sqlalchemy.orm  # type: ignore[]
-    from sqlalchemy import create_engine, func, select  # type: ignore[]
+    import sqlalchemy
+    import sqlalchemy as sqla
+    import sqlalchemy.orm
+    from sqlalchemy import create_engine, func, select
 except ModuleNotFoundError:
     pass
 else:
@@ -1009,8 +999,8 @@ else:
 
 
 try:
-    import streamlit  # type: ignore[]
-    import streamlit as st  # type: ignore[]
+    import streamlit
+    import streamlit as st
 except ModuleNotFoundError:
     pass
 else:
@@ -1018,7 +1008,7 @@ else:
 
 
 try:
-    import stringcase  # type: ignore[]
+    import stringcase
 except ModuleNotFoundError:
     pass
 else:
@@ -1026,7 +1016,7 @@ else:
 
 
 try:
-    from tabulate import tabulate  # type: ignore[]
+    from tabulate import tabulate
 except ModuleNotFoundError:
     pass
 else:
@@ -1034,7 +1024,7 @@ else:
 
 
 try:
-    from tqdm import tqdm  # type: ignore[]
+    from tqdm import tqdm
 except ModuleNotFoundError:
     pass
 else:
@@ -1042,7 +1032,7 @@ else:
 
 
 try:
-    from utilities.datetime import (  # type: ignore[]
+    from utilities.datetime import (
         Month,
         date_to_datetime,
         get_now,
@@ -1057,27 +1047,21 @@ try:
         serialize_time,
         serialize_timedelta,
     )
-    from utilities.functools import partial  # type: ignore[]
-    from utilities.git import get_repo_root  # type: ignore[]
-    from utilities.iterables import one  # type: ignore[]
-    from utilities.pathlib import list_dir  # type: ignore[]
-    from utilities.pickle import read_pickle, write_pickle  # type: ignore[]
-    from utilities.re import extract_group, extract_groups  # type: ignore[]
-    from utilities.text import ensure_str  # type: ignore[]
-    from utilities.types import (  # type: ignore[]
+    from utilities.functools import partial
+    from utilities.git import get_repo_root
+    from utilities.iterables import one
+    from utilities.pathlib import list_dir
+    from utilities.pickle import read_pickle, write_pickle
+    from utilities.re import extract_group, extract_groups
+    from utilities.text import ensure_str
+    from utilities.types import (
         ensure_class,
         ensure_datetime,
         ensure_float,
         ensure_int,
         ensure_not_none,
     )
-    from utilities.zoneinfo import (  # type: ignore[]
-        HONG_KONG,
-        TOKYO,
-        US_CENTRAL,
-        US_EASTERN,
-        UTC,
-    )
+    from utilities.zoneinfo import HONG_KONG, TOKYO, US_CENTRAL, US_EASTERN, UTC
 except ModuleNotFoundError:
     pass
 else:
@@ -1116,60 +1100,55 @@ else:
         write_pickle,
     ]
     try:
-        from utilities.altair import (  # type: ignore[]
-            plot_intraday_dataframe,
-            vconcat_charts,
-        )
+        from utilities.altair import plot_intraday_dataframe, vconcat_charts
     except ModuleNotFoundError:
         pass
     else:
         _ = [plot_intraday_dataframe, vconcat_charts]
     try:
-        from utilities.atomicwrites import writer  # type: ignore[]
+        from utilities.atomicwrites import writer
     except ModuleNotFoundError:
         pass
     else:
         _ = [writer]
     try:
-        from utilities.more_itertools import always_iterable, peekable  # type: ignore[]
+        from utilities.more_itertools import always_iterable, peekable
     except ModuleNotFoundError:
         pass
     else:
         _ = [always_iterable, peekable]
     try:
-        from utilities.pandas import IndexS  # type: ignore[]
+        from utilities.pandas import IndexS
     except ModuleNotFoundError:
         pass
     else:
         _ = [IndexS]
     try:
-        from utilities.polars import check_polars_dataframe  # type: ignore[]
+        from utilities.polars import check_polars_dataframe
     except ModuleNotFoundError:
         pass
     else:
         _ = [check_polars_dataframe]
     try:
-        from utilities.pytest import throttle  # type: ignore[]
+        from utilities.pytest import throttle
     except ModuleNotFoundError:
         pass
     else:
         _ = [throttle]
     try:
-        from utilities.sqlalchemy import get_table, insert_items  # type: ignore[]
+        from utilities.sqlalchemy import get_table, insert_items
     except ModuleNotFoundError:
         pass
     else:
         _ = [get_table, insert_items]
     try:
-        from utilities.sqlalchemy_polars import (  # type: ignore[]
-            insert_dataframe,
-        )
+        from utilities.sqlalchemy_polars import insert_dataframe
     except ModuleNotFoundError:
         pass
     else:
         _ = [insert_dataframe]
     try:
-        from utilities.timer import Timer  # type: ignore[]
+        from utilities.timer import Timer
     except ModuleNotFoundError:
         pass
     else:
@@ -1177,8 +1156,8 @@ else:
 
 
 try:
-    import xarray  # type: ignore[]
-    from xarray import DataArray, Dataset  # type: ignore[]
+    import xarray
+    from xarray import DataArray, Dataset
 except ModuleNotFoundError:
     pass
 else:
@@ -1228,7 +1207,7 @@ class _Show:
 
     def _enter_pandas(self) -> None:
         try:
-            from pandas import option_context  # type: ignore[]
+            from pandas import option_context
         except ModuleNotFoundError:
             pass
         else:
@@ -1245,7 +1224,7 @@ class _Show:
 
     def _enter_polars(self) -> None:
         try:
-            from polars import Config  # type: ignore[]
+            from polars import Config
         except ModuleNotFoundError:
             pass
         else:
