@@ -1,11 +1,11 @@
 repos:
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.5.1
+    rev: v0.5.5
     hooks:
       - id: ruff
         args: [--fix]
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.9.15
+    rev: 0.9.16
     hooks:
       - id: run-bump2version
       - id: run-ruff-format
@@ -18,7 +18,7 @@ repos:
     hooks:
       - id: shfmt
   - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-    rev: v2.13.0
+    rev: v2.14.0
     hooks:
       - id: pretty-format-toml
         args: [--autofix, --trailing-commas]
