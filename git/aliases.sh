@@ -163,6 +163,7 @@ if command -v git >/dev/null 2>&1; then
 	gdm() { git diff origin/master "$@"; }
 	# fetch
 	gf() { git fetch --all; }
+	gfm() { git fetch origin master:master; }
 	# log
 	alias gl='git log --oneline --decorate --graph'
 	# mv
@@ -176,9 +177,9 @@ if command -v git >/dev/null 2>&1; then
 	grb() { gf && git rebase "$@"; }
 	grba() { git rebase --abort; }
 	grbc() { git rebase --continue; }
-	grbi() { gf && git rebase -i "$@"; }
-	grbim() { gf && git rebase -i origin/master; }
-	grbm() { gf && git rebase -s recursive -X theirs origin/master; }
+	grbi() { gfm && git rebase -i "$@"; }
+	grbim() { gfm && git rebase -i origin/master; }
+	grbm() { gfm && git rebase -s recursive -X theirs origin/master; }
 	grbs() { git rebase --skip; }
 	# rebase (squash)
 	gsqm() {
