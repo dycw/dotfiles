@@ -456,11 +456,11 @@ else:
 
 try:
     import ib_async
-    from ib_async import ContFuture, Contract, Crypto, Forex, Future, Stock
+    from ib_async import Contract
 except ModuleNotFoundError:
     pass
 else:
-    _ = [ContFuture, Contract, Crypto, Forex, Future, Stock, ib_async]
+    _ = [Contract, ib_async]
 
 
 try:
@@ -1049,7 +1049,7 @@ try:
     )
     from utilities.functools import partial
     from utilities.git import get_repo_root
-    from utilities.iterables import one
+    from utilities.iterables import groupby_lists, one
     from utilities.pathlib import list_dir
     from utilities.pickle import read_pickle, write_pickle
     from utilities.re import extract_group, extract_groups
@@ -1060,6 +1060,8 @@ try:
         ensure_float,
         ensure_int,
         ensure_not_none,
+        get_class,
+        get_class_name,
     )
     from utilities.zoneinfo import HONG_KONG, TOKYO, US_CENTRAL, US_EASTERN, UTC
 except ModuleNotFoundError:
@@ -1081,8 +1083,11 @@ else:
         ensure_str,
         extract_group,
         extract_groups,
+        get_class,
+        get_class_name,
         get_now,
         get_repo_root,
+        groupby_lists,
         list_dir,
         one,
         parse_date,
@@ -1100,11 +1105,23 @@ else:
         write_pickle,
     ]
     try:
-        from utilities.altair import plot_intraday_dataframe, vconcat_charts
+        from utilities.altair import (
+            plot_dataframes,
+            plot_intraday_dataframe,
+            save_chart,
+            save_charts_as_pdf,
+            vconcat_charts,
+        )
     except ModuleNotFoundError:
         pass
     else:
-        _ = [plot_intraday_dataframe, vconcat_charts]
+        _ = [
+            plot_dataframes,
+            plot_intraday_dataframe,
+            save_chart,
+            save_charts_as_pdf,
+            vconcat_charts,
+        ]
     try:
         from utilities.atomicwrites import writer
     except ModuleNotFoundError:
@@ -1112,11 +1129,15 @@ else:
     else:
         _ = [writer]
     try:
-        from utilities.more_itertools import always_iterable, peekable
+        from utilities.more_itertools import (
+            always_iterable,
+            partition_typeguard,
+            peekable,
+        )
     except ModuleNotFoundError:
         pass
     else:
-        _ = [always_iterable, peekable]
+        _ = [always_iterable, partition_typeguard, peekable]
     try:
         from utilities.pandas import IndexS
     except ModuleNotFoundError:
