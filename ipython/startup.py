@@ -1035,17 +1035,10 @@ try:
     from utilities.datetime import (
         Month,
         date_to_datetime,
+        ensure_month,
         get_now,
-        parse_date,
-        parse_datetime,
         parse_month,
-        parse_time,
-        parse_timedelta,
-        serialize_date,
-        serialize_datetime,
         serialize_month,
-        serialize_time,
-        serialize_timedelta,
     )
     from utilities.functools import partial
     from utilities.git import get_repo_root
@@ -1077,6 +1070,7 @@ else:
         date_to_datetime,
         ensure_class,
         ensure_datetime,
+        ensure_month,
         ensure_float,
         ensure_int,
         ensure_not_none,
@@ -1090,18 +1084,10 @@ else:
         groupby_lists,
         list_dir,
         one,
-        parse_date,
-        parse_datetime,
         parse_month,
-        parse_time,
-        parse_timedelta,
         partial,
         read_pickle,
-        serialize_date,
-        serialize_datetime,
         serialize_month,
-        serialize_time,
-        serialize_timedelta,
         write_pickle,
     ]
     try:
@@ -1174,7 +1160,44 @@ else:
         pass
     else:
         _ = [Timer]
-
+    try:
+        from utilities.whenever import (
+            ensure_date,
+            ensure_local_datetime,
+            ensure_time,
+            ensure_timedelta,
+            ensure_zoned_datetime,
+            parse_date,
+            parse_local_datetime,
+            parse_time,
+            parse_timedelta,
+            parse_zoned_datetime,
+            serialize_date,
+            serialize_local_datetime,
+            serialize_time,
+            serialize_timedelta,
+            serialize_zoned_datetime,
+        )
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [
+            ensure_date,
+            ensure_local_datetime,
+            ensure_time,
+            ensure_timedelta,
+            ensure_zoned_datetime,
+            parse_date,
+            parse_local_datetime,
+            parse_time,
+            parse_timedelta,
+            parse_zoned_datetime,
+            serialize_date,
+            serialize_local_datetime,
+            serialize_time,
+            serialize_timedelta,
+            serialize_zoned_datetime,
+        ]
 
 try:
     import xarray

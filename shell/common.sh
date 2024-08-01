@@ -200,7 +200,8 @@ alias rmrf='rm -rf'
 
 # ruff
 if command -v ruff >/dev/null 2>&1; then
-	alias rw='ruff check -w'
+	rf() { pre-commit run run-ruff-format --all-files; }
+	rcw() { ruff check -w "$@"; }
 fi
 
 # tmux
