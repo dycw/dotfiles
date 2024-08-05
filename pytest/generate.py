@@ -6,13 +6,25 @@ from dataclasses import dataclass, field
 from itertools import chain, permutations, product
 from logging import basicConfig, info
 from sys import stdout
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal, override
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
 
 basicConfig(format="{message}", style="{", level="INFO", stream=stdout)
+
+
+Key = Literal["c", "f", "i", "k", "m", "n", "p", "x"]
+
+
+class ArgumentError(Exception): ...
+
+
+@dataclass(frozen=True, kw_only=True)
+class Part:
+    key: Key
+    options: list[str]
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -53,30 +65,21 @@ class Settings:
 
     def yield_parts(self) -> Iterator[Part]:
         if self.f:
-            yield Part(key="f", option="-f")
+            yield Part(key="f", options=["-f"])
         if self.i:
-            yield Part(key="i", option="--instafail")
+            yield Part(key="i", options=["--instafail"])
         if self.k:
-            yield Part(key="k", option="-k")
+            yield Part(key="k", options=["--randomly-dont-reorganize", "-k"])
         if self.maxfail:
-            yield Part(key="m", option="--maxfail")
+            yield Part(key="m", options=["--maxfail"])
         if self.n:
-            yield Part(key="n", option="-nauto")
+            yield Part(key="n", options=["-nauto"])
         if self.no_cov:
-            yield Part(key="c", option="--no-cov")
+            yield Part(key="c", options=["--no-cov"])
         if self.pdb:
-            yield Part(key="p", option="--pdb")
+            yield Part(key="p", options=["--pdb"])
         if self.x:
-            yield Part(key="x", option="-x")
-
-
-class ArgumentError(Exception): ...
-
-
-@dataclass(frozen=True, kw_only=True)
-class Part:
-    key: str
-    option: str
+            yield Part(key="x", options=["-x"])
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -85,26 +88,28 @@ class Alias:
     parts: list[Part] = field(default_factory=list)
 
     def __post_init__(self) -> None:
-        if self.settings.k and self.parts[-1].key != "k":
+        if self.settings.k and (self.parts[-1].key != "k"):
             msg = "-k must be the last term"
             raise ArgumentError(msg)
-        if self.settings.maxfail and self.parts[-1].key != "m":
+        if self.settings.maxfail and (self.parts[-1].key != "m"):
             msg = "--maxfail must be the last term"
             raise ArgumentError(msg)
 
-    def __repr__(self) -> str:  # type: ignore[]
+    @override
+    def __repr__(self) -> str:
         keys = "".join(p.key for p in self.parts)
         alias = f"pyt{keys}"
         options = " ".join(
             chain(
                 ["-ra", "-vv", "--color=yes", "--strict-markers"],
-                (p.option for p in self.parts),
+                *(p.options for p in self.parts),
             )
         )
         command = f"pytest {options}".strip()
         return f"alias {alias}='{command}'"
 
-    def __str__(self) -> str:  # type: ignore[]
+    @override
+    def __str__(self) -> str:
         return repr(self)
 
 
