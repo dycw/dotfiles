@@ -204,6 +204,7 @@ ls.add_snippets("python", {
     s("ty-generic", { t({ "from typing import Generic", "" }) }),
     s("ty-literal", { t({ "from typing import Literal", "" }) }),
     s("ty-overload", { t({ "from typing import overload", "" }) }),
+    s("ty-protocol", { t({ "from typing import Protocol", "" }) }),
     s("ty-type-var", { t({ "from typing import TypeVar", "" }) }),
 
     -- typing-extensions
