@@ -41,6 +41,11 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
+                    elements = { "ascending", "descending" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
                     elements = { "backward", "forward" },
                     word = true,
                     cyclic = true,
