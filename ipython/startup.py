@@ -1033,6 +1033,12 @@ else:
 
 try:
     from utilities.datetime import (
+        DAY,
+        EPOCH_UTC,
+        HOUR,
+        MINUTE,
+        SECOND,
+        WEEK,
         Month,
         date_to_datetime,
         ensure_month,
@@ -1072,12 +1078,18 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [
+        DAY,
+        EPOCH_UTC,
         HONG_KONG,
+        HOUR,
+        MINUTE,
         Month,
+        SECOND,
         TOKYO,
         US_CENTRAL,
         US_EASTERN,
         UTC,
+        WEEK,
         date_to_datetime,
         ensure_class,
         ensure_datetime,

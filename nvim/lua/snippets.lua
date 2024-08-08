@@ -165,6 +165,7 @@ ls.add_snippets("python", {
 
     -- random
     s("ra-randint", { t({ "from random import randint", "" }) }),
+    s("ra-random", { t({ "from random import Random", "" }) }),
     s("ra-seed", { t({ "from random import seed", "" }) }),
     s("ra-shuffle", { t({ "from random import shuffle", "" }) }),
 
