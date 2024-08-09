@@ -841,7 +841,11 @@ try:
         assert_series_not_equal,
     )
 
-    Config(tbl_rows=_PANDAS_POLARS_ROWS, tbl_cols=_PANDAS_POLARS_COLS)
+    Config(
+        tbl_rows=_PANDAS_POLARS_ROWS,
+        tbl_cols=_PANDAS_POLARS_COLS,
+        thousands_separator=True,
+    )
 except ModuleNotFoundError:
     try:
         from pandas import (
