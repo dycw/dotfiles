@@ -37,7 +37,7 @@
   },
   "conform.nvim": {
     "branch": "master",
-    "commit": "0f4f299dfea09d2adfd7a1da05149a0844ac8eee"
+    "commit": "667102f26106709cddd2dff1f699610df5b94d7f"
   },
   "dial.nvim": {
     "branch": "master",
@@ -49,11 +49,11 @@
   },
   "flit.nvim": {
     "branch": "main",
-    "commit": "a9be4e76c30a128f1e51af448c8321bf8366bcd4"
+    "commit": "1ef72de6a02458d31b10039372c8a15ab8989e0d"
   },
   "fzf-lua": {
     "branch": "main",
-    "commit": "2c4f76ac810de3b1ef91f06371ebc3cff55b1b3c"
+    "commit": "64a305a2490e48c44be9f5a489e01b995dd58c92"
   },
   "gitsigns.nvim": {
     "branch": "main",
@@ -121,7 +121,7 @@
   },
   "nvim-autopairs": {
     "branch": "master",
-    "commit": "4a39f2dcbe1967ddc3a0f76f863540dd3aa7871a"
+    "commit": "48ca9aaee733911424646cb1605f27bc01dedbe3"
   },
   "nvim-bqf": {
     "branch": "main",
@@ -145,11 +145,11 @@
   },
   "nvim-lint": {
     "branch": "master",
-    "commit": "906cd0012be2acbf98de87a3c25154abe7da0478"
+    "commit": "ad0fe35e80f5cd31a0f19176d7b30e5c3011119d"
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "652386deae739e38fa1bcf2f06e3e7de9b3436ba"
+    "commit": "ff97d376b1d22b2eaf9274605531babf0cd0cf21"
   },
   "nvim-neoclip.lua": {
     "branch": "main",
@@ -169,11 +169,11 @@
   },
   "nvim-tree.lua": {
     "branch": "master",
-    "commit": "48d0e82f9434691cc50d970898142a8c084a49d6"
+    "commit": "ad0b95dee55955817af635fa121f6e2486b10583"
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "a8535b2329a082c7f4e0b11b91b1792770425eaa"
+    "commit": "e5a05ba5e298cc1e1dad8eb8095b8d4d89a7f793"
   },
   "nvim-treesitter-context": {
     "branch": "master",
@@ -185,7 +185,7 @@
   },
   "nvim-various-textobjs": {
     "branch": "main",
-    "commit": "52343c70e2487095cafd4a5000d0465a2b992b03"
+    "commit": "1a5cc2c04cf6fb9941b1eb0696b67d3c53f22e07"
   },
   "nvim-web-devicons": {
     "branch": "master",
@@ -197,7 +197,7 @@
   },
   "rainbow-delimiters.nvim": {
     "branch": "master",
-    "commit": "254c67c8c69ca71efd84ec2be6d0344ec792cedd"
+    "commit": "79f7d771626eaa2b92f6f32f399b841bb638049e"
   },
   "sort.nvim": {
     "branch": "main",
@@ -265,6 +265,6 @@
   },
   "workspace-diagnostics.nvim": {
     "branch": "main",
-    "commit": "29ed948a84076e9bed63ce298b5cc5264b72b341"
+    "commit": "573ff93c47898967efdfbc6587a1a39e3c2d365e"
   }
 }
