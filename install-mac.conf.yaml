@@ -37,7 +37,7 @@
     ~/.jupyter/jupyter_lab_config.py: jupyter/jupyter_lab_config.py
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/apputils-extension/notification.jupyterlab-settings: jupyter/apputils/notification.json
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/apputils-extension/themes.jupyterlab-settings: jupyter/apputils/themes.json
-    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/codemirror-extension/plugin.jupyterlab-settings: jupyter/codemirror.json
+    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/codemirror-extension/plugin.jupyterlab-settings: jupyter/codemirror/plugin.json
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/docmanager-extension/plugin.jupyterlab-settings: jupyter/docmanager.json
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/filebrowser-extension/browser.jupyterlab-settings: jupyter/filebrowser.json
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings: jupyter/notebook.json

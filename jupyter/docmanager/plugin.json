@@ -2,7 +2,7 @@
   "autosave": true,
   "autosaveInterval": 60,
   "confirmClosingDocument": false,
-  "lastModifiedCheckMargin": 500,
   "defaultViewers": {},
-  "renameUntitledFileOnSave": true,
+  "lastModifiedCheckMargin": 500,
+  "renameUntitledFileOnSave": true
 }
