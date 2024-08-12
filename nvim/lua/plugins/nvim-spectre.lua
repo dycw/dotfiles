@@ -1,9 +1,9 @@
 -- luacheck: push ignore
-local api = vim.api
+local v = vim
 -- luacheck: pop
 
 local send_escape = function()
-    api.nvim_feedkeys(api.nvim_replace_termcodes("<Esc>", false, false, true), "n", false)
+    v.api.nvim_feedkeys(v.api.nvim_replace_termcodes("<Esc>", false, false, true), "n", false)
 end
 
 return {
@@ -13,7 +13,21 @@ return {
         local utilities = require("utilities")
         local keymap_set = utilities.keymap_set
 
-        spectre.setup({ live_update = true })
+        local is_macos = v.fn.has("macunix")
+        if is_macos == 1 then
+            spectre.setup({
+                live_update = true,
+                replace_engine = { -- https://github.com/nvim-pack/nvim-spectre/issues/118#issuecomment-1531683211
+                    ["sed"] = {
+                        cmd = "sed",
+                        args = { "-i", "", "-E" },
+                    },
+                },
+            })
+        else
+            spectre.setup({ live_update = true })
+        end
+
         keymap_set("n", "<Leader>sp", function()
             spectre.open_file_search()
         end, "s[p]ectre (file)")
