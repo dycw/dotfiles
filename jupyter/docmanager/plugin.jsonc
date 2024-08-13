@@ -4,5 +4,6 @@
   "confirmClosingDocument": false,
   "defaultViewers": {},
   "lastModifiedCheckMargin": 500,
-  "renameUntitledFileOnSave": true
+  "renameUntitledFileOnSave": true,
+  "maxNumberRecents": 10,
 }

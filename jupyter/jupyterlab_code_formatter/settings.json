@@ -1,9 +1,0 @@
-{
-  "preferences": {
-    "default_formatter": {
-      "python": "my_ruff_format"
-    }
-  },
-  "formatOnSave": true,
-  "suppressFormatterErrors": false
-}
