@@ -15,6 +15,7 @@
     - ~/.ipython/profile_default/startup
     - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/apputils-extension
     - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/codemirror-extension
+    - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/completer-extension
     - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/docmanager-extension
     - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/filebrowser-extension
     - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/notebook-extension
@@ -38,6 +39,7 @@
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/apputils-extension/notification.jupyterlab-settings: jupyter/apputils/notification.jsonc
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/apputils-extension/themes.jupyterlab-settings: jupyter/apputils/themes.jsonc
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/codemirror-extension/plugin.jupyterlab-settings: jupyter/codemirror/plugin.jsonc
+    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/completer-extension/manager.jupyterlab-settings: jupyter/completer/manager.jsonc
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/docmanager-extension/plugin.jupyterlab-settings: jupyter/docmanager/plugin.jsonc
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/filebrowser-extension/browser.jupyterlab-settings: jupyter/filebrowser/browser.jsonc
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings: jupyter/notebook/tracker.jsonc
