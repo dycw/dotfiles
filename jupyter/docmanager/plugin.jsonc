@@ -5,4 +5,5 @@
   "defaultViewers": {},
   "lastModifiedCheckMargin": 500,
   "renameUntitledFileOnSave": true,
+  "maxNumberRecents": 10,
 }
