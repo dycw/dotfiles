@@ -608,7 +608,9 @@ try:
     from numpy.random import Generator, RandomState, default_rng
     from numpy.typing import NDArray
 except ModuleNotFoundError:
-    pass
+    from math import inf, nan
+
+    _ = [inf, nan]
 else:
     _ = [
         Generator,
