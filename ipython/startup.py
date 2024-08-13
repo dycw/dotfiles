@@ -85,7 +85,7 @@ from collections.abc import (
     Sized,
 )
 from collections.abc import Set as AbstractSet
-from contextlib import ExitStack, suppress
+from contextlib import suppress
 from dataclasses import (
     asdict,
     astuple,
@@ -121,7 +121,6 @@ from subprocess import PIPE, CalledProcessError, check_call, check_output, run
 from sys import stdout
 from tempfile import TemporaryDirectory
 from time import sleep
-from types import TracebackType
 from typing import (
     IO,
     Annotated,
@@ -1165,6 +1164,12 @@ else:
     else:
         _ = [always_iterable, partition_typeguard, peekable]
     try:
+        from utilities.jupyter import show
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [show]
+    try:
         from utilities.pandas import IndexS
     except ModuleNotFoundError:
         pass
@@ -1264,71 +1269,3 @@ def _add_src_to_sys_path() -> None:
 
 
 _ = _add_src_to_sys_path()
-
-
-@dataclass
-class _Show:
-    """Context manager which adjusts the display of NDFrames."""
-
-    rows: int | None = field(default=_PANDAS_POLARS_ROWS)
-    columns: int | None = field(default=_PANDAS_POLARS_COLS, kw_only=True)
-    dp: int | None = field(default=None, kw_only=True)
-    stack: ExitStack = field(default_factory=ExitStack, kw_only=True)
-
-    def __call__(
-        self,
-        rows: int | None = _PANDAS_POLARS_ROWS,
-        *,
-        dp: int | None = None,
-        columns: int | None = _PANDAS_POLARS_COLS,
-    ) -> _Show:
-        return replace(self, rows=rows, dp=dp, columns=columns)
-
-    def __enter__(self) -> None:
-        self._enter_pandas()
-        self._enter_polars()
-        _ = self.stack.__enter__()
-
-    def _enter_pandas(self) -> None:
-        try:
-            from pandas import option_context
-        except ModuleNotFoundError:
-            pass
-        else:
-            kwargs: dict[str, Any] = {}
-            if self.dp is not None:
-                kwargs["display.precision"] = self.dp
-            if self.rows is not None:
-                kwargs["display.min_rows"] = kwargs["display.max_rows"] = self.rows
-            if self.columns is not None:
-                kwargs["display.max_columns"] = self.columns
-            if len(kwargs) >= 1:
-                context = option_context(*chain(*kwargs.items()))
-                self.stack.enter_context(context)
-
-    def _enter_polars(self) -> None:
-        try:
-            from polars import Config
-        except ModuleNotFoundError:
-            pass
-        else:
-            kwargs: dict[str, Any] = {}
-            if self.dp is not None:
-                kwargs["float_precision"] = self.dp
-            if self.rows is not None:
-                kwargs["tbl_rows"] = self.rows
-            if self.columns is not None:
-                kwargs["tbl_cols"] = self.columns
-            config = Config(**kwargs)
-            _ = self.stack.enter_context(config)
-
-    def __exit__(
-        self,
-        exc_type: type[BaseException] | None,
-        exc_val: BaseException | None,
-        exc_tb: TracebackType | None,
-    ) -> None:
-        _ = self.stack.__exit__(exc_type, exc_val, exc_tb)
-
-
-show = _Show()
