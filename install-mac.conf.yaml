@@ -42,7 +42,7 @@
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/filebrowser-extension/browser.jupyterlab-settings: jupyter/filebrowser/browser.json
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings: jupyter/notebook/tracker.json
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings: jupyter/shortcuts/shortcuts.json
-    ~/Library/Application Support/Jupyter/lab/user-settings/jupyterlab_code_formatter/settings.jupyterlab-settings: jupyter/jupyterlab_code_formatter.json
+    ~/Library/Application Support/Jupyter/lab/user-settings/jupyterlab_code_formatter/settings.jupyterlab-settings: jupyter/jupyterlab_code_formatter/settings.json
     ~/.zimrc: zsh/zimrc
     ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
