@@ -19,6 +19,7 @@
     - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/console-extension
     - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/docmanager-extension
     - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/filebrowser-extension
+    - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/fileeditor-extension
     - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/notebook-extension
     - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/shortcuts-extension
     - ~/Library/Application Support/Jupyter/lab/user-settings/jupyterlab_code_formatter/
@@ -44,6 +45,7 @@
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/console-extension/tracker.jupyterlab-settings: jupyter/console/tracker.jsonc
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/docmanager-extension/plugin.jupyterlab-settings: jupyter/docmanager/plugin.jsonc
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/filebrowser-extension/browser.jupyterlab-settings: jupyter/filebrowser/browser.jsonc
+    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/fileeditor-extension/plugin.jupyterlab-settings: jupyter/fileeditor/plugin.jsonc
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings: jupyter/notebook/tracker.jsonc
     ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings: jupyter/shortcuts/shortcuts.jsonc
     ~/Library/Application Support/Jupyter/lab/user-settings/jupyterlab_code_formatter/settings.jupyterlab-settings: jupyter/jupyterlab_code_formatter/settings.jsonc
