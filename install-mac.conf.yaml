@@ -52,6 +52,7 @@
     ~/.zimrc: zsh/zimrc
     ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
+    ~/Library/LaunchAgents/com.redis-stack.redis-stack-server.plist: redis/com.redis-stack.redis-stack-server.plist
 
 - shell:
     - [
@@ -157,11 +158,7 @@
         Installing pyright,
       ]
     - [
-        "command -v redis-server >/dev/null 2>&1 || brew install redis",
-        Installing redis,
-      ]
-    - [
-        "command -v redis-stack-server >/dev/null 2>&1 || brew tap-redis-stack/redis-stack && brew install redis-stack-server",
+        "command -v redis-stack-server >/dev/null 2>&1 || brew tap redis-stack/redis-stack && brew install redis-stack",
         Installing redis-stack,
       ]
     - [
@@ -241,4 +238,8 @@
     - [
         "command -v justpath >/dev/null 2>&1 || pipx install justpath",
         Installing justpath,
+      ]
+    - [
+        "launchctl load ~/Library/LaunchAgents/com.redis-stack.redis-stack-server.plist",
+        Launching redis-stack-server,
       ]

@@ -85,6 +85,7 @@ ls.add_snippets("python", {
     s("hy-invalid-argument", { t({ "from hypothesis.errors import InvalidArgument", "" }) }),
     s("hy-lists", { t({ "from hypothesis.strategies import lists", "" }) }),
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
+    s("hy-sampled-from", { t({ "from hypothesis.strategies import sampled_from", "" }) }),
     s("hy-settings", { t({ "from hypothesis import settings", "" }) }),
     s("settings-max-examples", { t({ "@settings(max_examples=1)", "" }) }),
     s("settings-generate-only", { t({ "@settings(phases={Phase.generate})", "" }) }),
@@ -97,6 +98,10 @@ ls.add_snippets("python", {
 
     -- loguru
     s("lo-logger", { t({ "from loguru import logger", "" }) }),
+
+    -- math
+    s("ma-inf", { t({ "from math import inf", "" }) }),
+    s("ma-nan", { t({ "from math import nan", "" }) }),
 
     -- more-itertools
     s("mi-iterate", { t({ "from more_itertools import iterate", "" }) }),
@@ -126,6 +131,7 @@ ls.add_snippets("python", {
     s("po-enum", { t({ "from polars import Enum", "" }) }),
     s("po-expr", { t({ "from polars import Expr", "" }) }),
     s("po-float64", { t({ "from polars import Float64", "" }) }),
+    s("po-from-epoch", { t({ "from polars import from_epoch", "" }) }),
     s("po-int-range", { t({ "from polars import int_range", "" }) }),
     s("po-int-ranges", { t({ "from polars import int_ranges", "" }) }),
     s("po-int64", { t({ "from polars import Int64", "" }) }),
@@ -210,6 +216,9 @@ ls.add_snippets("python", {
 
     -- typing-extensions
     s("ty-override", { t({ "from typing_extensions import override", "" }) }),
+
+    -- uuid
+    s("uu-uuid", { t({ "from uuid import UUID", "" }) }),
 
     -- utilities
     s("ut-always-iterable", { t({ "from utilities.more_itertools import always_iterable", "" }) }),

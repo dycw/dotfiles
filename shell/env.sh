@@ -78,15 +78,15 @@ if command -v pyenv >/dev/null 2>&1; then
 fi
 
 # redis-stack
-if command -v brew >/dev/null 2>&1; then
-	__dir="$(brew --prefix)"/Caskroom/redis-stack-server/7.4.0-v0/bin
-	case ":${PATH}:" in
-	*:"${__dir}":*) ;;
-	*)
-		export PATH="${__dir}:${PATH}"
-		;;
-	esac
-fi
+# if command -v brew >/dev/null 2>&1; then
+# 	__dir="$(brew --prefix)"/Caskroom/redis-stack-server/7.4.0-v0/bin
+# 	case ":${PATH}:" in
+# 	*:"${__dir}":*) ;;
+# 	*)
+# 		export PATH="${__dir}:${PATH}"
+# 		;;
+# 	esac
+# fi
 
 # ripgrep
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/ripgreprc"

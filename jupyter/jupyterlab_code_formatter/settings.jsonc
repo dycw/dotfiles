@@ -39,7 +39,7 @@
     "args": ["--select=I001"],
   },
   "ruffformat": {
-    "args": [],
+    "args": ["--line-length=80"],
   },
   "suppressFormatterErrors": false,
   "suppressFormatterErrorsIFFAutoFormatOnSave": false,
