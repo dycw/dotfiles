@@ -157,10 +157,6 @@
         Installing pyright,
       ]
     - [
-        "command -v redis-server >/dev/null 2>&1 || brew install redis",
-        Installing redis,
-      ]
-    - [
         "command -v redis-stack-server >/dev/null 2>&1 || brew tap-redis-stack/redis-stack && brew install redis-stack-server",
         Installing redis-stack,
       ]
