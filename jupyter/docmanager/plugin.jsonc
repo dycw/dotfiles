@@ -1,9 +1,6 @@
 {
-  "autosave": true,
-  "autosaveInterval": 60,
-  "confirmClosingDocument": false,
-  "defaultViewers": {},
-  "lastModifiedCheckMargin": 500,
-  "renameUntitledFileOnSave": true,
-  "maxNumberRecents": 10,
+  // Document Manager
+  // @jupyterlab/docmanager-extension:plugin
+  // Document Manager settings.
+  // ***************************************
 }
