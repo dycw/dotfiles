@@ -52,6 +52,7 @@
     ~/.zimrc: zsh/zimrc
     ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
+    ~/Library/LaunchAgents/com.redis-stack.redis-stack-server.plist: redis/com.redis-stack.redis-stack-server.plist
 
 - shell:
     - [
