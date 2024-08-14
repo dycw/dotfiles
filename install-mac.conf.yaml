@@ -13,16 +13,16 @@
     - ~/.config/tmux
     - ~/.config/wezterm
     - ~/.ipython/profile_default/startup
-    - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/apputils-extension
-    - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/codemirror-extension
-    - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/completer-extension
-    - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/console-extension
-    - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/docmanager-extension
-    - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/filebrowser-extension
-    - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/fileeditor-extension
-    - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/notebook-extension
-    - ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/shortcuts-extension
-    - ~/Library/Application Support/Jupyter/lab/user-settings/jupyterlab_code_formatter/
+    - ~/.jupyter/lab/user-settings/@jupyterlab/apputils-extension
+    - ~/.jupyter/lab/user-settings/@jupyterlab/codemirror-extension
+    - ~/.jupyter/lab/user-settings/@jupyterlab/completer-extension
+    - ~/.jupyter/lab/user-settings/@jupyterlab/console-extension
+    - ~/.jupyter/lab/user-settings/@jupyterlab/docmanager-extension
+    - ~/.jupyter/lab/user-settings/@jupyterlab/filebrowser-extension
+    - ~/.jupyter/lab/user-settings/@jupyterlab/fileeditor-extension
+    - ~/.jupyter/lab/user-settings/@jupyterlab/notebook-extension
+    - ~/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension
+    - ~/.jupyter/lab/user-settings/jupyterlab_code_formatter/
 
 - link:
     ~/.config/direnv/direnvrc: direnv/direnvrc
@@ -37,18 +37,18 @@
     ~/.config/wezterm/wezterm.lua: wezterm/wezterm.lua
     ~/.ipython/profile_default/ipython_config.py: ipython/ipython_config.py
     ~/.ipython/profile_default/startup/startup.py: ipython/startup.py
-    ~/Library/Application Support/Jupyter/jupyter_lab_config.py: jupyter/jupyter_lab_config.py
-    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/apputils-extension/notification.jupyterlab-settings: jupyter/apputils/notification.jsonc
-    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/apputils-extension/themes.jupyterlab-settings: jupyter/apputils/themes.jsonc
-    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/codemirror-extension/plugin.jupyterlab-settings: jupyter/codemirror/plugin.jsonc
-    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/completer-extension/manager.jupyterlab-settings: jupyter/completer/manager.jsonc
-    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/console-extension/tracker.jupyterlab-settings: jupyter/console/tracker.jsonc
-    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/docmanager-extension/plugin.jupyterlab-settings: jupyter/docmanager/plugin.jsonc
-    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/filebrowser-extension/browser.jupyterlab-settings: jupyter/filebrowser/browser.jsonc
-    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/fileeditor-extension/plugin.jupyterlab-settings: jupyter/fileeditor/plugin.jsonc
-    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings: jupyter/notebook/tracker.jsonc
-    ~/Library/Application Support/Jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings: jupyter/shortcuts/shortcuts.jsonc
-    ~/Library/Application Support/Jupyter/lab/user-settings/jupyterlab_code_formatter/settings.jupyterlab-settings: jupyter/jupyterlab_code_formatter/settings.jsonc
+    ~/.jupyter/lab/jupyter_lab_config.py: jupyter/jupyter_lab_config.py
+    ~/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/notification.jupyterlab-settings: jupyter/apputils/notification.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/themes.jupyterlab-settings: jupyter/apputils/themes.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/codemirror-extension/plugin.jupyterlab-settings: jupyter/codemirror/plugin.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/completer-extension/manager.jupyterlab-settings: jupyter/completer/manager.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/console-extension/tracker.jupyterlab-settings: jupyter/console/tracker.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/docmanager-extension/plugin.jupyterlab-settings: jupyter/docmanager/plugin.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/filebrowser-extension/browser.jupyterlab-settings: jupyter/filebrowser/browser.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/fileeditor-extension/plugin.jupyterlab-settings: jupyter/fileeditor/plugin.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings: jupyter/notebook/tracker.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings: jupyter/shortcuts/shortcuts.jsonc
+    ~/.jupyter/lab/user-settings/jupyterlab_code_formatter/settings.jupyterlab-settings: jupyter/jupyterlab_code_formatter/settings.jsonc
     ~/.zimrc: zsh/zimrc
     ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
@@ -157,8 +157,12 @@
         Installing pyright,
       ]
     - [
-        "command -v redis >/dev/null 2>&1 || brew install redis",
+        "command -v redis-server >/dev/null 2>&1 || brew install redis",
         Installing redis,
+      ]
+    - [
+        "command -v redis-stack-server >/dev/null 2>&1 || brew tap-redis-stack/redis-stack && brew install redis-stack-server",
+        Installing redis-stack,
       ]
     - [
         "command -v restic >/dev/null 2>&1 || brew install restic",
@@ -228,7 +232,7 @@
         "[ -f ${HOME}/.config/fzf/fzf.zsh ] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
         Configuring fzf,
       ]
-    - [brew services start postgresql, Configuring postgresql]
+    - [brew services start postgresql@16, Configuring postgresql]
     - [brew services start redis, Configuring redis]
     - [
         "command -v harlequin >/dev/null 2>&1 || pipx install harlequin",
