@@ -126,6 +126,7 @@ ls.add_snippets("python", {
     s("po-enum", { t({ "from polars import Enum", "" }) }),
     s("po-expr", { t({ "from polars import Expr", "" }) }),
     s("po-float64", { t({ "from polars import Float64", "" }) }),
+    s("po-from-epoch", { t({ "from polars import from_epoch", "" }) }),
     s("po-int-range", { t({ "from polars import int_range", "" }) }),
     s("po-int-ranges", { t({ "from polars import int_ranges", "" }) }),
     s("po-int64", { t({ "from polars import Int64", "" }) }),
