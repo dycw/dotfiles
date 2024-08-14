@@ -62,7 +62,7 @@ if command -v brew >/dev/null 2>&1; then
 		;;
 	esac
 fi
-#
+
 # pyenv
 export PYENV_ROOT="${HOME}/.pyenv"
 __dir="${PYENV_ROOT}/bin"
@@ -75,6 +75,17 @@ esac
 # pyenv
 if command -v pyenv >/dev/null 2>&1; then
 	eval "$(pyenv init -)"
+fi
+
+# redis-stack
+if command -v brew >/dev/null 2>&1; then
+	__dir="$(brew --prefix)"/Caskroom/redis-stack-server/7.4.0-v0/bin
+	case ":${PATH}:" in
+	*:"${__dir}":*) ;;
+	*)
+		export PATH="${__dir}:${PATH}"
+		;;
+	esac
 fi
 
 # ripgrep
