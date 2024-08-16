@@ -556,7 +556,6 @@ else:
     try:
         from utilities.more_itertools import (
             always_iterable,
-            one,
             partition_typeguard,
             peekable,
         )
@@ -565,7 +564,7 @@ else:
 
         _ = [always_iterable, one, peekable]
     else:
-        _ = [always_iterable, one, partition_typeguard, peekable]
+        _ = [always_iterable, partition_typeguard, peekable]
 
 try:
     import numpy  # noqa: ICN001
@@ -1296,3 +1295,8 @@ def _add_src_to_sys_path() -> None:
 
 
 _ = _add_src_to_sys_path()
+
+
+builtins.print(  # noqa: T201
+    f"{dt.datetime.now():%Y-%m-%d %H:%M:%S}: Finished running `startup.py`"  # noqa: DTZ005
+)
