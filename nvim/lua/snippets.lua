@@ -78,8 +78,10 @@ ls.add_snippets("python", {
     -- hypothesis
     s("hy-assume", { t({ "from hypothesis import assume", "" }) }),
     s("hy-booleans", { t({ "from hypothesis.strategies import booleans", "" }) }),
+    s("hy-composite", { t({ "from hypothesis.strategies import composite", "" }) }),
     s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-dates", { t({ "from hypothesis.strategies import dates", "" }) }),
+    s("hy-datetimes", { t({ "from hypothesis.strategies import datetimes", "" }) }),
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
     s("hy-invalid-argument", { t({ "from hypothesis.errors import InvalidArgument", "" }) }),
@@ -87,8 +89,10 @@ ls.add_snippets("python", {
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
     s("hy-sampled-from", { t({ "from hypothesis.strategies import sampled_from", "" }) }),
     s("hy-settings", { t({ "from hypothesis import settings", "" }) }),
-    s("settings-max-examples", { t({ "@settings(max_examples=1)", "" }) }),
+    s("hy-tuples", { t({ "from hypothesis.strategies import tuples", "" }) }),
+    s("settings-filter-too-much", { t({ "@settings(suppress_health_check={HealthCheck.filter_too_much})", "" }) }),
     s("settings-generate-only", { t({ "@settings(phases={Phase.generate})", "" }) }),
+    s("settings-max-examples", { t({ "@settings(max_examples=1)", "" }) }),
 
     -- itertools
     s("it-accumulate", { t({ "from itertools import accumulate", "" }) }),
@@ -177,6 +181,9 @@ ls.add_snippets("python", {
 
     -- re
     s("re-search", { t({ "from re import search", "" }) }),
+
+    -- redis
+    s("re-redis", { t({ "from redis import Redis", "" }) }),
 
     -- rich
     s("ri-print", { t({ "from rich import print", "" }), t({ "" }), t({ "print(" }), i(1, "Values"), t({ ")", "" }) }),

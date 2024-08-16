@@ -141,6 +141,9 @@ from typing import (
 )
 from zoneinfo import ZoneInfo
 
+builtins.print(f"{dt.datetime.now():%Y-%m-%d %H:%M:%S}: Running `startup.py`...")  # noqa: DTZ005, T201
+
+
 _ = [
     AbstractSet,
     Annotated,
@@ -252,7 +255,6 @@ _ = [
     platform,
     poplib,
     pprint,
-    pprint,
     product,
     random,
     re,
@@ -341,6 +343,24 @@ else:
 
     alt.data_transformers.enable("vegafusion")
 
+    try:
+        from utilities.altair import (
+            plot_dataframes,
+            plot_intraday_dataframe,
+            save_chart,
+            save_charts_as_pdf,
+            vconcat_charts,
+        )
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [
+            plot_dataframes,
+            plot_intraday_dataframe,
+            save_chart,
+            save_charts_as_pdf,
+            vconcat_charts,
+        ]
 
 try:
     from beartype import beartype
@@ -527,20 +547,25 @@ else:
 try:
     import more_itertools
     import more_itertools as mi
-    from more_itertools import split_at
+    from more_itertools import partition, split_at
 except ModuleNotFoundError:
     pass
 else:
-    _ = [mi, more_itertools, split_at]
+    _ = [mi, more_itertools, partition, split_at]
+
     try:
-        import utilities
+        from utilities.more_itertools import (
+            always_iterable,
+            one,
+            partition_typeguard,
+            peekable,
+        )
     except ModuleNotFoundError:
         from more_itertools import always_iterable, one, peekable
 
         _ = [always_iterable, one, peekable]
     else:
-        _ = utilities
-
+        _ = [always_iterable, one, partition_typeguard, peekable]
 
 try:
     import numpy  # noqa: ICN001
@@ -723,12 +748,17 @@ try:
     )
 except ModuleNotFoundError:
     try:
+        from utilities.pandas import IndexS
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [IndexS]
+    try:
         from utilities.pickle import read_pickle
     except ModuleNotFoundError:
         pass
     else:
         _ = [read_pickle]
-
 else:
     _ = [
         BDay,
@@ -936,7 +966,12 @@ else:
         struct,
         when,
     ]
-
+    try:
+        from utilities.polars import check_polars_dataframe
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [check_polars_dataframe]
 
 try:
     from pqdm.processes import pqdm
@@ -954,6 +989,20 @@ except ModuleNotFoundError:
 else:
     _ = [pydantic, BaseModel]
 
+
+try:
+    from pytest import fixture, mark, param  # noqa: PT013
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [fixture, mark, param]
+
+    try:
+        from utilities.pytest import throttle
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [throttle]
 
 try:
     import requests
@@ -998,12 +1047,24 @@ try:
     import sqlalchemy
     import sqlalchemy as sqla
     import sqlalchemy.orm
-    from sqlalchemy import create_engine, func, select
+    from sqlalchemy import func, select
 except ModuleNotFoundError:
     pass
 else:
-    _ = [sqla, sqlalchemy, sqlalchemy.orm, create_engine, select, func]
+    _ = [sqla, sqlalchemy, sqlalchemy.orm, select, func]
+    try:
+        import utilities
+    except ModuleNotFoundError:
+        from utilities.sqlalchemy import (
+            create_engine,
+            get_table,
+            insert_items,
+            insert_items_async,
+        )
 
+        _ = [create_engine, get_table, insert_items, insert_items_async]
+    else:
+        _ = utilities
 
 try:
     import streamlit
@@ -1070,6 +1131,7 @@ try:
     from utilities.pickle import read_pickle, write_pickle
     from utilities.re import extract_group, extract_groups
     from utilities.text import ensure_str
+    from utilities.timer import Timer
     from utilities.types import (
         ensure_class,
         ensure_datetime,
@@ -1093,6 +1155,7 @@ else:
         Month,
         SECOND,
         TOKYO,
+        Timer,
         US_CENTRAL,
         US_EASTERN,
         UTC,
@@ -1134,39 +1197,11 @@ else:
         write_pickle,
     ]
     try:
-        from utilities.altair import (
-            plot_dataframes,
-            plot_intraday_dataframe,
-            save_chart,
-            save_charts_as_pdf,
-            vconcat_charts,
-        )
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [
-            plot_dataframes,
-            plot_intraday_dataframe,
-            save_chart,
-            save_charts_as_pdf,
-            vconcat_charts,
-        ]
-    try:
         from utilities.atomicwrites import writer
     except ModuleNotFoundError:
         pass
     else:
         _ = [writer]
-    try:
-        from utilities.more_itertools import (
-            always_iterable,
-            partition_typeguard,
-            peekable,
-        )
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [always_iterable, partition_typeguard, peekable]
     try:
         from utilities.jupyter import show
     except ModuleNotFoundError:
@@ -1174,41 +1209,38 @@ else:
     else:
         _ = [show]
     try:
-        from utilities.pandas import IndexS
+        from utilities.sqlalchemy_polars import (
+            insert_dataframe,
+            insert_dataframe_async,
+            select_to_dataframe,
+            select_to_dataframe_async,
+        )
     except ModuleNotFoundError:
         pass
     else:
-        _ = [IndexS]
-    try:
-        from utilities.polars import check_polars_dataframe
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [check_polars_dataframe]
-    try:
-        from utilities.pytest import throttle
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [throttle]
-    try:
-        from utilities.sqlalchemy import get_table, insert_items
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [get_table, insert_items]
-    try:
-        from utilities.sqlalchemy_polars import insert_dataframe
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [insert_dataframe]
-    try:
-        from utilities.timer import Timer
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [Timer]
+        _ = [
+            insert_dataframe,
+            insert_dataframe_async,
+            select_to_dataframe,
+            select_to_dataframe_async,
+        ]
+
+
+try:
+    import xarray
+    from xarray import DataArray, Dataset
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [xarray, DataArray, Dataset]
+
+
+try:
+    from whenever import Date, DateTimeDelta, LocalDateTime, Time, ZonedDateTime
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [Date, DateTimeDelta, LocalDateTime, Time, ZonedDateTime]
     try:
         from utilities.whenever import (
             ensure_date,
@@ -1247,15 +1279,6 @@ else:
             serialize_timedelta,
             serialize_zoned_datetime,
         ]
-
-try:
-    import xarray
-    from xarray import DataArray, Dataset
-except ModuleNotFoundError:
-    pass
-else:
-    _ = [xarray, DataArray, Dataset]
-
 
 # functions
 

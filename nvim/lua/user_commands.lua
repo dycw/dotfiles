@@ -23,7 +23,12 @@ end
 CreateInsertCodeUserCommand(
     "HypothesisSettingsFilterTooMuch",
     { "from hypothesis import HealthCheck, settings" },
-    "@settings(suppress_health_check=[HealthCheck.filter_too_much])"
+    "@settings(suppress_health_check={HealthCheck.filter_too_much})"
+)
+CreateInsertCodeUserCommand(
+    "HypothesisSettingsGenerateOnly",
+    { "from hypothesis import Phase, settings" },
+    "@settings(phases={Phase.generate})"
 )
 CreateInsertCodeUserCommand(
     "HypothesisSettingsMaxExamples",
