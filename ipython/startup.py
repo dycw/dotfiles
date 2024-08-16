@@ -748,12 +748,17 @@ try:
     )
 except ModuleNotFoundError:
     try:
+        from utilities.pandas import IndexS
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [IndexS]
+    try:
         from utilities.pickle import read_pickle
     except ModuleNotFoundError:
         pass
     else:
         _ = [read_pickle]
-
 else:
     _ = [
         BDay,
@@ -961,7 +966,12 @@ else:
         struct,
         when,
     ]
-
+    try:
+        from utilities.polars import check_polars_dataframe
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [check_polars_dataframe]
 
 try:
     from pqdm.processes import pqdm
@@ -979,6 +989,20 @@ except ModuleNotFoundError:
 else:
     _ = [pydantic, BaseModel]
 
+
+try:
+    from pytest import fixture, mark, param  # noqa: PT013
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [fixture, mark, param]
+
+    try:
+        from utilities.pytest import throttle
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [throttle]
 
 try:
     import requests
@@ -1031,9 +1055,14 @@ else:
     try:
         import utilities
     except ModuleNotFoundError:
-        from utilities.sqlalchemy import create_engine
+        from utilities.sqlalchemy import (
+            create_engine,
+            get_table,
+            insert_items,
+            insert_items_async,
+        )
 
-        _ = [create_engine]
+        _ = [create_engine, get_table, insert_items, insert_items_async]
     else:
         _ = utilities
 
@@ -1180,35 +1209,38 @@ else:
     else:
         _ = [show]
     try:
-        from utilities.pandas import IndexS
+        from utilities.sqlalchemy_polars import (
+            insert_dataframe,
+            insert_dataframe_async,
+            select_to_dataframe,
+            select_to_dataframe_async,
+        )
     except ModuleNotFoundError:
         pass
     else:
-        _ = [IndexS]
-    try:
-        from utilities.polars import check_polars_dataframe
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [check_polars_dataframe]
-    try:
-        from utilities.pytest import throttle
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [throttle]
-    try:
-        from utilities.sqlalchemy import get_table, insert_items
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [get_table, insert_items]
-    try:
-        from utilities.sqlalchemy_polars import insert_dataframe
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [insert_dataframe]
+        _ = [
+            insert_dataframe,
+            insert_dataframe_async,
+            select_to_dataframe,
+            select_to_dataframe_async,
+        ]
+
+
+try:
+    import xarray
+    from xarray import DataArray, Dataset
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [xarray, DataArray, Dataset]
+
+
+try:
+    from whenever import Date, DateTimeDelta, LocalDateTime, Time, ZonedDateTime
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [Date, DateTimeDelta, LocalDateTime, Time, ZonedDateTime]
     try:
         from utilities.whenever import (
             ensure_date,
@@ -1247,16 +1279,6 @@ else:
             serialize_timedelta,
             serialize_zoned_datetime,
         ]
-
-
-try:
-    import xarray
-    from xarray import DataArray, Dataset
-except ModuleNotFoundError:
-    pass
-else:
-    _ = [xarray, DataArray, Dataset]
-
 
 # functions
 
