@@ -141,6 +141,9 @@ from typing import (
 )
 from zoneinfo import ZoneInfo
 
+builtins.print(f"{dt.datetime.now():%Y-%m-%d %H:%M:%S}: Running `startup.py`...")  # noqa: DTZ005, T201
+
+
 _ = [
     AbstractSet,
     Annotated,
@@ -252,7 +255,6 @@ _ = [
     platform,
     poplib,
     pprint,
-    pprint,
     product,
     random,
     re,
@@ -341,6 +343,24 @@ else:
 
     alt.data_transformers.enable("vegafusion")
 
+    try:
+        from utilities.altair import (
+            plot_dataframes,
+            plot_intraday_dataframe,
+            save_chart,
+            save_charts_as_pdf,
+            vconcat_charts,
+        )
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [
+            plot_dataframes,
+            plot_intraday_dataframe,
+            save_chart,
+            save_charts_as_pdf,
+            vconcat_charts,
+        ]
 
 try:
     from beartype import beartype
@@ -527,20 +547,25 @@ else:
 try:
     import more_itertools
     import more_itertools as mi
-    from more_itertools import split_at
+    from more_itertools import partition, split_at
 except ModuleNotFoundError:
     pass
 else:
-    _ = [mi, more_itertools, split_at]
+    _ = [mi, more_itertools, partition, split_at]
+
     try:
-        import utilities
+        from utilities.more_itertools import (
+            always_iterable,
+            one,
+            partition_typeguard,
+            peekable,
+        )
     except ModuleNotFoundError:
         from more_itertools import always_iterable, one, peekable
 
         _ = [always_iterable, one, peekable]
     else:
-        _ = utilities
-
+        _ = [always_iterable, one, partition_typeguard, peekable]
 
 try:
     import numpy  # noqa: ICN001
@@ -998,12 +1023,19 @@ try:
     import sqlalchemy
     import sqlalchemy as sqla
     import sqlalchemy.orm
-    from sqlalchemy import create_engine, func, select
+    from sqlalchemy import func, select
 except ModuleNotFoundError:
     pass
 else:
-    _ = [sqla, sqlalchemy, sqlalchemy.orm, create_engine, select, func]
+    _ = [sqla, sqlalchemy, sqlalchemy.orm, select, func]
+    try:
+        import utilities
+    except ModuleNotFoundError:
+        from utilities.sqlalchemy import create_engine
 
+        _ = [create_engine]
+    else:
+        _ = utilities
 
 try:
     import streamlit
@@ -1070,6 +1102,7 @@ try:
     from utilities.pickle import read_pickle, write_pickle
     from utilities.re import extract_group, extract_groups
     from utilities.text import ensure_str
+    from utilities.timer import Timer
     from utilities.types import (
         ensure_class,
         ensure_datetime,
@@ -1093,6 +1126,7 @@ else:
         Month,
         SECOND,
         TOKYO,
+        Timer,
         US_CENTRAL,
         US_EASTERN,
         UTC,
@@ -1134,39 +1168,11 @@ else:
         write_pickle,
     ]
     try:
-        from utilities.altair import (
-            plot_dataframes,
-            plot_intraday_dataframe,
-            save_chart,
-            save_charts_as_pdf,
-            vconcat_charts,
-        )
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [
-            plot_dataframes,
-            plot_intraday_dataframe,
-            save_chart,
-            save_charts_as_pdf,
-            vconcat_charts,
-        ]
-    try:
         from utilities.atomicwrites import writer
     except ModuleNotFoundError:
         pass
     else:
         _ = [writer]
-    try:
-        from utilities.more_itertools import (
-            always_iterable,
-            partition_typeguard,
-            peekable,
-        )
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [always_iterable, partition_typeguard, peekable]
     try:
         from utilities.jupyter import show
     except ModuleNotFoundError:
@@ -1203,12 +1209,6 @@ else:
         pass
     else:
         _ = [insert_dataframe]
-    try:
-        from utilities.timer import Timer
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [Timer]
     try:
         from utilities.whenever import (
             ensure_date,
@@ -1247,6 +1247,7 @@ else:
             serialize_timedelta,
             serialize_zoned_datetime,
         ]
+
 
 try:
     import xarray

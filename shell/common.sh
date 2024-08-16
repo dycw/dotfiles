@@ -152,7 +152,7 @@ fi
 pi() { pip install "$@"; }
 pie() { pi --editable .; }
 pii() { pi ipython; }
-pij() { pi jupyterlab jupyterlab-vim; }
+pij() { pi jupyterlab jupyterlab-code-formatter; }
 plo() { pip list --outdated; }
 pui() { pip uninstall "$@"; }
 

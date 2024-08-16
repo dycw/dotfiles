@@ -1,6 +1,4 @@
 {
-  // Document Manager
-  // @jupyterlab/docmanager-extension:plugin
-  // Document Manager settings.
-  // ***************************************
+  "autosave": false,
+  "autosaveInterval": 120,
 }

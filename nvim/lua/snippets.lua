@@ -78,6 +78,7 @@ ls.add_snippets("python", {
     -- hypothesis
     s("hy-assume", { t({ "from hypothesis import assume", "" }) }),
     s("hy-booleans", { t({ "from hypothesis.strategies import booleans", "" }) }),
+    s("hy-composite", { t({ "from hypothesis.strategies import composite", "" }) }),
     s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-dates", { t({ "from hypothesis.strategies import dates", "" }) }),
     s("hy-datetimes", { t({ "from hypothesis.strategies import datetimes", "" }) }),
