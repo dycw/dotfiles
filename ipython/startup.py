@@ -497,6 +497,13 @@ except ModuleNotFoundError:
 else:
     _ = [logger]
 
+    try:
+        from utilities.loguru import logged_sleep_async, logged_sleep_sync
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [logged_sleep_async, logged_sleep_sync]
+
 
 try:
     import luigi
@@ -724,7 +731,6 @@ try:
         Timestamp,
         bdate_range,
         qcut,
-        read_pickle,
         read_sql,
         read_table,
         set_option,
@@ -747,15 +753,9 @@ try:
     )
 except ModuleNotFoundError:
     try:
-        from utilities.pandas import IndexS
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [IndexS]
-    try:
         from utilities.pickle import read_pickle
     except ModuleNotFoundError:
-        pass
+        from pandas import read_pickle
     else:
         _ = [read_pickle]
 else:
@@ -966,11 +966,11 @@ else:
         when,
     ]
     try:
-        from utilities.polars import check_polars_dataframe
+        from utilities.polars import check_polars_dataframe, zoned_datetime
     except ModuleNotFoundError:
         pass
     else:
-        _ = [check_polars_dataframe]
+        _ = [check_polars_dataframe, zoned_datetime]
 
 try:
     from pqdm.processes import pqdm
@@ -1046,24 +1046,33 @@ try:
     import sqlalchemy
     import sqlalchemy as sqla
     import sqlalchemy.orm
-    from sqlalchemy import func, select
+    from sqlalchemy import Column, MetaData, Table, func, select
 except ModuleNotFoundError:
     pass
 else:
-    _ = [sqla, sqlalchemy, sqlalchemy.orm, select, func]
+    _ = [Column, MetaData, Table, sqla, sqlalchemy, sqlalchemy.orm, select, func]
     try:
-        import utilities
-    except ModuleNotFoundError:
         from utilities.sqlalchemy import (
             create_engine,
+            ensure_tables_created,
+            ensure_tables_created_async,
+            ensure_tables_dropped,
             get_table,
             insert_items,
             insert_items_async,
         )
-
-        _ = [create_engine, get_table, insert_items, insert_items_async]
+    except ModuleNotFoundError:
+        pass
     else:
-        _ = utilities
+        _ = [
+            create_engine,
+            ensure_tables_created,
+            ensure_tables_created_async,
+            ensure_tables_dropped,
+            get_table,
+            insert_items,
+            insert_items_async,
+        ]
 
 try:
     import streamlit
@@ -1126,6 +1135,7 @@ try:
     from utilities.functools import partial
     from utilities.git import get_repo_root
     from utilities.iterables import groupby_lists, one
+    from utilities.logging import LogLevel
     from utilities.pathlib import list_dir
     from utilities.pickle import read_pickle, write_pickle
     from utilities.re import extract_group, extract_groups
@@ -1150,6 +1160,7 @@ else:
         EPOCH_UTC,
         HONG_KONG,
         HOUR,
+        LogLevel,
         MINUTE,
         Month,
         SECOND,

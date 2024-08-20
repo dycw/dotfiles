@@ -34,6 +34,7 @@ ls.add_snippets("python", {
     s("co-iterable", { t({ "from collections.abc import Iterable", "" }) }),
     s("co-iterator", { t({ "from collections.abc import Iterator", "" }) }),
     s("co-mapping", { t({ "from collections.abc import Mapping", "" }) }),
+    s("co-sequence", { t({ "from collections.abc import Sequence", "" }) }),
 
     -- contextlib
     s("co-suppress", { t({ "from contextlib import suppress", "" }) }),
@@ -180,10 +181,16 @@ ls.add_snippets("python", {
     s("ra-shuffle", { t({ "from random import shuffle", "" }) }),
 
     -- re
+    s("im-re", { t({ "import re", "" }) }),
+    s("re-escape", { t({ "from re import escape", "" }) }),
     s("re-search", { t({ "from re import search", "" }) }),
 
     -- redis
     s("re-redis", { t({ "from redis import Redis", "" }) }),
+
+    -- reprlib
+    s("im-rep", { t({ "import reprlib", "" }) }),
+    s("re-repr", { t({ "from reprlib import repr", "" }) }),
 
     -- rich
     s("ri-print", { t({ "from rich import print", "" }), t({ "" }), t({ "print(" }), i(1, "Values"), t({ ")", "" }) }),
@@ -251,21 +258,22 @@ ls.add_snippets("python", {
     s("ut-insert-dataframe", { t({ "from utilities.sqlalchemy_polars import insert_dataframe", "" }) }),
     s("ut-insert-items", { t({ "from utilities.sqlalchemy import insert_items", "" }) }),
     s("ut-int-arrays", { t({ "from utilities.hypothesis import int_arrays", "" }) }),
-    s("ut-utc", { t({ "from utilities.zoneinfo import UTC", "" }) }),
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
+    s("ut-log-level", { t({ "from utilities.logging import LogLevel", "" }) }),
     s("ut-memoize", { t({ "from utilities.atools import memoize", "" }) }),
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
-    s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-parse-date", { t({ "from utilities.datetime import parse_date", "" }) }),
+    s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
     s("ut-refresh-memoized", { t({ "from utilities.atools import refresh_memoized", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
-    s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
+    s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
     s("ut-tokyo", { t({ "from utilities.zoneinfo import TOKYO", "" }) }),
+    s("ut-utc", { t({ "from utilities.zoneinfo import UTC", "" }) }),
     s("ut-write-pickle", { t({ "from utilities.pickle import write_pickle", "" }) }),
     s("ut-writer", { t({ "from utilities.atomicwrites import writer", "" }) }),
 
