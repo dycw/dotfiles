@@ -46,6 +46,7 @@ import poplib
 import pprint
 import random
 import re
+import reprlib
 import secrets
 import shutil
 import smtplib
@@ -67,6 +68,7 @@ import uuid
 import wave
 import zipfile
 import zoneinfo
+from asyncio import create_task, get_event_loop, get_running_loop
 from collections import Counter, defaultdict, deque
 from collections.abc import (
     AsyncGenerator,
@@ -203,6 +205,7 @@ _ = [
     copy,
     copyfile,
     cpu_count,
+    create_task,
     csv,
     dataclass,
     dataclasses,
@@ -221,6 +224,8 @@ _ = [
     fractions,
     ftplib,
     functools,
+    get_event_loop,
+    get_running_loop,
     getenv,
     gettext,
     glob,
@@ -261,6 +266,7 @@ _ = [
     reduce,
     repeat,
     replace,
+    reprlib,
     rmtree,
     run,
     search,
@@ -1138,7 +1144,9 @@ try:
     from utilities.logging import LogLevel
     from utilities.pathlib import list_dir
     from utilities.pickle import read_pickle, write_pickle
+    from utilities.random import SYSTEM_RANDOM
     from utilities.re import extract_group, extract_groups
+    from utilities.reprlib import ReprLocals, custom_print, custom_repr
     from utilities.text import ensure_str
     from utilities.timer import Timer
     from utilities.types import (
@@ -1163,13 +1171,18 @@ else:
         LogLevel,
         MINUTE,
         Month,
+        ReprLocals,
+        ReprLocals,
         SECOND,
+        SYSTEM_RANDOM,
         TOKYO,
         Timer,
         US_CENTRAL,
         US_EASTERN,
         UTC,
         WEEK,
+        custom_print,
+        custom_repr,
         date_to_datetime,
         ensure_class,
         ensure_datetime,

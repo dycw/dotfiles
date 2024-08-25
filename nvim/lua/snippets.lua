@@ -5,6 +5,7 @@ local t = ls.text_node
 
 ls.add_snippets("python", {
     -- asyncio
+    s("as-create-task", { t({ "from asyncio import create_task", "" }) }),
     s("as-get-event-loop", { t({ "from asyncio import get_event_loop", "" }) }),
 
     -- beartype
@@ -220,6 +221,7 @@ ls.add_snippets("python", {
     s("ti-sleep", { t({ "from time import sleep", "" }) }),
 
     -- typing
+    s("im-typing", { t({ "import typing", "" }) }),
     s("ty-any", { t({ "from typing import Any", "" }) }),
     s("ty-cast", { t({ "from typing import cast", "" }) }),
     s("ty-generic", { t({ "from typing import Generic", "" }) }),
@@ -237,6 +239,7 @@ ls.add_snippets("python", {
     -- utilities
     s("ut-always-iterable", { t({ "from utilities.more_itertools import always_iterable", "" }) }),
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
+    s("ut-custom-repr", { t({ "from utilities.reprlib import custom_repr", "" }) }),
     s("ut-date-to-datetime", { t({ "from utilities.datetime import date_to_datetime", "" }) }),
     s("ut-ensure-date", { t({ "from utilities.types import ensure_date", "" }) }),
     s("ut-ensure-float", { t({ "from utilities.types import ensure_float", "" }) }),
@@ -267,8 +270,10 @@ ls.add_snippets("python", {
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
     s("ut-refresh-memoized", { t({ "from utilities.atools import refresh_memoized", "" }) }),
+    s("ut-repr-locals", { t({ "from utilities.reprlib import ReprLocals", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
+    s("ut-system-random", { t({ "from utilities.random import SYSTEM_RANDOM", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
     s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),

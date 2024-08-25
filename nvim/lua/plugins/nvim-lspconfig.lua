@@ -57,12 +57,12 @@ return { -- LSP Configuration & Plugins
                     end, "inlay [h]ints")
                 end
 
-                if client then
-                    require("workspace-diagnostics").populate_workspace_diagnostics(
-                        client,
-                        v.api.nvim_get_current_buf()
-                    )
-                end
+                -- if client then
+                --     require("workspace-diagnostics").populate_workspace_diagnostics(
+                --         client,
+                --         v.api.nvim_get_current_buf()
+                --     )
+                -- end
             end,
         })
 
@@ -141,6 +141,6 @@ return { -- LSP Configuration & Plugins
         { "folke/lazydev.nvim", opts = {} },
 
         -- project-wide diagnostics
-        { "artemave/workspace-diagnostics.nvim" },
+        -- { "artemave/workspace-diagnostics.nvim" },
     },
 }
