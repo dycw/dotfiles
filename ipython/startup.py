@@ -69,6 +69,7 @@ import wave
 import zipfile
 import zoneinfo
 from asyncio import create_task, get_event_loop, get_running_loop
+from asyncio import sleep as sleep_async
 from collections import Counter, defaultdict, deque
 from collections.abc import (
     AsyncGenerator,
@@ -122,7 +123,7 @@ from shutil import copyfile, rmtree
 from subprocess import PIPE, CalledProcessError, check_call, check_output, run
 from sys import stdout
 from tempfile import TemporaryDirectory
-from time import sleep
+from time import sleep as sleep_sync
 from typing import (
     IO,
     Annotated,
@@ -273,7 +274,8 @@ _ = [
     secrets,
     shutil,
     signature,
-    sleep,
+    sleep_async,
+    sleep_sync,
     smtplib,
     socket,
     socket,
