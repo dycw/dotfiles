@@ -105,6 +105,7 @@ from hashlib import md5
 from inspect import signature
 from itertools import (
     chain,
+    count,
     dropwhile,
     groupby,
     islice,
@@ -205,6 +206,7 @@ _ = [
     contextvars,
     copy,
     copyfile,
+    count,
     cpu_count,
     create_task,
     csv,
@@ -1108,6 +1110,14 @@ else:
 
 
 try:
+    from tenacity import retry
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [retry]
+
+
+try:
     from tqdm import tqdm
 except ModuleNotFoundError:
     pass
@@ -1140,6 +1150,7 @@ try:
         parse_month,
         serialize_month,
     )
+    from utilities.functions import get_class, get_class_name
     from utilities.functools import partial
     from utilities.git import get_repo_root
     from utilities.iterables import groupby_lists, one
@@ -1150,6 +1161,7 @@ try:
     from utilities.re import extract_group, extract_groups
     from utilities.reprlib import ReprLocals, custom_print, custom_repr
     from utilities.text import ensure_str
+    from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
     from utilities.types import (
         ensure_class,
@@ -1157,8 +1169,6 @@ try:
         ensure_float,
         ensure_int,
         ensure_not_none,
-        get_class,
-        get_class_name,
         make_isinstance,
     )
     from utilities.zoneinfo import HONG_KONG, TOKYO, US_CENTRAL, US_EASTERN, UTC
@@ -1166,6 +1176,7 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [
+        BackgroundTask,
         DAY,
         EPOCH_UTC,
         HONG_KONG,
@@ -1217,6 +1228,7 @@ else:
         parse_month,
         partial,
         read_pickle,
+        run_in_background,
         serialize_month,
         serialize_month,
         write_pickle,

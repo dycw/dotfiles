@@ -37,7 +37,7 @@
   },
   "conform.nvim": {
     "branch": "master",
-    "commit": "667102f26106709cddd2dff1f699610df5b94d7f"
+    "commit": "62eba813b7501b39612146cbf29cd07f1d4ac29c"
   },
   "dial.nvim": {
     "branch": "master",
@@ -53,7 +53,7 @@
   },
   "fzf-lua": {
     "branch": "main",
-    "commit": "64a305a2490e48c44be9f5a489e01b995dd58c92"
+    "commit": "1ac27d5734ccd057ef2b46a8644022913f37b89e"
   },
   "gitsigns.nvim": {
     "branch": "main",
@@ -65,7 +65,7 @@
   },
   "indent-blankline.nvim": {
     "branch": "master",
-    "commit": "dddb5d21811c319eb6e51a993d8fb44b193aae3f"
+    "commit": "db926997af951da38e5004ec7b9fbdc480b48f5d"
   },
   "iswap.nvim": {
     "branch": "master",
@@ -89,11 +89,11 @@
   },
   "lualine.nvim": {
     "branch": "master",
-    "commit": "544dd1583f9bb27b393f598475c89809c4d5e86b"
+    "commit": "b431d228b7bbcdaea818bdc3e25b8cdbe861f056"
   },
   "luasnip": {
     "branch": "master",
-    "commit": "b84eeb3641b08324287587b426ec974b888390d9"
+    "commit": "7ad2eaeaca56d6ed63acacbfc114b99f1f67b982"
   },
   "marks.nvim": {
     "branch": "master",
@@ -101,7 +101,7 @@
   },
   "mason-lspconfig.nvim": {
     "branch": "main",
-    "commit": "62360f061d45177dda8afc1b0fd1327328540301"
+    "commit": "482350b050bd413931c2cdd4857443c3da7d57cb"
   },
   "mason-tool-installer.nvim": {
     "branch": "main",
@@ -121,7 +121,7 @@
   },
   "nvim-autopairs": {
     "branch": "master",
-    "commit": "48ca9aaee733911424646cb1605f27bc01dedbe3"
+    "commit": "19606af7c039271d5aa96bceff101e7523af3136"
   },
   "nvim-bqf": {
     "branch": "main",
@@ -145,11 +145,11 @@
   },
   "nvim-lint": {
     "branch": "master",
-    "commit": "ad0fe35e80f5cd31a0f19176d7b30e5c3011119d"
+    "commit": "debabca63c0905b59ce596a55a8e33eafdf66342"
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "ff97d376b1d22b2eaf9274605531babf0cd0cf21"
+    "commit": "911167921d49cd5c1c9b2436031d0da3945e787f"
   },
   "nvim-neoclip.lua": {
     "branch": "main",
@@ -169,11 +169,11 @@
   },
   "nvim-tree.lua": {
     "branch": "master",
-    "commit": "ad0b95dee55955817af635fa121f6e2486b10583"
+    "commit": "d43ab67d0eb4317961c5e9d15fffe908519debe0"
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "e5a05ba5e298cc1e1dad8eb8095b8d4d89a7f793"
+    "commit": "bef7ec6f7a01ba0717da73082e33c224bdc2ddcc"
   },
   "nvim-treesitter-context": {
     "branch": "master",
@@ -181,11 +181,11 @@
   },
   "nvim-treesitter-textobjects": {
     "branch": "master",
-    "commit": "ca93cb2c34b67ab22d01976fc90bc95627a3317f"
+    "commit": "41e3abf6bfd9a9a681eb1f788bdeba91c9004b2b"
   },
   "nvim-various-textobjs": {
     "branch": "main",
-    "commit": "1a5cc2c04cf6fb9941b1eb0696b67d3c53f22e07"
+    "commit": "8dbc655f794202f45ab6a1cac1cb323a218ac6a1"
   },
   "nvim-web-devicons": {
     "branch": "master",
@@ -193,11 +193,11 @@
   },
   "plenary.nvim": {
     "branch": "master",
-    "commit": "a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683"
+    "commit": "ec289423a1693aeae6cd0d503bac2856af74edaa"
   },
   "rainbow-delimiters.nvim": {
     "branch": "master",
-    "commit": "79f7d771626eaa2b92f6f32f399b841bb638049e"
+    "commit": "9f3d10e66a79e8975926f8cb930856e4930d9da4"
   },
   "sort.nvim": {
     "branch": "main",
@@ -262,9 +262,5 @@
   "wildfire.nvim": {
     "branch": "master",
     "commit": "1729faca1c6ae34520a6e531983a3737d3654ee1"
-  },
-  "workspace-diagnostics.nvim": {
-    "branch": "main",
-    "commit": "573ff93c47898967efdfbc6587a1a39e3c2d365e"
   }
 }

@@ -204,16 +204,16 @@
         "command -v watchexec >/dev/null 2>&1 || brew install watchexec",
         Installing watchexec,
       ]
-    - [
-        "command -v wezterm >/dev/null 2>&1 || brew install --cask wezterm",
-        Installing wezterm,
-      ]
     - ["command -v yq >/dev/null 2>&1 || brew install yq", Installing yq]
     - [
         "command -v zoxide >/dev/null 2>&1 || brew install zoxide",
         Installing zoxide,
       ]
     - [brew install --cask 1password, Installing 1Password]
+    - [
+        brew install --cask db-browser-for-sqlite,
+        Installing DB Browser for SQLite,
+      ]
     - [brew install --cask dropbox, Installing Dropbox]
     - [brew install --cask google-chrome, Installing Google Chrome]
     - [brew install --cask libreoffice, Installing LibreOffice]
@@ -221,10 +221,20 @@
     - [brew install --cask protonvpn, Installing ProtonVPN]
     - [brew install --cask spotify, Installing Spotify]
     - [brew install --cask transmission, Installing Transmission]
-    - [brew install --cask visual-studio-code, Installing VS Code]
-    - [brew install --cask vlc, Installing VLC]
     - [brew install --cask whatsapp, Installing WhatsApp]
     - [brew install --cask zoom, Installing Zoom]
+    - [
+        "command -v code >/dev/bull 2>&1 || brew install --cask visual-studio-code",
+        Installing VS Code,
+      ]
+    - [
+        "command -v vlc >/dev/null 2>&1 || brew install --cask vlc",
+        Installing VLC,
+      ]
+    - [
+        "command -v wezterm >/dev/null 2>&1 || brew install --cask wezterm",
+        Installing wezterm,
+      ]
     - [
         "[ -f ${HOME}/.config/fzf/fzf.zsh ] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
         Configuring fzf,

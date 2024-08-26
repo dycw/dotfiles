@@ -7,6 +7,7 @@ ls.add_snippets("python", {
     -- asyncio
     s("as-create-task", { t({ "from asyncio import create_task", "" }) }),
     s("as-get-event-loop", { t({ "from asyncio import get_event_loop", "" }) }),
+    s("as-sleep", { t({ "from asyncio import sleep", "" }) }),
 
     -- beartype
     s("be-beartype", { t({ "from beartype import beartype", "" }) }),
@@ -99,6 +100,7 @@ ls.add_snippets("python", {
     -- itertools
     s("it-accumulate", { t({ "from itertools import accumulate", "" }) }),
     s("it-chain", { t({ "from itertools import chain", "" }) }),
+    s("it-count", { t({ "from itertools import count", "" }) }),
     s("it-groupby", { t({ "from itertools import groupby", "" }) }),
     s("it-product", { t({ "from itertools import product", "" }) }),
 
@@ -215,7 +217,10 @@ ls.add_snippets("python", {
     s("sy-stdout", { t({ "from sys import stdout", "" }) }),
 
     -- tempfile
-    s("te-temporary-directory", { t({ "from utilities.tempfile import TemporaryDirectory", "" }) }),
+    s("te-temporary-directory", { t({ "from tempfile import TemporaryDirectory", "" }) }),
+
+    -- tenacity
+    s("te-retry", { t({ "from tenacity import retry", "" }) }),
 
     -- time
     s("ti-sleep", { t({ "from time import sleep", "" }) }),
@@ -275,6 +280,7 @@ ls.add_snippets("python", {
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s("ut-system-random", { t({ "from utilities.random import SYSTEM_RANDOM", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
+    s("ut-temporary-directory", { t({ "from utilities.tempfile import TemporaryDirectory", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
     s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
     s("ut-tokyo", { t({ "from utilities.zoneinfo import TOKYO", "" }) }),
