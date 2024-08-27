@@ -124,6 +124,7 @@
         "command -v luacheck >/dev/null 2>&1 || brew install luacheck",
         Installing luacheck,
       ]
+    - [brew install mysql, Installing mysql]
     - [
         "command -v nvim >/dev/null 2>&1 || brew install neovim",
         Installing neovim,
@@ -195,6 +196,7 @@
         "command -v topgrade >/dev/null 2>&1 || brew install topgrade",
         Installing topgrade,
       ]
+    - [brew install unixodbc, Installing unixodbc]
     - ["command -v uv >/dev/null 2>&1 || brew install uv", Installing uv]
     - [
         "command -v watch >/dev/null 2>&1 || brew install watch",
@@ -211,6 +213,10 @@
       ]
     - [brew install --cask 1password, Installing 1Password]
     - [
+        "command -v code >/dev/bull 2>&1 || brew install --cask visual-studio-code",
+        Installing VS Code,
+      ]
+    - [
         brew install --cask db-browser-for-sqlite,
         Installing DB Browser for SQLite,
       ]
@@ -221,12 +227,6 @@
     - [brew install --cask protonvpn, Installing ProtonVPN]
     - [brew install --cask spotify, Installing Spotify]
     - [brew install --cask transmission, Installing Transmission]
-    - [brew install --cask whatsapp, Installing WhatsApp]
-    - [brew install --cask zoom, Installing Zoom]
-    - [
-        "command -v code >/dev/bull 2>&1 || brew install --cask visual-studio-code",
-        Installing VS Code,
-      ]
     - [
         "command -v vlc >/dev/null 2>&1 || brew install --cask vlc",
         Installing VLC,
@@ -235,6 +235,8 @@
         "command -v wezterm >/dev/null 2>&1 || brew install --cask wezterm",
         Installing wezterm,
       ]
+    - [brew install --cask whatsapp, Installing WhatsApp]
+    - [brew install --cask zoom, Installing Zoom]
     - [
         "[ -f ${HOME}/.config/fzf/fzf.zsh ] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
         Configuring fzf,
