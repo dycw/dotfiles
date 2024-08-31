@@ -511,13 +511,20 @@ else:
         from utilities.loguru import (
             LogLevel,
             get_logging_level,
+            log_call,
             logged_sleep_async,
             logged_sleep_sync,
         )
     except ModuleNotFoundError:
         from utilities.logging import LogLevel, get_logging_level
     else:
-        _ = [LogLevel, get_logging_level, logged_sleep_async, logged_sleep_sync]
+        _ = [
+            LogLevel,
+            get_logging_level,
+            log_call,
+            logged_sleep_async,
+            logged_sleep_sync,
+        ]
 
 
 try:
