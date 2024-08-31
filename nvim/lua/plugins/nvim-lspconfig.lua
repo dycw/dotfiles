@@ -83,7 +83,7 @@ return { -- LSP Configuration & Plugins
         --  - settings (table): Override the default settings passed when initializing the server.
         --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
         local servers = {
-            basedpyright = {
+            pyright = {
                 capabilities = capabilities,
             },
             lua_ls = {
@@ -109,7 +109,7 @@ return { -- LSP Configuration & Plugins
         -- for you, so that they are available from within Neovim.
         local ensure_installed = v.tbl_keys(servers or {})
         v.list_extend(ensure_installed, {
-            "basedpyright",
+            "pyright",
             "shfmt",
             "stylua",
         })

@@ -277,6 +277,7 @@ ls.add_snippets("python", {
     s("ut-refresh-memoized", { t({ "from utilities.atools import refresh_memoized", "" }) }),
     s("ut-repr-locals", { t({ "from utilities.reprlib import ReprLocals", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
+    s("ut-sentinel", { t({ "from utilities.sentinel import sentinel, Sentinel", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s("ut-system-random", { t({ "from utilities.random import SYSTEM_RANDOM", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),

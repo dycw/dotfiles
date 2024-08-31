@@ -508,11 +508,16 @@ else:
     _ = [logger]
 
     try:
-        from utilities.loguru import logged_sleep_async, logged_sleep_sync
+        from utilities.loguru import (
+            LogLevel,
+            get_logging_level,
+            logged_sleep_async,
+            logged_sleep_sync,
+        )
     except ModuleNotFoundError:
-        pass
+        from utilities.logging import LogLevel, get_logging_level
     else:
-        _ = [logged_sleep_async, logged_sleep_sync]
+        _ = [LogLevel, get_logging_level, logged_sleep_async, logged_sleep_sync]
 
 
 try:
@@ -1154,7 +1159,6 @@ try:
     from utilities.functools import partial
     from utilities.git import get_repo_root
     from utilities.iterables import groupby_lists, one
-    from utilities.logging import LogLevel
     from utilities.pathlib import list_dir
     from utilities.pickle import read_pickle, write_pickle
     from utilities.random import SYSTEM_RANDOM
