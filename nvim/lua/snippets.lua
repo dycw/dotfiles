@@ -242,7 +242,7 @@ ls.add_snippets("python", {
     s("uu-uuid", { t({ "from uuid import UUID", "" }) }),
 
     -- utilities
-    s("ut-always-iterable", { t({ "from utilities.more_itertools import always_iterable", "" }) }),
+    s("ut-always-iterable", { t({ "from utilities.iterables import always_iterable", "" }) }),
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
     s("ut-custom-repr", { t({ "from utilities.reprlib import custom_repr", "" }) }),
     s("ut-date-to-datetime", { t({ "from utilities.datetime import date_to_datetime", "" }) }),
@@ -268,7 +268,8 @@ ls.add_snippets("python", {
     s("ut-int-arrays", { t({ "from utilities.hypothesis import int_arrays", "" }) }),
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
-    s("ut-log-level", { t({ "from utilities.logging import LogLevel", "" }) }),
+    s("ut-log-call", { t({ "from utilities.loguru import log_call", "" }) }),
+    s("ut-log-level", { t({ "from utilities.loguru import LogLevel", "" }) }),
     s("ut-memoize", { t({ "from utilities.atools import memoize", "" }) }),
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
     s("ut-parse-date", { t({ "from utilities.datetime import parse_date", "" }) }),

@@ -68,7 +68,13 @@ import uuid
 import wave
 import zipfile
 import zoneinfo
-from asyncio import create_task, get_event_loop, get_running_loop
+from asyncio import (
+    create_task,
+    get_event_loop,
+    get_running_loop,
+    new_event_loop,
+    set_event_loop,
+)
 from asyncio import sleep as sleep_async
 from collections import Counter, defaultdict, deque
 from collections.abc import (
@@ -251,6 +257,7 @@ _ = [
     math,
     md5,
     multiprocessing,
+    new_event_loop,
     numbers,
     op,
     operator,
@@ -274,6 +281,7 @@ _ = [
     run,
     search,
     secrets,
+    set_event_loop,
     shutil,
     signature,
     sleep_async,
@@ -583,17 +591,19 @@ else:
     _ = [mi, more_itertools, partition, split_at]
 
     try:
-        from utilities.more_itertools import (
-            always_iterable,
-            partition_typeguard,
-            peekable,
-        )
+        from utilities.iterables import always_iterable, one
     except ModuleNotFoundError:
-        from more_itertools import always_iterable, one, peekable
-
-        _ = [always_iterable, one, peekable]
+        from more_itertools import always_iterable, one
     else:
-        _ = [always_iterable, partition_typeguard, peekable]
+        _ = [one, always_iterable]
+    try:
+        from utilities.more_itertools import partition_typeguard, peekable
+    except ModuleNotFoundError:
+        from more_itertools import peekable
+
+        _ = [peekable]
+    else:
+        _ = [partition_typeguard, peekable]
 
 try:
     import numpy  # noqa: ICN001
