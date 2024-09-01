@@ -46,6 +46,7 @@ import poplib
 import pprint
 import random
 import re
+import reprlib
 import secrets
 import shutil
 import smtplib
@@ -67,6 +68,14 @@ import uuid
 import wave
 import zipfile
 import zoneinfo
+from asyncio import (
+    create_task,
+    get_event_loop,
+    get_running_loop,
+    new_event_loop,
+    set_event_loop,
+)
+from asyncio import sleep as sleep_async
 from collections import Counter, defaultdict, deque
 from collections.abc import (
     AsyncGenerator,
@@ -102,6 +111,7 @@ from hashlib import md5
 from inspect import signature
 from itertools import (
     chain,
+    count,
     dropwhile,
     groupby,
     islice,
@@ -120,7 +130,7 @@ from shutil import copyfile, rmtree
 from subprocess import PIPE, CalledProcessError, check_call, check_output, run
 from sys import stdout
 from tempfile import TemporaryDirectory
-from time import sleep
+from time import sleep as sleep_sync
 from typing import (
     IO,
     Annotated,
@@ -202,7 +212,9 @@ _ = [
     contextvars,
     copy,
     copyfile,
+    count,
     cpu_count,
+    create_task,
     csv,
     dataclass,
     dataclasses,
@@ -221,6 +233,8 @@ _ = [
     fractions,
     ftplib,
     functools,
+    get_event_loop,
+    get_running_loop,
     getenv,
     gettext,
     glob,
@@ -243,6 +257,7 @@ _ = [
     math,
     md5,
     multiprocessing,
+    new_event_loop,
     numbers,
     op,
     operator,
@@ -261,13 +276,16 @@ _ = [
     reduce,
     repeat,
     replace,
+    reprlib,
     rmtree,
     run,
     search,
     secrets,
+    set_event_loop,
     shutil,
     signature,
-    sleep,
+    sleep_async,
+    sleep_sync,
     smtplib,
     socket,
     socket,
@@ -497,6 +515,25 @@ except ModuleNotFoundError:
 else:
     _ = [logger]
 
+    try:
+        from utilities.loguru import (
+            LogLevel,
+            get_logging_level,
+            log_call,
+            logged_sleep_async,
+            logged_sleep_sync,
+        )
+    except ModuleNotFoundError:
+        from utilities.logging import LogLevel, get_logging_level
+    else:
+        _ = [
+            LogLevel,
+            get_logging_level,
+            log_call,
+            logged_sleep_async,
+            logged_sleep_sync,
+        ]
+
 
 try:
     import luigi
@@ -554,18 +591,19 @@ else:
     _ = [mi, more_itertools, partition, split_at]
 
     try:
-        from utilities.more_itertools import (
-            always_iterable,
-            one,
-            partition_typeguard,
-            peekable,
-        )
+        from utilities.iterables import always_iterable, one
     except ModuleNotFoundError:
-        from more_itertools import always_iterable, one, peekable
-
-        _ = [always_iterable, one, peekable]
+        from more_itertools import always_iterable, one
     else:
-        _ = [always_iterable, one, partition_typeguard, peekable]
+        _ = [one, always_iterable]
+    try:
+        from utilities.more_itertools import partition_typeguard, peekable
+    except ModuleNotFoundError:
+        from more_itertools import peekable
+
+        _ = [peekable]
+    else:
+        _ = [partition_typeguard, peekable]
 
 try:
     import numpy  # noqa: ICN001
@@ -725,7 +763,6 @@ try:
         Timestamp,
         bdate_range,
         qcut,
-        read_pickle,
         read_sql,
         read_table,
         set_option,
@@ -748,15 +785,9 @@ try:
     )
 except ModuleNotFoundError:
     try:
-        from utilities.pandas import IndexS
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [IndexS]
-    try:
         from utilities.pickle import read_pickle
     except ModuleNotFoundError:
-        pass
+        from pandas import read_pickle
     else:
         _ = [read_pickle]
 else:
@@ -967,11 +998,11 @@ else:
         when,
     ]
     try:
-        from utilities.polars import check_polars_dataframe
+        from utilities.polars import check_polars_dataframe, zoned_datetime
     except ModuleNotFoundError:
         pass
     else:
-        _ = [check_polars_dataframe]
+        _ = [check_polars_dataframe, zoned_datetime]
 
 try:
     from pqdm.processes import pqdm
@@ -1047,24 +1078,33 @@ try:
     import sqlalchemy
     import sqlalchemy as sqla
     import sqlalchemy.orm
-    from sqlalchemy import func, select
+    from sqlalchemy import Column, MetaData, Table, func, select
 except ModuleNotFoundError:
     pass
 else:
-    _ = [sqla, sqlalchemy, sqlalchemy.orm, select, func]
+    _ = [Column, MetaData, Table, sqla, sqlalchemy, sqlalchemy.orm, select, func]
     try:
-        import utilities
-    except ModuleNotFoundError:
         from utilities.sqlalchemy import (
             create_engine,
+            ensure_tables_created,
+            ensure_tables_created_async,
+            ensure_tables_dropped,
             get_table,
             insert_items,
             insert_items_async,
         )
-
-        _ = [create_engine, get_table, insert_items, insert_items_async]
+    except ModuleNotFoundError:
+        pass
     else:
-        _ = utilities
+        _ = [
+            create_engine,
+            ensure_tables_created,
+            ensure_tables_created_async,
+            ensure_tables_dropped,
+            get_table,
+            insert_items,
+            insert_items_async,
+        ]
 
 try:
     import streamlit
@@ -1089,6 +1129,14 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [tabulate]
+
+
+try:
+    from tenacity import retry
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [retry]
 
 
 try:
@@ -1124,13 +1172,17 @@ try:
         parse_month,
         serialize_month,
     )
+    from utilities.functions import get_class, get_class_name
     from utilities.functools import partial
     from utilities.git import get_repo_root
     from utilities.iterables import groupby_lists, one
     from utilities.pathlib import list_dir
     from utilities.pickle import read_pickle, write_pickle
+    from utilities.random import SYSTEM_RANDOM
     from utilities.re import extract_group, extract_groups
+    from utilities.reprlib import ReprLocals, custom_print, custom_repr
     from utilities.text import ensure_str
+    from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
     from utilities.types import (
         ensure_class,
@@ -1138,8 +1190,6 @@ try:
         ensure_float,
         ensure_int,
         ensure_not_none,
-        get_class,
-        get_class_name,
         make_isinstance,
     )
     from utilities.zoneinfo import HONG_KONG, TOKYO, US_CENTRAL, US_EASTERN, UTC
@@ -1147,19 +1197,26 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [
+        BackgroundTask,
         DAY,
         EPOCH_UTC,
         HONG_KONG,
         HOUR,
+        LogLevel,
         MINUTE,
         Month,
+        ReprLocals,
+        ReprLocals,
         SECOND,
+        SYSTEM_RANDOM,
         TOKYO,
         Timer,
         US_CENTRAL,
         US_EASTERN,
         UTC,
         WEEK,
+        custom_print,
+        custom_repr,
         date_to_datetime,
         ensure_class,
         ensure_datetime,
@@ -1192,6 +1249,7 @@ else:
         parse_month,
         partial,
         read_pickle,
+        run_in_background,
         serialize_month,
         serialize_month,
         write_pickle,
@@ -1296,3 +1354,8 @@ def _add_src_to_sys_path() -> None:
 
 
 _ = _add_src_to_sys_path()
+
+
+builtins.print(  # noqa: T201
+    f"{dt.datetime.now():%Y-%m-%d %H:%M:%S}: Finished running `startup.py`"  # noqa: DTZ005
+)

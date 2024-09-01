@@ -5,7 +5,9 @@ local t = ls.text_node
 
 ls.add_snippets("python", {
     -- asyncio
+    s("as-create-task", { t({ "from asyncio import create_task", "" }) }),
     s("as-get-event-loop", { t({ "from asyncio import get_event_loop", "" }) }),
+    s("as-sleep", { t({ "from asyncio import sleep", "" }) }),
 
     -- beartype
     s("be-beartype", { t({ "from beartype import beartype", "" }) }),
@@ -34,6 +36,7 @@ ls.add_snippets("python", {
     s("co-iterable", { t({ "from collections.abc import Iterable", "" }) }),
     s("co-iterator", { t({ "from collections.abc import Iterator", "" }) }),
     s("co-mapping", { t({ "from collections.abc import Mapping", "" }) }),
+    s("co-sequence", { t({ "from collections.abc import Sequence", "" }) }),
 
     -- contextlib
     s("co-suppress", { t({ "from contextlib import suppress", "" }) }),
@@ -97,6 +100,7 @@ ls.add_snippets("python", {
     -- itertools
     s("it-accumulate", { t({ "from itertools import accumulate", "" }) }),
     s("it-chain", { t({ "from itertools import chain", "" }) }),
+    s("it-count", { t({ "from itertools import count", "" }) }),
     s("it-groupby", { t({ "from itertools import groupby", "" }) }),
     s("it-product", { t({ "from itertools import product", "" }) }),
 
@@ -180,10 +184,16 @@ ls.add_snippets("python", {
     s("ra-shuffle", { t({ "from random import shuffle", "" }) }),
 
     -- re
+    s("im-re", { t({ "import re", "" }) }),
+    s("re-escape", { t({ "from re import escape", "" }) }),
     s("re-search", { t({ "from re import search", "" }) }),
 
     -- redis
     s("re-redis", { t({ "from redis import Redis", "" }) }),
+
+    -- reprlib
+    s("im-rep", { t({ "import reprlib", "" }) }),
+    s("re-repr", { t({ "from reprlib import repr", "" }) }),
 
     -- rich
     s("ri-print", { t({ "from rich import print", "" }), t({ "" }), t({ "print(" }), i(1, "Values"), t({ ")", "" }) }),
@@ -207,12 +217,16 @@ ls.add_snippets("python", {
     s("sy-stdout", { t({ "from sys import stdout", "" }) }),
 
     -- tempfile
-    s("te-temporary-directory", { t({ "from utilities.tempfile import TemporaryDirectory", "" }) }),
+    s("te-temporary-directory", { t({ "from tempfile import TemporaryDirectory", "" }) }),
+
+    -- tenacity
+    s("te-retry", { t({ "from tenacity import retry", "" }) }),
 
     -- time
     s("ti-sleep", { t({ "from time import sleep", "" }) }),
 
     -- typing
+    s("im-typing", { t({ "import typing", "" }) }),
     s("ty-any", { t({ "from typing import Any", "" }) }),
     s("ty-cast", { t({ "from typing import cast", "" }) }),
     s("ty-generic", { t({ "from typing import Generic", "" }) }),
@@ -228,8 +242,9 @@ ls.add_snippets("python", {
     s("uu-uuid", { t({ "from uuid import UUID", "" }) }),
 
     -- utilities
-    s("ut-always-iterable", { t({ "from utilities.more_itertools import always_iterable", "" }) }),
+    s("ut-always-iterable", { t({ "from utilities.iterables import always_iterable", "" }) }),
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
+    s("ut-custom-repr", { t({ "from utilities.reprlib import custom_repr", "" }) }),
     s("ut-date-to-datetime", { t({ "from utilities.datetime import date_to_datetime", "" }) }),
     s("ut-ensure-date", { t({ "from utilities.types import ensure_date", "" }) }),
     s("ut-ensure-float", { t({ "from utilities.types import ensure_float", "" }) }),
@@ -251,21 +266,27 @@ ls.add_snippets("python", {
     s("ut-insert-dataframe", { t({ "from utilities.sqlalchemy_polars import insert_dataframe", "" }) }),
     s("ut-insert-items", { t({ "from utilities.sqlalchemy import insert_items", "" }) }),
     s("ut-int-arrays", { t({ "from utilities.hypothesis import int_arrays", "" }) }),
-    s("ut-utc", { t({ "from utilities.zoneinfo import UTC", "" }) }),
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
+    s("ut-log-call", { t({ "from utilities.loguru import log_call", "" }) }),
+    s("ut-log-level", { t({ "from utilities.loguru import LogLevel", "" }) }),
     s("ut-memoize", { t({ "from utilities.atools import memoize", "" }) }),
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
-    s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-parse-date", { t({ "from utilities.datetime import parse_date", "" }) }),
+    s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
     s("ut-refresh-memoized", { t({ "from utilities.atools import refresh_memoized", "" }) }),
+    s("ut-repr-locals", { t({ "from utilities.reprlib import ReprLocals", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
+    s("ut-sentinel", { t({ "from utilities.sentinel import sentinel, Sentinel", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
+    s("ut-system-random", { t({ "from utilities.random import SYSTEM_RANDOM", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
-    s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
+    s("ut-temporary-directory", { t({ "from utilities.tempfile import TemporaryDirectory", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
+    s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
     s("ut-tokyo", { t({ "from utilities.zoneinfo import TOKYO", "" }) }),
+    s("ut-utc", { t({ "from utilities.zoneinfo import UTC", "" }) }),
     s("ut-write-pickle", { t({ "from utilities.pickle import write_pickle", "" }) }),
     s("ut-writer", { t({ "from utilities.atomicwrites import writer", "" }) }),
 
