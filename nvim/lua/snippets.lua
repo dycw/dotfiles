@@ -70,6 +70,7 @@ ls.add_snippets("python", {
     -- functools
     s("fu-partial", { t({ "from functools import partial", "" }) }),
     s("fu-reduce", { t({ "from functools import reduce", "" }) }),
+    s("fu-wraps", { t({ "from functools import wraps", "" }) }),
 
     -- future
     s("fu-annotations", { t({ "from __future__ import annotations", "" }) }),
@@ -89,6 +90,8 @@ ls.add_snippets("python", {
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
     s("hy-invalid-argument", { t({ "from hypothesis.errors import InvalidArgument", "" }) }),
     s("hy-lists", { t({ "from hypothesis.strategies import lists", "" }) }),
+    s("hy-none", { t({ "from hypothesis.strategies import none", "" }) }),
+    s("hy-phase", { t({ "from hypothesis import Phase", "" }) }),
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
     s("hy-sampled-from", { t({ "from hypothesis.strategies import sampled_from", "" }) }),
     s("hy-settings", { t({ "from hypothesis import settings", "" }) }),
@@ -159,9 +162,10 @@ ls.add_snippets("python", {
         i(1, "arg1"),
         t({ '", [param(' }),
         i(2, "param1"),
-        t(")])"),
+        t(")], ids=str)"),
     }),
     s("mark-skip", { t({ "@mark.skip", "" }) }),
+    s("mark-xfail", { t({ "@mark.xfail", "" }) }),
     s("py-approx", { t({ "from pytest import approx", "" }) }),
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
     s("py-mark", { t({ "from pytest import mark, param", "" }) }),
@@ -243,6 +247,7 @@ ls.add_snippets("python", {
 
     -- utilities
     s("ut-always-iterable", { t({ "from utilities.iterables import always_iterable", "" }) }),
+    s("ut-cache", { t({ "from utilities.functools import cache", "" }) }),
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
     s("ut-custom-repr", { t({ "from utilities.reprlib import custom_repr", "" }) }),
     s("ut-date-to-datetime", { t({ "from utilities.datetime import date_to_datetime", "" }) }),

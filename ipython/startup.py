@@ -519,20 +519,14 @@ else:
         from utilities.loguru import (
             LogLevel,
             get_logging_level,
-            log_call,
+            log,
             logged_sleep_async,
             logged_sleep_sync,
         )
     except ModuleNotFoundError:
         from utilities.logging import LogLevel, get_logging_level
     else:
-        _ = [
-            LogLevel,
-            get_logging_level,
-            log_call,
-            logged_sleep_async,
-            logged_sleep_sync,
-        ]
+        _ = [LogLevel, get_logging_level, log, logged_sleep_async, logged_sleep_sync]
 
 
 try:
@@ -1164,7 +1158,6 @@ try:
         get_now_hk,
         get_now_tokyo,
         get_quarters,
-        get_time_zone_name,
         get_today,
         get_today_hk,
         get_today_tokyo,
@@ -1180,7 +1173,7 @@ try:
     from utilities.pickle import read_pickle, write_pickle
     from utilities.random import SYSTEM_RANDOM
     from utilities.re import extract_group, extract_groups
-    from utilities.reprlib import ReprLocals, custom_print, custom_repr
+    from utilities.reprlib import custom_print, custom_repr
     from utilities.text import ensure_str
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
@@ -1192,7 +1185,14 @@ try:
         ensure_not_none,
         make_isinstance,
     )
-    from utilities.zoneinfo import HONG_KONG, TOKYO, US_CENTRAL, US_EASTERN, UTC
+    from utilities.zoneinfo import (
+        HONG_KONG,
+        TOKYO,
+        US_CENTRAL,
+        US_EASTERN,
+        UTC,
+        get_time_zone_name,
+    )
 except ModuleNotFoundError:
     pass
 else:
@@ -1202,11 +1202,8 @@ else:
         EPOCH_UTC,
         HONG_KONG,
         HOUR,
-        LogLevel,
         MINUTE,
         Month,
-        ReprLocals,
-        ReprLocals,
         SECOND,
         SYSTEM_RANDOM,
         TOKYO,
