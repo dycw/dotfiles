@@ -740,6 +740,21 @@ else:
 
 
 try:
+    import orjson
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [orjson]
+
+    try:
+        from utilities.orjson import deserialize, serialize
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [deserialize, serialize]
+
+
+try:
     import pandas  # noqa: ICN001
     import pandas as pd
     from pandas import (
@@ -1028,6 +1043,7 @@ else:
         pass
     else:
         _ = [throttle]
+
 
 try:
     import requests
