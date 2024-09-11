@@ -71,6 +71,11 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
+                    elements = { "buy", "sell" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
                     elements = { "close", "open" },
                     word = true,
                     cyclic = true,
@@ -101,12 +106,12 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
-                    elements = { "left", "right" },
+                    elements = { "high", "low" },
                     word = true,
                     cyclic = true,
                 }),
                 augend.constant.new({
-                    elements = { "low", "high" },
+                    elements = { "left", "right" },
                     word = true,
                     cyclic = true,
                 }),
