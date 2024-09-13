@@ -108,7 +108,16 @@ from dataclasses import (
 from enum import Enum, IntEnum, auto
 from functools import lru_cache, partial, reduce, wraps
 from hashlib import md5
-from inspect import signature
+from inspect import (
+    isasyncgen,
+    isasyncgenfunction,
+    iscoroutine,
+    iscoroutinefunction,
+    isfunction,
+    isgenerator,
+    isgeneratorfunction,
+    signature,
+)
 from itertools import (
     chain,
     count,
@@ -246,6 +255,13 @@ _ = [
     inspect,
     io,
     is_dataclass,
+    isasyncgen,
+    isasyncgenfunction,
+    iscoroutine,
+    iscoroutinefunction,
+    isfunction,
+    isgenerator,
+    isgeneratorfunction,
     islice,
     it,
     itertools,
@@ -287,7 +303,6 @@ _ = [
     sleep_async,
     sleep_sync,
     smtplib,
-    socket,
     socket,
     starmap,
     stat,
@@ -431,6 +446,15 @@ else:
 
 
 try:
+    import dacite
+    from dacite import from_dict
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [dacite, from_dict]
+
+
+try:
     from frozendict import frozendict
 except ModuleNotFoundError:
     pass
@@ -518,15 +542,23 @@ else:
     try:
         from utilities.loguru import (
             LogLevel,
-            get_logging_level,
+            get_logging_level_name,
+            get_logging_level_number,
             log,
             logged_sleep_async,
             logged_sleep_sync,
         )
     except ModuleNotFoundError:
-        from utilities.logging import LogLevel, get_logging_level
+        pass
     else:
-        _ = [LogLevel, get_logging_level, log, logged_sleep_async, logged_sleep_sync]
+        _ = [
+            LogLevel,
+            get_logging_level_number,
+            get_logging_level_name,
+            log,
+            logged_sleep_async,
+            logged_sleep_sync,
+        ]
 
 
 try:
@@ -585,11 +617,19 @@ else:
     _ = [mi, more_itertools, partition, split_at]
 
     try:
-        from utilities.iterables import always_iterable, one
+        from utilities.iterables import (
+            OneEmptyError,
+            OneError,
+            OneNonUniqueError,
+            always_iterable,
+            one,
+        )
     except ModuleNotFoundError:
         from more_itertools import always_iterable, one
+
+        _ = [always_iterable, one]
     else:
-        _ = [one, always_iterable]
+        _ = [OneEmptyError, OneError, OneNonUniqueError, always_iterable, one]
     try:
         from utilities.more_itertools import partition_typeguard, peekable
     except ModuleNotFoundError:
@@ -737,6 +777,21 @@ else:
         zeros,
         zeros_like,
     ]
+
+
+try:
+    import orjson
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [orjson]
+
+    try:
+        from utilities.orjson import deserialize, serialize
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [deserialize, serialize]
 
 
 try:
@@ -992,11 +1047,27 @@ else:
         when,
     ]
     try:
-        from utilities.polars import check_polars_dataframe, zoned_datetime
+        from utilities.polars import (
+            DatetimeHongKong,
+            DatetimeTokyo,
+            DatetimeUSCentral,
+            DatetimeUSEastern,
+            DatetimeUTC,
+            check_polars_dataframe,
+            zoned_datetime,
+        )
     except ModuleNotFoundError:
         pass
     else:
-        _ = [check_polars_dataframe, zoned_datetime]
+        _ = [
+            DatetimeHongKong,
+            DatetimeTokyo,
+            DatetimeUSCentral,
+            DatetimeUSEastern,
+            DatetimeUTC,
+            check_polars_dataframe,
+            zoned_datetime,
+        ]
 
 try:
     from pqdm.processes import pqdm
@@ -1028,6 +1099,7 @@ else:
         pass
     else:
         _ = [throttle]
+
 
 try:
     import requests
@@ -1142,13 +1214,18 @@ else:
 
 
 try:
+    from utilities.asyncio import send_and_next_async, start_async_generator_coroutine
     from utilities.datetime import (
         DAY,
         EPOCH_UTC,
+        HALF_YEAR,
         HOUR,
         MINUTE,
+        MONTH,
+        QUARTER,
         SECOND,
         WEEK,
+        YEAR,
         Month,
         date_to_datetime,
         ensure_month,
@@ -1166,9 +1243,10 @@ try:
         serialize_month,
     )
     from utilities.functions import get_class, get_class_name
-    from utilities.functools import partial
+    from utilities.functools import ensure_not_none, partial
     from utilities.git import get_repo_root
     from utilities.iterables import groupby_lists, one
+    from utilities.math import is_integral
     from utilities.pathlib import list_dir
     from utilities.pickle import read_pickle, write_pickle
     from utilities.random import SYSTEM_RANDOM
@@ -1182,15 +1260,14 @@ try:
         ensure_datetime,
         ensure_float,
         ensure_int,
-        ensure_not_none,
         make_isinstance,
     )
     from utilities.zoneinfo import (
-        HONG_KONG,
-        TOKYO,
-        US_CENTRAL,
-        US_EASTERN,
         UTC,
+        HongKong,
+        Tokyo,
+        USCentral,
+        USEastern,
         get_time_zone_name,
     )
 except ModuleNotFoundError:
@@ -1200,25 +1277,31 @@ else:
         BackgroundTask,
         DAY,
         EPOCH_UTC,
-        HONG_KONG,
+        HALF_YEAR,
         HOUR,
+        HongKong,
         MINUTE,
+        MONTH,
         Month,
+        QUARTER,
         SECOND,
         SYSTEM_RANDOM,
-        TOKYO,
         Timer,
-        US_CENTRAL,
-        US_EASTERN,
+        Tokyo,
+        USCentral,
+        USEastern,
         UTC,
         WEEK,
+        YEAR,
         custom_print,
         custom_repr,
+        date_to_datetime,
         date_to_datetime,
         ensure_class,
         ensure_datetime,
         ensure_float,
         ensure_int,
+        ensure_month,
         ensure_month,
         ensure_not_none,
         ensure_str,
@@ -1239,16 +1322,17 @@ else:
         get_today_tokyo,
         get_years,
         groupby_lists,
+        is_integral,
         list_dir,
         make_isinstance,
         one,
         parse_month,
-        parse_month,
         partial,
         read_pickle,
         run_in_background,
+        send_and_next_async,
         serialize_month,
-        serialize_month,
+        start_async_generator_coroutine,
         write_pickle,
     ]
     try:

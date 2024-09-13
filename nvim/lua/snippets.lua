@@ -94,6 +94,7 @@ ls.add_snippets("python", {
     s("hy-phase", { t({ "from hypothesis import Phase", "" }) }),
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
     s("hy-sampled-from", { t({ "from hypothesis.strategies import sampled_from", "" }) }),
+    s("hy-sets", { t({ "from hypothesis.strategies import sets", "" }) }),
     s("hy-settings", { t({ "from hypothesis import settings", "" }) }),
     s("hy-tuples", { t({ "from hypothesis.strategies import tuples", "" }) }),
     s("settings-filter-too-much", { t({ "@settings(suppress_health_check={HealthCheck.filter_too_much})", "" }) }),
@@ -109,6 +110,16 @@ ls.add_snippets("python", {
 
     -- loguru
     s("lo-logger", { t({ "from loguru import logger", "" }) }),
+    s("trace-start", { t({ "logger.trace('➢')", "" }) }),
+    s("trace-finish", { t({ "logger.trace('✔')", "" }) }),
+    s("debug-start", { t({ "logger.debug('➢')", "" }) }),
+    s("debug-finish", { t({ "logger.debug('✔')", "" }) }),
+    s("info-start", { t({ "logger.info('➢')", "" }) }),
+    s("info-finish", { t({ "logger.info('✔')", "" }) }),
+    s("warning-start", { t({ "logger.warning('➢')", "" }) }),
+    s("warning-finish", { t({ "logger.warning('✔')", "" }) }),
+    s("error-start", { t({ "logger.error('➢')", "" }) }),
+    s("error-finish", { t({ "logger.error('✔')", "" }) }),
 
     -- math
     s("ma-inf", { t({ "from math import inf", "" }) }),
@@ -190,7 +201,9 @@ ls.add_snippets("python", {
     -- re
     s("im-re", { t({ "import re", "" }) }),
     s("re-escape", { t({ "from re import escape", "" }) }),
+    s("re-findall", { t({ "from re import findall", "" }) }),
     s("re-search", { t({ "from re import search", "" }) }),
+    s("re-sub", { t({ "from re import sub", "" }) }),
 
     -- redis
     s("re-redis", { t({ "from redis import Redis", "" }) }),
@@ -248,6 +261,7 @@ ls.add_snippets("python", {
     -- utilities
     s("ut-always-iterable", { t({ "from utilities.iterables import always_iterable", "" }) }),
     s("ut-cache", { t({ "from utilities.functools import cache", "" }) }),
+    s("ut-check-duplicates", { t({ "from utilities.iterables import check_duplicates", "" }) }),
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
     s("ut-custom-repr", { t({ "from utilities.reprlib import custom_repr", "" }) }),
     s("ut-date-to-datetime", { t({ "from utilities.datetime import date_to_datetime", "" }) }),
@@ -265,7 +279,7 @@ ls.add_snippets("python", {
     s("ut-get-repo-root", { t({ "from utilities.git import get_repo_root", "" }) }),
     s("ut-get-table", { t({ "from utilities.sqlalchemy import get_table", "" }) }),
     s("ut-get-today", { t({ "from utilities.datetime import get_today", "" }) }),
-    s("ut-hong-kong", { t({ "from utilities.zoneinfo import HONG_KONG", "" }) }),
+    s("ut-hong-kong", { t({ "from utilities.zoneinfo import HongKong", "" }) }),
     s("ut-impossible-case-error", { t({ "from utilities.errors import ImpossibleCaseError", "" }) }),
     s("ut-index-s", { t({ "utilities.pandas import IndexS", "" }) }),
     s("ut-insert-dataframe", { t({ "from utilities.sqlalchemy_polars import insert_dataframe", "" }) }),
@@ -276,7 +290,9 @@ ls.add_snippets("python", {
     s("ut-log-call", { t({ "from utilities.loguru import log_call", "" }) }),
     s("ut-log-level", { t({ "from utilities.loguru import LogLevel", "" }) }),
     s("ut-memoize", { t({ "from utilities.atools import memoize", "" }) }),
+    s("ut-minute", { t({ "from utilities.datetime import MINUTE", "" }) }),
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
+    s("ut-one-empty-error", { t({ "from utilities.iterables import OneEmptyError", "" }) }),
     s("ut-parse-date", { t({ "from utilities.datetime import parse_date", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
@@ -290,10 +306,14 @@ ls.add_snippets("python", {
     s("ut-temporary-directory", { t({ "from utilities.tempfile import TemporaryDirectory", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
     s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
-    s("ut-tokyo", { t({ "from utilities.zoneinfo import TOKYO", "" }) }),
+    s("ut-tokyo", { t({ "from utilities.zoneinfo import Tokyo", "" }) }),
+    s("ut-transpose", { t({ "from utilities.iterables import transpose", "" }) }),
+    s("ut-us-central", { t({ "from utilities.zoneinfo import USCentral", "" }) }),
+    s("ut-us-eastern", { t({ "from utilities.zoneinfo import USEastern", "" }) }),
     s("ut-utc", { t({ "from utilities.zoneinfo import UTC", "" }) }),
     s("ut-write-pickle", { t({ "from utilities.pickle import write_pickle", "" }) }),
     s("ut-writer", { t({ "from utilities.atomicwrites import writer", "" }) }),
+    s("ut-zoned-datetime", { t({ "from utilities.polars import zoned_datetime", "" }) }),
 
     -- zoneinfo
     s("zo-zoneinfo", { t({ "from zoneinfo import ZoneInfo", "" }) }),
