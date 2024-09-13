@@ -108,7 +108,16 @@ from dataclasses import (
 from enum import Enum, IntEnum, auto
 from functools import lru_cache, partial, reduce, wraps
 from hashlib import md5
-from inspect import signature
+from inspect import (
+    isasyncgen,
+    isasyncgenfunction,
+    iscoroutine,
+    iscoroutinefunction,
+    isfunction,
+    isgenerator,
+    isgeneratorfunction,
+    signature,
+)
 from itertools import (
     chain,
     count,
@@ -246,6 +255,13 @@ _ = [
     inspect,
     io,
     is_dataclass,
+    isasyncgen,
+    isasyncgenfunction,
+    iscoroutine,
+    iscoroutinefunction,
+    isfunction,
+    isgenerator,
+    isgeneratorfunction,
     islice,
     it,
     itertools,
@@ -287,7 +303,6 @@ _ = [
     sleep_async,
     sleep_sync,
     smtplib,
-    socket,
     socket,
     starmap,
     stat,
@@ -428,6 +443,15 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [cp, cvxpy]
+
+
+try:
+    import dacite
+    from dacite import from_dict
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [dacite, from_dict]
 
 
 try:
@@ -1023,11 +1047,27 @@ else:
         when,
     ]
     try:
-        from utilities.polars import check_polars_dataframe, zoned_datetime
+        from utilities.polars import (
+            DatetimeHongKong,
+            DatetimeTokyo,
+            DatetimeUSCentral,
+            DatetimeUSEastern,
+            DatetimeUTC,
+            check_polars_dataframe,
+            zoned_datetime,
+        )
     except ModuleNotFoundError:
         pass
     else:
-        _ = [check_polars_dataframe, zoned_datetime]
+        _ = [
+            DatetimeHongKong,
+            DatetimeTokyo,
+            DatetimeUSCentral,
+            DatetimeUSEastern,
+            DatetimeUTC,
+            check_polars_dataframe,
+            zoned_datetime,
+        ]
 
 try:
     from pqdm.processes import pqdm
@@ -1174,6 +1214,7 @@ else:
 
 
 try:
+    from utilities.asyncio import send_and_next_async, start_async_generator_coroutine
     from utilities.datetime import (
         DAY,
         EPOCH_UTC,
@@ -1202,7 +1243,7 @@ try:
         serialize_month,
     )
     from utilities.functions import get_class, get_class_name
-    from utilities.functools import partial
+    from utilities.functools import ensure_not_none, partial
     from utilities.git import get_repo_root
     from utilities.iterables import groupby_lists, one
     from utilities.math import is_integral
@@ -1219,7 +1260,6 @@ try:
         ensure_datetime,
         ensure_float,
         ensure_int,
-        ensure_not_none,
         make_isinstance,
     )
     from utilities.zoneinfo import (
@@ -1270,26 +1310,16 @@ else:
         get_class,
         get_class_name,
         get_half_years,
-        get_half_years,
-        get_months,
         get_months,
         get_now,
-        get_now,
-        get_now_hk,
         get_now_hk,
         get_now_tokyo,
-        get_now_tokyo,
-        get_quarters,
         get_quarters,
         get_repo_root,
         get_time_zone_name,
         get_today,
-        get_today,
-        get_today_hk,
         get_today_hk,
         get_today_tokyo,
-        get_today_tokyo,
-        get_years,
         get_years,
         groupby_lists,
         is_integral,
@@ -1297,14 +1327,12 @@ else:
         make_isinstance,
         one,
         parse_month,
-        parse_month,
-        parse_month,
         partial,
         read_pickle,
         run_in_background,
+        send_and_next_async,
         serialize_month,
-        serialize_month,
-        serialize_month,
+        start_async_generator_coroutine,
         write_pickle,
     ]
     try:
