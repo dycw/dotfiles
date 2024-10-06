@@ -67,6 +67,7 @@ import urllib
 import uuid
 import wave
 import zipfile
+import zlib
 import zoneinfo
 from asyncio import (
     create_task,
@@ -94,7 +95,7 @@ from collections.abc import (
     Sized,
 )
 from collections.abc import Set as AbstractSet
-from contextlib import suppress
+from contextlib import asynccontextmanager, contextmanager, suppress
 from dataclasses import (
     asdict,
     astuple,
@@ -132,6 +133,7 @@ from itertools import (
     takewhile,
 )
 from multiprocessing import Pool, cpu_count
+from operator import add, and_, mul, neg, or_, sub, truediv
 from os import environ, getenv
 from pathlib import Path
 from re import escape, findall, search
@@ -158,6 +160,7 @@ from typing import (
     TypeVar,
     Union,
 )
+from zlib import crc32
 from zoneinfo import ZoneInfo
 
 builtins.print(f"{dt.datetime.now():%Y-%m-%d %H:%M:%S}: Running `startup.py`...")  # noqa: DTZ005, T201
@@ -204,9 +207,12 @@ _ = [
     Union,
     ZoneInfo,
     abc,
+    add,
+    and_,
     asdict,
     ast,
     astuple,
+    asynccontextmanager,
     asyncio,
     auto,
     base64,
@@ -218,11 +224,13 @@ _ = [
     check_output,
     cmath,
     concurrent.futures,
+    contextmanager,
     contextvars,
     copy,
     copyfile,
     count,
     cpu_count,
+    crc32,
     create_task,
     csv,
     dataclass,
@@ -272,11 +280,14 @@ _ = [
     make_dataclass,
     math,
     md5,
+    mul,
     multiprocessing,
+    neg,
     new_event_loop,
     numbers,
     op,
     operator,
+    or_,
     os,
     pairwise,
     partial,
@@ -309,6 +320,7 @@ _ = [
     statistics,
     stdout,
     string,
+    sub,
     subprocess,
     suppress,
     sys,
@@ -318,6 +330,7 @@ _ = [
     textwrap,
     threading,
     time,
+    truediv,
     types,
     typing,
     typing,
@@ -327,6 +340,7 @@ _ = [
     wave,
     wraps,
     zipfile,
+    zlib,
     zoneinfo,
 ]
 
@@ -1054,6 +1068,8 @@ else:
             DatetimeUSEastern,
             DatetimeUTC,
             check_polars_dataframe,
+            convert_time_zone,
+            replace_time_zone,
             zoned_datetime,
         )
     except ModuleNotFoundError:
@@ -1066,6 +1082,8 @@ else:
             DatetimeUSEastern,
             DatetimeUTC,
             check_polars_dataframe,
+            convert_time_zone,
+            replace_time_zone,
             zoned_datetime,
         ]
 
@@ -1099,6 +1117,15 @@ else:
         pass
     else:
         _ = [throttle]
+
+
+try:
+    import redis
+    import redis.asyncio
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [redis, redis.asyncio]
 
 
 try:
@@ -1214,7 +1241,11 @@ else:
 
 
 try:
-    from utilities.asyncio import send_and_next_async, start_async_generator_coroutine
+    from utilities.asyncio import (
+        send_and_next_async,
+        start_async_generator_coroutine,
+        try_await,
+    )
     from utilities.datetime import (
         DAY,
         EPOCH_UTC,
@@ -1242,8 +1273,9 @@ try:
         parse_month,
         serialize_month,
     )
-    from utilities.functions import get_class, get_class_name
-    from utilities.functools import ensure_not_none, partial
+    from utilities.enum import ensure_enum
+    from utilities.functions import ensure_not_none, get_class, get_class_name
+    from utilities.functools import partial
     from utilities.git import get_repo_root
     from utilities.iterables import groupby_lists, one
     from utilities.math import is_integral
@@ -1299,6 +1331,7 @@ else:
         date_to_datetime,
         ensure_class,
         ensure_datetime,
+        ensure_enum,
         ensure_float,
         ensure_int,
         ensure_month,
@@ -1333,6 +1366,7 @@ else:
         send_and_next_async,
         serialize_month,
         start_async_generator_coroutine,
+        try_await,
         write_pickle,
     ]
     try:

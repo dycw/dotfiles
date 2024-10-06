@@ -8,17 +8,16 @@ ls.add_snippets("python", {
     s("as-create-task", { t({ "from asyncio import create_task", "" }) }),
     s("as-get-event-loop", { t({ "from asyncio import get_event_loop", "" }) }),
     s("as-sleep", { t({ "from asyncio import sleep", "" }) }),
+    s("as-task-group", { t({ "from asyncio import TaskGroup", "" }) }),
 
     -- beartype
     s("be-beartype", { t({ "from beartype import beartype", "" }) }),
 
+    -- beartype
+    s("bi-bidict", { t({ "from bidict import bidict", "" }) }),
+
     -- breakpoints
-    s("bp", { t({ "breakpoint()", "" }) }),
-    s("index-bp", {
-        t({ "if index == " }),
-        i(1, "Index"),
-        t({ ":", "    breakpoint()" }),
-    }),
+    s("bp", { t({ "from rich import print as rp", "breakpoint()", "" }) }),
     s("if-name-main", { t({ 'if __name__ == "__main__":', "   main()", "" }) }),
     s("rnie", { t({ "raise NotImplementedError" }) }),
 
@@ -47,8 +46,19 @@ ls.add_snippets("python", {
     s("da-dataclass", { t({ "from dataclasses import dataclass", "" }) }),
     s("da-field", { t({ "from dataclasses import field", "" }) }),
     s("da-replace", { t({ "from dataclasses import replace", "" }) }),
-    s("dataclass-fr-kw", {
-        t({ "@dataclass(frozen=True, kw_only=True)", "" }),
+    s("dataclass-fr-kw-sl", {
+        t({ "@dataclass(frozen=True, kw_only=True, slots=True)", "" }),
+        t({ "class " }),
+        i(1, "ClassName"),
+        t({ ":", "" }),
+        t("    "),
+        i(2, "field1"),
+        t(": "),
+        i(3, "annotation1"),
+        t({ "", "" }),
+    }),
+    s("dataclass-kw-sl", {
+        t({ "@dataclass(kw_only=True, slots=True)", "" }),
         t({ "class " }),
         i(1, "ClassName"),
         t({ ":", "" }),
@@ -86,6 +96,7 @@ ls.add_snippets("python", {
     s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-dates", { t({ "from hypothesis.strategies import dates", "" }) }),
     s("hy-datetimes", { t({ "from hypothesis.strategies import datetimes", "" }) }),
+    s("hy-floats", { t({ "from hypothesis.strategies import floats", "" }) }),
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
     s("hy-invalid-argument", { t({ "from hypothesis.errors import InvalidArgument", "" }) }),
@@ -131,8 +142,13 @@ ls.add_snippets("python", {
     s("mi-split-at", { t({ "from more_itertools import split_after", "" }) }),
 
     -- operator
+    s("op-add", { t({ "from operator import add", "" }) }),
     s("op-and", { t({ "from operator import and_", "" }) }),
+    s("op-mul", { t({ "from operator import mul", "" }) }),
+    s("op-neg", { t({ "from operator import neg", "" }) }),
     s("op-or", { t({ "from operator import or_", "" }) }),
+    s("op-sub", { t({ "from operator import sub", "" }) }),
+    s("op-truediv", { t({ "from operator import truediv", "" }) }),
 
     -- pathlib
     s("pa-path", { t({ "from pathlib import Path", "" }) }),
@@ -213,6 +229,7 @@ ls.add_snippets("python", {
     s("re-repr", { t({ "from reprlib import repr", "" }) }),
 
     -- rich
+    s("rp", { t({ "from rich import print", "" }) }),
     s("ri-print", { t({ "from rich import print", "" }), t({ "" }), t({ "print(" }), i(1, "Values"), t({ ")", "" }) }),
 
     -- shutil
@@ -265,6 +282,7 @@ ls.add_snippets("python", {
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
     s("ut-custom-repr", { t({ "from utilities.reprlib import custom_repr", "" }) }),
     s("ut-date-to-datetime", { t({ "from utilities.datetime import date_to_datetime", "" }) }),
+    s("ut-duraiton", { t({ "from utilities.types import Duration", "" }) }),
     s("ut-ensure-date", { t({ "from utilities.types import ensure_date", "" }) }),
     s("ut-ensure-float", { t({ "from utilities.types import ensure_float", "" }) }),
     s("ut-ensure-int", { t({ "from utilities.types import ensure_int", "" }) }),
