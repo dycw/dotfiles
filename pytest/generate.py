@@ -71,15 +71,15 @@ class Settings:
         if self.k:
             yield Part(key="k", options=["--randomly-dont-reorganize", "-k"])
         if self.maxfail:
-            yield Part(key="m", options=["--maxfail"])
+            yield Part(key="m", options=["--randomly-dont-reorganize", "--maxfail"])
         if self.n:
             yield Part(key="n", options=["-nauto"])
         if self.no_cov:
             yield Part(key="c", options=["--no-cov"])
         if self.pdb:
-            yield Part(key="p", options=["--pdb"])
+            yield Part(key="p", options=["--randomly-dont-reorganize", "--pdb"])
         if self.x:
-            yield Part(key="x", options=["-x"])
+            yield Part(key="x", options=["--randomly-dont-reorganize", "-x"])
 
 
 @dataclass(frozen=True, kw_only=True)
