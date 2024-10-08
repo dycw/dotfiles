@@ -1,0 +1,8 @@
+unalias p
+alias p from rich import print; print(%1)
+alias pl from rich import print; print({k: v for k, v in locals().items() if not k.startswith("@")})
+alias i from rich import inspect; inspect(%1)
+alias im from rich import inspect; inspect(%1, methods=True)
+alias ip from rich import inspect; inspect(%1, private=True)
+alias id from rich import inspect; inspect(%1, dunder=True)
+alias ia from rich import inspect; inspect(%1, all=True)
