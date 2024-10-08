@@ -229,8 +229,7 @@ ls.add_snippets("python", {
     s("re-repr", { t({ "from reprlib import repr", "" }) }),
 
     -- rich
-    s("rp", { t({ "from rich import print", "" }) }),
-    s("ri-print", { t({ "from rich import print", "" }), t({ "" }), t({ "print(" }), i(1, "Values"), t({ ")", "" }) }),
+    s("rp", { t({ "from rich import print as rp", "" }) }),
 
     -- shutil
     s("sh-rmtree", { t({ "from shutil import rmtree", "" }) }),

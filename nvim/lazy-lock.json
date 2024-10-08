@@ -149,7 +149,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "16666f1bc40f69ce05eb1883fd8c0d076284d8a5"
+    "commit": "cc5f97f4ee5f9f5ef9d98e9f7135dfada5c3794f"
   },
   "nvim-neoclip.lua": {
     "branch": "main",
@@ -173,7 +173,7 @@
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "7821feb7e7d55a76b7ffeeb6b0bfb7b8f499ce94"
+    "commit": "4f04fb7027ce786ac4adfd1c629ca40aea96ffec"
   },
   "nvim-treesitter-context": {
     "branch": "master",
@@ -181,7 +181,7 @@
   },
   "nvim-treesitter-textobjects": {
     "branch": "master",
-    "commit": "4a2d05ec24eaa6b655c7d19092a3b6c0219d46b9"
+    "commit": "b91c98afa6c42819aea6cbc1ba38272f5456a5cf"
   },
   "nvim-various-textobjs": {
     "branch": "main",
@@ -233,7 +233,7 @@
   },
   "vim-just": {
     "branch": "main",
-    "commit": "639f9cb02183d1bdf17f13a4045320f007c35020"
+    "commit": "f08fa6b29dbfc486696fa606d44af86bc88fb1e8"
   },
   "vim-mergetool": {
     "branch": "master",
