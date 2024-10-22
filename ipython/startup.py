@@ -156,6 +156,7 @@ from typing import (
     Protocol,
     TextIO,
     TypeAlias,
+    TypedDict,
     TypeGuard,
     TypeVar,
     Union,
@@ -204,6 +205,7 @@ _ = [
     TypeAlias,
     TypeGuard,
     TypeVar,
+    TypedDict,
     Union,
     ZoneInfo,
     abc,
@@ -951,6 +953,7 @@ try:
         read_database_uri,
         read_delta,
         read_excel,
+        read_ipc,
         read_json,
         read_ndjson,
         read_ods,
@@ -1053,6 +1056,7 @@ else:
         read_database_uri,
         read_delta,
         read_excel,
+        read_ipc,
         read_json,
         read_ndjson,
         read_ods,
@@ -1069,6 +1073,7 @@ else:
             DatetimeUTC,
             check_polars_dataframe,
             convert_time_zone,
+            floor_datetime,
             replace_time_zone,
             zoned_datetime,
         )
@@ -1083,6 +1088,7 @@ else:
             DatetimeUTC,
             check_polars_dataframe,
             convert_time_zone,
+            floor_datetime,
             replace_time_zone,
             zoned_datetime,
         ]
@@ -1260,6 +1266,7 @@ try:
         Month,
         date_to_datetime,
         ensure_month,
+        ensure_time_zone,
         get_half_years,
         get_months,
         get_now,
@@ -1278,10 +1285,10 @@ try:
     from utilities.functools import partial
     from utilities.git import get_repo_root
     from utilities.iterables import groupby_lists, one
-    from utilities.math import is_integral
+    from utilities.math import is_integral, safe_round
     from utilities.pathlib import list_dir
     from utilities.pickle import read_pickle, write_pickle
-    from utilities.random import SYSTEM_RANDOM
+    from utilities.random import SYSTEM_RANDOM, get_state
     from utilities.re import extract_group, extract_groups
     from utilities.reprlib import custom_print, custom_repr
     from utilities.text import ensure_str
@@ -1308,6 +1315,7 @@ else:
     _ = [
         BackgroundTask,
         DAY,
+        safe_round,
         EPOCH_UTC,
         HALF_YEAR,
         HOUR,
@@ -1338,6 +1346,7 @@ else:
         ensure_month,
         ensure_not_none,
         ensure_str,
+        ensure_time_zone,
         extract_group,
         extract_groups,
         get_class,
@@ -1349,6 +1358,7 @@ else:
         get_now_tokyo,
         get_quarters,
         get_repo_root,
+        get_state,
         get_time_zone_name,
         get_today,
         get_today_hk,

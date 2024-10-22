@@ -77,6 +77,9 @@ ls.add_snippets("python", {
     s("en-auto", { t({ "from enum import auto", "" }) }),
     s("en-enum", { t({ "from enum import Enum", "" }) }),
 
+    -- frozendict
+    s("fr-frozendict", { t({ "from frozendict import frozendict", "" }) }),
+
     -- functools
     s("fu-partial", { t({ "from functools import partial", "" }) }),
     s("fu-reduce", { t({ "from functools import reduce", "" }) }),
@@ -177,6 +180,7 @@ ls.add_snippets("python", {
     s("po-lit", { t({ "from polars import lit", "" }) }),
     s("po-max-horizontal", { t({ "from polars import max_horizontal", "" }) }),
     s("po-min-horizontal", { t({ "from polars import min_horizontal", "" }) }),
+    s("po-read-ipc", { t({ "from polars import read_ipc", "" }) }),
     s("po-series", { t({ "from polars import Series", "" }) }),
     s("po-struct", { t({ "from polars import struct", "" }) }),
     s("po-utf8", { t({ "from polars import Utf8", "" }) }),
@@ -230,6 +234,7 @@ ls.add_snippets("python", {
 
     -- rich
     s("rp", { t({ "from rich import print as rp", "" }) }),
+    s("ri-pretty-repr", { t({ "from rich.pretty import pretty_repr", "" }) }),
 
     -- shutil
     s("sh-rmtree", { t({ "from shutil import rmtree", "" }) }),
@@ -267,6 +272,7 @@ ls.add_snippets("python", {
     s("ty-overload", { t({ "from typing import overload", "" }) }),
     s("ty-protocol", { t({ "from typing import Protocol", "" }) }),
     s("ty-type-var", { t({ "from typing import TypeVar", "" }) }),
+    s("ty-typed-dict", { t({ "from typing import TypedDict", "" }) }),
 
     -- typing-extensions
     s("ty-override", { t({ "from typing_extensions import override", "" }) }),
@@ -281,7 +287,7 @@ ls.add_snippets("python", {
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
     s("ut-custom-repr", { t({ "from utilities.reprlib import custom_repr", "" }) }),
     s("ut-date-to-datetime", { t({ "from utilities.datetime import date_to_datetime", "" }) }),
-    s("ut-duraiton", { t({ "from utilities.types import Duration", "" }) }),
+    s("ut-duration", { t({ "from utilities.types import Duration", "" }) }),
     s("ut-ensure-date", { t({ "from utilities.types import ensure_date", "" }) }),
     s("ut-ensure-float", { t({ "from utilities.types import ensure_float", "" }) }),
     s("ut-ensure-int", { t({ "from utilities.types import ensure_int", "" }) }),
@@ -315,6 +321,7 @@ ls.add_snippets("python", {
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
     s("ut-refresh-memoized", { t({ "from utilities.atools import refresh_memoized", "" }) }),
     s("ut-repr-locals", { t({ "from utilities.reprlib import ReprLocals", "" }) }),
+    s("ut-safe-round", { t({ "from utilities.math import safe_round", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-sentinel", { t({ "from utilities.sentinel import sentinel, Sentinel", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
