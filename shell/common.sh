@@ -1,10 +1,6 @@
 #!/usr/bin/env sh
 # shellcheck source=/dev/null
 
-# basedpyright
-bpyr() { basedpyright "$@"; }
-bpyrw() { bpyr -w "$@"; }
-
 # bat
 if command -v bat >/dev/null 2>&1; then
 	cat() { bat "$@"; }
@@ -45,6 +41,9 @@ chown_dirs() { find . -type d -exec chown "$1" {} \;; }
 
 # coverage
 alias open-cov='open .coverage/html/index.html'
+
+# cyberghost
+cyber_jp() { sudo cyberghostvpn --country-code JP --connect; }
 
 # direnv
 if command -v direnv >/dev/null 2>&1; then
