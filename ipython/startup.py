@@ -152,8 +152,10 @@ from typing import (
     Literal,
     NewType,
     NoReturn,
+    NotRequired,
     ParamSpec,
     Protocol,
+    Required,
     TextIO,
     TypeAlias,
     TypedDict,
@@ -194,10 +196,12 @@ _ = [
     Mapping,
     NewType,
     NoReturn,
+    NotRequired,
     ParamSpec,
     Path,
     Pool,
     Protocol,
+    Required,
     Sequence,
     Sized,
     TemporaryDirectory,
@@ -1419,11 +1423,18 @@ else:
 
 
 try:
-    from whenever import Date, DateTimeDelta, LocalDateTime, Time, ZonedDateTime
+    from whenever import (
+        Date,
+        DateTimeDelta,
+        LocalDateTime,
+        Time,
+        TimeDelta,
+        ZonedDateTime,
+    )
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Date, DateTimeDelta, LocalDateTime, Time, ZonedDateTime]
+    _ = [Date, DateTimeDelta, LocalDateTime, Time, ZonedDateTime, TimeDelta]
     try:
         from utilities.whenever import (
             ensure_date,

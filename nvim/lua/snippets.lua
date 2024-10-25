@@ -269,8 +269,10 @@ ls.add_snippets("python", {
     s("ty-cast", { t({ "from typing import cast", "" }) }),
     s("ty-generic", { t({ "from typing import Generic", "" }) }),
     s("ty-literal", { t({ "from typing import Literal", "" }) }),
+    s("ty-not-required", { t({ "from typing import NotRequired", "" }) }),
     s("ty-overload", { t({ "from typing import overload", "" }) }),
     s("ty-protocol", { t({ "from typing import Protocol", "" }) }),
+    s("ty-required", { t({ "from typing import Required", "" }) }),
     s("ty-type-var", { t({ "from typing import TypeVar", "" }) }),
     s("ty-typed-dict", { t({ "from typing import TypedDict", "" }) }),
 
@@ -338,6 +340,14 @@ ls.add_snippets("python", {
     s("ut-write-pickle", { t({ "from utilities.pickle import write_pickle", "" }) }),
     s("ut-writer", { t({ "from utilities.atomicwrites import writer", "" }) }),
     s("ut-zoned-datetime", { t({ "from utilities.polars import zoned_datetime", "" }) }),
+
+    -- whenever
+    s("wh-date-delta", { t({ "from whenever import DateDelta", "" }) }),
+    s("wh-date-time-delta", { t({ "from whenever import DateTimeDelta", "" }) }),
+    s("wh-local-date-time", { t({ "from whenever import LocalDateTime", "" }) }),
+    s("wh-time", { t({ "from whenever import Time", "" }) }),
+    s("wh-time-delta", { t({ "from whenever import TimeDelta", "" }) }),
+    s("wh-zoned-date-time", { t({ "from whenever import ZonedDateTime", "" }) }),
 
     -- zoneinfo
     s("zo-zoneinfo", { t({ "from zoneinfo import ZoneInfo", "" }) }),
