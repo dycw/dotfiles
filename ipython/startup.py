@@ -890,7 +890,6 @@ else:
         pandas,
         pd,
         qcut,
-        read_pickle,
         read_sql,
         read_table,
         set_option,
