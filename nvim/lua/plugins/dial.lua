@@ -136,6 +136,11 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
+                    elements = { "positive", "negative" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
                     elements = { "true", "false" },
                     word = true,
                     cyclic = true,

@@ -121,6 +121,7 @@ ls.add_snippets("python", {
     s("it-count", { t({ "from itertools import count", "" }) }),
     s("it-groupby", { t({ "from itertools import groupby", "" }) }),
     s("it-product", { t({ "from itertools import product", "" }) }),
+    s("it-starmap", { t({ "from itertools import starmap", "" }) }),
 
     -- loguru
     s("lo-logger", { t({ "from loguru import logger", "" }) }),
