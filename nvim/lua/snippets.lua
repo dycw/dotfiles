@@ -17,9 +17,9 @@ ls.add_snippets("python", {
     s("bi-bidict", { t({ "from bidict import bidict", "" }) }),
 
     -- breakpoints
-    s("bp", { t({ "from rich import print as rp", "breakpoint()", "" }) }),
+    s("bp", { t({ "breakpoint()", "" }) }),
     s("if-name-main", { t({ 'if __name__ == "__main__":', "   main()", "" }) }),
-    s("rnie", { t({ "raise NotImplementedError" }) }),
+    s("rnie", { t({ "raise NotImplementedError", "" }) }),
 
     -- cachetools
     s("ca-ttl-cache", { t({ "from cachetools.func import ttl_cache", "" }) }),
