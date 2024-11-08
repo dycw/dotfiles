@@ -564,7 +564,6 @@ else:
             LogLevel,
             get_logging_level_name,
             get_logging_level_number,
-            log,
             logged_sleep_async,
             logged_sleep_sync,
         )
@@ -575,7 +574,6 @@ else:
             LogLevel,
             get_logging_level_number,
             get_logging_level_name,
-            log,
             logged_sleep_async,
             logged_sleep_sync,
         ]
