@@ -39,6 +39,10 @@
     "branch": "master",
     "commit": "d28ccf945374edd9f1c34a82f6c22261dbd8ab98"
   },
+  "copilot-cmp": {
+    "branch": "master",
+    "commit": "b6e5286b3d74b04256d0a7e3bd2908eabec34b44"
+  },
   "copilot.lua": {
     "branch": "master",
     "commit": "f8d8d872bb319f640d5177dad5fbf01f7a16d7d0"
