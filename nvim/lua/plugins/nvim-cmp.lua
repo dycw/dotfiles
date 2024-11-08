@@ -73,6 +73,17 @@ return {
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/cmp-path",
+
+        -- Copilot
+        {
+            "zbirenbaum/copilot.lua",
+            config = function()
+                require("copilot").setup({
+                    suggestion = { enabled = false },
+                    panel = { enabled = false },
+                })
+            end,
+        },
         {
             "zbirenbaum/copilot-cmp",
             config = function()
