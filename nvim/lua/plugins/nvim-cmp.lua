@@ -46,8 +46,8 @@ return {
                 end,
             },
             sources = {
-                { name = "buffer" },
                 { name = "copilot" },
+                { name = "buffer" },
                 { name = "luasnip" },
                 { name = "nvim_lsp" },
                 { name = "path" },
@@ -73,7 +73,12 @@ return {
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/cmp-path",
-        "zbirenbaum/copilot-cmp",
+        {
+            "zbirenbaum/copilot-cmp",
+            config = function()
+                require("copilot_cmp").setup()
+            end,
+        },
     },
     event = "InsertEnter",
 }
