@@ -46,10 +46,11 @@ return {
                 end,
             },
             sources = {
-                { name = "nvim_lsp" },
-                { name = "luasnip" },
-                { name = "path" },
-                { name = "buffer" },
+                { name = "copilot", group_index = 2 },
+                { name = "nvim_lsp", group_index = 2 },
+                { name = "luasnip", group_index = 2 },
+                { name = "path", group_index = 2 },
+                { name = "buffer", group_index = 2 },
             },
         })
     end,
@@ -72,6 +73,23 @@ return {
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/cmp-path",
+
+        -- Copilot
+        {
+            "zbirenbaum/copilot.lua",
+            config = function()
+                require("copilot").setup({
+                    suggestion = { enabled = false },
+                    panel = { enabled = false },
+                })
+            end,
+        },
+        {
+            "zbirenbaum/copilot-cmp",
+            config = function()
+                require("copilot_cmp").setup()
+            end,
+        },
     },
     event = "InsertEnter",
 }
