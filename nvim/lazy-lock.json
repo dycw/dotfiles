@@ -155,6 +155,10 @@
     "branch": "master",
     "commit": "a065833f35a3a7cc3ef137ac88b5381da2ba302e"
   },
+  "nvim-early-retirement": {
+    "branch": "main",
+    "commit": "2c36a5671b9d8f0d9e11b77c5a55de802bc45e34"
+  },
   "nvim-hlslens": {
     "branch": "main",
     "commit": "07afd4dd14405ad14b142a501a3abea6ae44b21b"
