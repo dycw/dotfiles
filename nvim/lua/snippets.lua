@@ -38,6 +38,8 @@ ls.add_snippets("python", {
     s("co-sequence", { t({ "from collections.abc import Sequence", "" }) }),
 
     -- contextlib
+    s("co-asynccontextmanager", { t({ "from contextlib import asynccontextmanager", "" }) }),
+    s("co-contextmanager", { t({ "from contextlib import contextmanager", "" }) }),
     s("co-suppress", { t({ "from contextlib import suppress", "" }) }),
 
     -- dataclasses
