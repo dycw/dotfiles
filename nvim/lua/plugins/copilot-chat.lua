@@ -8,6 +8,6 @@ return {
             { "nvim-lua/plenary.nvim" },
         },
         keys = { { "<Leader>cc", ":CopilotChat<CR>", mode = { "n", "v" }, desc = "copilot [c]hat" } },
-        opts = { debug = true, clear_chat_on_new_prompt = true },
+        opts = { debug = true },
     },
 }
