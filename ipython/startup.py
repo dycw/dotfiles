@@ -475,6 +475,20 @@ else:
 
 
 try:
+    import eventkit
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [eventkit]
+
+    try:
+        from utilities.eventkit import add_listener
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [add_listener]
+
+try:
     from frozendict import frozendict
 except ModuleNotFoundError:
     pass
@@ -537,11 +551,11 @@ else:
 
 try:
     import ib_async
-    from ib_async import Contract
+    from ib_async import IB, Contract
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Contract, ib_async]
+    _ = [Contract, IB, ib_async]
 
 
 try:
@@ -1127,12 +1141,18 @@ else:
 
 
 try:
-    import redis
-    import redis.asyncio
+    from redis.asyncio import Redis
 except ModuleNotFoundError:
     pass
 else:
-    _ = [redis, redis.asyncio]
+    _ = [Redis]
+
+    try:
+        from utilities.redis import redis_hash_map_key, redis_key
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [redis_hash_map_key, redis_key]
 
 
 try:

@@ -286,6 +286,7 @@ ls.add_snippets("python", {
     s("uu-uuid", { t({ "from uuid import UUID", "" }) }),
 
     -- utilities
+    s("ut-add-listener", { t({ "from utilities.eventkit import add_listener", "" }) }),
     s("ut-always-iterable", { t({ "from utilities.iterables import always_iterable", "" }) }),
     s("ut-cache", { t({ "from utilities.functools import cache", "" }) }),
     s("ut-check-duplicates", { t({ "from utilities.iterables import check_duplicates", "" }) }),
@@ -315,7 +316,6 @@ ls.add_snippets("python", {
     s("ut-int-arrays", { t({ "from utilities.hypothesis import int_arrays", "" }) }),
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
-    s("ut-log-call", { t({ "from utilities.loguru import log_call", "" }) }),
     s("ut-log-level", { t({ "from utilities.loguru import LogLevel", "" }) }),
     s("ut-memoize", { t({ "from utilities.atools import memoize", "" }) }),
     s("ut-minute", { t({ "from utilities.datetime import MINUTE", "" }) }),
