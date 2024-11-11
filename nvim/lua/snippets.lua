@@ -263,6 +263,9 @@ ls.add_snippets("python", {
     -- tenacity
     s("te-retry", { t({ "from tenacity import retry", "" }) }),
 
+    -- tenacity
+    s("te-indent", { t({ "from textwrap import indent", "" }) }),
+
     -- time
     s("ti-sleep", { t({ "from time import sleep", "" }) }),
 
