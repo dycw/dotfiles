@@ -9,6 +9,7 @@ import builtins
 import calendar
 import cmath
 import concurrent.futures
+import contextlib
 import contextvars
 import copy
 import csv
@@ -132,6 +133,7 @@ from itertools import (
     starmap,
     takewhile,
 )
+from logging import getLogger
 from multiprocessing import Pool, cpu_count
 from operator import add, and_, mul, neg, or_, sub, truediv
 from os import environ, getenv
@@ -156,6 +158,7 @@ from typing import (
     ParamSpec,
     Protocol,
     Required,
+    Self,
     TextIO,
     TypeAlias,
     TypedDict,
@@ -202,6 +205,7 @@ _ = [
     Pool,
     Protocol,
     Required,
+    Self,
     Sequence,
     Sized,
     TemporaryDirectory,
@@ -230,6 +234,7 @@ _ = [
     check_output,
     cmath,
     concurrent.futures,
+    contextlib,
     contextmanager,
     contextvars,
     copy,
@@ -256,6 +261,7 @@ _ = [
     fractions,
     ftplib,
     functools,
+    getLogger,
     get_event_loop,
     get_running_loop,
     getenv,
@@ -338,7 +344,6 @@ _ = [
     time,
     truediv,
     types,
-    typing,
     typing,
     unittest,
     urllib,
@@ -475,6 +480,20 @@ else:
 
 
 try:
+    import eventkit
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [eventkit]
+
+    try:
+        from utilities.eventkit import add_listener
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [add_listener]
+
+try:
     from frozendict import frozendict
 except ModuleNotFoundError:
     pass
@@ -537,11 +556,11 @@ else:
 
 try:
     import ib_async
-    from ib_async import Contract
+    from ib_async import IB, Contract
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Contract, ib_async]
+    _ = [Contract, IB, ib_async]
 
 
 try:
@@ -1127,12 +1146,18 @@ else:
 
 
 try:
-    import redis
-    import redis.asyncio
+    from redis.asyncio import Redis
 except ModuleNotFoundError:
     pass
 else:
-    _ = [redis, redis.asyncio]
+    _ = [Redis]
+
+    try:
+        from utilities.redis import redis_hash_map_key, redis_key
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [redis_hash_map_key, redis_key]
 
 
 try:
@@ -1145,14 +1170,14 @@ else:
 
 try:
     import rich
-    from rich import inspect, pretty, print
+    from rich import inspect, print
     from rich import print as p
     from rich.pretty import pprint, pretty_repr
     from rich.traceback import install as _install
 except ModuleNotFoundError:
     pass
 else:
-    _ = [inspect, p, pprint, pretty, pretty_repr, print, rich]
+    _ = [inspect, p, pprint, pretty_repr, print, rich]
 
     _install()
 
@@ -1185,25 +1210,21 @@ else:
     _ = [Column, MetaData, Table, sqla, sqlalchemy, sqlalchemy.orm, select, func]
     try:
         from utilities.sqlalchemy import (
-            create_engine,
+            create_async_engine,
             ensure_tables_created,
-            ensure_tables_created_async,
             ensure_tables_dropped,
             get_table,
             insert_items,
-            insert_items_async,
         )
     except ModuleNotFoundError:
         pass
     else:
         _ = [
-            create_engine,
+            create_async_engine,
             ensure_tables_created,
-            ensure_tables_created_async,
             ensure_tables_dropped,
             get_table,
             insert_items,
-            insert_items_async,
         ]
 
 try:
@@ -1248,11 +1269,7 @@ else:
 
 
 try:
-    from utilities.asyncio import (
-        send_and_next_async,
-        start_async_generator_coroutine,
-        try_await,
-    )
+    from utilities.asyncio import try_await
     from utilities.datetime import (
         DAY,
         EPOCH_UTC,
@@ -1267,7 +1284,6 @@ try:
         Month,
         date_to_datetime,
         ensure_month,
-        ensure_time_zone,
         get_half_years,
         get_months,
         get_now,
@@ -1308,6 +1324,7 @@ try:
         Tokyo,
         USCentral,
         USEastern,
+        ensure_time_zone,
         get_time_zone_name,
     )
 except ModuleNotFoundError:
@@ -1374,9 +1391,7 @@ else:
         partial,
         read_pickle,
         run_in_background,
-        send_and_next_async,
         serialize_month,
-        start_async_generator_coroutine,
         try_await,
         write_pickle,
     ]
@@ -1393,21 +1408,11 @@ else:
     else:
         _ = [show]
     try:
-        from utilities.sqlalchemy_polars import (
-            insert_dataframe,
-            insert_dataframe_async,
-            select_to_dataframe,
-            select_to_dataframe_async,
-        )
+        from utilities.sqlalchemy_polars import insert_dataframe, select_to_dataframe
     except ModuleNotFoundError:
         pass
     else:
-        _ = [
-            insert_dataframe,
-            insert_dataframe_async,
-            select_to_dataframe,
-            select_to_dataframe_async,
-        ]
+        _ = [insert_dataframe, select_to_dataframe]
 
 
 try:

@@ -38,6 +38,8 @@ ls.add_snippets("python", {
     s("co-sequence", { t({ "from collections.abc import Sequence", "" }) }),
 
     -- contextlib
+    s("co-asynccontextmanager", { t({ "from contextlib import asynccontextmanager", "" }) }),
+    s("co-contextmanager", { t({ "from contextlib import contextmanager", "" }) }),
     s("co-suppress", { t({ "from contextlib import suppress", "" }) }),
 
     -- dataclasses
@@ -115,6 +117,9 @@ ls.add_snippets("python", {
     s("settings-generate-only", { t({ "@settings(phases={Phase.generate})", "" }) }),
     s("settings-max-examples", { t({ "@settings(max_examples=1)", "" }) }),
 
+    -- ib-async
+    s("ib-ib", { t({ "from ib_async import IB", "" }) }),
+
     -- itertools
     s("it-accumulate", { t({ "from itertools import accumulate", "" }) }),
     s("it-chain", { t({ "from itertools import chain", "" }) }),
@@ -123,18 +128,11 @@ ls.add_snippets("python", {
     s("it-product", { t({ "from itertools import product", "" }) }),
     s("it-starmap", { t({ "from itertools import starmap", "" }) }),
 
+    -- logging
+    s("lo-get-logger", { t({ "from logging import getLogger", "" }) }),
+
     -- loguru
     s("lo-logger", { t({ "from loguru import logger", "" }) }),
-    s("trace-start", { t({ "logger.trace('➢')", "" }) }),
-    s("trace-finish", { t({ "logger.trace('✔')", "" }) }),
-    s("debug-start", { t({ "logger.debug('➢')", "" }) }),
-    s("debug-finish", { t({ "logger.debug('✔')", "" }) }),
-    s("info-start", { t({ "logger.info('➢')", "" }) }),
-    s("info-finish", { t({ "logger.info('✔')", "" }) }),
-    s("warning-start", { t({ "logger.warning('➢')", "" }) }),
-    s("warning-finish", { t({ "logger.warning('✔')", "" }) }),
-    s("error-start", { t({ "logger.error('➢')", "" }) }),
-    s("error-finish", { t({ "logger.error('✔')", "" }) }),
 
     -- math
     s("ma-inf", { t({ "from math import inf", "" }) }),
@@ -261,6 +259,12 @@ ls.add_snippets("python", {
     -- tenacity
     s("te-retry", { t({ "from tenacity import retry", "" }) }),
 
+    -- textwrap
+    s("te-indent", { t({ "from textwrap import indent", "" }) }),
+
+    -- threading
+    s("th-rlock", { t({ "from threading import RLock", "" }) }),
+
     -- time
     s("ti-sleep", { t({ "from time import sleep", "" }) }),
 
@@ -284,6 +288,7 @@ ls.add_snippets("python", {
     s("uu-uuid", { t({ "from uuid import UUID", "" }) }),
 
     -- utilities
+    s("ut-add-listener", { t({ "from utilities.eventkit import add_listener", "" }) }),
     s("ut-always-iterable", { t({ "from utilities.iterables import always_iterable", "" }) }),
     s("ut-cache", { t({ "from utilities.functools import cache", "" }) }),
     s("ut-check-duplicates", { t({ "from utilities.iterables import check_duplicates", "" }) }),
@@ -300,6 +305,7 @@ ls.add_snippets("python", {
     s("ut-ensure-str", { t({ "from utilities.text import ensure_str", "" }) }),
     s("ut-extract-group", { t({ "from utilities.re import extract_group", "" }) }),
     s("ut-extract-groups", { t({ "from utilities.re import extract_groups", "" }) }),
+    s("ut-get-funcname", { t({ "from utilities.functions import get_func_name", "" }) }),
     s("ut-get-local-timezone", { t({ "from utilities.datetime import local_timezone", "" }) }),
     s("ut-get-now", { t({ "from utilities.datetime import get_now", "" }) }),
     s("ut-get-repo-root", { t({ "from utilities.git import get_repo_root", "" }) }),
@@ -313,8 +319,7 @@ ls.add_snippets("python", {
     s("ut-int-arrays", { t({ "from utilities.hypothesis import int_arrays", "" }) }),
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
-    s("ut-log-call", { t({ "from utilities.loguru import log_call", "" }) }),
-    s("ut-log-level", { t({ "from utilities.loguru import LogLevel", "" }) }),
+    s("ut-log-level", { t({ "from utilities.logging import LogLevel", "" }) }),
     s("ut-memoize", { t({ "from utilities.atools import memoize", "" }) }),
     s("ut-minute", { t({ "from utilities.datetime import MINUTE", "" }) }),
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
@@ -327,11 +332,13 @@ ls.add_snippets("python", {
     s("ut-safe-round", { t({ "from utilities.math import safe_round", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-sentinel", { t({ "from utilities.sentinel import sentinel, Sentinel", "" }) }),
+    s("ut-setup-logging", { t({ "from utilities.logging import setup_logging", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s("ut-system-random", { t({ "from utilities.random import SYSTEM_RANDOM", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
     s("ut-temporary-directory", { t({ "from utilities.tempfile import TemporaryDirectory", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
+    s("ut-timeout-dur", { t({ "from utilities.asyncio import timeout_dur", "" }) }),
     s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
     s("ut-tokyo", { t({ "from utilities.zoneinfo import Tokyo", "" }) }),
     s("ut-transpose", { t({ "from utilities.iterables import transpose", "" }) }),
