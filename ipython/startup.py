@@ -9,6 +9,7 @@ import builtins
 import calendar
 import cmath
 import concurrent.futures
+import contextlib
 import contextvars
 import copy
 import csv
@@ -132,6 +133,7 @@ from itertools import (
     starmap,
     takewhile,
 )
+from logging import getLogger
 from multiprocessing import Pool, cpu_count
 from operator import add, and_, mul, neg, or_, sub, truediv
 from os import environ, getenv
@@ -156,6 +158,7 @@ from typing import (
     ParamSpec,
     Protocol,
     Required,
+    Self,
     TextIO,
     TypeAlias,
     TypedDict,
@@ -202,6 +205,7 @@ _ = [
     Pool,
     Protocol,
     Required,
+    Self,
     Sequence,
     Sized,
     TemporaryDirectory,
@@ -230,6 +234,7 @@ _ = [
     check_output,
     cmath,
     concurrent.futures,
+    contextlib,
     contextmanager,
     contextvars,
     copy,
@@ -256,6 +261,7 @@ _ = [
     fractions,
     ftplib,
     functools,
+    getLogger,
     get_event_loop,
     get_running_loop,
     getenv,
@@ -338,7 +344,6 @@ _ = [
     time,
     truediv,
     types,
-    typing,
     typing,
     unittest,
     urllib,
@@ -1205,25 +1210,21 @@ else:
     _ = [Column, MetaData, Table, sqla, sqlalchemy, sqlalchemy.orm, select, func]
     try:
         from utilities.sqlalchemy import (
-            create_engine,
+            create_async_engine,
             ensure_tables_created,
-            ensure_tables_created_async,
             ensure_tables_dropped,
             get_table,
             insert_items,
-            insert_items_async,
         )
     except ModuleNotFoundError:
         pass
     else:
         _ = [
-            create_engine,
+            create_async_engine,
             ensure_tables_created,
-            ensure_tables_created_async,
             ensure_tables_dropped,
             get_table,
             insert_items,
-            insert_items_async,
         ]
 
 try:
@@ -1407,21 +1408,11 @@ else:
     else:
         _ = [show]
     try:
-        from utilities.sqlalchemy_polars import (
-            insert_dataframe,
-            insert_dataframe_async,
-            select_to_dataframe,
-            select_to_dataframe_async,
-        )
+        from utilities.sqlalchemy_polars import insert_dataframe, select_to_dataframe
     except ModuleNotFoundError:
         pass
     else:
-        _ = [
-            insert_dataframe,
-            insert_dataframe_async,
-            select_to_dataframe,
-            select_to_dataframe_async,
-        ]
+        _ = [insert_dataframe, select_to_dataframe]
 
 
 try:
