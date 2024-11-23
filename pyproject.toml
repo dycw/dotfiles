@@ -9,8 +9,6 @@ unsafe-fixes = true
 
 [tool.ruff.lint]
 ignore = [
-  "ANN101",  # missing-type-self
-  "ANN102",  # missing-type-cls
   "ANN401",  # dynamically-typed-expression
   "D",  # pydocstyle
   # formatter

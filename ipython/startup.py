@@ -1170,14 +1170,14 @@ else:
 
 try:
     import rich
-    from rich import inspect, pretty, print
+    from rich import inspect, print
     from rich import print as p
     from rich.pretty import pprint, pretty_repr
     from rich.traceback import install as _install
 except ModuleNotFoundError:
     pass
 else:
-    _ = [inspect, p, pprint, pretty, pretty_repr, print, rich]
+    _ = [inspect, p, pprint, pretty_repr, print, rich]
 
     _install()
 
