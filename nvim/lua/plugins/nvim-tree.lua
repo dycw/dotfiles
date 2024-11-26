@@ -7,6 +7,6 @@ return {
             "<Cmd>NvimTreeFindFileToggle<CR>",
             "File [E]xplorer"
         )
-        require("nvim-tree").setup()
+        require("nvim-tree").setup({ git = { ignore = true } })
     end,
 }

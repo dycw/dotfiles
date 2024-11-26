@@ -29,5 +29,8 @@ ignore = [
 ]
 select = ["ALL"]
 
+[tool.ruff.lint.extend-per-file-ignores]
+"ipython/startup.py" = ["A004"]  # builtin-import-shadowing
+
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"

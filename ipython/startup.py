@@ -96,7 +96,13 @@ from collections.abc import (
     Sized,
 )
 from collections.abc import Set as AbstractSet
-from contextlib import asynccontextmanager, contextmanager, suppress
+from contextlib import (
+    asynccontextmanager,
+    contextmanager,
+    redirect_stderr,
+    redirect_stdout,
+    suppress,
+)
 from dataclasses import (
     asdict,
     astuple,
@@ -133,7 +139,7 @@ from itertools import (
     starmap,
     takewhile,
 )
-from logging import getLogger
+from logging import StreamHandler, getLogger
 from multiprocessing import Pool, cpu_count
 from operator import add, and_, mul, neg, or_, sub, truediv
 from os import environ, getenv
@@ -262,6 +268,7 @@ _ = [
     ftplib,
     functools,
     getLogger,
+    StreamHandler,
     get_event_loop,
     get_running_loop,
     getenv,
@@ -312,6 +319,8 @@ _ = [
     product,
     random,
     re,
+    redirect_stderr,
+    redirect_stdout,
     reduce,
     repeat,
     replace,
@@ -583,19 +592,11 @@ else:
             LogLevel,
             get_logging_level_name,
             get_logging_level_number,
-            logged_sleep_async,
-            logged_sleep_sync,
         )
     except ModuleNotFoundError:
         pass
     else:
-        _ = [
-            LogLevel,
-            get_logging_level_number,
-            get_logging_level_name,
-            logged_sleep_async,
-            logged_sleep_sync,
-        ]
+        _ = [LogLevel, get_logging_level_number, get_logging_level_name]
 
 
 try:
@@ -1302,6 +1303,7 @@ try:
     from utilities.functools import partial
     from utilities.git import get_repo_root
     from utilities.iterables import groupby_lists, one
+    from utilities.logging import setup_logging
     from utilities.math import is_integral, safe_round
     from utilities.pathlib import list_dir
     from utilities.pickle import read_pickle, write_pickle
@@ -1354,13 +1356,11 @@ else:
         custom_print,
         custom_repr,
         date_to_datetime,
-        date_to_datetime,
         ensure_class,
         ensure_datetime,
         ensure_enum,
         ensure_float,
         ensure_int,
-        ensure_month,
         ensure_month,
         ensure_not_none,
         ensure_str,
@@ -1392,6 +1392,7 @@ else:
         read_pickle,
         run_in_background,
         serialize_month,
+        setup_logging,
         try_await,
         write_pickle,
     ]

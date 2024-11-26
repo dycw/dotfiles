@@ -41,6 +41,8 @@ ls.add_snippets("python", {
     s("co-asynccontextmanager", { t({ "from contextlib import asynccontextmanager", "" }) }),
     s("co-contextmanager", { t({ "from contextlib import contextmanager", "" }) }),
     s("co-suppress", { t({ "from contextlib import suppress", "" }) }),
+    s("co-redirect-stderr", { t({ "from contextlib import redirect_stderr", "" }) }),
+    s("co-redirect-stdout", { t({ "from contextlib import redirect_stdout", "" }) }),
 
     -- dataclasses
     s("da-asdict", { t({ "from dataclasses import asdict", "" }) }),
@@ -130,6 +132,7 @@ ls.add_snippets("python", {
 
     -- logging
     s("lo-get-logger", { t({ "from logging import getLogger", "" }) }),
+    s("lo-stream-handler", { t({ "from logging import StreamHandler", "" }) }),
 
     -- loguru
     s("lo-logger", { t({ "from loguru import logger", "" }) }),
