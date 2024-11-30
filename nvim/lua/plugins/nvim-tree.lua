@@ -7,6 +7,13 @@ return {
             "<Cmd>NvimTreeFindFileToggle<CR>",
             "File [E]xplorer"
         )
-        require("nvim-tree").setup()
+        require("nvim-tree").setup({
+            filters = {
+                custom = { "__pycache__" },
+            },
+            git = {
+                ignore = true,
+            },
+        })
     end,
 }
