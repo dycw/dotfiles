@@ -208,6 +208,9 @@ ls.add_snippets("python", {
     -- pytest-benchmark
     s("py-benchmark-fixture", { t({ "from pytest_benchmark.fixture import BenchmarkFixture", "" }) }),
 
+    -- pytest-lazy-fixtures
+    s("py-lf", { t({ "from pytest_lazy_fixtures import lf", "" }) }),
+
     -- pytest-regressions
     s(
         "py-dataframe-regression-fixture",

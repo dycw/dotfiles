@@ -565,11 +565,11 @@ else:
 
 try:
     import ib_async
-    from ib_async import IB, Contract
+    from ib_async import IB, Contract, Trade
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Contract, IB, ib_async]
+    _ = [Contract, IB, ib_async, Trade]
 
 
 try:
