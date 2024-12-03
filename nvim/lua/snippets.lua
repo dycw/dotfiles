@@ -131,7 +131,9 @@ ls.add_snippets("python", {
     s("it-starmap", { t({ "from itertools import starmap", "" }) }),
 
     -- logging
+    s("lo-formatter", { t({ "from logging import Formatter", "" }) }),
     s("lo-get-logger", { t({ "from logging import getLogger", "" }) }),
+    s("lo-handler", { t({ "from logging import Handler", "" }) }),
     s("lo-stream-handler", { t({ "from logging import StreamHandler", "" }) }),
 
     -- loguru
@@ -149,6 +151,7 @@ ls.add_snippets("python", {
     -- operator
     s("op-add", { t({ "from operator import add", "" }) }),
     s("op-and", { t({ "from operator import and_", "" }) }),
+    s("op-eq", { t({ "from operator import eq", "" }) }),
     s("op-mul", { t({ "from operator import mul", "" }) }),
     s("op-neg", { t({ "from operator import neg", "" }) }),
     s("op-or", { t({ "from operator import or_", "" }) }),
@@ -189,6 +192,7 @@ ls.add_snippets("python", {
     s("po-when", { t({ "from polars import when", "" }) }),
 
     -- pytest
+    s("mo", { t({ "@mark.only", "" }) }),
     s("mark-only", { t({ "@mark.only", "" }) }),
     s("mark-parametrize", {
         t({ '@mark.parametrize("' }),

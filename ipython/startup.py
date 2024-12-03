@@ -139,7 +139,7 @@ from itertools import (
     starmap,
     takewhile,
 )
-from logging import StreamHandler, getLogger
+from logging import Formatter, StreamHandler, getLogger
 from multiprocessing import Pool, cpu_count
 from operator import add, and_, mul, neg, or_, sub, truediv
 from os import environ, getenv
@@ -194,6 +194,7 @@ _ = [
     Coroutine,
     Counter,
     Enum,
+    Formatter,
     Generator,
     Generic,
     Hashable,
@@ -214,6 +215,7 @@ _ = [
     Self,
     Sequence,
     Sized,
+    StreamHandler,
     TemporaryDirectory,
     TextIO,
     TypeAlias,
@@ -268,7 +270,6 @@ _ = [
     ftplib,
     functools,
     getLogger,
-    StreamHandler,
     get_event_loop,
     get_running_loop,
     getenv,
