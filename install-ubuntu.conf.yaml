@@ -47,6 +47,7 @@
         "command -v zsh >/dev/null 2>&1 || sudo apt install -y zsh",
         Installing zsh,
       ]
+    - [chsh -s $(which zsh), Configuring zsh]
     - [
         "[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
         Installing rust,
