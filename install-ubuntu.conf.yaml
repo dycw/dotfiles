@@ -130,10 +130,6 @@
     - ["command -v fzf >/dev/null 2>&1 || brew install fzf", Installing fzf]
     - ["command -v gcc dev/null 2>&1 || brew install gcc", Installing gcc]
     - ["command -v gh >/dev/null 2>&1 || brew install gh", Installing gh]
-    - [
-        "command -v gitweb >/dev/null 2>&1 || brew install yoannfleurydev/gitweb/gitweb",
-        Installing gitweb,
-      ]
     - ["command -v just >/dev/null 2>&1 || brew install just", Installing just]
     - [
         "command -v luacheck >/dev/null 2>&1 || brew install luacheck",
