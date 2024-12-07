@@ -1,8 +1,18 @@
 #!/usr/bin/env sh
 
 # brew
-__file='/opt/homebrew/bin/brew'
-if [ -f "${__file}" ]; then
+case "$(uname)" in
+Darwin)
+	__file='/opt/homebrew/bin/brew'
+	;;
+Linux)
+	__file='/home/linuxbrew/.linuxbrew/bin/brew'
+	;;
+*)
+	__file=''
+	;;
+esac
+if [ -n "${__file}" ] && [ -f "${__file}" ]; then
 	eval "$(${__file} shellenv)"
 fi
 
@@ -76,17 +86,6 @@ esac
 if command -v pyenv >/dev/null 2>&1; then
 	eval "$(pyenv init -)"
 fi
-
-# redis-stack
-# if command -v brew >/dev/null 2>&1; then
-# 	__dir="$(brew --prefix)"/Caskroom/redis-stack-server/7.4.0-v0/bin
-# 	case ":${PATH}:" in
-# 	*:"${__dir}":*) ;;
-# 	*)
-# 		export PATH="${__dir}:${PATH}"
-# 		;;
-# 	esac
-# fi
 
 # ripgrep
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/ripgreprc"
