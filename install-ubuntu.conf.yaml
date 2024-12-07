@@ -216,4 +216,7 @@
         "command -v pdfarranger >/dev/null 2>&1 || sudo snap install pdfarranger",
         Install pdfarranger,
       ]
-    - ["sudo snap install whatsapp-linux-app", Installing whatsapp]
+    - [
+        "command -v whatsapp-linux-app >/dev/null 2>&1 || sudo snap install whatsapp-linux-app",
+        Installing whatsapp,
+      ]
