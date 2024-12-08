@@ -18,7 +18,7 @@ ls.add_snippets("python", {
 
     -- breakpoints
     s("bp", { t({ "breakpoint()", "" }) }),
-    s("if-name-main", { t({ 'if __name__ == "__main__":', "   main()", "" }) }),
+    s("if-name-main", { t({ 'if __name__ == "__main__":', "    main()", "" }) }),
     s("rnie", { t({ "raise NotImplementedError", "" }) }),
 
     -- cachetools
@@ -192,7 +192,11 @@ ls.add_snippets("python", {
     s("po-when", { t({ "from polars import when", "" }) }),
 
     -- pytest
+    s("a0", { t({ "from rich.pretty import pretty_repr", "", "assert 0, pretty_repr(locals(), max_length=5)" }) }),
     s("mo", { t({ "@mark.only", "" }) }),
+    s("mmo", { t({ "marks=mark.only", "" }) }),
+    s("ms", { t({ "@mark.skip", "" }) }),
+    s("mx", { t({ "@mark.xfail", "" }) }),
     s("mark-only", { t({ "@mark.only", "" }) }),
     s("mark-parametrize", {
         t({ '@mark.parametrize("' }),
@@ -208,6 +212,19 @@ ls.add_snippets("python", {
     s("py-mark", { t({ "from pytest import mark, param", "" }) }),
     s("py-param", { t({ "from pytest import param", "" }) }),
     s("py-raises", { t({ "from pytest import raises", "" }) }),
+    s("py-write-pickle", {
+        t({
+            "from utilities.git import get_repo_root",
+            "from utilities.pickle import write_pickle",
+            "",
+            "write_pickle(",
+        }),
+        i(1, "obj"),
+        t({
+            ', get_repo_root().joinpath("notebooks", "pytest-tmp.gz"), overwrite=True)',
+            "",
+        }),
+    }),
 
     -- pytest-benchmark
     s("py-benchmark-fixture", { t({ "from pytest_benchmark.fixture import BenchmarkFixture", "" }) }),
@@ -303,7 +320,6 @@ ls.add_snippets("python", {
     s("ut-cache", { t({ "from utilities.functools import cache", "" }) }),
     s("ut-check-duplicates", { t({ "from utilities.iterables import check_duplicates", "" }) }),
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
-    s("ut-custom-repr", { t({ "from utilities.reprlib import custom_repr", "" }) }),
     s("ut-date-to-datetime", { t({ "from utilities.datetime import date_to_datetime", "" }) }),
     s("ut-duration", { t({ "from utilities.types import Duration", "" }) }),
     s("ut-ensure-date", { t({ "from utilities.types import ensure_date", "" }) }),
@@ -315,30 +331,25 @@ ls.add_snippets("python", {
     s("ut-ensure-str", { t({ "from utilities.text import ensure_str", "" }) }),
     s("ut-extract-group", { t({ "from utilities.re import extract_group", "" }) }),
     s("ut-extract-groups", { t({ "from utilities.re import extract_groups", "" }) }),
-    s("ut-get-funcname", { t({ "from utilities.functions import get_func_name", "" }) }),
-    s("ut-get-local-timezone", { t({ "from utilities.datetime import local_timezone", "" }) }),
+    s("ut-get-func-name", { t({ "from utilities.functions import get_func_name", "" }) }),
     s("ut-get-now", { t({ "from utilities.datetime import get_now", "" }) }),
     s("ut-get-repo-root", { t({ "from utilities.git import get_repo_root", "" }) }),
     s("ut-get-table", { t({ "from utilities.sqlalchemy import get_table", "" }) }),
     s("ut-get-today", { t({ "from utilities.datetime import get_today", "" }) }),
     s("ut-hong-kong", { t({ "from utilities.zoneinfo import HongKong", "" }) }),
     s("ut-impossible-case-error", { t({ "from utilities.errors import ImpossibleCaseError", "" }) }),
-    s("ut-index-s", { t({ "utilities.pandas import IndexS", "" }) }),
     s("ut-insert-dataframe", { t({ "from utilities.sqlalchemy_polars import insert_dataframe", "" }) }),
     s("ut-insert-items", { t({ "from utilities.sqlalchemy import insert_items", "" }) }),
     s("ut-int-arrays", { t({ "from utilities.hypothesis import int_arrays", "" }) }),
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
     s("ut-log-level", { t({ "from utilities.logging import LogLevel", "" }) }),
-    s("ut-memoize", { t({ "from utilities.atools import memoize", "" }) }),
     s("ut-minute", { t({ "from utilities.datetime import MINUTE", "" }) }),
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
     s("ut-one-empty-error", { t({ "from utilities.iterables import OneEmptyError", "" }) }),
     s("ut-parse-date", { t({ "from utilities.datetime import parse_date", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
-    s("ut-refresh-memoized", { t({ "from utilities.atools import refresh_memoized", "" }) }),
-    s("ut-repr-locals", { t({ "from utilities.reprlib import ReprLocals", "" }) }),
     s("ut-safe-round", { t({ "from utilities.math import safe_round", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-sentinel", { t({ "from utilities.sentinel import sentinel, Sentinel", "" }) }),

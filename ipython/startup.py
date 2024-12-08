@@ -147,7 +147,7 @@ from pathlib import Path
 from re import escape, findall, search
 from shutil import copyfile, rmtree
 from subprocess import PIPE, CalledProcessError, check_call, check_output, run
-from sys import stdout
+from sys import exc_info, stderr, stdout
 from tempfile import TemporaryDirectory
 from time import sleep as sleep_sync
 from typing import (
@@ -172,6 +172,7 @@ from typing import (
     TypeVar,
     Union,
 )
+from uuid import UUID, uuid4
 from zlib import crc32
 from zoneinfo import ZoneInfo
 
@@ -222,6 +223,7 @@ _ = [
     TypeGuard,
     TypeVar,
     TypedDict,
+    UUID,
     Union,
     ZoneInfo,
     abc,
@@ -263,6 +265,7 @@ _ = [
     enum,
     environ,
     escape,
+    exc_info,
     field,
     fields,
     findall,
@@ -340,6 +343,7 @@ _ = [
     starmap,
     stat,
     statistics,
+    stderr,
     stdout,
     string,
     sub,
@@ -358,6 +362,8 @@ _ = [
     unittest,
     urllib,
     uuid,
+    uuid,
+    uuid4,
     wave,
     wraps,
     zipfile,
@@ -661,6 +667,8 @@ else:
             OneError,
             OneNonUniqueError,
             always_iterable,
+            check_subset,
+            check_superset,
             one,
         )
     except ModuleNotFoundError:
@@ -668,7 +676,15 @@ else:
 
         _ = [always_iterable, one]
     else:
-        _ = [OneEmptyError, OneError, OneNonUniqueError, always_iterable, one]
+        _ = [
+            OneEmptyError,
+            OneError,
+            OneNonUniqueError,
+            always_iterable,
+            check_subset,
+            check_superset,
+            one,
+        ]
     try:
         from utilities.more_itertools import partition_typeguard, peekable
     except ModuleNotFoundError:
