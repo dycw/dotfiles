@@ -349,6 +349,7 @@ ls.add_snippets("python", {
     s("ut-one-empty-error", { t({ "from utilities.iterables import OneEmptyError", "" }) }),
     s("ut-parse-date", { t({ "from utilities.datetime import parse_date", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
+    s("ut-pathlike", { t({ "from utilities.pathlib import PathLike", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
     s("ut-safe-round", { t({ "from utilities.math import safe_round", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
