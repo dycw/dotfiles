@@ -81,6 +81,11 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
+                    elements = { "ceil", "floor" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
                     elements = { "close", "open" },
                     word = true,
                     cyclic = true,
@@ -97,11 +102,6 @@ return {
                 }),
                 augend.constant.new({
                     elements = { "down", "up" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "end", "start" },
                     word = true,
                     cyclic = true,
                 }),
@@ -142,6 +142,11 @@ return {
                 }),
                 augend.constant.new({
                     elements = { "positive", "negative" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "start", "end", "stop" },
                     word = true,
                     cyclic = true,
                 }),
