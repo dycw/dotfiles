@@ -126,6 +126,7 @@ from inspect import (
     isgeneratorfunction,
     signature,
 )
+from io import StringIO
 from itertools import (
     chain,
     count,
@@ -176,6 +177,8 @@ from uuid import UUID, uuid4
 from zlib import crc32
 from zoneinfo import ZoneInfo
 
+from utilities.dataclasses import yield_fields
+
 builtins.print(f"{dt.datetime.now():%Y-%m-%d %H:%M:%S}: Running `startup.py`...")  # noqa: DTZ005, T201
 
 
@@ -217,6 +220,7 @@ _ = [
     Sequence,
     Sized,
     StreamHandler,
+    StringIO,
     TemporaryDirectory,
     TextIO,
     TypeAlias,
@@ -1288,6 +1292,7 @@ else:
 
 try:
     from utilities.asyncio import try_await
+    from utilities.dataclasses import yield_fields
     from utilities.datetime import (
         DAY,
         EPOCH_UTC,
@@ -1316,7 +1321,17 @@ try:
         serialize_month,
     )
     from utilities.enum import ensure_enum
-    from utilities.functions import ensure_not_none, get_class, get_class_name
+    from utilities.functions import (
+        ensure_class,
+        ensure_datetime,
+        ensure_float,
+        ensure_int,
+        ensure_not_none,
+        ensure_str,
+        get_class,
+        get_class_name,
+        make_isinstance,
+    )
     from utilities.functools import partial
     from utilities.git import get_repo_root
     from utilities.iterables import groupby_lists, one
@@ -1326,17 +1341,8 @@ try:
     from utilities.pickle import read_pickle, write_pickle
     from utilities.random import SYSTEM_RANDOM, get_state
     from utilities.re import extract_group, extract_groups
-    from utilities.reprlib import custom_print, custom_repr
-    from utilities.text import ensure_str
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
-    from utilities.types import (
-        ensure_class,
-        ensure_datetime,
-        ensure_float,
-        ensure_int,
-        make_isinstance,
-    )
     from utilities.zoneinfo import (
         UTC,
         HongKong,
@@ -1352,7 +1358,6 @@ else:
     _ = [
         BackgroundTask,
         DAY,
-        safe_round,
         EPOCH_UTC,
         HALF_YEAR,
         HOUR,
@@ -1370,8 +1375,6 @@ else:
         UTC,
         WEEK,
         YEAR,
-        custom_print,
-        custom_repr,
         date_to_datetime,
         ensure_class,
         ensure_datetime,
@@ -1408,10 +1411,12 @@ else:
         partial,
         read_pickle,
         run_in_background,
+        safe_round,
         serialize_month,
         setup_logging,
         try_await,
         write_pickle,
+        yield_fields,
     ]
     try:
         from utilities.atomicwrites import writer
