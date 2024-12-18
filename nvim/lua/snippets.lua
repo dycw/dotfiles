@@ -360,6 +360,7 @@ ls.add_snippets("python", {
     s("ut-utc", { t({ "from utilities.zoneinfo import UTC", "" }) }),
     s("ut-write-pickle", { t({ "from utilities.pickle import write_pickle", "" }) }),
     s("ut-writer", { t({ "from utilities.atomicwrites import writer", "" }) }),
+    s("ut-yield-fields", { t({ "from utilities.dataclasses import yield_fields", "" }) }),
     s("ut-zoned-datetime", { t({ "from utilities.polars import zoned_datetime", "" }) }),
 
     -- whenever
