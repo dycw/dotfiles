@@ -655,11 +655,11 @@ else:
 try:
     import more_itertools
     import more_itertools as mi
-    from more_itertools import partition, split_at
+    from more_itertools import partition, split_at, unique_everseen, unique_justseen
 except ModuleNotFoundError:
     pass
 else:
-    _ = [mi, more_itertools, partition, split_at]
+    _ = [mi, more_itertools, partition, split_at, unique_everseen, unique_justseen]
 
     try:
         from utilities.iterables import (
