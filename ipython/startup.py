@@ -177,8 +177,6 @@ from uuid import UUID, uuid4
 from zlib import crc32
 from zoneinfo import ZoneInfo
 
-from utilities.dataclasses import yield_fields
-
 builtins.print(f"{dt.datetime.now():%Y-%m-%d %H:%M:%S}: Running `startup.py`...")  # noqa: DTZ005, T201
 
 
@@ -1292,7 +1290,11 @@ else:
 
 try:
     from utilities.asyncio import try_await
-    from utilities.dataclasses import yield_fields
+    from utilities.dataclasses import (
+        asdict_without_defaults,
+        repr_without_defaults,
+        yield_fields,
+    )
     from utilities.datetime import (
         DAY,
         EPOCH_UTC,
@@ -1375,6 +1377,7 @@ else:
         UTC,
         WEEK,
         YEAR,
+        asdict_without_defaults,
         date_to_datetime,
         ensure_class,
         ensure_datetime,
@@ -1410,6 +1413,7 @@ else:
         parse_month,
         partial,
         read_pickle,
+        repr_without_defaults,
         run_in_background,
         safe_round,
         serialize_month,

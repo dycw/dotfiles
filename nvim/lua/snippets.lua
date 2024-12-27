@@ -88,6 +88,7 @@ ls.add_snippets("python", {
     -- hypothesis
     s("hy-assume", { t({ "from hypothesis import assume", "" }) }),
     s("hy-booleans", { t({ "from hypothesis.strategies import booleans", "" }) }),
+    s("hy-builds", { t({ "from hypothesis.strategies import builds", "" }) }),
     s("hy-composite", { t({ "from hypothesis.strategies import composite", "" }) }),
     s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-dates", { t({ "from hypothesis.strategies import dates", "" }) }),
@@ -284,6 +285,9 @@ ls.add_snippets("python", {
     -- time
     s("ti-sleep", { t({ "from time import sleep", "" }) }),
 
+    -- tqdm
+    s("tq-tqdm", { t({ "from tqdm import tqdm", "" }) }),
+
     -- typing
     s("im-typing", { t({ "import typing", "" }) }),
     s("ty-any", { t({ "from typing import Any", "" }) }),
@@ -306,6 +310,7 @@ ls.add_snippets("python", {
     -- utilities
     s("ut-add-listener", { t({ "from utilities.eventkit import add_listener", "" }) }),
     s("ut-always-iterable", { t({ "from utilities.iterables import always_iterable", "" }) }),
+    s("ut-asdict-without-defaults", { t({ "from utilities.dataclasses import asdict_without_defaults", "" }) }),
     s("ut-cache", { t({ "from utilities.functools import cache", "" }) }),
     s("ut-check-duplicates", { t({ "from utilities.iterables import check_duplicates", "" }) }),
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
@@ -340,12 +345,14 @@ ls.add_snippets("python", {
     s("ut-one-non-unique-error", { t({ "from utilities.iterables import OneNonUniqueError", "" }) }),
     s("ut-parse-date", { t({ "from utilities.whenever import parse_date", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
-    s("ut-pathlike", { t({ "from utilities.pathlib import PathLike", "" }) }),
+    s("ut-path-like", { t({ "from utilities.pathlib import PathLike", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
+    s("ut-repr-without-defaults", { t({ "from utilities.dataclasses import repr_without_defaults", "" }) }),
     s("ut-safe-round", { t({ "from utilities.math import safe_round", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-sentinel", { t({ "from utilities.sentinel import sentinel, Sentinel", "" }) }),
     s("ut-setup-logging", { t({ "from utilities.logging import setup_logging", "" }) }),
+    s("ut-show", { t({ "from utilities.jupyter import show", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s("ut-system-random", { t({ "from utilities.random import SYSTEM_RANDOM", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
