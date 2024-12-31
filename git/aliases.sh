@@ -14,9 +14,17 @@ if command -v git >/dev/null 2>&1; then
 	gacnf() { gaa && gcnf "$@"; }
 	gacnr() { gaa && gcnr "$@"; }
 	gacr() { gaa && gcr "$@"; }
+	gac2() {
+		gaa
+		if ! gcnow; then
+			gaa
+			gcnow
+		fi
+		gp
+	}
 	# branch
-	alias gb='git branch'
-	alias gba='git branch -a'
+	gb() { git branch "$@"; }
+	gba() { gb -a "$@"; }
 	gbd() {
 		__branch=$(__branch_or_dev "$@")
 		if gbexists "${__branch}"; then
@@ -71,6 +79,8 @@ if command -v git >/dev/null 2>&1; then
 	alias gcp='git cherry-pick'
 	# clone
 	gcl() { git clone --recurse-submodules "$@"; }
+	# commit
+	gcnow() { git commit -m "Saved at $(date +"%Y-%m-%d %H:%M:%S (%a)")"; }
 	# commit + push
 	__git_commit() {
 		unset __amend __no_verify __reuse __force
