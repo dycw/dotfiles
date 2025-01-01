@@ -231,6 +231,9 @@ if command -v git >/dev/null 2>&1; then
 		gacnfw() { gacnf "$@" && gitweb; }
 		gacnrw() { gacnr "$@" && gitweb; }
 		gacrw() { gacr "$@" && gitweb; }
+		gac2w() { gac2 "$@" && gitweb; }
+		# commit
+		gcnoww() { gcnow "$@" && gitweb; }
 		# commit + push
 		gcw() { gc "$@" && gitweb; }
 		gcaw() { gca "$@" && gitweb; }
