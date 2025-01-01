@@ -14,8 +14,8 @@ if command -v git >/dev/null 2>&1; then
 	gacnf() { gaa && gcnf "$@"; }
 	gacnr() { gaa && gcnr "$@"; }
 	gacr() { gaa && gcr "$@"; }
-	gac2() { __gac2 && gp; }
-	gac2f() { __gac2 && gpf; }
+	gac2() { if __gac2; then gp; fi; }
+	gac2f() { if __gac2; then gpf; fi; }
 	__gac2() {
 		gaa
 		if ! gcnow; then
