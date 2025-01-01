@@ -14,13 +14,14 @@ if command -v git >/dev/null 2>&1; then
 	gacnf() { gaa && gcnf "$@"; }
 	gacnr() { gaa && gcnr "$@"; }
 	gacr() { gaa && gcr "$@"; }
-	gac2() {
+	gac2() { if __gac2; then gp; fi; }
+	gac2f() { if __gac2; then gpf; fi; }
+	__gac2() {
 		gaa
 		if ! gcnow; then
 			gaa
 			gcnow
 		fi
-		gp
 	}
 	# branch
 	gb() { git branch "$@"; }
@@ -231,6 +232,7 @@ if command -v git >/dev/null 2>&1; then
 		gacnfw() { gacnf "$@" && gitweb; }
 		gacnrw() { gacnr "$@" && gitweb; }
 		gacrw() { gacr "$@" && gitweb; }
+		gac2fw() { gac2f "$@" && gitweb; }
 		gac2w() { gac2 "$@" && gitweb; }
 		# commit
 		gcnoww() { gcnow "$@" && gitweb; }
