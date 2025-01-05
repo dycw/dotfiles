@@ -110,7 +110,13 @@ ls.add_snippets("python", {
     s("settings-max-examples", { t({ "@settings(max_examples=1)", "" }) }),
 
     -- ib-async
+    s("ib-cont-future", { t({ "from ib_async import ContFuture", "" }) }),
+    s("ib-crypto", { t({ "from ib_async import Crypto", "" }) }),
+    s("ib-forex", { t({ "from ib_async import Forex", "" }) }),
+    s("ib-future", { t({ "from ib_async import Future", "" }) }),
     s("ib-ib", { t({ "from ib_async import IB", "" }) }),
+    s("ib-index", { t({ "from ib_async import Index", "" }) }),
+    s("ib-stock", { t({ "from ib_async import Stock", "" }) }),
 
     -- itertools
     s("it-accumulate", { t({ "from itertools import accumulate", "" }) }),
@@ -347,6 +353,7 @@ ls.add_snippets("python", {
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-path-like", { t({ "from utilities.pathlib import PathLike", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
+    s("ut-replace-non-sentinel", { t({ "from utilities.dataclasses import replace_non_sentinel", "" }) }),
     s("ut-repr-without-defaults", { t({ "from utilities.dataclasses import repr_without_defaults", "" }) }),
     s("ut-safe-round", { t({ "from utilities.math import safe_round", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
