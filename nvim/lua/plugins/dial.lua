@@ -131,6 +131,16 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
+                    elements = { "max", "min" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "maximum", "minimum" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
                     elements = { "minor", "major" },
                     word = true,
                     cyclic = true,
