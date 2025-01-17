@@ -46,6 +46,11 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
+                    elements = { "after", "before" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
                     elements = { "and", "or" },
                     word = true,
                     cyclic = true,
