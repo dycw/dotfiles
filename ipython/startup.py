@@ -1004,6 +1004,7 @@ try:
     )
     from polars._typing import PolarsDataType, SchemaDict  # type: ignore []
     from polars.datatypes import DataTypeClass
+    from polars.exceptions import ColumnNotFoundError, InvalidOperationError
     from polars.testing import (
         assert_frame_equal,
         assert_frame_not_equal,
@@ -1048,6 +1049,7 @@ else:
         Binary,
         Boolean,
         Categorical,
+        ColumnNotFoundError,
         Config,
         DataFrame,
         DataType,
@@ -1062,6 +1064,7 @@ else:
         Int32,
         Int64,
         Int8,
+        InvalidOperationError,
         List,
         Null,
         Object,
