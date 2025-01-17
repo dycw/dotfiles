@@ -37,11 +37,11 @@
   },
   "conform.nvim": {
     "branch": "master",
-    "commit": "70019124aa4f2e6838be9fbd2007f6d13b27a96d"
+    "commit": "6dc21d4ce050c2e592d9635b7983d67baf216e3d"
   },
   "dial.nvim": {
     "branch": "master",
-    "commit": "46b4375e84e8eb771129bff6b2b1e47746601ef9"
+    "commit": "34bbd9c387c358190e61ce71017faad3dffa7a74"
   },
   "fidget.nvim": {
     "branch": "main",
@@ -53,19 +53,19 @@
   },
   "fzf-lua": {
     "branch": "main",
-    "commit": "8efb28fd24e9d55694460d0ac8fa147d7276d984"
+    "commit": "fbe21aeb147b3dc8b188b5753a8e288ecedcee5e"
   },
   "gitsigns.nvim": {
     "branch": "main",
-    "commit": "abcd00a7d5bc1a9470cb21b023c575acade3e4db"
+    "commit": "817bd848fffe82e697b4da656e3f2834cd0665c5"
   },
   "inc-rename.nvim": {
     "branch": "main",
-    "commit": "4d00cd5029e99f176128bc37ef245e2dd348191d"
+    "commit": "e510160beefa9806751d883a5945c4fe6520b633"
   },
   "indent-blankline.nvim": {
     "branch": "master",
-    "commit": "259357fa4097e232730341fa60988087d189193a"
+    "commit": "7a698a1d7ed755af9f5a88733b23ca246ce2df28"
   },
   "iswap.nvim": {
     "branch": "master",
@@ -81,7 +81,7 @@
   },
   "leap.nvim": {
     "branch": "main",
-    "commit": "c6bfb191f1161fbabace1f36f578a20ac6c7642c"
+    "commit": "67d26a13cfbf558450955ee9c76e78e03d13ee9e"
   },
   "lsp_signature.nvim": {
     "branch": "master",
@@ -101,7 +101,7 @@
   },
   "mason-lspconfig.nvim": {
     "branch": "main",
-    "commit": "97d9f1d3ad205dece6bcafd1d71cf1507608f3c7"
+    "commit": "e942edf5c85b6a2ab74059ea566cac5b3e1514a4"
   },
   "mason-tool-installer.nvim": {
     "branch": "main",
@@ -121,7 +121,7 @@
   },
   "nvim-autopairs": {
     "branch": "master",
-    "commit": "d2f791ceeb26d04d87aa54343bc94e8ad8d7be1c"
+    "commit": "3d02855468f94bf435db41b661b58ec4f48a06b7"
   },
   "nvim-bqf": {
     "branch": "main",
@@ -153,15 +153,15 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "88157521e890fe7fdf18bee22438875edd6300a6"
+    "commit": "339ccc81e08793c3af9b83882a6ebd90c9cc0d3b"
   },
   "nvim-neoclip.lua": {
     "branch": "main",
-    "commit": "108ad22f284737e93f6bd4ba5614bfe9d716be60"
+    "commit": "c4ce7f6c402872469795f8a47ffabe87e142f0fb"
   },
   "nvim-spectre": {
     "branch": "master",
-    "commit": "08be31c104df3b4b049607694ebb2b6ced4f928b"
+    "commit": "ddd7383e856a7c939cb4f5143278fe041bbb8cb9"
   },
   "nvim-surround": {
     "branch": "main",
@@ -173,15 +173,15 @@
   },
   "nvim-tree.lua": {
     "branch": "master",
-    "commit": "68fc4c20f5803444277022c681785c5edd11916d"
+    "commit": "fca0b67c0b5a31727fb33addc4d9c100736a2894"
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "306dd6e9dc806db1d79568d26e1c9b6c98b95fbc"
+    "commit": "5da195ac3dfafd08d8b10756d975f0e01e1d563a"
   },
   "nvim-treesitter-context": {
     "branch": "master",
-    "commit": "d0dd7ce5a9d0be1f28086e818e52fdc5c78975df"
+    "commit": "bece284c5322ddf6946fa4bdc383a2bc033269d7"
   },
   "nvim-treesitter-textobjects": {
     "branch": "master",
@@ -197,11 +197,11 @@
   },
   "plenary.nvim": {
     "branch": "master",
-    "commit": "2d9b06177a975543726ce5c73fca176cedbffe9d"
+    "commit": "3707cdb1e43f5cea73afb6037e6494e7ce847a66"
   },
   "rainbow-delimiters.nvim": {
     "branch": "master",
-    "commit": "5578ca6709e0e9a0c76fc7c484b9951b428cbb71"
+    "commit": "85b80abaa09cbbc039e3095b2f515b3cf8cadd11"
   },
   "sort.nvim": {
     "branch": "main",
@@ -209,7 +209,7 @@
   },
   "sqlite.lua": {
     "branch": "master",
-    "commit": "cf482586c4f24e197375235a6e310b9b9e80ba83"
+    "commit": "b487fcc8937b683942a1f7d9662fcf50ca5acd58"
   },
   "targets.vim": {
     "branch": "master",
@@ -221,11 +221,11 @@
   },
   "tokyonight.nvim": {
     "branch": "main",
-    "commit": "7bb270adaa7692c2c33befc35f5567fc596a2504"
+    "commit": "775f82f08a3d1fb55a37fc6d3a4ab10cd7ed8a10"
   },
   "trouble.nvim": {
     "branch": "main",
-    "commit": "46cf952fc115f4c2b98d4e208ed1e2dce08c9bf6"
+    "commit": "50481f414bd3c1a40122c1d759d7e424d5fafe84"
   },
   "vim-caser": {
     "branch": "master",
