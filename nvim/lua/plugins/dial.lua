@@ -41,7 +41,17 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
+                    elements = { "LOWER", "UPPER" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
                     elements = { "True", "False" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "absolute", "relative" },
                     word = true,
                     cyclic = true,
                 }),
