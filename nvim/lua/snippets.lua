@@ -4,6 +4,10 @@ local s = ls.snippet
 local t = ls.text_node
 
 ls.add_snippets("python", {
+    -- abc
+    s("ab-abc", { t({ "from abc import ABC", "" }) }),
+    s("ab-abstract-method", { t({ "from abc import abstractmethod", "" }) }),
+
     -- asyncio
     s("as-create-task", { t({ "from asyncio import create_task", "" }) }),
     s("as-get-event-loop", { t({ "from asyncio import get_event_loop", "" }) }),
@@ -13,7 +17,7 @@ ls.add_snippets("python", {
     -- beartype
     s("be-beartype", { t({ "from beartype import beartype", "" }) }),
 
-    -- beartype
+    -- bidict
     s("bi-bidict", { t({ "from bidict import bidict", "" }) }),
 
     -- breakpoints
@@ -138,6 +142,7 @@ ls.add_snippets("python", {
 
     -- math
     s("ma-inf", { t({ "from math import inf", "" }) }),
+    s("ma-isclose", { t({ "from math import isclose", "" }) }),
     s("ma-nan", { t({ "from math import nan", "" }) }),
 
     -- more-itertools
@@ -165,6 +170,7 @@ ls.add_snippets("python", {
     s("po-boolean", { t({ "from polars import Boolean", "" }) }),
     s("po-coalesce", { t({ "from polars import coalesce", "" }) }),
     s("po-col", { t({ "from polars import col", "" }) }),
+    s("po-column-not-found-error", { t({ "from polars.exceptions import ColumnNotFoundError", "" }) }),
     s("po-compute-error", { t({ "from polars.exceptions import ComputeError", "" }) }),
     s("po-concat", { t({ "from polars import concat", "" }) }),
     s("po-dataframe", { t({ "from polars import DataFrame", "" }) }),
@@ -368,6 +374,9 @@ ls.add_snippets("python", {
     s("ut-system-random", { t({ "from utilities.random import SYSTEM_RANDOM", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
     s("ut-temporary-directory", { t({ "from utilities.tempfile import TemporaryDirectory", "" }) }),
+    s("ut-text-ascii", { t({ "from utilities.hypothesis import text_ascii", "" }) }),
+    s("ut-text-ascii-lower", { t({ "from utilities.hypothesis import text_ascii_lower", "" }) }),
+    s("ut-text-ascii-upper", { t({ "from utilities.hypothesis import text_ascii_upper", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
     s("ut-timeout-dur", { t({ "from utilities.asyncio import timeout_dur", "" }) }),
     s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
@@ -380,6 +389,7 @@ ls.add_snippets("python", {
     s("ut-writer", { t({ "from utilities.atomicwrites import writer", "" }) }),
     s("ut-yield-fields", { t({ "from utilities.dataclasses import yield_fields", "" }) }),
     s("ut-zoned-datetime", { t({ "from utilities.polars import zoned_datetime", "" }) }),
+    s("ut-zoned-datetimes", { t({ "from utilities.hypothesis import zoned_datetimes", "" }) }),
 
     -- whenever
     s("wh-date-delta", { t({ "from whenever import DateDelta", "" }) }),
