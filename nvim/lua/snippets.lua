@@ -36,6 +36,7 @@ ls.add_snippets("python", {
 
     -- collections
     s("co-callable", { t({ "from collections.abc import Callable", "" }) }),
+    s("co-counter", { t({ "from collections import Counter", "" }) }),
     s("co-iterable", { t({ "from collections.abc import Iterable", "" }) }),
     s("co-iterator", { t({ "from collections.abc import Iterator", "" }) }),
     s("co-mapping", { t({ "from collections.abc import Mapping", "" }) }),
@@ -78,6 +79,7 @@ ls.add_snippets("python", {
     s("fr-frozendict", { t({ "from frozendict import frozendict", "" }) }),
 
     -- functools
+    s("fu-cached-property", { t({ "from functools import cached_property", "" }) }),
     s("fu-partial", { t({ "from functools import partial", "" }) }),
     s("fu-reduce", { t({ "from functools import reduce", "" }) }),
     s("fu-wraps", { t({ "from functools import wraps", "" }) }),
@@ -121,6 +123,9 @@ ls.add_snippets("python", {
     s("ib-ib", { t({ "from ib_async import IB", "" }) }),
     s("ib-index", { t({ "from ib_async import Index", "" }) }),
     s("ib-stock", { t({ "from ib_async import Stock", "" }) }),
+
+    -- io
+    s("io-string-io", { t({ "from io import StringIO", "" }) }),
 
     -- itertools
     s("it-accumulate", { t({ "from itertools import accumulate", "" }) }),
@@ -337,12 +342,15 @@ ls.add_snippets("python", {
     s("ut-ensure-not-none", { t({ "from utilities.functions import ensure_not_none", "" }) }),
     s("ut-ensure-number", { t({ "from utilities.functions import ensure_number", "" }) }),
     s("ut-ensure-str", { t({ "from utilities.text import ensure_str", "" }) }),
+    s("ut-ensure-suffx", { t({ "from utilities.pathlib import ensure_suffix", "" }) }),
     s("ut-extract-group", { t({ "from utilities.re import extract_group", "" }) }),
     s("ut-extract-groups", { t({ "from utilities.re import extract_groups", "" }) }),
     s("ut-get-args", { t({ "from utilities.typing import get_args", "" }) }),
+    s("ut-get-class-name", { t({ "from utilities.functions import get_class_name", "" }) }),
     s("ut-get-func-name", { t({ "from utilities.functions import get_func_name", "" }) }),
     s("ut-get-now", { t({ "from utilities.datetime import get_now", "" }) }),
     s("ut-get-repo-root", { t({ "from utilities.git import get_repo_root", "" }) }),
+    s("ut-get-state", { t({ "from utilities.random import get_state", "" }) }),
     s("ut-get-table", { t({ "from utilities.sqlalchemy import get_table", "" }) }),
     s("ut-get-today", { t({ "from utilities.datetime import get_today", "" }) }),
     s("ut-hong-kong", { t({ "from utilities.zoneinfo import HongKong", "" }) }),
