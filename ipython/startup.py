@@ -70,6 +70,7 @@ import wave
 import zipfile
 import zlib
 import zoneinfo
+from abc import ABC, ABCMeta, abstractmethod
 from asyncio import (
     create_task,
     get_event_loop,
@@ -181,6 +182,8 @@ builtins.print(f"{dt.datetime.now():%Y-%m-%d %H:%M:%S}: Running `startup.py`..."
 
 
 _ = [
+    ABC,
+    ABCMeta,
     AbstractSet,
     Annotated,
     Any,
@@ -229,6 +232,7 @@ _ = [
     Union,
     ZoneInfo,
     abc,
+    abstractmethod,
     add,
     and_,
     asdict,
@@ -837,6 +841,21 @@ else:
 
 
 try:
+    import optuna
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [optuna]
+
+    try:
+        from utilities.optuna import get_best_params, make_objective, suggest_bool
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [get_best_params, make_objective, suggest_bool]
+
+
+try:
     import orjson
 except ModuleNotFoundError:
     pass
@@ -987,6 +1006,7 @@ try:
         int_range,
         int_ranges,
         lit,
+        mean_horizontal,
         read_avro,
         read_csv,
         read_csv_batched,
@@ -1000,6 +1020,7 @@ try:
         read_ods,
         read_parquet,
         struct,
+        sum_horizontal,
         when,
     )
     from polars._typing import PolarsDataType, SchemaDict  # type: ignore []
@@ -1092,6 +1113,7 @@ else:
         int_range,
         int_ranges,
         lit,
+        mean_horizontal,
         pl,
         polars,
         read_avro,
@@ -1107,6 +1129,7 @@ else:
         read_ods,
         read_parquet,
         struct,
+        sum_horizontal,
         when,
     ]
     try:
@@ -1122,6 +1145,9 @@ else:
             dataclass_to_schema,
             floor_datetime,
             get_data_type_or_series_time_zone,
+            insert_after,
+            insert_before,
+            insert_between,
             replace_time_zone,
             zoned_datetime,
         )
@@ -1140,6 +1166,9 @@ else:
             dataclass_to_schema,
             floor_datetime,
             get_data_type_or_series_time_zone,
+            insert_after,
+            insert_before,
+            insert_between,
             replace_time_zone,
             zoned_datetime,
         ]
@@ -1356,6 +1385,7 @@ try:
     from utilities.re import extract_group, extract_groups
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
+    from utilities.types import Number
     from utilities.zoneinfo import (
         UTC,
         HongKong,
@@ -1378,6 +1408,7 @@ else:
         MINUTE,
         MONTH,
         Month,
+        Number,
         QUARTER,
         SECOND,
         SYSTEM_RANDOM,

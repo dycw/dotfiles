@@ -121,6 +121,16 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
+                    elements = { "entry", "exit" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "first", "last" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
                     elements = { "head", "tail" },
                     word = true,
                     cyclic = true,
