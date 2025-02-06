@@ -1139,6 +1139,7 @@ else:
             DatetimeUSCentral,
             DatetimeUSEastern,
             DatetimeUTC,
+            are_frames_equal,
             check_polars_dataframe,
             convert_time_zone,
             dataclass_to_dataframe,
@@ -1160,6 +1161,7 @@ else:
             DatetimeUSCentral,
             DatetimeUSEastern,
             DatetimeUTC,
+            are_frames_equal,
             check_polars_dataframe,
             convert_time_zone,
             dataclass_to_dataframe,
@@ -1379,6 +1381,7 @@ try:
     from utilities.iterables import groupby_lists, one
     from utilities.logging import setup_logging
     from utilities.math import is_integral, safe_round
+    from utilities.os import CPU_COUNT
     from utilities.pathlib import list_dir
     from utilities.pickle import read_pickle, write_pickle
     from utilities.random import SYSTEM_RANDOM, get_state
@@ -1400,6 +1403,7 @@ except ModuleNotFoundError:
 else:
     _ = [
         BackgroundTask,
+        CPU_COUNT,
         DAY,
         EPOCH_UTC,
         HALF_YEAR,

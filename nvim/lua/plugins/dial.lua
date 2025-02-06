@@ -151,6 +151,11 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
+                    elements = { "loss", "profits" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
                     elements = { "lower", "upper" },
                     word = true,
                     cyclic = true,

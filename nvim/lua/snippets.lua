@@ -134,6 +134,7 @@ ls.add_snippets("python", {
     s("it-cycle", { t({ "from itertools import cycle", "" }) }),
     s("it-groupby", { t({ "from itertools import groupby", "" }) }),
     s("it-product", { t({ "from itertools import product", "" }) }),
+    s("it-repeat", { t({ "from itertools import repeat", "" }) }),
     s("it-starmap", { t({ "from itertools import starmap", "" }) }),
 
     -- logging
@@ -216,9 +217,9 @@ ls.add_snippets("python", {
     }),
     s("ms", { t({ "@mark.skip", "" }) }),
     s("mx", { t({ "@mark.xfail", "" }) }),
+    s("pyi", { t({ "from hypothesis import reproduce_failure", "from pytest import mark, param", "" }) }),
     s("py-approx", { t({ "from pytest import approx", "" }) }),
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
-    s("py-mark", { t({ "from pytest import mark, param", "" }) }),
     s("py-param", { t({ "from pytest import param", "" }) }),
     s("py-raises", { t({ "from pytest import raises", "" }) }),
     s("py-write-pickle", {
@@ -333,6 +334,7 @@ ls.add_snippets("python", {
     s("ut-cache", { t({ "from utilities.functools import cache", "" }) }),
     s("ut-check-duplicates", { t({ "from utilities.iterables import check_duplicates", "" }) }),
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
+    s("ut-cpu-count", { t({ "from utilities.os import CPU_COUNT", "" }) }),
     s("ut-date-to-datetime", { t({ "from utilities.datetime import date_to_datetime", "" }) }),
     s("ut-duration", { t({ "from utilities.types import Duration", "" }) }),
     s("ut-ensure-date", { t({ "from utilities.functions import ensure_date", "" }) }),
