@@ -3,8 +3,6 @@ config = get_config()  # type: ignore[] # noqa: F821, INP001
 # ------------------------------------------------------------------------------
 # InteractiveShellApp(Configurable) configuration
 # ------------------------------------------------------------------------------
-config.InteractiveShellApp.exec_lines = ["%autoreload 2"]
-config.InteractiveShellApp.extensions = ["autoreload"]
 
 # ------------------------------------------------------------------------------
 # Application(SingletonConfigurable) configuration

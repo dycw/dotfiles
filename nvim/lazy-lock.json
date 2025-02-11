@@ -53,11 +53,11 @@
   },
   "fzf-lua": {
     "branch": "main",
-    "commit": "1176d512b1390f992c775f08dcb155d4e0ba01cf"
+    "commit": "8a63c9e7998a51319c3cc118bb38241c18acc9c8"
   },
   "gitsigns.nvim": {
     "branch": "main",
-    "commit": "fc56fc25cfc3dc3f24266508aa4a7096102eb6a6"
+    "commit": "4baa13519c2168cc9a7890a3580c50226ed018fb"
   },
   "inc-rename.nvim": {
     "branch": "main",
@@ -81,7 +81,7 @@
   },
   "leap.nvim": {
     "branch": "main",
-    "commit": "be8e6eee2dabc68ce810ddf2e800c14bfda09fee"
+    "commit": "8b826a9fc766bffd14288aee01847cb0d6c6c383"
   },
   "lsp_signature.nvim": {
     "branch": "master",
@@ -89,7 +89,7 @@
   },
   "lualine.nvim": {
     "branch": "master",
-    "commit": "2a5bae925481f999263d6f5ed8361baef8df4f83"
+    "commit": "f4f791f67e70d378a754d02da068231d2352e5bc"
   },
   "luasnip": {
     "branch": "master",
@@ -153,11 +153,11 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "696ac53289280a29a349f3e68624e23129341126"
+    "commit": "6c17f8656f667727b27f5f598463afedb7791b18"
   },
   "nvim-neoclip.lua": {
     "branch": "main",
-    "commit": "90e4dd66bb6b1cc0c03f01aaf8b005f69f565421"
+    "commit": "831a97c7697736411a05ff8b91e8798ea4c2d6fb"
   },
   "nvim-spectre": {
     "branch": "master",
@@ -173,15 +173,15 @@
   },
   "nvim-tree.lua": {
     "branch": "master",
-    "commit": "70825f23db61ecd900c4cfea169bffe931926a9d"
+    "commit": "80523101f0ae48b7f1990e907b685a3d79776c01"
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "824bf8455fd670186986fb3eb46fcaa4c5460949"
+    "commit": "a840137349fcc35b5ad2c718a9b034b93012fa43"
   },
   "nvim-treesitter-context": {
     "branch": "master",
-    "commit": "9a49f43a2ec9bf77aecfb0fcbc43af43338375c0"
+    "commit": "03f382ef224c27a8508cdab2d0b463dcb8ca12a6"
   },
   "nvim-treesitter-textobjects": {
     "branch": "master",
@@ -221,7 +221,7 @@
   },
   "tokyonight.nvim": {
     "branch": "main",
-    "commit": "dca4adba7dc5f09302a00b0e76078d54d82d2658"
+    "commit": "84ea0b5f4651afdf50ececaf6f110fe9d9dc9458"
   },
   "trouble.nvim": {
     "branch": "main",
