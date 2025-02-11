@@ -1,16 +1,1 @@
-layout_anaconda() {
-  local ANACONDA_HOME="/opt/miniconda3/" # Make sure this points to path of your conda install
-  PATH_add "$ANACONDA_HOME"/bin
-
-  if [ -n "$1" ]; then
-    # Explicit environment name from layout command.
-    local env="$1"
-    source activate ${env}
-  elif (grep -q name: environment.yml); then
-    local env=$(grep name: environment.yml | sed -e 's/name: //')
-    source activate "$env" || (conda env create -f environment.yml && source activate "$env")
-  else
-    (>&2 echo No environment specified);
-    exit 1;
-  fi;
-}
+#!/usr/bin/env bash
