@@ -217,7 +217,10 @@ ls.add_snippets("python", {
     }),
     s("ms", { t({ "@mark.skip", "" }) }),
     s("mx", { t({ "@mark.xfail", "" }) }),
-    s("pyi", { t({ "from hypothesis import reproduce_failure", "from pytest import mark, param", "" }) }),
+    s(
+        "pyi",
+        { t({ "from hypothesis import reproduce_failure, settings, Phase", "from pytest import mark, param", "" }) }
+    ),
     s("py-approx", { t({ "from pytest import approx", "" }) }),
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
     s("py-param", { t({ "from pytest import param", "" }) }),
@@ -331,6 +334,7 @@ ls.add_snippets("python", {
     s("ut-add-listener", { t({ "from utilities.eventkit import add_listener", "" }) }),
     s("ut-always-iterable", { t({ "from utilities.iterables import always_iterable", "" }) }),
     s("ut-asdict-without-defaults", { t({ "from utilities.dataclasses import asdict_without_defaults", "" }) }),
+    s("ut-bucket-mapping", { t({ "from utilities.more_itertools import bucket_mapping", "" }) }),
     s("ut-cache", { t({ "from utilities.functools import cache", "" }) }),
     s("ut-check-duplicates", { t({ "from utilities.iterables import check_duplicates", "" }) }),
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
@@ -394,6 +398,7 @@ ls.add_snippets("python", {
     s("ut-timeout-dur", { t({ "from utilities.asyncio import timeout_dur", "" }) }),
     s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
     s("ut-tokyo", { t({ "from utilities.zoneinfo import Tokyo", "" }) }),
+    s("ut-trace", { t({ "from utilities.traceback import trace", "" }) }),
     s("ut-transpose", { t({ "from utilities.iterables import transpose", "" }) }),
     s("ut-us-central", { t({ "from utilities.zoneinfo import USCentral", "" }) }),
     s("ut-us-eastern", { t({ "from utilities.zoneinfo import USEastern", "" }) }),
