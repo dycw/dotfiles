@@ -12,6 +12,7 @@ ls.add_snippets("python", {
     s("as-create-task", { t({ "from asyncio import create_task", "" }) }),
     s("as-get-event-loop", { t({ "from asyncio import get_event_loop", "" }) }),
     s("as-sleep", { t({ "from asyncio import sleep", "" }) }),
+    s("as-task", { t({ "from asyncio import Task", "" }) }),
     s("as-task-group", { t({ "from asyncio import TaskGroup", "" }) }),
 
     -- beartype
@@ -35,6 +36,7 @@ ls.add_snippets("python", {
     s("cl-option", { t({ "from click import option", "" }) }),
 
     -- collections
+    s("co-abstract-set", { t({ "from collections.abc import Set as AbstractSet", "" }) }),
     s("co-callable", { t({ "from collections.abc import Callable", "" }) }),
     s("co-counter", { t({ "from collections import Counter", "" }) }),
     s("co-iterable", { t({ "from collections.abc import Iterable", "" }) }),
@@ -103,6 +105,7 @@ ls.add_snippets("python", {
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
     s("hy-invalid-argument", { t({ "from hypothesis.errors import InvalidArgument", "" }) }),
+    s("hy-just", { t({ "from hypothesis.strategies import just", "" }) }),
     s("hy-lists", { t({ "from hypothesis.strategies import lists", "" }) }),
     s("hy-none", { t({ "from hypothesis.strategies import none", "" }) }),
     s("hy-phase", { t({ "from hypothesis import Phase", "" }) }),
@@ -377,12 +380,13 @@ ls.add_snippets("python", {
     s("ut-one-non-unique-error", { t({ "from utilities.iterables import OneNonUniqueError", "" }) }),
     s("ut-parse-date", { t({ "from utilities.whenever import parse_date", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
-    s("ut-path-like", { t({ "from utilities.pathlib import PathLike", "" }) }),
+    s("ut-path-like", { t({ "from utilities.types import PathLike", "" }) }),
     s("ut-period", { t({ "from utilities.period import Period", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
     s("ut-replace-non-sentinel", { t({ "from utilities.dataclasses import replace_non_sentinel", "" }) }),
     s("ut-repr-without-defaults", { t({ "from utilities.dataclasses import repr_without_defaults", "" }) }),
     s("ut-safe-round", { t({ "from utilities.math import safe_round", "" }) }),
+    s("ut-seed", { t({ "from utilities.types import Seed", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-sentinel", { t({ "from utilities.sentinel import sentinel, Sentinel", "" }) }),
     s("ut-setup-logging", { t({ "from utilities.logging import setup_logging", "" }) }),

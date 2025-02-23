@@ -692,13 +692,17 @@ else:
             one,
         ]
     try:
-        from utilities.more_itertools import partition_typeguard, peekable
+        from utilities.more_itertools import (
+            bucket_mapping,
+            partition_typeguard,
+            peekable,
+        )
     except ModuleNotFoundError:
         from more_itertools import peekable
 
         _ = [peekable]
     else:
-        _ = [partition_typeguard, peekable]
+        _ = [bucket_mapping, partition_typeguard, peekable]
 
 try:
     import numpy  # noqa: ICN001
