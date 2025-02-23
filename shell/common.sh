@@ -141,7 +141,7 @@ set editing-mode vi
 ipython_startup() { ${EDITOR} "${HOME}"/dotfiles/ipython/startup.py; }
 
 # local
-__file="${HOME}/common.local.sh"
+__file="${HOME}/common.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
