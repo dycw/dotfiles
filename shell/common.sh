@@ -140,6 +140,12 @@ set editing-mode vi
 # ipython
 ipython_startup() { ${EDITOR} "${HOME}"/dotfiles/ipython/startup.py; }
 
+# local
+__file="${HOME}/common.sh"
+if [ -f "$__file" ]; then
+	. "$__file"
+fi
+
 # neovim
 if command -v nvim >/dev/null 2>&1; then
 	cdplugins() { cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins" || exit; }
@@ -201,6 +207,11 @@ alias rmrf='rm -rf'
 if command -v ruff >/dev/null 2>&1; then
 	rf() { pre-commit run run-ruff-format --all-files; }
 	rcw() { ruff check -w "$@"; }
+fi
+
+# tailscale
+if command -v tailscale >/dev/null 2>&1; then
+	ts_status() { tailscale status; }
 fi
 
 # tmux
