@@ -99,6 +99,15 @@ case ":${PATH}:" in
 	;;
 esac
 
+# tailscale
+__dir="/Applications/Tailscale.app/Contents/MacOS"
+case ":${PATH}:" in
+*:"${__dir}":*) ;;
+*)
+	export PATH="${__dir}:${PATH}"
+	;;
+esac
+
 # xdg
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}"
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"

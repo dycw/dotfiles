@@ -203,6 +203,11 @@ if command -v ruff >/dev/null 2>&1; then
 	rcw() { ruff check -w "$@"; }
 fi
 
+# tailscale
+if command -v tailscale >/dev/null 2>&1; then
+	ts_status() { tailscale status; }
+fi
+
 # tmux
 if command -v tmux >/dev/null 2>&1; then
 	if [ -z "$TMUX" ]; then
