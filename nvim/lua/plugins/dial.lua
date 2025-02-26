@@ -131,6 +131,11 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
+                    elements = { "float", "int" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
                     elements = { "head", "tail" },
                     word = true,
                     cyclic = true,
@@ -177,6 +182,11 @@ return {
                 }),
                 augend.constant.new({
                     elements = { "on", "off" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "only", "skip" },
                     word = true,
                     cyclic = true,
                 }),

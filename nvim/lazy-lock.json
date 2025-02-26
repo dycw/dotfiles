@@ -73,7 +73,7 @@
   },
   "lazy.nvim": {
     "branch": "main",
-    "commit": "e5e9bf48211a13d9ee6c1077c88327c49c1ab4a0"
+    "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a"
   },
   "lazydev.nvim": {
     "branch": "main",
@@ -85,7 +85,7 @@
   },
   "lsp_signature.nvim": {
     "branch": "master",
-    "commit": "5b64964ed02098c85613ee3d20f96bed1dfb64cc"
+    "commit": "693b75f1dc31f5af45ceb762966a6ab00af1850b"
   },
   "lualine.nvim": {
     "branch": "master",
@@ -105,7 +105,7 @@
   },
   "mason-tool-installer.nvim": {
     "branch": "main",
-    "commit": "374c78d3ebb5c53f43ea6bd906b6587b5e899b9e"
+    "commit": "5639d58a3d11ff7c05c8e31e159bfedae55d7961"
   },
   "mason.nvim": {
     "branch": "main",
@@ -129,7 +129,7 @@
   },
   "nvim-cmp": {
     "branch": "main",
-    "commit": "12509903a5723a876abd65953109f926f4634c30"
+    "commit": "5a11682453ac6b13dbf32cd403da4ee9c07ef1c3"
   },
   "nvim-colorizer.lua": {
     "branch": "master",
@@ -153,7 +153,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "6b63bdf2399b9bedf93297d98419550523a9ad68"
+    "commit": "99c75820f2606b6b446cad7c75ec2ef7ee8a1317"
   },
   "nvim-neoclip.lua": {
     "branch": "main",
@@ -177,7 +177,7 @@
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "5774e7d3da4f681296a87fcd85d17779ad362a4f"
+    "commit": "93ce9feb4fabbb37b3e7f47d80f27be778f4d956"
   },
   "nvim-treesitter-context": {
     "branch": "master",
@@ -189,7 +189,7 @@
   },
   "nvim-various-textobjs": {
     "branch": "main",
-    "commit": "05cedb32194e1fd8e2a3c7b678d68dee7e410cdf"
+    "commit": "ea78fbdac4a2ca10e2922721233a769770afb45b"
   },
   "nvim-web-devicons": {
     "branch": "master",
@@ -253,7 +253,7 @@
   },
   "vim-tmux-navigator": {
     "branch": "master",
-    "commit": "d847ea942a5bb4d4fab6efebc9f30d787fd96e65"
+    "commit": "791dacfcfc8ccb7f6eb1c853050883b03e5a22fe"
   },
   "vim-visual-multi": {
     "branch": "master",
