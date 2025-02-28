@@ -173,6 +173,7 @@ from typing import (
     TypeGuard,
     TypeVar,
     Union,
+    overload,
 )
 from uuid import UUID, uuid4
 from zlib import crc32
@@ -318,6 +319,7 @@ _ = [
     operator,
     or_,
     os,
+    overload,
     pairwise,
     partial,
     pathlib,
@@ -770,9 +772,9 @@ try:
     from numpy.random import Generator, RandomState, default_rng
     from numpy.typing import NDArray
 except ModuleNotFoundError:
-    from math import inf, nan
+    from math import inf, log, nan
 
-    _ = [inf, nan]
+    _ = [inf, log, nan]
 else:
     _ = [
         Generator,
@@ -984,6 +986,7 @@ try:
         Datetime,
         Decimal,
         Duration,
+        Expr,
         Float32,
         Float64,
         Int8,
@@ -1027,7 +1030,11 @@ try:
         sum_horizontal,
         when,
     )
-    from polars._typing import PolarsDataType, SchemaDict  # type: ignore []
+    from polars._typing import (  # type: ignore []
+        IntoExprColumn,
+        PolarsDataType,
+        SchemaDict,
+    )
     from polars.datatypes import DataTypeClass
     from polars.exceptions import ColumnNotFoundError, InvalidOperationError
     from polars.testing import (
@@ -1083,12 +1090,14 @@ else:
         Datetime,
         Decimal,
         Duration,
+        Expr,
         Float32,
         Float64,
         Int16,
         Int32,
         Int64,
         Int8,
+        IntoExprColumn,
         InvalidOperationError,
         List,
         Null,
