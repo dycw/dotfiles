@@ -187,6 +187,7 @@ ls.add_snippets("python", {
     s("po-date-ranges", { t({ "from polars import date_ranges", "" }) }),
     s("po-datetime", { t({ "from polars import Datetime", "" }) }),
     s("po-datetime-range", { t({ "from polars import datetime_range", "" }) }),
+    s("po-duration", { t({ "from polars import Duration", "" }) }),
     s("po-enum", { t({ "from polars import Enum", "" }) }),
     s("po-expr", { t({ "from polars import Expr", "" }) }),
     s("po-float64", { t({ "from polars import Float64", "" }) }),
@@ -208,7 +209,8 @@ ls.add_snippets("python", {
     s("po-when", { t({ "from polars import when", "" }) }),
 
     -- pytest
-    s("a0", { t({ "from rich.pretty import pretty_repr", "", "assert 0, pretty_repr(locals(), max_length=5)" }) }),
+    s("a0", { t({ "assert 0, '!!!'", "" }) }),
+    s("a00", { t({ "from rich.pretty import pretty_repr", "", "assert 0, pretty_repr(locals(), max_length=5)" }) }),
     s("mo", { t({ "@mark.only", "" }) }),
     s("mmo", { t({ "marks=mark.only", "" }) }),
     s("mp", {
