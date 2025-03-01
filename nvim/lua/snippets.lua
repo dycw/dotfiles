@@ -11,6 +11,7 @@ ls.add_snippets("python", {
     -- asyncio
     s("as-create-task", { t({ "from asyncio import create_task", "" }) }),
     s("as-get-event-loop", { t({ "from asyncio import get_event_loop", "" }) }),
+    s("as-run", { t({ "from asyncio import run", "" }) }),
     s("as-sleep", { t({ "from asyncio import sleep", "" }) }),
     s("as-task", { t({ "from asyncio import Task", "" }) }),
     s("as-task-group", { t({ "from asyncio import TaskGroup", "" }) }),
