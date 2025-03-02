@@ -678,6 +678,10 @@ else:
             check_subset,
             check_superset,
             one,
+            one_maybe,
+            one_modal_value,
+            one_str,
+            one_unique,
         )
     except ModuleNotFoundError:
         from more_itertools import always_iterable, one
@@ -692,6 +696,10 @@ else:
             check_subset,
             check_superset,
             one,
+            one_maybe,
+            one_modal_value,
+            one_str,
+            one_unique,
         ]
     try:
         from utilities.more_itertools import (
@@ -1104,7 +1112,6 @@ else:
         Object,
         PolarsDataType,
         SchemaDict,
-        SchemaDict,
         Series,
         Struct,
         Time,
@@ -1344,7 +1351,6 @@ else:
 
 
 try:
-    from utilities.asyncio import try_await
     from utilities.dataclasses import (
         asdict_without_defaults,
         repr_without_defaults,
@@ -1397,7 +1403,7 @@ try:
     from utilities.os import CPU_COUNT
     from utilities.pathlib import list_dir
     from utilities.pickle import read_pickle, write_pickle
-    from utilities.random import SYSTEM_RANDOM, get_state
+    from utilities.random import SYSTEM_RANDOM, get_state, shuffle
     from utilities.re import extract_group, extract_groups
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
@@ -1412,7 +1418,7 @@ try:
         get_time_zone_name,
     )
 except ModuleNotFoundError:
-    pass
+    from random import shuffle
 else:
     _ = [
         BackgroundTask,
@@ -1477,7 +1483,6 @@ else:
         safe_round,
         serialize_month,
         setup_logging,
-        try_await,
         write_pickle,
         yield_fields,
     ]
@@ -1499,6 +1504,8 @@ else:
         pass
     else:
         _ = [insert_dataframe, select_to_dataframe]
+finally:
+    _ = [shuffle]
 
 
 try:
