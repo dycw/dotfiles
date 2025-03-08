@@ -106,6 +106,11 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
+                    elements = { "cloud", "local" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
                     elements = { "column", "row" },
                     word = true,
                     cyclic = true,
