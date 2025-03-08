@@ -156,6 +156,7 @@ ls.add_snippets("python", {
     s("ma-nan", { t({ "from math import nan", "" }) }),
 
     -- more-itertools
+    s("mi-chunked", { t({ "from more_itertools import chunked", "" }) }),
     s("mi-iterate", { t({ "from more_itertools import iterate", "" }) }),
     s("mi-partition", { t({ "from more_itertools import partition", "" }) }),
     s("mi-split-at", { t({ "from more_itertools import split_after", "" }) }),
@@ -231,6 +232,7 @@ ls.add_snippets("python", {
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
     s("py-param", { t({ "from pytest import param", "" }) }),
     s("py-raises", { t({ "from pytest import raises", "" }) }),
+    s("py-skip", { t({ "from pytest import skip", "" }) }),
     s("py-write-pickle", {
         t({
             "from utilities.git import get_repo_root",
@@ -340,6 +342,7 @@ ls.add_snippets("python", {
     s("ut-add-listener", { t({ "from utilities.eventkit import add_listener", "" }) }),
     s("ut-always-iterable", { t({ "from utilities.iterables import always_iterable", "" }) }),
     s("ut-asdict-without-defaults", { t({ "from utilities.dataclasses import asdict_without_defaults", "" }) }),
+    s("ut-bounded-task-group", { t({ "from utilities.asyncio import BoundedTaskGroup", "" }) }),
     s("ut-bucket-mapping", { t({ "from utilities.more_itertools import bucket_mapping", "" }) }),
     s("ut-cache", { t({ "from utilities.functools import cache", "" }) }),
     s("ut-check-duplicates", { t({ "from utilities.iterables import check_duplicates", "" }) }),
@@ -394,6 +397,7 @@ ls.add_snippets("python", {
     s("ut-sentinel", { t({ "from utilities.sentinel import sentinel, Sentinel", "" }) }),
     s("ut-setup-logging", { t({ "from utilities.logging import setup_logging", "" }) }),
     s("ut-show", { t({ "from utilities.jupyter import show", "" }) }),
+    s("ut-shuffle", { t({ "from utilities.random import shuffle", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s("ut-system-random", { t({ "from utilities.random import SYSTEM_RANDOM", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
@@ -413,6 +417,7 @@ ls.add_snippets("python", {
     s("ut-write-pickle", { t({ "from utilities.pickle import write_pickle", "" }) }),
     s("ut-writer", { t({ "from utilities.atomicwrites import writer", "" }) }),
     s("ut-yield-fields", { t({ "from utilities.dataclasses import yield_fields", "" }) }),
+    s("ut-yield-shelf", { t({ "from utilities.shelve import yield_shelf", "" }) }),
     s("ut-zoned-datetime", { t({ "from utilities.polars import zoned_datetime", "" }) }),
     s("ut-zoned-datetimes", { t({ "from utilities.hypothesis import zoned_datetimes", "" }) }),
 

@@ -37,7 +37,7 @@
   },
   "conform.nvim": {
     "branch": "master",
-    "commit": "a6f5bdb78caa305496357d17e962bbc4c0b392e2"
+    "commit": "db8a4a9edb217067b1d7a2e0362c74bfe9cc944d"
   },
   "dial.nvim": {
     "branch": "master",
@@ -53,7 +53,7 @@
   },
   "fzf-lua": {
     "branch": "main",
-    "commit": "ae9378a48fcf07475d93b3dc7775c2aab0b9fa7b"
+    "commit": "da9a0898541b34b95361e4223df17a7f680be070"
   },
   "gitsigns.nvim": {
     "branch": "main",
@@ -85,7 +85,7 @@
   },
   "lsp_signature.nvim": {
     "branch": "master",
-    "commit": "02a2784275e05fba89395e1d5e147d7a2b4877d2"
+    "commit": "02629e5bc38f6cb1a49bb43ff4a441f23335a933"
   },
   "lualine.nvim": {
     "branch": "master",
@@ -129,7 +129,7 @@
   },
   "nvim-cmp": {
     "branch": "main",
-    "commit": "5a11682453ac6b13dbf32cd403da4ee9c07ef1c3"
+    "commit": "c27370703e798666486e3064b64d59eaf4bdc6d5"
   },
   "nvim-colorizer.lua": {
     "branch": "master",
@@ -153,7 +153,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "a3f8422b752e03334dbaf4a46940d8aee0acdebf"
+    "commit": "fd26f8626c03b424f7140d454031d1dcb8d23513"
   },
   "nvim-neoclip.lua": {
     "branch": "main",
@@ -177,7 +177,7 @@
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "99487eb34a397befce8182ff63347a21c5f4b881"
+    "commit": "71ac531a6301b6d5f4dc4d7157ffd8bd8d6d769e"
   },
   "nvim-treesitter-context": {
     "branch": "master",
@@ -185,7 +185,7 @@
   },
   "nvim-treesitter-textobjects": {
     "branch": "master",
-    "commit": "ab0950c53d1ae04da8e488aa762b450d5241dca2"
+    "commit": "a68af6f493a89e4f1ddd72c4f14ea80a2a876b78"
   },
   "nvim-various-textobjs": {
     "branch": "main",
@@ -193,7 +193,7 @@
   },
   "nvim-web-devicons": {
     "branch": "master",
-    "commit": "1020869742ecb191f260818234517f4a1515cfe8"
+    "commit": "ab4cfee554e501f497bce0856788d43cf2eb93d7"
   },
   "plenary.nvim": {
     "branch": "master",
@@ -201,7 +201,7 @@
   },
   "rainbow-delimiters.nvim": {
     "branch": "master",
-    "commit": "2619f1a13a0053afe2266b306908de27dc18978f"
+    "commit": "c2255b20bb1accb0e83e70f995adf99b78dee13d"
   },
   "sort.nvim": {
     "branch": "main",

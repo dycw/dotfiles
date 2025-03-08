@@ -1351,6 +1351,7 @@ else:
 
 
 try:
+    from utilities.asyncio import BoundedTaskGroup, QueueProcessor
     from utilities.dataclasses import (
         asdict_without_defaults,
         repr_without_defaults,
@@ -1365,6 +1366,9 @@ try:
         MONTH,
         QUARTER,
         SECOND,
+        TODAY_HK,
+        TODAY_TOKYO,
+        TODAY_UTC,
         WEEK,
         YEAR,
         Month,
@@ -1405,6 +1409,7 @@ try:
     from utilities.pickle import read_pickle, write_pickle
     from utilities.random import SYSTEM_RANDOM, get_state, shuffle
     from utilities.re import extract_group, extract_groups
+    from utilities.shelve import yield_shelf
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
     from utilities.types import Number
@@ -1422,6 +1427,7 @@ except ModuleNotFoundError:
 else:
     _ = [
         BackgroundTask,
+        BoundedTaskGroup,
         CPU_COUNT,
         DAY,
         EPOCH_UTC,
@@ -1433,8 +1439,12 @@ else:
         Month,
         Number,
         QUARTER,
+        QueueProcessor,
         SECOND,
         SYSTEM_RANDOM,
+        TODAY_HK,
+        TODAY_TOKYO,
+        TODAY_UTC,
         Timer,
         Tokyo,
         USCentral,
@@ -1485,6 +1495,7 @@ else:
         setup_logging,
         write_pickle,
         yield_fields,
+        yield_shelf,
     ]
     try:
         from utilities.atomicwrites import writer
