@@ -25,6 +25,7 @@
     - ~/.jupyter/lab/user-settings/jupyterlab_code_formatter/
 
 - link:
+    ~/.config/direnv/direnv.toml: direnv/direnv.toml
     ~/.config/direnv/direnvrc: direnv/direnvrc
     ~/.config/git/config: git/config
     ~/.config/git/ignore: git/ignore
@@ -150,10 +151,6 @@
     - [
         "command -v prettier >/dev/null 2>&1 || brew install prettier",
         Installing prettier,
-      ]
-    - [
-        "command -v pyenv >/dev/null 2>&1 || brew install pyenv",
-        Installing pyenv,
       ]
     - [
         "command -v pyright >/dev/null 2>&1 || brew install pyright",

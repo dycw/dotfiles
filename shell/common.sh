@@ -224,11 +224,12 @@ fi
 
 # uv
 if command -v uv >/dev/null 2>&1; then
+	uva() { uv add "$@"; }
 	uvpi() { uv pip install "$@"; }
-	uvpie() { uvpi --editable .; }
 	uvpii() { uvpi ipython; }
 	uvpij() { uvpi jupyterlab jupyterlab-vim; }
-	uvps() { uv pip sync --strict requirements.txt; }
-	uvpse() { uvps && uvpie; }
+	uvpl() { uv pip list; }
+	uvplo() { uv pip list --outdated; }
 	uvpu() { uv pip uninstall "$@"; }
+	uvs() { uv sync --upgrade; }
 fi

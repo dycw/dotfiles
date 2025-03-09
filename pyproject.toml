@@ -1,7 +1,11 @@
-[tool.basedpyright]
+#
+
+# pyright
+[tool.pyright]
 exclude = ["ipython/startup.py"]
 ignore = ["ipython/startup.py"]
 
+# ruff
 [tool.ruff]
 extend-exclude = ["dotbot"]
 target-version = "py311"
