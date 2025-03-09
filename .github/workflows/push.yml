@@ -16,4 +16,4 @@ jobs:
         with:
           strategy: regex
           root: pyproject.toml
-          regex_pattern: 'current_version = (?<version>\d+\.\d+\.\d+)'
+          regex_pattern: 'current_version = "(?<version>\d+\.\d+\.\d+)"'
