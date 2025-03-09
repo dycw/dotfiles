@@ -1,7 +1,16 @@
-[tool.basedpyright]
+#
+
+# bump-my-version
+[tool.bumpversion]
+allow_dirty = true
+current_version = "0.1.228"
+
+# pyright
+[tool.pyright]
 exclude = ["ipython/startup.py"]
 ignore = ["ipython/startup.py"]
 
+# ruff
 [tool.ruff]
 extend-exclude = ["dotbot"]
 target-version = "py311"
