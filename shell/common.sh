@@ -153,14 +153,6 @@ if command -v nvim >/dev/null 2>&1; then
 	lua_snippets() { ${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua; }
 fi
 
-# pip
-pi() { pip install "$@"; }
-pie() { pi --editable .; }
-pii() { pi ipython; }
-pij() { pi jupyterlab jupyterlab-vim; }
-plo() { pip list --outdated; }
-pui() { pip uninstall "$@"; }
-
 # pre-commit
 if command -v pre-commit >/dev/null 2>&1; then
 	alias pca='pre-commit run -a'
@@ -226,9 +218,12 @@ fi
 if command -v uv >/dev/null 2>&1; then
 	uva() { uv add "$@"; }
 	uvpi() { uv pip install "$@"; }
+	pii() { uvpi ipython; }
 	uvpii() { uvpi ipython; }
+	pij() { uvpi jupyterlab jupyterlab-vim; }
 	uvpij() { uvpi jupyterlab jupyterlab-vim; }
 	uvpl() { uv pip list; }
+	plo() { uv pip list --outdated; }
 	uvplo() { uv pip list --outdated; }
 	uvpu() { uv pip uninstall "$@"; }
 	uvs() { uv sync --upgrade; }
