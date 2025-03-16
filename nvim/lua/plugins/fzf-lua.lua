@@ -144,7 +144,7 @@ return {
         keymap_set("n", "<Leader>ws", fzf_lua.lsp_live_workspace_symbols, "workspace [s]ymbols (search)")
         -- miscellaneous
         keymap_set("n", "<Leader>ac", fzf_lua.autocmds, "auto[c]mds")
-        keymap_set({ "n", "v" }, "<Leader>co", fzf_lua.commands, "[c]ommands")
+        keymap_set({ "n", "v" }, "<Leader>co", fzf_lua.commands, "c[o]mmands")
         keymap_set("n", "<Leader>ch", fzf_lua.command_history, "command [h]istory")
         keymap_set("n", "<Leader>cg", fzf_lua.changes, "chan[g]es")
         keymap_set("n", "<Leader>fl", fzf_lua.builtin, "fzf-[l]ua")

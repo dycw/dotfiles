@@ -1,0 +1,16 @@
+
+    @given(bar=bars, data=data())
+    @mark.only
+    def test_error_intel_id_invalid(self, *, bar: int, data: DataObject) -> None:
+        intel = data.draw(
+            intels(
+                execution=executions(
+                    account=accounts,
+                    bar=bar,
+                    intel_id=None,
+                    intel_ref=intel_refs(bar=bar),
+                )
+            )
+        )
+        with raises(_LiveIntel_IntelID_InvalidError):
+            _ = LiveIntel(intel=intel)
