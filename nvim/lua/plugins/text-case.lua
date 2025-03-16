@@ -6,6 +6,7 @@ return {
         require("telescope").load_extension("textcase")
 
         local keymap_set = require("utilities").keymap_set
+        keymap_set({ "n", "v" }, "<Leader>cc", "<Cmd>TextCaseOpenTelescopeQuickChange<CR>", "change [c]ase")
         keymap_set("n", "<Leader>sb", ":Subs/", "su[b]stitute")
         keymap_set("n", "<Leader>su", "<Cmd>TextCaseStartReplacingCommand<CR>", "s[u]bstitute")
     end,
