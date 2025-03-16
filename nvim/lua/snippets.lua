@@ -24,8 +24,15 @@ ls.add_snippets("python", {
 
     -- breakpoints
     s("bp", { t({ "breakpoint()", "" }) }),
-    s("if-name-main", { t({ 'if __name__ == "__main__":', "    main()", "" }) }),
+    s("gb", {
+        t({ "from utilities.contextvars import global_breakpoint", "" }),
+        t({ "global_breakpoint()", "" }),
+    }),
     s("rnie", { t({ "raise NotImplementedError", "" }) }),
+    s("sgb", {
+        t({ "from utilities.contextvars import set_global_breakpoint", "" }),
+        t({ "set_global_breakpoint()", "" }),
+    }),
 
     -- cachetools
     s("ca-ttl-cache", { t({ "from cachetools.func import ttl_cache", "" }) }),
@@ -57,6 +64,7 @@ ls.add_snippets("python", {
     s("da-astuple", { t({ "from dataclasses import astuple", "" }) }),
     s("da-dataclass", { t({ "from dataclasses import dataclass", "" }) }),
     s("da-field", { t({ "from dataclasses import field", "" }) }),
+    s("da-init-var", { t({ "from dataclasses import InitVar", "" }) }),
     s("da-replace", { t({ "from dataclasses import replace", "" }) }),
     s("dataclass-kw-sl", {
         t({ "@dataclass(kw_only=True, slots=True)", "" }),
@@ -77,6 +85,9 @@ ls.add_snippets("python", {
     s("im-enum", { t({ "import enum", "" }) }),
     s("en-auto", { t({ "from enum import auto", "" }) }),
     s("en-enum", { t({ "from enum import Enum", "" }) }),
+
+    -- errors
+    s("ex-n801", { t({ "(Exception): ...  # noqa: N801", "" }) }),
 
     -- frozendict
     s("fr-frozendict", { t({ "from frozendict import frozendict", "" }) }),
@@ -212,7 +223,6 @@ ls.add_snippets("python", {
 
     -- pytest
     s("a0", { t({ "assert 0, '!!!'", "" }) }),
-    s("a00", { t({ "from rich.pretty import pretty_repr", "", "assert 0, pretty_repr(locals(), max_length=5)" }) }),
     s("mo", { t({ "@mark.only", "" }) }),
     s("mmo", { t({ "marks=mark.only", "" }) }),
     s("mp", {
@@ -224,10 +234,11 @@ ls.add_snippets("python", {
     }),
     s("ms", { t({ "@mark.skip", "" }) }),
     s("mx", { t({ "@mark.xfail", "" }) }),
-    s(
-        "pyi",
-        { t({ "from hypothesis import reproduce_failure, settings, Phase", "from pytest import mark, param", "" }) }
-    ),
+    s("pyi", {
+        t({ "from hypothesis import Phase, reproduce_failure, settings", "" }),
+        t({ "from pytest import mark, param", "" }),
+        t({ "from utilities.contextvars import set_global_breakpoint", "" }),
+    }),
     s("py-approx", { t({ "from pytest import approx", "" }) }),
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
     s("py-param", { t({ "from pytest import param", "" }) }),
@@ -282,6 +293,9 @@ ls.add_snippets("python", {
     -- rich
     s("rp", { t({ "from rich import print as rp", "" }) }),
     s("ri-pretty-repr", { t({ "from rich.pretty import pretty_repr", "" }) }),
+
+    -- scripts
+    s("if-name-main", { t({ 'if __name__ == "__main__":', "    main()", "" }) }),
 
     -- shutil
     s("sh-rmtree", { t({ "from shutil import rmtree", "" }) }),
@@ -376,6 +390,7 @@ ls.add_snippets("python", {
     s("ut-insert-dataframe", { t({ "from utilities.sqlalchemy_polars import insert_dataframe", "" }) }),
     s("ut-insert-items", { t({ "from utilities.sqlalchemy import insert_items", "" }) }),
     s("ut-int-arrays", { t({ "from utilities.hypothesis import int_arrays", "" }) }),
+    s("ut-is-pytest", { t({ "from utilities.pytest import is_pytest", "" }) }),
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
     s("ut-log-level", { t({ "from utilities.logging import LogLevel", "" }) }),
