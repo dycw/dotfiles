@@ -106,6 +106,7 @@ ls.add_snippets("python", {
     s("hu-naturaltime", { t({ "from humanize import naturaltime", "" }) }),
 
     -- hypothesis
+    s("da-data-object", { t({ "data: DataObject" }) }),
     s("hy-assume", { t({ "from hypothesis import assume", "" }) }),
     s("hy-booleans", { t({ "from hypothesis.strategies import booleans", "" }) }),
     s("hy-builds", { t({ "from hypothesis.strategies import builds", "" }) }),
@@ -120,6 +121,7 @@ ls.add_snippets("python", {
     s("hy-just", { t({ "from hypothesis.strategies import just", "" }) }),
     s("hy-lists", { t({ "from hypothesis.strategies import lists", "" }) }),
     s("hy-none", { t({ "from hypothesis.strategies import none", "" }) }),
+    s("hy-permutations", { t({ "from hypothesis.strategies import permutations", "" }) }),
     s("hy-phase", { t({ "from hypothesis import Phase", "" }) }),
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
     s("hy-sampled-from", { t({ "from hypothesis.strategies import sampled_from", "" }) }),
@@ -395,6 +397,7 @@ ls.add_snippets("python", {
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
     s("ut-log-level", { t({ "from utilities.logging import LogLevel", "" }) }),
     s("ut-minute", { t({ "from utilities.datetime import MINUTE", "" }) }),
+    s("ut-month", { t({ "from utilities.datetime import Month", "" }) }),
     s("ut-number", { t({ "from utilities.types import Number", "" }) }),
     s("ut-one", { t({ "from utilities.iterables import one", "" }) }),
     s("ut-one-empty-error", { t({ "from utilities.iterables import OneEmptyError", "" }) }),
