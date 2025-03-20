@@ -679,7 +679,6 @@ else:
             check_superset,
             one,
             one_maybe,
-            one_modal_value,
             one_str,
             one_unique,
         )
@@ -697,7 +696,6 @@ else:
             check_superset,
             one,
             one_maybe,
-            one_modal_value,
             one_str,
             one_unique,
         ]
@@ -1352,11 +1350,7 @@ else:
 
 try:
     from utilities.asyncio import BoundedTaskGroup, QueueProcessor
-    from utilities.dataclasses import (
-        asdict_without_defaults,
-        repr_without_defaults,
-        yield_fields,
-    )
+    from utilities.dataclasses import dataclass_repr, dataclass_to_dict, yield_fields
     from utilities.datetime import (
         DAY,
         EPOCH_UTC,
@@ -1425,6 +1419,8 @@ try:
     )
 except ModuleNotFoundError:
     from random import shuffle
+
+    _ = [shuffle]
 else:
     _ = [
         BackgroundTask,
@@ -1453,7 +1449,8 @@ else:
         UTC,
         WEEK,
         YEAR,
-        asdict_without_defaults,
+        dataclass_repr,
+        dataclass_to_dict,
         date_to_datetime,
         datetime_utc,
         ensure_class,
@@ -1490,11 +1487,11 @@ else:
         parse_month,
         partial,
         read_pickle,
-        repr_without_defaults,
         run_in_background,
         safe_round,
         serialize_month,
         setup_logging,
+        shuffle,
         write_pickle,
         yield_fields,
         yield_shelf,
@@ -1517,8 +1514,6 @@ else:
         pass
     else:
         _ = [insert_dataframe, select_to_dataframe]
-finally:
-    _ = [shuffle]
 
 
 try:
