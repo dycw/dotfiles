@@ -151,6 +151,7 @@ if command -v nvim >/dev/null 2>&1; then
 	cdplugins() { cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins" || exit; }
 	n() { nvim "$@"; }
 	lua_snippets() { ${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua; }
+	plugins_dial() { ${EDITOR} "${HOME}"/dotfiles/nvim/lua/plugins/dial.lua; }
 fi
 
 # pre-commit
