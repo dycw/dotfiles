@@ -15,6 +15,7 @@ if command -v git >/dev/null 2>&1; then
 	gacnr() { gaa && gcnr "$@"; }
 	gacr() { gaa && gcr "$@"; }
 	gac2() { if __gac2; then gp; fi; }
+	gac2e() { if __gac2; then exit; fi; }
 	gac2f() { if __gac2; then gpf; fi; }
 	__gac2() {
 		gaa
