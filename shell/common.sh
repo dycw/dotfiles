@@ -131,8 +131,11 @@ fi
 hypothesis_ci() { export HYPOTHESIS_PROFILE='ci'; }
 hypothesis_debug() { export HYPOTHESIS_PROFILE='debug'; }
 hypothesis_default() { export HYPOTHESIS_PROFILE='default'; }
-hypothesis_dev() { export HYPOTHESIS_PROFILE='dev'; }
-hypothesis_no_shrinke() { export HYPOTHESIS_NO_SHRINK='default'; }
+hypothesis_dev() {
+	export HYPOTHESIS_PROFILE='dev'
+	hypothesis_no_shrink
+}
+hypothesis_no_shrink() { export HYPOTHESIS_NO_SHRINK='1'; }
 
 # input
 set bell-style none
