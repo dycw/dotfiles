@@ -128,10 +128,14 @@ if [ -f "$__file" ]; then
 fi
 
 # hypothesis
-hypothesis_ci() { export HYPOTHESIS_PROFILE=ci; }
-hypothesis_debug() { export HYPOTHESIS_PROFILE=debug; }
-hypothesis_default() { export HYPOTHESIS_PROFILE=default; }
-hypothesis_dev() { export HYPOTHESIS_PROFILE=dev; }
+hypothesis_ci() { export HYPOTHESIS_PROFILE='ci'; }
+hypothesis_debug() { export HYPOTHESIS_PROFILE='debug'; }
+hypothesis_default() { export HYPOTHESIS_PROFILE='default'; }
+hypothesis_dev() {
+	export HYPOTHESIS_PROFILE='dev'
+	hypothesis_no_shrink
+}
+hypothesis_no_shrink() { export HYPOTHESIS_NO_SHRINK='1'; }
 
 # input
 set bell-style none
@@ -151,6 +155,7 @@ if command -v nvim >/dev/null 2>&1; then
 	cdplugins() { cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins" || exit; }
 	n() { nvim "$@"; }
 	lua_snippets() { ${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua; }
+	plugins_dial() { ${EDITOR} "${HOME}"/dotfiles/nvim/lua/plugins/dial.lua; }
 fi
 
 # pre-commit
