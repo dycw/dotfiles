@@ -345,7 +345,7 @@ ls.add_snippets("python", {
     s("im-typing", { t({ "import typing", "" }) }),
     s("ty-any", { t({ "from typing import Any", "" }) }),
     s("ty-cast", { t({ "from typing import cast", "" }) }),
-    s("ty-class-vas", { t({ "from typing import ClassVar", "" }) }),
+    s("ty-class-var", { t({ "from typing import ClassVar", "" }) }),
     s("ty-generic", { t({ "from typing import Generic", "" }) }),
     s("ty-literal", { t({ "from typing import Literal", "" }) }),
     s("ty-not-required", { t({ "from typing import NotRequired", "" }) }),
