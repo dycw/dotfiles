@@ -1407,7 +1407,8 @@ try:
     from utilities.shelve import yield_shelf
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
-    from utilities.types import Number
+    from utilities.types import Number, StrMapping, TimeZone
+    from utilities.typing import get_args, get_literal_elements
     from utilities.zoneinfo import (
         UTC,
         HongKong,
@@ -1439,9 +1440,11 @@ else:
         QueueProcessor,
         SECOND,
         SYSTEM_RANDOM,
+        StrMapping,
         TODAY_HK,
         TODAY_TOKYO,
         TODAY_UTC,
+        TimeZone,
         Timer,
         Tokyo,
         USCentral,
@@ -1464,9 +1467,11 @@ else:
         ensure_time_zone,
         extract_group,
         extract_groups,
+        get_args,
         get_class,
         get_class_name,
         get_half_years,
+        get_literal_elements,
         get_months,
         get_now,
         get_now_hk,

@@ -60,6 +60,7 @@ return {
                     "--unfixable=RET504", -- unnecessary-assign
                     "--unfixable=SIM102", -- collapsible-if
                     "--unfixable=PYI016", -- duplicate-union-member
+                    "--unfixable=PYI018", -- unused-private-type-var
                     "--unfixable=SIM105", -- suppressible-exception
                     "--unfixable=SIM114", -- if-with-same-arms
                     "--unfixable=T201", -- print
