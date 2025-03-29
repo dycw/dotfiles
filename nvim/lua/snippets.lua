@@ -45,6 +45,7 @@ ls.add_snippets("python", {
 
     -- collections
     s("co-abstract-set", { t({ "from collections.abc import Set as AbstractSet", "" }) }),
+    s("co-awaitable", { t({ "from collections.abc import Awaitable", "" }) }),
     s("co-callable", { t({ "from collections.abc import Callable", "" }) }),
     s("co-counter", { t({ "from collections import Counter", "" }) }),
     s("co-iterable", { t({ "from collections.abc import Iterable", "" }) }),
@@ -87,6 +88,7 @@ ls.add_snippets("python", {
     s("en-enum", { t({ "from enum import Enum", "" }) }),
 
     -- errors
+    s("no-t201", { t({ "# noqa: T201", "" }) }),
     s("ex-n801", { t({ "(Exception): ...  # noqa: N801", "" }) }),
 
     -- frozendict
@@ -123,6 +125,7 @@ ls.add_snippets("python", {
     s("hy-none", { t({ "from hypothesis.strategies import none", "" }) }),
     s("hy-permutations", { t({ "from hypothesis.strategies import permutations", "" }) }),
     s("hy-phase", { t({ "from hypothesis import Phase", "" }) }),
+    s("hy-randoms", { t({ "from hypothesis.strategies import randoms", "" }) }),
     s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
     s("hy-sampled-from", { t({ "from hypothesis.strategies import sampled_from", "" }) }),
     s("hy-sets", { t({ "from hypothesis.strategies import sets", "" }) }),
@@ -140,6 +143,9 @@ ls.add_snippets("python", {
     s("ib-ib", { t({ "from ib_async import IB", "" }) }),
     s("ib-index", { t({ "from ib_async import Index", "" }) }),
     s("ib-stock", { t({ "from ib_async import Stock", "" }) }),
+
+    -- inspect
+    s("in-signature", { t({ "from inspect import signature", "" }) }),
 
     -- io
     s("io-string-io", { t({ "from io import StringIO", "" }) }),
@@ -339,6 +345,7 @@ ls.add_snippets("python", {
     s("im-typing", { t({ "import typing", "" }) }),
     s("ty-any", { t({ "from typing import Any", "" }) }),
     s("ty-cast", { t({ "from typing import cast", "" }) }),
+    s("ty-class-var", { t({ "from typing import ClassVar", "" }) }),
     s("ty-generic", { t({ "from typing import Generic", "" }) }),
     s("ty-literal", { t({ "from typing import Literal", "" }) }),
     s("ty-not-required", { t({ "from typing import NotRequired", "" }) }),
