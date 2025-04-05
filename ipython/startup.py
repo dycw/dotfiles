@@ -72,6 +72,10 @@ import zlib
 import zoneinfo
 from abc import ABC, ABCMeta, abstractmethod
 from asyncio import (
+    Queue,
+    QueueEmpty,
+    QueueFull,
+    TaskGroup,
     create_task,
     get_event_loop,
     get_running_loop,
@@ -148,6 +152,7 @@ from os import environ, getenv
 from pathlib import Path
 from re import escape, findall, search
 from shutil import copyfile, rmtree
+from statistics import fmean, mean
 from subprocess import PIPE, CalledProcessError, check_call, check_output, run
 from sys import exc_info, stderr, stdout
 from tempfile import TemporaryDirectory
@@ -174,6 +179,7 @@ from typing import (
     TypeVar,
     Union,
     overload,
+    override,
 )
 from uuid import UUID, uuid4
 from zlib import crc32
@@ -217,12 +223,16 @@ _ = [
     Path,
     Pool,
     Protocol,
+    Queue,
+    QueueEmpty,
+    QueueFull,
     Required,
     Self,
     Sequence,
     Sized,
     StreamHandler,
     StringIO,
+    TaskGroup,
     TemporaryDirectory,
     TextIO,
     TypeAlias,
@@ -276,6 +286,7 @@ _ = [
     field,
     fields,
     findall,
+    fmean,
     fractions,
     ftplib,
     functools,
@@ -310,6 +321,7 @@ _ = [
     make_dataclass,
     math,
     md5,
+    mean,
     mul,
     multiprocessing,
     neg,
@@ -320,6 +332,7 @@ _ = [
     or_,
     os,
     overload,
+    override,
     pairwise,
     partial,
     pathlib,
@@ -580,11 +593,11 @@ else:
 
 try:
     import ib_async
-    from ib_async import IB, Contract, Trade
+    from ib_async import IB, Contract, RealTimeBar, RealTimeBarList, Trade
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Contract, IB, ib_async, Trade]
+    _ = [Contract, IB, RealTimeBar, RealTimeBarList, Trade, ib_async]
 
 
 try:
@@ -1349,7 +1362,7 @@ else:
 
 
 try:
-    from utilities.asyncio import BoundedTaskGroup, QueueProcessor
+    from utilities.asyncio import EnhancedTaskGroup, QueueProcessor
     from utilities.dataclasses import dataclass_repr, dataclass_to_dict, yield_fields
     from utilities.datetime import (
         DAY,
@@ -1401,6 +1414,7 @@ try:
     from utilities.math import is_integral, safe_round
     from utilities.os import CPU_COUNT
     from utilities.pathlib import list_dir
+    from utilities.period import Period
     from utilities.pickle import read_pickle, write_pickle
     from utilities.random import SYSTEM_RANDOM, get_state, shuffle
     from utilities.re import extract_group, extract_groups
@@ -1425,10 +1439,10 @@ except ModuleNotFoundError:
 else:
     _ = [
         BackgroundTask,
-        BoundedTaskGroup,
         CPU_COUNT,
         DAY,
         EPOCH_UTC,
+        EnhancedTaskGroup,
         HALF_YEAR,
         HOUR,
         HongKong,
@@ -1436,6 +1450,7 @@ else:
         MONTH,
         Month,
         Number,
+        Period,
         QUARTER,
         QueueProcessor,
         SECOND,

@@ -114,6 +114,7 @@ fi
 # gh
 if command -v gh >/dev/null 2>&1; then
 	ghc() { gh pr create "$@"; }
+	ghic() { gh issue create "$@"; }
 	ghm() { gh pr merge --auto "$@"; }
 	ghcm() { gh pr create && gh pr merge --auto "$@"; }
 fi
