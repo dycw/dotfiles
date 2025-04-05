@@ -114,7 +114,19 @@ fi
 # gh
 if command -v gh >/dev/null 2>&1; then
 	ghc() { gh pr create "$@"; }
-	ghic() { gh issue create "$@"; }
+	ghic() {
+		case $# in
+		1)
+			gh issue create --title="$1"
+			;;
+		*)
+			title="$1"
+			label="$2"
+			shift 2
+			echo gh issue create --title="$title" --label="$label" "$@"
+			;;
+		esac
+	}
 	ghm() { gh pr merge --auto "$@"; }
 	ghcm() { gh pr create && gh pr merge --auto "$@"; }
 fi
