@@ -114,6 +114,10 @@
         Installing bottom,
       ]
     - [
+        "command -v bump-my-version >/dev/null 2>&1 || brew install bump-my-version",
+        Installing bump-my-version,
+      ]
+    - [
         "command -v cmake >/dev/null 2>&1 || brew install cmake",
         Installing cmake,
       ]
@@ -204,10 +208,6 @@
     - [
         "[ -f ${HOME}/.config/fzf/fzf.zsh] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
         Configuring fzf,
-      ]
-    - [
-        "command -v bump2version >/dev/null 2>&1 || pipx install bump2version",
-        Installing bump2version,
       ]
     - [
         "command -v pdfarranger >/dev/null 2>&1 || sudo snap install pdfarranger",
