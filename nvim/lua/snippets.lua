@@ -136,13 +136,19 @@ ls.add_snippets("python", {
     s("settings-max-examples", { t({ "@settings(max_examples=1)", "" }) }),
 
     -- ib-async
+    s("ib-commission-report", { t({ "from ib_async import CommissionReport", "" }) }),
     s("ib-cont-future", { t({ "from ib_async import ContFuture", "" }) }),
     s("ib-crypto", { t({ "from ib_async import Crypto", "" }) }),
+    s("ib-execution", { t({ "from ib_async import Execution", "" }) }),
     s("ib-forex", { t({ "from ib_async import Forex", "" }) }),
+    s("ib-fill", { t({ "from ib_async import Fill", "" }) }),
     s("ib-future", { t({ "from ib_async import Future", "" }) }),
     s("ib-ib", { t({ "from ib_async import IB", "" }) }),
     s("ib-index", { t({ "from ib_async import Index", "" }) }),
+    s("ib-order", { t({ "from ib_async import Order", "" }) }),
+    s("ib-order-status", { t({ "from ib_async import OrderStatus", "" }) }),
     s("ib-stock", { t({ "from ib_async import Stock", "" }) }),
+    s("ib-trade", { t({ "from ib_async import Trade", "" }) }),
 
     -- inspect
     s("in-signature", { t({ "from inspect import signature", "" }) }),
@@ -164,10 +170,8 @@ ls.add_snippets("python", {
     s("lo-formatter", { t({ "from logging import Formatter", "" }) }),
     s("lo-get-logger", { t({ "from logging import getLogger", "" }) }),
     s("lo-handler", { t({ "from logging import Handler", "" }) }),
+    s("lo-logger", { t({ "from logging import getLogger", "", "_LOGGER = getLogger(__name__)", "" }) }),
     s("lo-stream-handler", { t({ "from logging import StreamHandler", "" }) }),
-
-    -- loguru
-    s("lo-logger", { t({ "from loguru import logger", "" }) }),
 
     -- math
     s("ma-inf", { t({ "from math import inf", "" }) }),
@@ -292,7 +296,7 @@ ls.add_snippets("python", {
     s("re-sub", { t({ "from re import sub", "" }) }),
 
     -- redis
-    s("re-redis", { t({ "from redis import Redis", "" }) }),
+    s("re-redis", { t({ "from redis.asyncio import Redis", "" }) }),
 
     -- reprlib
     s("im-rep", { t({ "import reprlib", "" }) }),
@@ -314,6 +318,10 @@ ls.add_snippets("python", {
     s("sq-or", { t({ "from sqlalchemy import or_", "" }) }),
     s("sq-select", { t({ "from sqlalchemy import select", "" }) }),
     s("sq-text", { t({ "from sqlalchemy import text", "" }) }),
+
+    -- statistics
+    s("st-fmean", { t({ "from statistics import fmean", "" }) }),
+    s("st-mean", { t({ "from statistics import mean", "" }) }),
 
     -- subprocess
     s("su-check-call", { t({ "from subprocess import check_call", "" }) }),
@@ -365,6 +373,7 @@ ls.add_snippets("python", {
     -- utilities
     s("ut-add-listener", { t({ "from utilities.eventkit import add_listener", "" }) }),
     s("ut-always-iterable", { t({ "from utilities.iterables import always_iterable", "" }) }),
+    s("ut-bernoulli", { t({ "from utilities.random import bernoulli", "" }) }),
     s("ut-bounded-task-group", { t({ "from utilities.asyncio import BoundedTaskGroup", "" }) }),
     s("ut-bucket-mapping", { t({ "from utilities.more_itertools import bucket_mapping", "" }) }),
     s("ut-cache", { t({ "from utilities.functools import cache", "" }) }),
