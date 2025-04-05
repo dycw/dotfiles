@@ -88,6 +88,10 @@
         Installing bottom,
       ]
     - [
+        "command -v bump-my-version >/dev/null 2>&1 || brew install bump-my-version",
+        Installing bump-my-version,
+      ]
+    - [
         "command -v cmake >/dev/null 2>&1 || brew install cmake",
         Installing cmake,
       ]
