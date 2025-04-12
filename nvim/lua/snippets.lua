@@ -10,6 +10,7 @@ ls.add_snippets("python", {
 
     -- asyncio
     s("as-create-task", { t({ "from asyncio import create_task", "" }) }),
+    s("as-event", { t({ "from asyncio import Event", "" }) }),
     s("as-get-event-loop", { t({ "from asyncio import get_event_loop", "" }) }),
     s("as-run", { t({ "from asyncio import run", "" }) }),
     s("as-sleep", { t({ "from asyncio import sleep", "" }) }),
@@ -323,6 +324,9 @@ ls.add_snippets("python", {
     s("st-fmean", { t({ "from statistics import fmean", "" }) }),
     s("st-mean", { t({ "from statistics import mean", "" }) }),
 
+    -- string
+    s("st-ascii-letters", { t({ "from string import ascii_letters", "" }) }),
+
     -- subprocess
     s("su-check-call", { t({ "from subprocess import check_call", "" }) }),
     s("su-check-output", { t({ "from subprocess import check_output", "" }) }),
@@ -414,6 +418,9 @@ ls.add_snippets("python", {
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
     s("ut-log-level", { t({ "from utilities.logging import LogLevel", "" }) }),
+    s("ut-merge-mappings", { t({ "from utilities.iterables import merge_mappings", "" }) }),
+    s("ut-merge-sets", { t({ "from utilities.iterables import merge_sets", "" }) }),
+    s("ut-merge-str-mappings", { t({ "from utilities.iterables import merge_str_mappings", "" }) }),
     s("ut-minute", { t({ "from utilities.datetime import MINUTE", "" }) }),
     s("ut-month", { t({ "from utilities.datetime import Month", "" }) }),
     s("ut-number", { t({ "from utilities.types import Number", "" }) }),
@@ -431,12 +438,14 @@ ls.add_snippets("python", {
     s("ut-seed", { t({ "from utilities.types import Seed", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-sentinel", { t({ "from utilities.sentinel import sentinel, Sentinel", "" }) }),
+    s("ut-serialize-zoned-datetime", { t({ "from utilities.whenever import serialize_zoned_datetime" }) }),
     s("ut-setup-logging", { t({ "from utilities.logging import setup_logging", "" }) }),
     s("ut-show", { t({ "from utilities.jupyter import show", "" }) }),
     s("ut-shuffle", { t({ "from utilities.random import shuffle", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s("ut-system-random", { t({ "from utilities.random import SYSTEM_RANDOM", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
+    s("ut-temp-paths", { t({ "from utilities.hypothesis import temp_paths", "" }) }),
     s("ut-temporary-directory", { t({ "from utilities.tempfile import TemporaryDirectory", "" }) }),
     s("ut-text-ascii", { t({ "from utilities.hypothesis import text_ascii", "" }) }),
     s("ut-text-ascii-lower", { t({ "from utilities.hypothesis import text_ascii_lower", "" }) }),

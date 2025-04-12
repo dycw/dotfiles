@@ -123,7 +123,7 @@ if command -v gh >/dev/null 2>&1; then
 			title="$1"
 			label="$2"
 			shift 2
-			echo gh issue create --title="$title" --label="$label" "$@"
+			gh issue create --title="$title" --label="$label" "$@"
 			;;
 		esac
 	}
