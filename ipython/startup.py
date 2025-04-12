@@ -109,6 +109,7 @@ from contextlib import (
     suppress,
 )
 from dataclasses import (
+    InitVar,
     asdict,
     astuple,
     dataclass,
@@ -145,7 +146,7 @@ from itertools import (
     starmap,
     takewhile,
 )
-from logging import Formatter, StreamHandler, getLogger
+from logging import Formatter, LogRecord, StreamHandler, getLogger
 from multiprocessing import Pool, cpu_count
 from operator import add, and_, mul, neg, or_, sub, truediv
 from os import environ, getenv
@@ -211,10 +212,12 @@ _ = [
     Generic,
     Hashable,
     IO,
+    InitVar,
     IntEnum,
     Iterable,
     Iterator,
     Literal,
+    LogRecord,
     Mapping,
     NewType,
     NoReturn,
@@ -688,6 +691,7 @@ else:
             OneError,
             OneNonUniqueError,
             always_iterable,
+            check_duplicates,
             check_subset,
             check_superset,
             one,
@@ -705,6 +709,7 @@ else:
             OneError,
             OneNonUniqueError,
             always_iterable,
+            check_duplicates,
             check_subset,
             check_superset,
             one,
@@ -1386,6 +1391,7 @@ try:
         get_months,
         get_now,
         get_now_hk,
+        get_now_local,
         get_now_tokyo,
         get_quarters,
         get_today,
@@ -1410,7 +1416,7 @@ try:
     from utilities.functools import partial
     from utilities.git import get_repo_root
     from utilities.iterables import groupby_lists, one
-    from utilities.logging import setup_logging
+    from utilities.logging import SizeAndTimeRotatingFileHandler, setup_logging
     from utilities.math import is_integral, safe_round
     from utilities.os import CPU_COUNT
     from utilities.pathlib import list_dir
@@ -1427,8 +1433,6 @@ try:
         UTC,
         HongKong,
         Tokyo,
-        USCentral,
-        USEastern,
         ensure_time_zone,
         get_time_zone_name,
     )
@@ -1455,6 +1459,7 @@ else:
         QueueProcessor,
         SECOND,
         SYSTEM_RANDOM,
+        SizeAndTimeRotatingFileHandler,
         StrMapping,
         TODAY_HK,
         TODAY_TOKYO,
@@ -1462,8 +1467,6 @@ else:
         TimeZone,
         Timer,
         Tokyo,
-        USCentral,
-        USEastern,
         UTC,
         WEEK,
         YEAR,
@@ -1490,6 +1493,7 @@ else:
         get_months,
         get_now,
         get_now_hk,
+        get_now_local,
         get_now_tokyo,
         get_quarters,
         get_repo_root,
@@ -1534,6 +1538,12 @@ else:
         pass
     else:
         _ = [insert_dataframe, select_to_dataframe]
+    try:
+        from utilities.tzdata import USCentral, USEastern
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [USCentral, USEastern]
 
 
 try:
