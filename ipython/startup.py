@@ -872,13 +872,15 @@ else:
 
 try:
     import optuna
+    from optuna import Trial, create_study, create_trial
 except ModuleNotFoundError:
     pass
 else:
-    _ = [optuna]
+    _ = [Trial, create_study, create_trial, optuna]
 
     try:
         from utilities.optuna import get_best_params, make_objective, suggest_bool
+
     except ModuleNotFoundError:
         pass
     else:

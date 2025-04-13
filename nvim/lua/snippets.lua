@@ -117,6 +117,7 @@ ls.add_snippets("python", {
     s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-dates", { t({ "from hypothesis.strategies import dates", "" }) }),
     s("hy-datetimes", { t({ "from hypothesis.strategies import datetimes", "" }) }),
+    s("hy-draw-fn", { t({ "from hypothesis.strategies import DrawFn", "" }) }),
     s("hy-floats", { t({ "from hypothesis.strategies import floats", "" }) }),
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
