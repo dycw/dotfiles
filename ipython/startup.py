@@ -897,7 +897,6 @@ else:
 
     try:
         from utilities.optuna import get_best_params, make_objective, suggest_bool
-
     except ModuleNotFoundError:
         pass
     else:
