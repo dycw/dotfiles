@@ -117,6 +117,7 @@ ls.add_snippets("python", {
     s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
     s("hy-dates", { t({ "from hypothesis.strategies import dates", "" }) }),
     s("hy-datetimes", { t({ "from hypothesis.strategies import datetimes", "" }) }),
+    s("hy-draw-fn", { t({ "from hypothesis.strategies import DrawFn", "" }) }),
     s("hy-floats", { t({ "from hypothesis.strategies import floats", "" }) }),
     s("hy-given", { t({ "from hypothesis import given", "" }) }),
     s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
@@ -194,6 +195,13 @@ ls.add_snippets("python", {
     s("op-or", { t({ "from operator import or_", "" }) }),
     s("op-sub", { t({ "from operator import sub", "" }) }),
     s("op-truediv", { t({ "from operator import truediv", "" }) }),
+
+    -- optuna
+    s("op-base-pruner", { t({ "from optuna.pruners import BasePruner", "" }) }),
+    s("op-base-sampler", { t({ "from optuna.samplers import BaseSampler", "" }) }),
+    s("op-study", { t({ "from optuna import Study", "" }) }),
+    s("op-study-direction", { t({ "from optuna.study import StudyDirection", "" }) }),
+    s("op-trial", { t({ "from optuna import Trial", "" }) }),
 
     -- pathlib
     s("pa-path", { t({ "from pathlib import Path", "" }) }),
@@ -456,8 +464,8 @@ ls.add_snippets("python", {
     s("ut-tokyo", { t({ "from utilities.zoneinfo import Tokyo", "" }) }),
     s("ut-trace", { t({ "from utilities.traceback import trace", "" }) }),
     s("ut-transpose", { t({ "from utilities.iterables import transpose", "" }) }),
-    s("ut-us-central", { t({ "from utilities.zoneinfo import USCentral", "" }) }),
-    s("ut-us-eastern", { t({ "from utilities.zoneinfo import USEastern", "" }) }),
+    s("ut-us-central", { t({ "from utilities.tzdata import USCentral", "" }) }),
+    s("ut-us-eastern", { t({ "from utilities.tzdata import USEastern", "" }) }),
     s("ut-utc", { t({ "from utilities.zoneinfo import UTC", "" }) }),
     s("ut-write-pickle", { t({ "from utilities.pickle import write_pickle", "" }) }),
     s("ut-writer", { t({ "from utilities.atomicwrites import writer", "" }) }),
