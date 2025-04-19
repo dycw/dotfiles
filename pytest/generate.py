@@ -136,9 +136,9 @@ def yield_aliases() -> Iterator[Alias]:
 
 def main() -> None:
     """Echo all the commands, ready for piping to a script."""
-    info("#!/usr/bin/env bash")
+    info("#!/usr/bin/env bash")  # noqa: LOG015
     for alias in sorted(yield_aliases(), key=str):
-        info(alias)
+        info(alias)  # noqa: LOG015
 
 
 if __name__ == "__main__":
