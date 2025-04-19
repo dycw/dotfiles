@@ -679,11 +679,25 @@ else:
 try:
     import more_itertools
     import more_itertools as mi
-    from more_itertools import partition, split_at, unique_everseen, unique_justseen
+    from more_itertools import (
+        partition,
+        split_at,
+        unique_justseen,
+        windowed,
+        windowed_complete,
+    )
 except ModuleNotFoundError:
     pass
 else:
-    _ = [mi, more_itertools, partition, split_at, unique_everseen, unique_justseen]
+    _ = [
+        mi,
+        more_itertools,
+        partition,
+        split_at,
+        unique_justseen,
+        windowed,
+        windowed_complete,
+    ]
 
     try:
         from utilities.iterables import (
@@ -698,11 +712,12 @@ else:
             one_maybe,
             one_str,
             one_unique,
+            unique_everseen,
         )
     except ModuleNotFoundError:
-        from more_itertools import always_iterable, one
+        from more_itertools import always_iterable, one, unique_everseen
 
-        _ = [always_iterable, one]
+        _ = [always_iterable, one, unique_everseen]
     else:
         _ = [
             OneEmptyError,
@@ -716,6 +731,7 @@ else:
             one_maybe,
             one_str,
             one_unique,
+            unique_everseen,
         ]
     try:
         from utilities.more_itertools import (
@@ -873,10 +889,11 @@ else:
 try:
     import optuna
     from optuna import Trial, create_study, create_trial
+    from optuna.samplers import RandomSampler
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Trial, create_study, create_trial, optuna]
+    _ = [RandomSampler, Trial, create_study, create_trial, optuna]
 
     try:
         from utilities.optuna import get_best_params, make_objective, suggest_bool
