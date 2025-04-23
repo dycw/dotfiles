@@ -72,6 +72,7 @@ import zlib
 import zoneinfo
 from abc import ABC, ABCMeta, abstractmethod
 from asyncio import (
+    CancelledError,
     Queue,
     QueueEmpty,
     QueueFull,
@@ -148,7 +149,7 @@ from itertools import (
 )
 from logging import Formatter, LogRecord, StreamHandler, getLogger
 from multiprocessing import Pool, cpu_count
-from operator import add, and_, mul, neg, or_, sub, truediv
+from operator import add, and_, attrgetter, itemgetter, mul, neg, or_, pos, sub, truediv
 from os import environ, getenv
 from pathlib import Path
 from re import escape, findall, search
@@ -201,6 +202,7 @@ _ = [
     BinaryIO,
     Callable,
     CalledProcessError,
+    CancelledError,
     ClassVar,
     Collection,
     Container,
@@ -254,6 +256,7 @@ _ = [
     astuple,
     asynccontextmanager,
     asyncio,
+    attrgetter,
     auto,
     base64,
     bisect,
@@ -316,6 +319,7 @@ _ = [
     isgeneratorfunction,
     islice,
     it,
+    itemgetter,
     itertools,
     json,
     locale,
@@ -343,6 +347,7 @@ _ = [
     pickle,
     platform,
     poplib,
+    pos,
     pprint,
     product,
     random,
@@ -612,11 +617,27 @@ else:
 
 
 try:
+    import lightweight_charts
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [lightweight_charts]
+
+    try:
+        from utilities.lightweight_charts import save_chart, yield_chart
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [save_chart, yield_chart]
+
+
+try:
+    import loguru
     from loguru import logger
 except ModuleNotFoundError:
     pass
 else:
-    _ = [logger]
+    _ = [logger, loguru]
 
     try:
         from utilities.loguru import (
@@ -1193,11 +1214,14 @@ else:
             DatetimeUSCentral,
             DatetimeUSEastern,
             DatetimeUTC,
+            ExprLike,
             are_frames_equal,
             check_polars_dataframe,
+            concat_series,
             convert_time_zone,
             dataclass_to_dataframe,
             dataclass_to_schema,
+            ensure_expr_or_series,
             floor_datetime,
             get_data_type_or_series_time_zone,
             insert_after,
@@ -1215,11 +1239,14 @@ else:
             DatetimeUSCentral,
             DatetimeUSEastern,
             DatetimeUTC,
+            ExprLike,
             are_frames_equal,
             check_polars_dataframe,
+            concat_series,
             convert_time_zone,
             dataclass_to_dataframe,
             dataclass_to_schema,
+            ensure_expr_or_series,
             floor_datetime,
             get_data_type_or_series_time_zone,
             insert_after,
@@ -1228,6 +1255,21 @@ else:
             replace_time_zone,
             zoned_datetime,
         ]
+
+
+try:
+    import polars_ols
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [polars_ols]
+
+    try:
+        from utilities.polars_ols import compute_rolling_ols
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [compute_rolling_ols]
 
 try:
     from pqdm.processes import pqdm
@@ -1416,7 +1458,10 @@ try:
         get_today_hk,
         get_today_tokyo,
         get_years,
+        parse_date_compact,
+        parse_datetime_compact,
         parse_month,
+        serialize_compact,
         serialize_month,
     )
     from utilities.enum import ensure_enum
@@ -1445,6 +1490,7 @@ try:
     from utilities.shelve import yield_shelf
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
+    from utilities.traceback import trace
     from utilities.types import Number, StrMapping, TimeZone
     from utilities.typing import get_args, get_literal_elements
     from utilities.zoneinfo import (
@@ -1526,14 +1572,18 @@ else:
         list_dir,
         make_isinstance,
         one,
+        parse_date_compact,
+        parse_datetime_compact,
         parse_month,
         partial,
         read_pickle,
         run_in_background,
         safe_round,
+        serialize_compact,
         serialize_month,
         setup_logging,
         shuffle,
+        trace,
         write_pickle,
         yield_fields,
         yield_shelf,
