@@ -1478,7 +1478,12 @@ try:
     )
     from utilities.functools import partial
     from utilities.git import get_repo_root
-    from utilities.iterables import groupby_lists, one
+    from utilities.iterables import (
+        group_consecutive_integers,
+        groupby_lists,
+        one,
+        ungroup_consecutive_integers,
+    )
     from utilities.logging import SizeAndTimeRotatingFileHandler, setup_logging
     from utilities.math import is_integral, safe_round
     from utilities.os import CPU_COUNT
@@ -1567,6 +1572,7 @@ else:
         get_today_hk,
         get_today_tokyo,
         get_years,
+        group_consecutive_integers,
         groupby_lists,
         is_integral,
         list_dir,
@@ -1584,6 +1590,7 @@ else:
         setup_logging,
         shuffle,
         trace,
+        ungroup_consecutive_integers,
         write_pickle,
         yield_fields,
         yield_shelf,
