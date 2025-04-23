@@ -370,14 +370,12 @@ ls.add_snippets("python", {
     s("ty-literal", { t({ "from typing import Literal", "" }) }),
     s("ty-not-required", { t({ "from typing import NotRequired", "" }) }),
     s("ty-overload", { t({ "from typing import overload", "" }) }),
+    s("ty-override", { t({ "from typing import override", "" }) }),
     s("ty-protocol", { t({ "from typing import Protocol", "" }) }),
     s("ty-required", { t({ "from typing import Required", "" }) }),
     s("ty-self", { t({ "from typing import Self", "" }) }),
     s("ty-type-var", { t({ "from typing import TypeVar", "" }) }),
     s("ty-typed-dict", { t({ "from typing import TypedDict", "" }) }),
-
-    -- typing-extensions
-    s("ty-override", { t({ "from typing_extensions import override", "" }) }),
 
     -- uuid
     s("uu-uuid", { t({ "from uuid import UUID", "" }) }),
@@ -403,7 +401,8 @@ ls.add_snippets("python", {
     s("ut-ensure-not-none", { t({ "from utilities.functions import ensure_not_none", "" }) }),
     s("ut-ensure-number", { t({ "from utilities.functions import ensure_number", "" }) }),
     s("ut-ensure-str", { t({ "from utilities.text import ensure_str", "" }) }),
-    s("ut-ensure-suffx", { t({ "from utilities.pathlib import ensure_suffix", "" }) }),
+    s("ut-ensure-suffix", { t({ "from utilities.pathlib import ensure_suffix", "" }) }),
+    s("ut-expr-like", { t({ "from utilities.polars import ExprLike", "" }) }),
     s("ut-extract-group", { t({ "from utilities.re import extract_group", "" }) }),
     s("ut-extract-groups", { t({ "from utilities.re import extract_groups", "" }) }),
     s("ut-get-args", { t({ "from utilities.typing import get_args", "" }) }),
