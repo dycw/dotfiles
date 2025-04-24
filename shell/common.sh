@@ -159,7 +159,8 @@ ipython_startup() { ${EDITOR} "${HOME}"/dotfiles/ipython/startup.py; }
 ip() { uv run --with=ipython ipython; }
 
 # jupyter
-jl() { uv run --with=altair,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python jupyter lab; }
+jl() { uv run --with=hvplot,jupyterlab jupyter lab; }
+# jl() { uv run --with=altair,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python jupyter lab; }
 
 # local
 __file="${HOME}/common.sh"

@@ -1434,6 +1434,8 @@ try:
         EPOCH_UTC,
         HALF_YEAR,
         HOUR,
+        MICROSECOND,
+        MILLISECOND,
         MINUTE,
         MONTH,
         QUARTER,
@@ -1496,7 +1498,7 @@ try:
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
     from utilities.traceback import trace
-    from utilities.types import Number, StrMapping, TimeZone
+    from utilities.types import MaybeIterable, Number, StrMapping, TimeZone
     from utilities.typing import get_args, get_literal_elements
     from utilities.zoneinfo import (
         UTC,
@@ -1519,8 +1521,11 @@ else:
         HALF_YEAR,
         HOUR,
         HongKong,
+        MICROSECOND,
+        MILLISECOND,
         MINUTE,
         MONTH,
+        MaybeIterable,
         Month,
         Number,
         Period,
