@@ -1219,6 +1219,8 @@ else:
             check_polars_dataframe,
             concat_series,
             convert_time_zone,
+            cross,
+            cross_rolling_quantile,
             dataclass_to_dataframe,
             dataclass_to_schema,
             ensure_expr_or_series,
@@ -1228,6 +1230,7 @@ else:
             insert_before,
             insert_between,
             replace_time_zone,
+            touch,
             zoned_datetime,
         )
     except ModuleNotFoundError:
@@ -1244,6 +1247,8 @@ else:
             check_polars_dataframe,
             concat_series,
             convert_time_zone,
+            cross,
+            cross_rolling_quantile,
             dataclass_to_dataframe,
             dataclass_to_schema,
             ensure_expr_or_series,
@@ -1253,6 +1258,7 @@ else:
             insert_before,
             insert_between,
             replace_time_zone,
+            touch,
             zoned_datetime,
         ]
 
