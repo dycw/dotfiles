@@ -186,6 +186,10 @@ ls.add_snippets("python", {
     s("mi-partition", { t({ "from more_itertools import partition", "" }) }),
     s("mi-split-at", { t({ "from more_itertools import split_after", "" }) }),
 
+    -- numpy
+    s("im-np", { t({ "import numpy as np", "" }) }),
+    s("np-pi", { t({ "from numpy import pi", "" }) }),
+
     -- operator
     s("op-add", { t({ "from operator import add", "" }) }),
     s("op-and", { t({ "from operator import and_", "" }) }),
@@ -425,6 +429,7 @@ ls.add_snippets("python", {
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
     s("ut-log-level", { t({ "from utilities.logging import LogLevel", "" }) }),
+    s("ut-maybe-iterable", { t({ "from utilities.types import MaybeIterable", "" }) }),
     s("ut-merge-mappings", { t({ "from utilities.iterables import merge_mappings", "" }) }),
     s("ut-merge-sets", { t({ "from utilities.iterables import merge_sets", "" }) }),
     s("ut-merge-str-mappings", { t({ "from utilities.iterables import merge_str_mappings", "" }) }),
