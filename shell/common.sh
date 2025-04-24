@@ -156,6 +156,10 @@ set editing-mode vi
 
 # ipython
 ipython_startup() { ${EDITOR} "${HOME}"/dotfiles/ipython/startup.py; }
+ip() { uv run --with=ipython ipython; }
+
+# jupyter
+jl() { uv run --with=altair,matplotlib,jupyterlab,jupyterlab-vim,hvplot jupyter lab; }
 
 # local
 __file="${HOME}/common.sh"
@@ -236,10 +240,6 @@ fi
 if command -v uv >/dev/null 2>&1; then
 	uva() { uv add "$@"; }
 	uvpi() { uv pip install "$@"; }
-	pii() { uvpi ipython; }
-	uvpii() { uvpi ipython; }
-	pij() { uvpi jupyterlab jupyterlab-vim; }
-	uvpij() { uvpi jupyterlab jupyterlab-vim; }
 	uvpl() { uv pip list; }
 	plo() { uv pip list --outdated; }
 	uvplo() { uv pip list --outdated; }
