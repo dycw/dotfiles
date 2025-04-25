@@ -188,6 +188,7 @@ ls.add_snippets("python", {
 
     -- numpy
     s("im-np", { t({ "import numpy as np", "" }) }),
+    s("np-linspace", { t({ "from numpy import linspace", "" }) }),
     s("np-pi", { t({ "from numpy import pi", "" }) }),
 
     -- operator
@@ -268,6 +269,18 @@ ls.add_snippets("python", {
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
     s("py-param", { t({ "from pytest import param", "" }) }),
     s("py-raises", { t({ "from pytest import raises", "" }) }),
+    s("py-read-pickle", {
+        t({
+            "from utilities.git import get_repo_root",
+            "from utilities.pickle import write_pickle",
+            "",
+        }),
+        i(1, "obj"),
+        t({
+            ' = read_pickle(get_repo_root().joinpath("notebooks", "pytest-tmp.gz"))',
+            "",
+        }),
+    }),
     s("py-skip", { t({ "from pytest import skip", "" }) }),
     s("py-write-pickle", {
         t({
