@@ -821,6 +821,7 @@ try:
         nonzero,
         ones,
         ones_like,
+        pi,
         ravel,
         set_printoptions,
         sqrt,
@@ -893,10 +894,11 @@ else:
         ndarray,
         newaxis,
         nonzero,
-        numpy,
         np,
+        numpy,
         ones,
         ones_like,
+        pi,
         ravel,
         set_printoptions,
         sqrt,
@@ -1067,6 +1069,8 @@ try:
         UInt32,
         UInt64,
         Utf8,
+        all_horizontal,
+        any_horizontal,
         coalesce,
         col,
         concat,
@@ -1175,6 +1179,8 @@ else:
         UInt64,
         UInt8,
         Utf8,
+        all_horizontal,
+        any_horizontal,
         assert_frame_equal,
         assert_frame_not_equal,
         assert_series_equal,
@@ -1219,6 +1225,8 @@ else:
             check_polars_dataframe,
             concat_series,
             convert_time_zone,
+            cross,
+            cross_rolling_quantile,
             dataclass_to_dataframe,
             dataclass_to_schema,
             ensure_expr_or_series,
@@ -1227,7 +1235,9 @@ else:
             insert_after,
             insert_before,
             insert_between,
+            join,
             replace_time_zone,
+            touch,
             zoned_datetime,
         )
     except ModuleNotFoundError:
@@ -1244,6 +1254,8 @@ else:
             check_polars_dataframe,
             concat_series,
             convert_time_zone,
+            cross,
+            cross_rolling_quantile,
             dataclass_to_dataframe,
             dataclass_to_schema,
             ensure_expr_or_series,
@@ -1252,7 +1264,9 @@ else:
             insert_after,
             insert_before,
             insert_between,
+            join,
             replace_time_zone,
+            touch,
             zoned_datetime,
         ]
 
@@ -1434,6 +1448,8 @@ try:
         EPOCH_UTC,
         HALF_YEAR,
         HOUR,
+        MICROSECOND,
+        MILLISECOND,
         MINUTE,
         MONTH,
         QUARTER,
@@ -1478,7 +1494,12 @@ try:
     )
     from utilities.functools import partial
     from utilities.git import get_repo_root
-    from utilities.iterables import groupby_lists, one
+    from utilities.iterables import (
+        group_consecutive_integers,
+        groupby_lists,
+        one,
+        ungroup_consecutive_integers,
+    )
     from utilities.logging import SizeAndTimeRotatingFileHandler, setup_logging
     from utilities.math import is_integral, safe_round
     from utilities.os import CPU_COUNT
@@ -1491,7 +1512,7 @@ try:
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
     from utilities.traceback import trace
-    from utilities.types import Number, StrMapping, TimeZone
+    from utilities.types import MaybeIterable, Number, StrMapping, TimeZone
     from utilities.typing import get_args, get_literal_elements
     from utilities.zoneinfo import (
         UTC,
@@ -1514,8 +1535,11 @@ else:
         HALF_YEAR,
         HOUR,
         HongKong,
+        MICROSECOND,
+        MILLISECOND,
         MINUTE,
         MONTH,
+        MaybeIterable,
         Month,
         Number,
         Period,
@@ -1567,6 +1591,7 @@ else:
         get_today_hk,
         get_today_tokyo,
         get_years,
+        group_consecutive_integers,
         groupby_lists,
         is_integral,
         list_dir,
@@ -1584,6 +1609,7 @@ else:
         setup_logging,
         shuffle,
         trace,
+        ungroup_consecutive_integers,
         write_pickle,
         yield_fields,
         yield_shelf,

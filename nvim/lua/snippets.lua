@@ -186,6 +186,11 @@ ls.add_snippets("python", {
     s("mi-partition", { t({ "from more_itertools import partition", "" }) }),
     s("mi-split-at", { t({ "from more_itertools import split_after", "" }) }),
 
+    -- numpy
+    s("im-np", { t({ "import numpy as np", "" }) }),
+    s("np-linspace", { t({ "from numpy import linspace", "" }) }),
+    s("np-pi", { t({ "from numpy import pi", "" }) }),
+
     -- operator
     s("op-add", { t({ "from operator import add", "" }) }),
     s("op-and", { t({ "from operator import and_", "" }) }),
@@ -264,6 +269,18 @@ ls.add_snippets("python", {
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
     s("py-param", { t({ "from pytest import param", "" }) }),
     s("py-raises", { t({ "from pytest import raises", "" }) }),
+    s("py-read-pickle", {
+        t({
+            "from utilities.git import get_repo_root",
+            "from utilities.pickle import write_pickle",
+            "",
+        }),
+        i(1, "obj"),
+        t({
+            ' = read_pickle(get_repo_root().joinpath("notebooks", "pytest-tmp.gz"))',
+            "",
+        }),
+    }),
     s("py-skip", { t({ "from pytest import skip", "" }) }),
     s("py-write-pickle", {
         t({
@@ -425,6 +442,7 @@ ls.add_snippets("python", {
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
     s("ut-log-level", { t({ "from utilities.logging import LogLevel", "" }) }),
+    s("ut-maybe-iterable", { t({ "from utilities.types import MaybeIterable", "" }) }),
     s("ut-merge-mappings", { t({ "from utilities.iterables import merge_mappings", "" }) }),
     s("ut-merge-sets", { t({ "from utilities.iterables import merge_sets", "" }) }),
     s("ut-merge-str-mappings", { t({ "from utilities.iterables import merge_str_mappings", "" }) }),
