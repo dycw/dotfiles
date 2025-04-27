@@ -188,7 +188,12 @@ ls.add_snippets("python", {
 
     -- numpy
     s("im-np", { t({ "import numpy as np", "" }) }),
+    s("np-arange", { t({ "from numpy import arange", "" }) }),
+    s("np-full", { t({ "from numpy import full", "" }) }),
+    s("np-isnan", { t({ "from numpy import isnan", "" }) }),
     s("np-linspace", { t({ "from numpy import linspace", "" }) }),
+    s("np-nan", { t({ "from numpy import nan", "" }) }),
+    s("np-ndarray", { t({ "from numpy import ndarray", "" }) }),
     s("np-pi", { t({ "from numpy import pi", "" }) }),
 
     -- operator
@@ -426,11 +431,13 @@ ls.add_snippets("python", {
     s("ut-get-class-name", { t({ "from utilities.functions import get_class_name", "" }) }),
     s("ut-get-func-name", { t({ "from utilities.functions import get_func_name", "" }) }),
     s("ut-get-now", { t({ "from utilities.datetime import get_now", "" }) }),
+    s("ut-get-now-local", { t({ "from utilities.tzlocal import get_now_local", "" }) }),
     s("ut-get-repo-root", { t({ "from utilities.git import get_repo_root", "" }) }),
     s("ut-get-state", { t({ "from utilities.random import get_state", "" }) }),
     s("ut-get-table", { t({ "from utilities.sqlalchemy import get_table", "" }) }),
     s("ut-get-today", { t({ "from utilities.datetime import get_today", "" }) }),
-    s("ut-hong-kong", { t({ "from utilities.zoneinfo import HongKong", "" }) }),
+    s("ut-get-today-local", { t({ "from utilities.tzlocal import get_today_local", "" }) }),
+    s("ut-hong-kong", { t({ "from utilities.tzdata import HongKong", "" }) }),
     s("ut-impossible-case-error", { t({ "from utilities.errors import ImpossibleCaseError", "" }) }),
     s("ut-insert-after", { t({ "from utilities.polars import insert_after", "" }) }),
     s("ut-insert-before", { t({ "from utilities.polars import insert_before", "" }) }),
@@ -478,7 +485,7 @@ ls.add_snippets("python", {
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
     s("ut-timeout-dur", { t({ "from utilities.asyncio import timeout_dur", "" }) }),
     s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
-    s("ut-tokyo", { t({ "from utilities.zoneinfo import Tokyo", "" }) }),
+    s("ut-tokyo", { t({ "from utilities.tzdata import Tokyo", "" }) }),
     s("ut-trace", { t({ "from utilities.traceback import trace", "" }) }),
     s("ut-transpose", { t({ "from utilities.iterables import transpose", "" }) }),
     s("ut-us-central", { t({ "from utilities.tzdata import USCentral", "" }) }),

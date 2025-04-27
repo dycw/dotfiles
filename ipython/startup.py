@@ -1425,11 +1425,12 @@ else:
 
 
 try:
+    import tenacity
     from tenacity import retry
 except ModuleNotFoundError:
     pass
 else:
-    _ = [retry]
+    _ = [retry, tenacity]
 
 
 try:
@@ -1438,6 +1439,72 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [tqdm]
+
+
+try:
+    import tzdata
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [tzdata]
+    try:
+        from utilities.tzdata import (
+            NOW_HONG_KONG,
+            NOW_TOKYO,
+            TODAY_HONG_KONG,
+            TODAY_TOKYO,
+            HongKong,
+            Tokyo,
+            USCentral,
+            USEastern,
+            get_now_hong_kong,
+            get_now_tokyo,
+            get_today_hong_kong,
+            get_today_tokyo,
+        )
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [
+            HongKong,
+            NOW_HONG_KONG,
+            NOW_TOKYO,
+            TODAY_HONG_KONG,
+            TODAY_TOKYO,
+            Tokyo,
+            USCentral,
+            USEastern,
+            get_now_hong_kong,
+            get_now_tokyo,
+            get_today_hong_kong,
+            get_today_tokyo,
+        ]
+
+
+try:
+    import tzlocal
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [tzlocal]
+    try:
+        from utilities.tzlocal import (
+            NOW_LOCAL,
+            TODAY_LOCAL,
+            get_local_time_zone,
+            get_now_local,
+            get_today_local,
+        )
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [
+            NOW_LOCAL,
+            TODAY_LOCAL,
+            get_local_time_zone,
+            get_now_local,
+            get_today_local,
+        ]
 
 
 try:
@@ -1454,8 +1521,6 @@ try:
         MONTH,
         QUARTER,
         SECOND,
-        TODAY_HK,
-        TODAY_TOKYO,
         TODAY_UTC,
         WEEK,
         YEAR,
@@ -1466,13 +1531,8 @@ try:
         get_half_years,
         get_months,
         get_now,
-        get_now_hk,
-        get_now_local,
-        get_now_tokyo,
         get_quarters,
         get_today,
-        get_today_hk,
-        get_today_tokyo,
         get_years,
         parse_date_compact,
         parse_datetime_compact,
@@ -1549,8 +1609,6 @@ else:
         SYSTEM_RANDOM,
         SizeAndTimeRotatingFileHandler,
         StrMapping,
-        TODAY_HK,
-        TODAY_TOKYO,
         TODAY_UTC,
         TimeZone,
         Timer,
@@ -1580,16 +1638,11 @@ else:
         get_literal_elements,
         get_months,
         get_now,
-        get_now_hk,
-        get_now_local,
-        get_now_tokyo,
         get_quarters,
         get_repo_root,
         get_state,
         get_time_zone_name,
         get_today,
-        get_today_hk,
-        get_today_tokyo,
         get_years,
         group_consecutive_integers,
         groupby_lists,
@@ -1632,12 +1685,6 @@ else:
         pass
     else:
         _ = [insert_dataframe, select_to_dataframe]
-    try:
-        from utilities.tzdata import USCentral, USEastern
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [USCentral, USEastern]
 
 
 try:
@@ -1650,6 +1697,7 @@ else:
 
 
 try:
+    import whenever
     from whenever import (
         Date,
         DateTimeDelta,
@@ -1661,7 +1709,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Date, DateTimeDelta, LocalDateTime, Time, ZonedDateTime, TimeDelta]
+    _ = [Date, DateTimeDelta, LocalDateTime, Time, TimeDelta, ZonedDateTime, whenever]
     try:
         from utilities.whenever import (
             ensure_date,
