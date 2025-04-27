@@ -1574,13 +1574,7 @@ try:
     from utilities.traceback import trace
     from utilities.types import MaybeIterable, Number, StrMapping, TimeZone
     from utilities.typing import get_args, get_literal_elements
-    from utilities.zoneinfo import (
-        UTC,
-        HongKong,
-        Tokyo,
-        ensure_time_zone,
-        get_time_zone_name,
-    )
+    from utilities.zoneinfo import UTC, ensure_time_zone, get_time_zone_name
 except ModuleNotFoundError:
     from random import shuffle
 
@@ -1594,7 +1588,6 @@ else:
         EnhancedTaskGroup,
         HALF_YEAR,
         HOUR,
-        HongKong,
         MICROSECOND,
         MILLISECOND,
         MINUTE,
@@ -1612,7 +1605,6 @@ else:
         TODAY_UTC,
         TimeZone,
         Timer,
-        Tokyo,
         UTC,
         WEEK,
         YEAR,
