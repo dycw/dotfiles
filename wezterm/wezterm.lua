@@ -8,7 +8,7 @@ local config = wezterm.config_builder()
 config.audible_bell = "Disabled"
 config.initial_cols = 200
 config.initial_rows = 100
-config.font_size = 13.0
+config.font_size = 12.0
 
 -- and finally, return the configuration to wezterm
 return config
