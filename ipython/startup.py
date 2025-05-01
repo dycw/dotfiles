@@ -1221,7 +1221,9 @@ else:
             DatetimeUSEastern,
             DatetimeUTC,
             ExprLike,
+            adjust_frequencies,
             are_frames_equal,
+            boolean_value_counts,
             check_polars_dataframe,
             concat_series,
             convert_time_zone,
@@ -1235,9 +1237,11 @@ else:
             insert_after,
             insert_before,
             insert_between,
+            is_near_event,
             join,
             replace_time_zone,
             touch,
+            try_reify_expr,
             zoned_datetime,
         )
     except ModuleNotFoundError:
@@ -1250,7 +1254,9 @@ else:
             DatetimeUSEastern,
             DatetimeUTC,
             ExprLike,
+            adjust_frequencies,
             are_frames_equal,
+            boolean_value_counts,
             check_polars_dataframe,
             concat_series,
             convert_time_zone,
@@ -1264,9 +1270,11 @@ else:
             insert_after,
             insert_before,
             insert_between,
+            is_near_event,
             join,
             replace_time_zone,
             touch,
+            try_reify_expr,
             zoned_datetime,
         ]
 
@@ -1561,7 +1569,7 @@ try:
         ungroup_consecutive_integers,
     )
     from utilities.logging import SizeAndTimeRotatingFileHandler, setup_logging
-    from utilities.math import is_integral, safe_round
+    from utilities.math import ewm_parameters, is_integral, safe_round
     from utilities.os import CPU_COUNT
     from utilities.pathlib import list_dir
     from utilities.period import Period
@@ -1621,6 +1629,7 @@ else:
         ensure_not_none,
         ensure_str,
         ensure_time_zone,
+        ewm_parameters,
         extract_group,
         extract_groups,
         get_args,
