@@ -405,6 +405,7 @@ ls.add_snippets("python", {
 
     -- utilities
     s("ut-add-listener", { t({ "from utilities.eventkit import add_listener", "" }) }),
+    s("ut-try-reify-expr", { t({ "from utilities.polars import try_reify_expr", "" }) }),
     s("ut-always-iterable", { t({ "from utilities.iterables import always_iterable", "" }) }),
     s("ut-bernoulli", { t({ "from utilities.random import bernoulli", "" }) }),
     s("ut-bounded-task-group", { t({ "from utilities.asyncio import BoundedTaskGroup", "" }) }),
