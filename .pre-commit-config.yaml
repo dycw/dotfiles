@@ -1,7 +1,7 @@
 repos:
   # fixers
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.6
+    rev: v0.11.8
     hooks:
       - id: ruff
         args: [--fix]
@@ -11,7 +11,7 @@ repos:
       - id: run-bump-my-version
       - id: run-ruff-format
   - repo: https://github.com/johnnymorganz/stylua
-    rev: v2.0.2
+    rev: v2.1.0
     hooks:
       - id: stylua
   - repo: https://github.com/jumanjihouse/pre-commit-hooks
