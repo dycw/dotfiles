@@ -42,7 +42,6 @@ return {
 
         -- build groups
         local groups = {
-            { "&&", "||" },
             { "absolute", "relative" },
             { "after", "before" },
             { "all", "any" },
@@ -55,6 +54,7 @@ return {
             { "ceil", "floor" },
             { "close", "open" },
             { "cloud", "local" },
+            { "cold", "hot" },
             { "column", "row" },
             { "disable", "enable" },
             { "down", "up" },
