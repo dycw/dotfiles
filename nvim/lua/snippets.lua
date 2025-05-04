@@ -324,6 +324,7 @@ ls.add_snippets("python", {
     s("im-re", { t({ "import re", "" }) }),
     s("re-escape", { t({ "from re import escape", "" }) }),
     s("re-findall", { t({ "from re import findall", "" }) }),
+    s("re-ignorecase", { t({ "from re import IGNORECASE", "" }) }),
     s("re-search", { t({ "from re import search", "" }) }),
     s("re-sub", { t({ "from re import sub", "" }) }),
 
@@ -365,6 +366,9 @@ ls.add_snippets("python", {
 
     -- sys
     s("sy-stdout", { t({ "from sys import stdout", "" }) }),
+
+    -- tabulate
+    s("ta-tabulate", { t({ "from tabulate import tabulate", "" }) }),
 
     -- tempfile
     s("te-temporary-directory", { t({ "from tempfile import TemporaryDirectory", "" }) }),

@@ -1,3 +1,7 @@
+-- luacheck: push ignore
+local v = vim
+-- luacheck: pop
+
 return {
     "monaqa/dial.nvim",
     config = function()
@@ -11,9 +15,102 @@ return {
         keymap_set("v", "g<C-a>", map.inc_gvisual(), "Increment")
         keymap_set("v", "g<C-x>", map.dec_gvisual(), "Decrement")
 
+        local function titlecase(s)
+            return s:sub(1, 1):upper() .. s:sub(2):lower()
+        end
+
         local augend = require("dial.augend")
+        local function register_group(words)
+            return {
+                augend.constant.new({
+                    elements = v.tbl_map(string.upper, words),
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = v.tbl_map(titlecase, words),
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = v.tbl_map(string.lower, words),
+                    word = true,
+                    cyclic = true,
+                }),
+            }
+        end
+
+        -- build groups
+        local groups = {
+            { "&&", "||" },
+            { "absolute", "relative" },
+            { "after", "before" },
+            { "all", "any" },
+            { "and", "or" },
+            { "ascending", "descending" },
+            { "backward", "forward" },
+            { "bottom", "top" },
+            { "bull", "bear" },
+            { "buy", "sell" },
+            { "ceil", "floor" },
+            { "close", "open" },
+            { "cloud", "local" },
+            { "column", "row" },
+            { "disable", "enable" },
+            { "down", "up" },
+            { "entry", "exit" },
+            { "first", "last" },
+            { "float", "int" },
+            { "gateway", "tws" },
+            { "head", "tail" },
+            { "high", "low" },
+            { "left", "right" },
+            { "long", "short" },
+            { "loss", "profit" },
+            { "lower", "upper" },
+            { "max", "min" },
+            { "max_value", "min_value" },
+            { "maximum", "minimum" },
+            { "minor", "major" },
+            { "no", "yes" },
+            { "on", "off" },
+            { "only", "skip" },
+            { "positive", "negative" },
+            { "start", "end", "stop" },
+            { "true", "false" },
+        }
+
+        local groups_all_cases = {}
+        for _, pair in ipairs(groups) do
+            table.insert(
+                groups_all_cases,
+                augend.constant.new({
+                    elements = v.tbl_map(string.upper, pair),
+                    word = true,
+                    cyclic = true,
+                })
+            )
+            table.insert(
+                groups_all_cases,
+                augend.constant.new({
+                    elements = v.tbl_map(titlecase, pair),
+                    word = true,
+                    cyclic = true,
+                })
+            )
+            table.insert(
+                groups_all_cases,
+                augend.constant.new({
+                    elements = v.tbl_map(string.lower, pair),
+                    word = true,
+                    cyclic = true,
+                })
+            )
+        end
+
+        -- register all
         require("dial.config").augends:register_group({
-            default = {
+            default = v.list_extend({
                 augend.integer.alias.decimal,
                 augend.integer.alias.decimal_int,
                 augend.integer.alias.hex,
@@ -25,222 +122,7 @@ return {
                 augend.date.alias["%H:%M"],
                 augend.constant.alias.bool,
                 augend.semver.alias.semver,
-                augend.constant.new({
-                    elements = { "&&", "||" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "<", ">" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "<=", ">=" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "BUY", "SELL" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "DOWN", "UP" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "LOWER", "UPPER" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "START", "END", "STOP" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "True", "False" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "absolute", "relative" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "after", "before" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "and", "or" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "all", "any" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "ascending", "descending" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "backward", "forward" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "bottom", "top" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "bull", "bear" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "buy", "sell" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "ceil", "floor" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "close", "open" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "cloud", "local" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "column", "row" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "disable", "enable" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "down", "up" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "entry", "exit" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "first", "last" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "float", "int" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "gateway", "tws" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "head", "tail" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "high", "low" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "left", "right" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "long", "short" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "loss", "profit" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "lower", "upper" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "max", "min" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "max_value", "min_value" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "maximum", "minimum" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "minor", "major" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "no", "yes" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "on", "off" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "only", "skip" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "positive", "negative" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "start", "end", "stop" },
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = { "true", "false" },
-                    word = true,
-                    cyclic = true,
-                }),
-            },
+            }, groups_all_cases),
         })
     end,
 }
