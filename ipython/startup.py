@@ -606,9 +606,13 @@ try:
         Contract,
         ContractDescription,
         ContractDetails,
+        Forex,
+        Order,
+        OrderStatus,
         RealTimeBar,
         RealTimeBarList,
         Trade,
+        TradeLogEntry,
     )
 except ModuleNotFoundError:
     pass
@@ -617,10 +621,14 @@ else:
         Contract,
         ContractDescription,
         ContractDetails,
+        Forex,
         IB,
+        Order,
+        OrderStatus,
         RealTimeBar,
         RealTimeBarList,
         Trade,
+        TradeLogEntry,
         ib_async,
     ]
 
