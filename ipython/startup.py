@@ -601,11 +601,36 @@ else:
 
 try:
     import ib_async
-    from ib_async import IB, Contract, RealTimeBar, RealTimeBarList, Trade
+    from ib_async import (
+        IB,
+        Contract,
+        ContractDescription,
+        ContractDetails,
+        Forex,
+        Order,
+        OrderStatus,
+        RealTimeBar,
+        RealTimeBarList,
+        Trade,
+        TradeLogEntry,
+    )
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Contract, IB, RealTimeBar, RealTimeBarList, Trade, ib_async]
+    _ = [
+        Contract,
+        ContractDescription,
+        ContractDetails,
+        Forex,
+        IB,
+        Order,
+        OrderStatus,
+        RealTimeBar,
+        RealTimeBarList,
+        Trade,
+        TradeLogEntry,
+        ib_async,
+    ]
 
 
 try:
