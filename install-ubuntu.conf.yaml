@@ -181,6 +181,10 @@
         Installing shfmt,
       ]
     - [
+        "command -v sshpass >/dev/null 2>&1 || brew install sshpass",
+        Installing sshpass,
+      ]
+    - [
         "command -v starship >/dev/null 2>&1 || brew install starship",
         Installing starship,
       ]
