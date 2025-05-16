@@ -75,3 +75,6 @@ unset __conda_setup
 # <<< conda initialize <<<
 alias ssh-dw-vm='ssh derek@192.168.1.58'
 alias ssh-dw-vm='ssh vboxuser@192.168.1.58'
+alias ssh-='ssh vboxuser@192.168.1.58'
+eval "$(uv generate-shell-completion zsh)"
+eval "$(uvx --generate-shell-completion zsh)"
