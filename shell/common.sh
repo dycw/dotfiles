@@ -167,6 +167,9 @@ if [ -f "$__file" ]; then
 	. "$__file"
 fi
 
+# marimo
+mar() { uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' marimo new; }
+
 # neovim
 if command -v nvim >/dev/null 2>&1; then
 	cdplugins() { cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins" || exit; }

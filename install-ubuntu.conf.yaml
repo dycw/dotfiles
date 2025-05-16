@@ -9,6 +9,7 @@
     - ~/.config
     - ~/.config/direnv
     - ~/.config/git
+    - ~/.config/marimo
     - ~/.config/pip
     - ~/.config/tmux
     - ~/.config/wezterm
@@ -29,6 +30,7 @@
     ~/.config/direnv/direnvrc: direnv/direnvrc
     ~/.config/git/config: git/config
     ~/.config/git/ignore: git/ignore
+    ~/.config/marimo/marimo.toml: marimo/marimo.toml
     ~/.config/nvim: nvim
     ~/.config/pip/pip.conf: pip/pip.conf
     ~/.config/ripgreprc: ripgrep/ripgreprc

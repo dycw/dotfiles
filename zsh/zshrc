@@ -73,3 +73,4 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+alias ssh-dw-vm='ssh derek@192.168.1.58'
