@@ -24,6 +24,18 @@ line_length = 79
 preset = "default"
 
 [keymap.overrides]
+"cell.createAbove" = "Cmd-k"
+"cell.createBelow" = "Cmd-j"
+"cell.focusDown" = "Ctrl-j"
+"cell.focusUp" = "Ctrl-k"
+"cell.format" = "Ctrl-f"
+"cell.goToDefinition" = "Ctrl-d"
+"cell.run" = "Ctrl-enter"
+"cell.runAndNewAbove" = "Ctrl-Shift-enter"
+"global.focusBottom" = "Ctrl-Shift-j"
+"global.focusTop" = "Ctrl-Shift-k"
+"global.interrupt" = "Ctrl-i"
+"global.toggleSidebar" = "Ctrl-h"
 
 [language_servers.pylsp]
 enable_flake8 = false

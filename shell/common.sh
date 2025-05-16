@@ -169,6 +169,9 @@ fi
 
 # marimo
 mar() { uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' marimo new; }
+if command -v nvim >/dev/null 2>&1; then
+	marimo_toml() { ${EDITOR} "${HOME}"/dotfiles/marimo/marimo.toml; }
+fi
 
 # neovim
 if command -v nvim >/dev/null 2>&1; then
