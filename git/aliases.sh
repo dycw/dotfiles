@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+# shellcheck disable=SC2120
+
 if command -v git >/dev/null 2>&1; then
 	# add
 	ga() { git add "$@"; }
@@ -28,20 +30,21 @@ if command -v git >/dev/null 2>&1; then
 	gb() { git branch "$@"; }
 	gba() { gb -a "$@"; }
 	gbd() {
+		unset __gbd_branch
 		if [ $# -eq 0 ]; then
 			if __is_current_branch_master; then
-				__branch='dev'
+				__gbd_branch='dev'
 			else
 				echo "'gbd' off 'master' requires 1 argument 'branch'"
 				return
 			fi
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__gbd_branch="$1"
 		else
 			echo "'gbd' accepts [0..1] arguments"
 			return
 		fi
-		git branch -D "${__branch}"
+		git branch -D "${__gbd_branch}"
 	}
 	gbdr() {
 		git branch -r --color=never |
@@ -52,58 +55,83 @@ if command -v git >/dev/null 2>&1; then
 	gbm() { git branch -m "$1"; }
 	# checkout
 	gco() {
+		unset __gco_branch
 		if [ $# -eq 0 ]; then
 			if __is_current_branch_master; then
-				__branch='dev'
+				__gco_branch='dev'
 			elif __is_current_branch_dev; then
-				__branch='master'
+				__gco_branch='master'
 			else
 				echo "'gco' requires 1 argument 'branch'"
 				return
 			fi
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__gco_branch="$1"
 		else
 			echo "'gco' accepts [0..1] arguments"
 			return
 		fi
-		git checkout "${__branch}"
+		git checkout "${__gco_branch}"
+		git pull --force
 	}
 	gcob() {
+		unset __gcob_branch
 		if [ $# -eq 0 ]; then
 			if __is_current_branch_master; then
-				__branch='dev'
+				__gcob_branch='dev'
 			else
 				echo "'gcob' off 'master' requires 1 argument 'branch'"
 				return
 			fi
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__gcob_branch="$1"
 		else
 			echo "'gcob' accepts [0..1] arguments"
 			return
 		fi
-		git checkout -b "${__branch}"
+		git checkout -b "${__gcob_branch}"
 	}
-	gcobrc() { gcobr "$(__current_branch)"; }
-	gcobt() { git checkout -b "$1" -t "origin/$1"; }
-	gcom() { git checkout master && git pull --force; }
-	gcomk() { gcom && gbkc "$@"; }
-	gcomr() { gcom && gcobr "$@"; }
+	gcobt() {
+		git checkout -b "$1" -t "origin/$1"
+	}
+	gcom() {
+		if [ $# -eq 0 ]; then
+			gco 'master'
+		else
+			echo "'gcom' requires 0 arguments"
+			return
+		fi
+	}
+	gcomd() {
+		unset __gcomd_branch
+		if [ $# -eq 0 ]; then
+			if __is_current_branch_master; then
+				echo "'gcomd' cannot be run on master"
+				return
+			else
+				__gcomd_branch="$(__current_branch)"
+				gco 'master'
+				gbd "${__gcomd_branch}"
+			fi
+		else
+			echo "'gcomd' requires 0 arguments"
+			return
+		fi
+	}
 	gcomrc() { gcomr && gcobrc; }
 	gcop() { git checkout --patch; }
 	# checkout + branch
 	gbr() {
+		unset __gbr_branch
 		if [ $# -eq 0 ]; then
 			if __is_current_branch_master; then
 				echo "'gcobr' cannot be run on master"
 				return
 			else
-				__branch="$(__current_branch)"
-				echo "branch is now $__branch"
+				__gbr_branch="$(__current_branch)"
 				gco master
-				gbd "${__branch}"
-				gcob "${__branch}"
+				gbd "${__gbr_branch}"
+				gcob "${__gbr_branch}"
 			fi
 		else
 			echo "'gcobr' accepts [0..1] arguments"
