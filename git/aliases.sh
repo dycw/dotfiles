@@ -24,11 +24,11 @@ if command -v git >/dev/null 2>&1; then
 		__gac_count_non_file=0
 		__gac_message=""
 		__gac_file_names=""
-		set --
+		__gac_file_args=""
 
 		for arg in "$@"; do
-			if [ "${__gac_count_non_file}" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
-				set -- "$@" "$arg"
+			if [ "$__gac_count_non_file" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
+				__gac_file_args="$__gac_file_args \"$arg\""
 				__gac_file_names="${__gac_file_names}${__gac_file_names:+ }$arg"
 				__gac_count_file=$((__gac_count_file + 1))
 			else
@@ -37,21 +37,23 @@ if command -v git >/dev/null 2>&1; then
 			fi
 		done
 
+		# Format: 'a','b','c'
 		__gac_file_list=""
 		for f in $__gac_file_names; do
 			__gac_file_list="${__gac_file_list}'${f}',"
 		done
-		__gac_file_list="${__gac_file_list%,}"
+		__gac_file_list="${__gac_file_list%,}" # strip trailing comma
 
 		echo "'gac' got ${__gac_count_file} file(s) ${__gac_file_list:-'(none)'} and ${__gac_count_non_file} message(s)" >&2
-		if [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 0 ]; then
+
+		if [ "$__gac_count_file" -eq 0 ] && [ "$__gac_count_non_file" -eq 0 ]; then
 			ga && gc
-		elif [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 1 ]; then
+		elif [ "$__gac_count_file" -eq 0 ] && [ "$__gac_count_non_file" -eq 1 ]; then
 			ga && gc "$__gac_message"
-		elif [ "${__gac_count_file}" -ge 1 ] && [ "${__gac_count_non_file}" -eq 0 ]; then
-			ga "$@" && gc
-		elif [ "${__gac_count_file}" -ge 1 ] && [ "${__gac_count_non_file}" -eq 1 ]; then
-			ga "$@" && gc "$__gac_message"
+		elif [ "$__gac_count_file" -ge 1 ] && [ "$__gac_count_non_file" -eq 0 ]; then
+			eval "ga $__gac_file_args" && gc
+		elif [ "$__gac_count_file" -ge 1 ] && [ "$__gac_count_non_file" -eq 1 ]; then
+			eval "ga $__gac_file_args" && gc "$__gac_message"
 		else
 			echo "'gac' accepts any number of files followed by [0..1] messages; got ${__gac_count_file} file(s) ${__gac_file_list:-'(none)'} and ${__gac_count_non_file} message(s)" >&2
 			return 1
