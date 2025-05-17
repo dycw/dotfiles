@@ -228,30 +228,33 @@ if command -v git >/dev/null 2>&1; then
 	gcl() { git clone --recurse-submodules "$@"; }
 	# commit
 	__git_commit() {
-		unset __git_commit_message
-		if [ $# -eq 0 ]; then
-			__git_commit_message="$(__git_commit_auto_message)"
-		elif [ $# -eq 1 ]; then
-			__git_commit_message="$1"
+		if [ $# -eq 4 ]; then
+			__git_commit_alias="$1"
+			__git_commit_num_args="$2"
+			__git_commit_no_verify="$3"
+			__git_commit_message="$4"
+			if [ "${__git_commit_num_args}" -eq 0 ]; then
+				__git_commit_message="$(__git_commit_auto_message)"
+			elif [ "${__git_commit_num_args}" -eq 1 ]; then
+				:
+			else
+				echo "'${__git_commit_alias}' accepts [0..1] arguments"
+				return 1
+			fi
+			if [ "${__git_commit_no_verify}" -eq 0 ]; then
+				git commit -m "${__git_commit_message}"
+				return $?
+			elif [ "${__git_commit_no_verify}" -eq 1 ]; then
+				git commit -m --no-verify "${__git_commit_message}"
+				return $?
+			else
+				echo "'$__git_commit_alias' accepts {0, 1} for the 'no-verify' flags"
+				return 1
+			fi
 		else
-			echo "'__git_commit' accepts [0..1] arguments"
+			echo "'__git_commit' accepts requires 4 arguments"
 			return 1
 		fi
-		git commit -m "${__git_commit_message}"
-		return $?
-	}
-	__git_commit_no_verify() {
-		unset __git_commit_no_verify_message
-		if [ $# -eq 0 ]; then
-			__git_commit_no_verify_message="$(__git_commit_auto_message)"
-		elif [ $# -eq 1 ]; then
-			__git_commit_no_verify_message="$1"
-		else
-			echo "'__git_commit_no_verify' accepts [0..1] arguments"
-			return 1
-		fi
-		git commit -m --no-verify "${__git_commit_no_verify_message}"
-		return $?
 	}
 	__git_commit_auto_message() { echo "Commited by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"; }
 	# commit + push
@@ -325,24 +328,25 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -eq 4 ]; then
 			__git_push_alias="$1"
 			__git_push_num_args="$2"
-			if [ "${__git_push_num_args}" -ne 0 ]; then
-				echo "'${__git_push_num_args}' accepts no arguments"
-				return 1
-			fi
 			__git_push_force="$3"
 			__git_push_gitweb="$4"
-			if [ "${__git_push_force}" -eq 0 ] && [ "${__git_push_gitweb}" -eq 0 ]; then
-				git push -u origin "$(__current_branch)" || return $?
-			elif [ "${__git_push_force}" -eq 0 ] && [ "${__git_push_gitweb}" -eq 1 ]; then
-				git push -u origin "$(__current_branch)" || return $?
-				gitweb || return $?
-			elif [ "${__git_push_force}" -eq 1 ] && [ "${__git_push_gitweb}" -eq 0 ]; then
-				git push -fu origin "$(__current_branch)" || return $?
-			elif [ "${__git_push_force}" -eq 1 ] && [ "${__git_push_gitweb}" -eq 1 ]; then
-				git push -fu origin "$(__current_branch)" || return $?
-				gitweb || return $?
+			if [ "${__git_push_num_args}" -eq 0 ]; then
+				if [ "${__git_push_force}" -eq 0 ] && [ "${__git_push_gitweb}" -eq 0 ]; then
+					git push -u origin "$(__current_branch)" || return $?
+				elif [ "${__git_push_force}" -eq 0 ] && [ "${__git_push_gitweb}" -eq 1 ]; then
+					git push -u origin "$(__current_branch)" || return $?
+					gitweb || return $?
+				elif [ "${__git_push_force}" -eq 1 ] && [ "${__git_push_gitweb}" -eq 0 ]; then
+					git push -fu origin "$(__current_branch)" || return $?
+				elif [ "${__git_push_force}" -eq 1 ] && [ "${__git_push_gitweb}" -eq 1 ]; then
+					git push -fu origin "$(__current_branch)" || return $?
+					gitweb || return $?
+				else
+					echo "'$__git_push_alias' accepts {0, 1} for the 'force' and 'gitweb' flags"
+					return 1
+				fi
 			else
-				echo "'$__git_push_alias' accepts {0, 1} for the 'force' and 'gitweb' flags"
+				echo "'${__git_push_num_args}' accepts no arguments"
 				return 1
 			fi
 		else
