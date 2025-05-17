@@ -10,6 +10,7 @@ if command -v git >/dev/null 2>&1; then
 		else
 			git add "$@"
 		fi
+		return $?
 	}
 	gap() {
 		if [ $# -eq 0 ]; then
@@ -49,19 +50,21 @@ if command -v git >/dev/null 2>&1; then
 		if [ "$__gac_count_file" -eq 0 ] && [ "$__gac_count_non_file" -eq 0 ]; then
 			ga
 			if ! gc; then
-				ga
-				gc
+				ga && gc
 			fi
+			return $?
 		elif [ "$__gac_count_file" -eq 0 ] && [ "$__gac_count_non_file" -eq 1 ]; then
 			ga
 			if ! gc "$__gac_message"; then
-				ga
-				gc "$__gac_message"
+				ga && gc "$__gac_message"
 			fi
+			return $?
 		elif [ "$__gac_count_file" -ge 1 ] && [ "$__gac_count_non_file" -eq 0 ]; then
 			eval "ga $__gac_file_args" && gc
+			return $?
 		elif [ "$__gac_count_file" -ge 1 ] && [ "$__gac_count_non_file" -eq 1 ]; then
 			eval "ga $__gac_file_args" && gc "$__gac_message"
+			return $?
 		else
 			echo "'gac' accepts any number of files followed by [0..1] messages; got ${__gac_count_file} file(s) ${__gac_file_list:-'(none)'} and ${__gac_count_non_file} message(s)" >&2
 			return 1
