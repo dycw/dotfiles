@@ -104,56 +104,64 @@ if command -v git >/dev/null 2>&1; then
 	}
 	__git_add_commit_push() {
 		if [ "$#" -ge 3 ]; then
-			__git_add_commit_push_no_verify="$1"
-			__git_add_commit_push_force="$2"
-			__git_add_commit_push_gitweb="$3"
+			__git_acp_no_verify="$1"
+			__git_acp_force="$2"
+			__git_acp_gitweb="$3"
 			shift 3
 
-			__git_add_commit_push_count_file=0
-			__git_add_commit_push_count_non_file=0
-			__git_add_commit_push_message=""
-			__git_add_commit_push_file_names=""
-			__git_add_commit_push_file_args=""
+			__git_acp_count_file=0
+			__git_acp_count_non_file=0
+			__git_acp_message=""
+			__git_acp_file_names=""
+			__git_acp_file_args=""
 
 			for arg in "$@"; do
-				if [ "${__git_add_commit_push_count_non_file}" -eq 0 ] && { [ -f "${arg}" ] || [ -d "${arg}" ]; }; then
-					__git_add_commit_push_file_args="${__git_add_commit_push_file_args} \"$arg\""
-					__git_add_commit_push_file_names="${__git_add_commit_push_file_names}${__git_add_commit_push_file_names:+ }$arg"
-					__git_add_commit_push_count_file=$((__git_add_commit_push_count_file + 1))
+				if [ "${__git_acp_count_non_file}" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
+					__git_acp_file_args="${__git_acp_file_args} \"$arg\""
+					__git_acp_file_names="${__git_acp_file_names}${__git_acp_file_names:+ }$arg"
+					__git_acp_count_file=$((__git_acp_count_file + 1))
 				else
-					__git_add_commit_push_count_non_file=$((__git_add_commit_push_count_non_file + 1))
-					__git_add_commit_push_message="$arg"
+					__git_acp_count_non_file=$((__git_acp_count_non_file + 1))
+					__git_acp_message="$arg"
 				fi
 			done
 
-			__git_add_commit_push_file_list=""
-			for f in ${__git_add_commit_push_file_names}; do
-				__git_add_commit_push_file_list="${__git_add_commit_push_file_list}'${f}',"
+			__git_acp_file_list=""
+			for f in ${__git_acp_file_names}; do
+				__git_acp_file_list="${__git_acp_file_list}'${f}',"
 			done
-			__git_add_commit_push_file_list="${__git_add_commit_push_file_list%,}"
+			__git_acp_file_list="${__git_acp_file_list%,}"
 
-			if [ "${__git_add_commit_push_count_file}" -eq 0 ] && [ "${__git_add_commit_push_count_non_file}" -eq 0 ]; then
+			if [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
 				ga || return $?
-				__git_commit_push "${__git_add_commit_push_no_verify}" "" "${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
+				__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}" || {
+					ga && __git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}"
+				}
 				return $?
-			elif [ "${__git_add_commit_push_count_file}" -eq 0 ] && [ "${__git_add_commit_push_count_non_file}" -eq 1 ]; then
+
+			elif [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
 				ga || return $?
-				__git_commit_push "${__git_add_commit_push_no_verify}" "${__git_add_commit_push_message}" "${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
+				__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}" || {
+					ga && __git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}"
+				}
 				return $?
-			elif [ "${__git_add_commit_push_count_file}" -ge 1 ] && [ "${__git_add_commit_push_count_non_file}" -eq 0 ]; then
-				eval "ga ${__git_add_commit_push_file_args}" || return $?
-				__git_commit_push "${__git_add_commit_push_no_verify}" "" "${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
+
+			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
+				eval "ga ${__git_acp_file_args}" || return $?
+				__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}"
 				return $?
-			elif [ "${__git_add_commit_push_count_file}" -ge 1 ] && [ "${__git_add_commit_push_count_non_file}" -eq 1 ]; then
-				eval "ga ${__git_add_commit_push_file_args}" || return $?
-				__git_commit_push "${__git_add_commit_push_no_verify}" "${__git_add_commit_push_message}" "${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
+
+			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
+				eval "ga ${__git_acp_file_args}" || return $?
+				__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}"
 				return $?
+
 			else
-				echo "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__git_add_commit_push_count_file} file(s) ${__git_add_commit_push_file_list:-'(none)'} and ${__git_add_commit_push_count_non_file} message(s)" >&2
+				echo "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__git_acp_count_file} file(s) ${__git_acp_file_list:-'(none)'} and ${__git_acp_count_non_file} message(s)" >&2
 				return 1
 			fi
 		else
-			echo "'__git_add_commit_push' requires at least 3 arguments"
+			echo "'__git_add_commit_push' requires at least 3 arguments" >&2
 			return 1
 		fi
 	}
@@ -186,10 +194,16 @@ if command -v git >/dev/null 2>&1; then
 		return $?
 	}
 	gbdr() {
-		git branch -r --color=never |
-			fzf |
-			sed -En 's/origin\/(.*)/\1/p' |
-			xargs -n 1 git push -d origin
+		unset __gbdr_branch
+		if [ $# -eq 0 ]; then
+			__gbdr_branch="$(git branch -r --color=never | fzf | sed -En 's|origin/(.*)|\1|p')"
+		elif [ $# -eq 1 ]; then
+			__gbdr_branch="$1"
+		else
+			echo "'gbdr' accepts [0..1] arguments"
+			return 1
+		fi
+		git push origin -d "${__gbdr_branch}"
 	}
 	gbm() { git branch -m "$1"; }
 	# checkout
