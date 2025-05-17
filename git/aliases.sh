@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# shellcheck disable=SC2120
+# shellcheck disable=SC2120,SC2317
 
 if command -v git >/dev/null 2>&1; then
 	# add
@@ -20,34 +20,73 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# add + commit + push
 	gac() {
-		# If no args: git add . && commit with "hi"
-		# if [ $# -eq 0 ]; then
-		# 	git add . && git commit -m hi
-		# 	exit $?
-		# fi
-
-		files=""
-		remaining=0
-		seen_nonfile=0
+		__gac_files=""
+		__gac_count_file=0
+		__gac_count_non_file=0
+		__gac_message=""
 
 		for arg in "$@"; do
-			if [ $seen_nonfile -eq 0 ] && [ -f "$arg" ]; then
-				files="$files \"$arg\""
+			if [ "${__gac_count_non_file}" -eq 0 ] && { [ -f "${arg}" ] || [ -d "${arg}" ]; }; then
+				__gac_files="${__gac_files} \"${arg}\""
+				__gac_count_file=$((__gac_count_file + 1))
 			else
-				seen_nonfile=1
-				remaining=$((remaining + 1))
-				last="$arg"
+				__gac_count_non_file=$((__gac_count_non_file + 1))
+				__gac_message="${arg}"
 			fi
 		done
 
-		# If no commit message
-		if [ $remaining -eq 0 ]; then
-			echo git add $files && git commit -m "auto message"
-		elif [ $remaining -eq 1 ]; then
-			echo git add $files && git commit -m "$last"
+		if [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 0 ]; then
+			ga
+			gc
+		elif [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 1 ]; then
+			ga
+			gc "${__gac_message}"
+		elif [ "${__gac_count_file}" -ge 1 ] && [ "${__gac_count_non_file}" -eq 0 ]; then
+			set -- "${__gac_files}"
+			ga "$@"
+			gc
+		elif [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 1 ]; then
+			set -- "${__gac_files}"
+			ga "$@"
+			gc "${__gac_message}"
 		else
-			echo "Error: Too many trailing arguments (only one commit message allowed)" >&2
-			exit 1
+			echo "'gac' accepts [0..1] messages"
+			return
+		fi
+	}
+	gacn() {
+		__gac_files=""
+		__gac_count_file=0
+		__gac_count_non_file=0
+		__gac_message=""
+
+		for arg in "$@"; do
+			if [ "${__gac_count_non_file}" -eq 0 ] && { [ -f "${arg}" ] || [ -d "${arg}" ]; }; then
+				__gac_files="${__gac_files} \"${arg}\""
+				__gac_count_file=$((__gac_count_file + 1))
+			else
+				__gac_count_non_file=$((__gac_count_non_file + 1))
+				__gac_message="${arg}"
+			fi
+		done
+
+		if [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 0 ]; then
+			ga
+			gc
+		elif [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 1 ]; then
+			ga
+			gc "${__gac_message}"
+		elif [ "${__gac_count_file}" -ge 1 ] && [ "${__gac_count_non_file}" -eq 0 ]; then
+			set -- "${__gac_files}"
+			ga "$@"
+			gc
+		elif [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 1 ]; then
+			set -- "${__gac_files}"
+			ga "$@"
+			gc "${__gac_message}"
+		else
+			echo "'gac' accepts [0..1] messages"
+			return
 		fi
 	}
 	gac2() { if __gac2; then gp; fi; }
@@ -209,38 +248,38 @@ if command -v git >/dev/null 2>&1; then
 	gc() {
 		if [ $# -le 1 ]; then
 			__git_commit "$@"
+			gp
 		else
 			echo "'gc' accepts [0..1] arguments"
 			return
 		fi
-		gp
 	}
 	gcf() {
 		if [ $# -le 1 ]; then
 			__git_commit "$@"
+			gpf
 		else
 			echo "'gcf' accepts [0..1] arguments"
 			return
 		fi
-		gpf
 	}
 	gcn() {
 		if [ $# -le 1 ]; then
 			__git_commit_no_verify "$@"
+			gp
 		else
 			echo "'gcn' accepts [0..1] arguments"
 			return
 		fi
-		gp
 	}
 	gcnp() {
 		if [ $# -le 1 ]; then
 			__git_commit_no_verify "$@"
+			gpf
 		else
 			echo "'gcnp' accepts [0..1] arguments"
 			return
 		fi
-		gpf
 	}
 	__git_commit() {
 		unset __git_commit_message
@@ -257,9 +296,9 @@ if command -v git >/dev/null 2>&1; then
 	__git_commit_no_verify() {
 		unset __git_commit_no_verify_message
 		if [ $# -eq 0 ]; then
-			__git_commit_no_verify="$(__git_commit_auto_message)"
+			__git_commit_no_verify_message="$(__git_commit_auto_message)"
 		elif [ $# -eq 1 ]; then
-			__git_commit_no_verify="$1"
+			__git_commit_no_verify_message="$1"
 		else
 			echo "'__git_commit_no_verify' accepts [0..1] arguments"
 			return
