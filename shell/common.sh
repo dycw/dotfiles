@@ -118,7 +118,7 @@ fi
 if command -v gh >/dev/null 2>&1; then
 	ghc() {
 		if [ $# -eq 1 ]; then
-			gh pr create --title="$1 --body=' '"
+			gh pr create --title="$1" --body="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
 			return $?
 		elif [ $# -eq 2 ]; then
 			gh pr create --title="$1" --body="Closes #$2"
