@@ -71,44 +71,43 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	gac() {
-		__git_add_commit_push gac 0 0 0 "$@"
+		__git_add_commit_push 0 0 0 "$@"
 		return $?
 	}
 	gacn() {
-		__git_add_commit_push gacn 1 0 0 "$@"
+		__git_add_commit_push 1 0 0 "$@"
 		return $?
 	}
 	gacf() {
-		__git_add_commit_push gacf 0 1 0 "$@"
+		__git_add_commit_push 0 1 0 "$@"
 		return $?
 	}
 	gacnf() {
-		__git_add_commit_push gacnf 1 1 0 "$@"
+		__git_add_commit_push 1 1 0 "$@"
 		return $?
 	}
 	gacw() {
-		__git_add_commit_push gacw 0 0 1 "$@"
+		__git_add_commit_push 0 0 1 "$@"
 		return $?
 	}
 	gacnw() {
-		__git_add_commit_push gacnw 1 0 1 "$@"
+		__git_add_commit_push 1 0 1 "$@"
 		return $?
 	}
 	gacfw() {
-		__git_add_commit_push gacfw 0 1 1 "$@"
+		__git_add_commit_push 0 1 1 "$@"
 		return $?
 	}
 	gacnfw() {
-		__git_add_commit_push gacnfw 1 1 1 "$@"
+		__git_add_commit_push 1 1 1 "$@"
 		return $?
 	}
 	__git_add_commit_push() {
-		if [ "$#" -ge 4 ]; then
-			__git_add_commit_push_alias="$1"
-			__git_add_commit_push_no_verify="$2"
-			__git_add_commit_push_force="$3"
-			__git_add_commit_push_gitweb="$4"
-			shift 4
+		if [ "$#" -ge 3 ]; then
+			__git_add_commit_push_no_verify="$1"
+			__git_add_commit_push_force="$2"
+			__git_add_commit_push_gitweb="$3"
+			shift 3
 
 			__git_add_commit_push_count_file=0
 			__git_add_commit_push_count_non_file=0
@@ -135,37 +134,26 @@ if command -v git >/dev/null 2>&1; then
 
 			if [ "${__git_add_commit_push_count_file}" -eq 0 ] && [ "${__git_add_commit_push_count_non_file}" -eq 0 ]; then
 				ga || return $?
-				__git_commit_push "${__git_add_commit_push_alias}" 0 \
-					"${__git_add_commit_push_no_verify}" "" \
-					"${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
+				__git_commit_push "${__git_add_commit_push_no_verify}" "" "${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
 				return $?
-
 			elif [ "${__git_add_commit_push_count_file}" -eq 0 ] && [ "${__git_add_commit_push_count_non_file}" -eq 1 ]; then
 				ga || return $?
-				__git_commit_push "${__git_add_commit_push_alias}" 1 \
-					"${__git_add_commit_push_no_verify}" "${__git_add_commit_push_message}" \
-					"${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
+				__git_commit_push "${__git_add_commit_push_no_verify}" "${__git_add_commit_push_message}" "${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
 				return $?
-
 			elif [ "${__git_add_commit_push_count_file}" -ge 1 ] && [ "${__git_add_commit_push_count_non_file}" -eq 0 ]; then
 				eval "ga ${__git_add_commit_push_file_args}" || return $?
-				__git_commit_push "${__git_add_commit_push_alias}" 0 \
-					"${__git_add_commit_push_no_verify}" "" \
-					"${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
+				__git_commit_push "${__git_add_commit_push_no_verify}" "" "${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
 				return $?
-
 			elif [ "${__git_add_commit_push_count_file}" -ge 1 ] && [ "${__git_add_commit_push_count_non_file}" -eq 1 ]; then
 				eval "ga ${__git_add_commit_push_file_args}" || return $?
-				__git_commit_push "${__git_add_commit_push_alias}" 1 \
-					"${__git_add_commit_push_no_verify}" "${__git_add_commit_push_message}" \
-					"${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
+				__git_commit_push "${__git_add_commit_push_no_verify}" "${__git_add_commit_push_message}" "${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
 				return $?
 			else
-				echo "'${__git_add_commit_push_alias}' accepts any number of files followed by [0..1] messages; got ${__git_add_commit_push_count_file} file(s) ${__git_add_commit_push_file_list:-'(none)'} and ${__git_add_commit_push_count_non_file} message(s)" >&2
+				echo "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__git_add_commit_push_count_file} file(s) ${__git_add_commit_push_file_list:-'(none)'} and ${__git_add_commit_push_count_non_file} message(s)" >&2
 				return 1
 			fi
 		else
-			echo "'__git_add_commit_push' requires at least 4 arguments"
+			echo "'__git_add_commit_push' requires at least 3 arguments"
 			return 1
 		fi
 	}
