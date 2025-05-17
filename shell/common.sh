@@ -118,7 +118,7 @@ fi
 if command -v gh >/dev/null 2>&1; then
 	ghc() {
 		if [ $# -eq 1 ]; then
-			gh pr create --title="$1"
+			gh pr create --title="$1 --body"
 			return $?
 		elif [ $# -eq 2 ]; then
 			gh pr create --title="$1" --body="Closes #$2"
@@ -129,12 +129,6 @@ if command -v gh >/dev/null 2>&1; then
 		fi
 	}
 	ghi() {
-		case $# in
-		1) gh issue create --title="$1" ;;
-		2) gh issue create --title="$1" --label="$2" ;;
-		3) gh issue create --title="$1" --label="$2" --body="$3" ;;
-		*) echo "ghic TITLE [LABEL] [BODY]" ;;
-		esac
 		if [ $# -eq 1 ]; then
 			gh issue create --title="$1"
 			return $?
@@ -161,8 +155,7 @@ if command -v gh >/dev/null 2>&1; then
 	}
 	ghcm() {
 		if [ $# -ge 1 ] && [ $# -le 2 ]; then
-			ghc "$@" || return $?
-			ghm
+			ghc "$@" && ghm
 			return $?
 		else
 			echo "'ghcm' accepts [0..1] arguments"
