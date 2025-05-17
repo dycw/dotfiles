@@ -20,73 +20,40 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# add + commit + push
 	gac() {
-		__gac_files=""
 		__gac_count_file=0
 		__gac_count_non_file=0
 		__gac_message=""
+		__gac_file_names=""
+		set --
 
 		for arg in "$@"; do
-			if [ "${__gac_count_non_file}" -eq 0 ] && { [ -f "${arg}" ] || [ -d "${arg}" ]; }; then
-				__gac_files="${__gac_files} \"${arg}\""
+			if [ "${__gac_count_non_file}" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
+				set -- "$@" "$arg"
+				__gac_file_names="${__gac_file_names}${__gac_file_names:+ }$arg"
 				__gac_count_file=$((__gac_count_file + 1))
 			else
 				__gac_count_non_file=$((__gac_count_non_file + 1))
-				__gac_message="${arg}"
+				__gac_message="$arg"
 			fi
 		done
 
-		if [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 0 ]; then
-			ga
-			gc
-		elif [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 1 ]; then
-			ga
-			gc "${__gac_message}"
-		elif [ "${__gac_count_file}" -ge 1 ] && [ "${__gac_count_non_file}" -eq 0 ]; then
-			set -- "${__gac_files}"
-			ga "$@"
-			gc
-		elif [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 1 ]; then
-			set -- "${__gac_files}"
-			ga "$@"
-			gc "${__gac_message}"
-		else
-			echo "'gac' accepts [0..1] messages"
-			return
-		fi
-	}
-	gacn() {
-		__gac_files=""
-		__gac_count_file=0
-		__gac_count_non_file=0
-		__gac_message=""
-
-		for arg in "$@"; do
-			if [ "${__gac_count_non_file}" -eq 0 ] && { [ -f "${arg}" ] || [ -d "${arg}" ]; }; then
-				__gac_files="${__gac_files} \"${arg}\""
-				__gac_count_file=$((__gac_count_file + 1))
-			else
-				__gac_count_non_file=$((__gac_count_non_file + 1))
-				__gac_message="${arg}"
-			fi
+		__gac_file_list=""
+		for f in $__gac_file_names; do
+			__gac_file_list="${__gac_file_list}'${f}',"
 		done
+		__gac_file_list="${__gac_file_list%,}"
 
 		if [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 0 ]; then
-			ga
-			gc
+			ga && gc
 		elif [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 1 ]; then
-			ga
-			gc "${__gac_message}"
+			ga && gc "$__gac_message"
 		elif [ "${__gac_count_file}" -ge 1 ] && [ "${__gac_count_non_file}" -eq 0 ]; then
-			set -- "${__gac_files}"
-			ga "$@"
-			gc
-		elif [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 1 ]; then
-			set -- "${__gac_files}"
-			ga "$@"
-			gc "${__gac_message}"
+			ga "$@" && gc
+		elif [ "${__gac_count_file}" -ge 1 ] && [ "${__gac_count_non_file}" -eq 1 ]; then
+			ga "$@" && gc "$__gac_message"
 		else
-			echo "'gac' accepts [0..1] messages"
-			return
+			echo "'gac' accepts any number of files followed by [0..1] messages; got ${__gac_count_file} file(s) ${__gac_file_list:-'(none)'} and ${__gac_count_non_file} message(s)" >&2
+			return 1
 		fi
 	}
 	gac2() { if __gac2; then gp; fi; }
