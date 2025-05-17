@@ -306,10 +306,12 @@ if command -v git >/dev/null 2>&1; then
 				echo "'${__git_commit_push_alias}' accepts [0..1] arguments; got ${__git_commit_push_num_args} and message \"${__git_commit_push_message}\""
 				return 1
 			fi
+			echo "hi"
 			__git_commit "${__git_commit_push_alias}" \
 				"${__git_commit_push_num_args}" \
 				"${__git_commit_push_no_verify}" \
 				"${__git_commit_push_message}" || return $?
+			echo "hi2"
 			__git_push "${__git_commit_push_alias}" \
 				"${__git_commit_push_num_args}" \
 				"${__git_commit_push_force}" \
