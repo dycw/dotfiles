@@ -248,7 +248,7 @@ if command -v git >/dev/null 2>&1; then
 				git commit --no-verify -m "${__git_commit_message}"
 				return $?
 			else
-				echo "'$__git_commit_alias' accepts {0, 1} for the 'no-verify' flags"
+				echo "'${__git_commit_alias}' accepts [0..1] arguments; got ${__git_commit_num_args} and message \"${__git_commit_message}\""
 				return 1
 			fi
 		else
@@ -303,7 +303,7 @@ if command -v git >/dev/null 2>&1; then
 			elif [ "${__git_commit_push_num_args}" -eq 1 ] && [ -n "${__git_commit_push_message}" ]; then
 				: # valid
 			else
-				echo "'${__git_commit_push_alias}' accpets [0..1] arguments"
+				echo "'${__git_commit_push_alias}' accepts [0..1] arguments; got ${__git_commit_push_num_args} and message \"${__git_commit_push_message}\""
 				return 1
 			fi
 			__git_commit "${__git_commit_push_alias}" \
@@ -432,32 +432,6 @@ if command -v git >/dev/null 2>&1; then
 	gta() { git tag -a "$1" "$2" -m "$1" && git push -u origin --tags; }
 	gtd() { git tag -d "$@" && git push -d origin "$@"; }
 
-	# gitweb
-	if command -v gitweb >/dev/null 2>&1; then
-		alias gw='gitweb'
-		# add + commit + push
-		gacw() { gac "$@" && gitweb; }
-		gacaw() { gaca "$@" && gitweb; }
-		gacanw() { gacan "$@" && gitweb; }
-		gacfw() { gacf "$@" && gitweb; }
-		gacnw() { gacn "$@" && gitweb; }
-		gacnfw() { gacnf "$@" && gitweb; }
-		gacnrw() { gacnr "$@" && gitweb; }
-		gacrw() { gacr "$@" && gitweb; }
-		gac2fw() { gac2f "$@" && gitweb; }
-		gac2w() { gac2 "$@" && gitweb; }
-		# commit
-		gcnoww() { gcnow "$@" && gitweb; }
-		# commit + push
-		gcw() { gc "$@" && gitweb; }
-		gcaw() { gca "$@" && gitweb; }
-		gcanw() { gcan "$@" && gitweb; }
-		gcfw() { gcf "$@" && gitweb; }
-		gcnw() { gcn "$@" && gitweb; }
-		gcnfw() { gcnf "$@" && gitweb; }
-		gcnrw() { gcnr "$@" && gitweb; }
-		gcrw() { gcr "$@" && gitweb; }
-	fi
 	# push
 	alias gpw='gp && gitweb'
 	alias gpfw='gpf && gitweb'
