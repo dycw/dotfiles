@@ -20,7 +20,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	# add + commit + push
-	gac() {
+	gac_prototype() {
 		__gac_count_file=0
 		__gac_count_non_file=0
 		__gac_message=""
@@ -70,23 +70,113 @@ if command -v git >/dev/null 2>&1; then
 			return 1
 		fi
 	}
-	gac2() { if __gac2; then gp; fi; }
-	gac2e() { if __gac2; then exit; fi; }
-	gac2f() { if __gac2; then gpf; fi; }
-	__gac2() {
-		gaa
-		if ! gcnow; then
-			gaa
-			gcnow
+	gac() {
+		__git_add_commit_push gac 0 0 0 "$@"
+		return $?
+	}
+	gacn() {
+		__git_add_commit_push gacn 1 0 0 "$@"
+		return $?
+	}
+	gacf() {
+		__git_add_commit_push gacf 0 1 0 "$@"
+		return $?
+	}
+	gacnf() {
+		__git_add_commit_push gacnf 1 1 0 "$@"
+		return $?
+	}
+	gacw() {
+		__git_add_commit_push gacw 0 0 1 "$@"
+		return $?
+	}
+	gacnw() {
+		__git_add_commit_push gacnw 1 0 1 "$@"
+		return $?
+	}
+	gacfw() {
+		__git_add_commit_push gacfw 0 1 1 "$@"
+		return $?
+	}
+	gacnfw() {
+		__git_add_commit_push gacnfw 1 1 1 "$@"
+		return $?
+	}
+	__git_add_commit_push() {
+		if [ "$#" -ge 4 ]; then
+			__git_add_commit_push_alias="$1"
+			__git_add_commit_push_no_verify="$2"
+			__git_add_commit_push_force="$3"
+			__git_add_commit_push_gitweb="$4"
+			shift 4
+
+			__git_add_commit_push_count_file=0
+			__git_add_commit_push_count_non_file=0
+			__git_add_commit_push_message=""
+			__git_add_commit_push_file_names=""
+			__git_add_commit_push_file_args=""
+
+			for arg in "$@"; do
+				if [ "${__git_add_commit_push_count_non_file}" -eq 0 ] && { [ -f "${arg}" ] || [ -d "${arg}" ]; }; then
+					__git_add_commit_push_file_args="${__git_add_commit_push_file_args} \"$arg\""
+					__git_add_commit_push_file_names="${__git_add_commit_push_file_names}${__git_add_commit_push_file_names:+ }$arg"
+					__git_add_commit_push_count_file=$((__git_add_commit_push_count_file + 1))
+				else
+					__git_add_commit_push_count_non_file=$((__git_add_commit_push_count_non_file + 1))
+					__git_add_commit_push_message="$arg"
+				fi
+			done
+
+			__git_add_commit_push_file_list=""
+			for f in ${__git_add_commit_push_file_names}; do
+				__git_add_commit_push_file_list="${__git_add_commit_push_file_list}'${f}',"
+			done
+			__git_add_commit_push_file_list="${__git_add_commit_push_file_list%,}"
+
+			if [ "${__git_add_commit_push_count_file}" -eq 0 ] && [ "${__git_add_commit_push_count_non_file}" -eq 0 ]; then
+				ga || return $?
+				__git_commit_push "${__git_add_commit_push_alias}" 0 \
+					"${__git_add_commit_push_no_verify}" "" \
+					"${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
+				return $?
+
+			elif [ "${__git_add_commit_push_count_file}" -eq 0 ] && [ "${__git_add_commit_push_count_non_file}" -eq 1 ]; then
+				ga || return $?
+				__git_commit_push "${__git_add_commit_push_alias}" 1 \
+					"${__git_add_commit_push_no_verify}" "${__git_add_commit_push_message}" \
+					"${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
+				return $?
+
+			elif [ "${__git_add_commit_push_count_file}" -ge 1 ] && [ "${__git_add_commit_push_count_non_file}" -eq 0 ]; then
+				eval "ga ${__git_add_commit_push_file_args}" || return $?
+				__git_commit_push "${__git_add_commit_push_alias}" 0 \
+					"${__git_add_commit_push_no_verify}" "" \
+					"${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
+				return $?
+
+			elif [ "${__git_add_commit_push_count_file}" -ge 1 ] && [ "${__git_add_commit_push_count_non_file}" -eq 1 ]; then
+				eval "ga ${__git_add_commit_push_file_args}" || return $?
+				__git_commit_push "${__git_add_commit_push_alias}" 1 \
+					"${__git_add_commit_push_no_verify}" "${__git_add_commit_push_message}" \
+					"${__git_add_commit_push_force}" "${__git_add_commit_push_gitweb}"
+				return $?
+			else
+				echo "'${__git_add_commit_push_alias}' accepts any number of files followed by [0..1] messages; got ${__git_add_commit_push_count_file} file(s) ${__git_add_commit_push_file_list:-'(none)'} and ${__git_add_commit_push_count_non_file} message(s)" >&2
+				return 1
+			fi
+		else
+			echo "'__git_add_commit_push' requires at least 4 arguments"
+			return 1
 		fi
 	}
 	# branch
 	gb() {
 		if [ $# -eq 0 ]; then
 			git branch -alv --sort=-committerdate
+			return $?
 		else
 			echo "'gb' accepts no arguments"
-			return
+			return 1
 		fi
 	}
 	gbd() {
@@ -96,15 +186,16 @@ if command -v git >/dev/null 2>&1; then
 				__gbd_branch='dev'
 			else
 				echo "'gbd' off 'master' requires 1 argument 'branch'"
-				return
+				return 1
 			fi
 		elif [ $# -eq 1 ]; then
 			__gbd_branch="$1"
 		else
 			echo "'gbd' accepts [0..1] arguments"
-			return
+			return 1
 		fi
 		git branch -D "${__gbd_branch}"
+		return $?
 	}
 	gbdr() {
 		git branch -r --color=never |
@@ -123,16 +214,16 @@ if command -v git >/dev/null 2>&1; then
 				__gco_branch='master'
 			else
 				echo "'gco' requires 1 argument 'branch'"
-				return
+				return 1
 			fi
 		elif [ $# -eq 1 ]; then
 			__gco_branch="$1"
 		else
 			echo "'gco' accepts [0..1] arguments"
-			return
+			return 1
 		fi
-		git checkout "${__gco_branch}"
-		git pull --force
+		git checkout "${__gco_branch}" && git pull --force
+		return $?
 	}
 	gcob() {
 		unset __gcob_branch
@@ -141,15 +232,16 @@ if command -v git >/dev/null 2>&1; then
 				__gcob_branch='dev'
 			else
 				echo "'gcob' off 'master' requires 1 argument 'branch'"
-				return
+				return 1
 			fi
 		elif [ $# -eq 1 ]; then
 			__gcob_branch="$1"
 		else
 			echo "'gcob' accepts [0..1] arguments"
-			return
+			return 1
 		fi
 		git checkout -b "${__gcob_branch}"
+		return $?
 	}
 	gcobt() {
 		if [ $# -eq 1 ]; then
@@ -157,26 +249,29 @@ if command -v git >/dev/null 2>&1; then
 				gco master
 			fi
 			git checkout -b "$1" -t "origin/$1"
+			return $?
 		else
 			echo "'gcobt' requires 1 argument"
-			return
+			return 1
 		fi
 	}
 	gcof() {
 		if [ $# -eq 0 ]; then
 			git checkout -- .
+			return $?
 		else
 			echo "'gcof' accepts no arguments"
-			return
+			return 1
 		fi
 
 	}
 	gcom() {
 		if [ $# -eq 0 ]; then
 			gco master
+			return $?
 		else
 			echo "'gcom' accepts no arguments"
-			return
+			return 1
 		fi
 	}
 	gcomd() {
@@ -184,23 +279,25 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			if __is_current_branch_master; then
 				echo "'gcomd' cannot be run on master"
-				return
+				return 1
 			else
 				__gcomd_branch="$(__current_branch)"
 				gco master
 				gbd "${__gcomd_branch}"
+				return $?
 			fi
 		else
 			echo "'gcomd' accepts no arguments"
-			return
+			return 1
 		fi
 	}
 	gcop() {
 		if [ $# -eq 0 ]; then
 			git checkout --patch
+			return $?
 		else
 			echo "'gcop' accepts no arguments"
-			return
+			return 1
 		fi
 	}
 	# checkout + branch
@@ -209,13 +306,11 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			if __is_current_branch_master; then
 				echo "'gcobr' cannot be run on master"
-				return
+				return 1
 			else
 				__gbr_branch="$(__current_branch)"
-				gcof
-				gco master
-				gbd "${__gbr_branch}"
-				gcob "${__gbr_branch}"
+				gcof && gco master && gbd "${__gbr_branch}" && gcob "${__gbr_branch}"
+				return $?
 			fi
 		else
 			echo "'gcobr' accepts [0..1] arguments"
@@ -428,10 +523,6 @@ if command -v git >/dev/null 2>&1; then
 	# tag
 	gta() { git tag -a "$1" "$2" -m "$1" && git push -u origin --tags; }
 	gtd() { git tag -d "$@" && git push -d origin "$@"; }
-
-	# push
-	alias gpw='gp && gitweb'
-	alias gpfw='gpf && gitweb'
 
 	# watchexec
 	if command -v watch >/dev/null 2>&1; then
