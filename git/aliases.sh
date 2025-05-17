@@ -28,8 +28,14 @@ if command -v git >/dev/null 2>&1; then
 	gb() { git branch "$@"; }
 	gba() { gb -a "$@"; }
 	gbd() {
-		__branch=$(__branch_or_dev "$@")
-		if gbexists "${__branch}"; then
+		if [ $# -eq 0 ]; then
+			if [ "$(gcurr)" = 'master' ]; then
+				__branch='dev'
+			fi
+		elif [ $# -eq 1 ]; then
+			__branch="$1"
+		fi
+		if [ -n "${__branch}" ] && gbexists "${__branch}"; then
 			git branch -D "${__branch}"
 		fi
 	}
@@ -46,18 +52,12 @@ if command -v git >/dev/null 2>&1; then
 			false
 		fi
 	}
-	gbk() {
-		__branch=$(__branch_or_dev "$@")
-		if gbexists "${__branch}"; then
-			git branch -D "${__branch}"
-		fi
-	}
 	gbm() { git branch -m "$@"; }
 	__branch_or_dev() {
 		if [ "$#" -eq 0 ]; then
 			echo dev
 		else
-			echo "$@"
+			echo "$1"
 		fi
 	}
 	# checkout
@@ -70,12 +70,14 @@ if command -v git >/dev/null 2>&1; then
 			git checkout "$@"
 		fi
 	}
-	gcob() { git checkout -b "$(__branch_or_dev "$@")"; }
-	gcobr() { gbk "$@" && gcob "$@"; }
+	gcob() { git checkout -b "$(__branch_or_dev "$1")"; }
+	gcobr() { gbk "$1" && gcob "$1"; }
+	gcobrc() { gcobr "$(gcurr)"; }
 	gcobt() { git checkout -b "$1" -t "origin/$1"; }
 	gcom() { git checkout master && git pull --force; }
-	gcomk() { gcom && gbk "$@"; }
+	gcomk() { gcom && gbkc "$@"; }
 	gcomr() { gcom && gcobr "$@"; }
+	gcomrc() { gcomr && gcobrc; }
 	gcop() { git checkout --patch; }
 	# cherry-pick
 	alias gcp='git cherry-pick'
