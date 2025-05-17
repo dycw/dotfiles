@@ -116,22 +116,37 @@ fi
 
 # gh
 if command -v gh >/dev/null 2>&1; then
-	ghc() { gh pr create "$@"; }
+	ghc() {
+		case $# in
+		1)
+			gh pr create --title="$1"
+			;;
+		2)
+			gh pr create --title="$1" --body="Closes #$2"
+			;;
+		*)
+			echo "ghc TITLE [ISSUE_NUM]"
+			;;
+		esac
+	}
 	ghic() {
 		case $# in
 		1)
 			gh issue create --title="$1"
 			;;
-		*)
-			title="$1"
-			label="$2"
-			shift 2
-			gh issue create --title="$title" --label="$label" "$@"
+		2)
+			gh issue create --title="$1" --label="$2"
+			;;
+		3)
+			gh issue create --title="$1" --label="$2" --body="$3"
 			;;
 		esac
 	}
-	ghm() { gh pr merge --auto "$@"; }
-	ghcm() { gh pr create && gh pr merge --auto "$@"; }
+	ghm() { gh pr merge --auto; }
+	ghcm() {
+		gh pr create "$@"
+		gh pr merge --auto
+	}
 fi
 
 # git

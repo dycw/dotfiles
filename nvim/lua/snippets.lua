@@ -488,6 +488,7 @@ ls.add_snippets("python", {
     s("ut-setup-logging", { t({ "from utilities.logging import setup_logging", "" }) }),
     s("ut-show", { t({ "from utilities.jupyter import show", "" }) }),
     s("ut-shuffle", { t({ "from utilities.random import shuffle", "" }) }),
+    s("ut-str-mapping", { t({ "from utilities.types import StrMapping", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s("ut-system-random", { t({ "from utilities.random import SYSTEM_RANDOM", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
