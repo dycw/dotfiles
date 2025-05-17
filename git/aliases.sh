@@ -142,7 +142,7 @@ if command -v git >/dev/null 2>&1; then
 	gbdr() {
 		unset __gbdr_branch
 		if [ $# -eq 0 ]; then
-			__gbdr_branch=$(git branch -r --color=never | awk '!/->/' | fzf | sed -E 's|^[[:space:]]*origin/||')
+			__gbdr_branch="$(__select_remote_branch)"
 		elif [ $# -eq 1 ]; then
 			__gbdr_branch="$1"
 		else
@@ -153,6 +153,9 @@ if command -v git >/dev/null 2>&1; then
 		return $?
 	}
 	gbm() { git branch -m "$1"; }
+	__select_remote_branch() {
+		git branch -r --color=never | awk '!/->/' | fzf | sed -E 's|^[[:space:]]*origin/||'
+	}
 	# checkout
 	gcm() {
 		if [ $# -eq 0 ]; then
@@ -218,16 +221,20 @@ if command -v git >/dev/null 2>&1; then
 		return $?
 	}
 	gcobt() {
-		if [ $# -eq 1 ]; then
-			if ! __is_current_branch_master; then
-				gco master
-			fi
-			git checkout -b "$1" -t "origin/$1"
-			return $?
+		unset __gcobt_branch
+		if [ $# -eq 0 ]; then
+			__gcobt_branch="$(__select_remote_branch)"
+		elif [ $# -eq 1 ]; then
+			__gcobt_branch="$1"
 		else
-			echo "'gcobt' requires 1 argument"
+			echo "'gcobt' accepts [0..1] arguments"
 			return 1
 		fi
+		if ! __is_current_branch_master; then
+			gco master
+		fi
+		git checkout -b "${__gcobt_branch}" -t "origin/${__gcobt_branch}"
+		return $?
 	}
 	gcof() {
 		if [ $# -eq 0 ]; then
