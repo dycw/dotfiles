@@ -47,9 +47,17 @@ if command -v git >/dev/null 2>&1; then
 		echo "'gac' got ${__gac_count_file} file(s) ${__gac_file_list:-'(none)'} and ${__gac_count_non_file} message(s)" >&2
 
 		if [ "$__gac_count_file" -eq 0 ] && [ "$__gac_count_non_file" -eq 0 ]; then
-			ga && gc
+			ga
+			if ! gc; then
+				ga
+				gc
+			fi
 		elif [ "$__gac_count_file" -eq 0 ] && [ "$__gac_count_non_file" -eq 1 ]; then
-			ga && gc "$__gac_message"
+			ga
+			if ! gc "$__gac_message"; then
+				ga
+				gc "$__gac_message"
+			fi
 		elif [ "$__gac_count_file" -ge 1 ] && [ "$__gac_count_non_file" -eq 0 ]; then
 			eval "ga $__gac_file_args" && gc
 		elif [ "$__gac_count_file" -ge 1 ] && [ "$__gac_count_non_file" -eq 1 ]; then
@@ -201,6 +209,7 @@ if command -v git >/dev/null 2>&1; then
 				return
 			else
 				__gbr_branch="$(__current_branch)"
+				gcof
 				gco master
 				gbd "${__gbr_branch}"
 				gcob "${__gbr_branch}"
@@ -215,42 +224,6 @@ if command -v git >/dev/null 2>&1; then
 	# clone
 	gcl() { git clone --recurse-submodules "$@"; }
 	# commit
-	gc() {
-		if [ $# -le 1 ]; then
-			__git_commit "$@"
-			gp
-		else
-			echo "'gc' accepts [0..1] arguments"
-			return
-		fi
-	}
-	gcf() {
-		if [ $# -le 1 ]; then
-			__git_commit "$@"
-			gpf
-		else
-			echo "'gcf' accepts [0..1] arguments"
-			return
-		fi
-	}
-	gcn() {
-		if [ $# -le 1 ]; then
-			__git_commit_no_verify "$@"
-			gp
-		else
-			echo "'gcn' accepts [0..1] arguments"
-			return
-		fi
-	}
-	gcnp() {
-		if [ $# -le 1 ]; then
-			__git_commit_no_verify "$@"
-			gpf
-		else
-			echo "'gcnp' accepts [0..1] arguments"
-			return
-		fi
-	}
 	__git_commit() {
 		unset __git_commit_message
 		if [ $# -eq 0 ]; then
@@ -259,9 +232,10 @@ if command -v git >/dev/null 2>&1; then
 			__git_commit_message="$1"
 		else
 			echo "'__git_commit' accepts [0..1] arguments"
-			return
+			return 1
 		fi
 		git commit -m "${__git_commit_message}"
+		return $?
 	}
 	__git_commit_no_verify() {
 		unset __git_commit_no_verify_message
@@ -271,96 +245,49 @@ if command -v git >/dev/null 2>&1; then
 			__git_commit_no_verify_message="$1"
 		else
 			echo "'__git_commit_no_verify' accepts [0..1] arguments"
-			return
+			return 1
 		fi
 		git commit -m --no-verify "${__git_commit_no_verify_message}"
+		return $?
 	}
 	__git_commit_auto_message() { echo "Commited by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"; }
 	# commit + push
-	__git_commitz() {
-		unset __amend __no_verify __reuse __force
-		while test $# != 0; do
-			case "$1" in
-			-a)
-				__amend=1
-				shift
-				;;
-			-n)
-				__no_verify=1
-				shift
-				;;
-			-r)
-				__reuse=1
-				shift
-				;;
-			-f)
-				__force=1
-				shift
-				;;
-			*) break ;;
-			esac
-		done
-		if [ -n "${__amend}" ] && [ -n "${__reuse}" ]; then
-			echo "Expected at most one of --amend or --reuse; got both"
-		elif [ -n "${__amend}" ] && [ -z "${__reuse}" ]; then
-			# __amend, not reuse
-			if [ -n "${__force}" ]; then
-				if [ -n "${__no_verify}" ] && [ $# -eq 0 ]; then
-					git commit -n --amend
-				elif [ -n "${__no_verify}" ] && [ $# -eq 1 ]; then
-					git commit -nm "$1" --amend
-				elif [ -z "${__no_verify}" ] && [ $# -eq 0 ]; then
-					git commit --amend
-				elif [ -z "${__no_verify}" ] && [ $# -eq 1 ]; then
-					git commit -m "$1" --amend
-				else
-					echo "Since --amend, expected at most 1 argument; got $#"
-				fi
-				gpf
-			else
-				echo "Since --amend, expected --force"
-			fi
-		elif [ -z "${__amend}" ] && [ -n "${__reuse}" ]; then
-			# reuse, not amend
-			if [ $# -ge 1 ]; then
-				echo "Since --reuse, expected no arguments; got $#"
-			elif [ -z "${__force}" ]; then
-				echo "Since --reuse, expected --force"
-			else
-				if [ -n "${__no_verify}" ]; then
-					git commit -n --amend --no-edit
-				else
-					git commit --amend --no-edit
-				fi
-				gpf
-			fi
+	gc() {
+		if [ $# -le 1 ]; then
+			__git_commit "$@" && gp
+			return $?
 		else
-			# not amend, not reuse
-			if [ -n "${__no_verify}" ] && [ $# -eq 0 ]; then
-				git commit -n
-			elif [ -n "${__no_verify}" ] && [ $# -eq 1 ]; then
-				git commit -nm "$1"
-			elif [ -z "${__no_verify}" ] && [ $# -eq 0 ]; then
-				git commit
-			elif [ -z "${__no_verify}" ] && [ $# -eq 1 ]; then
-				git commit -m "$1"
-			else
-				echo "Basic case expected at most 1 argument; got $#"
-			fi
-			if [ -n "${__force}" ]; then
-				gpf
-			else
-				gp
-			fi
+			echo "'gc' accepts [0..1] arguments"
+			return 1
 		fi
 	}
-	gca() { __git_commit -a -f "$@"; }
-	gcan() { __git_commit -a -n -f "$@"; }
-	gcf() { __git_commit -f "$@"; }
-	gcn() { __git_commit -n "$@"; }
-	gcnf() { __git_commit -n -f "$@"; }
-	gcnr() { __git_commit -n -r -f "$@"; }
-	gcr() { __git_commit -r -f "$@"; }
+	gcf() {
+		if [ $# -le 1 ]; then
+			__git_commit "$@" && gpf
+			return $?
+		else
+			echo "'gcf' accepts [0..1] arguments"
+			return 1
+		fi
+	}
+	gcn() {
+		if [ $# -le 1 ]; then
+			__git_commit_no_verify "$@" && gp
+			return $?
+		else
+			echo "'gcn' accepts [0..1] arguments"
+			return 1
+		fi
+	}
+	gcnf() {
+		if [ $# -le 1 ]; then
+			__git_commit_no_verify "$@" && gpf
+			return $?
+		else
+			echo "'gcnf' accepts [0..1] arguments"
+			return 1
+		fi
+	}
 	# diff
 	gd() { git diff "$@"; }
 	gdc() { git diff --cached "$@"; }
@@ -378,9 +305,10 @@ if command -v git >/dev/null 2>&1; then
 	gp() {
 		if [ $# -eq 0 ]; then
 			git push -u origin "$(__current_branch)"
+			return $?
 		else
 			echo "'gp' accepts no arguments"
-			return
+			return 1
 		fi
 	}
 	gpf() {
