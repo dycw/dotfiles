@@ -42,7 +42,7 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			git branch -alv --sort=-committerdate
 		else
-			echo "'gb' accepts 0 arguments"
+			echo "'gb' accepts no arguments"
 			return
 		fi
 	}
@@ -123,7 +123,7 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			git checkout -- .
 		else
-			echo "'gcof' requires 0 arguments"
+			echo "'gcof' accepts no arguments"
 			return
 		fi
 
@@ -132,7 +132,7 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			gco master
 		else
-			echo "'gcom' requires 0 arguments"
+			echo "'gcom' accepts no arguments"
 			return
 		fi
 	}
@@ -148,7 +148,7 @@ if command -v git >/dev/null 2>&1; then
 				gbd "${__gcomd_branch}"
 			fi
 		else
-			echo "'gcomd' requires 0 arguments"
+			echo "'gcomd' accepts no arguments"
 			return
 		fi
 	}
@@ -156,7 +156,7 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			git checkout --patch
 		else
-			echo "'gcop' requires 0 arguments"
+			echo "'gcop' accepts no arguments"
 			return
 		fi
 	}
@@ -183,9 +183,19 @@ if command -v git >/dev/null 2>&1; then
 	# clone
 	gcl() { git clone --recurse-submodules "$@"; }
 	# commit
-	__git_commit_now() {
-		git commit -m "Saved at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
+	gc() {
+		unset __gc_message
+		if [ $# -eq 0 ]; then
+			__gc_message="$(__git_commit_auto_message)"
+		elif [ $# -eq 1 ]; then
+			__gc_message="$1"
+		else
+			echo "'gc' accepts [0..1] arguments"
+			return
+		fi
+		git commit -m "${__gc_message}"
 	}
+	__git_commit_auto_message() { echo "Commited by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"; }
 	# commit + push
 	__git_commit() {
 		unset __amend __no_verify __reuse __force
@@ -264,7 +274,6 @@ if command -v git >/dev/null 2>&1; then
 			fi
 		fi
 	}
-	gc() { __git_commit "$@"; }
 	gca() { __git_commit -a -f "$@"; }
 	gcan() { __git_commit -a -n -f "$@"; }
 	gcf() { __git_commit -f "$@"; }
