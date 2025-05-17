@@ -131,7 +131,7 @@ if command -v gh >/dev/null 2>&1; then
 			return 1
 		fi
 	}
-	ghi() {
+	ghic() {
 		if [ $# -eq 1 ]; then
 			gh issue create --title="$1" --body='.'
 			return $?
@@ -142,7 +142,16 @@ if command -v gh >/dev/null 2>&1; then
 			gh issue create --title="$1" --label="$2" --body="$3"
 			return $?
 		else
-			echo "'ghi' accepts [1..3] arguments"
+			echo "'ghic' accepts [1..3] arguments"
+			return 1
+		fi
+	}
+	ghil() {
+		if [ $# -eq 0 ]; then
+			gh issue list
+			return $?
+		else
+			echo "'ghil' accepts no arguments"
 			return 1
 		fi
 	}
