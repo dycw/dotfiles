@@ -495,13 +495,46 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	# rebase
-	grb() { gf && git rebase "$@"; }
-	grba() { git rebase --abort; }
-	grbc() { git rebase --continue; }
-	grbi() { gfm && git rebase -i "$@"; }
-	grbim() { gfm && git rebase -i origin/master; }
-	grbm() { gfm && git rebase -s recursive -X theirs origin/master; }
-	grbs() { git rebase --skip; }
+	grb() {
+		unset __grb_branch
+		if [ $# -eq 0 ]; then
+			__grb_branch='origin/master'
+		elif [ $# -eq 1 ]; then
+			__grb_branch="$1"
+		else
+			echo "'grb' accepts [0..1] arguments"
+			return 1
+		fi
+		gf && git rebase -s recursive -X theirs "${__grb_branch}"
+		return $?
+	}
+	grba() {
+		if [ $# -eq 0 ]; then
+			git rebase --abort
+			return $?
+		else
+			echo "'grba' accepts no arguments"
+			return 1
+		fi
+	}
+	grbc() {
+		if [ $# -eq 0 ]; then
+			git rebase --continue
+			return $?
+		else
+			echo "'grbc' accepts no arguments"
+			return 1
+		fi
+	}
+	grbs() {
+		if [ $# -eq 0 ]; then
+			git rebase --skip
+			return $?
+		else
+			echo "'grbs' accepts no arguments"
+			return 1
+		fi
+	}
 	# rebase (squash)
 	gsqm() {
 		gf
