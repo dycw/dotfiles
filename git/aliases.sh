@@ -4,9 +4,20 @@
 
 if command -v git >/dev/null 2>&1; then
 	# add
-	ga() { git add "$@"; }
-	gaa() { git add -A; }
-	gap() { git add -p "$@"; }
+	ga() {
+		if [ $# -eq 0 ]; then
+			git add -A
+		else
+			git add "$@"
+		fi
+	}
+	gap() {
+		if [ $# -eq 0 ]; then
+			git add -pA
+		else
+			git add -p "$@"
+		fi
+	}
 	# add + commit + push
 	gac() { gaa && gc "$@"; }
 	gaca() { gaa && gca "$@"; }
@@ -27,8 +38,14 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	# branch
-	gb() { git branch "$@"; }
-	gba() { gb -a "$@"; }
+	gb() {
+		if [ $# -eq 0 ]; then
+			git branch -alv --sort=-committerdate
+		else
+			echo "'gb' accepts 0 arguments"
+			return
+		fi
+	}
 	gbd() {
 		unset __gbd_branch
 		if [ $# -eq 0 ]; then
@@ -92,11 +109,28 @@ if command -v git >/dev/null 2>&1; then
 		git checkout -b "${__gcob_branch}"
 	}
 	gcobt() {
-		git checkout -b "$1" -t "origin/$1"
+		if [ $# -eq 1 ]; then
+			if ! __is_current_branch_master; then
+				gco master
+			fi
+			git checkout -b "$1" -t "origin/$1"
+		else
+			echo "'gcobt' requires 1 argument"
+			return
+		fi
+	}
+	gcof() {
+		if [ $# -eq 0 ]; then
+			git checkout -- .
+		else
+			echo "'gcof' requires 0 arguments"
+			return
+		fi
+
 	}
 	gcom() {
 		if [ $# -eq 0 ]; then
-			gco 'master'
+			gco master
 		else
 			echo "'gcom' requires 0 arguments"
 			return
@@ -110,7 +144,7 @@ if command -v git >/dev/null 2>&1; then
 				return
 			else
 				__gcomd_branch="$(__current_branch)"
-				gco 'master'
+				gco master
 				gbd "${__gcomd_branch}"
 			fi
 		else
@@ -118,8 +152,14 @@ if command -v git >/dev/null 2>&1; then
 			return
 		fi
 	}
-	gcomrc() { gcomr && gcobrc; }
-	gcop() { git checkout --patch; }
+	gcop() {
+		if [ $# -eq 0 ]; then
+			git checkout --patch
+		else
+			echo "'gcop' requires 0 arguments"
+			return
+		fi
+	}
 	# checkout + branch
 	gbr() {
 		unset __gbr_branch
@@ -143,7 +183,9 @@ if command -v git >/dev/null 2>&1; then
 	# clone
 	gcl() { git clone --recurse-submodules "$@"; }
 	# commit
-	gcnow() { git commit -m "Saved at $(date +"%Y-%m-%d %H:%M:%S (%a)")"; }
+	__git_commit_now() {
+		git commit -m "Saved at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
+	}
 	# commit + push
 	__git_commit() {
 		unset __amend __no_verify __reuse __force
