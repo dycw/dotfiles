@@ -29,13 +29,13 @@ if command -v git >/dev/null 2>&1; then
 	gba() { gb -a "$@"; }
 	gbd() {
 		if [ $# -eq 0 ]; then
-			if [ "$(gcurr)" = 'master' ]; then
+			if __is_current_branch_master; then
 				__branch='dev'
 			fi
 		elif [ $# -eq 1 ]; then
 			__branch="$1"
 		fi
-		if [ -n "${__branch}" ] && gbexists "${__branch}"; then
+		if [ -n "${__branch}" ] && __branch_exists "${__branch}"; then
 			git branch -D "${__branch}"
 		fi
 	}
@@ -45,32 +45,32 @@ if command -v git >/dev/null 2>&1; then
 			sed -En 's/origin\/(.*)/\1/p' |
 			xargs -n 1 git push -d origin
 	}
-	gbexists() {
-		if git rev-parse --verify "$@" >/dev/null 2>&1; then
-			true
-		else
-			false
-		fi
-	}
 	gbm() { git branch -m "$@"; }
-	__branch_or_dev() {
-		if [ "$#" -eq 0 ]; then
-			echo dev
-		else
-			echo "$1"
-		fi
-	}
 	# checkout
 	gco() {
-		if [ "$#" -eq 0 ]; then
-			git checkout dev
-		elif [ "$#" -eq 1 ]; then
-			git checkout "$1"
-		else
-			git checkout "$@"
+		if [ $# -eq 0 ]; then
+			if __is_current_branch_master; then
+				__branch='dev'
+			fi
+		elif [ $# -eq 1 ]; then
+			__branch="$1"
+		fi
+		if [ -n "${__branch}" ] && __branch_exists "${__branch}"; then
+			git checkout "${__branch}"
 		fi
 	}
-	gcob() { git checkout -b "$(__branch_or_dev "$1")"; }
+	gcob() {
+		if [ $# -eq 0 ]; then
+			if __is_current_branch_master; then
+				__branch='dev'
+			fi
+		elif [ $# -eq 1 ]; then
+			__branch="$1"
+		fi
+		if [ -n "${__branch}" ]; then
+			git checkout -b "${__branch}"
+		fi
+	}
 	gcobr() { gbk "$1" && gcob "$1"; }
 	gcobrc() { gcobr "$(gcurr)"; }
 	gcobt() { git checkout -b "$1" -t "origin/$1"; }
@@ -205,8 +205,24 @@ if command -v git >/dev/null 2>&1; then
 	alias gr='git reset'
 	alias grp='git reset --patch'
 	# rev-parse
-	gcurr() { git rev-parse --abbrev-ref HEAD; }
-	groot() { git rev-parse --show-toplevel; }
+	__branch_exists() {
+		if git rev-parse --verify "$@" >/dev/null 2>&1; then
+			true
+		else
+			false
+		fi
+	}
+	__current_branch() { git rev-parse --abbrev-ref HEAD; }
+	__is_current_branch() {
+		if [ "$(__current_branch)" = "$1" ]; then
+			true
+		else
+			false
+		fi
+	}
+	__is_current_branch_dev() { __is_current_branch 'dev'; }
+	__is_current_branch_master() { __is_current_branch 'master'; }
+	__repo_root() { git rev-parse --show-toplevel; }
 	# rm
 	alias grm='git rm'
 	alias grmc='git rm --cached'
