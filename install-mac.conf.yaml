@@ -7,8 +7,10 @@
 
 - create:
     - ~/.config
+    - ~/.config/bottom
     - ~/.config/direnv
     - ~/.config/git
+    - ~/.config/marimo
     - ~/.config/pip
     - ~/.config/tmux
     - ~/.config/wezterm
@@ -25,10 +27,12 @@
     - ~/.jupyter/lab/user-settings/jupyterlab_code_formatter/
 
 - link:
+    ~/.config/bottom/bottom.toml: bottom/bottom.toml
     ~/.config/direnv/direnv.toml: direnv/direnv.toml
     ~/.config/direnv/direnvrc: direnv/direnvrc
     ~/.config/git/config: git/config
     ~/.config/git/ignore: git/ignore
+    ~/.config/marimo/marimo.toml: marimo/marimo.toml
     ~/.config/nvim: nvim
     ~/.config/pip/pip.conf: pip/pip.conf
     ~/.config/ripgreprc: ripgrep/ripgreprc
@@ -184,6 +188,10 @@
     - [
         "command -v shfmt >/dev/null 2>&1 || brew install shfmt",
         Installing shfmt,
+      ]
+    - [
+        "command -v sshpass >/dev/null 2>&1 || brew install sshpass",
+        Installing sshpass,
       ]
     - [
         "command -v starship >/dev/null 2>&1 || brew install starship",

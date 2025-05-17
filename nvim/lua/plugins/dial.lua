@@ -47,6 +47,7 @@ return {
             { "all", "any" },
             { "and", "or" },
             { "ascending", "descending" },
+            { "ask", "bid" },
             { "backward", "forward" },
             { "bottom", "top" },
             { "bull", "bear" },
@@ -77,6 +78,7 @@ return {
             { "only", "skip" },
             { "positive", "negative" },
             { "start", "end", "stop" },
+            { "stderr", "stdout" },
             { "true", "false" },
         }
 

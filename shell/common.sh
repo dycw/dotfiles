@@ -18,6 +18,9 @@ fi
 if command -v btm >/dev/null 2>&1; then
 	htop() { btm "$@"; }
 fi
+if command -v nvim >/dev/null 2>&1; then
+	bottom_toml() { ${EDITOR} "${HOME}"/dotfiles/bottom/bottom.toml; }
+fi
 
 # cd
 alias ~='cd "${HOME}"'
@@ -113,22 +116,23 @@ fi
 
 # gh
 if command -v gh >/dev/null 2>&1; then
-	ghc() { gh pr create "$@"; }
-	ghic() {
+	ghc() {
 		case $# in
-		1)
-			gh issue create --title="$1"
-			;;
-		*)
-			title="$1"
-			label="$2"
-			shift 2
-			gh issue create --title="$title" --label="$label" "$@"
-			;;
+		1) gh pr create --title="$1" ;;
+		2) gh pr create --title="$1" --body="Closes #$2" ;;
+		*) echo "ghc TITLE [ISSUE_NUM]" ;;
 		esac
 	}
-	ghm() { gh pr merge --auto "$@"; }
-	ghcm() { gh pr create && gh pr merge --auto "$@"; }
+	ghic() {
+		case $# in
+		1) gh issue create --title="$1" ;;
+		2) gh issue create --title="$1" --label="$2" ;;
+		3) gh issue create --title="$1" --label="$2" --body="$3" ;;
+		*) echo "ghic TITLE [LABEL] [BODY]" ;;
+		esac
+	}
+	ghm() { gh pr merge --auto --squash; }
+	ghcm() { ghc "$@" && ghm; }
 fi
 
 # git
@@ -165,6 +169,12 @@ jl() { uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter
 __file="${HOME}/common.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
+fi
+
+# marimo
+mar() { uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' marimo new; }
+if command -v nvim >/dev/null 2>&1; then
+	marimo_toml() { ${EDITOR} "${HOME}"/dotfiles/marimo/marimo.toml; }
 fi
 
 # neovim

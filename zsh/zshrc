@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # shellcheck source=/dev/null
 
-# shell (first)
+# shell - paths (first)
 __file="${HOME}/dotfiles/shell/common.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
@@ -31,13 +31,10 @@ fi
 unalias l
 unalias ll
 
-# zsh
-alias zshrc='"$EDITOR" "${HOME}"/.zshrc'
-
-# ---- end ----
+# shell - paths (end)
 
 # direnv
-if command -v starship >/dev/null 2>&1; then
+if command -v direnv >/dev/null 2>&1; then
 	eval "$(direnv hook zsh)"
 fi
 
@@ -51,25 +48,16 @@ if command -v starship >/dev/null 2>&1; then
 	eval "$(starship init zsh)"
 fi
 
+# uv
+if command -v uv >/dev/null 2>&1; then
+	eval "$(uv generate-shell-completion zsh)"
+	eval "$(uvx --generate-shell-completion zsh)"
+fi
+
 # zoxide
 if command -v zoxide >/dev/null 2>&1; then
 	eval "$(zoxide init zsh --cmd j --hook prompt)"
 fi
 
-eval "$(direnv hook zsh)"
-. "$HOME/.cargo/env"
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/derekwan/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/derekwan/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/derekwan/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/derekwan/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+# zsh
+alias zshrc='"$EDITOR" "${HOME}"/.zshrc'

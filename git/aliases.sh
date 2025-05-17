@@ -1,190 +1,498 @@
 #!/usr/bin/env sh
 
+# shellcheck disable=SC2120,SC2317
+
 if command -v git >/dev/null 2>&1; then
 	# add
-	ga() { git add "$@"; }
-	gaa() { git add -A; }
-	gap() { git add -p "$@"; }
+	ga() {
+		if [ $# -eq 0 ]; then
+			git add -A
+		else
+			git add "$@"
+		fi
+		return $?
+	}
+	gap() {
+		if [ $# -eq 0 ]; then
+			git add -pA
+		else
+			git add -p "$@"
+		fi
+	}
 	# add + commit + push
-	gac() { gaa && gc "$@"; }
-	gaca() { gaa && gca "$@"; }
-	gacan() { gaa && gcan "$@"; }
-	gacf() { gaa && gcf "$@"; }
-	gacn() { gaa && gcn "$@"; }
-	gacnf() { gaa && gcnf "$@"; }
-	gacnr() { gaa && gcnr "$@"; }
-	gacr() { gaa && gcr "$@"; }
-	gac2() { if __gac2; then gp; fi; }
-	gac2e() { if __gac2; then exit; fi; }
-	gac2f() { if __gac2; then gpf; fi; }
-	__gac2() {
-		gaa
-		if ! gcnow; then
-			gaa
-			gcnow
+	gac() {
+		__git_add_commit_push 0 0 0 "$@"
+		return $?
+	}
+	gacn() {
+		__git_add_commit_push 1 0 0 "$@"
+		return $?
+	}
+	gacf() {
+		__git_add_commit_push 0 1 0 "$@"
+		return $?
+	}
+	gacnf() {
+		__git_add_commit_push 1 1 0 "$@"
+		return $?
+	}
+	gacw() {
+		__git_add_commit_push 0 0 1 "$@"
+		return $?
+	}
+	gacnw() {
+		__git_add_commit_push 1 0 1 "$@"
+		return $?
+	}
+	gacfw() {
+		__git_add_commit_push 0 1 1 "$@"
+		return $?
+	}
+	gacnfw() {
+		__git_add_commit_push 1 1 1 "$@"
+		return $?
+	}
+	__git_add_commit_push() {
+		if [ "$#" -ge 3 ]; then
+			__git_acp_no_verify="$1"
+			__git_acp_force="$2"
+			__git_acp_gitweb="$3"
+			shift 3
+
+			__git_acp_count_file=0
+			__git_acp_count_non_file=0
+			__git_acp_message=""
+			__git_acp_file_names=""
+			__git_acp_file_args=""
+
+			for arg in "$@"; do
+				if [ "${__git_acp_count_non_file}" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
+					__git_acp_file_args="${__git_acp_file_args} \"$arg\""
+					__git_acp_file_names="${__git_acp_file_names}${__git_acp_file_names:+ }$arg"
+					__git_acp_count_file=$((__git_acp_count_file + 1))
+				else
+					__git_acp_count_non_file=$((__git_acp_count_non_file + 1))
+					__git_acp_message="$arg"
+				fi
+			done
+
+			__git_acp_file_list=""
+			for f in ${__git_acp_file_names}; do
+				__git_acp_file_list="${__git_acp_file_list}'${f}',"
+			done
+			__git_acp_file_list="${__git_acp_file_list%,}"
+
+			if [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
+				ga || return $?
+				__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}" || {
+					ga && __git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}"
+				}
+				return $?
+			elif [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
+				ga || return $?
+				__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}" || {
+					ga && __git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}"
+				}
+				return $?
+			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
+				eval "ga ${__git_acp_file_args}" || return $?
+				__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}"
+				return $?
+			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
+				eval "ga ${__git_acp_file_args}" || return $?
+				__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}"
+				return $?
+			else
+				echo "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__git_acp_count_file} file(s) ${__git_acp_file_list:-'(none)'} and ${__git_acp_count_non_file} message(s)" >&2
+				return 1
+			fi
+		else
+			echo "'__git_add_commit_push' requires at least 3 arguments" >&2
+			return 1
 		fi
 	}
 	# branch
-	gb() { git branch "$@"; }
-	gba() { gb -a "$@"; }
-	gbd() {
-		__branch=$(__branch_or_dev "$@")
-		if gbexists "${__branch}"; then
-			git branch -D "${__branch}"
+	gb() {
+		if [ $# -eq 0 ]; then
+			git branch -alv --sort=-committerdate
+			return $?
+		else
+			echo "'gb' accepts no arguments"
+			return 1
 		fi
+	}
+	gbd() {
+		unset __gbd_branch
+		if [ $# -eq 0 ]; then
+			if __is_current_branch_master; then
+				__gbd_branch='dev'
+			else
+				echo "'gbd' off 'master' requires 1 argument 'branch'"
+				return 1
+			fi
+		elif [ $# -eq 1 ]; then
+			__gbd_branch="$1"
+		else
+			echo "'gbd' accepts [0..1] arguments"
+			return 1
+		fi
+		git branch -D "${__gbd_branch}"
+		return $?
 	}
 	gbdr() {
-		git branch -r --color=never |
-			fzf |
-			sed -En 's/origin\/(.*)/\1/p' |
-			xargs -n 1 git push -d origin
-	}
-	gbexists() {
-		if git rev-parse --verify "$@" >/dev/null 2>&1; then
-			true
+		unset __gbdr_branch
+		if [ $# -eq 0 ]; then
+			__gbdr_branch="$(git branch -r --color=never | fzf | sed -En 's|origin/(.*)|\1|p')"
+		elif [ $# -eq 1 ]; then
+			__gbdr_branch="$1"
 		else
-			false
+			echo "'gbdr' accepts [0..1] arguments"
+			return 1
 		fi
+		git push origin -d "${__gbdr_branch}"
+		return $?
 	}
-	gbk() {
-		__branch=$(__branch_or_dev "$@")
-		if gbexists "${__branch}"; then
-			git branch -D "${__branch}"
-		fi
-	}
-	gbm() { git branch -m "$@"; }
-	__branch_or_dev() {
-		if [ "$#" -eq 0 ]; then
-			echo dev
-		else
-			echo "$@"
-		fi
-	}
+	gbm() { git branch -m "$1"; }
 	# checkout
 	gco() {
-		if [ "$#" -eq 0 ]; then
-			git checkout dev
-		elif [ "$#" -eq 1 ]; then
-			git checkout "$1"
+		unset __gco_branch
+		if [ $# -eq 0 ]; then
+			if __is_current_branch_master; then
+				__gco_branch='dev'
+			elif __is_current_branch_dev; then
+				__gco_branch='master'
+			else
+				echo "'gco' requires 1 argument 'branch'"
+				return 1
+			fi
+		elif [ $# -eq 1 ]; then
+			__gco_branch="$1"
 		else
-			git checkout "$@"
+			echo "'gco' accepts [0..1] arguments"
+			return 1
+		fi
+		git checkout "${__gco_branch}" && git pull --force
+		return $?
+	}
+	gcob() {
+		unset __gcob_branch
+		if [ $# -eq 0 ]; then
+			if __is_current_branch_master; then
+				__gcob_branch='dev'
+			else
+				echo "'gcob' off 'master' requires 1 argument 'branch'"
+				return 1
+			fi
+		elif [ $# -eq 1 ]; then
+			__gcob_branch="$1"
+		else
+			echo "'gcob' accepts [0..1] arguments"
+			return 1
+		fi
+		git checkout -b "${__gcob_branch}"
+		return $?
+	}
+	gcobt() {
+		if [ $# -eq 1 ]; then
+			if ! __is_current_branch_master; then
+				gco master
+			fi
+			git checkout -b "$1" -t "origin/$1"
+			return $?
+		else
+			echo "'gcobt' requires 1 argument"
+			return 1
 		fi
 	}
-	gcob() { git checkout -b "$(__branch_or_dev "$@")"; }
-	gcobr() { gbk "$@" && gcob "$@"; }
-	gcobt() { git checkout -b "$1" -t "origin/$1"; }
-	gcom() { git checkout master && git pull --force; }
-	gcomk() { gcom && gbk "$@"; }
-	gcomr() { gcom && gcobr "$@"; }
-	gcop() { git checkout --patch; }
+	gcof() {
+		if [ $# -eq 0 ]; then
+			git checkout -- .
+			return $?
+		else
+			echo "'gcof' accepts no arguments"
+			return 1
+		fi
+	}
+	gcom() {
+		if [ $# -eq 0 ]; then
+			gco master
+			return $?
+		else
+			echo "'gcom' accepts no arguments"
+			return 1
+		fi
+	}
+	gcomd() {
+		unset __gcomd_branch
+		if [ $# -eq 0 ]; then
+			if __is_current_branch_master; then
+				echo "'gcomd' cannot be run on master"
+				return 1
+			else
+				__gcomd_branch="$(__current_branch)"
+				gco master
+				gbd "${__gcomd_branch}"
+				return $?
+			fi
+		else
+			echo "'gcomd' accepts no arguments"
+			return 1
+		fi
+	}
+	gcop() {
+		if [ $# -eq 0 ]; then
+			git checkout --patch
+			return $?
+		else
+			echo "'gcop' accepts no arguments"
+			return 1
+		fi
+	}
+	# checkout + branch
+	gbr() {
+		unset __gbr_branch
+		if [ $# -eq 0 ]; then
+			if __is_current_branch_master; then
+				echo "'gcobr' cannot be run on master"
+				return 1
+			else
+				__gbr_branch="$(__current_branch)"
+				gcof && gco master && gbd "${__gbr_branch}" && gcob "${__gbr_branch}"
+				return $?
+			fi
+		else
+			echo "'gcobr' accepts [0..1] arguments"
+			return
+		fi
+	}
 	# cherry-pick
-	alias gcp='git cherry-pick'
+	gcp() {
+		git cherry-pick "$@"
+	}
 	# clone
-	gcl() { git clone --recurse-submodules "$@"; }
-	# commit
-	gcnow() { git commit -m "Saved at $(date +"%Y-%m-%d %H:%M:%S (%a)")"; }
-	# commit + push
-	__git_commit() {
-		unset __amend __no_verify __reuse __force
-		while test $# != 0; do
-			case "$1" in
-			-a)
-				__amend=1
-				shift
-				;;
-			-n)
-				__no_verify=1
-				shift
-				;;
-			-r)
-				__reuse=1
-				shift
-				;;
-			-f)
-				__force=1
-				shift
-				;;
-			*) break ;;
-			esac
-		done
-		if [ -n "${__amend}" ] && [ -n "${__reuse}" ]; then
-			echo "Expected at most one of --amend or --reuse; got both"
-		elif [ -n "${__amend}" ] && [ -z "${__reuse}" ]; then
-			# __amend, not reuse
-			if [ -n "${__force}" ]; then
-				if [ -n "${__no_verify}" ] && [ $# -eq 0 ]; then
-					git commit -n --amend
-				elif [ -n "${__no_verify}" ] && [ $# -eq 1 ]; then
-					git commit -nm "$1" --amend
-				elif [ -z "${__no_verify}" ] && [ $# -eq 0 ]; then
-					git commit --amend
-				elif [ -z "${__no_verify}" ] && [ $# -eq 1 ]; then
-					git commit -m "$1" --amend
-				else
-					echo "Since --amend, expected at most 1 argument; got $#"
-				fi
-				gpf
-			else
-				echo "Since --amend, expected --force"
-			fi
-		elif [ -z "${__amend}" ] && [ -n "${__reuse}" ]; then
-			# reuse, not amend
-			if [ $# -ge 1 ]; then
-				echo "Since --reuse, expected no arguments; got $#"
-			elif [ -z "${__force}" ]; then
-				echo "Since --reuse, expected --force"
-			else
-				if [ -n "${__no_verify}" ]; then
-					git commit -n --amend --no-edit
-				else
-					git commit --amend --no-edit
-				fi
-				gpf
-			fi
+	gcl() {
+		if [ $# -eq 1 ]; then
+			git clone --recurse-submodules "$1"
 		else
-			# not amend, not reuse
-			if [ -n "${__no_verify}" ] && [ $# -eq 0 ]; then
-				git commit -n
-			elif [ -n "${__no_verify}" ] && [ $# -eq 1 ]; then
-				git commit -nm "$1"
-			elif [ -z "${__no_verify}" ] && [ $# -eq 0 ]; then
-				git commit
-			elif [ -z "${__no_verify}" ] && [ $# -eq 1 ]; then
-				git commit -m "$1"
-			else
-				echo "Basic case expected at most 1 argument; got $#"
-			fi
-			if [ -n "${__force}" ]; then
-				gpf
-			else
-				gp
-			fi
+			echo "'gcl' accepts [0..1] arguments"
+			return 1
 		fi
 	}
-	gc() { __git_commit "$@"; }
-	gca() { __git_commit -a -f "$@"; }
-	gcan() { __git_commit -a -n -f "$@"; }
-	gcf() { __git_commit -f "$@"; }
-	gcn() { __git_commit -n "$@"; }
-	gcnf() { __git_commit -n -f "$@"; }
-	gcnr() { __git_commit -n -r -f "$@"; }
-	gcr() { __git_commit -r -f "$@"; }
+	# commit
+	__git_commit() {
+		if [ $# -eq 2 ]; then
+			__git_commit_no_verify="$1"
+			__git_commit_message="$2"
+			if [ -z "${__git_commit_message}" ]; then
+				__git_commit_message="$(__git_commit_auto_message)"
+			fi
+			if [ "${__git_commit_no_verify}" -eq 0 ]; then
+				git commit -m "${__git_commit_message}"
+				return $?
+			elif [ "${__git_commit_no_verify}" -eq 1 ]; then
+				git commit --no-verify -m "${__git_commit_message}"
+				return $?
+			else
+				echo "'__git_commit' accepts {0, 1} for the 'no-verify' flag; got ${__git_commit_no_verify}"
+				return 1
+			fi
+		else
+			echo "'__git_commit' requires 2 arguments"
+			return 1
+		fi
+	}
+	__git_commit_auto_message() { echo "Commited by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"; }
+	# commit + push
+	gc() {
+		if [ $# -le 1 ]; then
+			__git_commit_push 0 "${1:-}" 0 0
+			return $?
+		else
+			echo "'gc' accepts [0..1] arguments"
+			return 1
+		fi
+	}
+	gcn() {
+		if [ $# -le 1 ]; then
+			__git_commit_push 1 "${1:-}" 0 0
+			return $?
+		else
+			echo "'gcn' accepts [0..1] arguments"
+			return 1
+		fi
+	}
+	gcf() {
+		if [ $# -le 1 ]; then
+			__git_commit_push 0 "${1:-}" 1 0
+			return $?
+		else
+			echo "'gcf' accepts [0..1] arguments"
+			return 1
+		fi
+	}
+	gcnf() {
+		if [ $# -le 1 ]; then
+			__git_commit_push 1 "${1:-}" 1 0
+			return $?
+		else
+			echo "'gcnf' accepts [0..1] arguments"
+			return 1
+		fi
+	}
+	gcw() {
+		if [ $# -le 1 ]; then
+			__git_commit_push 0 "${1:-}" 0 1
+			return $?
+		else
+			echo "'gcw' accepts [0..1] arguments"
+			return 1
+		fi
+	}
+	gcnw() {
+		if [ $# -le 1 ]; then
+			__git_commit_push 1 "${1:-}" 0 1
+			return $?
+		else
+			echo "'gcnw' accepts [0..1] arguments"
+			return 1
+		fi
+	}
+	gcfw() {
+		if [ $# -le 1 ]; then
+			__git_commit_push 0 "${1:-}" 1 1
+			return $?
+		else
+			echo "'gcfw' accepts [0..1] arguments"
+			return 1
+		fi
+	}
+	gcnfw() {
+		if [ $# -le 1 ]; then
+			__git_commit_push 1 "${1:-}" 1 1
+			return $?
+		else
+			echo "'gcnfw' accepts [0..1] arguments"
+			return 1
+		fi
+	}
+	__git_commit_push() {
+		if [ "$#" -eq 4 ]; then
+			__git_commit_push_no_verify="$1"
+			__git_commit_push_message="$2"
+			__git_commit_push_force="$3"
+			__git_commit_push_gitweb="$4"
+			__git_commit "${__git_commit_push_no_verify}" "${__git_commit_push_message}" || return $?
+			__git_push "${__git_commit_push_force}" "${__git_commit_push_gitweb}"
+			return $?
+		else
+			echo "'__git_commit_push' requires 4 arguments"
+			return 1
+		fi
+	}
 	# diff
 	gd() { git diff "$@"; }
 	gdc() { git diff --cached "$@"; }
 	gdm() { git diff origin/master "$@"; }
 	# fetch
-	gf() { git fetch --all; }
-	gfm() { git fetch origin master:master; }
+	gf() {
+		if [ $# -eq 0 ]; then
+			git fetch --all
+			return $?
+		else
+			echo "'gf' accepts no arguments"
+			return 1
+		fi
+	}
 	# log
-	alias gl='git log --oneline --decorate --graph'
+	gl() {
+		if [ $# -eq 0 ]; then
+			git log --oneline --decorate --graph
+			return $?
+		else
+			echo "'gcof' accepts no arguments"
+			return 1
+		fi
+	}
 	# mv
-	alias gmv='git mv'
+	gmv() {
+		if [ $# -eq 2 ]; then
+			git mv "$1" "$2"
+			return $?
+		else
+			echo "'gmv' requires 2 arguments"
+			return 1
+		fi
+	}
 	# pull
-	gpl() { git pull --force; }
+	gpl() {
+		if [ $# -eq 0 ]; then
+			git pull --force
+			return $?
+		else
+			echo "'gpl' accepts no arguments"
+			return 1
+		fi
+	}
 	# push
-	gp() { git push -u origin "$(gcurr)"; }
-	gpf() { git push -fu origin "$(gcurr)"; }
+	gp() {
+		if [ $# -eq 0 ]; then
+			__git_push 0 0
+			return $?
+		else
+			echo "'gp' accepts no arguments"
+			return 1
+		fi
+	}
+	gpf() {
+		if [ $# -eq 0 ]; then
+			__git_push 1 0
+			return $?
+		else
+			echo "'gpf' accepts no arguments"
+			return 1
+		fi
+	}
+	gpw() {
+		if [ $# -eq 0 ]; then
+			__git_push 0 1
+			return $?
+		else
+			echo "'gpw' accepts no arguments"
+			return 1
+		fi
+	}
+	gpfw() {
+		if [ $# -eq 0 ]; then
+			__git_push 1 1
+			return $?
+		else
+			echo "'gpfw' accepts no arguments"
+			return 1
+		fi
+	}
+	__git_push() {
+		if [ $# -eq 2 ]; then
+			__git_push_force="$1"
+			__git_push_gitweb="$2"
+			if [ "${__git_push_force}" -eq 0 ] && [ "${__git_push_gitweb}" -eq 0 ]; then
+				git push -u origin "$(__current_branch)" || return $?
+			elif [ "${__git_push_force}" -eq 0 ] && [ "${__git_push_gitweb}" -eq 1 ]; then
+				git push -u origin "$(__current_branch)" || return $?
+				gitweb || return $?
+			elif [ "${__git_push_force}" -eq 1 ] && [ "${__git_push_gitweb}" -eq 0 ]; then
+				git push -fu origin "$(__current_branch)" || return $?
+			elif [ "${__git_push_force}" -eq 1 ] && [ "${__git_push_gitweb}" -eq 1 ]; then
+				git push -fu origin "$(__current_branch)" || return $?
+				gitweb || return $?
+			else
+				echo "'__git_push' accepts {0, 1} for the 'force' and 'gitweb' flags; got ${__git_push_force} and ${__git_push_gitweb}"
+				return 1
+			fi
+		else
+			echo "'__git_push' requires 2 arguments"
+			return 1
+		fi
+	}
 	# rebase
 	grb() { gf && git rebase "$@"; }
 	grba() { git rebase --abort; }
@@ -203,8 +511,24 @@ if command -v git >/dev/null 2>&1; then
 	alias gr='git reset'
 	alias grp='git reset --patch'
 	# rev-parse
-	gcurr() { git rev-parse --abbrev-ref HEAD; }
-	groot() { git rev-parse --show-toplevel; }
+	__branch_exists() {
+		if git rev-parse --verify "$@" >/dev/null 2>&1; then
+			true
+		else
+			false
+		fi
+	}
+	__current_branch() { git rev-parse --abbrev-ref HEAD; }
+	__is_current_branch() {
+		if [ "$(__current_branch)" = "$1" ]; then
+			true
+		else
+			false
+		fi
+	}
+	__is_current_branch_dev() { __is_current_branch 'dev'; }
+	__is_current_branch_master() { __is_current_branch 'master'; }
+	__repo_root() { git rev-parse --show-toplevel; }
 	# rm
 	alias grm='git rm'
 	alias grmc='git rm --cached'
@@ -220,40 +544,13 @@ if command -v git >/dev/null 2>&1; then
 	# tag
 	gta() { git tag -a "$1" "$2" -m "$1" && git push -u origin --tags; }
 	gtd() { git tag -d "$@" && git push -d origin "$@"; }
-
-	# gitweb
-	if command -v gitweb >/dev/null 2>&1; then
-		alias gw='gitweb'
-		# add + commit + push
-		gacw() { gac "$@" && gitweb; }
-		gacaw() { gaca "$@" && gitweb; }
-		gacanw() { gacan "$@" && gitweb; }
-		gacfw() { gacf "$@" && gitweb; }
-		gacnw() { gacn "$@" && gitweb; }
-		gacnfw() { gacnf "$@" && gitweb; }
-		gacnrw() { gacnr "$@" && gitweb; }
-		gacrw() { gacr "$@" && gitweb; }
-		gac2fw() { gac2f "$@" && gitweb; }
-		gac2w() { gac2 "$@" && gitweb; }
-		# commit
-		gcnoww() { gcnow "$@" && gitweb; }
-		# commit + push
-		gcw() { gc "$@" && gitweb; }
-		gcaw() { gca "$@" && gitweb; }
-		gcanw() { gcan "$@" && gitweb; }
-		gcfw() { gcf "$@" && gitweb; }
-		gcnw() { gcn "$@" && gitweb; }
-		gcnfw() { gcnf "$@" && gitweb; }
-		gcnrw() { gcnr "$@" && gitweb; }
-		gcrw() { gcr "$@" && gitweb; }
-	fi
-	# push
-	alias gpw='gp && gitweb'
-	alias gpfw='gpf && gitweb'
-
 	# watchexec
 	if command -v watch >/dev/null 2>&1; then
 		wgd() { watch -d -n 0.1 -- git diff "$@"; }
 		wgs() { watch -d -n 0.1 -- git status "$@"; }
+	fi
+	# gitweb
+	if command -v gitweb >/dev/null 2>&1; then
+		gw() { gitweb; }
 	fi
 fi

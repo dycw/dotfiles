@@ -1570,6 +1570,7 @@ try:
         parse_date_compact,
         parse_datetime_compact,
         parse_month,
+        round_datetime,
         serialize_compact,
         serialize_month,
     )
@@ -1681,6 +1682,7 @@ else:
         parse_month,
         partial,
         read_pickle,
+        round_datetime,
         run_in_background,
         safe_round,
         serialize_compact,
