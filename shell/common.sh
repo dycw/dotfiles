@@ -133,10 +133,10 @@ if command -v gh >/dev/null 2>&1; then
 	}
 	ghi() {
 		if [ $# -eq 1 ]; then
-			gh issue create --title="$1"
+			gh issue create --title="$1" --body='.'
 			return $?
 		elif [ $# -eq 2 ]; then
-			gh issue create --title="$1" --label="$2"
+			gh issue create --title="$1" --label="$2" --body='.'
 			return $?
 		elif [ $# -eq 3 ]; then
 			gh issue create --title="$1" --label="$2" --body="$3"
