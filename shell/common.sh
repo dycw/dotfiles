@@ -117,22 +117,58 @@ fi
 # gh
 if command -v gh >/dev/null 2>&1; then
 	ghc() {
-		case $# in
-		1) gh pr create --title="$1" ;;
-		2) gh pr create --title="$1" --body="Closes #$2" ;;
-		*) echo "ghc TITLE [ISSUE_NUM]" ;;
-		esac
+		if [ $# -eq 1 ]; then
+			gh pr create --title="$1"
+			return $?
+		elif [ $# -eq 2 ]; then
+			gh pr create --title="$1" --body="Closes #$2"
+			return $?
+		else
+			echo "'ghc' accepts [0..1] arguments"
+			return 1
+		fi
 	}
-	ghic() {
+	ghi() {
 		case $# in
 		1) gh issue create --title="$1" ;;
 		2) gh issue create --title="$1" --label="$2" ;;
 		3) gh issue create --title="$1" --label="$2" --body="$3" ;;
 		*) echo "ghic TITLE [LABEL] [BODY]" ;;
 		esac
+		if [ $# -eq 1 ]; then
+			gh issue create --title="$1"
+			return $?
+		elif [ $# -eq 2 ]; then
+			gh issue create --title="$1" --label="$2"
+			return $?
+		elif [ $# -eq 3 ]; then
+			gh issue create --title="$1" --label="$2" --body="$3"
+			return $?
+		else
+			echo "'ghi' accepts [0..1] arguments"
+			return 1
+		fi
 	}
-	ghm() { gh pr merge --auto --squash; }
-	ghcm() { ghc "$@" && ghm; }
+	# shellcheck disable=SC2120
+	ghm() {
+		if [ $# -eq 0 ]; then
+			gh pr merge --auto --squash
+			return $?
+		else
+			echo "'ghm' accepts no arguments"
+			return 1
+		fi
+	}
+	ghcm() {
+		if [ $# -ge 1 ] && [ $# -le 2 ]; then
+			ghc "$@" || return $?
+			ghm
+			return $?
+		else
+			echo "'ghcm' accepts [0..1] arguments"
+			return 1
+		fi
+	}
 fi
 
 # git
