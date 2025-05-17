@@ -18,6 +18,9 @@ fi
 if command -v btm >/dev/null 2>&1; then
 	htop() { btm "$@"; }
 fi
+if command -v nvim >/dev/null 2>&1; then
+	bottom_toml() { ${EDITOR} "${HOME}"/dotfiles/bottom/bottom.toml; }
+fi
 
 # cd
 alias ~='cd "${HOME}"'
