@@ -143,7 +143,6 @@ if command -v git >/dev/null 2>&1; then
 		unset __gbdr_branch
 		if [ $# -eq 0 ]; then
 			__gbdr_branch=$(git branch -r --color=never | awk '!/->/' | fzf | sed -E 's|^[[:space:]]*origin/||')
-			git push origin --delete "$__gbdr_branch"
 		elif [ $# -eq 1 ]; then
 			__gbdr_branch="$1"
 		else
