@@ -408,7 +408,7 @@ if command -v git >/dev/null 2>&1; then
 			git log --oneline --decorate --graph
 			return $?
 		else
-			echo "'gcof' accepts no arguments"
+			echo "'gl' accepts no arguments"
 			return 1
 		fi
 	}
