@@ -142,10 +142,10 @@ if command -v gh >/dev/null 2>&1; then
 			;;
 		esac
 	}
-	ghm() { gh pr merge --auto; }
+	ghm() { gh pr merge --auto --squash; }
 	ghcm() {
-		gh pr create "$@"
-		gh pr merge --auto
+		ghc "$@"
+		ghm
 	}
 fi
 
