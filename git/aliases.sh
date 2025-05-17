@@ -19,14 +19,37 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	# add + commit + push
-	gac() { gaa && gc "$@"; }
-	gaca() { gaa && gca "$@"; }
-	gacan() { gaa && gcan "$@"; }
-	gacf() { gaa && gcf "$@"; }
-	gacn() { gaa && gcn "$@"; }
-	gacnf() { gaa && gcnf "$@"; }
-	gacnr() { gaa && gcnr "$@"; }
-	gacr() { gaa && gcr "$@"; }
+	gac() {
+		# If no args: git add . && commit with "hi"
+		# if [ $# -eq 0 ]; then
+		# 	git add . && git commit -m hi
+		# 	exit $?
+		# fi
+
+		files=""
+		remaining=0
+		seen_nonfile=0
+
+		for arg in "$@"; do
+			if [ $seen_nonfile -eq 0 ] && [ -f "$arg" ]; then
+				files="$files \"$arg\""
+			else
+				seen_nonfile=1
+				remaining=$((remaining + 1))
+				last="$arg"
+			fi
+		done
+
+		# If no commit message
+		if [ $remaining -eq 0 ]; then
+			echo git add $files && git commit -m "auto message"
+		elif [ $remaining -eq 1 ]; then
+			echo git add $files && git commit -m "$last"
+		else
+			echo "Error: Too many trailing arguments (only one commit message allowed)" >&2
+			exit 1
+		fi
+	}
 	gac2() { if __gac2; then gp; fi; }
 	gac2e() { if __gac2; then exit; fi; }
 	gac2f() { if __gac2; then gpf; fi; }
@@ -184,20 +207,68 @@ if command -v git >/dev/null 2>&1; then
 	gcl() { git clone --recurse-submodules "$@"; }
 	# commit
 	gc() {
-		unset __gc_message
-		if [ $# -eq 0 ]; then
-			__gc_message="$(__git_commit_auto_message)"
-		elif [ $# -eq 1 ]; then
-			__gc_message="$1"
+		if [ $# -le 1 ]; then
+			__git_commit "$@"
 		else
 			echo "'gc' accepts [0..1] arguments"
 			return
 		fi
-		git commit -m "${__gc_message}"
+		gp
+	}
+	gcf() {
+		if [ $# -le 1 ]; then
+			__git_commit "$@"
+		else
+			echo "'gcf' accepts [0..1] arguments"
+			return
+		fi
+		gpf
+	}
+	gcn() {
+		if [ $# -le 1 ]; then
+			__git_commit_no_verify "$@"
+		else
+			echo "'gcn' accepts [0..1] arguments"
+			return
+		fi
+		gp
+	}
+	gcnp() {
+		if [ $# -le 1 ]; then
+			__git_commit_no_verify "$@"
+		else
+			echo "'gcnp' accepts [0..1] arguments"
+			return
+		fi
+		gpf
+	}
+	__git_commit() {
+		unset __git_commit_message
+		if [ $# -eq 0 ]; then
+			__git_commit_message="$(__git_commit_auto_message)"
+		elif [ $# -eq 1 ]; then
+			__git_commit_message="$1"
+		else
+			echo "'__git_commit' accepts [0..1] arguments"
+			return
+		fi
+		git commit -m "${__git_commit_message}"
+	}
+	__git_commit_no_verify() {
+		unset __git_commit_no_verify_message
+		if [ $# -eq 0 ]; then
+			__git_commit_no_verify="$(__git_commit_auto_message)"
+		elif [ $# -eq 1 ]; then
+			__git_commit_no_verify="$1"
+		else
+			echo "'__git_commit_no_verify' accepts [0..1] arguments"
+			return
+		fi
+		git commit -m --no-verify "${__git_commit_no_verify_message}"
 	}
 	__git_commit_auto_message() { echo "Commited by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"; }
 	# commit + push
-	__git_commit() {
+	__git_commitz() {
 		unset __amend __no_verify __reuse __force
 		while test $# != 0; do
 			case "$1" in
@@ -295,8 +366,22 @@ if command -v git >/dev/null 2>&1; then
 	# pull
 	gpl() { git pull --force; }
 	# push
-	gp() { git push -u origin "$(__current_branch)"; }
-	gpf() { git push -fu origin "$(__current_branch)"; }
+	gp() {
+		if [ $# -eq 0 ]; then
+			git push -u origin "$(__current_branch)"
+		else
+			echo "'gp' accepts no arguments"
+			return
+		fi
+	}
+	gpf() {
+		if [ $# -eq 0 ]; then
+			git push -fu origin "$(__current_branch)"
+		else
+			echo "'gpf' accepts no arguments"
+			return
+		fi
+	}
 	# rebase
 	grb() { gf && git rebase "$@"; }
 	grba() { git rebase --abort; }
