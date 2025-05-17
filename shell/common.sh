@@ -124,7 +124,7 @@ if command -v gh >/dev/null 2>&1; then
 			gh pr create --title="$1" --body="Closes #$2"
 			return $?
 		else
-			echo "'ghc' accepts [0..1] arguments"
+			echo "'ghc' accepts [1..2] arguments"
 			return 1
 		fi
 	}
@@ -139,7 +139,7 @@ if command -v gh >/dev/null 2>&1; then
 			gh issue create --title="$1" --label="$2" --body="$3"
 			return $?
 		else
-			echo "'ghi' accepts [0..1] arguments"
+			echo "'ghi' accepts [1..3] arguments"
 			return 1
 		fi
 	}
@@ -158,7 +158,7 @@ if command -v gh >/dev/null 2>&1; then
 			ghc "$@" && ghm
 			return $?
 		else
-			echo "'ghcm' accepts [0..1] arguments"
+			echo "'ghcm' accepts [1..2] arguments"
 			return 1
 		fi
 	}
