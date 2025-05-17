@@ -28,16 +28,21 @@ if command -v git >/dev/null 2>&1; then
 	gb() { git branch "$@"; }
 	gba() { gb -a "$@"; }
 	gbd() {
+		unset __branch
 		if [ $# -eq 0 ]; then
 			if __is_current_branch_master; then
 				__branch='dev'
+			else
+				echo "❯ gbd BRANCH"
+				return
 			fi
 		elif [ $# -eq 1 ]; then
 			__branch="$1"
+		else
+			echo "❯ gbd [BRANCH]"
+			return
 		fi
-		if [ -n "${__branch}" ] && __branch_exists "${__branch}"; then
-			git branch -D "${__branch}"
-		fi
+		git branch -D "${__branch}"
 	}
 	gbdr() {
 		git branch -r --color=never |
@@ -45,12 +50,15 @@ if command -v git >/dev/null 2>&1; then
 			sed -En 's/origin\/(.*)/\1/p' |
 			xargs -n 1 git push -d origin
 	}
-	gbm() { git branch -m "$@"; }
+	gbm() { git branch -m "$1"; }
 	# checkout
 	gco() {
+		unset __branch
 		if [ $# -eq 0 ]; then
 			if __is_current_branch_master; then
 				__branch='dev'
+			elif __is_current_branch_dev; then
+				__branch='master'
 			fi
 		elif [ $# -eq 1 ]; then
 			__branch="$1"
@@ -60,6 +68,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	gcob() {
+		unset __branch
 		if [ $# -eq 0 ]; then
 			if __is_current_branch_master; then
 				__branch='dev'
@@ -72,7 +81,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	gcobr() { gbk "$1" && gcob "$1"; }
-	gcobrc() { gcobr "$(gcurr)"; }
+	gcobrc() { gcobr "$(__current_branch)"; }
 	gcobt() { git checkout -b "$1" -t "origin/$1"; }
 	gcom() { git checkout master && git pull --force; }
 	gcomk() { gcom && gbkc "$@"; }
@@ -185,8 +194,8 @@ if command -v git >/dev/null 2>&1; then
 	# pull
 	gpl() { git pull --force; }
 	# push
-	gp() { git push -u origin "$(gcurr)"; }
-	gpf() { git push -fu origin "$(gcurr)"; }
+	gp() { git push -u origin "$(__current_branch)"; }
+	gpf() { git push -fu origin "$(__current_branch)"; }
 	# rebase
 	grb() { gf && git rebase "$@"; }
 	grba() { git rebase --abort; }
