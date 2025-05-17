@@ -306,20 +306,48 @@ if command -v git >/dev/null 2>&1; then
 	gpl() { git pull --force; }
 	# push
 	gp() {
-		if [ $# -eq 0 ]; then
-			git push -u origin "$(__current_branch)"
-			return $?
-		else
-			echo "'gp' accepts no arguments"
-			return 1
-		fi
+		__git_push gp $# 0 0
+		return $?
 	}
 	gpf() {
-		if [ $# -eq 0 ]; then
-			git push -fu origin "$(__current_branch)"
+		__git_push gpf $# 1 0
+		return $?
+	}
+	gpw() {
+		__git_push gpw $# 0 1
+		return $?
+	}
+	gpfw() {
+		__git_push gpfw $# 1 1
+		return $?
+	}
+	__git_push() {
+		if [ $# -eq 4 ]; then
+			__git_push_alias="$1"
+			__git_push_num_args="$2"
+			if [ "${__git_push_num_args}" -ne 0 ]; then
+				echo "'${__git_push_num_args}' accepts no arguments"
+				return 1
+			fi
+			__git_push_force="$3"
+			__git_push_gitweb="$4"
+			if [ "${__git_push_force}" -eq 0 ] && [ "${__git_push_gitweb}" -eq 0 ]; then
+				git push -u origin "$(__current_branch)" || return $?
+			elif [ "${__git_push_force}" -eq 0 ] && [ "${__git_push_gitweb}" -eq 1 ]; then
+				git push -u origin "$(__current_branch)" || return $?
+				gitweb || return $?
+			elif [ "${__git_push_force}" -eq 1 ] && [ "${__git_push_gitweb}" -eq 0 ]; then
+				git push -fu origin "$(__current_branch)" || return $?
+			elif [ "${__git_push_force}" -eq 1 ] && [ "${__git_push_gitweb}" -eq 1 ]; then
+				git push -fu origin "$(__current_branch)" || return $?
+				gitweb || return $?
+			else
+				echo "'$__git_push_alias' accepts {0, 1} for the 'force' and 'gitweb' flags"
+				return 1
+			fi
 		else
-			echo "'gpf' accepts no arguments"
-			return
+			echo "'__git_push' accepts requires 4 arguments"
+			return 1
 		fi
 	}
 	# rebase
