@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # shellcheck source=/dev/null
 
-# shell (first)
+# shell - paths (first)
 __file="${HOME}/dotfiles/shell/common.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
@@ -31,7 +31,7 @@ fi
 unalias l
 unalias ll
 
-# ---- end ----
+# shell - paths (end)
 
 # direnv
 if command -v direnv >/dev/null 2>&1; then
