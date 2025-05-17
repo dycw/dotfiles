@@ -154,6 +154,31 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gbm() { git branch -m "$1"; }
 	# checkout
+	gcm() {
+		if [ $# -eq 0 ]; then
+			gco master
+			return $?
+		else
+			echo "'gcm' accepts no arguments"
+			return 1
+		fi
+	}
+	gcmd() {
+		unset __gcmd_branch
+		if [ $# -eq 0 ]; then
+			if __is_current_branch_master; then
+				echo "'gcmd' cannot be run on master"
+				return 1
+			else
+				__gcmd_branch="$(__current_branch)"
+				gcof && gco master && gbd "${__gcmd_branch}"
+				return $?
+			fi
+		else
+			echo "'gcmd' accepts no arguments"
+			return 1
+		fi
+	}
 	gco() {
 		unset __gco_branch
 		if [ $# -eq 0 ]; then
@@ -210,32 +235,6 @@ if command -v git >/dev/null 2>&1; then
 			return $?
 		else
 			echo "'gcof' accepts no arguments"
-			return 1
-		fi
-	}
-	gcom() {
-		if [ $# -eq 0 ]; then
-			gco master
-			return $?
-		else
-			echo "'gcom' accepts no arguments"
-			return 1
-		fi
-	}
-	gcomd() {
-		unset __gcomd_branch
-		if [ $# -eq 0 ]; then
-			if __is_current_branch_master; then
-				echo "'gcomd' cannot be run on master"
-				return 1
-			else
-				__gcomd_branch="$(__current_branch)"
-				gco master
-				gbd "${__gcomd_branch}"
-				return $?
-			fi
-		else
-			echo "'gcomd' accepts no arguments"
 			return 1
 		fi
 	}
