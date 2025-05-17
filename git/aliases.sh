@@ -233,9 +233,9 @@ if command -v git >/dev/null 2>&1; then
 			__git_commit_num_args="$2"
 			__git_commit_no_verify="$3"
 			__git_commit_message="$4"
-			if [ "${__git_commit_num_args}" -eq 0 ]; then
+			if [ "${__git_commit_num_args}" -eq 0 ] && [ -z "${__git_commit_message}" ]; then
 				__git_commit_message="$(__git_commit_auto_message)"
-			elif [ "${__git_commit_num_args}" -eq 1 ]; then
+			elif [ "${__git_commit_num_args}" -eq 1 ] && [ -n "${__git_commit_message}" ]; then
 				:
 			else
 				echo "'${__git_commit_alias}' accepts [0..1] arguments"
@@ -245,52 +245,78 @@ if command -v git >/dev/null 2>&1; then
 				git commit -m "${__git_commit_message}"
 				return $?
 			elif [ "${__git_commit_no_verify}" -eq 1 ]; then
-				git commit -m --no-verify "${__git_commit_message}"
+				git commit --no-verify -m "${__git_commit_message}"
 				return $?
 			else
 				echo "'$__git_commit_alias' accepts {0, 1} for the 'no-verify' flags"
 				return 1
 			fi
 		else
-			echo "'__git_commit' accepts requires 4 arguments"
+			echo "'__git_commit' requires 4 arguments"
 			return 1
 		fi
 	}
 	__git_commit_auto_message() { echo "Commited by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"; }
 	# commit + push
 	gc() {
-		if [ $# -le 1 ]; then
-			__git_commit "$@" && gp
-			return $?
-		else
-			echo "'gc' accepts [0..1] arguments"
-			return 1
-		fi
-	}
-	gcf() {
-		if [ $# -le 1 ]; then
-			__git_commit "$@" && gpf
-			return $?
-		else
-			echo "'gcf' accepts [0..1] arguments"
-			return 1
-		fi
+		__git_commit_push gc "$#" 0 "${1:-}" 0 0
+		return $?
 	}
 	gcn() {
-		if [ $# -le 1 ]; then
-			__git_commit_no_verify "$@" && gp
-			return $?
-		else
-			echo "'gcn' accepts [0..1] arguments"
-			return 1
-		fi
+		__git_commit_push gcn "$#" 1 "${1:-}" 0 0
+		return $?
+	}
+	gcf() {
+		__git_commit_push gcf "$#" 0 "${1:-}" 1 0
+		return $?
 	}
 	gcnf() {
-		if [ $# -le 1 ]; then
-			__git_commit_no_verify "$@" && gpf
+		__git_commit_push gcnf "$#" 1 "${1:-}" 1 0
+		return $?
+	}
+	gcw() {
+		__git_commit_push gcw "$#" 0 "${1:-}" 0 1
+		return $?
+	}
+	gcnw() {
+		__git_commit_push gcnw "$#" 1 "${1:-}" 0 1
+		return $?
+	}
+	gcfw() {
+		__git_commit_push gcfw "$#" 0 "${1:-}" 1 1
+		return $?
+	}
+	gcnfw() {
+		__git_commit_push gcnfw "$#" 1 "${1:-}" 1 1
+		return $?
+	}
+	__git_commit_push() {
+		if [ "$#" -eq 6 ]; then
+			__git_commit_push_alias="$1"
+			__git_commit_push_num_args="$2"
+			__git_commit_push_no_verify="$3"
+			__git_commit_push_message="$4"
+			__git_commit_push_force="$5"
+			__git_commit_push_gitweb="$6"
+			if [ "${__git_commit_push_num_args}" -eq 0 ] && [ -z "${__git_commit_push_message}" ]; then
+				__git_commit_push_message="$(__git_commit_auto_message)"
+			elif [ "${__git_commit_push_num_args}" -eq 1 ] && [ -n "${__git_commit_push_message}" ]; then
+				: # valid
+			else
+				echo "'${__git_commit_push_alias}' accpets [0..1] arguments"
+				return 1
+			fi
+			__git_commit "${__git_commit_push_alias}" \
+				"${__git_commit_push_num_args}" \
+				"${__git_commit_push_no_verify}" \
+				"${__git_commit_push_message}" || return $?
+			__git_push "${__git_commit_push_alias}" \
+				"${__git_commit_push_num_args}" \
+				"${__git_commit_push_force}" \
+				"${__git_commit_push_gitweb}"
 			return $?
 		else
-			echo "'gcnf' accepts [0..1] arguments"
+			echo "'__git_commit_push' requires 6 arguments"
 			return 1
 		fi
 	}
