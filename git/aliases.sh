@@ -238,7 +238,7 @@ if command -v git >/dev/null 2>&1; then
 			elif [ "${__git_commit_num_args}" -eq 1 ] && [ -n "${__git_commit_message}" ]; then
 				:
 			else
-				echo "'${__git_commit_alias}' accepts [0..1] arguments"
+				echo "'${__git_commit_alias}' accepts [0..1] arguments; got ${__git_commit_num_args} and message \"${__git_commit_message}\""
 				return 1
 			fi
 			if [ "${__git_commit_no_verify}" -eq 0 ]; then
@@ -248,7 +248,7 @@ if command -v git >/dev/null 2>&1; then
 				git commit --no-verify -m "${__git_commit_message}"
 				return $?
 			else
-				echo "'${__git_commit_alias}' accepts [0..1] arguments; got ${__git_commit_num_args} and message \"${__git_commit_message}\""
+				echo "'$__git_commit_alias' accepts {0, 1} for the 'no-verify' flag; got ${__git_commit_no_verify}"
 				return 1
 			fi
 		else
@@ -370,11 +370,11 @@ if command -v git >/dev/null 2>&1; then
 					git push -fu origin "$(__current_branch)" || return $?
 					gitweb || return $?
 				else
-					echo "'$__git_push_alias' accepts {0, 1} for the 'force' and 'gitweb' flags"
+					echo "'$__git_push_alias' accepts {0, 1} for the 'force' and 'gitweb' flags; got ${__git_commit_push_force} and ${__git_push_gitweb}"
 					return 1
 				fi
 			else
-				echo "'${__git_push_num_args}' accepts no arguments"
+				echo "'${__git_push_alias}' accepts no arguments"
 				return 1
 			fi
 		else
