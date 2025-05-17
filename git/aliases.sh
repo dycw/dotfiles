@@ -237,12 +237,18 @@ if command -v git >/dev/null 2>&1; then
 		return $?
 	}
 	gcof() {
+		unset __gcof_branch
 		if [ $# -eq 0 ]; then
 			git checkout -- .
 			return $?
 		else
-			echo "'gcof' accepts no arguments"
-			return 1
+			if __is_valid_ref "$1"; then
+				__gcof_branch="$1"
+				shift
+				git checkout "${__gcof_branch}" -- "$@"
+			else
+				git checkout -- "$@"
+			fi
 		fi
 	}
 	gcop() {
@@ -574,6 +580,13 @@ if command -v git >/dev/null 2>&1; then
 	alias grmf='git rm -f'
 	alias grmr='git rm -r'
 	alias grmrf='git rm -rf'
+	# show-ref
+	__is_valid_ref() {
+		git show-ref --verify --quiet "refs/heads/$1" ||
+			git show-ref --verify --quiet "refs/remotes/$1" ||
+			git show-ref --verify --quiet "refs/tags/$1" ||
+			git rev-parse --verify --quiet "$1" >/dev/null
+	}
 	# status
 	gs() { git status "$@"; }
 	# stash
