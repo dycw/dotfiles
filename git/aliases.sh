@@ -298,25 +298,20 @@ if command -v git >/dev/null 2>&1; then
 			__git_commit_push_message="$4"
 			__git_commit_push_force="$5"
 			__git_commit_push_gitweb="$6"
-			if [ "${__git_commit_push_num_args}" -eq 0 ] && [ -z "${__git_commit_push_message}" ]; then
-				__git_commit_push_message="$(__git_commit_auto_message)"
-			elif [ "${__git_commit_push_num_args}" -eq 1 ] && [ -n "${__git_commit_push_message}" ]; then
-				: # valid
+			if [ "${__git_commit_push_num_args}" -le 1 ]; then
+				__git_commit "${__git_commit_push_alias}" \
+					"${__git_commit_push_num_args}" \
+					"${__git_commit_push_no_verify}" \
+					"${__git_commit_push_message}" || return $?
+				__git_push "${__git_commit_push_alias}" \
+					"${__git_commit_push_num_args}" \
+					"${__git_commit_push_force}" \
+					"${__git_commit_push_gitweb}"
+				return $?
 			else
-				echo "'${__git_commit_push_alias}' accepts [0..1] arguments; got ${__git_commit_push_num_args} and message \"${__git_commit_push_message}\""
+				echo "'${__git_commit_push_alias}' accepts [0..1] arguments; got ${__git_commit_push_num_args}"
 				return 1
 			fi
-			echo "hi"
-			__git_commit "${__git_commit_push_alias}" \
-				"${__git_commit_push_num_args}" \
-				"${__git_commit_push_no_verify}" \
-				"${__git_commit_push_message}" || return $?
-			echo "hi2"
-			__git_push "${__git_commit_push_alias}" \
-				"${__git_commit_push_num_args}" \
-				"${__git_commit_push_force}" \
-				"${__git_commit_push_gitweb}"
-			return $?
 		else
 			echo "'__git_commit_push' requires 6 arguments"
 			return 1
