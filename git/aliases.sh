@@ -88,24 +88,20 @@ if command -v git >/dev/null 2>&1; then
 					ga && __git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}"
 				}
 				return $?
-
 			elif [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
 				ga || return $?
 				__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}" || {
 					ga && __git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}"
 				}
 				return $?
-
 			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
 				eval "ga ${__git_acp_file_args}" || return $?
 				__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}"
 				return $?
-
 			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
 				eval "ga ${__git_acp_file_args}" || return $?
 				__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}"
 				return $?
-
 			else
 				echo "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__git_acp_count_file} file(s) ${__git_acp_file_list:-'(none)'} and ${__git_acp_count_non_file} message(s)" >&2
 				return 1
@@ -154,6 +150,7 @@ if command -v git >/dev/null 2>&1; then
 			return 1
 		fi
 		git push origin -d "${__gbdr_branch}"
+		return $?
 	}
 	gbm() { git branch -m "$1"; }
 	# checkout
@@ -215,7 +212,6 @@ if command -v git >/dev/null 2>&1; then
 			echo "'gcof' accepts no arguments"
 			return 1
 		fi
-
 	}
 	gcom() {
 		if [ $# -eq 0 ]; then
@@ -271,11 +267,17 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# cherry-pick
 	gcp() {
-		git cherry-pick
-
+		git cherry-pick "$@"
 	}
 	# clone
-	gcl() { git clone --recurse-submodules "$@"; }
+	gcl() {
+		if [ $# -eq 1 ]; then
+			git clone --recurse-submodules "$1"
+		else
+			echo "'gcl' accepts [0..1] arguments"
+			return 1
+		fi
+	}
 	# commit
 	__git_commit() {
 		if [ $# -eq 2 ]; then
@@ -392,14 +394,45 @@ if command -v git >/dev/null 2>&1; then
 	gdc() { git diff --cached "$@"; }
 	gdm() { git diff origin/master "$@"; }
 	# fetch
-	gf() { git fetch --all; }
-	gfm() { git fetch origin master:master; }
+	gf() {
+		if [ $# -eq 0 ]; then
+			git fetch --all
+			return $?
+		else
+			echo "'gf' accepts no arguments"
+			return 1
+		fi
+	}
 	# log
-	alias gl='git log --oneline --decorate --graph'
+	gl() {
+		if [ $# -eq 0 ]; then
+			git log --oneline --decorate --graph
+			return $?
+		else
+			echo "'gcof' accepts no arguments"
+			return 1
+		fi
+	}
 	# mv
-	alias gmv='git mv'
+	gmv() {
+		if [ $# -eq 2 ]; then
+			git mv "$1" "$2"
+			return $?
+		else
+			echo "'gmv' requires 2 arguments"
+			return 1
+		fi
+	}
 	# pull
-	gpl() { git pull --force; }
+	gpl() {
+		if [ $# -eq 0 ]; then
+			git pull --force
+			return $?
+		else
+			echo "'gpl' accepts no arguments"
+			return 1
+		fi
+	}
 	# push
 	gp() {
 		if [ $# -eq 0 ]; then
@@ -511,10 +544,13 @@ if command -v git >/dev/null 2>&1; then
 	# tag
 	gta() { git tag -a "$1" "$2" -m "$1" && git push -u origin --tags; }
 	gtd() { git tag -d "$@" && git push -d origin "$@"; }
-
 	# watchexec
 	if command -v watch >/dev/null 2>&1; then
 		wgd() { watch -d -n 0.1 -- git diff "$@"; }
 		wgs() { watch -d -n 0.1 -- git status "$@"; }
+	fi
+	# gitweb
+	if command -v gitweb >/dev/null 2>&1; then
+		gw() { gitweb; }
 	fi
 fi
