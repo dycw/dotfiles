@@ -405,7 +405,7 @@ if command -v git >/dev/null 2>&1; then
 	# log
 	gl() {
 		if [ $# -eq 0 ]; then
-			git log --oneline --decorate --graph
+			git log --abbrev-commit --decorate=short --pretty=format:'%C(red)%h%C(reset) |%C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)'
 			return $?
 		else
 			echo "'gl' accepts no arguments"
