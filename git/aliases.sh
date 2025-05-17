@@ -43,6 +43,7 @@ if command -v git >/dev/null 2>&1; then
 		done
 		__gac_file_list="${__gac_file_list%,}"
 
+		echo "'gac' got ${__gac_count_file} file(s) ${__gac_file_list:-'(none)'} and ${__gac_count_non_file} message(s)" >&2
 		if [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 0 ]; then
 			ga && gc
 		elif [ "${__gac_count_file}" -eq 0 ] && [ "${__gac_count_non_file}" -eq 1 ]; then
