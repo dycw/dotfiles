@@ -117,14 +117,17 @@ fi
 # gh
 if command -v gh >/dev/null 2>&1; then
 	ghc() {
-		if [ $# -eq 1 ]; then
-			gh pr create --title="$1" --body="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
+		if [ $# -eq 0 ]; then
+			gh pr create --title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")" --body='.'
+			return $?
+		elif [ $# -eq 1 ]; then
+			gh pr create --title="$1" --body='.'
 			return $?
 		elif [ $# -eq 2 ]; then
 			gh pr create --title="$1" --body="Closes #$2"
 			return $?
 		else
-			echo "'ghc' accepts [1..2] arguments"
+			echo "'ghc' accepts [0..2] arguments"
 			return 1
 		fi
 	}
