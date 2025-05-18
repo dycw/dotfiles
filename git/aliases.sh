@@ -6,17 +6,16 @@ if command -v git >/dev/null 2>&1; then
 	# add
 	ga() {
 		if [ $# -eq 0 ]; then
-			git add -A
+			git add -A || return $?
 		else
-			git add "$@"
+			git add "$@" || return $?
 		fi
-		return $?
 	}
 	gap() {
 		if [ $# -eq 0 ]; then
-			git add -pA
+			git add -pA || return $?
 		else
-			git add -p "$@"
+			git add -p "$@" || return $?
 		fi
 	}
 	# add + commit + push
@@ -409,8 +408,7 @@ if command -v git >/dev/null 2>&1; then
 			elif [ "${__git_push_gitweb}" -eq 1 ]; then
 				gitweb || return $?
 			else
-				echo "'__git_push' accepts {0, 1} for the 'gitweb' flag; got ${__git_push_gitweb}"
-				return 1
+				echo "'__git_push' accepts {0, 1} for the 'gitweb' flag; got ${__git_push_gitweb}" || return 1
 			fi
 		else
 			echo "'__git_push' requires 2 arguments" || return 1
@@ -438,44 +436,37 @@ if command -v git >/dev/null 2>&1; then
 		elif [ $# -eq 1 ]; then
 			__grb_branch="$1"
 		else
-			echo "'grb' accepts [0..1] arguments"
-			return 1
+			echo "'grb' accepts [0..1] arguments" || return 1
 		fi
-		gf && git rebase -s recursive -X theirs "${__grb_branch}"
-		return $?
+		gf || return $?
+		git rebase -s recursive -X theirs "${__grb_branch}" || return $?
 	}
 	grba() {
 		if [ $# -eq 0 ]; then
-			git rebase --abort
-			return $?
+			git rebase --abort || return $?
 		else
-			echo "'grba' accepts no arguments"
-			return 1
+			echo "'grba' accepts no arguments" || return 1
 		fi
 	}
 	grbc() {
 		if [ $# -eq 0 ]; then
-			git rebase --continue
-			return $?
+			git rebase --continue || return $?
 		else
-			echo "'grbc' accepts no arguments"
-			return 1
+			echo "'grbc' accepts no arguments" || return 1
 		fi
 	}
 	grbs() {
 		if [ $# -eq 0 ]; then
-			git rebase --skip
-			return $?
+			git rebase --skip || return $?
 		else
-			echo "'grbs' accepts no arguments"
-			return 1
+			echo "'grbs' accepts no arguments" || return 1
 		fi
 	}
 	# rebase (squash)
 	gsqm() {
-		gf
-		git reset --soft "$(git merge-base HEAD master)"
-		gcf "$@"
+		gf || return $?
+		git reset --soft "$(git merge-base HEAD master)" || return $?
+		gcf "$@" || return $?
 	}
 	# reset
 	alias gr='git reset'
