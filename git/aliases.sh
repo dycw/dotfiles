@@ -526,15 +526,6 @@ if command -v git >/dev/null 2>&1; then
 	# tag
 	gta() { git tag -a "$1" "$2" -m "$1" && git push -u origin --tags; }
 	gtd() { git tag -d "$@" && git push -d origin "$@"; }
-	# watchexec
-	if command -v watch >/dev/null 2>&1; then
-		wgd() { watch -d -n 0.1 -- git diff "$@"; }
-		wgs() { watch -d -n 0.1 -- git status "$@"; }
-	fi
-	# gitweb
-	if command -v gitweb >/dev/null 2>&1; then
-		gw() { gitweb; }
-	fi
 fi
 
 # gh
@@ -660,6 +651,17 @@ if command -v gh >/dev/null 2>&1; then
 	}
 fi
 
+# gh + gitweb
+if command -v gh >/dev/null 2>&1 && command -v gitweb >/dev/null 2>&1; then
+	gw() {
+		if __gh_pr_exists; then
+			ghv || return $?
+		else
+			gitweb || return $?
+		fi
+	}
+fi
+
 # git + gh
 if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 	gacc() {
@@ -711,6 +713,11 @@ if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 		else
 			echo "'__git_add_gh_pr_create' requires 3 arguments" || return 1
 		fi
-
 	}
+fi
+
+# git + watch
+if command -v git >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
+	wgd() { watch -d -n 0.1 -- git diff "$@"; }
+	wgs() { watch -d -n 0.1 -- git status "$@"; }
 fi
