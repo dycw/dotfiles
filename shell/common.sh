@@ -120,82 +120,95 @@ if command -v gh >/dev/null 2>&1; then
 	ghc() {
 		unset __ghc_body
 		if [ $# -eq 0 ]; then
-			gh pr create -t="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")" -b='.'
-			return $?
+			gh pr create -t="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")" -b='.' || return $?
 		elif [ $# -eq 1 ]; then
-			gh pr create -t="$1" -b='.'
-			return $?
+			gh pr create -t="$1" -b='.' || return $?
 		elif [ $# -eq 2 ]; then
 			if [ "$2" -eq "$2" ] 2>/dev/null; then
 				__ghc_body="Closes #$2"
 			else
 				__ghc_body="$2"
 			fi
-			gh pr create -t="$1" -b="$__ghc_body"
-			return $?
+			gh pr create -t="$1" -b="${__ghc_body}" || return $?
 		else
-			echo "'ghc' accepts [0..2] arguments"
-			return 1
+			echo "'ghc' accepts [0..2] arguments" || return 1
 		fi
 	}
 	ghcm() {
 		if [ $# -ge 1 ] && [ $# -le 2 ]; then
-			ghc "$@" && ghm
-			return $?
+			ghc "$@" || return $?
+			ghm || return $?
 		else
-			echo "'ghcm' accepts [1..2] arguments"
-			return 1
+			echo "'ghcm' accepts [1..2] arguments" || return 1
+		fi
+	}
+	ghe() {
+		unset __ghe_body
+		if [ $# -eq 1 ]; then
+			gh pr edit -t="$1" -b='.' || return $?
+		elif [ $# -eq 2 ]; then
+			if [ "$2" -eq "$2" ] 2>/dev/null; then
+				__ghe_body="Closes #$2"
+			else
+				__ghe_body="$2"
+			fi
+			gh pr edit -t="$1" -b="${__ghe_body}" || return $?
+		else
+			echo "'ghe' accepts [1..2] arguments" || return 1
 		fi
 	}
 	ghic() {
 		if [ $# -eq 1 ]; then
-			gh issue create -t="$1" -b='.'
-			return $?
+			gh issue create -t="$1" -b='.' || return $?
 		elif [ $# -eq 2 ]; then
-			gh issue create -t="$1" -l="$2" -b='.'
-			return $?
+			gh issue create -t="$1" -l="$2" -b='.' || return $?
 		elif [ $# -eq 3 ]; then
-			gh issue create -t="$1" -l="$2" -b="$3"
-			return $?
+			gh issue create -t="$1" -l="$2" -b="$3" || return $?
 		else
-			echo "'ghic' accepts [1..3] arguments"
-			return 1
+			echo "'ghic' accepts [1..3] arguments" || return 1
 		fi
 	}
 	ghil() {
 		if [ $# -eq 0 ]; then
-			gh issue list
-			return $?
+			gh issue list || return $?
 		else
-			echo "'ghil' accepts no arguments"
-			return 1
+			echo "'ghil' accepts no arguments" || return 1
 		fi
 	}
 	ghm() {
 		if [ $# -eq 0 ]; then
-			gh pr merge -s --auto
-			return $?
+			__gh_pr_merge 0 || return $?
 		else
-			echo "'ghm' accepts no arguments"
-			return 1
+			echo "'ghm' accepts no arguments" || return 1
 		fi
 	}
 	ghmd() {
 		if [ $# -eq 0 ]; then
-			ghm && gmd
-			return $?
+			__gh_pr_merge 1 || return $? || return $?
 		else
-			echo "'ghmd' accepts no arguments"
-			return 1
+			echo "'ghmd' accepts no arguments" || return 1
 		fi
 	}
 	ghv() {
 		if [ $# -eq 0 ]; then
-			gh pr view -w
-			return $?
+			gh pr view -w || return $?
 		else
-			echo "'ghv' accepts no arguments"
-			return 1
+			echo "'ghv' accepts no arguments" || return 1
+		fi
+	}
+	__gh_pr_merge() {
+		if [ $# -eq 1 ]; then
+			__gh_pr_merge_delete="$1"
+			gh pr merge -s --auto || return $?
+			if [ "${__gh_pr_merge_delete}" -eq 0 ]; then
+				:
+			elif [ "${__gh_pr_merge_delete}" -eq 1 ]; then
+				gcmd || return $?
+			else
+				echo "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__gh_pr_merge_delete}" || return 1
+			fi
+		else
+			echo "'__gh_pr_merge' requires 1 argument" || return 1
 		fi
 	}
 fi
@@ -214,30 +227,54 @@ gitignore() { ${EDITOR} "$(repo_root)/.gitignore"; }
 if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 	gacc() {
 		if [ $# -le 2 ]; then
-			gac && ghc "$@"
-			return $?
+			__git_add_gh_pr_create "${1:-}" "${2:-}" 0 || return $?
 		else
-			echo "'gacc' accepts [0..2] arguments"
-			return 1
+			echo "'gacc' accepts [0..2] arguments" || return 1
 		fi
 	}
 	gaccv() {
 		if [ $# -le 2 ]; then
-			gac && ghc "$@" && ghv
-			return $?
+			__git_add_gh_pr_create "${1:-}" "${2:-}" 1 || return $?
 		else
-			echo "'gaccv' accepts [0..2] arguments"
-			return 1
+			echo "'gaccv' accepts [0..2] arguments" || return 1
 		fi
 	}
 	gaccmd() {
 		if [ $# -ge 1 ] && [ $$ -le 2 ]; then
-			gac && ghc "$@" && ghm && gcmd
-			return $?
+			gac || return $?
+			ghc "$@" || return $?
+			ghm || return $?
+			gcmd || return $?
 		else
-			echo "'gaccmd' accepts [1..2] arguments"
-			return 1
+			echo "'gaccmd' accepts [1..2] arguments" || return 1
 		fi
+	}
+	__git_add_gh_pr_create() {
+		if [ $# -eq 3 ]; then
+			__git_add_gh_pr_create_first="$1"
+			__git_add_gh_pr_create_second="$2"
+			__git_add_gh_pr_create_view="$1"
+			gac || return $?
+			if [ -z "${__git_add_gh_pr_create_first}" ] && [ -z "${__git_add_gh_pr_create_second}" ]; then
+				ghc || return $?
+			elif [ -n "${__git_add_gh_pr_create_first}" ] && [ -z "${__git_add_gh_pr_create_second}" ]; then
+				ghc "${__git_add_gh_pr_create_first}" || return $?
+			elif [ -n "${__git_add_gh_pr_create_first}" ] && [ -n "${__git_add_gh_pr_create_second}" ]; then
+				ghc "${__git_add_gh_pr_create_first}" "${__git_add_gh_pr_create_second}" || return $?
+			else
+				echo "'__git_add_gh_pr_create' is missing first but got second ${__git_add_gh_pr_create_second}" || return 1
+			fi
+			if [ "${__git_add_gh_pr_create_view}" -eq 0 ]; then
+				:
+			elif [ "${__git_add_gh_pr_create_view}" -eq 1 ]; then
+				ghv || return $?
+			else
+				echo "'__git_add_gh_pr_create' accepts {0, 1} for the 'view' flag; got ${__git_add_gh_pr_create_view}" || return 1
+			fi
+		else
+			echo "'__git_add_gh_pr_create' requires 3 arguments" || return 1
+		fi
+
 	}
 fi
 
@@ -342,54 +379,43 @@ alias tmuxconf='${EDITOR} "${HOME}/.config/tmux/tmux.conf.local"'
 if command -v uv >/dev/null 2>&1; then
 	ip() {
 		if [ $# -eq 0 ]; then
-			uv run --with=ipython ipython
-			return $?
+			uv run --with=ipython ipython || return $?
 		else
-			echo "'ip' accepts no arguments"
-			return 1
+			echo "'ip' accepts no arguments" || return 1
 		fi
 	}
 	jl() {
 		if [ $# -eq 0 ]; then
-			uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python jupyter lab
-			return $?
+			uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python jupyter lab || return $?
 		else
-			echo "'jl' accepts no arguments"
-			return 1
+			echo "'jl' accepts no arguments" || return 1
 		fi
 	}
 	uva() { uv add "$@"; }
 	uvpi() { uv pip install "$@"; }
 	uvpl() {
 		if [ $# -eq 0 ]; then
-			uv pip list
-			return $?
+			uv pip list || return $?
 		elif [ $# -eq 1 ]; then
-			uv pip list | grep "$1"
-			return $?
+			(uv pip list | grep "$1") || return $?
 		else
-			echo "'uvpl' accepts [0..1] arguments"
-			return 1
+			echo "'uvpl' accepts [0..1] arguments" || return 1
 		fi
 
 	}
 	uvplo() {
 		if [ $# -eq 0 ]; then
-			uv pip list --outdated
-			return $?
+			uv pip list --outdated || return $?
 		else
-			echo "'uvplo' accepts no arguments"
-			return 1
+			echo "'uvplo' accepts no arguments" || return 1
 		fi
 	}
 	uvpu() { uv pip uninstall "$@"; }
 	uvs() {
 		if [ $# -eq 0 ]; then
-			uv sync --upgrade
-			return $?
+			uv sync --upgrade || return $?
 		else
-			echo "'uvs' accepts no arguments"
-			return 1
+			echo "'uvs' accepts no arguments" || return 1
 		fi
 	}
 fi
