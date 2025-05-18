@@ -212,17 +212,14 @@ gitignore() { ${EDITOR} "$(repo_root)/.gitignore"; }
 if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 	gacc() {
 		if [ $# -le 2 ]; then
-			gac || return $?
-			ghc "$@" || return $?
+			__git_add_gh_pr_create "${1:-}" "${2:-}" 0 || return $?
 		else
 			echo "'gacc' accepts [0..2] arguments" || return 1
 		fi
 	}
 	gaccv() {
 		if [ $# -le 2 ]; then
-			gac || return $?
-			ghc "$@" || return $?
-			ghv || return $?
+			__git_add_gh_pr_create "${1:-}" "${2:-}" "${3:-}" 1 || return $?
 		else
 			echo "'gaccv' accepts [0..2] arguments" || return 1
 		fi
@@ -236,6 +233,33 @@ if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 		else
 			echo "'gaccmd' accepts [1..2] arguments" || return 1
 		fi
+	}
+	__git_add_gh_pr_create() {
+		if [ $# -eq 3 ]; then
+			__git_add_gh_pr_create_first="$1"
+			__git_add_gh_pr_create_second="$2"
+			__git_add_gh_pr_create_view="$1"
+			gac || return $?
+			if [ -z "${__git_add_gh_pr_create_first}" ] && [ -z "${__git_add_gh_pr_create_second}" ]; then
+				ghc || return $?
+			elif [ -n "${__git_add_gh_pr_create_first}" ] && [ -z "${__git_add_gh_pr_create_second}" ]; then
+				ghc "${__git_add_gh_pr_create_first}" || return $?
+			elif [ -n "${__git_add_gh_pr_create_first}" ] && [ -n "${__git_add_gh_pr_create_second}" ]; then
+				ghc "${__git_add_gh_pr_create_first}" "${__git_add_gh_pr_create_second}" || return $?
+			else
+				echo "'__git_add_gh_pr_create' is missing first but got second ${__git_add_gh_pr_create_second}" || return 1
+			fi
+			if [ "${__git_add_gh_pr_create_view}" -eq 0 ]; then
+				:
+			elif [ "${__git_add_gh_pr_create_view}" -eq 1 ]; then
+				ghv || return $?
+			else
+				echo "'__git_add_gh_pr_create' accepts {0, 1} for the 'view' flag; got ${__git_add_gh_pr_create_view}" || return 1
+			fi
+		else
+			echo "'__git_add_gh_pr_create' requires 3 arguments" || return 1
+		fi
+
 	}
 fi
 
