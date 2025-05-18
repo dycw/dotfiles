@@ -219,7 +219,7 @@ if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 	}
 	gaccv() {
 		if [ $# -le 2 ]; then
-			__git_add_gh_pr_create "${1:-}" "${2:-}" "${3:-}" 1 || return $?
+			__git_add_gh_pr_create "${1:-}" "${2:-}" 1 || return $?
 		else
 			echo "'gaccv' accepts [0..2] arguments" || return 1
 		fi
