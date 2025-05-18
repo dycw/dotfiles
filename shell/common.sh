@@ -172,15 +172,6 @@ if command -v gh >/dev/null 2>&1; then
 			return 1
 		fi
 	}
-	ghcmd() {
-		if [ $# -ge 1 ] && [ $# -le 2 ]; then
-			ghc "$@" && ghm && gcmd
-			return $?
-		else
-			echo "'ghcmd' accepts [1..2] arguments"
-			return 1
-		fi
-	}
 fi
 
 # git
@@ -192,6 +183,19 @@ if [ -f "$__file" ]; then
 	. "$__file"
 fi
 gitignore() { ${EDITOR} "$(repo_root)/.gitignore"; }
+
+# git + gh
+if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
+	gaccmd() {
+		if [ $# -ge 1 ] && [ $# -le 2 ]; then
+			gac && ghc "$@" && ghm && gcmd
+			return $?
+		else
+			echo "'gaccmd' requires 1 argument 'title'"
+			return 1
+		fi
+	}
+fi
 
 # hypothesis
 hypothesis_ci() { export HYPOTHESIS_PROFILE='ci'; }
