@@ -556,6 +556,7 @@ if command -v git >/dev/null 2>&1; then
 	alias gr='git reset'
 	alias grp='git reset --patch'
 	# rev-parse
+	repo_root() { git rev-parse --show-toplevel; }
 	__branch_exists() {
 		if git rev-parse --verify "$@" >/dev/null 2>&1; then
 			true
@@ -573,7 +574,6 @@ if command -v git >/dev/null 2>&1; then
 	}
 	__is_current_branch_dev() { __is_current_branch 'dev'; }
 	__is_current_branch_master() { __is_current_branch 'master'; }
-	__repo_root() { git rev-parse --show-toplevel; }
 	# rm
 	alias grm='git rm'
 	alias grmc='git rm --cached'
