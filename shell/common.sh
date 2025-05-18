@@ -129,7 +129,7 @@ if command -v gh >/dev/null 2>&1; then
 			else
 				__ghc_body="$2"
 			fi
-			gh pr create -t="$1" -b="$__ghc_body" || return $?
+			gh pr create -t="$1" -b="${__ghc_body}" || return $?
 		else
 			echo "'ghc' accepts [0..2] arguments" || return 1
 		fi
@@ -140,6 +140,21 @@ if command -v gh >/dev/null 2>&1; then
 			ghm || return $?
 		else
 			echo "'ghcm' accepts [1..2] arguments" || return 1
+		fi
+	}
+	ghe() {
+		unset __ghe_body
+		if [ $# -eq 1 ]; then
+			gh pr edit -t="$1" -b='.' || return $?
+		elif [ $# -eq 2 ]; then
+			if [ "$2" -eq "$2" ] 2>/dev/null; then
+				__ghe_body="Closes #$2"
+			else
+				__ghe_body="$2"
+			fi
+			gh pr edit -t="$1" -b="${__ghe_body}" || return $?
+		else
+			echo "'ghe' accepts [1..2] arguments" || return 1
 		fi
 	}
 	ghic() {
