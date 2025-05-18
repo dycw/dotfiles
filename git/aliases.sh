@@ -60,27 +60,24 @@ if command -v git >/dev/null 2>&1; then
 
 			if [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
 				ga || return $?
-				__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}" || {
-					ga && __git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}"
-				}
-				return $?
+				if ! __git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}"; then
+					ga || return $?
+					__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}" || return $?
+				fi
 			elif [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
 				ga || return $?
-				__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}" || {
-					ga && __git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}"
-				}
-				return $?
+				if ! __git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}"; then
+					ga || return $?
+					__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}" || return $?
+				fi
 			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
 				eval "ga ${__git_acp_file_args}" || return $?
-				__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}"
-				return $?
+				__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}" || return $?
 			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
 				eval "ga ${__git_acp_file_args}" || return $?
-				__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}"
-				return $?
+				__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}" || return $?
 			else
-				echo "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__git_acp_count_file} file(s) ${__git_acp_file_list:-'(none)'} and ${__git_acp_count_non_file} message(s)" >&2
-				return 1
+				echo "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__git_acp_count_file} file(s) ${__git_acp_file_list:-'(none)'} and ${__git_acp_count_non_file} message(s)" || return 1
 			fi
 		else
 			echo "'__git_add_commit_push' requires at least 3 arguments" >&2
