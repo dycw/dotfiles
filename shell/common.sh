@@ -182,6 +182,7 @@ __file="${HOME}/dotfiles/git/aliases.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
+gitignore() { ${EDITOR} "$(repo_root)/.gitignore"; }
 
 # hypothesis
 hypothesis_ci() { export HYPOTHESIS_PROFILE='ci'; }
