@@ -178,7 +178,6 @@ if command -v gh >/dev/null 2>&1; then
 	ghiv() {
 		unset __ghiv_branch __ghiv_num
 		if [ $# -eq 0 ]; then
-			gh issue list || return $?
 			__ghiv_branch="$(current_branch)" || return $?
 			__ghiv_num="${__ghiv_branch%%-*}"
 			if [ "${__ghiv_num}" -eq "${__ghiv_num}" ] 2>/dev/null; then

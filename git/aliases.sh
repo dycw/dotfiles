@@ -402,7 +402,7 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -eq 2 ]; then
 			__git_push_force="$1"
 			__git_push_gitweb="$2"
-			__git_push_current_branch_force "${__git_push_force}" || return $?
+			__git_push_current_branch "${__git_push_force}" || return $?
 			if [ "${__git_push_gitweb}" -eq 0 ]; then
 				:
 			elif [ "${__git_push_gitweb}" -eq 1 ]; then
