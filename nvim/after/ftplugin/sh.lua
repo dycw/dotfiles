@@ -4,4 +4,3 @@ local bo = vim.bo
 
 bo.shiftwidth = 4
 bo.tabstop = 4
-bo.indentexpr = ""
