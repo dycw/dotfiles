@@ -138,7 +138,7 @@ if command -v git >/dev/null 2>&1; then
 			if __is_current_branch_master; then
 				echo "'gcmd' cannot be run on master" || return 1
 			else
-				__gcmd_branch="$(__current_branch)"
+				__gcmd_branch="$(current_branch)"
 				gcof || return $?
 				gcm || return $?
 				gbd "${__gcmd_branch}" || return $?
@@ -223,7 +223,7 @@ if command -v git >/dev/null 2>&1; then
 			if __is_current_branch_master; then
 				echo "'gcobr' cannot be run on master" || return 1
 			else
-				__gbr_branch="$(__current_branch)"
+				__gbr_branch="$(current_branch)"
 				gcof || return $?
 				gcom || return $?
 				gbd "${__gbr_branch}" || return $?
@@ -418,9 +418,9 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -eq 1 ]; then
 			__git_push_current_branch_force="$1"
 			if [ "${__git_push_force}" -eq 0 ]; then
-				git push -u origin "$(__current_branch)" || return $?
+				git push -u origin "$(current_branch)" || return $?
 			elif [ "${__git_push_force}" -eq 1 ]; then
-				git push -fu origin "$(__current_branch)" || return $?
+				git push -fu origin "$(current_branch)" || return $?
 			else
 				echo "'__git_push_current_branch' accepts {0, 1} for the 'force'; got ${__git_push_current_branch_force}" || return 1
 			fi
@@ -472,7 +472,20 @@ if command -v git >/dev/null 2>&1; then
 	alias gr='git reset'
 	alias grp='git reset --patch'
 	# rev-parse
-	repo_root() { git rev-parse --show-toplevel; }
+	current_branch() {
+		if [ $# -eq 0 ]; then
+			git rev-parse --abbrev-ref HEAD || return $?
+		else
+			echo "'current_branch' accepts no arguments" || return 1
+		fi
+	}
+	repo_root() {
+		if [ $# -eq 0 ]; then
+			git rev-parse --show-toplevel || return $?
+		else
+			echo "'repo_root' accepts no arguments" || return 1
+		fi
+	}
 	__branch_exists() {
 		if git rev-parse --verify "$@" >/dev/null 2>&1; then
 			true
@@ -480,9 +493,8 @@ if command -v git >/dev/null 2>&1; then
 			false
 		fi
 	}
-	__current_branch() { git rev-parse --abbrev-ref HEAD; }
 	__is_current_branch() {
-		if [ "$(__current_branch)" = "$1" ]; then
+		if [ "$(current_branch)" = "$1" ]; then
 			true
 		else
 			false

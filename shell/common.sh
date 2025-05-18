@@ -175,6 +175,29 @@ if command -v gh >/dev/null 2>&1; then
 			echo "'ghil' accepts no arguments" || return 1
 		fi
 	}
+	ghiv() {
+		unset __ghiv_branch __ghiv_num
+		if [ $# -eq 0 ]; then
+			gh issue list || return $?
+			__ghiv_branch="$(current_branch)" || return $?
+			__ghiv_num="${__ghiv_branch%%-*}"
+			if [ "${__ghiv_num}" -eq "${__ghiv_num}" ] 2>/dev/null; then
+				gh issue view "${__ghiv_num}" -w || return $?
+			else
+				echo "'ghiv' cannot be run on a branch without an issue number" || return 1
+			fi
+		elif [ $# -eq 1 ]; then
+			__ghiv_num="$1"
+			if [ "$1" -eq "$1" ] 2>/dev/null; then
+				gh issue view "$1" -w || return $?
+			else
+				echo "'ghiv' requries an integer" || return 1
+			fi
+		else
+			echo "'ghiv' accepts [0..1] arguments" || return 1
+		fi
+
+	}
 	ghm() {
 		if [ $# -eq 0 ]; then
 			__gh_pr_merge 0 || return $?
@@ -215,7 +238,7 @@ fi
 
 # git
 if command -v git >/dev/null 2>&1; then
-	cdr() { cd "$(git rev-parse --show-toplevel)" || exit; }
+	cdr() { cd "$(repo_root)" || exit; }
 fi
 __file="${HOME}/dotfiles/git/aliases.sh"
 if [ -f "$__file" ]; then
