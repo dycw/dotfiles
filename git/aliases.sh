@@ -299,7 +299,7 @@ if command -v git >/dev/null 2>&1; then
 				__git_commit_message="$(__git_commit_auto_message)"
 			fi
 			if [ "${__git_commit_no_verify}" -eq 0 ]; then
-				git commit -m "${__git_commit_message}" || true
+				git commit -m "${__git_commit_message}"
 				return $?
 			elif [ "${__git_commit_no_verify}" -eq 1 ]; then
 				git commit --no-verify -m "${__git_commit_message}"
