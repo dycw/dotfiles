@@ -18,9 +18,7 @@ fi
 if command -v btm >/dev/null 2>&1; then
 	htop() { btm "$@"; }
 fi
-if command -v nvim >/dev/null 2>&1; then
-	bottom_toml() { ${EDITOR} "${HOME}"/dotfiles/bottom/bottom.toml; }
-fi
+bottom_toml() { ${EDITOR} "${HOME}/dotfiles/bottom/bottom.toml"; }
 
 # cd
 alias ~='cd "${HOME}"'
@@ -200,8 +198,8 @@ set bell-style none
 set editing-mode vi
 
 # ipython
-ipython_startup() { ${EDITOR} "${HOME}"/dotfiles/ipython/startup.py; }
 ip() { uv run --with=ipython ipython; }
+ipython_startup() { ${EDITOR} "${HOME}/dotfiles/ipython/startup.py"; }
 
 # jupyter
 jl() { uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python jupyter lab; }
@@ -214,17 +212,13 @@ fi
 
 # marimo
 mar() { uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' marimo new; }
-if command -v nvim >/dev/null 2>&1; then
-	marimo_toml() { ${EDITOR} "${HOME}"/dotfiles/marimo/marimo.toml; }
-fi
+marimo_toml() { ${EDITOR} "${HOME}/dotfiles/marimo/marimo.toml"; }
 
 # neovim
-if command -v nvim >/dev/null 2>&1; then
-	cdplugins() { cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins" || exit; }
-	n() { nvim "$@"; }
-	lua_snippets() { ${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua; }
-	plugins_dial() { ${EDITOR} "${HOME}"/dotfiles/nvim/lua/plugins/dial.lua; }
-fi
+cdplugins() { cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins" || exit; }
+n() { nvim "$@"; }
+lua_snippets() { ${EDITOR} "${HOME}/dotfiles/nvim/lua/snippets.lua"; }
+plugins_dial() { ${EDITOR} "${HOME}/dotfiles/nvim/lua/plugins/dial.lua"; }
 
 # pre-commit
 if command -v pre-commit >/dev/null 2>&1; then
@@ -233,6 +227,7 @@ if command -v pre-commit >/dev/null 2>&1; then
 	alias pcau='pre-commit autoupdate'
 	alias pci='pre-commit install'
 fi
+pre_commit_config_yaml() { ${EDITOR} "$(repo_root)/.pre-commit-config.yaml"; }
 
 # ps
 alias pst='ps -fLu "$USER"| wc -l'
@@ -247,16 +242,16 @@ if command -v pyright >/dev/null 2>&1; then
 fi
 
 # pytest
-__file="${HOME}"/dotfiles/pytest/aliases.sh
-if [ -f "$__file" ]; then
-	. "$__file"
+__file="${HOME}/dotfiles/pytest/aliases.sh"
+if [ -f "${__file}" ]; then
+	. "${__file}"
 fi
 
 # python
-pyproject() { ${EDITOR} "$(groot)"/pyproject.toml; }
+pyproject() { ${EDITOR} "$(repo_root)/pyproject.toml"; }
 
 # q
-start_q() { QHOME="${HOME}"/q rlwrap -r "$HOME"/q/m64/q "$@"; }
+start_q() { QHOME="${HOME}"/q rlwrap -r "$HOME/q/m64/q" "$@"; }
 
 # rg
 if command -v pyright >/dev/null 2>&1 && command -v watchexec >/dev/null 2>&1; then
@@ -284,8 +279,8 @@ if command -v tmux >/dev/null 2>&1; then
 	if [ -z "$TMUX" ]; then
 		tmux new-session -c "${PWD}"
 	fi
-	alias tmuxconf='$EDITOR "${HOME}"/.config/tmux/tmux.conf.local'
 fi
+alias tmuxconf='${EDITOR} "${HOME}/.config/tmux/tmux.conf.local"'
 
 # uv
 if command -v uv >/dev/null 2>&1; then
