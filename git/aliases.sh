@@ -302,10 +302,10 @@ if command -v git >/dev/null 2>&1; then
 				__git_commit_message="$(__git_commit_auto_message)"
 			fi
 			if [ "${__git_commit_no_verify}" -eq 0 ]; then
-				git commit -m "${__git_commit_message}"
+				git commit -m "${__git_commit_message}" || __tree_is_clean
 				return $?
 			elif [ "${__git_commit_no_verify}" -eq 1 ]; then
-				git commit --no-verify -m "${__git_commit_message}"
+				git commit --no-verify -m "${__git_commit_message}" || __tree_is_clean
 				return $?
 			else
 				echo "'__git_commit' accepts {0, 1} for the 'no-verify' flag; got ${__git_commit_no_verify}"
@@ -592,6 +592,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# status
 	gs() { git status "$@"; }
+	__tree_is_clean() { [ -z "$(git status --porcelain)" ]; }
 	# stash
 	alias gst='git stash'
 	alias gstd='git stash drop'
