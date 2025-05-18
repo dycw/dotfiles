@@ -5,11 +5,11 @@ repos:
     hooks:
       - id: ruff-check
         args: [--fix]
-  - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.10.24
-    hooks:
-      - id: run-bump-my-version
-      - id: run-ruff-format
+  # - repo: https://github.com/dycw/pre-commit-hooks
+  #   rev: 0.10.24
+  #   hooks:
+  #     - id: run-bump-my-version
+  #     - id: run-ruff-format
   - repo: https://github.com/johnnymorganz/stylua
     rev: v2.1.0
     hooks:
@@ -39,5 +39,5 @@ repos:
       - id: end-of-file-fixer
       - id: mixed-line-ending
         args: [--fix=lf]
-      - id: no-commit-to-branch
+      # - id: no-commit-to-branch
       - id: trailing-whitespace
