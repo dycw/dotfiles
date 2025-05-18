@@ -182,7 +182,7 @@ if command -v gh >/dev/null 2>&1; then
 	}
 	ghmd() {
 		if [ $# -eq 0 ]; then
-			ghm && gmd
+			ghm && gcmd
 			return $?
 		else
 			echo "'ghmd' accepts no arguments"
