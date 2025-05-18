@@ -58,6 +58,7 @@ if command -v git >/dev/null 2>&1; then
 			__git_acp_force="$2"
 			__git_acp_gitweb="$3"
 			shift 3
+			echo "$__git_acp_no_verify $__git_acp_force $__git_acp_gitweb"
 
 			__git_acp_count_file=0
 			__git_acp_count_non_file=0
