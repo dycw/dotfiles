@@ -654,10 +654,14 @@ fi
 # gh + gitweb
 if command -v gh >/dev/null 2>&1 && command -v gitweb >/dev/null 2>&1; then
 	gw() {
-		if __gh_pr_exists; then
-			ghv || return $?
+		if [ $# -eq 0 ]; then
+			if __gh_pr_exists; then
+				ghv || return $?
+			else
+				gitweb || return $?
+			fi
 		else
-			gitweb || return $?
+			echo "'gw' accepts no arguments" || return 1
 		fi
 	}
 fi
