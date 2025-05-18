@@ -123,6 +123,7 @@ __file="${HOME}/dotfiles/git/aliases.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
+git_aliases() { ${EDITOR} "${HOME}/dotfiles/git/aliases.py"; }
 gitignore() { ${EDITOR} "$(repo_root)/.gitignore"; }
 
 # hypothesis
@@ -140,7 +141,7 @@ set bell-style none
 set editing-mode vi
 
 # ipython
-ipython_startup() { ${EDITOR} "${HOME}"/dotfiles/ipython/startup.py; }
+ipython_startup() { ${EDITOR} "${HOME}/dotfiles/ipython/startup.py"; }
 
 # jupyter
 
@@ -209,6 +210,9 @@ if command -v ruff >/dev/null 2>&1; then
 	rcw() { ruff check -w "$@"; }
 fi
 
+# shell
+shell_common() { ${EDITOR} "${HOME}/dotfiles/shell/common.sh"; }
+
 # tailscale
 if command -v tailscale >/dev/null 2>&1; then
 	ts_status() { tailscale status; }
@@ -220,7 +224,7 @@ if command -v tmux >/dev/null 2>&1; then
 		tmux new-session -c "${PWD}"
 	fi
 fi
-alias tmuxconf='${EDITOR} "${HOME}/.config/tmux/tmux.conf.local"'
+tmuxconf() { ${EDITOR} "${HOME}/.config/tmux/tmux.conf.local"; }
 
 # uv
 if command -v uv >/dev/null 2>&1; then
