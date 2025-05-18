@@ -83,7 +83,6 @@ if command -v git >/dev/null 2>&1; then
 			__git_acp_file_list="${__git_acp_file_list%,}"
 
 			if [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
-				echo hi
 				ga || return $?
 				__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}" || {
 					ga && __git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}"
