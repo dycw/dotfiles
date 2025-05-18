@@ -123,7 +123,7 @@ __file="${HOME}/dotfiles/git/aliases.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
-git_aliases() { ${EDITOR} "${HOME}/dotfiles/git/aliases.py"; }
+git_aliases() { ${EDITOR} "${HOME}/dotfiles/git/aliases.sh"; }
 gitignore() { ${EDITOR} "$(repo_root)/.gitignore"; }
 
 # hypothesis
