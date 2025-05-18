@@ -62,7 +62,7 @@ opt.laststatus = 3
 opt.list = true
 
 -- Strings to use in `'list'`  mode and for the |:list| command
-opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+opt.listchars = { tab = "▏ ", trail = "·", nbsp = "␣" }
 
 -- Disables mouse support
 opt.mouse = ""
