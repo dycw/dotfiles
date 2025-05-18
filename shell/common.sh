@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 # shellcheck source=/dev/null
+# shellcheck disable=SC2120
 
 # bat
 if command -v bat >/dev/null 2>&1; then
@@ -170,7 +171,6 @@ if command -v gh >/dev/null 2>&1; then
 			return 1
 		fi
 	}
-	# shellcheck disable=SC2120
 	ghm() {
 		if [ $# -eq 0 ]; then
 			gh pr merge -s --auto
@@ -206,6 +206,15 @@ if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 	gacc() {
 		if [ $# -le 2 ]; then
 			gac && ghc "$@"
+			return $?
+		else
+			echo "'gacc' accepts [0..2] arguments"
+			return 1
+		fi
+	}
+	gaccw() {
+		if [ $# -le 2 ]; then
+			gac && ghc "$@" && ghv
 			return $?
 		else
 			echo "'gacc' accepts [0..2] arguments"
