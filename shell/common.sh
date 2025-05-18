@@ -118,13 +118,13 @@ fi
 if command -v gh >/dev/null 2>&1; then
 	ghc() {
 		if [ $# -eq 0 ]; then
-			gh pr create --title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")" --body='.'
+			gh pr create -t="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")" -b='.'
 			return $?
 		elif [ $# -eq 1 ]; then
-			gh pr create --title="$1" --body='.'
+			gh pr create -t="$1" -b='.'
 			return $?
 		elif [ $# -eq 2 ]; then
-			gh pr create --title="$1" --body="Closes #$2"
+			gh pr create -t="$1" -b="Closes #$2"
 			return $?
 		else
 			echo "'ghc' accepts [0..2] arguments"
@@ -133,13 +133,13 @@ if command -v gh >/dev/null 2>&1; then
 	}
 	ghic() {
 		if [ $# -eq 1 ]; then
-			gh issue create --title="$1" --body='.'
+			gh issue create -t="$1" -b='.'
 			return $?
 		elif [ $# -eq 2 ]; then
-			gh issue create --title="$1" --label="$2" --body='.'
+			gh issue create -t="$1" -l="$2" -b='.'
 			return $?
 		elif [ $# -eq 3 ]; then
-			gh issue create --title="$1" --label="$2" --body="$3"
+			gh issue create -t="$1" -l="$2" -b="$3"
 			return $?
 		else
 			echo "'ghic' accepts [1..3] arguments"
@@ -158,7 +158,7 @@ if command -v gh >/dev/null 2>&1; then
 	# shellcheck disable=SC2120
 	ghm() {
 		if [ $# -eq 0 ]; then
-			gh pr merge --auto --squash
+			gh pr merge -s --auto
 			return $?
 		else
 			echo "'ghm' accepts no arguments"
@@ -171,6 +171,15 @@ if command -v gh >/dev/null 2>&1; then
 			return $?
 		else
 			echo "'ghcm' accepts [1..2] arguments"
+			return 1
+		fi
+	}
+	ghv() {
+		if [ $# -eq 0 ]; then
+			gh pr view -w
+			return $?
+		else
+			echo "'ghm' accepts no arguments"
 			return 1
 		fi
 	}
