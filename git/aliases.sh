@@ -267,74 +267,58 @@ if command -v git >/dev/null 2>&1; then
 	# commit + push
 	gc() {
 		if [ $# -le 1 ]; then
-			__git_commit_push 0 "${1:-}" 0 0
-			return $?
+			__git_commit_push 0 "${1:-}" 0 0 || return $?
 		else
-			echo "'gc' accepts [0..1] arguments"
-			return 1
+			echo "'gc' accepts [0..1] arguments" || return 1
 		fi
 	}
 	gcn() {
 		if [ $# -le 1 ]; then
-			__git_commit_push 1 "${1:-}" 0 0
-			return $?
+			__git_commit_push 1 "${1:-}" 0 0 || return $?
 		else
-			echo "'gcn' accepts [0..1] arguments"
-			return 1
+			echo "'gcn' accepts [0..1] arguments" || return 1
 		fi
 	}
 	gcf() {
 		if [ $# -le 1 ]; then
-			__git_commit_push 0 "${1:-}" 1 0
-			return $?
+			__git_commit_push 0 "${1:-}" 1 0 || return $?
 		else
-			echo "'gcf' accepts [0..1] arguments"
-			return 1
+			echo "'gcf' accepts [0..1] arguments" || return 1
 		fi
 	}
 	gcnf() {
 		if [ $# -le 1 ]; then
-			__git_commit_push 1 "${1:-}" 1 0
-			return $?
+			__git_commit_push 1 "${1:-}" 1 0 || return $?
 		else
-			echo "'gcnf' accepts [0..1] arguments"
-			return 1
+			echo "'gcnf' accepts [0..1] arguments" || return 1
 		fi
 	}
 	gcw() {
 		if [ $# -le 1 ]; then
-			__git_commit_push 0 "${1:-}" 0 1
-			return $?
+			__git_commit_push 0 "${1:-}" 0 1 || return $?
 		else
-			echo "'gcw' accepts [0..1] arguments"
-			return 1
+			echo "'gcw' accepts [0..1] arguments" || return 1
 		fi
 	}
 	gcnw() {
 		if [ $# -le 1 ]; then
-			__git_commit_push 1 "${1:-}" 0 1
-			return $?
+			__git_commit_push 1 "${1:-}" 0 1 || return $?
 		else
-			echo "'gcnw' accepts [0..1] arguments"
-			return 1
+			echo "'gcnw' accepts [0..1] arguments" || return 1
 		fi
 	}
 	gcfw() {
 		if [ $# -le 1 ]; then
-			__git_commit_push 0 "${1:-}" 1 1
-			return $?
+			__git_commit_push 0 "${1:-}" 1 1 || return $?
 		else
-			echo "'gcfw' accepts [0..1] arguments"
-			return 1
+			echo "'gcfw' accepts [0..1] arguments" || return 1
 		fi
 	}
 	gcnfw() {
 		if [ $# -le 1 ]; then
-			__git_commit_push 1 "${1:-}" 1 1
-			return $?
+			__git_commit_push 1 "${1:-}" 1 1 || return $?
 		else
-			echo "'gcnfw' accepts [0..1] arguments"
-			return 1
+			echo "'gcnfw' accepts [0..1] arguments" || return 1
 		fi
 	}
 	__git_commit_push() {
@@ -380,71 +364,70 @@ if command -v git >/dev/null 2>&1; then
 	# pull
 	gpl() {
 		if [ $# -eq 0 ]; then
-			git pull --force && gf
-			return $?
+			git pull --force || return $?
+			gf || return $?
 		else
-			echo "'gpl' accepts no arguments"
-			return 1
+			echo "'gpl' accepts no arguments" || return 1
 		fi
 	}
 	# push
 	gp() {
 		if [ $# -eq 0 ]; then
-			__git_push 0 0
-			return $?
+			__git_push 0 0 || return $?
 		else
-			echo "'gp' accepts no arguments"
-			return 1
+			echo "'gp' accepts no arguments" || return 1
 		fi
 	}
 	gpf() {
 		if [ $# -eq 0 ]; then
-			__git_push 1 0
-			return $?
+			__git_push 1 0 || return $?
 		else
-			echo "'gpf' accepts no arguments"
-			return 1
+			echo "'gpf' accepts no arguments" || return 1
 		fi
 	}
 	gpw() {
 		if [ $# -eq 0 ]; then
-			__git_push 0 1
-			return $?
+			__git_push 0 1 || return $?
 		else
-			echo "'gpw' accepts no arguments"
-			return 1
+			echo "'gpw' accepts no arguments" || return 1
 		fi
 	}
 	gpfw() {
 		if [ $# -eq 0 ]; then
-			__git_push 1 1
-			return $?
+			__git_push 1 1 || return $?
 		else
-			echo "'gpfw' accepts no arguments"
-			return 1
+			echo "'gpfw' accepts no arguments" || return 1
 		fi
 	}
 	__git_push() {
 		if [ $# -eq 2 ]; then
 			__git_push_force="$1"
 			__git_push_gitweb="$2"
-			if [ "${__git_push_force}" -eq 0 ] && [ "${__git_push_gitweb}" -eq 0 ]; then
-				git push -u origin "$(__current_branch)" || return $?
-			elif [ "${__git_push_force}" -eq 0 ] && [ "${__git_push_gitweb}" -eq 1 ]; then
-				git push -u origin "$(__current_branch)" || return $?
-				gitweb || return $?
-			elif [ "${__git_push_force}" -eq 1 ] && [ "${__git_push_gitweb}" -eq 0 ]; then
-				git push -fu origin "$(__current_branch)" || return $?
-			elif [ "${__git_push_force}" -eq 1 ] && [ "${__git_push_gitweb}" -eq 1 ]; then
-				git push -fu origin "$(__current_branch)" || return $?
+			__git_push_current_branch_force "${__git_push_force}" || return $?
+			if [ "${__git_push_gitweb}" -eq 0 ]; then
+				:
+			elif [ "${__git_push_gitweb}" -eq 1 ]; then
 				gitweb || return $?
 			else
-				echo "'__git_push' accepts {0, 1} for the 'force' and 'gitweb' flags; got ${__git_push_force} and ${__git_push_gitweb}"
+				echo "'__git_push' accepts {0, 1} for the 'gitweb' flag; got ${__git_push_gitweb}"
 				return 1
 			fi
 		else
-			echo "'__git_push' requires 2 arguments"
-			return 1
+			echo "'__git_push' requires 2 arguments" || return 1
+		fi
+	}
+	__git_push_current_branch() {
+		if [ $# -eq 1 ]; then
+			__git_push_current_branch_force="$1"
+			if [ "${__git_push_force}" -eq 0 ]; then
+				git push -u origin "$(__current_branch)" || return $?
+			elif [ "${__git_push_force}" -eq 1 ]; then
+				git push -fu origin "$(__current_branch)" || return $?
+			else
+				echo "'__git_push_current_branch' accepts {0, 1} for the 'force'; got ${__git_push_current_branch_force}" || return 1
+			fi
+		else
+			echo "'__git_push_current_branch' requires 1 arguments" || return 1
 		fi
 	}
 	# rebase
