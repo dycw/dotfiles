@@ -172,6 +172,15 @@ if command -v gh >/dev/null 2>&1; then
 			return 1
 		fi
 	}
+	ghcmd() {
+		if [ $# -ge 1 ] && [ $# -le 2 ]; then
+			ghc "$@" && ghm && gcmd
+			return $?
+		else
+			echo "'ghcmd' accepts [1..2] arguments"
+			return 1
+		fi
+	}
 fi
 
 # git
