@@ -212,12 +212,12 @@ if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 			return 1
 		fi
 	}
-	gaccw() {
+	gaccv() {
 		if [ $# -le 2 ]; then
 			gac && ghc "$@" && ghv
 			return $?
 		else
-			echo "'gacc' accepts [0..2] arguments"
+			echo "'gaccv' accepts [0..2] arguments"
 			return 1
 		fi
 	}
