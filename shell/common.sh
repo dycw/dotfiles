@@ -117,6 +117,7 @@ fi
 # gh
 if command -v gh >/dev/null 2>&1; then
 	ghc() {
+		unset __ghc_body
 		if [ $# -eq 0 ]; then
 			gh pr create -t="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")" -b='.'
 			return $?
@@ -124,10 +125,24 @@ if command -v gh >/dev/null 2>&1; then
 			gh pr create -t="$1" -b='.'
 			return $?
 		elif [ $# -eq 2 ]; then
-			gh pr create -t="$1" -b="Closes #$2"
+			if [ "$2" -eq "$2" ] 2>/dev/null; then
+				__ghc_body="Closes #$2"
+			else
+				__ghc_body="$2"
+			fi
+			gh pr create -t="$1" -b="$__ghc_body"
 			return $?
 		else
 			echo "'ghc' accepts [0..2] arguments"
+			return 1
+		fi
+	}
+	ghcm() {
+		if [ $# -ge 1 ] && [ $# -le 2 ]; then
+			ghc "$@" && ghm
+			return $?
+		else
+			echo "'ghcm' accepts [1..2] arguments"
 			return 1
 		fi
 	}
@@ -165,21 +180,12 @@ if command -v gh >/dev/null 2>&1; then
 			return 1
 		fi
 	}
-	ghcm() {
-		if [ $# -ge 1 ] && [ $# -le 2 ]; then
-			ghc "$@" && ghm
-			return $?
-		else
-			echo "'ghcm' accepts [1..2] arguments"
-			return 1
-		fi
-	}
 	ghv() {
 		if [ $# -eq 0 ]; then
 			gh pr view -w
 			return $?
 		else
-			echo "'ghm' accepts no arguments"
+			echo "'ghv' accepts no arguments"
 			return 1
 		fi
 	}
@@ -197,12 +203,21 @@ gitignore() { ${EDITOR} "$(repo_root)/.gitignore"; }
 
 # git + gh
 if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
+	gacc() {
+		if [ $# -le 2 ]; then
+			gac && ghc "$@"
+			return $?
+		else
+			echo "'gacc' accepts [0..2] arguments"
+			return 1
+		fi
+	}
 	gaccmd() {
-		if [ $# -eq 1 ]; then
+		if [ $# -ge 1 ] && [ $$ -le 2 ]; then
 			gac && ghc "$@" && ghm && gcmd
 			return $?
 		else
-			echo "'gaccmd' requires 1 argument 'title'"
+			echo "'gaccmd' accepts [1..2] arguments"
 			return 1
 		fi
 	}
