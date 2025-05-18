@@ -187,7 +187,7 @@ gitignore() { ${EDITOR} "$(repo_root)/.gitignore"; }
 # git + gh
 if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 	gaccmd() {
-		if [ $# -ge 1 ] && [ $# -le 2 ]; then
+		if [ $# -eq 1 ]; then
 			gac && ghc "$@" && ghm && gcmd
 			return $?
 		else
