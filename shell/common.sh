@@ -180,6 +180,15 @@ if command -v gh >/dev/null 2>&1; then
 			return 1
 		fi
 	}
+	ghmd() {
+		if [ $# -eq 0 ]; then
+			ghm && gmd
+			return $?
+		else
+			echo "'ghmd' accepts no arguments"
+			return 1
+		fi
+	}
 	ghv() {
 		if [ $# -eq 0 ]; then
 			gh pr view -w
