@@ -184,6 +184,19 @@ if [ -f "$__file" ]; then
 fi
 gitignore() { ${EDITOR} "$(repo_root)/.gitignore"; }
 
+# git + gh
+if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
+	gaccmd() {
+		if [ $# -eq 1 ]; then
+			gac && ghc "$@" && ghm && gcmd
+			return $?
+		else
+			echo "'gaccmd' requires 1 argument 'title'"
+			return 1
+		fi
+	}
+fi
+
 # hypothesis
 hypothesis_ci() { export HYPOTHESIS_PROFILE='ci'; }
 hypothesis_debug() { export HYPOTHESIS_PROFILE='debug'; }
