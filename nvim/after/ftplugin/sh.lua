@@ -1,6 +1,7 @@
 -- luacheck: push ignore
-local opt_local = vim.opt_local
+local bo = vim.bo
 -- luacheck: pop
 
-opt_local.shiftwidth = 2
-opt_local.tabstop = 2
+bo.shiftwidth = 4
+bo.tabstop = 4
+bo.indentexpr = ""
