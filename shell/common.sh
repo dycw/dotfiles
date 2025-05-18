@@ -311,7 +311,7 @@ if command -v uv >/dev/null 2>&1; then
 			uv pip list | grep "$1"
 			return $?
 		else
-			echo "'uvpl' accepts [0..2] arguments"
+			echo "'uvpl' accepts [0..1] arguments"
 			return 1
 		fi
 
