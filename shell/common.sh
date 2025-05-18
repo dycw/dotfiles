@@ -44,7 +44,7 @@ chown_dirs() { find . -type d -exec chown "$1" {} \;; }
 alias open-cov='open .coverage/html/index.html'
 
 # cyberghost
-if command -v btm >/dev/null 2>&1; then
+if command -v cyberghostvpn >/dev/null 2>&1; then
 	cyber_jp() { sudo cyberghostvpn --country-code JP --connect; }
 fi
 
