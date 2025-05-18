@@ -199,11 +199,9 @@ set bell-style none
 set editing-mode vi
 
 # ipython
-ip() { uv run --with=ipython ipython; }
-ipython_startup() { ${EDITOR} "${HOME}/dotfiles/ipython/startup.py"; }
+ipython_startup() { ${EDITOR} "${HOME}"/dotfiles/ipython/startup.py; }
 
 # jupyter
-jl() { uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python jupyter lab; }
 
 # local
 __file="${HOME}/common.sh"
@@ -285,11 +283,56 @@ alias tmuxconf='${EDITOR} "${HOME}/.config/tmux/tmux.conf.local"'
 
 # uv
 if command -v uv >/dev/null 2>&1; then
+	ip() {
+		if [ $# -eq 0 ]; then
+			uv run --with=ipython ipython
+			return $?
+		else
+			echo "'ip' accepts no arguments"
+			return 1
+		fi
+	}
+	jl() {
+		if [ $# -eq 0 ]; then
+			uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python jupyter lab
+			return $?
+		else
+			echo "'jl' accepts no arguments"
+			return 1
+		fi
+	}
 	uva() { uv add "$@"; }
 	uvpi() { uv pip install "$@"; }
-	uvpl() { uv pip list; }
-	plo() { uv pip list --outdated; }
-	uvplo() { uv pip list --outdated; }
+	uvpl() {
+		if [ $# -eq 0 ]; then
+			uv pip list
+			return $?
+		elif [ $# -eq 1 ]; then
+			uv pip list | grep "$1"
+			return $?
+		else
+			echo "'uvpl' accepts [0..2] arguments"
+			return 1
+		fi
+
+	}
+	uvplo() {
+		if [ $# -eq 0 ]; then
+			uv pip list --outdated
+			return $?
+		else
+			echo "'uvplo' accepts no arguments"
+			return 1
+		fi
+	}
 	uvpu() { uv pip uninstall "$@"; }
-	uvs() { uv sync --upgrade; }
+	uvs() {
+		if [ $# -eq 0 ]; then
+			uv sync --upgrade
+			return $?
+		else
+			echo "'uvs' accepts no arguments"
+			return 1
+		fi
+	}
 fi

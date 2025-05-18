@@ -149,7 +149,7 @@ if command -v git >/dev/null 2>&1; then
 			echo "'gbdr' accepts [0..1] arguments"
 			return 1
 		fi
-		git push origin -d "${__gbdr_branch}"
+		gf && git push origin -d "${__gbdr_branch}"
 		return $?
 	}
 	gbm() { git branch -m "$1"; }
@@ -233,7 +233,7 @@ if command -v git >/dev/null 2>&1; then
 		if ! __is_current_branch_master; then
 			gco master
 		fi
-		git checkout -b "${__gcobt_branch}" -t "origin/${__gcobt_branch}"
+		gf && git checkout -b "${__gcobt_branch}" -t "origin/${__gcobt_branch}"
 		return $?
 	}
 	gcof() {
