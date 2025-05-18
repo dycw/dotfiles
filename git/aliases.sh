@@ -153,6 +153,9 @@ if command -v git >/dev/null 2>&1; then
 		return $?
 	}
 	gbm() { git branch -m "$1"; }
+	__delete_gone_branches() {
+		git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
+	}
 	__select_remote_branch() {
 		git branch -r --color=never | awk '!/->/' | fzf | sed -E 's|^[[:space:]]*origin/||'
 	}
@@ -199,7 +202,7 @@ if command -v git >/dev/null 2>&1; then
 			echo "'gco' accepts [0..1] arguments"
 			return 1
 		fi
-		git checkout "${__gco_branch}" && git pull --force
+		git checkout "${__gco_branch}" && gpl
 		return $?
 	}
 	gcob() {
@@ -408,7 +411,7 @@ if command -v git >/dev/null 2>&1; then
 	# fetch
 	gf() {
 		if [ $# -eq 0 ]; then
-			git fetch --all
+			git fetch --all && __delete_gone_branches
 			return $?
 		else
 			echo "'gf' accepts no arguments"
@@ -438,7 +441,7 @@ if command -v git >/dev/null 2>&1; then
 	# pull
 	gpl() {
 		if [ $# -eq 0 ]; then
-			git pull --force
+			git pull --force && gf
 			return $?
 		else
 			echo "'gpl' accepts no arguments"
