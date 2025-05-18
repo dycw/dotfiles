@@ -20,38 +20,14 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	# add + commit + push
-	gac() {
-		__git_add_commit_push 0 0 0 "$@"
-		return $?
-	}
-	gacn() {
-		__git_add_commit_push 1 0 0 "$@"
-		return $?
-	}
-	gacf() {
-		__git_add_commit_push 0 1 0 "$@"
-		return $?
-	}
-	gacnf() {
-		__git_add_commit_push 1 1 0 "$@"
-		return $?
-	}
-	gacw() {
-		__git_add_commit_push 0 0 1 "$@"
-		return $?
-	}
-	gacnw() {
-		__git_add_commit_push 1 0 1 "$@"
-		return $?
-	}
-	gacfw() {
-		__git_add_commit_push 0 1 1 "$@"
-		return $?
-	}
-	gacnfw() {
-		__git_add_commit_push 1 1 1 "$@"
-		return $?
-	}
+	gac() { __git_add_commit_push 0 0 0 "$@" || return $?; }
+	gacn() { __git_add_commit_push 1 0 0 "$@" || return $?; }
+	gacf() { __git_add_commit_push 0 1 0 "$@" || return $?; }
+	gacnf() { __git_add_commit_push 1 1 0 "$@" || return $?; }
+	gacw() { __git_add_commit_push 0 0 1 "$@" || return $?; }
+	gacnw() { __git_add_commit_push 1 0 1 "$@" || return $?; }
+	gacfw() { __git_add_commit_push 0 1 1 "$@" || return $?; }
+	gacnfw() { __git_add_commit_push 1 1 1 "$@" || return $?; }
 	__git_add_commit_push() {
 		if [ "$#" -ge 3 ]; then
 			__git_acp_no_verify="$1"
@@ -114,11 +90,9 @@ if command -v git >/dev/null 2>&1; then
 	# branch
 	gb() {
 		if [ $# -eq 0 ]; then
-			git branch -alv --sort=-committerdate
-			return $?
+			git branch -alv --sort=-committerdate || return $?
 		else
-			echo "'gb' accepts no arguments"
-			return 1
+			echo "'gb' accepts no arguments" || return 1
 		fi
 	}
 	gbd() {
@@ -127,17 +101,14 @@ if command -v git >/dev/null 2>&1; then
 			if __is_current_branch_master; then
 				__gbd_branch='dev'
 			else
-				echo "'gbd' off 'master' requires 1 argument 'branch'"
-				return 1
+				echo "'gbd' off 'master' requires 1 argument 'branch'" || return 1
 			fi
 		elif [ $# -eq 1 ]; then
 			__gbd_branch="$1"
 		else
-			echo "'gbd' accepts [0..1] arguments"
-			return 1
+			echo "'gbd' accepts [0..1] arguments" || return 1
 		fi
-		git branch -D "${__gbd_branch}"
-		return $?
+		git branch -D "${__gbd_branch}" || return $?
 	}
 	gbdr() {
 		unset __gbdr_branch
@@ -146,11 +117,10 @@ if command -v git >/dev/null 2>&1; then
 		elif [ $# -eq 1 ]; then
 			__gbdr_branch="$1"
 		else
-			echo "'gbdr' accepts [0..1] arguments"
-			return 1
+			echo "'gbdr' accepts [0..1] arguments" || return 1
 		fi
-		gf && git push origin -d "${__gbdr_branch}"
-		return $?
+		gf || return $?
+		git push origin -d "${__gbdr_branch}" || return $?
 	}
 	gbm() { git branch -m "$1"; }
 	__delete_gone_branches() {
@@ -162,27 +132,24 @@ if command -v git >/dev/null 2>&1; then
 	# checkout
 	gcm() {
 		if [ $# -eq 0 ]; then
-			gco master
-			return $?
+			gco master || return $?
 		else
-			echo "'gcm' accepts no arguments"
-			return 1
+			echo "'gcm' accepts no arguments" || return 1
 		fi
 	}
 	gcmd() {
 		unset __gcmd_branch
 		if [ $# -eq 0 ]; then
 			if __is_current_branch_master; then
-				echo "'gcmd' cannot be run on master"
-				return 1
+				echo "'gcmd' cannot be run on master" || return 1
 			else
 				__gcmd_branch="$(__current_branch)"
-				gcof && gco master && gbd "${__gcmd_branch}"
-				return $?
+				gcof || return $?
+				gcm || return $?
+				gbd "${__gcmd_branch}" || return $?
 			fi
 		else
-			echo "'gcmd' accepts no arguments"
-			return 1
+			echo "'gcmd' accepts no arguments" || return 1
 		fi
 	}
 	gco() {
@@ -397,11 +364,9 @@ if command -v git >/dev/null 2>&1; then
 			__git_commit_push_force="$3"
 			__git_commit_push_gitweb="$4"
 			__git_commit "${__git_commit_push_no_verify}" "${__git_commit_push_message}" || return $?
-			__git_push "${__git_commit_push_force}" "${__git_commit_push_gitweb}"
-			return $?
+			__git_push "${__git_commit_push_force}" "${__git_commit_push_gitweb}" || return $?
 		else
-			echo "'__git_commit_push' requires 4 arguments"
-			return 1
+			echo "'__git_commit_push' requires 4 arguments" || return 1
 		fi
 	}
 	# diff
@@ -411,31 +376,25 @@ if command -v git >/dev/null 2>&1; then
 	# fetch
 	gf() {
 		if [ $# -eq 0 ]; then
-			git fetch --all && __delete_gone_branches
-			return $?
+			git fetch --all && __delete_gone_branches || return $?
 		else
-			echo "'gf' accepts no arguments"
-			return 1
+			echo "'gf' accepts no arguments" || return 1
 		fi
 	}
 	# log
 	gl() {
 		if [ $# -eq 0 ]; then
-			git log --abbrev-commit --decorate=short --pretty=format:'%C(red)%h%C(reset) |%C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)'
-			return $?
+			git log --abbrev-commit --decorate=short --pretty=format:'%C(red)%h%C(reset) |%C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)' || return $?
 		else
-			echo "'gl' accepts no arguments"
-			return 1
+			echo "'gl' accepts no arguments" || return 1
 		fi
 	}
 	# mv
 	gmv() {
 		if [ $# -eq 2 ]; then
-			git mv "$1" "$2"
-			return $?
+			git mv "$1" "$2" || return $?
 		else
-			echo "'gmv' requires 2 arguments"
-			return 1
+			echo "'gmv' requires || 2 arguments" return 1
 		fi
 	}
 	# pull

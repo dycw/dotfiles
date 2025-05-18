@@ -198,6 +198,21 @@ if command -v gh >/dev/null 2>&1; then
 			return 1
 		fi
 	}
+	__gh_pr_merge() {
+		if [ $# -eq 1 ]; then
+			__gh_pr_merge_delete="$1"
+			gh pr merge -s --auto || return $?
+			if [ "${__gh_pr_merge_delete}" -eq 0 ]; then
+				:
+			elif [ "${__gh_pr_merge_delete}" -eq 1 ]; then
+				gcmd || return $?
+			else
+				echo "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__gh_pr_merge_delete}" || return 1
+			fi
+		else
+			echo "'__gh_pr_merge' requires 1 argument" || return 1
+		fi
+	}
 fi
 
 # git
