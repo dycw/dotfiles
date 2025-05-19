@@ -632,7 +632,7 @@ if command -v gh >/dev/null 2>&1; then
 		fi
 	}
 	__gh_pr_exists() {
-		gh pr view --json number --jq .number >/dev/null 2>&1
+		gh pr view --state open --json number --jq .number >/dev/null 2>&1
 	}
 	__gh_pr_merge() {
 		if [ $# -eq 1 ]; then
