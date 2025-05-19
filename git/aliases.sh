@@ -226,7 +226,7 @@ if command -v git >/dev/null 2>&1; then
 			else
 				__gbr_branch="$(current_branch)"
 				gcof || return $?
-				gcom || return $?
+				gcm || return $?
 				gbd "${__gbr_branch}" || return $?
 				gcob "${__gbr_branch}" || return $?
 			fi
