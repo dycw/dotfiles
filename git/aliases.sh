@@ -423,7 +423,7 @@ if command -v git >/dev/null 2>&1; then
 			elif [ "${__git_push_force}" -eq 1 ]; then
 				git push -fu origin "$(current_branch)" || return $?
 			else
-				echo "'__git_push_current_branch' accepts {0, 1} for the 'force'; got ${__git_push_current_branch_force}" || return 1
+				echo "'__git_push_current_branch' accepts {0, 1} for the 'force' flag; got ${__git_push_current_branch_force}" || return 1
 			fi
 		else
 			echo "'__git_push_current_branch' requires 1 arguments" || return 1
