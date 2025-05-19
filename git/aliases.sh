@@ -32,7 +32,7 @@ if command -v git >/dev/null 2>&1; then
 		if [ "$#" -ge 3 ]; then
 			__git_acp_no_verify="$1"
 			__git_acp_force="$2"
-			__git_acp_gitweb="$3"
+			__git_acp_web="$3"
 			shift 3
 
 			__git_acp_count_file=0
@@ -60,22 +60,22 @@ if command -v git >/dev/null 2>&1; then
 
 			if [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
 				ga || return $?
-				if ! __git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}"; then
+				if ! __git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_web}"; then
 					ga || return $?
-					__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}" || return $?
+					__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_web}" || return $?
 				fi
 			elif [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
 				ga || return $?
-				if ! __git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}"; then
+				if ! __git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_web}"; then
 					ga || return $?
-					__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}" || return $?
+					__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_web}" || return $?
 				fi
 			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
 				eval "ga ${__git_acp_file_args}" || return $?
-				__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_gitweb}" || return $?
+				__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_web}" || return $?
 			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
 				eval "ga ${__git_acp_file_args}" || return $?
-				__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_gitweb}" || return $?
+				__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_web}" || return $?
 			else
 				echo "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__git_acp_count_file} file(s) ${__git_acp_file_list:-'(none)'} and ${__git_acp_count_non_file} message(s)" || return 1
 			fi
@@ -326,9 +326,9 @@ if command -v git >/dev/null 2>&1; then
 			__git_commit_push_no_verify="$1"
 			__git_commit_push_message="$2"
 			__git_commit_push_force="$3"
-			__git_commit_push_gitweb="$4"
+			__git_commit_push_web="$4"
 			__git_commit "${__git_commit_push_no_verify}" "${__git_commit_push_message}" || return $?
-			__git_push "${__git_commit_push_force}" "${__git_commit_push_gitweb}" || return $?
+			__git_push "${__git_commit_push_force}" "${__git_commit_push_web}" || return $?
 		else
 			echo "'__git_commit_push' requires 4 arguments" || return 1
 		fi
@@ -402,14 +402,14 @@ if command -v git >/dev/null 2>&1; then
 	__git_push() {
 		if [ $# -eq 2 ]; then
 			__git_push_force="$1"
-			__git_push_gitweb="$2"
+			__git_push_web="$2"
 			__git_push_current_branch "${__git_push_force}" || return $?
-			if [ "${__git_push_gitweb}" -eq 0 ]; then
+			if [ "${__git_push_web}" -eq 0 ]; then
 				:
-			elif [ "${__git_push_gitweb}" -eq 1 ]; then
-				gitweb || return $?
+			elif [ "${__git_push_web}" -eq 1 ]; then
+				gw || return $?
 			else
-				echo "'__git_push' accepts {0, 1} for the 'gitweb' flag; got ${__git_push_gitweb}" || return 1
+				echo "'__git_push' accepts {0, 1} for the 'web' flag; got ${__git_push_web}" || return 1
 			fi
 		else
 			echo "'__git_push' requires 2 arguments" || return 1
