@@ -680,7 +680,7 @@ if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 		fi
 	}
 	gaccmd() {
-		if [ $# -ge 1 ] && [ $$ -le 2 ]; then
+		if [ $# -ge 1 ] && [ $# -le 2 ]; then
 			gac || return $?
 			ghc "$@" || return $?
 			ghm || return $?
