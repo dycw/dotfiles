@@ -547,6 +547,23 @@ if command -v gh >/dev/null 2>&1; then
 			echo "'ghc' accepts [0..2] arguments" || return 1
 		fi
 	}
+	ghcv() {
+		unset __ghc_body
+		if [ $# -eq 0 ]; then
+			gh pr create -t="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")" -b='.' || return $?
+		elif [ $# -eq 1 ]; then
+			gh pr create -t="$1" -b='.' || return $?
+		elif [ $# -eq 2 ]; then
+			if [ "$2" -eq "$2" ] 2>/dev/null; then
+				__ghc_body="Closes #$2"
+			else
+				__ghc_body="$2"
+			fi
+			gh pr create -t="$1" -b="${__ghc_body}" || return $?
+		else
+			echo "'ghc' accepts [0..2] arguments" || return 1
+		fi
+	}
 	ghcm() {
 		if [ $# -ge 1 ] && [ $# -le 2 ]; then
 			ghc "$@" || return $?
@@ -626,9 +643,34 @@ if command -v gh >/dev/null 2>&1; then
 	}
 	ghv() {
 		if [ $# -eq 0 ]; then
-			gh pr view -w || return $?
+			if gh pr ready >/dev/null 2>&1; then
+				gh pr view -w || return $?
+			else
+				echo "'ghv' cannot find an open PR" || return 1
+			fi
 		else
 			echo "'ghv' accepts no arguments" || return 1
+		fi
+	}
+	__gh_pr_create() {
+		if [ $# -eq 1 ]; then
+			unset __ghc_body
+			if [ $# -eq 0 ]; then
+				gh pr create -t="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")" -b='.' || return $?
+			elif [ $# -eq 1 ]; then
+				gh pr create -t="$1" -b='.' || return $?
+			elif [ $# -eq 2 ]; then
+				if [ "$2" -eq "$2" ] 2>/dev/null; then
+					__ghc_body="Closes #$2"
+				else
+					__ghc_body="$2"
+				fi
+				gh pr create -t="$1" -b="${__ghc_body}" || return $?
+			else
+				echo "'__gh_pr_create' accepts [0..2] arguments" || return 1
+			fi
+		else
+			echo "'__gh_pr_create' requires 1 argument" || return 1
 		fi
 	}
 	__gh_pr_merge() {
