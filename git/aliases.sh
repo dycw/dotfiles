@@ -631,9 +631,6 @@ if command -v gh >/dev/null 2>&1; then
 			echo "'ghv' accepts no arguments" || return 1
 		fi
 	}
-	__gh_pr_exists() {
-		gh pr view --json number --jq .number >/dev/null 2>&1
-	}
 	__gh_pr_merge() {
 		if [ $# -eq 1 ]; then
 			__gh_pr_merge_delete="$1"
@@ -655,7 +652,7 @@ fi
 if command -v gh >/dev/null 2>&1 && command -v gitweb >/dev/null 2>&1; then
 	gw() {
 		if [ $# -eq 0 ]; then
-			if __gh_pr_exists; then
+			if gh pr ready >/dev/null 2>&1; then
 				ghv || return $?
 			else
 				gitweb || return $?
