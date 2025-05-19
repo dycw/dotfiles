@@ -199,6 +199,10 @@ if command -v pyright >/dev/null 2>&1 && command -v watchexec >/dev/null 2>&1; t
 	rgw() { watchexec rg "$@"; }
 fi
 
+test_count() {
+	echo "Got $# arguments"
+}
+
 # rm
 alias rmr='rm -r'
 alias rmf='rm -f'
