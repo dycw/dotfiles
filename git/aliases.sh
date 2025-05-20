@@ -539,22 +539,22 @@ fi
 if command -v gh >/dev/null 2>&1; then
 	ghc() {
 		if [ $# -eq 0 ]; then
-			__gh_pr_create "" "" 0 || return $?
+			__gh_pr_create_or_edit create "" "" 0 || return $?
 		elif [ $# -eq 1 ]; then
-			__gh_pr_create "$1" "" 0 || return $?
+			__gh_pr_create_or_edit create "$1" "" 0 || return $?
 		elif [ $# -eq 2 ]; then
-			__gh_pr_create "$1" "$2" 0 || return $?
+			__gh_pr_create_or_edit create "$1" "$2" 0 || return $?
 		else
 			echo "'ghc' accepts [0..2] arguments" || return 1
 		fi
 	}
 	ghcv() {
 		if [ $# -eq 0 ]; then
-			__gh_pr_create "" "" 1 || return $?
+			__gh_pr_create_or_edit "" "" 1 || return $?
 		elif [ $# -eq 1 ]; then
-			__gh_pr_create "$1" "" 1 || return $?
+			__gh_pr_create_or_edit "$1" "" 1 || return $?
 		elif [ $# -eq 2 ]; then
-			__gh_pr_create "$1" "$2" 1 || return $?
+			__gh_pr_create_or_edit "$1" "$2" 1 || return $?
 		else
 			echo "'ghcv' accepts [0..2] arguments" || return 1
 		fi
@@ -568,18 +568,21 @@ if command -v gh >/dev/null 2>&1; then
 		fi
 	}
 	ghe() {
-		unset __ghe_body
 		if [ $# -eq 1 ]; then
-			gh pr edit -t="$1" -b='.' || return $?
+			__gh_pr_create_or_edit edit "$1" "" 0 || return $?
 		elif [ $# -eq 2 ]; then
-			if [ "$2" -eq "$2" ] 2>/dev/null; then
-				__ghe_body="Closes #$2"
-			else
-				__ghe_body="$2"
-			fi
-			gh pr edit -t="$1" -b="${__ghe_body}" || return $?
+			__gh_pr_create_or_edit edit "$1" "$2" 0 || return $?
 		else
 			echo "'ghe' accepts [1..2] arguments" || return 1
+		fi
+	}
+	ghev() {
+		if [ $# -eq 1 ]; then
+			__gh_pr_create_or_edit edit "$1" "" 1 || return $?
+		elif [ $# -eq 2 ]; then
+			__gh_pr_create_or_edit edit "$1" "$2" 1 || return $?
+		else
+			echo "'ghev' accepts [1..2] arguments" || return 1
 		fi
 	}
 	ghic() {
@@ -647,29 +650,30 @@ if command -v gh >/dev/null 2>&1; then
 			echo "'ghv' accepts no arguments" || return 1
 		fi
 	}
-	__gh_pr_create() {
-		if [ $# -eq 3 ]; then
-			__gh_pr_create_title="$1"
-			__gh_pr_create_body="$2"
-			__gh_pr_create_web="$3"
-			if [ -z "${__gh_pr_create_title}" ]; then
-				__gh_pr_create_title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
+	__gh_pr_create_or_edit() {
+		if [ $# -eq 4 ]; then
+			__gh_pr_create_or_edit_verb="$1"
+			__gh_pr_create_or_edit_title="$2"
+			__gh_pr_create_or_edit_body="$3"
+			__gh_pr_create_or_edit_web="$4"
+			if [ -z "${__gh_pr_create_or_edit_title}" ]; then
+				__gh_pr_create_or_edit_title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
 			fi
-			if [ -z "${__gh_pr_create_body}" ]; then
-				if __is_int "${__gh_pr_create_body}"; then
-					__gh_pr_create_body="Closes ${__gh_pr_create_body}"
+			if [ -z "${__gh_pr_create_or_edit_body}" ]; then
+				if __is_int "${__gh_pr_create_or_edit_body}"; then
+					__gh_pr_create_or_edit_body="Closes ${__gh_pr_create_or_edit_body}"
 				fi
 			fi
-			gh pr create -t="${__gh_pr_create_title}" -b="${__gh_pr_create_body}" || return $?
-			if [ "${__gh_pr_create_web}" -eq 0 ]; then
+			gh pr "${__gh_pr_create_or_edit_verb}" -t="${__gh_pr_create_or_edit_title}" -b="${__gh_pr_create_or_edit_body}" || return $?
+			if [ "${__gh_pr_create_or_edit_web}" -eq 0 ]; then
 				:
-			elif [ "${__gh_pr_create_web}" -eq 1 ]; then
+			elif [ "${__gh_pr_create_or_edit_web}" -eq 1 ]; then
 				ghv || return $?
 			else
-				echo "'__gh_pr_create_web' accepts {0, 1} for the 'delete' flag; got ${__gh_pr_create_web}" || return 1
+				echo "'__gh_pr_create_or_edit_web' accepts {0, 1} for the 'web' flag; got ${__gh_pr_create_or_edit_web}" || return 1
 			fi
 		else
-			echo "'__gh_pr_create' requires 3 arguments" || return 1
+			echo "'__gh_pr_create_or_edit_web' requires 4 arguments" || return 1
 		fi
 	}
 	__gh_pr_merge() {
