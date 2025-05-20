@@ -210,6 +210,13 @@ if command -v git >/dev/null 2>&1; then
 			fi
 		fi
 	}
+	gcofm() {
+		if [ $# -ge 1 ]; then
+			gcof origin/master "$@" || return $?
+		else
+			echo "'gcofm' requires [1..] arguments" || return 1
+		fi
+	}
 	gcop() {
 		if [ $# -eq 0 ]; then
 			git checkout --patch || return $?
@@ -226,7 +233,7 @@ if command -v git >/dev/null 2>&1; then
 			else
 				__gbr_branch="$(current_branch)"
 				gcof || return $?
-				gcom || return $?
+				gcm || return $?
 				gbd "${__gbr_branch}" || return $?
 				gcob "${__gbr_branch}" || return $?
 			fi
@@ -531,20 +538,25 @@ fi
 # gh
 if command -v gh >/dev/null 2>&1; then
 	ghc() {
-		unset __ghc_body
 		if [ $# -eq 0 ]; then
-			gh pr create -t="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")" -b='.' || return $?
+			__gh_pr_create_or_edit create "" "" 0 || return $?
 		elif [ $# -eq 1 ]; then
-			gh pr create -t="$1" -b='.' || return $?
+			__gh_pr_create_or_edit create "$1" "" 0 || return $?
 		elif [ $# -eq 2 ]; then
-			if [ "$2" -eq "$2" ] 2>/dev/null; then
-				__ghc_body="Closes #$2"
-			else
-				__ghc_body="$2"
-			fi
-			gh pr create -t="$1" -b="${__ghc_body}" || return $?
+			__gh_pr_create_or_edit create "$1" "$2" 0 || return $?
 		else
 			echo "'ghc' accepts [0..2] arguments" || return 1
+		fi
+	}
+	ghcv() {
+		if [ $# -eq 0 ]; then
+			__gh_pr_create_or_edit "" "" 1 || return $?
+		elif [ $# -eq 1 ]; then
+			__gh_pr_create_or_edit "$1" "" 1 || return $?
+		elif [ $# -eq 2 ]; then
+			__gh_pr_create_or_edit "$1" "$2" 1 || return $?
+		else
+			echo "'ghcv' accepts [0..2] arguments" || return 1
 		fi
 	}
 	ghcm() {
@@ -556,18 +568,21 @@ if command -v gh >/dev/null 2>&1; then
 		fi
 	}
 	ghe() {
-		unset __ghe_body
 		if [ $# -eq 1 ]; then
-			gh pr edit -t="$1" -b='.' || return $?
+			__gh_pr_create_or_edit edit "$1" "" 0 || return $?
 		elif [ $# -eq 2 ]; then
-			if [ "$2" -eq "$2" ] 2>/dev/null; then
-				__ghe_body="Closes #$2"
-			else
-				__ghe_body="$2"
-			fi
-			gh pr edit -t="$1" -b="${__ghe_body}" || return $?
+			__gh_pr_create_or_edit edit "$1" "$2" 0 || return $?
 		else
 			echo "'ghe' accepts [1..2] arguments" || return 1
+		fi
+	}
+	ghev() {
+		if [ $# -eq 1 ]; then
+			__gh_pr_create_or_edit edit "$1" "" 1 || return $?
+		elif [ $# -eq 2 ]; then
+			__gh_pr_create_or_edit edit "$1" "$2" 1 || return $?
+		else
+			echo "'ghev' accepts [1..2] arguments" || return 1
 		fi
 	}
 	ghic() {
@@ -626,9 +641,39 @@ if command -v gh >/dev/null 2>&1; then
 	}
 	ghv() {
 		if [ $# -eq 0 ]; then
-			gh pr view -w || return $?
+			if gh pr ready >/dev/null 2>&1; then
+				gh pr view -w || return $?
+			else
+				echo "'ghv' cannot find an open PR" || return 1
+			fi
 		else
 			echo "'ghv' accepts no arguments" || return 1
+		fi
+	}
+	__gh_pr_create_or_edit() {
+		if [ $# -eq 4 ]; then
+			__gh_pr_create_or_edit_verb="$1"
+			__gh_pr_create_or_edit_title="$2"
+			__gh_pr_create_or_edit_body="$3"
+			__gh_pr_create_or_edit_web="$4"
+			if [ -z "${__gh_pr_create_or_edit_title}" ]; then
+				__gh_pr_create_or_edit_title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
+			fi
+			if [ -z "${__gh_pr_create_or_edit_body}" ]; then
+				if __is_int "${__gh_pr_create_or_edit_body}"; then
+					__gh_pr_create_or_edit_body="Closes ${__gh_pr_create_or_edit_body}"
+				fi
+			fi
+			gh pr "${__gh_pr_create_or_edit_verb}" -t="${__gh_pr_create_or_edit_title}" -b="${__gh_pr_create_or_edit_body}" || return $?
+			if [ "${__gh_pr_create_or_edit_web}" -eq 0 ]; then
+				:
+			elif [ "${__gh_pr_create_or_edit_web}" -eq 1 ]; then
+				ghv || return $?
+			else
+				echo "'__gh_pr_create_or_edit_web' accepts {0, 1} for the 'web' flag; got ${__gh_pr_create_or_edit_web}" || return 1
+			fi
+		else
+			echo "'__gh_pr_create_or_edit_web' requires 4 arguments" || return 1
 		fi
 	}
 	__gh_pr_merge() {
@@ -693,7 +738,7 @@ if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 		if [ $# -eq 3 ]; then
 			__git_add_gh_pr_create_first="$1"
 			__git_add_gh_pr_create_second="$2"
-			__git_add_gh_pr_create_view="$1"
+			__git_add_gh_pr_create_view="$3"
 			gac || return $?
 			if [ -z "${__git_add_gh_pr_create_first}" ] && [ -z "${__git_add_gh_pr_create_second}" ]; then
 				ghc || return $?
@@ -722,3 +767,12 @@ if command -v git >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
 	wgd() { watch -d -n 0.1 -- git diff "$@"; }
 	wgs() { watch -d -n 0.1 -- git status "$@"; }
 fi
+
+# utilities
+__is_int() {
+	if printf '%s\n' "$1" | grep -Eq '^-?[0-9]+$'; then
+		return 0
+	else
+		return 1
+	fi
+}
