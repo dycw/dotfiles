@@ -658,10 +658,8 @@ if command -v gh >/dev/null 2>&1; then
 			if [ -z "${__gh_pr_create_or_edit_title}" ]; then
 				__gh_pr_create_or_edit_title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
 			fi
-			if [ -z "${__gh_pr_create_or_edit_body}" ]; then
-				if __is_int "${__gh_pr_create_or_edit_body}"; then
-					__gh_pr_create_or_edit_body="Closes ${__gh_pr_create_or_edit_body}"
-				fi
+			if [ -n "${__gh_pr_create_or_edit_body}" ] && __is_int "${__gh_pr_create_or_edit_body}"; then
+				__gh_pr_create_or_edit_body="Closes #${__gh_pr_create_or_edit_body}"
 			fi
 			gh pr "${__gh_pr_create_or_edit_verb}" -t="${__gh_pr_create_or_edit_title}" -b="${__gh_pr_create_or_edit_body}" || return $?
 			if [ "${__gh_pr_create_or_edit_web}" -eq 0 ]; then
