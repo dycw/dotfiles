@@ -94,11 +94,7 @@ if command -v git >/dev/null 2>&1; then
 	gbd() {
 		unset __gbd_branch
 		if [ $# -eq 0 ]; then
-			if __is_current_branch_master; then
-				__gbd_branch='dev'
-			else
-				echo "'gbd' off 'master' requires 1 argument 'branch'" || return 1
-			fi
+			__gbd_branch="$(__select_local_branch)"
 		elif [ $# -eq 1 ]; then
 			__gbd_branch="$1"
 		else
@@ -121,6 +117,9 @@ if command -v git >/dev/null 2>&1; then
 	gbm() { git branch -m "$1"; }
 	__delete_gone_branches() {
 		git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
+	}
+	__select_local_branch() {
+		git branch --format="%(refname:short)" | fzf
 	}
 	__select_remote_branch() {
 		git branch -r --color=never | awk '!/->/' | fzf | sed -E 's|^[[:space:]]*origin/||'
