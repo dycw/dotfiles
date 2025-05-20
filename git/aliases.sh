@@ -150,13 +150,7 @@ if command -v git >/dev/null 2>&1; then
 	gco() {
 		unset __gco_branch
 		if [ $# -eq 0 ]; then
-			if __is_current_branch_master; then
-				__gco_branch='dev'
-			elif __is_current_branch_dev; then
-				__gco_branch='master'
-			else
-				echo "'gco' requires 1 argument 'branch'" || return 1
-			fi
+			__gco_branch="$(__select_local_branch)"
 		elif [ $# -eq 1 ]; then
 			__gco_branch="$1"
 		else
@@ -633,9 +627,16 @@ if command -v gh >/dev/null 2>&1; then
 	}
 	ghmd() {
 		if [ $# -eq 0 ]; then
-			__gh_pr_merge 1 || return $? || return $?
+			__gh_pr_merge 1 || return $?
 		else
 			echo "'ghmd' accepts no arguments" || return 1
+		fi
+	}
+	ghs() {
+		if [ $# -eq 0 ]; then
+			gh pr status || return $?
+		else
+			echo "'ghs' accepts no arguments" || return 1
 		fi
 	}
 	ghv() {
@@ -658,10 +659,8 @@ if command -v gh >/dev/null 2>&1; then
 			if [ -z "${__gh_pr_create_or_edit_title}" ]; then
 				__gh_pr_create_or_edit_title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
 			fi
-			if [ -z "${__gh_pr_create_or_edit_body}" ]; then
-				if __is_int "${__gh_pr_create_or_edit_body}"; then
-					__gh_pr_create_or_edit_body="Closes ${__gh_pr_create_or_edit_body}"
-				fi
+			if [ -n "${__gh_pr_create_or_edit_body}" ] && __is_int "${__gh_pr_create_or_edit_body}"; then
+				__gh_pr_create_or_edit_body="Closes #${__gh_pr_create_or_edit_body}"
 			fi
 			gh pr "${__gh_pr_create_or_edit_verb}" -t="${__gh_pr_create_or_edit_title}" -b="${__gh_pr_create_or_edit_body}" || return $?
 			if [ "${__gh_pr_create_or_edit_web}" -eq 0 ]; then
