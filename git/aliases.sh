@@ -627,9 +627,16 @@ if command -v gh >/dev/null 2>&1; then
 	}
 	ghmd() {
 		if [ $# -eq 0 ]; then
-			__gh_pr_merge 1 || return $? || return $?
+			__gh_pr_merge 1 || return $?
 		else
 			echo "'ghmd' accepts no arguments" || return 1
+		fi
+	}
+	ghs() {
+		if [ $# -eq 0 ]; then
+			gr pr status || return $?
+		else
+			echo "'ghs' accepts no arguments" || return 1
 		fi
 	}
 	ghv() {
