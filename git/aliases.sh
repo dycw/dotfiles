@@ -634,7 +634,7 @@ if command -v gh >/dev/null 2>&1; then
 	}
 	ghs() {
 		if [ $# -eq 0 ]; then
-			gr pr status || return $?
+			gh pr status || return $?
 		else
 			echo "'ghs' accepts no arguments" || return 1
 		fi
