@@ -1,15 +1,21 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 # shellcheck source=/dev/null
 
-function use_uv_python() {
+use_uv_python() {
 	source_up_if_exists
 	dotenv_if_exists
 	source_env_if_exists .envrc.local
-	local file='.venv/bin/activate'
-	if [ -f "$file" ]; then
-		source "$file"
+	activate='.venv/bin/activate'
+	if [ -f "${activate}" ]; then
+		. "${activate}"
 	else
 		uv venv
 	fi
-	uv sync
+	repo_root="$(git rev-parse --show-toplevel)"
+	script="${repo_root}/scripts/uv-sync.sh"
+	if [ -f "${script}" ]; then
+		. "${script}"
+	else
+		uv sync
+	fi
 }
