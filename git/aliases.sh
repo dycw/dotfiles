@@ -150,13 +150,7 @@ if command -v git >/dev/null 2>&1; then
 	gco() {
 		unset __gco_branch
 		if [ $# -eq 0 ]; then
-			if __is_current_branch_master; then
-				__gco_branch='dev'
-			elif __is_current_branch_dev; then
-				__gco_branch='master'
-			else
-				echo "'gco' requires 1 argument 'branch'" || return 1
-			fi
+			__gco_branch="$(__select_local_branch)"
 		elif [ $# -eq 1 ]; then
 			__gco_branch="$1"
 		else
