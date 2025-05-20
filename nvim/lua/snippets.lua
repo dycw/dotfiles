@@ -275,6 +275,7 @@ ls.add_snippets("python", {
     }),
     s("py-approx", { t({ "from pytest import approx", "" }) }),
     s("py-fixture", { t({ "from pytest import fixture", "" }) }),
+    s("py-mark", { t({ "from pytest import mark", "" }) }),
     s("py-param", { t({ "from pytest import param", "" }) }),
     s("py-raises", { t({ "from pytest import raises", "" }) }),
     s("py-read-pickle", {

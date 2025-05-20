@@ -210,6 +210,13 @@ if command -v git >/dev/null 2>&1; then
 			fi
 		fi
 	}
+	gcofm() {
+		if [ $# -ge 1 ]; then
+			gcof origin/master "$@" || return $?
+		else
+			echo "'gcofm' requires [1..] arguments" || return 1
+		fi
+	}
 	gcop() {
 		if [ $# -eq 0 ]; then
 			git checkout --patch || return $?

@@ -1,0 +1,5 @@
+
+https://github.com/queensberry-research/qrt/pull/3985
+__git_add_gh_pr_create:[:15: integer expression expected: Rename `RealTimeBar{Raw,Dict}`->`RealTime{Raw,Dict}`
+__git_add_gh_pr_create:[:17: integer expression expected: Rename `RealTimeBar{Raw,Dict}`->`RealTime{Raw,Dict}`
+'__git_add_gh_pr_create' accepts {0, 1} for the 'view' flag; got Rename `RealTimeBar{Raw,Dict}`->`RealTime{Raw,Dict}`
