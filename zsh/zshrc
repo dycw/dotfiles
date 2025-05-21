@@ -61,3 +61,4 @@ fi
 
 # zsh
 alias zshrc='"$EDITOR" "${HOME}"/.zshrc'
+alias ssh-dw-linode='ssh derek@172.237.148.48'

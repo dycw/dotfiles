@@ -603,6 +603,7 @@ try:
     import ib_async
     from ib_async import (
         IB,
+        BarDataList,
         Contract,
         ContractDescription,
         ContractDetails,
@@ -611,6 +612,7 @@ try:
         OrderStatus,
         RealTimeBar,
         RealTimeBarList,
+        Ticker,
         Trade,
         TradeLogEntry,
     )
@@ -618,6 +620,7 @@ except ModuleNotFoundError:
     pass
 else:
     _ = [
+        BarDataList,
         Contract,
         ContractDescription,
         ContractDetails,
@@ -627,6 +630,7 @@ else:
         OrderStatus,
         RealTimeBar,
         RealTimeBarList,
+        Ticker,
         Trade,
         TradeLogEntry,
         ib_async,

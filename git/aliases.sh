@@ -531,23 +531,15 @@ fi
 # gh
 if command -v gh >/dev/null 2>&1; then
 	ghc() {
-		if [ $# -eq 0 ]; then
-			__gh_pr_create_or_edit create "" "" 0 || return $?
-		elif [ $# -eq 1 ]; then
-			__gh_pr_create_or_edit create "$1" "" 0 || return $?
-		elif [ $# -eq 2 ]; then
-			__gh_pr_create_or_edit create "$1" "$2" 0 || return $?
+		if [ $# -le 2 ]; then
+			__gh_pr_create_or_edit create "${1:-}" "${2:-}" 0 || return $?
 		else
 			echo "'ghc' accepts [0..2] arguments" || return 1
 		fi
 	}
 	ghcv() {
-		if [ $# -eq 0 ]; then
-			__gh_pr_create_or_edit "" "" 1 || return $?
-		elif [ $# -eq 1 ]; then
-			__gh_pr_create_or_edit "$1" "" 1 || return $?
-		elif [ $# -eq 2 ]; then
-			__gh_pr_create_or_edit "$1" "$2" 1 || return $?
+		if [ $# -le 2 ]; then
+			__gh_pr_create_or_edit create "${1:-}" "${2:-}" 1 || return $?
 		else
 			echo "'ghcv' accepts [0..2] arguments" || return 1
 		fi
@@ -561,19 +553,15 @@ if command -v gh >/dev/null 2>&1; then
 		fi
 	}
 	ghe() {
-		if [ $# -eq 1 ]; then
-			__gh_pr_create_or_edit edit "$1" "" 0 || return $?
-		elif [ $# -eq 2 ]; then
-			__gh_pr_create_or_edit edit "$1" "$2" 0 || return $?
+		if [ $# -ge 1 ] && [ $# -le 2 ]; then
+			__gh_pr_create_or_edit edit "${1:-}" "${2:-}" 0 || return $?
 		else
 			echo "'ghe' accepts [1..2] arguments" || return 1
 		fi
 	}
 	ghev() {
-		if [ $# -eq 1 ]; then
-			__gh_pr_create_or_edit edit "$1" "" 1 || return $?
-		elif [ $# -eq 2 ]; then
-			__gh_pr_create_or_edit edit "$1" "$2" 1 || return $?
+		if [ $# -ge 1 ] && [ $# -le 2 ]; then
+			__gh_pr_create_or_edit edit "${1:-}" "${2:-}" 1 || return $?
 		else
 			echo "'ghev' accepts [1..2] arguments" || return 1
 		fi
