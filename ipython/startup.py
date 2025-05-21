@@ -1541,7 +1541,7 @@ else:
 
 
 try:
-    from utilities.asyncio import EnhancedTaskGroup, QueueProcessor
+    from utilities.asyncio import EnhancedTaskGroup, InfiniteLooper, InfiniteQueueLooper
     from utilities.dataclasses import dataclass_repr, dataclass_to_dict, yield_fields
     from utilities.datetime import (
         DAY,
@@ -1622,6 +1622,8 @@ else:
         EnhancedTaskGroup,
         HALF_YEAR,
         HOUR,
+        InfiniteLooper,
+        InfiniteQueueLooper,
         MICROSECOND,
         MILLISECOND,
         MINUTE,
@@ -1631,7 +1633,6 @@ else:
         Number,
         Period,
         QUARTER,
-        QueueProcessor,
         SECOND,
         SYSTEM_RANDOM,
         SizeAndTimeRotatingFileHandler,
@@ -1741,17 +1742,17 @@ else:
     try:
         from utilities.whenever import (
             ensure_date,
-            ensure_local_datetime,
+            ensure_plain_datetime,
             ensure_time,
             ensure_timedelta,
             ensure_zoned_datetime,
             parse_date,
-            parse_local_datetime,
+            parse_plain_datetime,
             parse_time,
             parse_timedelta,
             parse_zoned_datetime,
             serialize_date,
-            serialize_local_datetime,
+            serialize_plain_datetime,
             serialize_time,
             serialize_timedelta,
             serialize_zoned_datetime,
@@ -1761,17 +1762,17 @@ else:
     else:
         _ = [
             ensure_date,
-            ensure_local_datetime,
+            ensure_plain_datetime,
             ensure_time,
             ensure_timedelta,
             ensure_zoned_datetime,
             parse_date,
-            parse_local_datetime,
+            parse_plain_datetime,
             parse_time,
             parse_timedelta,
             parse_zoned_datetime,
             serialize_date,
-            serialize_local_datetime,
+            serialize_plain_datetime,
             serialize_time,
             serialize_timedelta,
             serialize_zoned_datetime,
