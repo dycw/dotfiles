@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 basicConfig(format="{message}", style="{", level="INFO", stream=stdout)
 
 
-Key = Literal["c", "f", "i", "k", "m", "n", "p", "x"]
+type Key = Literal["c", "f", "i", "k", "m", "n", "p", "x"]
 
 
 class ArgumentError(Exception): ...
@@ -101,7 +101,7 @@ class Alias:
         alias = f"pyt{keys}"
         options = " ".join(
             chain(
-                ["-ra", "-vv", "--color=yes", "--strict-markers"],
+                ["-ra", "-svv", "--color=yes", "--strict-markers"],
                 *(p.options for p in self.parts),
             )
         )
