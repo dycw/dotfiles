@@ -17,7 +17,7 @@ if [ -n "${__file}" ] && [ -f "${__file}" ]; then
 fi
 
 # flutter
-__dir="$HOME"/development/flutter/bin
+__dir="${HOME}"/development/flutter/bin
 case ":${PATH}:" in
 *:"$__dir":*) ;;
 *)
@@ -26,7 +26,7 @@ case ":${PATH}:" in
 esac
 
 # kdb
-export QHOME="${HOME}"/q
+export QHOME="${HOME}/q"
 __dir="${QHOME}/m64"
 case ":${PATH}:" in
 *:"${__dir}":*) ;;
@@ -44,7 +44,7 @@ fi
 
 # node
 if command -v brew >/dev/null 2>&1; then
-	__dir="$(brew --prefix)"/opt/node@20/bin
+	__dir="$(brew --prefix)/opt/node@20/bin"
 	case ":${PATH}:" in
 	*:"$__dir":*) ;;
 	*)
@@ -54,7 +54,7 @@ if command -v brew >/dev/null 2>&1; then
 fi
 
 # pipx
-__dir="${HOME}"/.local/bin
+__dir="${HOME}/.local/bin"
 case ":${PATH}:" in
 *:"${__dir}":*) ;;
 *)
@@ -64,27 +64,13 @@ esac
 
 # postgres
 if command -v brew >/dev/null 2>&1; then
-	__dir="$(brew --prefix)"/opt/postgresql@16/bin
+	__dir="$(brew --prefix)/opt/postgresql@16/bin"
 	case ":${PATH}:" in
 	*:"$__dir":*) ;;
 	*)
 		export PATH="${__dir}:${PATH}"
 		;;
 	esac
-fi
-
-# pyenv
-export PYENV_ROOT="${HOME}/.pyenv"
-__dir="${PYENV_ROOT}/bin"
-case ":${PATH}:" in
-*:"${__dir}":*) ;;
-*)
-	export PATH="${__dir}:${PATH}"
-	;;
-esac
-# pyenv
-if command -v pyenv >/dev/null 2>&1; then
-	eval "$(pyenv init -)"
 fi
 
 # ripgrep
