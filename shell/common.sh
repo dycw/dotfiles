@@ -66,6 +66,7 @@ if command -v eza >/dev/null 2>&1; then
 	l() { __eza_long --git-ignore "$@"; }
 	la() { __eza_long "$@"; }
 	__eza_short() { __eza_base --across "$@"; }
+	# shellcheck disable=SC2032
 	ls() { __eza_short --git-ignore "$@"; }
 	lsa() { __eza_short "$@"; }
 
@@ -220,6 +221,25 @@ fi
 
 # tmux
 if command -v tmux >/dev/null 2>&1; then
+	tmux_attach() {
+		unset __tmux_attach_window
+		if [ $# -eq 0 ]; then
+			__tmux_attach_window=0
+		elif [ $# -eq 1 ]; then
+			__tmux_attach_window="$1"
+		else
+			echo "'tmux_attach' accepts [0..1] arguments" || return 1
+		fi
+		tmux attach -t "${__tmux_attach_window}" || return $?
+	}
+	tmux_ls() {
+		if [ $# -eq 0 ]; then
+			# shellcheck disable=SC2033
+			tmux ls || return $?
+		else
+			echo "'tmux_ls' accepts no arguments" || return 1
+		fi
+	}
 	if [ -z "$TMUX" ]; then
 		tmux new-session -c "${PWD}"
 	fi
