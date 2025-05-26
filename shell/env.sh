@@ -2,15 +2,9 @@
 
 # brew
 case "$(uname)" in
-Darwin)
-	__dir='/opt/homebrew/bin'
-	;;
-Linux)
-	__dir='/home/linuxbrew/.linuxbrew/bin'
-	;;
-*)
-	__dir=''
-	;;
+Darwin) __dir='/opt/homebrew/bin' ;;
+Linux) __dir='/home/linuxbrew/.linuxbrew/bin' ;;
+*) __dir='' ;;
 esac
 case ":${PATH}:" in
 *:"$__dir":*) ;;
