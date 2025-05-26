@@ -162,6 +162,15 @@ n() { nvim "$@"; }
 lua_snippets() { ${EDITOR} "${HOME}/dotfiles/nvim/lua/snippets.lua"; }
 plugins_dial() { ${EDITOR} "${HOME}/dotfiles/nvim/lua/plugins/dial.lua"; }
 
+# path
+echo_path() {
+	if [ $# -eq 0 ]; then
+		echo "$PATH" | tr ':' '\n' | nl || return 0
+	else
+		echo "'echo_path' accepts no arguments" || return 1
+	fi
+}
+
 # pre-commit
 if command -v pre-commit >/dev/null 2>&1; then
 	alias pca='pre-commit run -a'
@@ -175,12 +184,6 @@ pre_commit_config_yaml() { ${EDITOR} "$(repo_root)/.pre-commit-config.yaml"; }
 alias pst='ps -fLu "$USER"| wc -l'
 if command -v watch >/dev/null 2>&1; then
 	alias wpst='watch -d -n0.1 "ps -fLu \"$USER\" | wc -l"'
-fi
-
-# pyright
-if command -v pyright >/dev/null 2>&1; then
-	pyr() { pyright "$@"; }
-	pyrw() { pyr -w "$@"; }
 fi
 
 # pytest
@@ -262,6 +265,8 @@ if command -v uv >/dev/null 2>&1; then
 			echo "'jl' accepts no arguments" || return 1
 		fi
 	}
+	pyr() { uv run pyright "$@"; }
+	pyrw() { uv run pyright -w "$@"; }
 	uva() { uv add "$@"; }
 	uvpi() { uv pip install "$@"; }
 	uvpl() {

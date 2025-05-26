@@ -2,27 +2,23 @@
 
 # brew
 case "$(uname)" in
-Darwin)
-	__file='/opt/homebrew/bin/brew'
-	;;
-Linux)
-	__file='/home/linuxbrew/.linuxbrew/bin/brew'
-	;;
-*)
-	__file=''
-	;;
+Darwin) __dir='/opt/homebrew/bin' ;;
+Linux) __dir='/home/linuxbrew/.linuxbrew/bin' ;;
+*) __dir='' ;;
 esac
-if [ -n "${__file}" ] && [ -f "${__file}" ]; then
-	eval "$(${__file} shellenv)"
+case ":${PATH}:" in
+*:"$__dir":*) ;;
+*) export PATH="${__dir}:${PATH}" ;;
+esac
+if command -v brew >/dev/null 2>&1; then
+	eval "$(brew shellenv)"
 fi
 
 # flutter
 __dir="${HOME}"/development/flutter/bin
 case ":${PATH}:" in
 *:"$__dir":*) ;;
-*)
-	export PATH="${__dir}:${PATH}"
-	;;
+*) export PATH="${__dir}:${PATH}" ;;
 esac
 
 # kdb
@@ -30,9 +26,14 @@ export QHOME="${HOME}/q"
 __dir="${QHOME}/m64"
 case ":${PATH}:" in
 *:"${__dir}":*) ;;
-*)
-	export PATH="${__dir}:${PATH}"
-	;;
+*) export PATH="${__dir}:${PATH}" ;;
+esac
+
+# local
+__dir="${HOME}/.local/bin"
+case ":${PATH}:" in
+*:"${__dir}":*) ;;
+*) export PATH="${__dir}:${PATH}" ;;
 esac
 
 # neovim
@@ -47,29 +48,16 @@ if command -v brew >/dev/null 2>&1; then
 	__dir="$(brew --prefix)/opt/node@20/bin"
 	case ":${PATH}:" in
 	*:"$__dir":*) ;;
-	*)
-		export PATH="${__dir}:${PATH}"
-		;;
+	*) export PATH="${__dir}:${PATH}" ;;
 	esac
 fi
-
-# pipx
-__dir="${HOME}/.local/bin"
-case ":${PATH}:" in
-*:"${__dir}":*) ;;
-*)
-	export PATH="${__dir}:${PATH}"
-	;;
-esac
 
 # postgres
 if command -v brew >/dev/null 2>&1; then
 	__dir="$(brew --prefix)/opt/postgresql@16/bin"
 	case ":${PATH}:" in
 	*:"$__dir":*) ;;
-	*)
-		export PATH="${__dir}:${PATH}"
-		;;
+	*) export PATH="${__dir}:${PATH}" ;;
 	esac
 fi
 
@@ -77,21 +65,17 @@ fi
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/ripgreprc"
 
 # rust
-__dir="${HOME}"/.cargo/bin
+__dir="${HOME}/.cargo/bin"
 case ":${PATH}:" in
 *:"${__dir}":*) ;;
-*)
-	export PATH="${__dir}:${PATH}"
-	;;
+*) export PATH="${__dir}:${PATH}" ;;
 esac
 
 # tailscale
 __dir="/Applications/Tailscale.app/Contents/MacOS"
 case ":${PATH}:" in
 *:"${__dir}":*) ;;
-*)
-	export PATH="${__dir}:${PATH}"
-	;;
+*) export PATH="${__dir}:${PATH}" ;;
 esac
 
 # xdg

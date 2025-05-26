@@ -161,10 +161,6 @@
         Installing prettier,
       ]
     - [
-        "command -v pyright >/dev/null 2>&1 || brew install pyright",
-        Installing pyright,
-      ]
-    - [
         "command -v redis-stack-server >/dev/null 2>&1 || brew tap redis-stack/redis-stack && brew install redis-stack",
         Installing redis-stack,
       ]

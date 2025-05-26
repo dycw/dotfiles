@@ -166,10 +166,6 @@
         Installing prettier,
       ]
     - [
-        "command -v pyright >/dev/null 2>&1 || brew install pyright",
-        Installing pyright,
-      ]
-    - [
         "command -v rg >/dev/null 2>&1 || brew install ripgrep",
         Installing ripgrep,
       ]
