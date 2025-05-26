@@ -177,12 +177,6 @@ if command -v watch >/dev/null 2>&1; then
 	alias wpst='watch -d -n0.1 "ps -fLu \"$USER\" | wc -l"'
 fi
 
-# pyright
-if command -v pyright >/dev/null 2>&1; then
-	pyr() { pyright "$@"; }
-	pyrw() { pyr -w "$@"; }
-fi
-
 # pytest
 __file="${HOME}/dotfiles/pytest/aliases.sh"
 if [ -f "${__file}" ]; then
@@ -262,6 +256,8 @@ if command -v uv >/dev/null 2>&1; then
 			echo "'jl' accepts no arguments" || return 1
 		fi
 	}
+	pyr() { uv run pyright "$@"; }
+	pyrw() { uv run pyright -w "$@"; }
 	uva() { uv add "$@"; }
 	uvpi() { uv pip install "$@"; }
 	uvpl() {
