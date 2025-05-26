@@ -4,44 +4,44 @@
 # shell - paths (first)
 __file="${HOME}/dotfiles/shell/common.sh"
 if [ -f "$__file" ]; then
-	. "$__file"
+    . "$__file"
 fi
 
 # fzf
-__file="${HOME}"/.config/fzf/fzf.bash
+__file="${HOME}/.config/fzf/fzf.bash"
 if [ -f "$__file" ]; then
-	. "$__file"
+    . "$__file"
 fi
 
 # shell - paths (end)
 
 # bash
-alias bashrc='"$EDITOR" "${HOME}"/.bashrc'
+bashrc() { ${EDITOR} "${HOME}/.bashrc"; }
 
 # direnv
 if command -v direnv >/dev/null 2>&1; then
-	eval "$(direnv hook bash)"
+    eval "$(direnv hook bash)"
 fi
 
 # fzf
 if command -v fzf >/dev/null 2>&1; then
-	eval "$(fzf --bash)"
+    eval "$(fzf --bash)"
 fi
 
 # starship
 if command -v starship >/dev/null 2>&1; then
-	eval "$(starship init bash)"
+    eval "$(starship init bash)"
 fi
 
 # uv
 if command -v uv >/dev/null 2>&1; then
-	eval "$(uv generate-shell-completion bash)"
-	eval "$(uvx --generate-shell-completion bash)"
+    eval "$(uv generate-shell-completion bash)"
+    eval "$(uvx --generate-shell-completion bash)"
 fi
 
 # zoxide
 if command -v zoxide >/dev/null 2>&1; then
-	eval "$(zoxide init bash --cmd j --hook prompt)"
+    eval "$(zoxide init bash --cmd j --hook prompt)"
 fi
 
 ################################################################################
@@ -80,7 +80,7 @@ shopt -s checkwinsize
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-	debian_chroot=$(cat /etc/debian_chroot)
+    debian_chroot=$(cat /etc/debian_chroot)
 fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
@@ -94,20 +94,20 @@ esac
 #force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
-	if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-		# We have color support; assume it's compliant with Ecma-48
-		# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-		# a case would tend to support setf rather than setaf.)
-		color_prompt=yes
-	else
-		color_prompt=
-	fi
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+        # We have color support; assume it's compliant with Ecma-48
+        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+        # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
+    else
+        color_prompt=
+    fi
 fi
 
 if [ "$color_prompt" = yes ]; then
-	PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
-	PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 unset color_prompt force_color_prompt
 
@@ -115,9 +115,9 @@ unset color_prompt force_color_prompt
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-	if [ -f /usr/share/bash-completion/bash_completion ]; then
-		. /usr/share/bash-completion/bash_completion
-	elif [ -f /etc/bash_completion ]; then
-		. /etc/bash_completion
-	fi
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
 fi
