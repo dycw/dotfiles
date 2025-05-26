@@ -3,17 +3,23 @@
 # brew
 case "$(uname)" in
 Darwin)
-	__file='/opt/homebrew/bin/brew'
+	__dir='/opt/homebrew/bin'
 	;;
 Linux)
-	__file='/home/linuxbrew/.linuxbrew/bin/brew'
+	__dir='/home/linuxbrew/.linuxbrew/bin'
 	;;
 *)
-	__file=''
+	__dir=''
 	;;
 esac
-if [ -n "${__file}" ] && [ -f "${__file}" ]; then
-	eval "$(${__file} shellenv)"
+case ":${PATH}:" in
+*:"$__dir":*) ;;
+*)
+	export PATH="${__dir}:${PATH}"
+	;;
+esac
+if command -v brew >/dev/null 2>&1; then
+	eval "$(brew shellenv)"
 fi
 
 # flutter
@@ -77,7 +83,7 @@ fi
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/ripgreprc"
 
 # rust
-__dir="${HOME}"/.cargo/bin
+__dir="${HOME}/.cargo/bin"
 case ":${PATH}:" in
 *:"${__dir}":*) ;;
 *)

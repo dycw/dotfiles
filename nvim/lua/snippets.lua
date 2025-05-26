@@ -330,6 +330,7 @@ ls.add_snippets("python", {
     s("re-escape", { t({ "from re import escape", "" }) }),
     s("re-findall", { t({ "from re import findall", "" }) }),
     s("re-ignorecase", { t({ "from re import IGNORECASE", "" }) }),
+    s("re-multiline", { t({ "from re import MULTILINE", "" }) }),
     s("re-search", { t({ "from re import search", "" }) }),
     s("re-sub", { t({ "from re import sub", "" }) }),
 
