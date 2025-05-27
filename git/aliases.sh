@@ -524,7 +524,6 @@ if command -v git >/dev/null 2>&1; then
 		else
 			echo "'gs' accepts no arguments" || return 1
 		fi
-
 	}
 	__tree_is_clean() { [ -z "$(git status --porcelain)" ]; }
 	# stash
