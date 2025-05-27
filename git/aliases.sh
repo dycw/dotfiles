@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-
 # shellcheck disable=SC2120,SC2317
 
 # git
