@@ -518,7 +518,14 @@ if command -v git >/dev/null 2>&1; then
 			git rev-parse --verify --quiet "$1" >/dev/null
 	}
 	# status
-	gs() { git status "$@"; }
+	gs() {
+		if [ $# -eq 0 ]; then
+			git status || return $?
+		else
+			echo "'gs' accepts no arguments" || return 1
+		fi
+
+	}
 	__tree_is_clean() { [ -z "$(git status --porcelain)" ]; }
 	# stash
 	alias gst='git stash'

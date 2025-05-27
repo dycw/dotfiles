@@ -26,15 +26,55 @@ alias ~='cd "${HOME}"'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias cdcache='cd "${HOME}"/.cache'
-alias cdconfig='cd "${HOME}"/.config'
-alias cdcache='cd "${XDG_CACHE_HOME:-${HOME}/.cache}"'
-alias cdconfig='cd "${XDG_CONFIG_HOME:-${HOME}/.config}"'
-alias cddb='cd "${HOME}"/Dropbox'
-alias cddbt='cd "${HOME}"/Dropbox/Temporary'
-alias cddf='cd "${HOME}"/dotfiles'
-alias cddl='cd "${HOME}"/Downloads'
-alias cdw='cd "${HOME}"/work'
+cdcache() {
+	if [ $# -eq 0 ]; then
+		cd "${XDG_CONFIG_HOME:-${HOME}}/.cache" || return $?
+	else
+		echo "'cdcache' accepts no arguments" || return 1
+	fi
+}
+cdconfig() {
+	if [ $# -eq 0 ]; then
+		cd "${XDG_CONFIG_HOME:-${HOME}}/.config" || return $?
+	else
+		echo "'cdconfig' accepts no arguments" || return 1
+	fi
+}
+cddb() {
+	if [ $# -eq 0 ]; then
+		cd "${HOME}/Dropbox" || return $?
+	else
+		echo "'cddb' accepts no arguments" || return 1
+	fi
+}
+cddbt() {
+	if [ $# -eq 0 ]; then
+		cd "${HOME}/Dropbox/Temporary" || return $?
+	else
+		echo "'cddbt' accepts no arguments" || return 1
+	fi
+}
+cddf() {
+	if [ $# -eq 0 ]; then
+		cd "${HOME}/dotfiles" || return $?
+	else
+		echo "'cddl' accepts no arguments" || return 1
+	fi
+}
+cddl() {
+	if [ $# -eq 0 ]; then
+		cd "${HOME}/Downloads" || return $?
+	else
+		echo "'cddl' accepts no arguments" || return 1
+	fi
+}
+cdw() {
+	if [ $# -eq 0 ]; then
+		cd "${HOME}/work" || return $?
+	else
+		echo "'cdw' accepts no arguments" || return 1
+	fi
+}
 
 # chmod
 chmod_files() { find . -type f -exec chmod "$1" {} \;; }
