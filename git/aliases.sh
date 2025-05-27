@@ -100,7 +100,9 @@ if command -v git >/dev/null 2>&1; then
 		else
 			echo "'gbd' accepts [0..1] arguments" || return 1
 		fi
-		git branch -D "${__gbd_branch}" || return $?
+		if __branch_exists "${__gbd_branch}"; then
+			git branch -D "${__gbd_branch}" || return $?
+		fi
 	}
 	gbdr() {
 		unset __gbdr_branch
