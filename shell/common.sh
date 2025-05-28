@@ -19,7 +19,13 @@ fi
 if command -v btm >/dev/null 2>&1; then
 	htop() { btm "$@"; }
 fi
-bottom_toml() { ${EDITOR} "${HOME}/dotfiles/bottom/bottom.toml"; }
+bottom_toml() {
+	if [ $# -eq 0 ]; then
+		${EDITOR} "${HOME}/dotfiles/bottom/bottom.toml"
+	else
+		echo "'bottom_toml' accepts no arguments" || return 1
+	fi
+}
 
 # cd
 alias ~='cd "${HOME}"'
@@ -181,8 +187,20 @@ __file="${HOME}/dotfiles/git/aliases.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
-git_aliases() { ${EDITOR} "${HOME}/dotfiles/git/aliases.sh"; }
-gitignore() { ${EDITOR} "$(repo_root)/.gitignore"; }
+git_aliases() {
+	if [ $# -eq 0 ]; then
+		${EDITOR} "${HOME}/dotfiles/git/aliases.sh"
+	else
+		echo "'git_aliases' accepts no arguments" || return 1
+	fi
+}
+git_ignore() {
+	if [ $# -eq 0 ]; then
+		${EDITOR} "$(repo_root)/.gitignore"
+	else
+		echo "'git_ignore' accepts no arguments" || return 1
+	fi
+}
 
 # hypothesis
 hypothesis_ci() { export HYPOTHESIS_PROFILE='ci'; }
@@ -199,7 +217,13 @@ set bell-style none
 set editing-mode vi
 
 # ipython
-ipython_startup() { ${EDITOR} "${HOME}/dotfiles/ipython/startup.py"; }
+ipython_startup() {
+	if [ $# -eq 0 ]; then
+		${EDITOR} "${HOME}/dotfiles/ipython/startup.py"
+	else
+		echo "'ipython_startup' accepts no arguments" || return 1
+	fi
+}
 
 # jupyter
 
@@ -210,8 +234,13 @@ if [ -f "$__file" ]; then
 fi
 
 # marimo
-mar() { uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' marimo new; }
-marimo_toml() { ${EDITOR} "${HOME}/dotfiles/marimo/marimo.toml"; }
+marimo_toml() {
+	if [ $# -eq 0 ]; then
+		${EDITOR} "${HOME}/dotfiles/marimo/marimo.toml"
+	else
+		echo "'marimo_toml' accepts no arguments" || return 1
+	fi
+}
 
 # neovim
 cdplugins() {
@@ -228,7 +257,13 @@ lua_snippets() {
 		echo "'lua_snippets' accepts no arguments" || return 1
 	fi
 }
-plugins_dial() { ${EDITOR} "${HOME}/dotfiles/nvim/lua/plugins/dial.lua"; }
+plugins_dial() {
+	if [ $# -eq 0 ]; then
+		${EDITOR} "${HOME}/dotfiles/nvim/lua/plugins/dial.lua"
+	else
+		echo "'plugins_dial' accepts no arguments" || return 1
+	fi
+}
 if command -v nvim >/dev/null 2>&1; then
 	n() { nvim "$@"; }
 fi
@@ -249,7 +284,13 @@ if command -v pre-commit >/dev/null 2>&1; then
 	alias pcau='pre-commit autoupdate'
 	alias pci='pre-commit install'
 fi
-pre_commit_config_yaml() { ${EDITOR} "$(repo_root)/.pre-commit-config.yaml"; }
+pre_commit_config() {
+	if [ $# -eq 0 ]; then
+		${EDITOR} "$(repo_root)/.pre-commit-config.yaml"
+	else
+		echo "'pre_commit_config' accepts no arguments" || return 1
+	fi
+}
 
 # ps
 alias pst='ps -fLu "$USER"| wc -l'
@@ -264,7 +305,13 @@ if [ -f "${__file}" ]; then
 fi
 
 # python
-pyproject() { ${EDITOR} "$(repo_root)/pyproject.toml"; }
+pyproject() {
+	if [ $# -eq 0 ]; then
+		${EDITOR} "$(repo_root)/pyproject.toml"
+	else
+		echo "'pyproject' accepts no arguments" || return 1
+	fi
+}
 
 # q
 start_q() { QHOME="${HOME}"/q rlwrap -r "$HOME/q/m64/q" "$@"; }
@@ -286,7 +333,13 @@ if command -v ruff >/dev/null 2>&1; then
 fi
 
 # shell
-shell_common() { ${EDITOR} "${HOME}/dotfiles/shell/common.sh"; }
+shell_common() {
+	if [ $# -eq 0 ]; then
+		${EDITOR} "${HOME}/dotfiles/shell/common.sh"
+	else
+		echo "'shell_common' accepts no arguments" || return 1
+	fi
+}
 
 # tailscale
 if command -v tailscale >/dev/null 2>&1; then
@@ -318,7 +371,13 @@ if command -v tmux >/dev/null 2>&1; then
 		tmux new-session -c "${PWD}"
 	fi
 fi
-tmuxconf() { ${EDITOR} "${HOME}/.config/tmux/tmux.conf.local"; }
+tmux_conf_local() {
+	if [ $# -eq 0 ]; then
+		${EDITOR} "${HOME}/.config/tmux/tmux.conf.local"
+	else
+		echo "'tmux_conf_local' accepts no arguments" || return 1
+	fi
+}
 
 # uv
 if command -v uv >/dev/null 2>&1; then
@@ -334,6 +393,13 @@ if command -v uv >/dev/null 2>&1; then
 			uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python jupyter lab || return $?
 		else
 			echo "'jl' accepts no arguments" || return 1
+		fi
+	}
+	mar() {
+		if [ $# -eq 0 ]; then
+			uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' marimo new
+		else
+			echo "'mar' accepts no arguments" || return 1
 		fi
 	}
 	pyr() { uv run pyright "$@"; }
