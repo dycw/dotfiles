@@ -54,6 +54,7 @@
     ~/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings: jupyter/shortcuts/shortcuts.jsonc
     ~/.jupyter/lab/user-settings/jupyterlab_code_formatter/settings.jupyterlab-settings: jupyter/jupyterlab_code_formatter/settings.jsonc
     ~/.pdbrc: pdb/pdbrc
+    ~/.psqlrc: psql/psqlrc
     ~/.zimrc: zsh/zimrc
     ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
