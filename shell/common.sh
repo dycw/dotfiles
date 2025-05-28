@@ -68,6 +68,16 @@ cddl() {
 		echo "'cddl' accepts no arguments" || return 1
 	fi
 }
+cdhere() {
+	unset __cdhere_pwd
+	if [ $# -eq 0 ]; then
+		__cdhere_pwd="$(pwd)"
+		cd .. || return $?
+		cd "${__cdhere_pwd}" || return $?
+	else
+		echo "'cdhere' accepts no arguments" || return 1
+	fi
+}
 cdw() {
 	if [ $# -eq 0 ]; then
 		cd "${HOME}/work" || return $?
@@ -159,7 +169,13 @@ fi
 
 # git
 if command -v git >/dev/null 2>&1; then
-	cdr() { cd "$(repo_root)" || exit; }
+	cdr() {
+		if [ $# -eq 0 ]; then
+			cd "$(repo_root)" || return 1
+		else
+			echo "'cdr' accepts no arguments" || return 1
+		fi
+	}
 fi
 __file="${HOME}/dotfiles/git/aliases.sh"
 if [ -f "$__file" ]; then
@@ -188,7 +204,7 @@ ipython_startup() { ${EDITOR} "${HOME}/dotfiles/ipython/startup.py"; }
 # jupyter
 
 # local
-__file="${HOME}/common.sh"
+__file="${HOME}/common.local.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
@@ -198,15 +214,29 @@ mar() { uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' mari
 marimo_toml() { ${EDITOR} "${HOME}/dotfiles/marimo/marimo.toml"; }
 
 # neovim
-cdplugins() { cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins" || exit; }
-n() { nvim "$@"; }
-lua_snippets() { ${EDITOR} "${HOME}/dotfiles/nvim/lua/snippets.lua"; }
+cdplugins() {
+	if [ $# -eq 0 ]; then
+		cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins" || return $?
+	else
+		echo "'cdplugins' accepts no arguments" || return 1
+	fi
+}
+lua_snippets() {
+	if [ $# -eq 0 ]; then
+		${EDITOR} "${HOME}/dotfiles/nvim/lua/snippets.lua"
+	else
+		echo "'lua_snippets' accepts no arguments" || return 1
+	fi
+}
 plugins_dial() { ${EDITOR} "${HOME}/dotfiles/nvim/lua/plugins/dial.lua"; }
+if command -v nvim >/dev/null 2>&1; then
+	n() { nvim "$@"; }
+fi
 
 # path
 echo_path() {
 	if [ $# -eq 0 ]; then
-		echo "$PATH" | tr ':' '\n' | nl || return 0
+		echo "${PATH}" | tr ':' '\n' | nl || return 0
 	else
 		echo "'echo_path' accepts no arguments" || return 1
 	fi

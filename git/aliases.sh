@@ -765,6 +765,17 @@ if command -v git >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
 	wgs() { watch -d -n 0.1 -- git status "$@"; }
 fi
 
+# github + watch
+if command -v gh >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
+	wghs() {
+		if [ $# -eq 0 ]; then
+			watch -n1 'gh pr status' || return $?
+		else
+			echo "'wghs' accepts no arguments" || return 1
+		fi
+	}
+fi
+
 # utilities
 __is_int() {
 	if printf '%s\n' "$1" | grep -Eq '^-?[0-9]+$'; then
