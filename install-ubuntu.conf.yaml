@@ -188,6 +188,10 @@
         "command -v stylua >/dev/null 2>&1 || brew install stylua",
         Installing stylua,
       ]
+    - [
+        "command -v tailscale >/dev/null 2>&1 || brew install tailscale",
+        Installing tailscale,
+      ]
     - ["command -v tmux >/dev/null 2>&1 || brew install tmux", Installing tmux]
     - [
         "command -v topgrade >/dev/null 2>&1 || brew install topgrade",
