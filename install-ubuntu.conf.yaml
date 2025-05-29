@@ -152,10 +152,6 @@
         Installing neovim,
       ]
     - [
-        "command -v node >/dev/null 2>&1 || brew install node@20",
-        Installing node,
-      ]
-    - [
         "command -v pgcli >/dev/null 2>&1 || brew install pgcli",
         Installing pgcli,
       ]
