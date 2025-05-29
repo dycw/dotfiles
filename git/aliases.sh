@@ -6,14 +6,14 @@ if command -v git >/dev/null 2>&1; then
 	# add
 	ga() {
 		if [ $# -eq 0 ]; then
-			git add -A || return $?
+			git add -u || return $?
 		else
 			git add "$@" || return $?
 		fi
 	}
 	gap() {
 		if [ $# -eq 0 ]; then
-			git add -pA || return $?
+			git add -pu || return $?
 		else
 			git add -p "$@" || return $?
 		fi

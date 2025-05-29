@@ -205,6 +205,7 @@ ls.add_snippets("python", {
     s("op-and", { t({ "from operator import and_", "" }) }),
     s("op-eq", { t({ "from operator import eq", "" }) }),
     s("op-mul", { t({ "from operator import mul", "" }) }),
+    s("op-ne", { t({ "from operator import ne", "" }) }),
     s("op-neg", { t({ "from operator import neg", "" }) }),
     s("op-or", { t({ "from operator import or_", "" }) }),
     s("op-sub", { t({ "from operator import sub", "" }) }),
