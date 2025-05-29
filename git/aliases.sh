@@ -6,7 +6,7 @@ if command -v git >/dev/null 2>&1; then
 	# add
 	ga() {
 		if [ $# -eq 0 ]; then
-			git add -u || return $?
+			git add -A || return $?
 		else
 			git add "$@" || return $?
 		fi

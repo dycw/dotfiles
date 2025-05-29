@@ -26,6 +26,9 @@
     - ~/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension
     - ~/.jupyter/lab/user-settings/jupyterlab_code_formatter/
 
+- shell:
+    - [git submodule update --init --recursive, Installing submodules]
+
 - link:
     ~/.config/bottom/bottom.toml: bottom/bottom.toml
     ~/.config/direnv/direnv.toml: direnv/direnv.toml
@@ -74,7 +77,6 @@
         '[ "$(scutil --get LocalHostName)" = DW-Mac ] || sudo scutil --set LocalHostName DW-Mac',
         Configuring local host name,
       ]
-    - [git submodule update --init --recursive, Installing submodules]
     - [
         "[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
         Installing rust,
@@ -115,10 +117,6 @@
     - ["command -v dust >/dev/null 2>&1 || brew install dust", Installing dust]
     - ["command -v eza >/dev/null 2>&1 || brew install eza", Installing eza]
     - ["command -v fd >/dev/null 2>&1 || brew install fd", Installing fd]
-    - [
-        "command -v ffmpeg >/dev/null 2>&1 || brew install ffmpeg",
-        Installing ffmpeg,
-      ]
     - ["command -v fzf >/dev/null 2>&1 || brew install fzf", Installing fzf]
     - ["command -v gh >/dev/null 2>&1 || brew install gh", Installing gh]
     - [
@@ -203,7 +201,6 @@
         "command -v topgrade >/dev/null 2>&1 || brew install topgrade",
         Installing topgrade,
       ]
-    - [brew install unixodbc, Installing unixodbc]
     - ["command -v uv >/dev/null 2>&1 || brew install uv", Installing uv]
     - [
         "command -v watch >/dev/null 2>&1 || brew install watch",
