@@ -103,6 +103,8 @@ from collections.abc import (
 )
 from collections.abc import Set as AbstractSet
 from contextlib import (
+    AsyncExitStack,
+    ExitStack,
     asynccontextmanager,
     contextmanager,
     redirect_stderr,
@@ -196,6 +198,7 @@ _ = [
     AbstractSet,
     Annotated,
     Any,
+    AsyncExitStack,
     AsyncGenerator,
     AsyncIterable,
     AsyncIterator,
@@ -209,6 +212,7 @@ _ = [
     Coroutine,
     Counter,
     Enum,
+    ExitStack,
     Formatter,
     Generator,
     Generic,

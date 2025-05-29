@@ -59,6 +59,7 @@ return {
             { "column", "row" },
             { "disable", "enable" },
             { "down", "up" },
+            { "entered", "exited" },
             { "entry", "exit" },
             { "first", "last" },
             { "float", "int" },

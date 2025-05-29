@@ -26,6 +26,9 @@
     - ~/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension
     - ~/.jupyter/lab/user-settings/jupyterlab_code_formatter/
 
+- shell:
+    - [git submodule update --init --recursive, Installing submodules]
+
 - link:
     ~/.config/bottom/bottom.toml: bottom/bottom.toml
     ~/.config/direnv/direnv.toml: direnv/direnv.toml
@@ -74,7 +77,6 @@
         '[ "$(scutil --get LocalHostName)" = DW-Mac ] || sudo scutil --set LocalHostName DW-Mac',
         Configuring local host name,
       ]
-    - [git submodule update --init --recursive, Installing submodules]
     - [
         "[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
         Installing rust,
@@ -84,10 +86,6 @@
         Installing brew,
       ]
     - ["command -v bat >/dev/null 2>&1 || brew install bat", Installing bat]
-    - [
-        "command -v biome >/dev/null 2>&1 || brew install biome",
-        Installing biome,
-      ]
     - [
         "command -v btm >/dev/null 2>&1 || brew install bottom",
         Installing bottom,
@@ -101,10 +99,6 @@
         Installing cmake,
       ]
     - [
-        "command -v cocoapods >/dev/null 2>&1 || brew install cocoapods",
-        Installing cocoapods,
-      ]
-    - [
         "command -v delta >/dev/null 2>&1 || brew install git-delta",
         Installing delta,
       ]
@@ -115,10 +109,6 @@
     - ["command -v dust >/dev/null 2>&1 || brew install dust", Installing dust]
     - ["command -v eza >/dev/null 2>&1 || brew install eza", Installing eza]
     - ["command -v fd >/dev/null 2>&1 || brew install fd", Installing fd]
-    - [
-        "command -v ffmpeg >/dev/null 2>&1 || brew install ffmpeg",
-        Installing ffmpeg,
-      ]
     - ["command -v fzf >/dev/null 2>&1 || brew install fzf", Installing fzf]
     - ["command -v gh >/dev/null 2>&1 || brew install gh", Installing gh]
     - [
@@ -141,17 +131,12 @@
         Installing neovim,
       ]
     - [
-        "command -v node >/dev/null 2>&1 || brew install node@20",
-        Installing node,
-      ]
-    - [
         "command -v pgcli >/dev/null 2>&1 || brew install pgcli",
         Installing pgcli,
       ]
-    - ["command -v pipx >/dev/null 2>&1 || brew install pipx", Installing pipx]
     - [
-        "command -v postgres >/dev/null 2>&1 || brew install postgresql@16",
-        Installing postgresql 16,
+        "command -v postgres >/dev/null 2>&1 || brew install postgresql@17",
+        Installing postgresql 17,
       ]
     - [
         "command -v pre-commit >/dev/null 2>&1 || brew install pre-commit",
@@ -203,7 +188,6 @@
         "command -v topgrade >/dev/null 2>&1 || brew install topgrade",
         Installing topgrade,
       ]
-    - [brew install unixodbc, Installing unixodbc]
     - ["command -v uv >/dev/null 2>&1 || brew install uv", Installing uv]
     - [
         "command -v watch >/dev/null 2>&1 || brew install watch",
@@ -247,15 +231,11 @@
         "[ -f ${HOME}/.config/fzf/fzf.zsh ] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
         Configuring fzf,
       ]
-    - [brew services start postgresql@16, Configuring postgresql]
+    - [brew services start postgresql@17, Configuring postgresql]
     - [brew services start redis, Configuring redis]
     - [
-        "command -v harlequin >/dev/null 2>&1 || pipx install harlequin",
+        "command -v harlequin >/dev/null 2>&1 || uv tool install harlequin",
         Installing harlequin,
-      ]
-    - [
-        "command -v justpath >/dev/null 2>&1 || pipx install justpath",
-        Installing justpath,
       ]
     - [
         "launchctl load ~/Library/LaunchAgents/com.redis-stack.redis-stack-server.plist",
