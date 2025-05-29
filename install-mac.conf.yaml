@@ -134,7 +134,6 @@
         "command -v pgcli >/dev/null 2>&1 || brew install pgcli",
         Installing pgcli,
       ]
-    - ["command -v pipx >/dev/null 2>&1 || brew install pipx", Installing pipx]
     - [
         "command -v postgres >/dev/null 2>&1 || brew install postgresql@17",
         Installing postgresql 17,
@@ -232,15 +231,11 @@
         "[ -f ${HOME}/.config/fzf/fzf.zsh ] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
         Configuring fzf,
       ]
-    - [brew services start postgresql@16, Configuring postgresql]
+    - [brew services start postgresql@17, Configuring postgresql]
     - [brew services start redis, Configuring redis]
     - [
-        "command -v harlequin >/dev/null 2>&1 || pipx install harlequin",
+        "command -v harlequin >/dev/null 2>&1 || uv tool install harlequin",
         Installing harlequin,
-      ]
-    - [
-        "command -v justpath >/dev/null 2>&1 || pipx install justpath",
-        Installing justpath,
       ]
     - [
         "launchctl load ~/Library/LaunchAgents/com.redis-stack.redis-stack-server.plist",
