@@ -13,7 +13,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gap() {
 		if [ $# -eq 0 ]; then
-			git add -pu || return $?
+			git add -pA || return $?
 		else
 			git add -p "$@" || return $?
 		fi
