@@ -136,8 +136,8 @@
       ]
     - ["command -v pipx >/dev/null 2>&1 || brew install pipx", Installing pipx]
     - [
-        "command -v postgres >/dev/null 2>&1 || brew install postgresql@16",
-        Installing postgresql 16,
+        "command -v postgres >/dev/null 2>&1 || brew install postgresql@17",
+        Installing postgresql 17,
       ]
     - [
         "command -v pre-commit >/dev/null 2>&1 || brew install pre-commit",
