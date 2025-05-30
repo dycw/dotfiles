@@ -12,6 +12,7 @@ ls.add_snippets("python", {
     s("as-create-task", { t({ "from asyncio import create_task", "" }) }),
     s("as-event", { t({ "from asyncio import Event", "" }) }),
     s("as-get-event-loop", { t({ "from asyncio import get_event_loop", "" }) }),
+    s("as-lock", { t({ "from asyncio import Lock", "" }) }),
     s("as-queue", { t({ "from asyncio import Queue", "" }) }),
     s("as-run", { t({ "from asyncio import run", "" }) }),
     s("as-sleep", { t({ "from asyncio import sleep", "" }) }),
@@ -377,6 +378,7 @@ ls.add_snippets("python", {
 
     -- string
     s("st-ascii-letters", { t({ "from string import ascii_letters", "" }) }),
+    s("st-template", { t({ "from string import Template", "" }) }),
 
     -- subprocess
     s("su-check-call", { t({ "from subprocess import check_call", "" }) }),
@@ -428,7 +430,6 @@ ls.add_snippets("python", {
 
     -- utilities
     s("ut-add-listener", { t({ "from utilities.eventkit import add_listener", "" }) }),
-    s("ut-try-reify-expr", { t({ "from utilities.polars import try_reify_expr", "" }) }),
     s("ut-always-iterable", { t({ "from utilities.iterables import always_iterable", "" }) }),
     s("ut-bernoulli", { t({ "from utilities.random import bernoulli", "" }) }),
     s("ut-bounded-task-group", { t({ "from utilities.asyncio import BoundedTaskGroup", "" }) }),
@@ -442,6 +443,8 @@ ls.add_snippets("python", {
     s("ut-date-to-datetime", { t({ "from utilities.datetime import date_to_datetime", "" }) }),
     s("ut-deserialize", { t({ "from utilities.orjson import deserialize", "" }) }),
     s("ut-duration", { t({ "from utilities.types import Duration", "" }) }),
+    s("ut-enhanced-queue", { t({ "from utilities.asyncio import EnhancedQueue", "" }) }),
+    s("ut-enhanced-task-group", { t({ "from utilities.asyncio import EnhancedTaskGroup", "" }) }),
     s("ut-ensure-date", { t({ "from utilities.functions import ensure_date", "" }) }),
     s("ut-ensure-float", { t({ "from utilities.functions import ensure_float", "" }) }),
     s("ut-ensure-int", { t({ "from utilities.functions import ensure_int", "" }) }),
@@ -511,6 +514,7 @@ ls.add_snippets("python", {
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s("ut-system-random", { t({ "from utilities.random import SYSTEM_RANDOM", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
+    s("ut-temp-environ", { t({ "from utilities.os import temp_environ", "" }) }),
     s("ut-temp-paths", { t({ "from utilities.hypothesis import temp_paths", "" }) }),
     s("ut-temporary-directory", { t({ "from utilities.tempfile import TemporaryDirectory", "" }) }),
     s("ut-text-ascii", { t({ "from utilities.hypothesis import text_ascii", "" }) }),
@@ -518,6 +522,7 @@ ls.add_snippets("python", {
     s("ut-text-ascii-upper", { t({ "from utilities.hypothesis import text_ascii_upper", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
     s("ut-timeout-dur", { t({ "from utilities.asyncio import timeout_dur", "" }) }),
+    s("ut-try-reify-expr", { t({ "from utilities.polars import try_reify_expr", "" }) }),
     s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
     s("ut-tokyo", { t({ "from utilities.tzdata import Tokyo", "" }) }),
     s("ut-trace", { t({ "from utilities.traceback import trace", "" }) }),
