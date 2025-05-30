@@ -23,6 +23,14 @@ repos:
     hooks:
       - id: pretty-format-toml
         args: [--autofix, --trailing-commas]
+  - repo: local
+    hooks:
+      - id: prettier
+        name: prettier
+        entry: prettier
+        language: system
+        files: ^(?!.*\.toml$)
+        args: [--write, --log-level=silent]
   # linters
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.10.0.1
