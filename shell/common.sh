@@ -81,14 +81,14 @@ cdh() {
 		cd .. || return $?
 		cd "${__cdh_pwd}" || return $?
 	else
-		echo "'cdh' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'cdh' accepts no arguments" || return 1
 	fi
 }
 cdw() {
 	if [ $# -eq 0 ]; then
 		cd "${HOME}/work" || return $?
 	else
-		echo "'cdw' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'cdw' accepts no arguments" || return 1
 	fi
 }
 
@@ -179,7 +179,7 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			cd "$(repo_root)" || return 1
 		else
-			echo "'cdr' accepts no arguments" || return 1
+			echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'cdr' accepts no arguments" || return 1
 		fi
 	}
 fi
@@ -191,14 +191,14 @@ git_aliases() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/git/aliases.sh"
 	else
-		echo "'git_aliases' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'git_aliases' accepts no arguments" || return 1
 	fi
 }
 git_ignore() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "$(repo_root)/.gitignore"
 	else
-		echo "'git_ignore' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'git_ignore' accepts no arguments" || return 1
 	fi
 }
 
@@ -221,7 +221,7 @@ ipython_startup() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/ipython/startup.py"
 	else
-		echo "'ipython_startup' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'ipython_startup' accepts no arguments" || return 1
 	fi
 }
 
@@ -238,7 +238,7 @@ marimo_toml() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/marimo/marimo.toml"
 	else
-		echo "'marimo_toml' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'marimo_toml' accepts no arguments" || return 1
 	fi
 }
 
@@ -247,21 +247,21 @@ cdplugins() {
 	if [ $# -eq 0 ]; then
 		cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins" || return $?
 	else
-		echo "'cdplugins' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'cdplugins' accepts no arguments" || return 1
 	fi
 }
 lua_snippets() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/nvim/lua/snippets.lua"
 	else
-		echo "'lua_snippets' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'lua_snippets' accepts no arguments" || return 1
 	fi
 }
 plugins_dial() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/nvim/lua/plugins/dial.lua"
 	else
-		echo "'plugins_dial' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'plugins_dial' accepts no arguments" || return 1
 	fi
 }
 if command -v nvim >/dev/null 2>&1; then
@@ -271,9 +271,9 @@ fi
 # path
 echo_path() {
 	if [ $# -eq 0 ]; then
-		echo "${PATH}" | tr ':' '\n' | nl || return 0
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] ${PATH}" | tr ':' '\n' | nl || return 0
 	else
-		echo "'echo_path' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'echo_path' accepts no arguments" || return 1
 	fi
 }
 
@@ -288,7 +288,7 @@ pre_commit_config() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "$(repo_root)/.pre-commit-config.yaml"
 	else
-		echo "'pre_commit_config' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'pre_commit_config' accepts no arguments" || return 1
 	fi
 }
 
