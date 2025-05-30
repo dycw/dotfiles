@@ -761,7 +761,7 @@ fi
 if command -v gh >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
 	ghs() {
 		if [ $# -eq 0 ]; then
-			watch -d -n 0.1 'gh pr status' || return $?
+			watch -d -n 1.0 'gh pr status' || return $?
 		else
 			echo_date "'ghs' accepts no arguments" || return 1
 		fi

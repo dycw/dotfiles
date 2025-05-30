@@ -29,7 +29,7 @@ repos:
         name: prettier
         entry: prettier
         language: system
-        files: ^(?!.*\.toml$)
+        types: [json]
         args: [--write, --log-level=silent]
   # linters
   - repo: https://github.com/shellcheck-py/shellcheck-py
