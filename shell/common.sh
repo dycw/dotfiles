@@ -309,7 +309,7 @@ pyproject() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "$(repo_root)/pyproject.toml"
 	else
-		echo "'pyproject' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'pyproject' accepts no arguments" || return 1
 	fi
 }
 
@@ -337,7 +337,7 @@ shell_common() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/shell/common.sh"
 	else
-		echo "'shell_common' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'shell_common' accepts no arguments" || return 1
 	fi
 }
 
@@ -355,7 +355,7 @@ if command -v tmux >/dev/null 2>&1; then
 		elif [ $# -eq 1 ]; then
 			__tmux_attach_window="$1"
 		else
-			echo "'tmux_attach' accepts [0..1] arguments" || return 1
+			echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'tmux_attach' accepts [0..1] arguments" || return 1
 		fi
 		tmux attach -t "${__tmux_attach_window}" || return $?
 	}
@@ -363,7 +363,7 @@ if command -v tmux >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			tmux ls || return $?
 		else
-			echo "'tmux_ls' accepts no arguments" || return 1
+			echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'tmux_ls' accepts no arguments" || return 1
 		fi
 	}
 	if [ -z "$TMUX" ]; then
@@ -390,7 +390,7 @@ tmux_conf_local() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/.config/tmux/tmux.conf.local"
 	else
-		echo "'tmux_conf_local' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'tmux_conf_local' accepts no arguments" || return 1
 	fi
 }
 
@@ -400,21 +400,21 @@ if command -v uv >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			uv run --with=ipython ipython || return $?
 		else
-			echo "'ip' accepts no arguments" || return 1
+			echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'ip' accepts no arguments" || return 1
 		fi
 	}
 	jl() {
 		if [ $# -eq 0 ]; then
 			uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python jupyter lab || return $?
 		else
-			echo "'jl' accepts no arguments" || return 1
+			echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'jl' accepts no arguments" || return 1
 		fi
 	}
 	mar() {
 		if [ $# -eq 0 ]; then
 			uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' marimo new
 		else
-			echo "'mar' accepts no arguments" || return 1
+			echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'mar' accepts no arguments" || return 1
 		fi
 	}
 	pyr() { uv run pyright "$@"; }
@@ -427,7 +427,7 @@ if command -v uv >/dev/null 2>&1; then
 		elif [ $# -eq 1 ]; then
 			(uv pip list | grep "$1") || return $?
 		else
-			echo "'uvpl' accepts [0..1] arguments" || return 1
+			echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'uvpl' accepts [0..1] arguments" || return 1
 		fi
 
 	}
@@ -435,7 +435,7 @@ if command -v uv >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			uv pip list --outdated || return $?
 		else
-			echo "'uvplo' accepts no arguments" || return 1
+			echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'uvplo' accepts no arguments" || return 1
 		fi
 	}
 	uvpu() { uv pip uninstall "$@"; }
@@ -443,7 +443,7 @@ if command -v uv >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			uv sync --upgrade || return $?
 		else
-			echo "'uvs' accepts no arguments" || return 1
+			echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'uvs' accepts no arguments" || return 1
 		fi
 	}
 fi
