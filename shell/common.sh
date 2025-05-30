@@ -23,7 +23,7 @@ bottom_toml() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/bottom/bottom.toml"
 	else
-		echo "'bottom_toml' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'bottom_toml' accepts no arguments" || return 1
 	fi
 }
 
@@ -36,42 +36,42 @@ cdcache() {
 	if [ $# -eq 0 ]; then
 		cd "${XDG_CONFIG_HOME:-${HOME}}/.cache" || return $?
 	else
-		echo "'cdcache' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'cdcache' accepts no arguments" || return 1
 	fi
 }
 cdconfig() {
 	if [ $# -eq 0 ]; then
 		cd "${XDG_CONFIG_HOME:-${HOME}}/.config" || return $?
 	else
-		echo "'cdconfig' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'cdconfig' accepts no arguments" || return 1
 	fi
 }
 cddb() {
 	if [ $# -eq 0 ]; then
 		cd "${HOME}/Dropbox" || return $?
 	else
-		echo "'cddb' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'cddb' accepts no arguments" || return 1
 	fi
 }
 cddbt() {
 	if [ $# -eq 0 ]; then
 		cd "${HOME}/Dropbox/Temporary" || return $?
 	else
-		echo "'cddbt' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'cddbt' accepts no arguments" || return 1
 	fi
 }
 cddf() {
 	if [ $# -eq 0 ]; then
 		cd "${HOME}/dotfiles" || return $?
 	else
-		echo "'cddl' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'cddl' accepts no arguments" || return 1
 	fi
 }
 cddl() {
 	if [ $# -eq 0 ]; then
 		cd "${HOME}/Downloads" || return $?
 	else
-		echo "'cddl' accepts no arguments" || return 1
+		echo "[$(date +'%Y-%m-%d %H:%M:%S')] 'cddl' accepts no arguments" || return 1
 	fi
 }
 cdh() {
