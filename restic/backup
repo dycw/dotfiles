@@ -5,18 +5,18 @@ _script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 _env="$_script_dir/.env"
 
 if [ -f "$_env" ]; then
-	echo "Sourcing environment file '$_env'..."
+	echo "[$(date +'%Y-%m-%d %H:%M:%S')] Sourcing environment file '$_env'..."
 	source "$_env"
 
 	declare -a _paths=("$HOME"/Dropbox "$HOME"/work)
 	for _path in "${_paths[@]}"; do
 		if [ -d "$_path" ]; then
-			echo "Backing up '$_path'..."
+			echo "[$(date +'%Y-%m-%d %H:%M:%S')] Backing up '$_path'..."
 			restic backup "$_path"
 		else
-			echo "Unable to find '$_path'; skipping..."
+			echo "[$(date +'%Y-%m-%d %H:%M:%S')] Unable to find '$_path'; skipping..."
 		fi
 	done
 else
-	echo "Unable to find environment file '$_env'; exiting..."
+	echo "[$(date +'%Y-%m-%d %H:%M:%S')] Unable to find environment file '$_env'; exiting..."
 fi
