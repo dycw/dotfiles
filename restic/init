@@ -2,12 +2,13 @@
 # shellcheck source=/dev/null
 
 _script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-_env="$_script_dir/.env"
+_env="${_script_dir}/.env"
+echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 
 if [ -f "$_env" ]; then
-	echo "Sourcing environment file '$_env'..."
+	echo_date "Sourcing environment file '$_env'..."
 	source "$_env"
 	restic -r "$RESTIC_REPOSITORY" init
 else
-	echo "Unable to find environment file '$_env'; exiting..."
+	echo_date "Unable to find environment file '$_env'; exiting..."
 fi
