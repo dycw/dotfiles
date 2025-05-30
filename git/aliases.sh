@@ -627,13 +627,6 @@ if command -v gh >/dev/null 2>&1; then
 			echo "'ghmd' accepts no arguments" || return 1
 		fi
 	}
-	ghs() {
-		if [ $# -eq 0 ]; then
-			gh pr status || return $?
-		else
-			echo "'ghs' accepts no arguments" || return 1
-		fi
-	}
 	ghv() {
 		if [ $# -eq 0 ]; then
 			if gh pr ready >/dev/null 2>&1; then
@@ -767,11 +760,11 @@ fi
 
 # github + watch
 if command -v gh >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
-	wghs() {
+	ghs() {
 		if [ $# -eq 0 ]; then
-			watch -n1 'gh pr status' || return $?
+			watch -d -n 0.1 'gh pr status' || return $?
 		else
-			echo "'wghs' accepts no arguments" || return 1
+			echo "'ghs' accepts no arguments" || return 1
 		fi
 	}
 fi

@@ -78,6 +78,18 @@
         Configuring local host name,
       ]
     - [
+        '[[ "$(pmset -g custom | awk ''/ sleep[[:space:]]/ {print $2}'')" == "0" ]] || sudo pmset -a sleep 0',
+        Configuring sleep,
+      ]
+    - [
+        '[[ "$(pmset -g custom | awk ''/ disksleep[[:space:]]/ {print $2}'')" == "10" ]] || sudo pmset -a disksleep 10',
+        Configuring disk sleep,
+      ]
+    - [
+        '[[ "$(pmset -g custom | awk ''/ displaysleep[[:space:]]/ {print $2}'')" == "10" ]] || sudo pmset -a displaysleep 10',
+        Configuring display sleep,
+      ]
+    - [
         "[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
         Installing rust,
       ]

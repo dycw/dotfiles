@@ -74,14 +74,14 @@ cddl() {
 		echo "'cddl' accepts no arguments" || return 1
 	fi
 }
-cdhere() {
-	unset __cdhere_pwd
+cdh() {
+	unset __cdh_pwd
 	if [ $# -eq 0 ]; then
-		__cdhere_pwd="$(pwd)"
+		__cdh_pwd="$(pwd)"
 		cd .. || return $?
-		cd "${__cdhere_pwd}" || return $?
+		cd "${__cdh_pwd}" || return $?
 	else
-		echo "'cdhere' accepts no arguments" || return 1
+		echo "'cdh' accepts no arguments" || return 1
 	fi
 }
 cdw() {
