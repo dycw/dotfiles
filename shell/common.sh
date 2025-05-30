@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # shellcheck source=/dev/null
-# shellcheck disable=SC2120
+# shellcheck disable=SC2120,SC2033
 
 # bat
 if command -v bat >/dev/null 2>&1; then
@@ -361,14 +361,29 @@ if command -v tmux >/dev/null 2>&1; then
 	}
 	tmux_ls() {
 		if [ $# -eq 0 ]; then
-			# shellcheck disable=SC2033
 			tmux ls || return $?
 		else
 			echo "'tmux_ls' accepts no arguments" || return 1
 		fi
 	}
 	if [ -z "$TMUX" ]; then
-		tmux new-session -c "${PWD}"
+		# not inside tmux
+		if [ -z "${SSH_CONNECTION}" ]; then
+			# not over SSH
+			tmux new-session -c "${PWD}"
+		elif [ -n "$SSH_CONNECTION" ]; then
+			# is over SSH
+			__tmux_session_count="$(tmux ls 2>/dev/null | wc -l)"
+			if [ "${__tmux_session_count}" -eq 0 ]; then
+				tmux new
+			elif [ "${__tmux_session_count}" -eq 1 ]; then
+				__tmux_session="$(tmux ls | cut -d: -f1)"
+				tmux attach -t "${__tmux_session}"
+			else
+				echo "[$(date +'%Y-%m-%d %H:%M:%S')] Multiple 'tmux' sessions detected:"
+				tmux ls
+			fi
+		fi
 	fi
 fi
 tmux_conf_local() {
