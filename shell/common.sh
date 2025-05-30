@@ -366,10 +366,13 @@ if command -v tmux >/dev/null 2>&1; then
 			echo "'tmux_ls' accepts no arguments" || return 1
 		fi
 	}
-	if [ -z "$TMUX" ]; then              # not inside tmux
-		if [ -z "${SSH_CONNECTION}" ]; then # not inside SSH
+	if [ -z "$TMUX" ]; then
+		# not inside tmux
+		if [ -z "${SSH_CONNECTION}" ]; then
+			# not over SSH
 			tmux new-session -c "${PWD}"
 		elif [ -n "$SSH_CONNECTION" ]; then
+			# is over SSH
 			__tmux_session_count="$(tmux ls 2>/dev/null | wc -l)"
 			if [ "${__tmux_session_count}" -eq 0 ]; then
 				tmux new
