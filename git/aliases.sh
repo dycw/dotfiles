@@ -614,16 +614,30 @@ if command -v gh >/dev/null 2>&1; then
 	}
 	ghm() {
 		if [ $# -eq 0 ]; then
-			__gh_pr_merge 0 || return $?
+			__gh_pr_merge 0 0 || return $?
 		else
 			echo_date "'ghm' accepts no arguments" || return 1
 		fi
 	}
 	ghmd() {
 		if [ $# -eq 0 ]; then
-			__gh_pr_merge 1 || return $?
+			__gh_pr_merge 1 0 || return $?
 		else
 			echo_date "'ghmd' accepts no arguments" || return 1
+		fi
+	}
+	ghmv() {
+		if [ $# -eq 0 ]; then
+			__gh_pr_merge 0 1 || return $?
+		else
+			echo_date "'ghmv' accepts no arguments" || return 1
+		fi
+	}
+	ghmdv() {
+		if [ $# -eq 0 ]; then
+			__gh_pr_merge 1 1 || return $?
+		else
+			echo_date "'ghmdv' accepts no arguments" || return 1
 		fi
 	}
 	ghv() {
@@ -662,9 +676,9 @@ if command -v gh >/dev/null 2>&1; then
 		fi
 	}
 	__gh_pr_merge() {
-		unset __gh_pr_merge_branch
-		if [ $# -eq 1 ]; then
+		if [ $# -eq 2 ]; then
 			__gh_pr_merge_delete="$1"
+			__gh_pr_merge_view="$2"
 			__gh_pr_merge_branch="$(current_branch)"
 			gh pr merge -s --auto || return $?
 			if [ "${__gh_pr_merge_delete}" -eq 0 ]; then
@@ -676,8 +690,15 @@ if command -v gh >/dev/null 2>&1; then
 			else
 				echo_date "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__gh_pr_merge_delete}" || return 1
 			fi
+			if [ "${__gh_pr_merge_view}" -eq 0 ]; then
+				:
+			elif [ "${__gh_pr_merge_view}" -eq 1 ]; then
+				ghv || return $?
+			else
+				echo_date "'__git_pr_merge' accepts {0, 1} for the 'view' flag; got ${__gh_pr_merge_view}" || return 1
+			fi
 		else
-			echo_date "'__gh_pr_merge' requires 1 argument" || return 1
+			echo_date "'__gh_pr_merge' requires 2 arguments" || return 1
 		fi
 	}
 fi

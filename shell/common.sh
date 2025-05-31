@@ -228,8 +228,6 @@ ipython_startup() {
 	fi
 }
 
-# jupyter
-
 # local
 __file="${HOME}/common.local.sh"
 if [ -f "$__file" ]; then
@@ -295,7 +293,14 @@ pre_commit_config() {
 	fi
 }
 
-# ps
+# ps + pgrep
+pgrep_name() {
+	if [ $# -eq 1 ]; then
+		ps -fp $(pgrep "$1") || return $?
+	else
+		echo_date "'pgrep_name' accepts 1 arguments" || return 1
+	fi
+}
 alias pst='ps -fLu "$USER"| wc -l'
 if command -v watch >/dev/null 2>&1; then
 	alias wpst='watch -d -n0.1 "ps -fLu \"$USER\" | wc -l"'

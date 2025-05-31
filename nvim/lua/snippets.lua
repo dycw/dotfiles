@@ -478,6 +478,7 @@ ls.add_snippets("python", {
     s("ut-list-dir", { t({ "from utilities.pathlib import list_dir", "" }) }),
     s("ut-lists-fixed-length", { t({ "from utilities.hypothesis import lists_fixed_length", "" }) }),
     s("ut-log-level", { t({ "from utilities.types import LogLevel", "" }) }),
+    s("ut-looper", { t({ "from utilities.asyncio import Looper", "" }) }),
     s("ut-maybe-iterable", { t({ "from utilities.types import MaybeIterable", "" }) }),
     s("ut-merge-mappings", { t({ "from utilities.iterables import merge_mappings", "" }) }),
     s("ut-merge-sets", { t({ "from utilities.iterables import merge_sets", "" }) }),
@@ -510,8 +511,13 @@ ls.add_snippets("python", {
     s("ut-setup-logging", { t({ "from utilities.logging import setup_logging", "" }) }),
     s("ut-show", { t({ "from utilities.jupyter import show", "" }) }),
     s("ut-shuffle", { t({ "from utilities.random import shuffle", "" }) }),
+    s("ut-sleep-dur", { t({ "from utilities.asyncio import sleep_dur", "" }) }),
     s("ut-str-mapping", { t({ "from utilities.types import StrMapping", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
+    s(
+        "ut-suppress-super-object-attribute-error",
+        { t({ "from utilities.contextlib import suppress_super_object_attribute_error", "" }) }
+    ),
     s("ut-system-random", { t({ "from utilities.random import SYSTEM_RANDOM", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
     s("ut-temp-environ", { t({ "from utilities.os import temp_environ", "" }) }),
