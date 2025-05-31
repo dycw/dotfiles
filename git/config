@@ -47,6 +47,10 @@
 
 [merge]
   conflictstyle = diff3
+  tool = nvimdiff
+
+[mergetool "nvimdiff"]
+  cmd = nvim -d \"$LOCAL\" \"$REMOTE\" \"$MERGED\" -c \"wincmd w\"
 
 [pull]
   default = upstream

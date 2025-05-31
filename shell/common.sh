@@ -34,14 +34,14 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 cdcache() {
 	if [ $# -eq 0 ]; then
-		cd "${XDG_CONFIG_HOME:-${HOME}}/.cache" || return $?
+		cd "${XDG_CONFIG_HOME:-"${HOME}/.cache"}" || return $?
 	else
 		echo_date "'cdcache' accepts no arguments" || return 1
 	fi
 }
 cdconfig() {
 	if [ $# -eq 0 ]; then
-		cd "${XDG_CONFIG_HOME:-${HOME}}/.config" || return $?
+		cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}" || return $?
 	else
 		echo_date "'cdconfig' accepts no arguments" || return 1
 	fi
@@ -246,7 +246,7 @@ marimo_toml() {
 # neovim
 cdplugins() {
 	if [ $# -eq 0 ]; then
-		cd "${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/lua/custom/plugins" || return $?
+		cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}/nvim/lua/plugins" || return $?
 	else
 		echo_date "'cdplugins' accepts no arguments" || return 1
 	fi
