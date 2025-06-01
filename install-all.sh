@@ -224,19 +224,8 @@ fi
 # apt
 apt_install() {
 	unset __apt_install_app __apt_install_iname
-	while [ "$1" ]; do
-		case "$1" in
-		*)
-			if [ -z "$__apt_install_app" ]; then
-				__apt_install_app="$1"
-			elif [ -z "$__apt_install_iname" ]; then
-				__apt_install_iname="$1"
-			fi
-			shift
-			;;
-		esac
-	done
-	__apt_install_iname="${__apt_install_iname:-$__apt_install_app}"
+	__apt_install_app="$1"
+	__apt_install_iname="${2:-$1}"
 
 	if command -v "${__apt_install_app}" >/dev/null 2>&1; then
 		echo_date "'${__apt_install_app}' is already installed"
@@ -248,11 +237,31 @@ apt_install() {
 	fi
 }
 if [ -n "${IS_UBUNTU}" ]; then
-	asdf
+	apt_install curl
+	apt_install dropbox nautilus-dropbox
+	apt_install git
+	apt_install zsh
 fi
+
 # snap
+snap_install() {
+	unset __snap_install_app
+	__snap_install_app="$1"
+
+	if command -v "${__snap_install_app}" >/dev/null 2>&1; then
+		echo_date "'${__snap_install_app}' is already installed"
+		return 0
+	else
+		echo_date "Installing '${__snap_install_app}'..."
+		sudo snap install -y "${__snap_install_app}"
+	fi
+}
+if [ -n "${IS_UBUNTU}" ]; then
+	snap_install pdfarranger
+	snap_install whatsapp-linux-app
+fi
 
 # wezterm/ubuntu
 if [ -n "${IS_UBUNTU}" ]; then
-	sudo apt install -y wezterm
+	snap_install wezterm
 fi

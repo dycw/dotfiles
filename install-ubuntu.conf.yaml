@@ -64,18 +64,6 @@
 
 - shell:
     - [
-        "command -v curl >/dev/null 2>&1 || sudo apt install -y curl",
-        Installing curl,
-      ]
-    - [
-        "command -v dropbox >/dev/null 2>&1 || sudo apt install -y nautilus-dropbox",
-        Installing Dropbox,
-      ]
-    - [
-        "command -v git >/dev/null 2>&1 || sudo apt install -y git",
-        Installing git,
-      ]
-    - [
         "command -v wezterm >/dev/null 2>&1 || curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /etc/apt/keyrings/wezterm-fury.gpg",
         Installing wezterm,
       ]
@@ -92,14 +80,9 @@
         Installing wezterm,
       ]
     - [
-        "command -v zsh >/dev/null 2>&1 || sudo apt install -y zsh",
-        Installing zsh,
-      ]
-    - [
         '[[ "$(basename "$SHELL")" == "zsh" ]] || sudo chsh -s $(which zsh)',
         Configuring zsh,
       ]
-
     - [
         "[ -f ${HOME}/.config/fzf/fzf.zsh] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
         Configuring fzf,
