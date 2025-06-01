@@ -210,7 +210,6 @@ brew_services() {
 }
 [ -n "${IS_MAC_MINI}" ] && brew_services postgresql@17
 [ -n "${IS_MAC_MINI}" ] && brew_services redis
-[ -n "${IS_MAC_MINI}" ] && brew_services tailscale
 
 # rust
 if [ -n "${IS_MAC_MINI}" ]; then
@@ -222,6 +221,35 @@ if [ -n "${IS_MAC_MINI}" ]; then
 	fi
 fi
 
+# apt
+apt_install() {
+	unset __apt_install_app __apt_install_iname
+	while [ "$1" ]; do
+		case "$1" in
+		*)
+			if [ -z "$__apt_install_app" ]; then
+				__apt_install_app="$1"
+			elif [ -z "$__apt_install_iname" ]; then
+				__apt_install_iname="$1"
+			fi
+			shift
+			;;
+		esac
+	done
+	__apt_install_iname="${__apt_install_iname:-$__apt_install_app}"
+
+	if command -v "${__apt_install_app}" >/dev/null 2>&1; then
+		echo_date "'${__apt_install_app}' is already installed"
+		return 0
+	else
+		echo_date "Installing '${__apt_install_app}'..."
+		sudo apt-get update
+		sudo apt-get install -y "${__apt_install_iname}"
+	fi
+}
+if [ -n "${IS_UBUNTU}" ]; then
+	asdf
+fi
 # snap
 
 # wezterm/ubuntu
