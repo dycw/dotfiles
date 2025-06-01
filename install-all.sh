@@ -33,29 +33,22 @@ Mac14,12)
 		sudo scutil --set LocalHostName DW-Mac
 	fi
 
-	# sleep
-	if [ "$(pmset -g custom | awk '/ sleep[[:space:]]/ {print $2}')" = "0" ]; then
-		echo_date 'Sleep is already set'
-	else
-		echo_date 'Setting sleep...'
-		sudo pmset -a sleep 0
-	fi
+	# power management
+	set_pm_value() {
+		key=$1
+		desired=$2
+		current=$(pmset -g custom | awk "/[[:space:]]${key}[[:space:]]/ {print \$2}")
+		if [ "$current" = "$desired" ]; then
+			echo_date "'$key' is already set"
+		else
+			echo_date "Setting '$key'..."
+			sudo pmset -a "$key" "$desired"
+		fi
+	}
+	set_pm_value sleep 0
+	set_pm_value disksleep 10
+	set_pm_value displaysleep 10
 
-	# disk sleep
-	if [ "$(pmset -g custom | awk '/ disksleep[[:space:]]/ {print $2}')" = "0" ]; then
-		echo_date 'Disk sleep is already set'
-	else
-		echo_date 'Setting disk sleep...'
-		sudo pmset -a disksleep 10
-	fi
-
-	# display sleep
-	if [ "$(pmset -g custom | awk '/ displaysleep[[:space:]]/ {print $2}')" = "0" ]; then
-		echo_date 'Display sleep is already set'
-	else
-		echo_date 'Setting display sleep...'
-		sudo pmset -a displaysleep 10
-	fi
 	;;
 MacBook10,1) echo_date "Detected MacBook.." ;;
 *) echo_date "Unknown \$MACHINE_TYPE: ${MACHINE_TYPE}" ;;
