@@ -349,9 +349,43 @@ shell_common() {
 	fi
 }
 
+# SSH
+ssh_home() {
+	if [ $# -eq 0 ]; then
+		if [ -n "${SSH_HOME_HOST}" ]; then
+			ssh "${SSH_HOME_HOST}" || return $?
+		else
+			echo_date "'\$SSH_HOME_HOST' does not exist" || return 1
+		fi
+	else
+		echo_date "'ssh_home' accepts no arguments" || return 1
+	fi
+}
+ssh_tunnel_home() {
+	if [ $# -eq 0 ]; then
+		if [ -z "${SSH_HOME_HOST}" ]; then
+			echo_date "'\$SSH_HOME_HOST' does not exist" || return 1
+		elif [ -z "${SSH_TUNNEL_HOME_USER}" ]; then
+			echo_date "'\$SSH_TUNNEL_HOME_USER' does not exist" || return 1
+		elif [ -z "${SSH_TUNNEL_HOME_PORT}" ]; then
+			echo_date "'\$SSH_TUNNEL_HOME_PORT' does not exist" || return 1
+		else
+			ssh -N -L "${SSH_TUNNEL_HOME_PORT}:localhost:${SSH_TUNNEL_HOME_PORT}" "${SSH_TUNNEL_HOME_USER}:${SSH_HOME_HOST}" || return $?
+		fi
+	else
+		echo_date "'ssh_tunnel_home' accepts no arguments" || return 1
+	fi
+}
+
 # tailscale
 if command -v tailscale >/dev/null 2>&1; then
-	ts_status() { tailscale status; }
+	ts_status() {
+		if [ $# -eq 0 ]; then
+			tailscale status
+		else
+			echo_date "'ts_status' accepts no arguments" || return 1
+		fi
+	}
 fi
 
 # tmux

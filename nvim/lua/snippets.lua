@@ -126,6 +126,7 @@ ls.add_snippets("python", {
     -- hypothesis
     s("da-data-object", { t({ "data: DataObject" }) }),
     s("hy-assume", { t({ "from hypothesis import assume", "" }) }),
+    s("hy-binary", { t({ "from hypothesis.strategies import binary", "" }) }),
     s("hy-booleans", { t({ "from hypothesis.strategies import booleans", "" }) }),
     s("hy-builds", { t({ "from hypothesis.strategies import builds", "" }) }),
     s("hy-composite", { t({ "from hypothesis.strategies import composite", "" }) }),
