@@ -96,7 +96,7 @@ else
 	NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-# brew - install
+# brew/install
 brew_install() {
 	unset __brew_install_app __brew_install_iname __brew_install_cask __brew_install_tap
 	while [ "$1" ]; do
@@ -192,7 +192,21 @@ brew_install watchexec
 [ -n "${IS_MAC_MINI}" ] && brew_install zoom --cask
 brew_install zoxide
 
-# brew - services
+# brew/fzf
+fzf_zsh="${XDG_CONFIG_HOME:-${HOME}/.config}/fzf/fzf.zsh"
+if [ -f "$fzf_zsh" ]; then
+	echo_date "'fzf' is already setup"
+else
+	echo_date "Setting up 'fzf'..."
+	if ! command -v brew >/dev/null 2>&1; then
+		"$(brew --prefix)/opt/fzf/install" --xdg --key-bindings --completion --no-update-rc --no-fish
+	else
+		echo_date "ERROR: 'brew' is not installed"
+		return 1
+	fi
+fi
+
+# brew/services
 brew_services() {
 	unset __brew_services_app
 	__brew_services_app="$1"
