@@ -299,7 +299,7 @@ pgrep_name() {
 	if [ $# -eq 1 ]; then
 		ps -fp $(pgrep "$1") || return $?
 	else
-		echo_date "'pgrep_name' accepts 1 arguments" || return 1
+		echo_date "'pgrep_name' accepts 1 argument" || return 1
 	fi
 }
 alias pst='ps -fLu "$USER"| wc -l'
@@ -326,8 +326,18 @@ pyproject() {
 start_q() { QHOME="${HOME}"/q rlwrap -r "$HOME/q/m64/q" "$@"; }
 
 # rg
-if command -v pyright >/dev/null 2>&1 && command -v watchexec >/dev/null 2>&1; then
+if command -v rg >/dev/null 2>&1; then
+	env_rg() {
+		if [ $# -eq 1 ]; then
+			env | rg "$1" || return $?
+		else
+			echo_date "'env_rg' accepts 1 argument" || return 1
+		fi
+	}
 	rgw() { watchexec rg "$@"; }
+	if command -v rg >/dev/null 2>&1 && command -v watchexec >/dev/null 2>&1; then
+		rgw() { watchexec rg "$@"; }
+	fi
 fi
 
 # rm
