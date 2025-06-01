@@ -95,22 +95,36 @@ else
 fi
 
 brew_install() {
-	unset __brew_install_app __brew_install_install __brew_install_tap
-	__brew_install_tap=
+	unset __brew_install_app __brew_install_iname __brew_install_cask __brew_install_tap __brew_install_exists
 	while [ "$1" ]; do
 		case "$1" in
+		--cask)
+			__brew_install_cask=1
+			shift
+			;;
 		--tap)
 			__brew_install_tap="$2"
 			shift 2
 			;;
 		*)
 			__brew_install_app="${__brew_install_app:-$1}"
-			__brew_install_install="${2:-$1}"
+			__brew_install_iname="${2:-$1}"
 			shift
 			;;
 		esac
 	done
-	if command -v "${__brew_install_app}" >/dev/null 2>&1; then
+
+	if [ -n "${__brew_install_cask}" ]; then
+		if brew list --cask "${__brew_install_app}" >/dev/null 2>&1; then
+			__brew_install_exists=1
+		fi
+	else
+		if command -v "${__brew_install_app}" >/dev/null 2>&1; then
+			__brew_install_exists=1
+		fi
+	fi
+
+	if [ -n "${__brew_install_cask}" ]; then
 		echo_date "'${__brew_install_app}' is already installed"
 	else
 		if command -v brew >/dev/null 2>&1; then
@@ -118,7 +132,11 @@ brew_install() {
 			if [ -n "${__brew_install_tap}" ]; then
 				brew tap "$__brew_install_tap"
 			fi
-			brew install "${__brew_install_install}"
+			if [ -n "${__brew_install_cask}" ]; then
+				brew install --cask "${__brew_install_iname}"
+			else
+				brew install "${__brew_install_iname}"
+			fi
 		else
 			echo_date "ERROR: 'brew' is not installed"
 		fi
@@ -162,6 +180,7 @@ brew_install uv
 brew_install watchexec
 brew_install yq
 brew_install zoxide
+# [ -n "${IS_MAC}" ] && brew_install gitweb yoannfleurydev/gitweb/gitweb
 
 # rust
 if [ -n "${IS_MAC_MINI}" ]; then
