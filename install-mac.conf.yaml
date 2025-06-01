@@ -58,17 +58,6 @@
 - shell:
     - command: ./install-all.sh
       description: Running installer...
-      # - [brew install --cask transmission, Installing Transmission]
-      # - [
-      #     "command -v vlc >/dev/null 2>&1 || brew install --cask vlc",
-      #     Installing VLC,
-      #   ]
-      # - [
-      #     "command -v wezterm >/dev/null 2>&1 || brew install --cask wezterm",
-      #     Installing wezterm,
-      #   ]
-      # - [brew install --cask whatsapp, Installing WhatsApp]
-      # - [brew install --cask zoom, Installing Zoom]
       # - [
       #     "[ -f ${HOME}/.config/fzf/fzf.zsh ] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
       #     Configuring fzf,

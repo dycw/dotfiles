@@ -96,8 +96,9 @@ else
 	NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
+# brew - install
 brew_install() {
-	unset __brew_install_app __brew_install_iname __brew_install_cask __brew_install_tap __brew_install_exists
+	unset __brew_install_app __brew_install_iname __brew_install_cask __brew_install_tap
 	__brew_install_app="$1"
 	__brew_install_iname="${2:-$1}"
 	while [ "$1" ]; do
@@ -111,31 +112,22 @@ brew_install() {
 		shift
 	done
 
-	if [ -n "${__brew_install_cask}" ]; then
-		if brew list --cask "${__brew_install_app}" >/dev/null 2>&1; then
-			__brew_install_exists=1
-		fi
-	else
-		if command -v "${__brew_install_app}" >/dev/null 2>&1; then
-			__brew_install_exists=1
-		fi
-	fi
-
-	if [ -n "${__brew_install_exists}" ]; then
+	if { [ -n "${__brew_install_cask}" ] && brew list --cask "${__brew_install_app}" >/dev/null 2>&1; } ||
+		{ [ -z "${__brew_install_cask}" ] && command -v "${__brew_install_app}" >/dev/null 2>&1; }; then
 		echo_date "'${__brew_install_app}' is already installed"
+		return 0
+	elif ! command -v brew >/dev/null 2>&1; then
+		echo_date "ERROR: 'brew' is not installed"
+		return 1
 	else
-		if command -v brew >/dev/null 2>&1; then
-			echo_date "Installing '${__brew_install_app}'..."
-			if [ -n "${__brew_install_tap}" ]; then
-				brew tap "$__brew_install_tap"
-			fi
-			if [ -n "${__brew_install_cask}" ]; then
-				brew install --cask "${__brew_install_iname}"
-			else
-				brew install "${__brew_install_iname}"
-			fi
+		echo_date "Installing '${__brew_install_app}'..."
+		if [ -n "${__brew_install_tap}" ]; then
+			brew tap "$__brew_install_tap"
+		fi
+		if [ -n "${__brew_install_cask}" ]; then
+			brew install --cask "${__brew_install_iname}"
 		else
-			echo_date "ERROR: 'brew' is not installed"
+			brew install "${__brew_install_iname}"
 		fi
 	fi
 }
@@ -181,13 +173,43 @@ brew_install topgrade
 [ -n "${IS_MAC_MINI}" ] && brew_install transmission --cask
 brew_install uv
 [ -n "${IS_MAC_MINI}" ] && brew_install visual-studio-code --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install vlc --cask
 [ -n "${IS_MAC}" ] && brew_install watch
 brew_install watchexec
 [ -n "${IS_MAC}" ] && brew_install wezterm --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install whatsapp --cask
 [ -n "${IS_UBUNTU}" ] && brew_install xclip
 [ -n "${IS_UBUNTU}" ] && brew_install xsel
 brew_install yq
+[ -n "${IS_MAC_MINI}" ] && brew_install zoom --cask
 brew_install zoxide
+
+# brew - services
+brew_services() {
+	unset __brew_services_app
+	__brew_services_app="$1"
+
+	if ! command -v brew >/dev/null 2>&1; then
+		echo_date "ERROR: 'brew' is not installed"
+		return 1
+	elif brew services list | grep -q "^${__brew_services_app}[[:space:]]\+started"; then
+		echo_date "'${__brew_services_app}' is already started"
+		return 0
+	else
+		echo_date "Starting '${__brew_services_app}'..."
+		brew services start "${__brew_services_app}"
+	fi
+}
+
+if [ -n "${IS_MAC_MINI}" ]; then
+	if brew services list | grep -q '^postgresql@17.*started'; then
+		echo_date "'postgresql@17' is already running"
+	else
+		echo_date "Starting 'postgresql@17'..."
+		brew services start postgresql@17
+	fi
+fi
+[ -n "${IS_MAC_MINI}" ] && brew services start postgresql@17
 
 # rust
 if [ -n "${IS_MAC_MINI}" ]; then
