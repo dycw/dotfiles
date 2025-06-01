@@ -66,10 +66,6 @@
 
 - shell:
     - [
-        '[ "$(system_profiler SPHardwareDataType | awk -F\": \" \"/Model Identifier/ {print \\$2}\")" = "Mac14,12" ] && ([ "$(scutil --get ComputerName)" = DW-Mac ] || sudo scutil --set ComputerName DW-Mac)',
-        Configuring computer name,
-      ]
-    - [
         '[ "$(scutil --get HostName)" = DW-Mac ] || sudo scutil --set HostName DW-Mac',
         Configuring host name,
       ]
