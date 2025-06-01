@@ -209,6 +209,8 @@ brew_services() {
 	fi
 }
 [ -n "${IS_MAC_MINI}" ] && brew_services postgresql@17
+[ -n "${IS_MAC_MINI}" ] && brew_services redis
+[ -n "${IS_MAC_MINI}" ] && brew_services tailscale
 
 # rust
 if [ -n "${IS_MAC_MINI}" ]; then
