@@ -5,32 +5,16 @@
 - clean:
     - "~"
 
-- create:
-    - ~/.config
-    - ~/.config/bottom
-    - ~/.config/direnv
-    - ~/.config/git
-    - ~/.config/marimo
-    - ~/.config/pip
-    - ~/.config/tmux
-    - ~/.config/wezterm
-    - ~/.ipython/profile_default/startup
-    - ~/.jupyter/lab/user-settings/@jupyterlab/apputils-extension
-    - ~/.jupyter/lab/user-settings/@jupyterlab/codemirror-extension
-    - ~/.jupyter/lab/user-settings/@jupyterlab/completer-extension
-    - ~/.jupyter/lab/user-settings/@jupyterlab/console-extension
-    - ~/.jupyter/lab/user-settings/@jupyterlab/docmanager-extension
-    - ~/.jupyter/lab/user-settings/@jupyterlab/filebrowser-extension
-    - ~/.jupyter/lab/user-settings/@jupyterlab/fileeditor-extension
-    - ~/.jupyter/lab/user-settings/@jupyterlab/notebook-extension
-    - ~/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension
-    - ~/.jupyter/lab/user-settings/jupyterlab_code_formatter/
-
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
 
 - link:
-    ~/.config/bottom/bottom.toml: bottom/bottom.toml
+    ~/.config/bottom/bottom.toml:
+      path: bottom/bottom.toml
+      create: true
+      relink: true
+      force: true
+      # - if
     ~/.config/direnv/direnv.toml: direnv/direnv.toml
     ~/.config/direnv/direnvrc: direnv/direnvrc
     ~/.config/git/config: git/config
@@ -65,191 +49,189 @@
     ~/Library/LaunchAgents/com.redis-stack.redis-stack-server.plist: redis/com.redis-stack.redis-stack-server.plist
 
 - shell:
-    - [
-        '[ "$(scutil --get HostName)" = DW-Mac ] || sudo scutil --set HostName DW-Mac',
-        Configuring host name,
-      ]
-    - [
-        '[ "$(scutil --get LocalHostName)" = DW-Mac ] || sudo scutil --set LocalHostName DW-Mac',
-        Configuring local host name,
-      ]
-    - [
-        '[[ "$(pmset -g custom | awk ''/ sleep[[:space:]]/ {print $2}'')" == "0" ]] || sudo pmset -a sleep 0',
-        Configuring sleep,
-      ]
-    - [
-        '[[ "$(pmset -g custom | awk ''/ disksleep[[:space:]]/ {print $2}'')" == "10" ]] || sudo pmset -a disksleep 10',
-        Configuring disk sleep,
-      ]
-    - [
-        '[[ "$(pmset -g custom | awk ''/ displaysleep[[:space:]]/ {print $2}'')" == "10" ]] || sudo pmset -a displaysleep 10',
-        Configuring display sleep,
-      ]
-    - [
-        "[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
-        Installing rust,
-      ]
-    - [
-        'command -v brew >/dev/null 2>&1 || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
-        Installing brew,
-      ]
-    - ["command -v bat >/dev/null 2>&1 || brew install bat", Installing bat]
-    - [
-        "command -v btm >/dev/null 2>&1 || brew install bottom",
-        Installing bottom,
-      ]
-    - [
-        "command -v bump-my-version >/dev/null 2>&1 || brew install bump-my-version",
-        Installing bump-my-version,
-      ]
-    - [
-        "command -v cmake >/dev/null 2>&1 || brew install cmake",
-        Installing cmake,
-      ]
-    - [
-        "command -v delta >/dev/null 2>&1 || brew install git-delta",
-        Installing delta,
-      ]
-    - [
-        "command -v direnv >/dev/null 2>&1 || brew install direnv",
-        Installing direnv,
-      ]
-    - ["command -v dust >/dev/null 2>&1 || brew install dust", Installing dust]
-    - ["command -v eza >/dev/null 2>&1 || brew install eza", Installing eza]
-    - ["command -v fd >/dev/null 2>&1 || brew install fd", Installing fd]
-    - ["command -v fzf >/dev/null 2>&1 || brew install fzf", Installing fzf]
-    - ["command -v gh >/dev/null 2>&1 || brew install gh", Installing gh]
-    - [
-        "command -v gitweb >/dev/null 2>&1 || brew install yoannfleurydev/gitweb/gitweb
-        ",
-        Installing gitweb,
-      ]
-    - [
-        "command -v gsed >/dev/null 2>&1 || brew install gnu-sed",
-        Installing gnu-sed,
-      ]
-    - ["command -v just >/dev/null 2>&1 || brew install just", Installing just]
-    - [
-        "command -v luacheck >/dev/null 2>&1 || brew install luacheck",
-        Installing luacheck,
-      ]
-    - [brew install mysql, Installing mysql]
-    - [
-        "command -v nvim >/dev/null 2>&1 || brew install neovim",
-        Installing neovim,
-      ]
-    - [
-        "command -v pgcli >/dev/null 2>&1 || brew install pgcli",
-        Installing pgcli,
-      ]
-    - [
-        "command -v postgres >/dev/null 2>&1 || brew install postgresql@17",
-        Installing postgresql 17,
-      ]
-    - [
-        "command -v pre-commit >/dev/null 2>&1 || brew install pre-commit",
-        Installing pre-commit,
-      ]
-    - [
-        "command -v prettier >/dev/null 2>&1 || brew install prettier",
-        Installing prettier,
-      ]
-    - [
-        "command -v redis-stack-server >/dev/null 2>&1 || brew tap redis-stack/redis-stack && brew install redis-stack",
-        Installing redis-stack,
-      ]
-    - [
-        "command -v restic >/dev/null 2>&1 || brew install restic",
-        Installing restic,
-      ]
-    - [
-        "command -v rg >/dev/null 2>&1 || brew install ripgrep",
-        Installing ripgrep,
-      ]
-    - [
-        "command -v rlwrap >/dev/null 2>&1 || brew install rlwrap",
-        Installing rlwrap,
-      ]
-    - ["command -v ruff >/dev/null 2>&1 || brew install ruff", Installing ruff]
-    - [
-        "command -v shellcheck >/dev/null 2>&1 || brew install shellcheck",
-        Installing shellcheck,
-      ]
-    - [
-        "command -v shfmt >/dev/null 2>&1 || brew install shfmt",
-        Installing shfmt,
-      ]
-    - [
-        "command -v sshpass >/dev/null 2>&1 || brew install sshpass",
-        Installing sshpass,
-      ]
-    - [
-        "command -v starship >/dev/null 2>&1 || brew install starship",
-        Installing starship,
-      ]
-    - [
-        "command -v stylua >/dev/null 2>&1 || brew install stylua",
-        Installing stylua,
-      ]
-    - [
-        "command -v tailscale >/dev/null 2>&1 || brew install tailscale",
-        Installing tailscale,
-      ]
-    - ["command -v tmux >/dev/null 2>&1 || brew install tmux", Installing tmux]
-    - [
-        "command -v topgrade >/dev/null 2>&1 || brew install topgrade",
-        Installing topgrade,
-      ]
-    - ["command -v uv >/dev/null 2>&1 || brew install uv", Installing uv]
-    - [
-        "command -v watch >/dev/null 2>&1 || brew install watch",
-        Installing watch,
-      ]
-    - [
-        "command -v watchexec >/dev/null 2>&1 || brew install watchexec",
-        Installing watchexec,
-      ]
-    - ["command -v yq >/dev/null 2>&1 || brew install yq", Installing yq]
-    - [
-        "command -v zoxide >/dev/null 2>&1 || brew install zoxide",
-        Installing zoxide,
-      ]
-    - [brew install --cask 1password, Installing 1Password]
-    - [
-        "command -v code >/dev/bull 2>&1 || brew install --cask visual-studio-code",
-        Installing VS Code,
-      ]
-    - [
-        brew install --cask db-browser-for-sqlite,
-        Installing DB Browser for SQLite,
-      ]
-    - [brew install --cask dropbox, Installing Dropbox]
-    - [brew install --cask google-chrome, Installing Google Chrome]
-    - [brew install --cask libreoffice, Installing LibreOffice]
-    - [brew install --cask postico, Installing Postico 2]
-    - [brew install --cask spotify, Installing Spotify]
-    - [brew install --cask transmission, Installing Transmission]
-    - [
-        "command -v vlc >/dev/null 2>&1 || brew install --cask vlc",
-        Installing VLC,
-      ]
-    - [
-        "command -v wezterm >/dev/null 2>&1 || brew install --cask wezterm",
-        Installing wezterm,
-      ]
-    - [brew install --cask whatsapp, Installing WhatsApp]
-    - [brew install --cask zoom, Installing Zoom]
-    - [
-        "[ -f ${HOME}/.config/fzf/fzf.zsh ] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
-        Configuring fzf,
-      ]
-    - [brew services start postgresql@17, Configuring postgresql]
-    - [brew services start redis, Configuring redis]
-    - [
-        "command -v harlequin >/dev/null 2>&1 || uv tool install harlequin",
-        Installing harlequin,
-      ]
-    - [
-        "launchctl load ~/Library/LaunchAgents/com.redis-stack.redis-stack-server.plist",
-        Launching redis-stack-server,
-      ]
+    - command: ./install-all.sh
+      description: Running installer...
+      stdin: true
+      stdout: true
+      stderr: true
+      # - [./install-all.sh, Running installed]
+      # - [
+      #     '[[ "$(pmset -g custom | awk ''/ sleep[[:space:]]/ {print $2}'')" == "0" ]] || sudo pmset -a sleep 0',
+      #     Configuring sleep,
+      #   ]
+      # - [
+      #     '[[ "$(pmset -g custom | awk ''/ disksleep[[:space:]]/ {print $2}'')" == "10" ]] || sudo pmset -a disksleep 10',
+      #     Configuring disk sleep,
+      #   ]
+      # - [
+      #     '[[ "$(pmset -g custom | awk ''/ displaysleep[[:space:]]/ {print $2}'')" == "10" ]] || sudo pmset -a displaysleep 10',
+      #     Configuring display sleep,
+      #   ]
+      # - [
+      #     "[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
+      #     Installing rust,
+      #   ]
+      # - [
+      #     'command -v brew >/dev/null 2>&1 || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
+      #     Installing brew,
+      #   ]
+      # - ["command -v bat >/dev/null 2>&1 || brew install bat", Installing bat]
+      # - [
+      #     "command -v btm >/dev/null 2>&1 || brew install bottom",
+      #     Installing bottom,
+      #   ]
+      # - [
+      #     "command -v bump-my-version >/dev/null 2>&1 || brew install bump-my-version",
+      #     Installing bump-my-version,
+      #   ]
+      # - [
+      #     "command -v cmake >/dev/null 2>&1 || brew install cmake",
+      #     Installing cmake,
+      #   ]
+      # - [
+      #     "command -v delta >/dev/null 2>&1 || brew install git-delta",
+      #     Installing delta,
+      #   ]
+      # - [
+      #     "command -v direnv >/dev/null 2>&1 || brew install direnv",
+      #     Installing direnv,
+      #   ]
+      # - ["command -v dust >/dev/null 2>&1 || brew install dust", Installing dust]
+      # - ["command -v eza >/dev/null 2>&1 || brew install eza", Installing eza]
+      # - ["command -v fd >/dev/null 2>&1 || brew install fd", Installing fd]
+      # - ["command -v fzf >/dev/null 2>&1 || brew install fzf", Installing fzf]
+      # - ["command -v gh >/dev/null 2>&1 || brew install gh", Installing gh]
+      # - [
+      #     "command -v gitweb >/dev/null 2>&1 || brew install yoannfleurydev/gitweb/gitweb
+      #     ",
+      #     Installing gitweb,
+      #   ]
+      # - [
+      #     "command -v gsed >/dev/null 2>&1 || brew install gnu-sed",
+      #     Installing gnu-sed,
+      #   ]
+      # - ["command -v just >/dev/null 2>&1 || brew install just", Installing just]
+      # - [
+      #     "command -v luacheck >/dev/null 2>&1 || brew install luacheck",
+      #     Installing luacheck,
+      #   ]
+      # - [brew install mysql, Installing mysql]
+      # - [
+      #     "command -v nvim >/dev/null 2>&1 || brew install neovim",
+      #     Installing neovim,
+      #   ]
+      # - [
+      #     "command -v pgcli >/dev/null 2>&1 || brew install pgcli",
+      #     Installing pgcli,
+      #   ]
+      # - [
+      #     "command -v postgres >/dev/null 2>&1 || brew install postgresql@17",
+      #     Installing postgresql 17,
+      #   ]
+      # - [
+      #     "command -v pre-commit >/dev/null 2>&1 || brew install pre-commit",
+      #     Installing pre-commit,
+      #   ]
+      # - [
+      #     "command -v prettier >/dev/null 2>&1 || brew install prettier",
+      #     Installing prettier,
+      #   ]
+      # - [
+      #     "command -v redis-stack-server >/dev/null 2>&1 || brew tap redis-stack/redis-stack && brew install redis-stack",
+      #     Installing redis-stack,
+      #   ]
+      # - [
+      #     "command -v restic >/dev/null 2>&1 || brew install restic",
+      #     Installing restic,
+      #   ]
+      # - [
+      #     "command -v rg >/dev/null 2>&1 || brew install ripgrep",
+      #     Installing ripgrep,
+      #   ]
+      # - [
+      #     "command -v rlwrap >/dev/null 2>&1 || brew install rlwrap",
+      #     Installing rlwrap,
+      #   ]
+      # - ["command -v ruff >/dev/null 2>&1 || brew install ruff", Installing ruff]
+      # - [
+      #     "command -v shellcheck >/dev/null 2>&1 || brew install shellcheck",
+      #     Installing shellcheck,
+      #   ]
+      # - [
+      #     "command -v shfmt >/dev/null 2>&1 || brew install shfmt",
+      #     Installing shfmt,
+      #   ]
+      # - [
+      #     "command -v sshpass >/dev/null 2>&1 || brew install sshpass",
+      #     Installing sshpass,
+      #   ]
+      # - [
+      #     "command -v starship >/dev/null 2>&1 || brew install starship",
+      #     Installing starship,
+      #   ]
+      # - [
+      #     "command -v stylua >/dev/null 2>&1 || brew install stylua",
+      #     Installing stylua,
+      #   ]
+      # - [
+      #     "command -v tailscale >/dev/null 2>&1 || brew install tailscale",
+      #     Installing tailscale,
+      #   ]
+      # - ["command -v tmux >/dev/null 2>&1 || brew install tmux", Installing tmux]
+      # - [
+      #     "command -v topgrade >/dev/null 2>&1 || brew install topgrade",
+      #     Installing topgrade,
+      #   ]
+      # - ["command -v uv >/dev/null 2>&1 || brew install uv", Installing uv]
+      # - [
+      #     "command -v watch >/dev/null 2>&1 || brew install watch",
+      #     Installing watch,
+      #   ]
+      # - [
+      #     "command -v watchexec >/dev/null 2>&1 || brew install watchexec",
+      #     Installing watchexec,
+      #   ]
+      # - ["command -v yq >/dev/null 2>&1 || brew install yq", Installing yq]
+      # - [
+      #     "command -v zoxide >/dev/null 2>&1 || brew install zoxide",
+      #     Installing zoxide,
+      #   ]
+      # - [brew install --cask 1password, Installing 1Password]
+      # - [
+      #     "command -v code >/dev/bull 2>&1 || brew install --cask visual-studio-code",
+      #     Installing VS Code,
+      #   ]
+      # - [
+      #     brew install --cask db-browser-for-sqlite,
+      #     Installing DB Browser for SQLite,
+      #   ]
+      # - [brew install --cask dropbox, Installing Dropbox]
+      # - [brew install --cask google-chrome, Installing Google Chrome]
+      # - [brew install --cask libreoffice, Installing LibreOffice]
+      # - [brew install --cask postico, Installing Postico 2]
+      # - [brew install --cask spotify, Installing Spotify]
+      # - [brew install --cask transmission, Installing Transmission]
+      # - [
+      #     "command -v vlc >/dev/null 2>&1 || brew install --cask vlc",
+      #     Installing VLC,
+      #   ]
+      # - [
+      #     "command -v wezterm >/dev/null 2>&1 || brew install --cask wezterm",
+      #     Installing wezterm,
+      #   ]
+      # - [brew install --cask whatsapp, Installing WhatsApp]
+      # - [brew install --cask zoom, Installing Zoom]
+      # - [
+      #     "[ -f ${HOME}/.config/fzf/fzf.zsh ] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
+      #     Configuring fzf,
+      #   ]
+      # - [brew services start postgresql@17, Configuring postgresql]
+      # - [brew services start redis, Configuring redis]
+      # - [
+      #     "command -v harlequin >/dev/null 2>&1 || uv tool install harlequin",
+      #     Installing harlequin,
+      #   ]
+      # - [
+      #     "launchctl load ~/Library/LaunchAgents/com.redis-stack.redis-stack-server.plist",
+      #     Launching redis-stack-server,
+      #   ]
