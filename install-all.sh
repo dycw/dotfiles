@@ -125,15 +125,12 @@ brew_install() {
 		{ [ -z "${__brew_install_cask}" ] && command -v "${__brew_install_app}" >/dev/null 2>&1; }; then
 		echo_date "'${__brew_install_app}' is already installed"
 		return 0
-
 	elif ! command -v brew >/dev/null 2>&1; then
 		echo_date "ERROR: 'brew' is not installed"
 		return 1
-
 	else
 		echo_date "Installing '${__brew_install_app}'..."
 		[ -n "${__brew_install_tap}" ] && brew tap "$__brew_install_tap"
-
 		if [ -n "${__brew_install_cask}" ]; then
 			brew install --cask "${__brew_install_app}"
 		else

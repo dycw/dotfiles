@@ -54,7 +54,7 @@ fi
 
 # postgres
 if command -v brew >/dev/null 2>&1; then
-	__dir="$(brew --prefix)/opt/postgresql@16/bin"
+	__dir="$(brew --prefix)/opt/postgresql@17/bin"
 	case ":${PATH}:" in
 	*:"$__dir":*) ;;
 	*) export PATH="${__dir}:${PATH}" ;;
