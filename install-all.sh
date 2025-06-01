@@ -99,37 +99,48 @@ fi
 # brew - install
 brew_install() {
 	unset __brew_install_app __brew_install_iname __brew_install_cask __brew_install_tap
-	__brew_install_app="$1"
-	__brew_install_iname="${2:-$1}"
 	while [ "$1" ]; do
 		case "$1" in
-		--cask) __brew_install_cask=1 ;;
+		--cask)
+			__brew_install_cask=1
+			shift
+			;;
 		--tap)
 			__brew_install_tap="$2"
+			shift 2
+			;;
+		*)
+			if [ -z "$__brew_install_app" ]; then
+				__brew_install_app="$1"
+			elif [ -z "$__brew_install_iname" ]; then
+				__brew_install_iname="$1"
+			fi
 			shift
 			;;
 		esac
-		shift
 	done
 
 	if { [ -n "${__brew_install_cask}" ] && brew list --cask "${__brew_install_app}" >/dev/null 2>&1; } ||
+		{ [ -n "${__brew_install_cask}" ] && find /Applications -maxdepth 1 -type d -iname "*${__brew_install_app}*.app" | grep -q .; } ||
 		{ [ -z "${__brew_install_cask}" ] && command -v "${__brew_install_app}" >/dev/null 2>&1; }; then
 		echo_date "'${__brew_install_app}' is already installed"
 		return 0
+
 	elif ! command -v brew >/dev/null 2>&1; then
 		echo_date "ERROR: 'brew' is not installed"
 		return 1
+
 	else
 		echo_date "Installing '${__brew_install_app}'..."
-		if [ -n "${__brew_install_tap}" ]; then
-			brew tap "$__brew_install_tap"
-		fi
+		[ -n "${__brew_install_tap}" ] && brew tap "$__brew_install_tap"
+
 		if [ -n "${__brew_install_cask}" ]; then
-			brew install --cask "${__brew_install_iname}"
+			brew install --cask "${__brew_install_app}"
 		else
 			brew install "${__brew_install_iname}"
 		fi
 	fi
+
 }
 
 [ -n "${IS_MAC}" ] && brew_install 1password --cask
@@ -200,16 +211,7 @@ brew_services() {
 		brew services start "${__brew_services_app}"
 	fi
 }
-
-if [ -n "${IS_MAC_MINI}" ]; then
-	if brew services list | grep -q '^postgresql@17.*started'; then
-		echo_date "'postgresql@17' is already running"
-	else
-		echo_date "Starting 'postgresql@17'..."
-		brew services start postgresql@17
-	fi
-fi
-[ -n "${IS_MAC_MINI}" ] && brew services start postgresql@17
+[ -n "${IS_MAC_MINI}" ] && brew_services postgresql@17
 
 # rust
 if [ -n "${IS_MAC_MINI}" ]; then
