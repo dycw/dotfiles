@@ -12,3 +12,29 @@ use_uv_python() {
 	fi
 	uv sync
 }
+
+use_uv_python_qrt() {
+	source_up_if_exists
+	dotenv_if_exists
+	source_env_if_exists .envrc.local
+	activate='.venv/bin/activate'
+	if [ -f "${activate}" ]; then
+		. "${activate}"
+	else
+		uv venv
+	fi
+	repo_root="$(git rev-parse --show-toplevel)"
+	script="${repo_root}"/scripts/uv-sync.sh
+	dockerenv='/.dockerenv'
+	if [ -f "${script}" ] && [ -f "${dockerenv}" ]; then
+		"${script}" --no-dev
+	elif [ -f "${script}" ] && ! [ -f "${dockerenv}" ]; then
+		"${script}"
+	elif [ -f "${script}" ] && [ -f "${dockerenv}" ]; then
+		uv sync
+	elif [ -f "${script}" ] && ! [ -f "${dockerenv}" ]; then
+		uv sync
+	else
+		echo_date "ERROR: 'check_uv_python_qrt'"
+	fi
+}
