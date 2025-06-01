@@ -211,7 +211,7 @@ brew_services() {
 [ -n "${IS_MAC_MINI}" ] && brew_services postgresql@17
 [ -n "${IS_MAC_MINI}" ] && brew_services redis
 
-# rust
+# mac mini/rust
 if [ -n "${IS_MAC_MINI}" ]; then
 	if [ -d "${HOME}"/.cargo ]; then
 		echo_date "'rust' is already installed"
@@ -221,7 +221,7 @@ if [ -n "${IS_MAC_MINI}" ]; then
 	fi
 fi
 
-# apt
+# ubuntu/apt
 apt_install() {
 	unset __apt_install_app __apt_install_iname
 	__apt_install_app="$1"
@@ -243,7 +243,23 @@ if [ -n "${IS_UBUNTU}" ]; then
 	apt_install zsh
 fi
 
-# snap
+# ubuntu/shell
+if [ -n "${IS_UBUNTU}" ]; then
+	if [ "$(basename "${SHELL}")" = 'zsh' ]; then
+		echo_date "'zsh' is already the default shell"
+	else
+		zsh_path="$(command -v zsh 2>/dev/null)"
+		if [ -x "${zsh_path}" ]; then
+			echo_date "Changing default shell to 'zsh'..."
+			sudo chsh -s "${zsh_path}" "$(whoami)"
+		else
+			echo_date "ERROR: 'zsh' not found or not executable"
+			return 1
+		fi
+	fi
+fi
+
+# ubuntu/snap
 snap_install() {
 	unset __snap_install_app
 	__snap_install_app="$1"
@@ -261,23 +277,7 @@ if [ -n "${IS_UBUNTU}" ]; then
 	snap_install whatsapp-linux-app
 fi
 
-# shell
-if [ -n "${IS_UBUNTU}" ]; then
-	if [ "$(basename "${SHELL}")" = 'zsh' ]; then
-		echo_date "'zsh' is already the default shell"
-	else
-		zsh_path="$(command -v zsh 2>/dev/null)"
-		if [ -x "${zsh_path}" ]; then
-			echo_date "Changing default shell to 'zsh'..."
-			sudo chsh -s "${zsh_path}" "$(whoami)"
-		else
-			echo_date "ERROR: 'zsh' not found or not executable"
-			return 1
-		fi
-	fi
-fi
-
-# wezterm/ubuntu
+# ubuntu/wezterm
 if [ -n "${IS_UBUNTU}" ]; then
 	if command -v wezterm >/dev/null 2>&1; then
 		echo_date "'wezterm' is already installed"
