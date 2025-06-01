@@ -80,18 +80,6 @@
         Installing wezterm,
       ]
     - [
-        '[[ "$(basename "$SHELL")" == "zsh" ]] || sudo chsh -s $(which zsh)',
-        Configuring zsh,
-      ]
-    - [
         "[ -f ${HOME}/.config/fzf/fzf.zsh] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
         Configuring fzf,
-      ]
-    - [
-        "command -v pdfarranger >/dev/null 2>&1 || sudo snap install pdfarranger",
-        Install pdfarranger,
-      ]
-    - [
-        "command -v whatsapp-linux-app >/dev/null 2>&1 || sudo snap install whatsapp-linux-app",
-        Installing whatsapp,
       ]

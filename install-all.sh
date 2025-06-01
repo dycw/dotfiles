@@ -261,6 +261,22 @@ if [ -n "${IS_UBUNTU}" ]; then
 	snap_install whatsapp-linux-app
 fi
 
+# shell
+if [ -n "${IS_UBUNTU}" ]; then
+	if [ "$(basename "${SHELL}")" = 'zsh' ]; then
+		echo_date "Default shell is already 'zsh'"
+	else
+		zsh_path="$(command -v zsh 2>/dev/null)"
+		if [ -x "${zsh_path}" ]; then
+			echo_date "Changing default shell to 'zsh'..."
+			sudo chsh -s "${zsh_path}" "$(whoami)"
+		else
+			echo_date "ERROR: 'zsh' not found or not executable"
+			return 1
+		fi
+	fi
+fi
+
 # wezterm/ubuntu
 if [ -n "${IS_UBUNTU}" ]; then
 	snap_install wezterm
