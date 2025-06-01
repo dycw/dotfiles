@@ -40,6 +40,22 @@ Mac14,12)
 		echo_date 'Setting sleep...'
 		sudo pmset -a sleep 0
 	fi
+
+	# disk sleep
+	if [ "$(pmset -g custom | awk '/ disksleep[[:space:]]/ {print $2}')" = "0" ]; then
+		echo_date 'Disk sleep is already set'
+	else
+		echo_date 'Setting disk sleep...'
+		sudo pmset -a disksleep 10
+	fi
+
+	# display sleep
+	if [ "$(pmset -g custom | awk '/ displaysleep[[:space:]]/ {print $2}')" = "0" ]; then
+		echo_date 'Display sleep is already set'
+	else
+		echo_date 'Setting display sleep...'
+		sudo pmset -a displaysleep 10
+	fi
 	;;
 MacBook10,1) echo_date "Detected MacBook.." ;;
 *) echo_date "Unknown \$MACHINE_TYPE: ${MACHINE_TYPE}" ;;
