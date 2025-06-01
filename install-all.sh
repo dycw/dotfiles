@@ -188,7 +188,7 @@ brew_install watchexec
 [ -n "${IS_MAC_MINI}" ] && brew_install whatsapp --cask
 [ -n "${IS_UBUNTU}" ] && brew_install xclip
 [ -n "${IS_UBUNTU}" ] && brew_install xsel
-brew_install yq
+[ -n "${IS_MAC}" ] && brew_install yq
 [ -n "${IS_MAC_MINI}" ] && brew_install zoom --cask
 brew_install zoxide
 
