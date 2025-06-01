@@ -4,6 +4,7 @@
 echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 
 # detect OS/Mac model
+unset OS_NAME MAC_MODEL IS_MAC_MINI IS_MACBOOK DISTRO IS_UBUNTU
 OS_NAME="$(uname)"
 case "$OS_NAME" in
 Darwin)
@@ -43,6 +44,7 @@ Linux)
 esac
 
 # groups
+unset IS_MAC
 if [ -n "${IS_MAC_MINI}" ] || [ -n "${IS_MACBOOK}" ]; then
 	IS_MAC=1
 fi
@@ -110,7 +112,7 @@ brew_install() {
 	done
 
 	if [ -n "${__brew_install_cask}" ]; then
-		if brew list --cask "${__brew_install_iname}" >/dev/null 2>&1; then
+		if brew list --cask "${__brew_install_app}" >/dev/null 2>&1; then
 			__brew_install_exists=1
 		fi
 	else
@@ -138,11 +140,14 @@ brew_install() {
 	fi
 }
 
+[ -n "${IS_MAC}" ] && brew_install 1password --cask
 brew_install bat
 brew_install btm bottom
 brew_install bump-my-version
+[ -n "${IS_MAC_MINI}" ] && brew_install db-browser-for-sqlite --cask
 brew_install delta git-delta
 brew_install direnv
+[ -n "${IS_MAC}" ] && brew_install dropbox --cask
 brew_install dust
 brew_install eza
 brew_install fd
@@ -151,10 +156,12 @@ brew_install gh
 [ -n "${IS_MAC}" ] && brew_install gitweb yoannfleurydev/gitweb/gitweb
 [ -n "${IS_MAC}" ] && brew_install gsed gnu-sed
 brew_install just
+[ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
 brew_install luacheck
 brew_install nvim neovim
 brew_install pgcli
 [ -n "${IS_MAC_MINI}" ] && brew_install postgres postgresql@17
+[ -n "${IS_MAC_MINI}" ] && brew_install postico --cask
 brew_install pre-commit
 brew_install prettier
 [ -n "${IS_MAC_MINI}" ] && brew_install redis-stack-server redis-stack --tap=redis-stack/redist
@@ -164,19 +171,23 @@ brew_install rg ripgrep
 brew_install ruff
 brew_install shellcheck
 brew_install shfmt
+[ -n "${IS_MAC_MINI}" ] && brew_install spotify --cask
 brew_install sshpass
 brew_install starship
 brew_install stylua
 brew_install tailscale
 brew_install tmux
 brew_install topgrade
+[ -n "${IS_MAC_MINI}" ] && brew_install transmission --cask
 brew_install uv
+[ -n "${IS_MAC_MINI}" ] && brew_install visual-studio-code --cask
 [ -n "${IS_MAC}" ] && brew_install watch
 brew_install watchexec
+[ -n "${IS_MAC}" ] && brew_install wezterm --cask
+[ -n "${IS_UBUNTU}" ] && brew_install xclip
+[ -n "${IS_UBUNTU}" ] && brew_install xsel
 brew_install yq
 brew_install zoxide
-[ -n "${IS_MAC}" ] && brew_install 1password --cask
-[ -n "${IS_MAC_MINI}" ] && brew_install code visual-studio-code --cask
 
 # rust
 if [ -n "${IS_MAC_MINI}" ]; then
@@ -186,4 +197,11 @@ if [ -n "${IS_MAC_MINI}" ]; then
 		echo_date "Installing 'rust'..."
 		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 	fi
+fi
+
+# snap
+
+# wezterm/ubuntu
+if [ -n "${IS_UBUNTU}" ]; then
+	sudo apt install -y wezterm
 fi

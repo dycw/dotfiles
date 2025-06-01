@@ -58,19 +58,6 @@
 - shell:
     - command: ./install-all.sh
       description: Running installer...
-      # - [
-      #     "command -v code >/dev/bull 2>&1 || brew install --cask visual-studio-code",
-      #     Installing VS Code,
-      #   ]
-      # - [
-      #     brew install --cask db-browser-for-sqlite,
-      #     Installing DB Browser for SQLite,
-      #   ]
-      # - [brew install --cask dropbox, Installing Dropbox]
-      # - [brew install --cask google-chrome, Installing Google Chrome]
-      # - [brew install --cask libreoffice, Installing LibreOffice]
-      # - [brew install --cask postico, Installing Postico 2]
-      # - [brew install --cask spotify, Installing Spotify]
       # - [brew install --cask transmission, Installing Transmission]
       # - [
       #     "command -v vlc >/dev/null 2>&1 || brew install --cask vlc",

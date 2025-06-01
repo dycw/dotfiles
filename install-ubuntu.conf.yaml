@@ -99,46 +99,7 @@
         '[[ "$(basename "$SHELL")" == "zsh" ]] || sudo chsh -s $(which zsh)',
         Configuring zsh,
       ]
-    - ["command -v ruff >/dev/null 2>&1 || brew install ruff", Installing ruff]
-    - [
-        "command -v shellcheck >/dev/null 2>&1 || brew install shellcheck",
-        Installing shellcheck,
-      ]
-    - [
-        "command -v shfmt >/dev/null 2>&1 || brew install shfmt",
-        Installing shfmt,
-      ]
-    - [
-        "command -v sshpass >/dev/null 2>&1 || brew install sshpass",
-        Installing sshpass,
-      ]
-    - [
-        "command -v starship >/dev/null 2>&1 || brew install starship",
-        Installing starship,
-      ]
-    - [
-        "command -v stylua >/dev/null 2>&1 || brew install stylua",
-        Installing stylua,
-      ]
-    - ["command -v tmux >/dev/null 2>&1 || brew install tmux", Installing tmux]
-    - [
-        "command -v topgrade >/dev/null 2>&1 || brew install topgrade",
-        Installing topgrade,
-      ]
-    - ["command -v uv >/dev/null 2>&1 || brew install uv", Installing uv]
-    - [
-        "command -v watchexec >/dev/null 2>&1 || brew install watchexec",
-        Installing watchexec,
-      ]
-    - [
-        "command -v xclip >/dev/null 2>&1 || brew install xclip",
-        Installing xclip,
-      ]
-    - ["command -v xsel >/dev/null 2>&1 || brew install xsel", Installing xsel]
-    - [
-        "command -v zoxide >/dev/null 2>&1 || brew install zoxide",
-        Installing zoxide,
-      ]
+
     - [
         "[ -f ${HOME}/.config/fzf/fzf.zsh] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
         Configuring fzf,
