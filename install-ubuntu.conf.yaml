@@ -108,33 +108,8 @@
         Install brew pre-requisites,
       ]
     - [
-        'command -v brew >/dev/null 2>&1 || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
-        Installing brew,
-      ]
-    - ["command -v bat >/dev/null 2>&1 || brew install bat", Installing bat]
-    - [
-        "command -v biome >/dev/null 2>&1 || brew install biome",
-        Installing biome,
-      ]
-    - [
-        "command -v btm >/dev/null 2>&1 || brew install bottom",
-        Installing bottom,
-      ]
-    - [
-        "command -v bump-my-version >/dev/null 2>&1 || brew install bump-my-version",
-        Installing bump-my-version,
-      ]
-    - [
         "command -v cmake >/dev/null 2>&1 || brew install cmake",
         Installing cmake,
-      ]
-    - [
-        "command -v delta >/dev/null 2>&1 || brew install git-delta",
-        Installing delta,
-      ]
-    - [
-        "command -v direnv >/dev/null 2>&1 || brew install direnv",
-        Installing direnv,
       ]
     - ["command -v dust >/dev/null 2>&1 || brew install dust", Installing dust]
     - ["command -v eza >/dev/null 2>&1 || brew install eza", Installing eza]
@@ -187,10 +162,6 @@
     - [
         "command -v stylua >/dev/null 2>&1 || brew install stylua",
         Installing stylua,
-      ]
-    - [
-        "command -v tailscale >/dev/null 2>&1 || brew install tailscale",
-        Installing tailscale,
       ]
     - ["command -v tmux >/dev/null 2>&1 || brew install tmux", Installing tmux]
     - [

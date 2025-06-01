@@ -59,53 +59,6 @@
     - command: ./install-all.sh
       description: Running installer...
       # - [
-      #     '[[ "$(pmset -g custom | awk ''/ disksleep[[:space:]]/ {print $2}'')" == "10" ]] || sudo pmset -a disksleep 10',
-      #     Configuring disk sleep,
-      #   ]
-      # - [
-      #     '[[ "$(pmset -g custom | awk ''/ displaysleep[[:space:]]/ {print $2}'')" == "10" ]] || sudo pmset -a displaysleep 10',
-      #     Configuring display sleep,
-      #   ]
-      # - [
-      #     "[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
-      #     Installing rust,
-      #   ]
-      # - [
-      #     'command -v brew >/dev/null 2>&1 || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
-      #     Installing brew,
-      #   ]
-      # - ["command -v bat >/dev/null 2>&1 || brew install bat", Installing bat]
-      # - [
-      #     "command -v btm >/dev/null 2>&1 || brew install bottom",
-      #     Installing bottom,
-      #   ]
-      # - [
-      #     "command -v bump-my-version >/dev/null 2>&1 || brew install bump-my-version",
-      #     Installing bump-my-version,
-      #   ]
-      # - [
-      #     "command -v cmake >/dev/null 2>&1 || brew install cmake",
-      #     Installing cmake,
-      #   ]
-      # - [
-      #     "command -v delta >/dev/null 2>&1 || brew install git-delta",
-      #     Installing delta,
-      #   ]
-      # - [
-      #     "command -v direnv >/dev/null 2>&1 || brew install direnv",
-      #     Installing direnv,
-      #   ]
-      # - ["command -v dust >/dev/null 2>&1 || brew install dust", Installing dust]
-      # - ["command -v eza >/dev/null 2>&1 || brew install eza", Installing eza]
-      # - ["command -v fd >/dev/null 2>&1 || brew install fd", Installing fd]
-      # - ["command -v fzf >/dev/null 2>&1 || brew install fzf", Installing fzf]
-      # - ["command -v gh >/dev/null 2>&1 || brew install gh", Installing gh]
-      # - [
-      #     "command -v gitweb >/dev/null 2>&1 || brew install yoannfleurydev/gitweb/gitweb
-      #     ",
-      #     Installing gitweb,
-      #   ]
-      # - [
       #     "command -v gsed >/dev/null 2>&1 || brew install gnu-sed",
       #     Installing gnu-sed,
       #   ]
