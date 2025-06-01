@@ -373,7 +373,7 @@ ssh_tunnel_home() {
 		elif [ -z "${SSH_TUNNEL_HOME_PORT}" ]; then
 			echo_date "'\$SSH_TUNNEL_HOME_PORT' does not exist" || return 1
 		else
-			ssh -N -L "${SSH_TUNNEL_HOME_PORT}:localhost:${SSH_TUNNEL_HOME_PORT}" "${SSH_TUNNEL_USER}:${SSH_HOME_HOST}" || return $?
+			ssh -N -L "${SSH_TUNNEL_HOME_PORT}:localhost:${SSH_TUNNEL_HOME_PORT}" "${SSH_HOME_USER}:${SSH_HOME_HOST}" || return $?
 		fi
 	else
 		echo_date "'ssh_tunnel_home' accepts no arguments" || return 1
