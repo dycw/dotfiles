@@ -264,7 +264,7 @@ fi
 # shell
 if [ -n "${IS_UBUNTU}" ]; then
 	if [ "$(basename "${SHELL}")" = 'zsh' ]; then
-		echo_date "Default shell is already 'zsh'"
+		echo_date "'zsh' is already the default shell"
 	else
 		zsh_path="$(command -v zsh 2>/dev/null)"
 		if [ -x "${zsh_path}" ]; then
@@ -279,5 +279,14 @@ fi
 
 # wezterm/ubuntu
 if [ -n "${IS_UBUNTU}" ]; then
-	snap_install wezterm
+	if command -v wezterm >/dev/null 2>&1; then
+		echo_date "'wezterm' is already installed"
+	else
+		echo_date "Installing 'wezterm'..."
+		curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg
+		echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list
+		sudo chmod 644 /usr/share/keyrings/wezterm-fury.gpg
+		sudo apt update
+		sudo apt install wezterm
+	fi
 fi
