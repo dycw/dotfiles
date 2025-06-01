@@ -28,13 +28,13 @@ Mac14,12)
 	# system configuration
 	set_scutil_value() {
 		key=$1
-		expected=$2
+		value=$2
 		current=$(scutil --get "${key}" 2>/dev/null || echo "")
 		if [ "${current}" = "${value}" ]; then
 			echo_date "'${key}' is already set"
 		else
 			echo_date "Setting ${key}..."
-			sudo scutil --set "${key}" "${expected}"
+			sudo scutil --set "${key}" "${value}"
 		fi
 	}
 	set_scutil_value ComputerName 'DW-Mac'
