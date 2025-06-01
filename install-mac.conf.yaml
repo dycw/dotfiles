@@ -59,36 +59,6 @@
     - command: ./install-all.sh
       description: Running installer...
       # - [
-      #     "command -v gsed >/dev/null 2>&1 || brew install gnu-sed",
-      #     Installing gnu-sed,
-      #   ]
-      # - ["command -v just >/dev/null 2>&1 || brew install just", Installing just]
-      # - [
-      #     "command -v luacheck >/dev/null 2>&1 || brew install luacheck",
-      #     Installing luacheck,
-      #   ]
-      # - [brew install mysql, Installing mysql]
-      # - [
-      #     "command -v nvim >/dev/null 2>&1 || brew install neovim",
-      #     Installing neovim,
-      #   ]
-      # - [
-      #     "command -v pgcli >/dev/null 2>&1 || brew install pgcli",
-      #     Installing pgcli,
-      #   ]
-      # - [
-      #     "command -v postgres >/dev/null 2>&1 || brew install postgresql@17",
-      #     Installing postgresql 17,
-      #   ]
-      # - [
-      #     "command -v pre-commit >/dev/null 2>&1 || brew install pre-commit",
-      #     Installing pre-commit,
-      #   ]
-      # - [
-      #     "command -v prettier >/dev/null 2>&1 || brew install prettier",
-      #     Installing prettier,
-      #   ]
-      # - [
       #     "command -v redis-stack-server >/dev/null 2>&1 || brew tap redis-stack/redis-stack && brew install redis-stack",
       #     Installing redis-stack,
       #   ]

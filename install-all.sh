@@ -95,14 +95,30 @@ else
 fi
 
 brew_install() {
-	app_name="$1"
-	install_name="${2:-$app_name}"
-	if command -v "${app_name}" >/dev/null 2>&1; then
-		echo_date "'${app_name}' is already installed"
+	unset __brew_install_app __brew_install_install __brew_install_tap
+	__brew_install_tap=
+	while [ "$1" ]; do
+		case "$1" in
+		--tap)
+			__brew_install_tap="$2"
+			shift 2
+			;;
+		*)
+			__brew_install_app=${__brew_install_app:-$1}
+			__brew_install_install=${2:-$1}
+			shift
+			;;
+		esac
+	done
+	if command -v "${__brew_install_app}" >/dev/null 2>&1; then
+		echo_date "'${__brew_install_app}' is already installed"
 	else
 		if command -v brew >/dev/null 2>&1; then
-			echo_date "Installing '${app_name}'..."
-			brew install "${install_name}"
+			echo_date "Installing '${__brew_install_app}'..."
+			if [ -n "${__brew_install_tap}" ]; then
+				brew tap "$__brew_install_tap"
+			fi
+			brew install "${__brew_install_install}"
 		else
 			echo_date "ERROR: 'brew' is not installed"
 		fi
@@ -119,12 +135,16 @@ brew_install eza
 brew_install fd
 brew_install fzf
 brew_install gh
-[ -n "${IS_MAC_MINI}" ] && brew_install gitweb yoannfleurydev/gitweb/gitweb
+[ -n "${IS_MAC}" ] && brew_install gitweb yoannfleurydev/gitweb/gitweb
 [ -n "${IS_MAC}" ] && brew_install gsed gnu-sed
 brew_install just
-[ -n "${IS_MAC_MINI}" ] || [ -n "${IS_UBUNTU}" ] && brew_install luacheck
-
-# [ -n "${IS_MAC_MINI}" ] || [ -n "${IS_UBUNTU}" ] && brew install 1
+[ -n "${IS_MAC}" ] || [ -n "${IS_UBUNTU}" ] && brew_install luacheck
+brew_install nvim neovim
+brew_install pgcli
+[ -n "${IS_MAC_MINI}" ] && brew_install postgres postgresql@17
+brew_install pre-commit
+brew_install prettier
+[ -n "${IS_MAC_MINI}" ] && brew_install redis-stack-server redis-stack --tap=redis-stack/redist
 
 # rust
 if [ -n "${IS_MAC_MINI}" ]; then
