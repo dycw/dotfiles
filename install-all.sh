@@ -9,46 +9,37 @@ case "$MACHINE_TYPE" in
 Mac14,12)
 	echo_date "Detected Mac-Mini..."
 
-	# computer name
-	if [ "$(scutil --get ComputerName)" = 'DW-Mac' ]; then
-		echo_date 'Computer name is already set'
-	else
-		echo_date 'Setting computer name...'
-		sudo scutil --set ComputerName DW-Mac
-	fi
-
-	# host name
-	if [ "$(scutil --get HostName)" = 'DW-Mac' ]; then
-		echo_date 'Host name is already set'
-	else
-		echo_date 'Setting host name...'
-		sudo scutil --set HostName DW-Mac
-	fi
-
-	# local host name
-	if [ "$(scutil --get LocalHostName)" = 'DW-Mac' ]; then
-		echo_date 'Local host name is already set'
-	else
-		echo_date 'Setting local host name...'
-		sudo scutil --set LocalHostName DW-Mac
-	fi
-
 	# power management
 	set_pm_value() {
 		key=$1
-		desired=$2
+		value=$2
 		current=$(pmset -g custom | awk "/[[:space:]]${key}[[:space:]]/ {print \$2}")
-		if [ "$current" = "$desired" ]; then
-			echo_date "'$key' is already set"
+		if [ "${current}" = "${value}" ]; then
+			echo_date "'${key}' is already set"
 		else
-			echo_date "Setting '$key'..."
-			sudo pmset -a "$key" "$desired"
+			echo_date "Setting ${key}..."
+			sudo pmset -a "${key}" "${value}"
 		fi
 	}
 	set_pm_value sleep 0
 	set_pm_value disksleep 10
 	set_pm_value displaysleep 10
 
+	# system configuration
+	set_scutil_value() {
+		key=$1
+		expected=$2
+		current=$(scutil --get "${key}" 2>/dev/null || echo "")
+		if [ "${current}" = "${value}" ]; then
+			echo_date "'${key}' is already set"
+		else
+			echo_date "Setting ${key}..."
+			sudo scutil --set "${key}" "${expected}"
+		fi
+	}
+	set_scutil_value ComputerName 'DW-Mac'
+	set_scutil_value HostName 'DW-Mac'
+	set_scutil_value LocalHostName 'DW-Mac'
 	;;
 MacBook10,1) echo_date "Detected MacBook.." ;;
 *) echo_date "Unknown \$MACHINE_TYPE: ${MACHINE_TYPE}" ;;
