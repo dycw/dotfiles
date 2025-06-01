@@ -99,49 +99,6 @@
         '[[ "$(basename "$SHELL")" == "zsh" ]] || sudo chsh -s $(which zsh)',
         Configuring zsh,
       ]
-    - [
-        "[ -d ${HOME}/.cargo ] || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
-        Installing rust,
-      ]
-    - [
-        "command -v brew >/dev/null 2>&1 || sudo apt-get install -y build-essential procps curl file git",
-        Install brew pre-requisites,
-      ]
-    - [
-        "command -v cmake >/dev/null 2>&1 || brew install cmake",
-        Installing cmake,
-      ]
-    - ["command -v dust >/dev/null 2>&1 || brew install dust", Installing dust]
-    - ["command -v eza >/dev/null 2>&1 || brew install eza", Installing eza]
-    - ["command -v fd >/dev/null 2>&1 || brew install fd", Installing fd]
-    - ["command -v fzf >/dev/null 2>&1 || brew install fzf", Installing fzf]
-    - ["command -v gcc dev/null 2>&1 || brew install gcc", Installing gcc]
-    - ["command -v gh >/dev/null 2>&1 || brew install gh", Installing gh]
-    - ["command -v just >/dev/null 2>&1 || brew install just", Installing just]
-    - [
-        "command -v luacheck >/dev/null 2>&1 || brew install luacheck",
-        Installing luacheck,
-      ]
-    - [
-        "command -v nvim >/dev/null 2>&1 || brew install neovim",
-        Installing neovim,
-      ]
-    - [
-        "command -v pgcli >/dev/null 2>&1 || brew install pgcli",
-        Installing pgcli,
-      ]
-    - [
-        "command -v pre-commit >/dev/null 2>&1 || brew install pre-commit",
-        Installing pre-commit,
-      ]
-    - [
-        "command -v prettier >/dev/null 2>&1 || brew install prettier",
-        Installing prettier,
-      ]
-    - [
-        "command -v rg >/dev/null 2>&1 || brew install ripgrep",
-        Installing ripgrep,
-      ]
     - ["command -v ruff >/dev/null 2>&1 || brew install ruff", Installing ruff]
     - [
         "command -v shellcheck >/dev/null 2>&1 || brew install shellcheck",

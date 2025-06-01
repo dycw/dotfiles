@@ -104,8 +104,8 @@ brew_install() {
 			shift 2
 			;;
 		*)
-			__brew_install_app=${__brew_install_app:-$1}
-			__brew_install_install=${2:-$1}
+			__brew_install_app="${__brew_install_app:-$1}"
+			__brew_install_install="${2:-$1}"
 			shift
 			;;
 		esac
@@ -138,13 +138,30 @@ brew_install gh
 [ -n "${IS_MAC}" ] && brew_install gitweb yoannfleurydev/gitweb/gitweb
 [ -n "${IS_MAC}" ] && brew_install gsed gnu-sed
 brew_install just
-[ -n "${IS_MAC}" ] || [ -n "${IS_UBUNTU}" ] && brew_install luacheck
+brew_install luacheck
 brew_install nvim neovim
 brew_install pgcli
 [ -n "${IS_MAC_MINI}" ] && brew_install postgres postgresql@17
 brew_install pre-commit
 brew_install prettier
 [ -n "${IS_MAC_MINI}" ] && brew_install redis-stack-server redis-stack --tap=redis-stack/redist
+[ -n "${IS_MAC_MINI}" ] && brew_install restic
+brew_install rg ripgrep
+[ -n "${IS_MAC}" ] && brew_install rlwrap
+brew_install ruff
+brew_install shellcheck
+brew_install shfmt
+brew_install sshpass
+brew_install starship
+brew_install stylua
+brew_install tailscale
+brew_install tmux
+brew_install topgrade
+brew_install uv
+[ -n "${IS_MAC}" ] && brew_install watch
+brew_install watchexec
+brew_install yq
+brew_install zoxide
 
 # rust
 if [ -n "${IS_MAC_MINI}" ]; then
