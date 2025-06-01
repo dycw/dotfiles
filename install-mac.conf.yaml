@@ -1,9 +1,14 @@
 - defaults:
     link:
+      create: true
       relink: true
+      force: true
 
 - clean:
-    - "~"
+    ~/:
+      force: true
+    ~/.config:
+      recursive: true
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
@@ -11,9 +16,6 @@
 - link:
     ~/.config/bottom/bottom.toml:
       path: bottom/bottom.toml
-      create: true
-      relink: true
-      force: true
       # - if
     ~/.config/direnv/direnv.toml: direnv/direnv.toml
     ~/.config/direnv/direnvrc: direnv/direnvrc
