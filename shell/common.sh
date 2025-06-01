@@ -272,7 +272,8 @@ fi
 # path
 echo_path() {
 	if [ $# -eq 0 ]; then
-		echo_date "${PATH}" | tr ':' '\n' | nl || return 0
+		echo_date "\$PATH:" || return 0
+		echo "${PATH}" | tr ':' '\n' | nl || return 0
 	else
 		echo_date "'echo_path' accepts no arguments" || return 1
 	fi

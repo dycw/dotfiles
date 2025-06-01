@@ -1,0 +1,74 @@
+- defaults:
+    link:
+      create: true
+      relink: true
+      force: true
+    shell:
+      stdin: true
+      stdout: true
+      stderr: true
+
+- clean:
+    ~/:
+      force: true
+    ~/.config:
+      recursive: true
+
+- shell:
+    - command: git submodule update --init --recursive
+      description: Installing submodules...
+
+- link:
+    ~/.config/bottom/bottom.toml:
+      path: bottom/bottom.toml
+      # - if
+    ~/.config/direnv/direnv.toml: direnv/direnv.toml
+    ~/.config/direnv/direnvrc: direnv/direnvrc
+    ~/.config/git/config: git/config
+    ~/.config/git/ignore: git/ignore
+    ~/.config/marimo/marimo.toml: marimo/marimo.toml
+    ~/.config/nvim: nvim
+    ~/.config/pip/pip.conf: pip/pip.conf
+    ~/.config/ripgreprc: ripgrep/ripgreprc
+    ~/.config/starship.toml: starship/starship.toml
+    ~/.config/tmux/tmux.conf.local: tmux/tmux.conf.local
+    ~/.config/tmux/tmux.conf: tmux/.tmux/.tmux.conf
+    ~/.config/wezterm/wezterm.lua: wezterm/wezterm.lua
+    ~/.ipython/profile_default/ipython_config.py: ipython/ipython_config.py
+    ~/.ipython/profile_default/startup/startup.py: ipython/startup.py
+    ~/.jupyter/lab/jupyter_lab_config.py: jupyter/jupyter_lab_config.py
+    ~/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/notification.jupyterlab-settings: jupyter/apputils/notification.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/themes.jupyterlab-settings: jupyter/apputils/themes.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/codemirror-extension/plugin.jupyterlab-settings: jupyter/codemirror/plugin.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/completer-extension/manager.jupyterlab-settings: jupyter/completer/manager.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/console-extension/tracker.jupyterlab-settings: jupyter/console/tracker.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/docmanager-extension/plugin.jupyterlab-settings: jupyter/docmanager/plugin.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/filebrowser-extension/browser.jupyterlab-settings: jupyter/filebrowser/browser.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/fileeditor-extension/plugin.jupyterlab-settings: jupyter/fileeditor/plugin.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings: jupyter/notebook/tracker.jsonc
+    ~/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings: jupyter/shortcuts/shortcuts.jsonc
+    ~/.jupyter/lab/user-settings/jupyterlab_code_formatter/settings.jupyterlab-settings: jupyter/jupyterlab_code_formatter/settings.jsonc
+    ~/.pdbrc: pdb/pdbrc
+    ~/.psqlrc: psql/psqlrc
+    ~/.zimrc: zsh/zimrc
+    ~/.zshenv: zsh/zshenv
+    ~/.zshrc: zsh/zshrc
+    ~/Library/LaunchAgents/com.redis-stack.redis-stack-server.plist: redis/com.redis-stack.redis-stack-server.plist
+
+- shell:
+    - command: ./install-all.sh
+      description: Running installer...
+      # - [
+      #     "[ -f ${HOME}/.config/fzf/fzf.zsh ] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
+      #     Configuring fzf,
+      #   ]
+      # - [brew services start postgresql@17, Configuring postgresql]
+      # - [brew services start redis, Configuring redis]
+      # - [
+      #     "command -v harlequin >/dev/null 2>&1 || uv tool install harlequin",
+      #     Installing harlequin,
+      #   ]
+      # - [
+      #     "launchctl load ~/Library/LaunchAgents/com.redis-stack.redis-stack-server.plist",
+      #     Launching redis-stack-server,
+      #   ]
