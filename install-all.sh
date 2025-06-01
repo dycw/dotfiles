@@ -96,26 +96,21 @@ fi
 
 brew_install() {
 	unset __brew_install_app __brew_install_iname __brew_install_cask __brew_install_tap __brew_install_exists
+	__brew_install_app="$1"
+	__brew_install_iname="${2:-$1}"
 	while [ "$1" ]; do
 		case "$1" in
-		--cask)
-			__brew_install_cask=1
-			shift
-			;;
+		--cask) __brew_install_cask=1 ;;
 		--tap)
 			__brew_install_tap="$2"
-			shift 2
-			;;
-		*)
-			__brew_install_app="${__brew_install_app:-$1}"
-			__brew_install_iname="${2:-$1}"
 			shift
 			;;
 		esac
+		shift
 	done
 
 	if [ -n "${__brew_install_cask}" ]; then
-		if brew list --cask "${__brew_install_app}" >/dev/null 2>&1; then
+		if brew list --cask "${__brew_install_iname}" >/dev/null 2>&1; then
 			__brew_install_exists=1
 		fi
 	else
@@ -124,7 +119,7 @@ brew_install() {
 		fi
 	fi
 
-	if [ -n "${__brew_install_cask}" ]; then
+	if [ -n "${__brew_install_exists}" ]; then
 		echo_date "'${__brew_install_app}' is already installed"
 	else
 		if command -v brew >/dev/null 2>&1; then
@@ -180,7 +175,8 @@ brew_install uv
 brew_install watchexec
 brew_install yq
 brew_install zoxide
-# [ -n "${IS_MAC}" ] && brew_install gitweb yoannfleurydev/gitweb/gitweb
+[ -n "${IS_MAC}" ] && brew_install 1password --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install code visual-studio-code --cask
 
 # rust
 if [ -n "${IS_MAC_MINI}" ]; then

@@ -58,7 +58,6 @@
 - shell:
     - command: ./install-all.sh
       description: Running installer...
-      # - [brew install --cask 1password, Installing 1Password]
       # - [
       #     "command -v code >/dev/bull 2>&1 || brew install --cask visual-studio-code",
       #     Installing VS Code,
