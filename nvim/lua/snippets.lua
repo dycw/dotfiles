@@ -9,6 +9,7 @@ ls.add_snippets("python", {
     s("ab-abstract-method", { t({ "from abc import abstractmethod", "" }) }),
 
     -- asyncio
+    s("im-asyncio", { t({ "import asyncio", "" }) }),
     s("as-create-task", { t({ "from asyncio import create_task", "" }) }),
     s("as-event", { t({ "from asyncio import Event", "" }) }),
     s("as-get-event-loop", { t({ "from asyncio import get_event_loop", "" }) }),
@@ -58,11 +59,13 @@ ls.add_snippets("python", {
     s("co-sequence", { t({ "from collections.abc import Sequence", "" }) }),
 
     -- contextlib
+    s("co-async-exit-stack", { t({ "from contextlib import AsyncExitStack", "" }) }),
     s("co-asynccontextmanager", { t({ "from contextlib import asynccontextmanager", "" }) }),
     s("co-contextmanager", { t({ "from contextlib import contextmanager", "" }) }),
-    s("co-suppress", { t({ "from contextlib import suppress", "" }) }),
+    s("co-exit-stack", { t({ "from contextlib import ExitStack", "" }) }),
     s("co-redirect-stderr", { t({ "from contextlib import redirect_stderr", "" }) }),
     s("co-redirect-stdout", { t({ "from contextlib import redirect_stdout", "" }) }),
+    s("co-suppress", { t({ "from contextlib import suppress", "" }) }),
 
     -- dataclasses
     s("da-asdict", { t({ "from dataclasses import asdict", "" }) }),
@@ -484,6 +487,7 @@ ls.add_snippets("python", {
     s("ut-merge-mappings", { t({ "from utilities.iterables import merge_mappings", "" }) }),
     s("ut-merge-sets", { t({ "from utilities.iterables import merge_sets", "" }) }),
     s("ut-merge-str-mappings", { t({ "from utilities.iterables import merge_str_mappings", "" }) }),
+    s("ut-millisecond", { t({ "from utilities.datetime import MILLISECOND", "" }) }),
     s("ut-minute", { t({ "from utilities.datetime import MINUTE", "" }) }),
     s("ut-month", { t({ "from utilities.datetime import Month", "" }) }),
     s("ut-number", { t({ "from utilities.types import Number", "" }) }),
