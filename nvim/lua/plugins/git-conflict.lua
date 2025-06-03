@@ -10,10 +10,10 @@ return {
             default_mappings = {
                 ours = "o",
                 theirs = "t",
-                none = "0",
+                none = "n",
                 both = "b",
-                next = "n",
-                prev = "p",
+                next = "j",
+                prev = "k",
             },
         })
 
