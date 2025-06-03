@@ -59,6 +59,10 @@
     "branch": "main",
     "commit": "8c8845ca6d05bc768b7ce27ebe3682ddf7e6a996"
   },
+  "git-conflict.nvim": {
+    "branch": "main",
+    "commit": "4bbfdd92d547d2862a75b4e80afaf30e73f7bbb4"
+  },
   "gitsigns.nvim": {
     "branch": "main",
     "commit": "8bdaccdb897945a3c99c1ad8df94db0ddf5c8790"
