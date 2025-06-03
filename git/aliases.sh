@@ -238,10 +238,10 @@ if command -v git >/dev/null 2>&1; then
 	gcp() { git cherry-pick "$@"; }
 	# clone
 	gcl() {
-		if [ $# -eq 1 ]; then
-			git clone --recurse-submodules "$1" || return $?
+		if [ $# -ge 1 ] && [ $# -le 2 ]; then
+			git clone --recurse-submodules "$@" || return $?
 		else
-			echo_date "'gcl' accepts [0..1] arguments" || return 1
+			echo_date "'gcl' accepts [1..2] arguments" || return 1
 		fi
 	}
 	# commit
