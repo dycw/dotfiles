@@ -5,16 +5,15 @@ local v = vim
 return {
     "akinsho/git-conflict.nvim",
     version = "*",
-    lazy = false, -- ensures it loads on startup
     config = function()
         require("git-conflict").setup({
             default_mappings = {
                 ours = "o",
                 theirs = "t",
-                none = "n",
+                none = "0",
                 both = "b",
-                next = "j",
-                prev = "k",
+                next = "n",
+                prev = "p",
             },
         })
 
