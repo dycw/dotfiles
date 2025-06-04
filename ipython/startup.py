@@ -1549,7 +1549,7 @@ else:
 
 
 try:
-    from utilities.asyncio import EnhancedTaskGroup, InfiniteLooper, InfiniteQueueLooper
+    from utilities.asyncio import EnhancedTaskGroup, Looper
     from utilities.dataclasses import dataclass_repr, dataclass_to_dict, yield_fields
     from utilities.datetime import (
         DAY,
@@ -1630,8 +1630,7 @@ else:
         EnhancedTaskGroup,
         HALF_YEAR,
         HOUR,
-        InfiniteLooper,
-        InfiniteQueueLooper,
+        Looper,
         MICROSECOND,
         MILLISECOND,
         MINUTE,

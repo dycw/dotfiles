@@ -353,12 +353,20 @@ if command -v git >/dev/null 2>&1; then
 			echo_date "'gl' accepts no arguments" || return 1
 		fi
 	}
+	# merge
+	gma() {
+		if [ $# -eq 0 ]; then
+			git merge --abort || return $?
+		else
+			echo_date "'gma' requires 0 arguments" return 1
+		fi
+	}
 	# mv
 	gmv() {
 		if [ $# -eq 2 ]; then
 			git mv "$1" "$2" || return $?
 		else
-			echo_date "'gmv' requires || 2 arguments" return 1
+			echo_date "'gmv' requires 2 arguments" return 1
 		fi
 	}
 	# pull

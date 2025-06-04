@@ -412,6 +412,7 @@ ls.add_snippets("python", {
 
     -- tqdm
     s("tq-tqdm", { t({ "from tqdm import tqdm", "" }) }),
+    s("tq-trange", { t({ "from tqdm import trange", "" }) }),
 
     -- typing
     s("im-typing", { t({ "import typing", "" }) }),
