@@ -5,6 +5,7 @@ local v = vim
 return {
     "akinsho/git-conflict.nvim",
     version = "*",
+    lazy = false, -- ensures it loads on startup
     config = function()
         require("git-conflict").setup({
             default_mappings = {
