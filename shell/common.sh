@@ -74,14 +74,14 @@ cddl() {
 		echo_date "'cddl' accepts no arguments" || return 1
 	fi
 }
-cdh() {
-	unset __cdh_pwd
+cd_here() {
+	unset __cd_here_pwd
 	if [ $# -eq 0 ]; then
-		__cdh_pwd="$(pwd)"
+		__cd_here_pwd="$(pwd)"
 		cd .. || return $?
-		cd "${__cdh_pwd}" || return $?
+		cd "${__cd_here_pwd}" || return $?
 	else
-		echo_date "'cdh' accepts no arguments" || return 1
+		echo_date "'cd_here' accepts no arguments" || return 1
 	fi
 }
 cdw() {
@@ -502,3 +502,17 @@ if command -v uv >/dev/null 2>&1; then
 		fi
 	}
 fi
+
+# venv
+venv_recreate() {
+	if [ $# -eq 0 ]; then
+		if [ -d .venv ]; then
+			rm -rf .venv || return $?
+			cd_here || return $?
+		else
+			echo_date "'.venv' does not exist" || return 1
+		fi
+	else
+		echo_date "'venv_recreate' accepts no arguments" || return 1
+	fi
+}

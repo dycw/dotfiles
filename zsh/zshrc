@@ -48,6 +48,14 @@ if command -v starship >/dev/null 2>&1; then
 	eval "$(starship init zsh)"
 fi
 
+# qrt
+__dir="${XDG_CONFIG_HOME:-${HOME}/.config}"/qrt/zsh
+if [ -d "${__dir}" ]; then
+    find -L "${__dir}" -type f -name '*.zsh' | while IFS= read -r __file; do
+        . "${__file}"
+    done
+fi
+
 # uv
 if command -v uv >/dev/null 2>&1; then
 	eval "$(uv generate-shell-completion zsh)"

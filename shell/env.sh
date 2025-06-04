@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# shellcheck source=/dev/null
 
 # brew
 case "$(uname)" in
@@ -22,15 +23,15 @@ case ":${PATH}:" in
 esac
 
 # kdb
-export QHOME="${HOME}/q"
-__dir="${QHOME}/m64"
+export QHOME="${HOME}"/q
+__dir="${QHOME}"/m64
 case ":${PATH}:" in
 *:"${__dir}":*) ;;
 *) export PATH="${__dir}:${PATH}" ;;
 esac
 
 # local
-__dir="${HOME}/.local/bin"
+__dir="${HOME}"/.local/bin
 case ":${PATH}:" in
 *:"${__dir}":*) ;;
 *) export PATH="${__dir}:${PATH}" ;;
@@ -65,14 +66,14 @@ fi
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/ripgreprc"
 
 # rust
-__dir="${HOME}/.cargo/bin"
+__dir="${HOME}"/.cargo/bin
 case ":${PATH}:" in
 *:"${__dir}":*) ;;
 *) export PATH="${__dir}:${PATH}" ;;
 esac
 
 # tailscale
-__dir="/Applications/Tailscale.app/Contents/MacOS"
+__dir='/Applications/Tailscale.app/Contents/MacOS'
 case ":${PATH}:" in
 *:"${__dir}":*) ;;
 *) export PATH="${__dir}:${PATH}" ;;
