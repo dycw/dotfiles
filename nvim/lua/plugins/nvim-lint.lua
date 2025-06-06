@@ -8,7 +8,6 @@ return {
         local lint = require("lint")
         lint.linters_by_ft = {
             css = { "biomejs" },
-            dockerfile = { "hadolint" },
             haskell = { "hlint" },
             html = { "biomejs" },
             htmldjango = { "biomejs" },
