@@ -316,7 +316,15 @@ fi
 # python
 pyproject() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "$(repo_root)/pyproject.toml"
+		__pyproject_dir="$(pwd)"
+		while [ "${__pyproject_dir}" != "/" ]; do
+			__pyproject_candidate="${__pyproject_dir}/pyproject.toml"
+			if [ -f "${__pyproject_candidate}" ]; then
+				"${EDITOR}" "${__pyproject_candidate}" || return 0
+			fi
+			__pyproject_dir="$(dirname "${__pyproject_dir}")"
+		done
+		echo_date "'pyproject' did not find any 'pyproject.toml' file" || return 1
 	else
 		echo_date "'pyproject' accepts no arguments" || return 1
 	fi
