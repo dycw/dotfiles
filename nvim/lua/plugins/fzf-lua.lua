@@ -11,13 +11,6 @@ return {
         local fzf_lua = require("fzf-lua")
         local keymap_set = require("utilities").keymap_set
 
-        local function files_here()
-            fzf_lua.files({
-                cwd = v.fn.getcwd(),
-                prompt = "AllFiles> ",
-            })
-        end
-
         fzf_lua.setup({
             keymap = {
                 fzf = {
@@ -32,7 +25,6 @@ return {
         keymap_set("n", "<Leader><Leader>", fzf_lua.buffers, "buffers")
         keymap_set("n", "<Leader>al", fzf_lua.lines, "all [l]ines")
         keymap_set("n", "<Leader>bl", fzf_lua.blines, "buffer [l]ines")
-        keymap_set("n", "<Leader>fh", files_here, "files [h]ere")
         keymap_set("n", "<Leader>of", fzf_lua.oldfiles, "old [f]iles")
         keymap_set("n", "<Leader>qf", fzf_lua.quickfix, "quick [f]ix")
         keymap_set("n", "<Leader>ta", fzf_lua.tabs, "t[a]bs")
@@ -88,10 +80,11 @@ return {
         -- autocommands
         v.api.nvim_create_autocmd("VimEnter", {
             callback = function()
-                if v.fn.argv(0) == "" and v.fn.isdirectory(".git") == 1 then
-                    require("fzf-lua").git_files({
-                        prompt = "GitFiles> ",
-                    })
+                if v.fn.argv(0) == "" then
+                    v.fn.system("git rev-parse --is-inside-work-tree")
+                    if v.v.shell_error == 0 then
+                        require("fzf-lua").git_files()
+                    end
                 end
             end,
             desc = "GitFiles upon startup",
