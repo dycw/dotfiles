@@ -122,6 +122,9 @@ ls.add_snippets("python", {
     -- future
     s("fu-annotations", { t({ "from __future__ import annotations", "" }) }),
 
+    -- getpass
+    s("ge-getuser", { t({ "from getpass import getuser", "" }) }),
+
     -- humanize
     s("hu-naturaldelta", { t({ "from humanize import naturaldelta", "" }) }),
     s("hu-naturaltime", { t({ "from humanize import naturaltime", "" }) }),
@@ -184,7 +187,9 @@ ls.add_snippets("python", {
     s("it-chain", { t({ "from itertools import chain", "" }) }),
     s("it-count", { t({ "from itertools import count", "" }) }),
     s("it-cycle", { t({ "from itertools import cycle", "" }) }),
+    s("it-dropwhile", { t({ "from itertools import dropwhile", "" }) }),
     s("it-groupby", { t({ "from itertools import groupby", "" }) }),
+    s("it-islice", { t({ "from itertools import islice", "" }) }),
     s("it-product", { t({ "from itertools import product", "" }) }),
     s("it-repeat", { t({ "from itertools import repeat", "" }) }),
     s("it-starmap", { t({ "from itertools import starmap", "" }) }),
@@ -234,6 +239,9 @@ ls.add_snippets("python", {
     s("op-study", { t({ "from optuna import Study", "" }) }),
     s("op-study-direction", { t({ "from optuna.study import StudyDirection", "" }) }),
     s("op-trial", { t({ "from optuna import Trial", "" }) }),
+
+    -- os
+    s("os-environ", { t({ "from os import environ", "" }) }),
 
     -- pathlib
     s("pa-path", { t({ "from pathlib import Path", "" }) }),
@@ -300,27 +308,27 @@ ls.add_snippets("python", {
     s("py-raises", { t({ "from pytest import raises", "" }) }),
     s("py-read-pickle", {
         t({
-            "from utilities.git import get_repo_root",
+            "from utilities.pathlib import get_root",
             "from utilities.pickle import write_pickle",
             "",
         }),
         i(1, "obj"),
         t({
-            ' = read_pickle(get_repo_root().joinpath("notebooks", "pytest-tmp.gz"))',
+            ' = read_pickle(get_root().joinpath("notebooks", "pytest-tmp.gz"))',
             "",
         }),
     }),
     s("py-skip", { t({ "from pytest import skip", "" }) }),
     s("py-write-pickle", {
         t({
-            "from utilities.git import get_repo_root",
+            "from utilities.pathlib import get_root",
             "from utilities.pickle import write_pickle",
             "",
             "write_pickle(",
         }),
         i(1, "obj"),
         t({
-            ', get_repo_root().joinpath("notebooks", "pytest-tmp.gz"), overwrite=True)',
+            ', get_root().joinpath("notebooks", "pytest-tmp.gz"), overwrite=True)',
             "",
         }),
     }),
@@ -466,12 +474,13 @@ ls.add_snippets("python", {
     s("ut-get-func-name", { t({ "from utilities.functions import get_func_name", "" }) }),
     s("ut-get-now", { t({ "from utilities.datetime import get_now", "" }) }),
     s("ut-get-now-local", { t({ "from utilities.tzlocal import get_now_local", "" }) }),
-    s("ut-get-repo-root", { t({ "from utilities.git import get_repo_root", "" }) }),
+    s("ut-get-root", { t({ "from utilities.pathlib import get_root", "" }) }),
     s("ut-get-state", { t({ "from utilities.random import get_state", "" }) }),
     s("ut-get-table", { t({ "from utilities.sqlalchemy import get_table", "" }) }),
     s("ut-get-today", { t({ "from utilities.datetime import get_today", "" }) }),
     s("ut-get-today-local", { t({ "from utilities.tzlocal import get_today_local", "" }) }),
     s("ut-hong-kong", { t({ "from utilities.tzdata import HongKong", "" }) }),
+    s("ut-hour", { t({ "from utilities.datetime import HOUR", "" }) }),
     s("ut-impossible-case-error", { t({ "from utilities.errors import ImpossibleCaseError", "" }) }),
     s("ut-insert-after", { t({ "from utilities.polars import insert_after", "" }) }),
     s("ut-insert-before", { t({ "from utilities.polars import insert_before", "" }) }),

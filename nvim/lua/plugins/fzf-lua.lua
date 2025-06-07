@@ -3,94 +3,7 @@ local v = vim
 -- luacheck: pop
 -- local api = v.api
 -- local fn = v.fn
-
-local function get_git_root()
-    local git_root = v.fn.systemlist("git rev-parse --show-toplevel")
-    if v.v.shell_error ~= 0 then
-        print("Error: Not a git repository")
-        return nil
-    end
-    return git_root[1] -- the output is a list, we need the first item
-end
-
-local function get_git_files(git_root)
-    local rel_files = v.fn.systemlist("git ls-files")
-    if v.v.shell_error ~= 0 then
-        print("Not a git repository or other error")
-        return {}
-    end
-    local abs_files = {}
-    for _, file in ipairs(rel_files) do
-        table.insert(abs_files, git_root .. "/" .. file) -- Convert to absolute path
-    end
-    return abs_files
-end
-
-local function get_old_files()
-    return v.tbl_filter(function(file)
-        return v.fn.filereadable(file) == 1
-    end, v.v.oldfiles)
-end
-
-local function sort_git_files_by_oldness(git_files, old_files)
-    local old_files_set = {}
-    for _, file in ipairs(old_files) do
-        old_files_set[file] = true
-    end
-
-    -- partition based on oldness
-    local git_old_files = {}
-    local git_non_old_files = {}
-    for _, file in ipairs(git_files) do
-        if old_files_set[file] then
-            table.insert(git_old_files, file)
-        else
-            table.insert(git_non_old_files, file)
-        end
-    end
-    table.sort(git_old_files, function(a, b)
-        return v.fn.index(old_files, a) < v.fn.index(old_files, b)
-    end)
-
-    -- concatenate the non-old onto old
-    for _, file in ipairs(git_non_old_files) do
-        table.insert(git_old_files, file)
-    end
-    return git_old_files
-end
-
-local function make_paths_relative(abs_files, git_root)
-    local rel_files = {}
-    for _, file in ipairs(abs_files) do
-        local relative_path = file:sub(#git_root + 2) -- Remove git root from the path
-        table.insert(rel_files, relative_path)
-    end
-    return rel_files
-end
-
-local function open_selected_file(selected)
-    if selected then
-        v.cmd("edit " .. selected[1])
-    end
-end
-
-local function git_files_mru()
-    local git_root = get_git_root()
-    if not git_root then
-        return
-    end -- exit if not in a git repository
-
-    local git_files = get_git_files(git_root)
-    local old_files = get_old_files()
-    local abs_files = sort_git_files_by_oldness(git_files, old_files)
-    local rel_files = make_paths_relative(abs_files, git_root)
-    local opts = {
-        actions = { default = open_selected_file },
-        prompt = "GitFilesMRU> ",
-        previewer = "builtin",
-    }
-    require("fzf-lua.core").fzf_exec(rel_files, opts)
-end
+--
 
 return {
     "ibhagwan/fzf-lua",
@@ -164,19 +77,18 @@ return {
         -- UI select
         require("fzf-lua.providers.ui_select").register()
 
-        -- git files (MRU)
-
-        v.api.nvim_create_user_command("GitFilesMRU", git_files_mru, {})
-
         -- autocommands
         v.api.nvim_create_autocmd("VimEnter", {
             callback = function()
                 if v.fn.argv(0) == "" then
-                    git_files_mru()
+                    v.fn.system("git rev-parse --is-inside-work-tree")
+                    if v.v.shell_error == 0 then
+                        require("fzf-lua").git_files()
+                    end
                 end
             end,
-            desc = "git-files upon entering vim",
-            group = v.api.nvim_create_augroup("git-files-upon-enter", { clear = true }),
+            desc = "GitFiles upon startup",
+            group = v.api.nvim_create_augroup("AutoGitFiles", { clear = true }),
         })
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },

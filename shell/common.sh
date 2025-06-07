@@ -288,7 +288,15 @@ if command -v pre-commit >/dev/null 2>&1; then
 fi
 pre_commit_config() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "$(repo_root)/.pre-commit-config.yaml"
+		__pre_commit_config_dir="$(pwd)"
+		while [ "${__pre_commit_config_dir}" != "/" ]; do
+			__pre_commit_config_candidate="${__pre_commit_config_dir}/.pre-commit-config.yaml"
+			if [ -f "${__pre_commit_config_candidate}" ]; then
+				"${EDITOR}" "${__pre_commit_config_candidate}" && return 0
+			fi
+			__pre_commit_config_dir="$(dirname "${__pre_commit_config_dir}")"
+		done
+		echo_date "'pre_commit_config' did not find any '.pre_commit_config.yaml' file" || return 1
 	else
 		echo_date "'pre_commit_config' accepts no arguments" || return 1
 	fi
@@ -307,6 +315,10 @@ if command -v watch >/dev/null 2>&1; then
 	alias wpst='watch -d -n0.1 "ps -fLu \"$USER\" | wc -l"'
 fi
 
+# pyright
+pyr() { pyright "$@"; }
+pyrw() { pyright -w "$@"; }
+
 # pytest
 __file="${HOME}/dotfiles/pytest/aliases.sh"
 if [ -f "${__file}" ]; then
@@ -316,7 +328,15 @@ fi
 # python
 pyproject() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "$(repo_root)/pyproject.toml"
+		__pyproject_dir="$(pwd)"
+		while [ "${__pyproject_dir}" != "/" ]; do
+			__pyproject_candidate="${__pyproject_dir}/pyproject.toml"
+			if [ -f "${__pyproject_candidate}" ]; then
+				"${EDITOR}" "${__pyproject_candidate}" && return 0
+			fi
+			__pyproject_dir="$(dirname "${__pyproject_dir}")"
+		done
+		echo_date "'pyproject' did not find any 'pyproject.toml' file" || return 1
 	else
 		echo_date "'pyproject' accepts no arguments" || return 1
 	fi
@@ -451,11 +471,11 @@ tmux_conf_local() {
 
 # uv
 if command -v uv >/dev/null 2>&1; then
-	ip() {
+	ipy() {
 		if [ $# -eq 0 ]; then
 			uv run --with=ipython ipython || return $?
 		else
-			echo_date "'ip' accepts no arguments" || return 1
+			echo_date "'ipy' accepts no arguments" || return 1
 		fi
 	}
 	jl() {
@@ -472,8 +492,6 @@ if command -v uv >/dev/null 2>&1; then
 			echo_date "'mar' accepts no arguments" || return 1
 		fi
 	}
-	pyr() { uv run pyright "$@"; }
-	pyrw() { uv run pyright -w "$@"; }
 	uva() { uv add "$@"; }
 	uvpi() { uv pip install "$@"; }
 	uvpl() {

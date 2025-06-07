@@ -38,6 +38,13 @@ if command -v direnv >/dev/null 2>&1; then
 	eval "$(direnv hook zsh)"
 fi
 
+# docker
+__dir="${HOME}/.docker/completions"
+if [ -d "${__dir}" ];  then
+  fpath=("${__dir}" $fpath)
+  autoload -Uz compinit
+fi
+
 # fzf
 if command -v fzf >/dev/null 2>&1; then
 	eval "$(fzf --zsh)"
@@ -64,7 +71,7 @@ fi
 
 # zoxide
 if command -v zoxide >/dev/null 2>&1; then
-	eval "$(zoxide init zsh --cmd j --hook prompt)"
+	eval "$(zoxide init zsh --cmd cd --cmd j --hook prompt)"
 fi
 
 # zsh
