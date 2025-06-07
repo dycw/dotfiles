@@ -122,6 +122,9 @@ ls.add_snippets("python", {
     -- future
     s("fu-annotations", { t({ "from __future__ import annotations", "" }) }),
 
+    -- getpass
+    s("ge-getuser", { t({ "from getpass import getuser", "" }) }),
+
     -- humanize
     s("hu-naturaldelta", { t({ "from humanize import naturaldelta", "" }) }),
     s("hu-naturaltime", { t({ "from humanize import naturaltime", "" }) }),
@@ -477,6 +480,7 @@ ls.add_snippets("python", {
     s("ut-get-today", { t({ "from utilities.datetime import get_today", "" }) }),
     s("ut-get-today-local", { t({ "from utilities.tzlocal import get_today_local", "" }) }),
     s("ut-hong-kong", { t({ "from utilities.tzdata import HongKong", "" }) }),
+    s("ut-hour", { t({ "from utilities.datetime import HOUR", "" }) }),
     s("ut-impossible-case-error", { t({ "from utilities.errors import ImpossibleCaseError", "" }) }),
     s("ut-insert-after", { t({ "from utilities.polars import insert_after", "" }) }),
     s("ut-insert-before", { t({ "from utilities.polars import insert_before", "" }) }),
