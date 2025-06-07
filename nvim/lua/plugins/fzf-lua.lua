@@ -1,9 +1,7 @@
 -- luacheck: push ignore
 local v = vim
 -- luacheck: pop
--- local api = v.api
--- local fn = v.fn
---
+local api = v.api
 
 return {
     "ibhagwan/fzf-lua",
@@ -77,18 +75,58 @@ return {
         -- UI select
         require("fzf-lua.providers.ui_select").register()
 
+        -- buffers + files
+        local fzf = require("fzf-lua")
+
+        vim.api.nvim_create_user_command("FzfBufCwd", function()
+            local fzf = require("fzf-lua")
+            local results = {}
+            local seen = {}
+
+            -- Buffers
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.api.nvim_buf_is_loaded(buf) then
+                    local name = vim.api.nvim_buf_get_name(buf)
+                    if name ~= "" then
+                        local rel = vim.fn.fnamemodify(name, ":.")
+                        table.insert(results, "[buf] " .. rel)
+                        seen[rel] = true
+                    end
+                end
+            end
+
+            -- Files
+            local handle = io.popen("fd --type f . 2>/dev/null") or io.popen("find . -type f")
+            if handle then
+                for line in handle:lines() do
+                    if not seen[line] then
+                        table.insert(results, line)
+                    end
+                end
+                handle:close()
+            end
+
+            print("Collected entries: " .. #results)
+
+            fzf.fzf_exec(results, {
+                prompt = "Buffers + Files> ",
+                previewer = "builtin",
+                actions = {
+                    ["default"] = function(selected)
+                        local sel = selected[1]:gsub("^%[buf%] ", "")
+                        vim.cmd("edit " .. vim.fn.fnameescape(sel))
+                    end,
+                },
+            })
+        end, {})
+
         -- autocommands
         v.api.nvim_create_autocmd("VimEnter", {
             callback = function()
-                if v.fn.argv(0) == "" then
-                    v.fn.system("git rev-parse --is-inside-work-tree")
-                    if v.v.shell_error == 0 then
-                        require("fzf-lua").git_files()
-                    end
-                end
+                fzf_lua.files()
             end,
-            desc = "GitFiles upon startup",
-            group = v.api.nvim_create_augroup("AutoGitFiles", { clear = true }),
+            desc = "Run `Files` upon startup",
+            group = v.api.nvim_create_augroup("AutoFzfLuaFiles", { clear = true }),
         })
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
