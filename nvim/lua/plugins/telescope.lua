@@ -31,29 +31,36 @@ return {
                 vimgrep_arguments = vimgrep_arguments,
             },
             extensions = {
-                adjacent = {
-                    level = 2, -- default
+                adjacent = { level = 2 },
+                project = {
+                    base_dirs = {
+                        { "~", max_depth = 1 },
+                        { "~/work", max_depth = 1 },
+                    },
                 },
+                recent_files = { only_cwd = true },
             },
         })
 
         -- extensions
         telescope.load_extension("adjacent")
+        telescope.load_extension("file_browser")
         telescope.load_extension("recent-files")
+        telescope.load_extension("ui-select")
 
         -- key maps
         -- key maps: files
         keymap_set("n", "<Leader><Leader>", function()
             require("telescope").extensions["recent-files"].recent_files({})
         end, "recent files")
-        keymap_set("n", "<Leader>af", "<Cmd>Telescope adjacent<CR>", "[a]djacent files")
-        keymap_set("n", "<Leader>ff", builtin.find_files, "find [f]iles")
+        keymap_set("n", "<Leader>af", "<Cmd>Telescope adjacent<CR>", "adjacent [f]iles")
+        keymap_set("n", "<Leader>f", builtin.find_files, "find [f]iles")
         keymap_set("n", "<Leader>gf", builtin.git_files, "git [f]iles")
         keymap_set("n", "<Leader>lg", builtin.live_grep, "live [g]rep")
         keymap_set("n", "<Leader>of", builtin.oldfiles, "old [f]iles")
 
         -- key maps: buffers
-        keymap_set("n", "<Leader>bb", builtin.buffers, "[b]uffers")
+        keymap_set("n", "<Leader>b", builtin.buffers, "[b]uffers")
 
         -- key maps: LSP
         keymap_set("n", "gd", builtin.lsp_definitions, "[d]efinitions")
@@ -89,10 +96,14 @@ return {
         })
     end,
     dependencies = {
-        "nvim-lua/plenary.nvim",
-        "nvim-tree/nvim-web-devicons",
-        "MaximilianLloyd/adjacent.nvim",
+        "maximilianlloyd/adjacent.nvim",
         "mollerhoj/telescope-recent-files.nvim",
+        "nvim-lua/plenary.nvim",
+        "nvim-telescope/telescope-file-browser.nvim",
+        "nvim-telescope/telescope-project.nvim",
+        "nvim-telescope/telescope-ui-select.nvim",
+        "nvim-tree/nvim-web-devicons",
     },
+
     event = "VimEnter",
 }
