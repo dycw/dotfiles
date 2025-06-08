@@ -1,4 +1,8 @@
 {
+  "adjacent.nvim": {
+    "branch": "main",
+    "commit": "a555ab92d61aa6fbbfa1bfaef4633b663563f04e"
+  },
   "auto-save.nvim": {
     "branch": "main",
     "commit": "37c82fd548e3f5ffc2d9d020a65dac1044584f44"
@@ -54,10 +58,6 @@
   "flit.nvim": {
     "branch": "main",
     "commit": "1ef72de6a02458d31b10039372c8a15ab8989e0d"
-  },
-  "fzf-lua": {
-    "branch": "main",
-    "commit": "70a1c1d266af2ea4d1d9c16e09c60d3fc8c5aa5f"
   },
   "git-conflict.nvim": {
     "branch": "main",
@@ -222,6 +222,10 @@
   "targets.vim": {
     "branch": "master",
     "commit": "6325416da8f89992b005db3e4517aaef0242602e"
+  },
+  "telescope-recent-files.nvim": {
+    "branch": "main",
+    "commit": "23b29aa701cd07c723282b3094e1a4dfc231f557"
   },
   "telescope.nvim": {
     "branch": "0.1.x",

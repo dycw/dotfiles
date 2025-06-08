@@ -76,51 +76,68 @@ return {
         require("fzf-lua.providers.ui_select").register()
 
         -- buffers + files
-        local function FzfLuaSmart(opts)
-            local config = require("fzf-lua.config")
-            local core = require("fzf-lua.core")
-            local path = require("fzf-lua.path")
-            local libuv = require("fzf-lua.libuv")
-            local make_entry = require("fzf-lua.make_entry")
-            opts = config.normalize_opts(opts, "git.files")
-            if not opts then
-                return
-            end
-            opts.cwd = path.git_root(opts)
-            opts.git_icons = true
-            opts.file_icons = true
-            if not opts.cwd then
-                return
-            end
-            local git_cmd = core.mt_cmd_wrapper(opts)
-            local git_fn = libuv.spawn_nvim_fzf_cmd({
-                cmd = git_cmd,
-                cwd = opts.cwd,
-                cb_pid = function(pid)
-                    opts.__pid = pid
-                end,
-            })
-            local contents = function(x, cb, y)
-                make_entry.preprocess(opts)
-                for _, buf_id in ipairs(vim.api.nvim_list_bufs()) do
-                    if vim.api.nvim_buf_is_loaded(buf_id) and vim.fn.buflisted(buf_id) == 1 then
-                        local p = vim.api.nvim_buf_get_name(buf_id)
-                        local exists, stats = pcall(vim.uv.fs_stat, p)
-                        if exists and stats and stats.type == "file" then
-                            cb(make_entry.file(p .. "\n", opts))
-                        end
+
+        local pickers = require("telescope.pickers")
+        local finders = require("telescope.finders")
+        local conf = require("telescope.config").values
+        local entry_display = require("telescope.pickers.entry_display")
+        local Path = require("plenary.path")
+
+        local function smart_entries()
+            local results = {}
+            local seen = {}
+
+            -- Buffers first
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.api.nvim_buf_is_loaded(buf) and vim.fn.buflisted(buf) == 1 then
+                    local name = vim.api.nvim_buf_get_name(buf)
+                    if name ~= "" then
+                        local rel = vim.fn.fnamemodify(name, ":.")
+                        table.insert(results, { display = "[buf] " .. rel, path = name })
+                        seen[rel] = true
                     end
                 end
-
-                git_fn(x, cb, y)
             end
-            opts = core.set_header(opts, opts.headers or { "cwd" })
-            return core.fzf_exec(contents, opts)
+
+            -- Files via fd
+            local handle = io.popen("fd --type f .")
+            if handle then
+                for line in handle:lines() do
+                    if not seen[line] then
+                        table.insert(results, { display = line, path = line })
+                    end
+                end
+                handle:close()
+            end
+
+            return results
         end
 
-        keymap_set("n", "<Leader><Leader>", function()
-            FzfLuaSmart({ prompt = "Buffers + Git Files> " })
-        end, "Buffers + Files")
+        local function smart_finder()
+            local entries = smart_entries()
+
+            pickers
+                .new({}, {
+                    prompt_title = "Buffers + Files",
+                    finder = finders.new_table({
+                        results = entries,
+                        entry_maker = function(entry)
+                            return {
+                                value = entry.path,
+                                display = entry.display,
+                                ordinal = entry.display,
+                                path = entry.path,
+                            }
+                        end,
+                    }),
+                    previewer = conf.file_previewer({}),
+                    sorter = conf.generic_sorter({}),
+                })
+                :find()
+        end
+
+        vim.api.nvim_create_user_command("TelescopeSmart", smart_finder, {})
+        vim.keymap.set("n", "<Leader><Leader>", smart_finder, { desc = "Buffers + Files (smart)" })
 
         -- autocommands
         v.api.nvim_create_autocmd("VimEnter", {
