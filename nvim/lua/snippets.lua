@@ -380,6 +380,7 @@ ls.add_snippets("python", {
     -- sqlalchemy
     s("sq-and", { t({ "from sqlalchemy import and_", "" }) }),
     s("sq-func", { t({ "from sqlalchemy import func", "" }) }),
+    s("sq-insert", { t({ "from sqlalchemy import insert", "" }) }),
     s("sq-or", { t({ "from sqlalchemy import or_", "" }) }),
     s("sq-select", { t({ "from sqlalchemy import select", "" }) }),
     s("sq-text", { t({ "from sqlalchemy import text", "" }) }),

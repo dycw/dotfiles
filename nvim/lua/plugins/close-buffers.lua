@@ -2,18 +2,18 @@ return {
     "kazhala/close-buffers.nvim",
     keys = {
         {
-            "<Leader>bd",
+            "<Leader>k",
             function()
                 require("close_buffers").delete({ type = "this" })
             end,
-            desc = "Buffer [d]elete",
+            desc = "[K]ill buffer",
         },
         {
-            "<Leader>bo",
+            "<Leader>ko",
             function()
                 require("close_buffers").delete({ type = "other" })
             end,
-            desc = "Buffer delete [o]thers",
+            desc = "Kill [o]thers",
         },
     },
 }
