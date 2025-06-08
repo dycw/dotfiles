@@ -26,7 +26,13 @@ return {
                     width = 0.99,
                 },
                 layout_strategy = "horizontal",
-                path_display = { "smart" },
+                path_display = {
+                    "smart",
+                    shorten = {
+                        len = 5,
+                        exclude = { 1, -1 },
+                    },
+                },
                 sorting_strategy = "ascending",
                 vimgrep_arguments = vimgrep_arguments,
             },
