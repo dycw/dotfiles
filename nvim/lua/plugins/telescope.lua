@@ -58,13 +58,12 @@ return {
         -- key maps: LSP
         keymap_set("n", "gd", builtin.lsp_definitions, "[d]efinitions")
         keymap_set("n", "gi", builtin.lsp_incoming_calls, "[i]ncoming calls")
+        keymap_set("n", "gI", builtin.lsp_implementations, "[i]mplementations")
         keymap_set("n", "go", builtin.lsp_outgoing_calls, "[o]utgoing calls")
         keymap_set("n", "gr", builtin.lsp_references, "[r]eferences")
-        -- keymap_set("n", "gD", builtin.lsp_declarations, "[D]eclarations")
-        -- keymap_set("n", "gI", builtin.lsp_implementations, "[i]mplementations")
-        -- keymap_set("n", "<Leader>ca", builtin.lsp_code_actions, "code [a]ctions")
+        keymap_set("n", "gt", builtin.lsp_type_definitions, "[t]ype definitions")
         keymap_set("n", "<Leader>ds", builtin.lsp_document_symbols, "document [s]ymbols")
-        keymap_set("n", "<Leader>td", builtin.lsp_type_definitions, "type [d]efinitions")
+        keymap_set("n", "<Leader>wd", builtin.diagnostics, "workspace [d]iagnostics")
         keymap_set("n", "<Leader>ws", builtin.lsp_dynamic_workspace_symbols, "workspace [s]ymbols")
 
         -- keys maps: text
