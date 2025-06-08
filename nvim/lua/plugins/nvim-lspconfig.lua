@@ -12,8 +12,8 @@ return { -- LSP Configuration & Plugins
                     v.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
                 end
                 map("K", v.lsp.buf.hover, "hover documentation")
-                map("zj", v.diagnostic.goto_next, "next diagnostic")
-                map("zk", v.diagnostic.goto_prev, "previous diagnostic")
+                map("zj", v.diagnostic.get_next, "next diagnostic")
+                map("zk", v.diagnostic.get_prev, "previous diagnostic")
                 map("<Leader>K", v.diagnostic.open_float, "open float")
                 map("<Leader>rn", v.lsp.buf.rename, "re[n]ame")
                 map("<Leader>lt", "<Cmd>LspRestart<CR>", "lsp res[t]art")
