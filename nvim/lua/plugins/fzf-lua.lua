@@ -20,7 +20,7 @@ return {
         for _, value in ipairs({ { "f", "[f]iles" }, { "fi", "f[i]les" } }) do
             keymap_set("n", "<Leader>" .. value[1], fzf_lua.files, value[2])
         end
-        keymap_set("n", "<Leader><Leader>", fzf_lua.buffers, "buffers")
+        -- keymap_set("n", "<Leader><Leader>", fzf_lua.buffers, "buffers")
         keymap_set("n", "<Leader>al", fzf_lua.lines, "all [l]ines")
         keymap_set("n", "<Leader>bl", fzf_lua.blines, "buffer [l]ines")
         keymap_set("n", "<Leader>of", fzf_lua.oldfiles, "old [f]iles")
@@ -76,49 +76,51 @@ return {
         require("fzf-lua.providers.ui_select").register()
 
         -- buffers + files
-        local fzf = require("fzf-lua")
-
-        vim.api.nvim_create_user_command("FzfBufCwd", function()
-            local fzf = require("fzf-lua")
-            local results = {}
-            local seen = {}
-
-            -- Buffers
-            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-                if vim.api.nvim_buf_is_loaded(buf) then
-                    local name = vim.api.nvim_buf_get_name(buf)
-                    if name ~= "" then
-                        local rel = vim.fn.fnamemodify(name, ":.")
-                        table.insert(results, "[buf] " .. rel)
-                        seen[rel] = true
-                    end
-                end
+        local function FzfLuaSmart(opts)
+            local config = require("fzf-lua.config")
+            local core = require("fzf-lua.core")
+            local path = require("fzf-lua.path")
+            local libuv = require("fzf-lua.libuv")
+            local make_entry = require("fzf-lua.make_entry")
+            opts = config.normalize_opts(opts, "git.files")
+            if not opts then
+                return
             end
-
-            -- Files
-            local handle = io.popen("fd --type f . 2>/dev/null") or io.popen("find . -type f")
-            if handle then
-                for line in handle:lines() do
-                    if not seen[line] then
-                        table.insert(results, line)
-                    end
-                end
-                handle:close()
+            opts.cwd = path.git_root(opts)
+            opts.git_icons = true
+            opts.file_icons = true
+            if not opts.cwd then
+                return
             end
-
-            print("Collected entries: " .. #results)
-
-            fzf.fzf_exec(results, {
-                prompt = "Buffers + Files> ",
-                previewer = "builtin",
-                actions = {
-                    ["default"] = function(selected)
-                        local sel = selected[1]:gsub("^%[buf%] ", "")
-                        vim.cmd("edit " .. vim.fn.fnameescape(sel))
-                    end,
-                },
+            local git_cmd = core.mt_cmd_wrapper(opts)
+            local git_fn = libuv.spawn_nvim_fzf_cmd({
+                cmd = git_cmd,
+                cwd = opts.cwd,
+                cb_pid = function(pid)
+                    opts.__pid = pid
+                end,
             })
-        end, {})
+            local contents = function(x, cb, y)
+                make_entry.preprocess(opts)
+                for _, buf_id in ipairs(vim.api.nvim_list_bufs()) do
+                    if vim.api.nvim_buf_is_loaded(buf_id) and vim.fn.buflisted(buf_id) == 1 then
+                        local p = vim.api.nvim_buf_get_name(buf_id)
+                        local exists, stats = pcall(vim.uv.fs_stat, p)
+                        if exists and stats and stats.type == "file" then
+                            cb(make_entry.file(p .. "\n", opts))
+                        end
+                    end
+                end
+
+                git_fn(x, cb, y)
+            end
+            opts = core.set_header(opts, opts.headers or { "cwd" })
+            return core.fzf_exec(contents, opts)
+        end
+
+        keymap_set("n", "<Leader><Leader>", function()
+            FzfLuaSmart({ prompt = "Buffers + Git Files> " })
+        end, "Buffers + Files")
 
         -- autocommands
         v.api.nvim_create_autocmd("VimEnter", {
