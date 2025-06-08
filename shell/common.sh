@@ -23,7 +23,7 @@ bottom_toml() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/bottom/bottom.toml"
 	else
-		echo_date "'bottom_toml' accepts no arguments" || return 1
+		echo_date "'bottom_toml' accepts no arguments" && return 1
 	fi
 }
 
@@ -36,42 +36,42 @@ cdcache() {
 	if [ $# -eq 0 ]; then
 		cd "${XDG_CONFIG_HOME:-"${HOME}/.cache"}" || return $?
 	else
-		echo_date "'cdcache' accepts no arguments" || return 1
+		echo_date "'cdcache' accepts no arguments" && return 1
 	fi
 }
 cdconfig() {
 	if [ $# -eq 0 ]; then
 		cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}" || return $?
 	else
-		echo_date "'cdconfig' accepts no arguments" || return 1
+		echo_date "'cdconfig' accepts no arguments" && return 1
 	fi
 }
 cddb() {
 	if [ $# -eq 0 ]; then
 		cd "${HOME}/Dropbox" || return $?
 	else
-		echo_date "'cddb' accepts no arguments" || return 1
+		echo_date "'cddb' accepts no arguments" && return 1
 	fi
 }
 cddbt() {
 	if [ $# -eq 0 ]; then
 		cd "${HOME}/Dropbox/Temporary" || return $?
 	else
-		echo_date "'cddbt' accepts no arguments" || return 1
+		echo_date "'cddbt' accepts no arguments" && return 1
 	fi
 }
 cddf() {
 	if [ $# -eq 0 ]; then
 		cd "${HOME}/dotfiles" || return $?
 	else
-		echo_date "'cddl' accepts no arguments" || return 1
+		echo_date "'cddl' accepts no arguments" && return 1
 	fi
 }
 cddl() {
 	if [ $# -eq 0 ]; then
 		cd "${HOME}/Downloads" || return $?
 	else
-		echo_date "'cddl' accepts no arguments" || return 1
+		echo_date "'cddl' accepts no arguments" && return 1
 	fi
 }
 cd_here() {
@@ -81,14 +81,14 @@ cd_here() {
 		cd .. || return $?
 		cd "${__cd_here_pwd}" || return $?
 	else
-		echo_date "'cd_here' accepts no arguments" || return 1
+		echo_date "'cd_here' accepts no arguments" && return 1
 	fi
 }
 cdw() {
 	if [ $# -eq 0 ]; then
 		cd "${HOME}/work" || return $?
 	else
-		echo_date "'cdw' accepts no arguments" || return 1
+		echo_date "'cdw' accepts no arguments" && return 1
 	fi
 }
 
@@ -180,9 +180,9 @@ fi
 if command -v git >/dev/null 2>&1; then
 	cdr() {
 		if [ $# -eq 0 ]; then
-			cd "$(repo_root)" || return 1
+			cd "$(repo_root)" && return 1
 		else
-			echo_date "'cdr' accepts no arguments" || return 1
+			echo_date "'cdr' accepts no arguments" && return 1
 		fi
 	}
 fi
@@ -194,14 +194,14 @@ git_aliases() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/git/aliases.sh"
 	else
-		echo_date "'git_aliases' accepts no arguments" || return 1
+		echo_date "'git_aliases' accepts no arguments" && return 1
 	fi
 }
 git_ignore() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "$(repo_root)/.gitignore"
 	else
-		echo_date "'git_ignore' accepts no arguments" || return 1
+		echo_date "'git_ignore' accepts no arguments" && return 1
 	fi
 }
 
@@ -224,7 +224,7 @@ ipython_startup() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/ipython/startup.py"
 	else
-		echo_date "'ipython_startup' accepts no arguments" || return 1
+		echo_date "'ipython_startup' accepts no arguments" && return 1
 	fi
 }
 
@@ -239,7 +239,7 @@ marimo_toml() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/marimo/marimo.toml"
 	else
-		echo_date "'marimo_toml' accepts no arguments" || return 1
+		echo_date "'marimo_toml' accepts no arguments" && return 1
 	fi
 }
 
@@ -248,21 +248,21 @@ cdplugins() {
 	if [ $# -eq 0 ]; then
 		cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}/nvim/lua/plugins" || return $?
 	else
-		echo_date "'cdplugins' accepts no arguments" || return 1
+		echo_date "'cdplugins' accepts no arguments" && return 1
 	fi
 }
 lua_snippets() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/nvim/lua/snippets.lua"
 	else
-		echo_date "'lua_snippets' accepts no arguments" || return 1
+		echo_date "'lua_snippets' accepts no arguments" && return 1
 	fi
 }
 plugins_dial() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/nvim/lua/plugins/dial.lua"
 	else
-		echo_date "'plugins_dial' accepts no arguments" || return 1
+		echo_date "'plugins_dial' accepts no arguments" && return 1
 	fi
 }
 if command -v nvim >/dev/null 2>&1; then
@@ -275,7 +275,7 @@ echo_path() {
 		echo_date "\$PATH:" || return 0
 		echo "${PATH}" | tr ':' '\n' | nl || return 0
 	else
-		echo_date "'echo_path' accepts no arguments" || return 1
+		echo_date "'echo_path' accepts no arguments" && return 1
 	fi
 }
 
@@ -296,9 +296,9 @@ pre_commit_config() {
 			fi
 			__pre_commit_config_dir="$(dirname "${__pre_commit_config_dir}")"
 		done
-		echo_date "'pre_commit_config' did not find any '.pre_commit_config.yaml' file" || return 1
+		echo_date "'pre_commit_config' did not find any '.pre_commit_config.yaml' file" && return 1
 	else
-		echo_date "'pre_commit_config' accepts no arguments" || return 1
+		echo_date "'pre_commit_config' accepts no arguments" && return 1
 	fi
 }
 
@@ -307,7 +307,7 @@ pgrep_name() {
 	if [ $# -eq 1 ]; then
 		ps -fp $(pgrep "$1") || return $?
 	else
-		echo_date "'pgrep_name' accepts 1 argument" || return 1
+		echo_date "'pgrep_name' accepts 1 argument" && return 1
 	fi
 }
 alias pst='ps -fLu "$USER"| wc -l'
@@ -336,9 +336,9 @@ pyproject() {
 			fi
 			__pyproject_dir="$(dirname "${__pyproject_dir}")"
 		done
-		echo_date "'pyproject' did not find any 'pyproject.toml' file" || return 1
+		echo_date "'pyproject' did not find any 'pyproject.toml' file" && return 1
 	else
-		echo_date "'pyproject' accepts no arguments" || return 1
+		echo_date "'pyproject' accepts no arguments" && return 1
 	fi
 }
 
@@ -351,7 +351,7 @@ if command -v rg >/dev/null 2>&1; then
 		if [ $# -eq 1 ]; then
 			env | rg "$1" || return $?
 		else
-			echo_date "'env_rg' accepts 1 argument" || return 1
+			echo_date "'env_rg' accepts 1 argument" && return 1
 		fi
 	}
 	rgw() { watchexec rg "$@"; }
@@ -376,7 +376,7 @@ shell_common() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/dotfiles/shell/common.sh"
 	else
-		echo_date "'shell_common' accepts no arguments" || return 1
+		echo_date "'shell_common' accepts no arguments" && return 1
 	fi
 }
 
@@ -384,29 +384,29 @@ shell_common() {
 ssh_home() {
 	if [ $# -eq 0 ]; then
 		if [ -z "${SSH_HOME_USER}" ]; then
-			echo_date "'\$SSH_HOME_USER' does not exist" || return 1
+			echo_date "'\$SSH_HOME_USER' does not exist" && return 1
 		elif [ -z "${SSH_HOME_HOST}" ]; then
-			echo_date "'\$SSH_HOME_HOST' does not exist" || return 1
+			echo_date "'\$SSH_HOME_HOST' does not exist" && return 1
 		else
 			ssh "${SSH_HOME_USER}@${SSH_HOME_HOST}" || return $?
 		fi
 	else
-		echo_date "'ssh_home' accepts no arguments" || return 1
+		echo_date "'ssh_home' accepts no arguments" && return 1
 	fi
 }
 ssh_tunnel_home() {
 	if [ $# -eq 0 ]; then
 		if [ -z "${SSH_HOME_USER}" ]; then
-			echo_date "'\$SSH_HOME_USER' does not exist" || return 1
+			echo_date "'\$SSH_HOME_USER' does not exist" && return 1
 		elif [ -z "${SSH_HOME_HOST}" ]; then
-			echo_date "'\$SSH_HOME_HOST' does not exist" || return 1
+			echo_date "'\$SSH_HOME_HOST' does not exist" && return 1
 		elif [ -z "${SSH_TUNNEL_HOME_PORT}" ]; then
-			echo_date "'\$SSH_TUNNEL_HOME_PORT' does not exist" || return 1
+			echo_date "'\$SSH_TUNNEL_HOME_PORT' does not exist" && return 1
 		else
 			ssh -N -L "${SSH_TUNNEL_HOME_PORT}:localhost:${SSH_TUNNEL_HOME_PORT}" "${SSH_HOME_USER}@${SSH_HOME_HOST}" || return $?
 		fi
 	else
-		echo_date "'ssh_tunnel_home' accepts no arguments" || return 1
+		echo_date "'ssh_tunnel_home' accepts no arguments" && return 1
 	fi
 }
 
@@ -416,7 +416,7 @@ if command -v tailscale >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			tailscale status
 		else
-			echo_date "'ts_status' accepts no arguments" || return 1
+			echo_date "'ts_status' accepts no arguments" && return 1
 		fi
 	}
 fi
@@ -430,7 +430,7 @@ if command -v tmux >/dev/null 2>&1; then
 		elif [ $# -eq 1 ]; then
 			__tmux_attach_window="$1"
 		else
-			echo_date "'tmux_attach' accepts [0..1] arguments" || return 1
+			echo_date "'tmux_attach' accepts [0..1] arguments" && return 1
 		fi
 		tmux attach -t "${__tmux_attach_window}" || return $?
 	}
@@ -438,7 +438,7 @@ if command -v tmux >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			tmux ls || return $?
 		else
-			echo_date "'tmux_ls' accepts no arguments" || return 1
+			echo_date "'tmux_ls' accepts no arguments" && return 1
 		fi
 	}
 	if [ -z "$TMUX" ]; then
@@ -465,7 +465,7 @@ tmux_conf_local() {
 	if [ $# -eq 0 ]; then
 		${EDITOR} "${HOME}/.config/tmux/tmux.conf.local"
 	else
-		echo_date "'tmux_conf_local' accepts no arguments" || return 1
+		echo_date "'tmux_conf_local' accepts no arguments" && return 1
 	fi
 }
 
@@ -475,21 +475,21 @@ if command -v uv >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			uv run --with=ipython ipython || return $?
 		else
-			echo_date "'ipy' accepts no arguments" || return 1
+			echo_date "'ipy' accepts no arguments" && return 1
 		fi
 	}
 	jl() {
 		if [ $# -eq 0 ]; then
 			uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python jupyter lab || return $?
 		else
-			echo_date "'jl' accepts no arguments" || return 1
+			echo_date "'jl' accepts no arguments" && return 1
 		fi
 	}
 	mar() {
 		if [ $# -eq 0 ]; then
 			uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' marimo new
 		else
-			echo_date "'mar' accepts no arguments" || return 1
+			echo_date "'mar' accepts no arguments" && return 1
 		fi
 	}
 	uva() { uv add "$@"; }
@@ -500,7 +500,7 @@ if command -v uv >/dev/null 2>&1; then
 		elif [ $# -eq 1 ]; then
 			(uv pip list | grep "$1") || return $?
 		else
-			echo_date "'uvpl' accepts [0..1] arguments" || return 1
+			echo_date "'uvpl' accepts [0..1] arguments" && return 1
 		fi
 
 	}
@@ -508,7 +508,7 @@ if command -v uv >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			uv pip list --outdated || return $?
 		else
-			echo_date "'uvplo' accepts no arguments" || return 1
+			echo_date "'uvplo' accepts no arguments" && return 1
 		fi
 	}
 	uvpu() { uv pip uninstall "$@"; }
@@ -516,7 +516,7 @@ if command -v uv >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			uv sync --upgrade || return $?
 		else
-			echo_date "'uvs' accepts no arguments" || return 1
+			echo_date "'uvs' accepts no arguments" && return 1
 		fi
 	}
 fi
@@ -528,9 +528,9 @@ venv_recreate() {
 			rm -rf .venv || return $?
 			cd_here || return $?
 		else
-			echo_date "'.venv' does not exist" || return 1
+			echo_date "'.venv' does not exist" && return 1
 		fi
 	else
-		echo_date "'venv_recreate' accepts no arguments" || return 1
+		echo_date "'venv_recreate' accepts no arguments" && return 1
 	fi
 }
