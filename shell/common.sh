@@ -78,7 +78,7 @@ cd_here() {
 	unset __cd_here_pwd
 	if [ $# -eq 0 ]; then
 		__cd_here_pwd="$(pwd)"
-		cd .. || return $?
+		cd / || return $?
 		cd "${__cd_here_pwd}" || return $?
 	else
 		echo_date "'cd_here' accepts no arguments" && return 1
@@ -290,7 +290,7 @@ pre_commit_config() {
 	if [ $# -eq 0 ]; then
 		__pre_commit_config_dir="$(pwd)"
 		while [ "${__pre_commit_config_dir}" != "/" ]; do
-			__pre_commit_config_candidate="${__pre_commit_config_dir}/.pre-commit-config.yaml"
+			__pre_commit_config_candidate="${__pre_commit_config_dir}"/.pre-commit-config.yaml
 			if [ -f "${__pre_commit_config_candidate}" ]; then
 				"${EDITOR}" "${__pre_commit_config_candidate}" && return 0
 			fi
@@ -330,7 +330,7 @@ pyproject() {
 	if [ $# -eq 0 ]; then
 		__pyproject_dir="$(pwd)"
 		while [ "${__pyproject_dir}" != "/" ]; do
-			__pyproject_candidate="${__pyproject_dir}/pyproject.toml"
+			__pyproject_candidate="${__pyproject_dir}"/pyproject.toml
 			if [ -f "${__pyproject_candidate}" ]; then
 				"${EDITOR}" "${__pyproject_candidate}" && return 0
 			fi
@@ -530,6 +530,15 @@ venv_recreate() {
 		else
 			echo_date "'.venv' does not exist" && return 1
 		fi
+		__venv_dir="$(pwd)"
+		while [ "${__venv_dir}" != "/" ]; do
+			__venv_candidate="${__venv_dir}/".venv
+			if [ -d "${__venv_candidate}" ]; then
+				rm -rf "${__venv_candidate}" && return 0
+			fi
+			__venv_dir="$(dirname "${__venv_dir}")"
+		done
+		echo_date "'venv_recreate' did not find any '.venv' directory" && return 1
 	else
 		echo_date "'venv_recreate' accepts no arguments" && return 1
 	fi
