@@ -328,17 +328,30 @@ fi
 # python
 pyproject() {
 	if [ $# -eq 0 ]; then
-		__pyproject_dir="$(pwd)"
-		while [ "${__pyproject_dir}" != "/" ]; do
-			__pyproject_candidate="${__pyproject_dir}"/pyproject.toml
-			if [ -f "${__pyproject_candidate}" ]; then
-				"${EDITOR}" "${__pyproject_candidate}" && return 0
-			fi
-			__pyproject_dir="$(dirname "${__pyproject_dir}")"
-		done
-		echo_date "'pyproject' did not find any 'pyproject.toml' file" && return 1
+		__pyproject_dir="$(pyproject_root)"
+		__pyproject_status=$?
+		if [ "${__pyproject_status}" -eq 0 ]; then
+			"${EDITOR}" "${__pyproject_dir}"/pyproject.toml && return 0
+		else
+			echo_date "'pyproject' did not find any 'pyproject.toml' file" && return 1
+		fi
 	else
 		echo_date "'pyproject' accepts no arguments" && return 1
+	fi
+}
+pyproject_root() {
+	if [ $# -eq 0 ]; then
+		__pyproject_root_in_repo_dir="$(pwd)"
+		while [ "${__pyproject_root_in_repo_dir}" != "/" ]; do
+			__pyproject_root_in_repo_candidate="${__pyproject_root_in_repo_dir}"/pyproject.toml
+			if [ -f "${__pyproject_root_in_repo_candidate}" ]; then
+				echo "${__pyproject_root_in_repo_dir}" && return 0
+			fi
+			__pyproject_root_in_repo_dir="$(dirname "${__pyproject_root_in_repo_dir}")"
+		done
+		echo_date "'pyproject_root' did not find any directory containing 'pyproject.toml'" && return 1
+	else
+		echo_date "'pyproject_root' accepts no arguments" && return 1
 	fi
 }
 
