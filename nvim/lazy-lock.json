@@ -1,4 +1,8 @@
 {
+  "adjacent.nvim": {
+    "branch": "main",
+    "commit": "a555ab92d61aa6fbbfa1bfaef4633b663563f04e"
+  },
   "auto-save.nvim": {
     "branch": "main",
     "commit": "37c82fd548e3f5ffc2d9d020a65dac1044584f44"
@@ -54,10 +58,6 @@
   "flit.nvim": {
     "branch": "main",
     "commit": "1ef72de6a02458d31b10039372c8a15ab8989e0d"
-  },
-  "fzf-lua": {
-    "branch": "main",
-    "commit": "70a1c1d266af2ea4d1d9c16e09c60d3fc8c5aa5f"
   },
   "git-conflict.nvim": {
     "branch": "main",
@@ -161,7 +161,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "036885e8e5456d3907626b634693234f628afef6"
+    "commit": "a182334ba933e58240c2c45e6ae2d9c7ae313e00"
   },
   "nvim-neoclip.lua": {
     "branch": "main",
@@ -223,9 +223,25 @@
     "branch": "master",
     "commit": "6325416da8f89992b005db3e4517aaef0242602e"
   },
+  "telescope-file-browser.nvim": {
+    "branch": "master",
+    "commit": "626998e5c1b71c130d8bc6cf7abb6709b98287bb"
+  },
+  "telescope-project.nvim": {
+    "branch": "master",
+    "commit": "8e11df94419e444601c09828dadf70890484e443"
+  },
+  "telescope-recent-files.nvim": {
+    "branch": "main",
+    "commit": "23b29aa701cd07c723282b3094e1a4dfc231f557"
+  },
+  "telescope-ui-select.nvim": {
+    "branch": "master",
+    "commit": "6e51d7da30bd139a6950adf2a47fda6df9fa06d2"
+  },
   "telescope.nvim": {
-    "branch": "0.1.x",
-    "commit": "a0bbec21143c7bc5f8bb02e0005fa0b982edc026"
+    "branch": "master",
+    "commit": "b4da76be54691e854d3e0e02c36b0245f945c2c7"
   },
   "text-case.nvim": {
     "branch": "main",
