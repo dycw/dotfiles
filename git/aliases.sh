@@ -243,6 +243,13 @@ if command -v git >/dev/null 2>&1; then
 			sed -E 's/^-+|-+$//g' |
 			cut -c1-80
 	}
+	__to_valid_branch() {
+		echo "$1" |
+			tr '[:upper:]' '[:lower:]' |
+			sed -E 's/[^a-z0-9]+/-/g' |
+			sed -E 's/^-+|-+$//g' |
+			cut -c1-80
+	}
 	# checkout + branch
 	gbr() {
 		unset __gbr_branch
