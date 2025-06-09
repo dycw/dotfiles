@@ -140,7 +140,8 @@ if command -v git >/dev/null 2>&1; then
 		unset __gcmd_branch
 		if [ $# -eq 0 ]; then
 			if __is_current_branch_master; then
-				echo_date "'gcmd' cannot be run on master" && return 1
+				gcof || return $?
+				gcm || return $?
 			else
 				__gcmd_branch="$(current_branch)"
 				gcof || return $?
@@ -164,7 +165,7 @@ if command -v git >/dev/null 2>&1; then
 		gpl || return $?
 	}
 	gcob() {
-		unset __gcob_branch
+		unset __gcob_branch __gcob_title __gcob_num
 		if [ $# -eq 0 ]; then
 			if __is_current_branch_master; then
 				__gcob_branch='dev'
@@ -172,11 +173,35 @@ if command -v git >/dev/null 2>&1; then
 				echo_date "'gcob' off 'master' requires 1 argument 'branch'" && return 1
 			fi
 		elif [ $# -eq 1 ]; then
-			__gcob_branch="$1"
+			__gcob_title="$1"
+			__gcob_branch="$(
+				echo "$1" |
+					tr '[:upper:]' '[:lower:]' |
+					sed -E 's/[^a-z0-9]+/-/g' |
+					sed -E 's/^-+|-+$//g' |
+					cut -c1-80
+			)"
+		elif [ $# -eq 2 ]; then
+			__gcob_title="$1"
+			__gcob_num="$2"
+			__gcob_desc="$(
+				echo "${__gcob_title}" |
+					tr '[:upper:]' '[:lower:]' |
+					sed -E 's/[^a-z0-9]+/-/g' |
+					sed -E 's/^-+|-+$//g' |
+					cut -c1-80
+			)"
+			__gcob_branch="$2-${__gcob_desc}"
 		else
-			echo_date "'gcob' accepts [0..1] arguments" && return 1
+			echo_date "'gcob' accepts [0..2] arguments" && return 1
 		fi
-		git checkout -b "${__gcob_branch}" || return $?
+		gf || return $?
+		git checkout -b "${__gcob_branch}" origin/master || return $?
+		if (command -v gh >/dev/null 2>&1) && [ $# -eq 1 ] && [ -n "${__gcob_title}" ]; then
+			ghc "${__gcob_title}" || return $?
+		elif (command -v gh >/dev/null 2>&1) && [ $# -eq 2 ] && [ -n "${__gcob_title}" ] && [ -n "${__gcob_num}" ]; then
+			ghc "${__gcob_title}" "${__gcob_num}" || return $?
+		fi
 	}
 	gcobt() {
 		unset __gcobt_branch

@@ -508,6 +508,7 @@ ls.add_snippets("python", {
     s("ut-one-non-unique-error", { t({ "from utilities.iterables import OneNonUniqueError", "" }) }),
     s("ut-pairs", { t({ "from utilities.hypothesis import pairs", "" }) }),
     s("ut-parse-date", { t({ "from utilities.whenever import parse_date", "" }) }),
+    s("ut-parse-enum", { t({ "from utilities.enum import parse_enum", "" }) }),
     s("ut-parse-month", { t({ "from utilities.datetime import parse_month", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
     s("ut-path-like", { t({ "from utilities.types import PathLike", "" }) }),
