@@ -165,7 +165,7 @@ if command -v git >/dev/null 2>&1; then
 		gpl || return $?
 	}
 	gcob() {
-		unset __gcob_branch __gcob_title __gcob_num
+		unset __gcob_branch __gcob_title __gcob_num __gcob_desc
 		if [ $# -eq 0 ]; then
 			if __is_current_branch_master; then
 				__gcob_branch='dev'
@@ -174,23 +174,11 @@ if command -v git >/dev/null 2>&1; then
 			fi
 		elif [ $# -eq 1 ]; then
 			__gcob_title="$1"
-			__gcob_branch="$(
-				echo "$1" |
-					tr '[:upper:]' '[:lower:]' |
-					sed -E 's/[^a-z0-9]+/-/g' |
-					sed -E 's/^-+|-+$//g' |
-					cut -c1-80
-			)"
+			__gcob_branch="$(__to_valid_branch "${__gcob_title}")"
 		elif [ $# -eq 2 ]; then
 			__gcob_title="$1"
 			__gcob_num="$2"
-			__gcob_desc="$(
-				echo "${__gcob_title}" |
-					tr '[:upper:]' '[:lower:]' |
-					sed -E 's/[^a-z0-9]+/-/g' |
-					sed -E 's/^-+|-+$//g' |
-					cut -c1-80
-			)"
+			__gcob_desc="$(__to_valid_branch "${__gcob_title}")"
 			__gcob_branch="$2-${__gcob_desc}"
 		else
 			echo_date "'gcob' accepts [0..2] arguments" && return 1
@@ -198,8 +186,14 @@ if command -v git >/dev/null 2>&1; then
 		gf || return $?
 		git checkout -b "${__gcob_branch}" origin/master || return $?
 		if (command -v gh >/dev/null 2>&1) && [ $# -eq 1 ] && [ -n "${__gcob_title}" ]; then
+			gp || return $?
+			__git_commit_empty_auto_message || return $?
+			gp || return $?
 			ghc "${__gcob_title}" || return $?
 		elif (command -v gh >/dev/null 2>&1) && [ $# -eq 2 ] && [ -n "${__gcob_title}" ] && [ -n "${__gcob_num}" ]; then
+			gp || return $?
+			__git_commit_empty_auto_message || return $?
+			gp || return $?
 			ghc "${__gcob_title}" "${__gcob_num}" || return $?
 		fi
 	}
@@ -241,6 +235,20 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gcop() {
 		git checkout --patch "$@" && return 1
+	}
+	__to_valid_branch() {
+		echo "$1" |
+			tr '[:upper:]' '[:lower:]' |
+			sed -E 's/[^a-z0-9]+/-/g' |
+			sed -E 's/^-+|-+$//g' |
+			cut -c1-80
+	}
+	__to_valid_branch() {
+		echo "$1" |
+			tr '[:upper:]' '[:lower:]' |
+			sed -E 's/[^a-z0-9]+/-/g' |
+			sed -E 's/^-+|-+$//g' |
+			cut -c1-80
 	}
 	# checkout + branch
 	gbr() {
@@ -289,6 +297,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	__git_commit_auto_message() { echo "Commited by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"; }
+	__git_commit_empty_auto_message() { git commit --allow-empty -m "$(__git_commit_auto_message)" --no-verify; }
 	# commit + push
 	gc() {
 		if [ $# -le 1 ]; then
