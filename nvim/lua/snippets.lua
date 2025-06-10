@@ -451,6 +451,7 @@ ls.add_snippets("python", {
     s("ut-cache", { t({ "from utilities.functools import cache", "" }) }),
     s("ut-check-duplicates", { t({ "from utilities.iterables import check_duplicates", "" }) }),
     s("ut-check-polars-dataframe", { t({ "from utilities.polars import check_polars_dataframe", "" }) }),
+    s("ut-counted-noun", { t({ "from utilities.inflect import counted_noun", "" }) }),
     s("ut-cpu-count", { t({ "from utilities.os import CPU_COUNT", "" }) }),
     s("ut-dataclass-repr", { t({ "from utilities.dataclasses import dataclass_repr", "" }) }),
     s("ut-dataclass-to-dict", { t({ "from utilities.dataclasses import dataclass_to_dict", "" }) }),
@@ -563,6 +564,7 @@ ls.add_snippets("python", {
     s("ut-zoned-datetimes", { t({ "from utilities.hypothesis import zoned_datetimes", "" }) }),
 
     -- whenever
+    s("wh-date", { t({ "from whenever import Date", "" }) }),
     s("wh-date-delta", { t({ "from whenever import DateDelta", "" }) }),
     s("wh-date-time-delta", { t({ "from whenever import DateTimeDelta", "" }) }),
     s("wh-local-date-time", { t({ "from whenever import LocalDateTime", "" }) }),

@@ -153,14 +153,14 @@ fi
 
 # fzf
 if command -v fzf >/dev/null 2>&1; then
-	export FZF_DEFAULT_COMMAND='fd -HL'
+	export FZF_DEFAULT_COMMAND='fd -HL --exclude .git'
 	export FZF_DEFAULT_OPTS="
     --height=80%
     --info=inline
     --layout=reverse
     --preview '([[ -f {} ]] && (bat -n --color=always {} || cat {})) || ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
     "
-	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND -tf -td"
+	export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND} -tf -td"
 	export FZF_CTRL_T_OPTS="
     --bind 'ctrl-a:select-all'
     --bind 'ctrl-d:deselect-all'
@@ -173,7 +173,7 @@ if command -v fzf >/dev/null 2>&1; then
 	export FZF_CTRL_R_OPTS="
     --preview-window up:3:wrap
     "
-	export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND -td"
+	export FZF_ALT_C_COMMAND="${FZF_DEFAULT_COMMAND} -td"
 fi
 
 # git

@@ -263,6 +263,10 @@
     "branch": "master",
     "commit": "9ea940c0d537e55de0de4c0298c04b976960fb12"
   },
+  "vim-eunuch": {
+    "branch": "master",
+    "commit": "e86bb794a1c10a2edac130feb0ea590a00d03f1e"
+  },
   "vim-just": {
     "branch": "main",
     "commit": "b7f9505f93ede57c4ec011405592280b3f1755ec"

@@ -61,7 +61,9 @@ return {
         end, "recent files")
         keymap_set("n", "<Leader>af", "<Cmd>Telescope adjacent<CR>", "adjacent [f]iles")
         keymap_set("n", "<Leader>f", builtin.find_files, "find [f]iles")
-        keymap_set("n", "<Leader>gf", builtin.git_files, "git [f]iles")
+        keymap_set("n", "<Leader>gf", function()
+            builtin.git_files({ show_untracked = true })
+        end, "git [f]iles")
         keymap_set("n", "<Leader>lg", builtin.live_grep, "live [g]rep")
         keymap_set("n", "<Leader>of", builtin.oldfiles, "old [f]iles")
 
