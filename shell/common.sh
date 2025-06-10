@@ -21,7 +21,7 @@ if command -v btm >/dev/null 2>&1; then
 fi
 bottom_toml() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/bottom/bottom.toml"
+		${EDITOR} "${HOME}"/dotfiles/bottom/bottom.toml
 	else
 		echo_date "'bottom_toml' accepts no arguments" && return 1
 	fi
@@ -192,14 +192,14 @@ if [ -f "$__file" ]; then
 fi
 git_aliases() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/git/aliases.sh"
+		${EDITOR} "${HOME}"/dotfiles/git/aliases.sh
 	else
 		echo_date "'git_aliases' accepts no arguments" && return 1
 	fi
 }
 git_ignore() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "$(repo_root)/.gitignore"
+		${EDITOR} "$(repo_root)"/.gitignore
 	else
 		echo_date "'git_ignore' accepts no arguments" && return 1
 	fi
@@ -222,7 +222,7 @@ set editing-mode vi
 # ipython
 ipython_startup() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/ipython/startup.py"
+		${EDITOR} "${HOME}"/dotfiles/ipython/startup.py
 	else
 		echo_date "'ipython_startup' accepts no arguments" && return 1
 	fi
@@ -237,7 +237,7 @@ fi
 # marimo
 marimo_toml() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/marimo/marimo.toml"
+		${EDITOR} "${HOME}"/dotfiles/marimo/marimo.toml
 	else
 		echo_date "'marimo_toml' accepts no arguments" && return 1
 	fi
@@ -253,14 +253,14 @@ cdplugins() {
 }
 lua_snippets() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/nvim/lua/snippets.lua"
+		${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua
 	else
 		echo_date "'lua_snippets' accepts no arguments" && return 1
 	fi
 }
 plugins_dial() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/nvim/lua/plugins/dial.lua"
+		${EDITOR} "${HOME}"/dotfiles/nvim/lua/plugins/dial.lua
 	else
 		echo_date "'plugins_dial' accepts no arguments" && return 1
 	fi
@@ -374,7 +374,7 @@ fi
 # shell
 shell_common() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/shell/common.sh"
+		${EDITOR} "${HOME}"/dotfiles/shell/common.sh
 	else
 		echo_date "'shell_common' accepts no arguments" && return 1
 	fi
@@ -463,7 +463,7 @@ if command -v tmux >/dev/null 2>&1; then
 fi
 tmux_conf_local() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/.config/tmux/tmux.conf.local"
+		${EDITOR} "${HOME}"/.config/tmux/tmux.conf.local
 	else
 		echo_date "'tmux_conf_local' accepts no arguments" && return 1
 	fi
@@ -473,21 +473,21 @@ tmux_conf_local() {
 if command -v uv >/dev/null 2>&1; then
 	ipy() {
 		if [ $# -eq 0 ]; then
-			uv run --with=ipython ipython || return $?
+			uv run --with=ipython --active --managed-python ipython || return $?
 		else
 			echo_date "'ipy' accepts no arguments" && return 1
 		fi
 	}
 	jl() {
 		if [ $# -eq 0 ]; then
-			uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python jupyter lab || return $?
+			uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python --active --managed-python jupyter lab || return $?
 		else
 			echo_date "'jl' accepts no arguments" && return 1
 		fi
 	}
 	mar() {
 		if [ $# -eq 0 ]; then
-			uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' marimo new
+			uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' --active --managed-python marimo new
 		else
 			echo_date "'mar' accepts no arguments" && return 1
 		fi
