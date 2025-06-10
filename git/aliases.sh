@@ -809,8 +809,8 @@ fi
 
 # git + watch
 if command -v git >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
-	wgd() { watch -d -n 0.1 -- git diff "$@"; }
-	wgs() { watch -d -n 0.1 -- git status "$@"; }
+	wgd() { watch -d -n 0.5 -- git diff "$@"; }
+	wgs() { watch -d -n 0.5 -- git status "$@"; }
 fi
 
 # github + watch
