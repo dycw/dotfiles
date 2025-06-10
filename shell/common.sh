@@ -2,6 +2,52 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2120,SC2033
 
+# ancestor
+ancestor() {
+	if [ $# -eq 2 ]; then
+		__ancestor_type="$1"
+		__ancestor_name="$2"
+		__ancestor_dir="$(pwd)"
+		while [ "${__ancestor_dir}" != "/" ]; do
+			__ancestor_candidate="${__ancestor_dir}"/"${__ancestor_name}"
+			case "${__ancestor_type}" in
+			file)
+				if [ -f "${__ancestor_candidate}" ]; then
+					echo "${__ancestor_dir}" && return 0
+				fi
+				;;
+			directory)
+				if [ -d "${__ancestor_candidate}" ]; then
+					echo "${__ancestor_dir}" && return 0
+				fi
+				;;
+			*)
+				echo_date "'ancestor' accepts 'file' or 'directory' for the first argument; got ${__ancestor_type}" && return 1
+				;;
+			esac
+			__ancestor_dir="$(dirname "${__ancestor_dir}")"
+		done
+		echo_date "'ancestor' did not find an ancestor containing a ${__ancestor_type} named '${__ancestor_name}'" && return 1
+	else
+		echo_date "'ancestor' accepts 2 arguments" && return 1
+	fi
+}
+
+ancestor_edit() {
+	if [ $# -eq 1 ]; then
+		__ancestor_edit_name="$1"
+		__ancestor_edit_candidate=$(ancestor file "${__ancestor_edit_name}" 2>/dev/null)
+		__ancestor_edit_code=$?
+		if [ "${__ancestor_edit_code}" -eq 0 ]; then
+			"${EDITOR}" "${__ancestor_edit_candidate}"/"${__ancestor_edit_name}" && return 0
+		else
+			echo_date "'ancestor_edit' did not find an ancestor containing a file named '${__ancestor_edit_name}'" && return 1
+		fi
+	else
+		echo_date "'ancestor_edit' accepts 1 arguments" && return 1
+	fi
+}
+
 # bat
 if command -v bat >/dev/null 2>&1; then
 	cat() { bat "$@"; }
@@ -288,15 +334,7 @@ if command -v pre-commit >/dev/null 2>&1; then
 fi
 pre_commit_config() {
 	if [ $# -eq 0 ]; then
-		__pre_commit_config_dir="$(pwd)"
-		while [ "${__pre_commit_config_dir}" != "/" ]; do
-			__pre_commit_config_candidate="${__pre_commit_config_dir}"/.pre-commit-config.yaml
-			if [ -f "${__pre_commit_config_candidate}" ]; then
-				"${EDITOR}" "${__pre_commit_config_candidate}" && return 0
-			fi
-			__pre_commit_config_dir="$(dirname "${__pre_commit_config_dir}")"
-		done
-		echo_date "'pre_commit_config' did not find any '.pre_commit_config.yaml' file" && return 1
+		ancestor_edit .pre-commit-config.yaml
 	else
 		echo_date "'pre_commit_config' accepts no arguments" && return 1
 	fi
@@ -328,15 +366,7 @@ fi
 # python
 pyproject() {
 	if [ $# -eq 0 ]; then
-		__pyproject_dir="$(pwd)"
-		while [ "${__pyproject_dir}" != "/" ]; do
-			__pyproject_candidate="${__pyproject_dir}"/pyproject.toml
-			if [ -f "${__pyproject_candidate}" ]; then
-				"${EDITOR}" "${__pyproject_candidate}" && return 0
-			fi
-			__pyproject_dir="$(dirname "${__pyproject_dir}")"
-		done
-		echo_date "'pyproject' did not find any 'pyproject.toml' file" && return 1
+		ancestor_edit pyproject.toml
 	else
 		echo_date "'pyproject' accepts no arguments" && return 1
 	fi
@@ -370,6 +400,15 @@ if command -v ruff >/dev/null 2>&1; then
 	rf() { pre-commit run run-ruff-format --all-files; }
 	rcw() { ruff check -w "$@"; }
 fi
+
+# settings
+settings_toml() {
+	if [ $# -eq 0 ]; then
+		ancestor_edit settings.toml
+	else
+		echo_date "'settings_toml' accepts no arguments" && return 1
+	fi
+}
 
 # shell
 shell_common() {
@@ -543,3 +582,5 @@ venv_recreate() {
 		echo_date "'venv_recreate' accepts no arguments" && return 1
 	fi
 }
+
+# private
