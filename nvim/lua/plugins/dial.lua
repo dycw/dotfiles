@@ -19,27 +19,6 @@ return {
             return s:sub(1, 1):upper() .. s:sub(2):lower()
         end
 
-        local augend = require("dial.augend")
-        local function register_group(words)
-            return {
-                augend.constant.new({
-                    elements = v.tbl_map(string.upper, words),
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = v.tbl_map(titlecase, words),
-                    word = true,
-                    cyclic = true,
-                }),
-                augend.constant.new({
-                    elements = v.tbl_map(string.lower, words),
-                    word = true,
-                    cyclic = true,
-                }),
-            }
-        end
-
         -- build groups
         local groups = {
             { "absolute", "relative" },
@@ -59,6 +38,7 @@ return {
             { "column", "row" },
             { "disable", "enable" },
             { "down", "up" },
+            { "end", "start", "stop" },
             { "entered", "exited" },
             { "entry", "exit" },
             { "first", "last" },
@@ -74,16 +54,18 @@ return {
             { "max_value", "min_value" },
             { "maximum", "minimum" },
             { "minor", "major" },
+            { "new", "old" },
             { "no", "yes" },
-            { "on", "off" },
+            { "off", "on" },
             { "only", "skip" },
             { "positive", "negative" },
-            { "start", "end", "stop" },
+            { "read", "write" },
             { "stderr", "stdout" },
             { "true", "false" },
         }
 
         local groups_all_cases = {}
+        local augend = require("dial.augend")
         for _, pair in ipairs(groups) do
             table.insert(
                 groups_all_cases,

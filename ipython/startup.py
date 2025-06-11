@@ -1636,7 +1636,6 @@ try:
     from utilities.shelve import yield_shelf
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
-    from utilities.traceback import trace
     from utilities.types import MaybeIterable, Number, StrMapping, TimeZone
     from utilities.typing import get_args, get_literal_elements
     from utilities.zoneinfo import UTC, ensure_time_zone, get_time_zone_name
@@ -1725,7 +1724,6 @@ else:
         sleep_max_dur,
         sleep_until,
         sleep_until_rounded,
-        trace,
         ungroup_consecutive_integers,
         write_pickle,
         yield_fields,

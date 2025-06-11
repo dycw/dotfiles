@@ -555,8 +555,10 @@ if command -v git >/dev/null 2>&1; then
 	gs() {
 		if [ $# -eq 0 ]; then
 			git status || return $?
+		elif [ $# -eq 1 ]; then
+			git status "$1" || return $?
 		else
-			echo_date "'gs' accepts no arguments" && return 1
+			echo_date "'gs' accepts [0..1] arguments" && return 1
 		fi
 	}
 	__tree_is_clean() { [ -z "$(git status --porcelain)" ]; }

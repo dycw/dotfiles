@@ -252,7 +252,8 @@ apt_install() {
 }
 if [ -n "${IS_UBUNTU}" ]; then
 	apt_install curl
-	apt_install dropbox nautilus-dropbox
+	apt_install libpq-dev
+	apt_install nautilus-dropbox
 	apt_install git
 	apt_install zsh
 fi

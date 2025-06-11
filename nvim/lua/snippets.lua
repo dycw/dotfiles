@@ -553,6 +553,7 @@ ls.add_snippets("python", {
     s("ut-tokyo", { t({ "from utilities.tzdata import Tokyo", "" }) }),
     s("ut-trace", { t({ "from utilities.traceback import trace", "" }) }),
     s("ut-transpose", { t({ "from utilities.iterables import transpose", "" }) }),
+    s("ut-unique-str", { t({ "from utilities.text import unique_str", "" }) }),
     s("ut-us-central", { t({ "from utilities.tzdata import USCentral", "" }) }),
     s("ut-us-eastern", { t({ "from utilities.tzdata import USEastern", "" }) }),
     s("ut-utc", { t({ "from utilities.zoneinfo import UTC", "" }) }),

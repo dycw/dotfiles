@@ -384,9 +384,8 @@ if command -v rg >/dev/null 2>&1; then
 			echo_date "'env_rg' accepts 1 argument" && return 1
 		fi
 	}
-	rgw() { watchexec rg "$@"; }
-	if command -v rg >/dev/null 2>&1 && command -v watchexec >/dev/null 2>&1; then
-		rgw() { watchexec rg "$@"; }
+	if command -v watch >/dev/null 2>&1; then
+		rgw() { watch -n0.1 rg "$@"; }
 	fi
 fi
 
@@ -531,8 +530,8 @@ if command -v uv >/dev/null 2>&1; then
 			echo_date "'mar' accepts no arguments" && return 1
 		fi
 	}
-	uva() { uv add "$@"; }
-	uvpi() { uv pip install "$@"; }
+	uva() { uv add --active --managed-python "$@"; }
+	uvpi() { uv pip install --managed-python "$@"; }
 	uvpl() {
 		if [ $# -eq 0 ]; then
 			uv pip list || return $?
@@ -551,6 +550,7 @@ if command -v uv >/dev/null 2>&1; then
 		fi
 	}
 	uvpu() { uv pip uninstall "$@"; }
+	uvr() { uv remove --active --managed-python "$@"; }
 	uvs() {
 		if [ $# -eq 0 ]; then
 			uv sync --upgrade || return $?
@@ -563,21 +563,14 @@ fi
 # venv
 venv_recreate() {
 	if [ $# -eq 0 ]; then
-		if [ -d .venv ]; then
+		__venv_recreate_candidate=$(ancestor directory .venv 2>/dev/null)
+		__venv_recreate_code=$?
+		if [ "${__venv_recreate_code}" -eq 0 ]; then
 			rm -rf .venv || return $?
 			cd_here || return $?
 		else
-			echo_date "'.venv' does not exist" && return 1
+			echo_date "'venv_recreate' did not find an ancestor containg a directory named '.venv'" && return 1
 		fi
-		__venv_dir="$(pwd)"
-		while [ "${__venv_dir}" != "/" ]; do
-			__venv_candidate="${__venv_dir}/".venv
-			if [ -d "${__venv_candidate}" ]; then
-				rm -rf "${__venv_candidate}" && return 0
-			fi
-			__venv_dir="$(dirname "${__venv_dir}")"
-		done
-		echo_date "'venv_recreate' did not find any '.venv' directory" && return 1
 	else
 		echo_date "'venv_recreate' accepts no arguments" && return 1
 	fi
