@@ -121,7 +121,6 @@ cddl() {
 	fi
 }
 cd_here() {
-	unset __cd_here_pwd
 	if [ $# -eq 0 ]; then
 		__cd_here_pwd="$(pwd)"
 		cd / || return $?
@@ -178,11 +177,10 @@ if command -v eza >/dev/null 2>&1; then
 
 	if command -v watch >/dev/null 2>&1; then
 		__watch_eza_base() {
-			watch -d -n 0.1 --color -- eza --all \
-				--classify=always --color=always --git \
-				--group --group-directories-first --header \
-				--long --reverse --sort=modified \
-				--time-style=long-iso "$@"
+			watch --color --differences --interval=0.5 -- \
+				eza --all --classify=always --color=always --git \
+				--group --group-directories-first --header --long \
+				--reverse --sort=modified --time-style=long-iso "$@"
 		}
 		wl() { __watch_eza_base --git-ignore "$@"; }
 		wla() { __watch_eza_base "$@"; }
@@ -350,7 +348,7 @@ pgrep_name() {
 }
 alias pst='ps -fLu "$USER"| wc -l'
 if command -v watch >/dev/null 2>&1; then
-	alias wpst='watch -d -n0.1 "ps -fLu \"$USER\" | wc -l"'
+	wpst() { watch --color --differences --interval=0.5 -- ps -fLu "${USER}" | wc -l; }
 fi
 
 # pyright
@@ -385,7 +383,7 @@ if command -v rg >/dev/null 2>&1; then
 		fi
 	}
 	if command -v watch >/dev/null 2>&1; then
-		rgw() { watch -n0.1 rg "$@"; }
+		wrg() { watch --color --differences --interval=0.5 -- rg "$@"; }
 	fi
 fi
 
@@ -558,18 +556,25 @@ if command -v uv >/dev/null 2>&1; then
 			echo_date "'uvs' accepts no arguments" && return 1
 		fi
 	}
+
+	if command -v watch >/dev/null 2>&1; then
+		wuvpi() { watch --color --differences --interval=0.5 -- uv pip install "$@"; }
+	fi
 fi
 
 # venv
 venv_recreate() {
 	if [ $# -eq 0 ]; then
-		__venv_recreate_candidate=$(ancestor directory .venv 2>/dev/null)
+		__venv_recreate_candidate=$(ancestor file .envrc 2>/dev/null)
 		__venv_recreate_code=$?
 		if [ "${__venv_recreate_code}" -eq 0 ]; then
-			rm -rf .venv || return $?
+			__venv_recreate_venv="${__venv_recreate_candidate}"/.venv
+			if [ -d "${__venv_recreate_venv}" ]; then
+				rm -rf "${__venv_recreate_venv}" || return $?
+			fi
 			cd_here || return $?
 		else
-			echo_date "'venv_recreate' did not find an ancestor containg a directory named '.venv'" && return 1
+			echo_date "'venv_recreate' did not find an ancestor containg a file named '.envrc'" && return 1
 		fi
 	else
 		echo_date "'venv_recreate' accepts no arguments" && return 1
