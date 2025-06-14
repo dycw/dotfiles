@@ -812,6 +812,7 @@ fi
 # git + watch
 if command -v git >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
 	wgd() { watch -d -n 0.5 -- git diff "$@"; }
+	wgl() { watch -d -n 0.5 -- git log --abbrev-commit --decorate=short --oneline; }
 	wgs() { watch -d -n 0.5 -- git status "$@"; }
 fi
 

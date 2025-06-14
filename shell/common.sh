@@ -355,6 +355,9 @@ fi
 pyr() { pyright "$@"; }
 pyrw() { pyright -w "$@"; }
 
+# pyright + pytest
+pyrt() { pyright "$@" && pytest "$@"; }
+
 # pytest
 __file="${HOME}/dotfiles/pytest/aliases.sh"
 if [ -f "${__file}" ]; then

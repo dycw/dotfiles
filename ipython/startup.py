@@ -1501,37 +1501,11 @@ except ModuleNotFoundError:
 else:
     _ = [tzdata]
     try:
-        from utilities.tzdata import (
-            NOW_HONG_KONG,
-            NOW_TOKYO,
-            TODAY_HONG_KONG,
-            TODAY_TOKYO,
-            HongKong,
-            Tokyo,
-            USCentral,
-            USEastern,
-            get_now_hong_kong,
-            get_now_tokyo,
-            get_today_hong_kong,
-            get_today_tokyo,
-        )
+        from utilities.tzdata import HongKong, Tokyo, USCentral, USEastern
     except ModuleNotFoundError:
         pass
     else:
-        _ = [
-            HongKong,
-            NOW_HONG_KONG,
-            NOW_TOKYO,
-            TODAY_HONG_KONG,
-            TODAY_TOKYO,
-            Tokyo,
-            USCentral,
-            USEastern,
-            get_now_hong_kong,
-            get_now_tokyo,
-            get_today_hong_kong,
-            get_today_tokyo,
-        ]
+        _ = [HongKong, Tokyo, USCentral, USEastern]
 
 
 try:
@@ -1542,73 +1516,35 @@ else:
     _ = [tzlocal]
     try:
         from utilities.tzlocal import (
-            NOW_LOCAL,
-            TODAY_LOCAL,
+            LOCAL_TIME_ZONE,
+            LOCAL_TIME_ZONE_NAME,
             get_local_time_zone,
-            get_now_local,
-            get_today_local,
         )
     except ModuleNotFoundError:
         pass
     else:
-        _ = [
-            NOW_LOCAL,
-            TODAY_LOCAL,
-            get_local_time_zone,
-            get_now_local,
-            get_today_local,
-        ]
+        _ = [LOCAL_TIME_ZONE, LOCAL_TIME_ZONE_NAME, get_local_time_zone]
 
 
 try:
     from utilities.asyncio import (
         EnhancedTaskGroup,
         Looper,
-        sleep_dur,
-        sleep_max_dur,
+        sleep_max,
+        sleep_rounded,
+        sleep_td,
         sleep_until,
-        sleep_until_rounded,
     )
     from utilities.dataclasses import dataclass_repr, dataclass_to_dict, yield_fields
-    from utilities.datetime import (
-        DAY,
-        EPOCH_UTC,
-        HALF_YEAR,
-        HOUR,
-        MICROSECOND,
-        MILLISECOND,
-        MINUTE,
-        MONTH,
-        QUARTER,
-        SECOND,
-        TODAY_UTC,
-        WEEK,
-        YEAR,
-        Month,
-        date_to_datetime,
-        datetime_utc,
-        ensure_month,
-        get_half_years,
-        get_months,
-        get_now,
-        get_quarters,
-        get_today,
-        get_years,
-        parse_date_compact,
-        parse_datetime_compact,
-        parse_month,
-        round_datetime,
-        serialize_compact,
-        serialize_month,
-    )
     from utilities.enum import ensure_enum
     from utilities.functions import (
         ensure_class,
-        ensure_datetime,
         ensure_float,
         ensure_int,
         ensure_not_none,
+        ensure_plain_date_time,
         ensure_str,
+        ensure_zoned_date_time,
         get_class,
         get_class_name,
         make_isinstance,
@@ -1629,7 +1565,7 @@ try:
     from utilities.math import ewm_parameters, is_integral, safe_round
     from utilities.os import CPU_COUNT
     from utilities.pathlib import list_dir
-    from utilities.period import Period
+    from utilities.period import DatePeriod, ZonedDateTimePeriod
     from utilities.pickle import read_pickle, write_pickle
     from utilities.random import SYSTEM_RANDOM, get_state, shuffle
     from utilities.re import extract_group, extract_groups
@@ -1638,6 +1574,20 @@ try:
     from utilities.timer import Timer
     from utilities.types import MaybeIterable, Number, StrMapping, TimeZone
     from utilities.typing import get_args, get_literal_elements
+    from utilities.whenever2 import (
+        DAY,
+        HOUR,
+        MICROSECOND,
+        MILLISECOND,
+        MINUTE,
+        SECOND,
+        TODAY_UTC,
+        WEEK,
+        get_now,
+        get_now_local,
+        get_today,
+        get_today_local,
+    )
     from utilities.zoneinfo import UTC, ensure_time_zone, get_time_zone_name
 except ModuleNotFoundError:
     from random import shuffle
@@ -1648,20 +1598,15 @@ else:
         BackgroundTask,
         CPU_COUNT,
         DAY,
-        EPOCH_UTC,
+        DatePeriod,
         EnhancedTaskGroup,
-        HALF_YEAR,
         HOUR,
         Looper,
         MICROSECOND,
         MILLISECOND,
         MINUTE,
-        MONTH,
         MaybeIterable,
-        Month,
         Number,
-        Period,
-        QUARTER,
         SECOND,
         SYSTEM_RANDOM,
         SizeAndTimeRotatingFileHandler,
@@ -1671,59 +1616,49 @@ else:
         Timer,
         UTC,
         WEEK,
-        YEAR,
+        ZonedDateTimePeriod,
         basic_config,
         dataclass_repr,
         dataclass_to_dict,
-        date_to_datetime,
-        datetime_utc,
         ensure_class,
-        ensure_datetime,
         ensure_enum,
         ensure_float,
         ensure_int,
-        ensure_month,
         ensure_not_none,
+        ensure_plain_date_time,
         ensure_str,
         ensure_time_zone,
+        ensure_zoned_date_time,
         ewm_parameters,
         extract_group,
         extract_groups,
         get_args,
         get_class,
         get_class_name,
-        get_half_years,
         get_literal_elements,
-        get_months,
         get_now,
-        get_quarters,
+        get_now_local,
         get_repo_root,
         get_state,
         get_time_zone_name,
         get_today,
-        get_years,
+        get_today_local,
         group_consecutive_integers,
         groupby_lists,
         is_integral,
         list_dir,
         make_isinstance,
         one,
-        parse_date_compact,
-        parse_datetime_compact,
-        parse_month,
         partial,
         read_pickle,
-        round_datetime,
         run_in_background,
         safe_round,
-        serialize_compact,
-        serialize_month,
         setup_logging,
         shuffle,
-        sleep_dur,
-        sleep_max_dur,
+        sleep_max,
+        sleep_rounded,
+        sleep_td,
         sleep_until,
-        sleep_until_rounded,
         ungroup_consecutive_integers,
         write_pickle,
         yield_fields,
@@ -1762,6 +1697,7 @@ try:
     import whenever
     from whenever import (
         Date,
+        DateDelta,
         DateTimeDelta,
         LocalDateTime,
         Time,
@@ -1771,45 +1707,17 @@ try:
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Date, DateTimeDelta, LocalDateTime, Time, TimeDelta, ZonedDateTime, whenever]
-    try:
-        from utilities.whenever import (
-            ensure_date,
-            ensure_plain_datetime,
-            ensure_time,
-            ensure_timedelta,
-            ensure_zoned_datetime,
-            parse_date,
-            parse_plain_datetime,
-            parse_time,
-            parse_timedelta,
-            parse_zoned_datetime,
-            serialize_date,
-            serialize_plain_datetime,
-            serialize_time,
-            serialize_timedelta,
-            serialize_zoned_datetime,
-        )
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [
-            ensure_date,
-            ensure_plain_datetime,
-            ensure_time,
-            ensure_timedelta,
-            ensure_zoned_datetime,
-            parse_date,
-            parse_plain_datetime,
-            parse_time,
-            parse_timedelta,
-            parse_zoned_datetime,
-            serialize_date,
-            serialize_plain_datetime,
-            serialize_time,
-            serialize_timedelta,
-            serialize_zoned_datetime,
-        ]
+    _ = [
+        Date,
+        DateDelta,
+        DateTimeDelta,
+        LocalDateTime,
+        Time,
+        TimeDelta,
+        ZonedDateTime,
+        whenever,
+    ]
+
 
 # functions
 
