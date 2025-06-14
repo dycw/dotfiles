@@ -146,11 +146,6 @@ chown_dirs() { find . -type d -exec chown "$1" {} \;; }
 # coverage
 alias open-cov='open .coverage/html/index.html'
 
-# cyberghost
-if command -v cyberghostvpn >/dev/null 2>&1; then
-	cyber_jp() { sudo cyberghostvpn --country-code JP --connect; }
-fi
-
 # direnv
 if command -v direnv >/dev/null 2>&1; then
 	alias dea='direnv allow'
