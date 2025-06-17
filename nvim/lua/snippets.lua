@@ -445,6 +445,7 @@ ls.add_snippets("python", {
 
     -- uuid
     s("uu-uuid", { t({ "from uuid import UUID", "" }) }),
+    s("uu-uuid4", { t({ "from uuid import uuid4", "" }) }),
 
     -- utilities
     s("ut-add-listener", { t({ "from utilities.eventkit import add_listener", "" }) }),
@@ -533,7 +534,7 @@ ls.add_snippets("python", {
     s("ut-setup-logging", { t({ "from utilities.logging import setup_logging", "" }) }),
     s("ut-show", { t({ "from utilities.jupyter import show", "" }) }),
     s("ut-shuffle", { t({ "from utilities.random import shuffle", "" }) }),
-    s("ut-sleep-dur", { t({ "from utilities.asyncio import sleep_dur", "" }) }),
+    s("ut-sleep-td", { t({ "from utilities.asyncio import sleep_td", "" }) }),
     s("ut-str-mapping", { t({ "from utilities.types import StrMapping", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
     s(
@@ -549,7 +550,7 @@ ls.add_snippets("python", {
     s("ut-text-ascii-lower", { t({ "from utilities.hypothesis import text_ascii_lower", "" }) }),
     s("ut-text-ascii-upper", { t({ "from utilities.hypothesis import text_ascii_upper", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
-    s("ut-timeout-dur", { t({ "from utilities.asyncio import timeout_dur", "" }) }),
+    s("ut-timeout-td", { t({ "from utilities.asyncio import timeout_td", "" }) }),
     s("ut-try-reify-expr", { t({ "from utilities.polars import try_reify_expr", "" }) }),
     s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
     s("ut-tokyo", { t({ "from utilities.tzdata import Tokyo", "" }) }),

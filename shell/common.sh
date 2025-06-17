@@ -383,6 +383,7 @@ if command -v rg >/dev/null 2>&1; then
 	if command -v watch >/dev/null 2>&1; then
 		wrg() { watch --color --differences --interval=0.5 -- rg "$@"; }
 	fi
+
 fi
 
 # rm
@@ -395,6 +396,15 @@ if command -v ruff >/dev/null 2>&1; then
 	rf() { pre-commit run run-ruff-format --all-files; }
 	rcw() { ruff check -w "$@"; }
 fi
+
+# secrets
+secrets_toml() {
+	if [ $# -eq 0 ]; then
+		ancestor_edit secrets.toml
+	else
+		echo_date "'secrets_toml' accepts no arguments" && return 1
+	fi
+}
 
 # settings
 settings_toml() {
