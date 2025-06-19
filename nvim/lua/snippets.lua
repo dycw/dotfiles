@@ -117,6 +117,7 @@ ls.add_snippets("python", {
     s("fu-cached-property", { t({ "from functools import cached_property", "" }) }),
     s("fu-partial", { t({ "from functools import partial", "" }) }),
     s("fu-reduce", { t({ "from functools import reduce", "" }) }),
+    s("fu-total-ordering", { t({ "from functools import total_ordering", "" }) }),
     s("fu-wraps", { t({ "from functools import wraps", "" }) }),
 
     -- future
