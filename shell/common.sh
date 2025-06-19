@@ -360,6 +360,7 @@ if [ -f "${__file}" ]; then
 fi
 
 # python
+export PYTHONBREAKPOINT='pudb.set_trace'
 pyproject() {
 	if [ $# -eq 0 ]; then
 		ancestor_edit pyproject.toml
