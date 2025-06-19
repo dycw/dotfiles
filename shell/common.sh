@@ -2,6 +2,52 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2120,SC2033
 
+# ancestor
+ancestor() {
+	if [ $# -eq 2 ]; then
+		__ancestor_type="$1"
+		__ancestor_name="$2"
+		__ancestor_dir="$(pwd)"
+		while [ "${__ancestor_dir}" != "/" ]; do
+			__ancestor_candidate="${__ancestor_dir}"/"${__ancestor_name}"
+			case "${__ancestor_type}" in
+			file)
+				if [ -f "${__ancestor_candidate}" ]; then
+					echo "${__ancestor_dir}" && return 0
+				fi
+				;;
+			directory)
+				if [ -d "${__ancestor_candidate}" ]; then
+					echo "${__ancestor_dir}" && return 0
+				fi
+				;;
+			*)
+				echo_date "'ancestor' accepts 'file' or 'directory' for the first argument; got ${__ancestor_type}" && return 1
+				;;
+			esac
+			__ancestor_dir="$(dirname "${__ancestor_dir}")"
+		done
+		echo_date "'ancestor' did not find an ancestor containing a ${__ancestor_type} named '${__ancestor_name}'" && return 1
+	else
+		echo_date "'ancestor' accepts 2 arguments" && return 1
+	fi
+}
+
+ancestor_edit() {
+	if [ $# -eq 1 ]; then
+		__ancestor_edit_name="$1"
+		__ancestor_edit_candidate=$(ancestor file "${__ancestor_edit_name}" 2>/dev/null)
+		__ancestor_edit_code=$?
+		if [ "${__ancestor_edit_code}" -eq 0 ]; then
+			"${EDITOR}" "${__ancestor_edit_candidate}"/"${__ancestor_edit_name}" && return 0
+		else
+			echo_date "'ancestor_edit' did not find an ancestor containing a file named '${__ancestor_edit_name}'" && return 1
+		fi
+	else
+		echo_date "'ancestor_edit' accepts 1 arguments" && return 1
+	fi
+}
+
 # bat
 if command -v bat >/dev/null 2>&1; then
 	cat() { bat "$@"; }
@@ -21,7 +67,7 @@ if command -v btm >/dev/null 2>&1; then
 fi
 bottom_toml() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/bottom/bottom.toml"
+		${EDITOR} "${HOME}"/dotfiles/bottom/bottom.toml
 	else
 		echo_date "'bottom_toml' accepts no arguments" && return 1
 	fi
@@ -75,7 +121,6 @@ cddl() {
 	fi
 }
 cd_here() {
-	unset __cd_here_pwd
 	if [ $# -eq 0 ]; then
 		__cd_here_pwd="$(pwd)"
 		cd / || return $?
@@ -100,11 +145,6 @@ chown_dirs() { find . -type d -exec chown "$1" {} \;; }
 
 # coverage
 alias open-cov='open .coverage/html/index.html'
-
-# cyberghost
-if command -v cyberghostvpn >/dev/null 2>&1; then
-	cyber_jp() { sudo cyberghostvpn --country-code JP --connect; }
-fi
 
 # direnv
 if command -v direnv >/dev/null 2>&1; then
@@ -132,11 +172,10 @@ if command -v eza >/dev/null 2>&1; then
 
 	if command -v watch >/dev/null 2>&1; then
 		__watch_eza_base() {
-			watch -d -n 0.1 --color -- eza --all \
-				--classify=always --color=always --git \
-				--group --group-directories-first --header \
-				--long --reverse --sort=modified \
-				--time-style=long-iso "$@"
+			watch --color --differences --interval=0.5 -- \
+				eza --all --classify=always --color=always --git \
+				--group --group-directories-first --header --long \
+				--reverse --sort=modified --time-style=long-iso "$@"
 		}
 		wl() { __watch_eza_base --git-ignore "$@"; }
 		wla() { __watch_eza_base "$@"; }
@@ -192,14 +231,14 @@ if [ -f "$__file" ]; then
 fi
 git_aliases() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/git/aliases.sh"
+		${EDITOR} "${HOME}"/dotfiles/git/aliases.sh
 	else
 		echo_date "'git_aliases' accepts no arguments" && return 1
 	fi
 }
 git_ignore() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "$(repo_root)/.gitignore"
+		${EDITOR} "$(repo_root)"/.gitignore
 	else
 		echo_date "'git_ignore' accepts no arguments" && return 1
 	fi
@@ -222,7 +261,7 @@ set editing-mode vi
 # ipython
 ipython_startup() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/ipython/startup.py"
+		${EDITOR} "${HOME}"/dotfiles/ipython/startup.py
 	else
 		echo_date "'ipython_startup' accepts no arguments" && return 1
 	fi
@@ -237,7 +276,7 @@ fi
 # marimo
 marimo_toml() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/marimo/marimo.toml"
+		${EDITOR} "${HOME}"/dotfiles/marimo/marimo.toml
 	else
 		echo_date "'marimo_toml' accepts no arguments" && return 1
 	fi
@@ -253,14 +292,14 @@ cdplugins() {
 }
 lua_snippets() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/nvim/lua/snippets.lua"
+		${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua
 	else
 		echo_date "'lua_snippets' accepts no arguments" && return 1
 	fi
 }
 plugins_dial() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/nvim/lua/plugins/dial.lua"
+		${EDITOR} "${HOME}"/dotfiles/nvim/lua/plugins/dial.lua
 	else
 		echo_date "'plugins_dial' accepts no arguments" && return 1
 	fi
@@ -288,15 +327,7 @@ if command -v pre-commit >/dev/null 2>&1; then
 fi
 pre_commit_config() {
 	if [ $# -eq 0 ]; then
-		__pre_commit_config_dir="$(pwd)"
-		while [ "${__pre_commit_config_dir}" != "/" ]; do
-			__pre_commit_config_candidate="${__pre_commit_config_dir}"/.pre-commit-config.yaml
-			if [ -f "${__pre_commit_config_candidate}" ]; then
-				"${EDITOR}" "${__pre_commit_config_candidate}" && return 0
-			fi
-			__pre_commit_config_dir="$(dirname "${__pre_commit_config_dir}")"
-		done
-		echo_date "'pre_commit_config' did not find any '.pre_commit_config.yaml' file" && return 1
+		ancestor_edit .pre-commit-config.yaml
 	else
 		echo_date "'pre_commit_config' accepts no arguments" && return 1
 	fi
@@ -312,12 +343,15 @@ pgrep_name() {
 }
 alias pst='ps -fLu "$USER"| wc -l'
 if command -v watch >/dev/null 2>&1; then
-	alias wpst='watch -d -n0.1 "ps -fLu \"$USER\" | wc -l"'
+	wpst() { watch --color --differences --interval=0.5 -- ps -fLu "${USER}" | wc -l; }
 fi
 
 # pyright
 pyr() { pyright "$@"; }
 pyrw() { pyright -w "$@"; }
+
+# pyright + pytest
+pyrt() { pyright "$@" && pytest "$@"; }
 
 # pytest
 __file="${HOME}/dotfiles/pytest/aliases.sh"
@@ -328,15 +362,7 @@ fi
 # python
 pyproject() {
 	if [ $# -eq 0 ]; then
-		__pyproject_dir="$(pwd)"
-		while [ "${__pyproject_dir}" != "/" ]; do
-			__pyproject_candidate="${__pyproject_dir}"/pyproject.toml
-			if [ -f "${__pyproject_candidate}" ]; then
-				"${EDITOR}" "${__pyproject_candidate}" && return 0
-			fi
-			__pyproject_dir="$(dirname "${__pyproject_dir}")"
-		done
-		echo_date "'pyproject' did not find any 'pyproject.toml' file" && return 1
+		ancestor_edit pyproject.toml
 	else
 		echo_date "'pyproject' accepts no arguments" && return 1
 	fi
@@ -354,10 +380,10 @@ if command -v rg >/dev/null 2>&1; then
 			echo_date "'env_rg' accepts 1 argument" && return 1
 		fi
 	}
-	rgw() { watchexec rg "$@"; }
-	if command -v rg >/dev/null 2>&1 && command -v watchexec >/dev/null 2>&1; then
-		rgw() { watchexec rg "$@"; }
+	if command -v watch >/dev/null 2>&1; then
+		wrg() { watch --color --differences --interval=0.5 -- rg "$@"; }
 	fi
+
 fi
 
 # rm
@@ -371,10 +397,28 @@ if command -v ruff >/dev/null 2>&1; then
 	rcw() { ruff check -w "$@"; }
 fi
 
+# secrets
+secrets_toml() {
+	if [ $# -eq 0 ]; then
+		ancestor_edit secrets.toml
+	else
+		echo_date "'secrets_toml' accepts no arguments" && return 1
+	fi
+}
+
+# settings
+settings_toml() {
+	if [ $# -eq 0 ]; then
+		ancestor_edit settings.toml
+	else
+		echo_date "'settings_toml' accepts no arguments" && return 1
+	fi
+}
+
 # shell
 shell_common() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/dotfiles/shell/common.sh"
+		${EDITOR} "${HOME}"/dotfiles/shell/common.sh
 	else
 		echo_date "'shell_common' accepts no arguments" && return 1
 	fi
@@ -463,7 +507,7 @@ if command -v tmux >/dev/null 2>&1; then
 fi
 tmux_conf_local() {
 	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}/.config/tmux/tmux.conf.local"
+		${EDITOR} "${HOME}"/.config/tmux/tmux.conf.local
 	else
 		echo_date "'tmux_conf_local' accepts no arguments" && return 1
 	fi
@@ -473,27 +517,27 @@ tmux_conf_local() {
 if command -v uv >/dev/null 2>&1; then
 	ipy() {
 		if [ $# -eq 0 ]; then
-			uv run --with=ipython ipython || return $?
+			uv run --with=ipython --active --managed-python ipython || return $?
 		else
 			echo_date "'ipy' accepts no arguments" && return 1
 		fi
 	}
 	jl() {
 		if [ $# -eq 0 ]; then
-			uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python jupyter lab || return $?
+			uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python --active --managed-python jupyter lab || return $?
 		else
 			echo_date "'jl' accepts no arguments" && return 1
 		fi
 	}
 	mar() {
 		if [ $# -eq 0 ]; then
-			uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' marimo new
+			uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' --active --managed-python marimo new
 		else
 			echo_date "'mar' accepts no arguments" && return 1
 		fi
 	}
-	uva() { uv add "$@"; }
-	uvpi() { uv pip install "$@"; }
+	uva() { uv add --active --managed-python "$@"; }
+	uvpi() { uv pip install --managed-python "$@"; }
 	uvpl() {
 		if [ $# -eq 0 ]; then
 			uv pip list || return $?
@@ -512,6 +556,7 @@ if command -v uv >/dev/null 2>&1; then
 		fi
 	}
 	uvpu() { uv pip uninstall "$@"; }
+	uvr() { uv remove --active --managed-python "$@"; }
 	uvs() {
 		if [ $# -eq 0 ]; then
 			uv sync --upgrade || return $?
@@ -519,27 +564,29 @@ if command -v uv >/dev/null 2>&1; then
 			echo_date "'uvs' accepts no arguments" && return 1
 		fi
 	}
+
+	if command -v watch >/dev/null 2>&1; then
+		wuvpi() { watch --color --differences --interval=0.5 -- uv pip install "$@"; }
+	fi
 fi
 
 # venv
 venv_recreate() {
 	if [ $# -eq 0 ]; then
-		if [ -d .venv ]; then
-			rm -rf .venv || return $?
+		__venv_recreate_candidate=$(ancestor file .envrc 2>/dev/null)
+		__venv_recreate_code=$?
+		if [ "${__venv_recreate_code}" -eq 0 ]; then
+			__venv_recreate_venv="${__venv_recreate_candidate}"/.venv
+			if [ -d "${__venv_recreate_venv}" ]; then
+				rm -rf "${__venv_recreate_venv}" || return $?
+			fi
 			cd_here || return $?
 		else
-			echo_date "'.venv' does not exist" && return 1
+			echo_date "'venv_recreate' did not find an ancestor containg a file named '.envrc'" && return 1
 		fi
-		__venv_dir="$(pwd)"
-		while [ "${__venv_dir}" != "/" ]; do
-			__venv_candidate="${__venv_dir}/".venv
-			if [ -d "${__venv_candidate}" ]; then
-				rm -rf "${__venv_candidate}" && return 0
-			fi
-			__venv_dir="$(dirname "${__venv_dir}")"
-		done
-		echo_date "'venv_recreate' did not find any '.venv' directory" && return 1
 	else
 		echo_date "'venv_recreate' accepts no arguments" && return 1
 	fi
 }
+
+# private

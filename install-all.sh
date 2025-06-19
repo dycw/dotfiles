@@ -164,6 +164,7 @@ brew_install pgcli
 [ -n "${IS_MAC_MINI}" ] && brew_install postico --cask
 brew_install pre-commit
 brew_install prettier
+[ -n "${IS_MAC}" ] && brew_install protonvpn --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install redis-stack-server redis-stack --tap=redis-stack/redist
 [ -n "${IS_MAC_MINI}" ] && brew_install restic
 brew_install rg ripgrep
@@ -252,7 +253,8 @@ apt_install() {
 }
 if [ -n "${IS_UBUNTU}" ]; then
 	apt_install curl
-	apt_install dropbox nautilus-dropbox
+	apt_install libpq-dev
+	apt_install nautilus-dropbox
 	apt_install git
 	apt_install zsh
 fi

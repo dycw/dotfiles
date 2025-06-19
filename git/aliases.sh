@@ -555,8 +555,10 @@ if command -v git >/dev/null 2>&1; then
 	gs() {
 		if [ $# -eq 0 ]; then
 			git status || return $?
+		elif [ $# -eq 1 ]; then
+			git status "$1" || return $?
 		else
-			echo_date "'gs' accepts no arguments" && return 1
+			echo_date "'gs' accepts [0..1] arguments" && return 1
 		fi
 	}
 	__tree_is_clean() { [ -z "$(git status --porcelain)" ]; }
@@ -810,6 +812,7 @@ fi
 # git + watch
 if command -v git >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
 	wgd() { watch -d -n 0.5 -- git diff "$@"; }
+	wgl() { watch -d -n 0.5 -- git log --abbrev-commit --decorate=short --oneline; }
 	wgs() { watch -d -n 0.5 -- git status "$@"; }
 fi
 

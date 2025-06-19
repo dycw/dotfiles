@@ -56,11 +56,11 @@ return {
 
         -- key maps
         -- key maps: files
-        keymap_set("n", "<Leader><Leader>", function()
-            require("telescope").extensions["recent-files"].recent_files({})
-        end, "recent files")
         keymap_set("n", "<Leader>af", "<Cmd>Telescope adjacent<CR>", "adjacent [f]iles")
-        keymap_set("n", "<Leader>f", builtin.find_files, "find [f]iles")
+        keymap_set("n", "<Leader>f", function()
+            require("telescope").extensions["recent-files"].recent_files({})
+            -- builtin.find_files
+        end, "[f]iles")
         keymap_set("n", "<Leader>gf", function()
             builtin.git_files({ show_untracked = true })
         end, "git [f]iles")
@@ -68,7 +68,7 @@ return {
         keymap_set("n", "<Leader>of", builtin.oldfiles, "old [f]iles")
 
         -- key maps: buffers
-        keymap_set("n", "<Leader>b", builtin.buffers, "[b]uffers")
+        keymap_set("n", "<Leader><Leader>", builtin.buffers, "buffers")
 
         -- key maps: LSP
         keymap_set("n", "gd", builtin.lsp_definitions, "[d]efinitions")
