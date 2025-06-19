@@ -132,8 +132,10 @@ brew_install() {
 		echo_date "Installing '${__brew_install_app}'..."
 		[ -n "${__brew_install_tap}" ] && brew tap "$__brew_install_tap"
 		if [ -n "${__brew_install_cask}" ]; then
+			echo "here with ${__brew_install_cask}"
 			brew install --cask "${__brew_install_app}"
 		else
+			echo "otherwise here with ${__brew_install_iname}"
 			brew install "${__brew_install_iname}"
 		fi
 	fi
@@ -160,7 +162,7 @@ brew_install just
 brew_install luacheck
 brew_install nvim neovim
 brew_install pgcli
-[ -n "${IS_MAC}" ] && brew_install postgresql@17
+[ -n "${IS_MAC}" ] && brew_install postgres postgresql@17
 [ -n "${IS_MAC_MINI}" ] && brew_install postico --cask
 brew_install pre-commit
 brew_install prettier
