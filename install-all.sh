@@ -132,10 +132,8 @@ brew_install() {
 		echo_date "Installing '${__brew_install_app}'..."
 		[ -n "${__brew_install_tap}" ] && brew tap "$__brew_install_tap"
 		if [ -n "${__brew_install_cask}" ]; then
-			echo "here with ${__brew_install_cask}"
 			brew install --cask "${__brew_install_app}"
 		else
-			echo "otherwise here with ${__brew_install_iname}"
 			brew install "${__brew_install_iname}"
 		fi
 	fi
