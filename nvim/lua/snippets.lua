@@ -479,6 +479,7 @@ ls.add_snippets("python", {
     s("ut-extract-groups", { t({ "from utilities.re import extract_groups", "" }) }),
     s("ut-get-args", { t({ "from utilities.typing import get_args", "" }) }),
     s("ut-get-class-name", { t({ "from utilities.functions import get_class_name", "" }) }),
+    s("ut-get-env-var", { t({ "from utilities.os import get_env_var", "" }) }),
     s("ut-get-func-name", { t({ "from utilities.functions import get_func_name", "" }) }),
     s("ut-get-local-time-zone", { t({ "from utilities.tzlocal import get_local_time_zone", "" }) }),
     s("ut-get-now", { t({ "from utilities.whenever import get_now", "" }) }),
