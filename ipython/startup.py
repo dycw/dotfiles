@@ -472,6 +472,21 @@ else:
         ]
 
 try:
+    import atomicwrites
+except ModuleNotFoundError:
+    pass
+else:
+    _ = [atomicwrites]
+
+    try:
+        from utilities.atomicwrites import writer
+    except ModuleNotFoundError:
+        pass
+    else:
+        _ = [writer]
+
+
+try:
     from beartype import beartype
 except ModuleNotFoundError:
     pass
@@ -610,10 +625,12 @@ try:
     from ib_async import (
         IB,
         BarDataList,
+        ContFuture,
         Contract,
         ContractDescription,
         ContractDetails,
         Forex,
+        Future,
         Order,
         OrderStatus,
         Position,
@@ -628,10 +645,12 @@ except ModuleNotFoundError:
 else:
     _ = [
         BarDataList,
+        ContFuture,
         Contract,
         ContractDescription,
         ContractDetails,
         Forex,
+        Future,
         IB,
         Order,
         OrderStatus,
@@ -774,6 +793,7 @@ else:
             one_maybe,
             one_str,
             one_unique,
+            transpose,
             unique_everseen,
         )
     except ModuleNotFoundError:
@@ -797,6 +817,7 @@ else:
             one_maybe,
             one_str,
             one_unique,
+            transpose,
             unique_everseen,
         ]
     try:
@@ -1028,7 +1049,7 @@ except ModuleNotFoundError:
     try:
         from utilities.pickle import read_pickle
     except ModuleNotFoundError:
-        from pandas import read_pickle
+        ...
     else:
         _ = [read_pickle]
 else:
@@ -1062,6 +1083,7 @@ else:
         pandas,
         pd,
         qcut,
+        read_pickle,
         read_sql,
         read_table,
         set_option,
@@ -1357,7 +1379,7 @@ else:
 
 try:
     from pytest import fixture, mark, param  # noqa: PT013
-except ModuleNotFoundError:
+except ImportError:
     pass
 else:
     _ = [fixture, mark, param]
@@ -1429,10 +1451,21 @@ try:
     import sqlalchemy as sqla
     import sqlalchemy.orm
     from sqlalchemy import Column, MetaData, Table, func, select
+    from sqlalchemy.orm import selectinload
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Column, MetaData, Table, sqla, sqlalchemy, sqlalchemy.orm, select, func]
+    _ = [
+        Column,
+        MetaData,
+        Table,
+        sqla,
+        sqlalchemy,
+        sqlalchemy.orm,
+        select,
+        func,
+        selectinload,
+    ]
     try:
         from utilities.sqlalchemy import (
             create_async_engine,
@@ -1550,7 +1583,6 @@ try:
         make_isinstance,
     )
     from utilities.functools import partial
-    from utilities.git import get_repo_root
     from utilities.iterables import (
         group_consecutive_integers,
         groupby_lists,
@@ -1564,17 +1596,18 @@ try:
     )
     from utilities.math import ewm_parameters, is_integral, safe_round
     from utilities.os import CPU_COUNT
-    from utilities.pathlib import list_dir
+    from utilities.pathlib import get_package_root, get_repo_root, get_root, list_dir
     from utilities.period import DatePeriod, ZonedDateTimePeriod
     from utilities.pickle import read_pickle, write_pickle
     from utilities.random import SYSTEM_RANDOM, get_state, shuffle
     from utilities.re import extract_group, extract_groups
     from utilities.shelve import yield_shelf
+    from utilities.text import parse_bool, parse_none
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
     from utilities.types import MaybeIterable, Number, StrMapping, TimeZone
     from utilities.typing import get_args, get_literal_elements
-    from utilities.whenever2 import (
+    from utilities.whenever import (
         DAY,
         HOUR,
         MICROSECOND,
@@ -1638,7 +1671,9 @@ else:
         get_literal_elements,
         get_now,
         get_now_local,
+        get_package_root,
         get_repo_root,
+        get_root,
         get_state,
         get_time_zone_name,
         get_today,
@@ -1649,6 +1684,8 @@ else:
         list_dir,
         make_isinstance,
         one,
+        parse_bool,
+        parse_none,
         partial,
         read_pickle,
         run_in_background,
@@ -1664,12 +1701,6 @@ else:
         yield_fields,
         yield_shelf,
     ]
-    try:
-        from utilities.atomicwrites import writer
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [writer]
     try:
         from utilities.jupyter import show
     except ModuleNotFoundError:
@@ -1700,8 +1731,10 @@ try:
         DateDelta,
         DateTimeDelta,
         LocalDateTime,
+        MonthDay,
         Time,
         TimeDelta,
+        YearMonth,
         ZonedDateTime,
     )
 except ModuleNotFoundError:
@@ -1712,8 +1745,10 @@ else:
         DateDelta,
         DateTimeDelta,
         LocalDateTime,
+        MonthDay,
         Time,
         TimeDelta,
+        YearMonth,
         ZonedDateTime,
         whenever,
     ]

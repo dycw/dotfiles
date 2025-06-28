@@ -146,6 +146,10 @@ chown_dirs() { find . -type d -exec chown "$1" {} \;; }
 # coverage
 alias open-cov='open .coverage/html/index.html'
 
+# debug
+set_debug() { export DEBUG='1'; }
+clear_debug() { unset DEBUG; }
+
 # direnv
 if command -v direnv >/dev/null 2>&1; then
 	alias dea='direnv allow'
