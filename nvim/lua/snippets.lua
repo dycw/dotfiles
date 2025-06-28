@@ -429,6 +429,10 @@ ls.add_snippets("python", {
     s("ty-extended-ts-converter", { t({ "from utilities.typed_settings import ExtendedTSConverter", "" }) }),
 
     -- typing
+    s("case-never", {
+        t({ "case never:", "" }),
+        t({ "    assert_never(never)", "" }),
+    }),
     s("im-typing", { t({ "import typing", "" }) }),
     s("ty-any", { t({ "from typing import Any", "" }) }),
     s("ty-cast", { t({ "from typing import cast", "" }) }),
@@ -483,13 +487,13 @@ ls.add_snippets("python", {
     s("ut-get-func-name", { t({ "from utilities.functions import get_func_name", "" }) }),
     s("ut-get-local-time-zone", { t({ "from utilities.tzlocal import get_local_time_zone", "" }) }),
     s("ut-get-now", { t({ "from utilities.whenever import get_now", "" }) }),
-    s("ut-get-now-local", { t({ "from utilities.tzlocal import get_now_local", "" }) }),
+    s("ut-get-now-local", { t({ "from utilities.whenever import get_now_local", "" }) }),
     s("ut-get-repo-root", { t({ "from utilities.git import get_repo_root", "" }) }),
     s("ut-get-root", { t({ "from utilities.pathlib import get_root", "" }) }),
     s("ut-get-state", { t({ "from utilities.random import get_state", "" }) }),
     s("ut-get-table", { t({ "from utilities.sqlalchemy import get_table", "" }) }),
     s("ut-get-today", { t({ "from utilities.whenever import get_today", "" }) }),
-    s("ut-get-today-local", { t({ "from utilities.tzlocal import get_today_local", "" }) }),
+    s("ut-get-today-local", { t({ "from utilities.whenever import get_today_local", "" }) }),
     s("ut-hong-kong", { t({ "from utilities.tzdata import HongKong", "" }) }),
     s("ut-hour", { t({ "from utilities.whenever import HOUR", "" }) }),
     s("ut-impossible-case-error", { t({ "from utilities.errors import ImpossibleCaseError", "" }) }),
