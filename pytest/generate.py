@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 basicConfig(format="{message}", style="{", level="INFO", stream=stdout)
 
 
-type Key = Literal["c", "f", "i", "k", "m", "n", "p", "x"]
+Key = Literal["c", "f", "i", "k", "m", "n", "p", "x"]
 
 
 class ArgumentError(Exception): ...
