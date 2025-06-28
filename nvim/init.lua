@@ -5,6 +5,7 @@ local v = vim
 require("globals") -- setting leader must happen before plugins are loaded
 require("autocmds")
 require("keymaps")
+require("lsp")
 require("opts")
 require("user_commands")
 
