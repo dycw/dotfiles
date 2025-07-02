@@ -347,6 +347,7 @@ _ = [
     overload,
     override,
     pairwise,
+    pairwise,
     partial,
     pathlib,
     permutations,
@@ -636,6 +637,7 @@ try:
         Position,
         RealTimeBar,
         RealTimeBarList,
+        Stock,
         Ticker,
         Trade,
         TradeLogEntry,
@@ -657,6 +659,7 @@ else:
         Position,
         RealTimeBar,
         RealTimeBarList,
+        Stock,
         Ticker,
         Trade,
         TradeLogEntry,
@@ -1000,11 +1003,11 @@ else:
     _ = [orjson]
 
     try:
-        from utilities.orjson import deserialize, serialize
+        from utilities.orjson import deserialize, read_object, serialize, write_object
     except ModuleNotFoundError:
         pass
     else:
-        _ = [deserialize, serialize]
+        _ = [deserialize, read_object, serialize, write_object]
 
 
 try:
@@ -1147,7 +1150,9 @@ try:
         int_range,
         int_ranges,
         lit,
+        max_horizontal,
         mean_horizontal,
+        min_horizontal,
         read_avro,
         read_csv,
         read_csv_batched,
@@ -1261,7 +1266,9 @@ else:
         int_range,
         int_ranges,
         lit,
+        max_horizontal,
         mean_horizontal,
+        min_horizontal,
         pl,
         polars,
         read_avro,
@@ -1298,6 +1305,7 @@ else:
             cross_rolling_quantile,
             dataclass_to_dataframe,
             dataclass_to_schema,
+            deserialize_dataframe,
             ensure_expr_or_series,
             floor_datetime,
             get_data_type_or_series_time_zone,
@@ -1307,6 +1315,7 @@ else:
             is_near_event,
             join,
             replace_time_zone,
+            serialize_dataframe,
             touch,
             try_reify_expr,
             zoned_datetime,
@@ -1331,6 +1340,7 @@ else:
             cross_rolling_quantile,
             dataclass_to_dataframe,
             dataclass_to_schema,
+            deserialize_dataframe,
             ensure_expr_or_series,
             floor_datetime,
             get_data_type_or_series_time_zone,
@@ -1340,6 +1350,7 @@ else:
             is_near_event,
             join,
             replace_time_zone,
+            serialize_dataframe,
             touch,
             try_reify_expr,
             zoned_datetime,
@@ -1596,7 +1607,13 @@ try:
     )
     from utilities.math import ewm_parameters, is_integral, safe_round
     from utilities.os import CPU_COUNT
-    from utilities.pathlib import get_package_root, get_repo_root, get_root, list_dir
+    from utilities.pathlib import (
+        ensure_suffix,
+        get_package_root,
+        get_repo_root,
+        get_root,
+        list_dir,
+    )
     from utilities.period import DatePeriod, ZonedDateTimePeriod
     from utilities.pickle import read_pickle, write_pickle
     from utilities.random import SYSTEM_RANDOM, get_state, shuffle
@@ -1613,9 +1630,14 @@ try:
         MICROSECOND,
         MILLISECOND,
         MINUTE,
+        MONTH,
         SECOND,
+        TODAY_LOCAL,
         TODAY_UTC,
         WEEK,
+        YEAR,
+        ZERO_DAYS,
+        ZERO_TIME,
         get_now,
         get_now_local,
         get_today,
@@ -1638,17 +1660,22 @@ else:
         MICROSECOND,
         MILLISECOND,
         MINUTE,
+        MONTH,
         MaybeIterable,
         Number,
         SECOND,
         SYSTEM_RANDOM,
         SizeAndTimeRotatingFileHandler,
         StrMapping,
+        TODAY_LOCAL,
         TODAY_UTC,
         TimeZone,
         Timer,
         UTC,
         WEEK,
+        YEAR,
+        ZERO_DAYS,
+        ZERO_TIME,
         ZonedDateTimePeriod,
         basic_config,
         dataclass_repr,
@@ -1660,6 +1687,7 @@ else:
         ensure_not_none,
         ensure_plain_date_time,
         ensure_str,
+        ensure_suffix,
         ensure_time_zone,
         ensure_zoned_date_time,
         ewm_parameters,
