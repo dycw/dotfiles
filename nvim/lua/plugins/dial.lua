@@ -46,6 +46,8 @@ return {
             { "gateway", "tws" },
             { "head", "tail" },
             { "high", "low" },
+            { "key", "value" },
+            { "keys", "values" },
             { "left", "right" },
             { "long", "short" },
             { "loss", "profit" },
