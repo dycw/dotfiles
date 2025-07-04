@@ -305,6 +305,7 @@ ls.add_snippets("python", {
         i(2, "param1"),
         t(")])"),
     }),
+    s("mr10", { t({ "@mark.repeat(10)", "" }) }),
     s("ms", { t({ "@mark.skip", "" }) }),
     s("mx", { t({ "@mark.xfail", "" }) }),
     s("pyi", {

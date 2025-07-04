@@ -312,6 +312,23 @@ if command -v nvim >/dev/null 2>&1; then
 	n() { nvim "$@"; }
 fi
 
+# openvpn
+openvpn_home() {
+	unset __openvpn_home_count __openvpn_home_file
+	__openvpn_home_count=0
+	first=""
+	find "${HOME}/dropbox" -type f -name "*.ovpn" | while IFS= read -r __openvpn_home_file; do
+		__openvpn_home_count=$((__openvpn_home_count + 1))
+	done
+
+	if [ "$__openvpn_home_count" -eq 0 ]; then
+		echo_date "ERROR: no '*.ovpn' file found"
+	elif [ "$__openvpn_home_count" -eq 1 ]; then
+		find "$HOME/DB" -type f -name "*.ovpn"
+	else
+		echo_date "ERROR: multiple '*.ovpn' files found"
+	fi
+}
 # path
 echo_path() {
 	if [ $# -eq 0 ]; then
