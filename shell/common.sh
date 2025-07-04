@@ -313,15 +313,17 @@ if command -v nvim >/dev/null 2>&1; then
 fi
 
 # openvpn
-openvpn_home() {
-	__openvpn_home_file=$(find "${HOME}/Dropbox/qrt" -type f -name '*.ovpn' -print -quit)
-	if [ -f "${__openvpn_home_file}" ]; then
-		echo_date "Connecting home using ${__openvpn_home_file}..."
-		sudo openvpn --config "${__openvpn_home_file}"
-	else
-		echo_date "ERROR: no '*.ovpn' file found"
-	fi
-}
+if command -v openvpn >/dev/null 2>&1; then
+	openvpn_home() {
+		__openvpn_home_file=$(find "${HOME}/Dropbox/qrt" -type f -name '*.ovpn' -print -quit)
+		if [ -f "${__openvpn_home_file}" ]; then
+			echo_date "Connecting home using ${__openvpn_home_file}..."
+			sudo openvpn --config "${__openvpn_home_file}" --auth-user-pass "${HOME}/openvpn.local"
+		else
+			echo_date "ERROR: no '*.ovpn' file found"
+		fi
+	}
+fi
 
 # path
 echo_path() {
