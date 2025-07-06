@@ -310,7 +310,7 @@ ls.add_snippets("python", {
     s("mx", { t({ "@mark.xfail", "" }) }),
     s("pyi", {
         t({ "from hypothesis import Phase, reproduce_failure, settings", "" }),
-        t({ "from pytest import mark, param", "" }),
+        t({ "from pytest import RaisesGroup, mark, param, raises", "" }),
         t({ "from utilities.contextvars import set_global_breakpoint", "" }),
     }),
     s("py-approx", { t({ "from pytest import approx", "" }) }),
@@ -318,6 +318,7 @@ ls.add_snippets("python", {
     s("py-mark", { t({ "from pytest import mark", "" }) }),
     s("py-param", { t({ "from pytest import param", "" }) }),
     s("py-raises", { t({ "from pytest import raises", "" }) }),
+    s("py-raises-group", { t({ "from pytest import RaisesGroup", "" }) }),
     s("py-read-pickle", {
         t({
             "from utilities.pathlib import get_root",
