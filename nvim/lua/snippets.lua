@@ -298,6 +298,7 @@ ls.add_snippets("python", {
     s("a0", { t({ "assert 0, '!!!'", "" }) }),
     s("mo", { t({ "@mark.only", "" }) }),
     s("mmo", { t({ "marks=mark.only", "" }) }),
+    s("mms", { t({ "marks=mark.skip", "" }) }),
     s("mp", {
         t({ '@mark.parametrize("' }),
         i(1, "arg1"),
