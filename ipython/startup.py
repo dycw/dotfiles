@@ -1175,7 +1175,11 @@ try:
         SchemaDict,
     )
     from polars.datatypes import DataTypeClass
-    from polars.exceptions import ColumnNotFoundError, InvalidOperationError
+    from polars.exceptions import (
+        ColumnNotFoundError,
+        InvalidOperationError,
+        NoRowsReturnedError,
+    )
     from polars.testing import (
         assert_frame_equal,
         assert_frame_not_equal,
@@ -1239,6 +1243,7 @@ else:
         IntoExprColumn,
         InvalidOperationError,
         List,
+        NoRowsReturnedError,
         Null,
         Object,
         PolarsDataType,
@@ -1595,6 +1600,7 @@ try:
     )
     from utilities.functools import partial
     from utilities.iterables import (
+        chunked,
         group_consecutive_integers,
         groupby_lists,
         one,
@@ -1678,6 +1684,7 @@ else:
         ZERO_TIME,
         ZonedDateTimePeriod,
         basic_config,
+        chunked,
         dataclass_repr,
         dataclass_to_dict,
         ensure_class,

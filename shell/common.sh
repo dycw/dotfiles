@@ -351,16 +351,22 @@ pre_commit_config() {
 }
 
 # ps + pgrep
-pgrep_name() {
+ps_pgrep() {
 	if [ $# -eq 1 ]; then
 		ps -fp $(pgrep "$1") || return $?
 	else
-		echo_date "'pgrep_name' accepts 1 argument" && return 1
+		echo_date "'ps_pgrep' accepts 1 argument" && return 1
 	fi
 }
 alias pst='ps -fLu "$USER"| wc -l'
 if command -v watch >/dev/null 2>&1; then
-	wpst() { watch --color --differences --interval=0.5 -- ps -fLu "${USER}" | wc -l; }
+	wps_pgrep() {
+		if [ $# -eq 1 ]; then
+			watch --color --differences --interval=0.5 -- ps -fp $(pgrep "$1")
+		else
+			echo_date "'wps_pgrep' accepts 1 argument" && return 1
+		fi
+	}
 fi
 
 # pyright
