@@ -1578,7 +1578,6 @@ else:
 try:
     from utilities.asyncio import (
         EnhancedTaskGroup,
-        Looper,
         sleep_max,
         sleep_rounded,
         sleep_td,
@@ -1662,7 +1661,6 @@ else:
         DatePeriod,
         EnhancedTaskGroup,
         HOUR,
-        Looper,
         MICROSECOND,
         MILLISECOND,
         MINUTE,
