@@ -353,16 +353,20 @@ pre_commit_config() {
 # ps + pgrep
 ps_pgrep() {
 	if [ $# -eq 1 ]; then
-		ps -fp $(pgrep "$1") || return $?
+		pids=$(pgrep "$1" | tr '\n' ' ')
+		if [ -n "${pids}" ]; then
+			ps -fp "${pids}" && return $?
+		else
+			echo_date "No process matched: $1" && return 1
+		fi
 	else
 		echo_date "'ps_pgrep' accepts 1 argument" && return 1
 	fi
 }
-alias pst='ps -fLu "$USER"| wc -l'
 if command -v watch >/dev/null 2>&1; then
 	wps_pgrep() {
 		if [ $# -eq 1 ]; then
-			watch --color --differences --interval=0.5 -- ps -fp $(pgrep "$1")
+			watch --color --differences --interval=0.5 -- "pids=\$(pgrep \"$1\"); if [ -n \"\${pids}\" ]; then ps -fp \${pids}; else echo \"No process matched: $1\"; fi"
 		else
 			echo_date "'wps_pgrep' accepts 1 argument" && return 1
 		fi

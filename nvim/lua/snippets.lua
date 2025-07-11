@@ -500,6 +500,7 @@ ls.add_snippets("python", {
     s("ut-get-func-name", { t({ "from utilities.functions import get_func_name", "" }) }),
     s("ut-get-literal-elements", { t({ "from utilities.typing import get_literal_elements", "" }) }),
     s("ut-get-local-time-zone", { t({ "from utilities.tzlocal import get_local_time_zone", "" }) }),
+    s("ut-get-logger", { t({ "from utilities.logging import get_logger", "" }) }),
     s("ut-get-now", { t({ "from utilities.whenever import get_now", "" }) }),
     s("ut-get-now-local", { t({ "from utilities.whenever import get_now_local", "" }) }),
     s("ut-get-repo-root", { t({ "from utilities.git import get_repo_root", "" }) }),
