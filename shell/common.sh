@@ -467,11 +467,10 @@ fi
 
 # python
 pyproject() {
-	if [ $# -eq 0 ]; then
-		ancestor_edit pyproject.toml
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'pyproject' accepts no arguments" && return 1
 	fi
+	ancestor_edit pyproject.toml
 }
 
 # q
@@ -480,11 +479,10 @@ start_q() { QHOME="${HOME}"/q rlwrap -r "$HOME/q/m64/q" "$@"; }
 # rg
 if command -v rg >/dev/null 2>&1; then
 	env_rg() {
-		if [ $# -eq 1 ]; then
-			env | rg "$1" || return $?
-		else
+		if [ $# -ne 1 ]; then
 			echo_date "'env_rg' accepts 1 argument" && return 1
 		fi
+		env | rg "$1"
 	}
 	if command -v watch >/dev/null 2>&1; then
 		wrg() { watch --color --differences --interval=0.5 -- rg "$@"; }
@@ -493,136 +491,120 @@ if command -v rg >/dev/null 2>&1; then
 fi
 
 # rm
-alias rmr='rm -r'
-alias rmf='rm -f'
-alias rmrf='rm -rf'
+rmr() { rm -r "$@"; }
+rmf() { rm -f "$@"; }
+rmrf() { rm -rf "$@"; }
 
 # ruff
 if command -v ruff >/dev/null 2>&1; then
-	rf() { pre-commit run run-ruff-format --all-files; }
 	rcw() { ruff check -w "$@"; }
 fi
 
 # secrets
 secrets_toml() {
-	if [ $# -eq 0 ]; then
-		ancestor_edit secrets.toml
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'secrets_toml' accepts no arguments" && return 1
 	fi
+	ancestor_edit secrets.toml
 }
 
 # settings
 settings_toml() {
-	if [ $# -eq 0 ]; then
-		ancestor_edit settings.toml
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'settings_toml' accepts no arguments" && return 1
 	fi
+	ancestor_edit settings.toml
 }
 
 # shell
 shell_common() {
-	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}"/dotfiles/shell/common.sh
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'shell_common' accepts no arguments" && return 1
 	fi
+	${EDITOR} "${HOME}"/dotfiles/shell/common.sh
 }
 
 # SSH
 ssh_home() {
-	if [ $# -eq 0 ]; then
-		if [ -z "${SSH_HOME_USER}" ]; then
-			echo_date "'\$SSH_HOME_USER' does not exist" && return 1
-		elif [ -z "${SSH_HOME_HOST}" ]; then
-			echo_date "'\$SSH_HOME_HOST' does not exist" && return 1
-		else
-			ssh "${SSH_HOME_USER}@${SSH_HOME_HOST}" || return $?
-		fi
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'ssh_home' accepts no arguments" && return 1
+	elif [ -z "${SSH_HOME_USER}" ]; then
+		echo_date "'\$SSH_HOME_USER' does not exist" && return 1
+	elif [ -z "${SSH_HOME_HOST}" ]; then
+		echo_date "'\$SSH_HOME_HOST' does not exist" && return 1
 	fi
+	ssh "${SSH_HOME_USER}@${SSH_HOME_HOST}"
 }
 ssh_tunnel_home() {
-	if [ $# -eq 0 ]; then
-		if [ -z "${SSH_HOME_USER}" ]; then
-			echo_date "'\$SSH_HOME_USER' does not exist" && return 1
-		elif [ -z "${SSH_HOME_HOST}" ]; then
-			echo_date "'\$SSH_HOME_HOST' does not exist" && return 1
-		elif [ -z "${SSH_TUNNEL_HOME_PORT}" ]; then
-			echo_date "'\$SSH_TUNNEL_HOME_PORT' does not exist" && return 1
-		else
-			ssh -N -L "${SSH_TUNNEL_HOME_PORT}:localhost:${SSH_TUNNEL_HOME_PORT}" "${SSH_HOME_USER}@${SSH_HOME_HOST}" || return $?
-		fi
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'ssh_tunnel_home' accepts no arguments" && return 1
+	elif [ -z "${SSH_HOME_USER}" ]; then
+		echo_date "'\$SSH_HOME_USER' does not exist" && return 1
+	elif [ -z "${SSH_HOME_HOST}" ]; then
+		echo_date "'\$SSH_HOME_HOST' does not exist" && return 1
+	elif [ -z "${SSH_TUNNEL_HOME_PORT}" ]; then
+		echo_date "'\$SSH_TUNNEL_HOME_PORT' does not exist" && return 1
 	fi
+	ssh -N -L "${SSH_TUNNEL_HOME_PORT}:localhost:${SSH_TUNNEL_HOME_PORT}" \
+		"${SSH_HOME_USER}@${SSH_HOME_HOST}"
 }
 
 # tailscale
 if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1; then
 	ts_up() {
-		if [ $# -eq 0 ]; then
-			ts_down || return $?
-			__ts_up_auth_key="${HOME}/tailscale.local.sh"
-			if ! [ -f "${__ts_up_auth_key}" ]; then
-				echo_date "'${__ts_up_auth_key}' does not exist" && return 1
-			fi
-			if [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
-				echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
-			fi
-			echo_date "Starting 'tailscaled' in the background..." || return $?
-			sudo tailscaled &
-			echo_date "Starting 'tailscale'..." || return $?
-			sudo tailscale up --accept-dns --accept-routes --auth-key="file:${__ts_up_auth_key}" --login-server="${TAILSCALE_LOGIN_SERVER}" && return $?
-		else
+		if [ $# -ne 0 ]; then
 			echo_date "'ts_up' accepts no arguments" && return 1
 		fi
+		ts_down
+		__file="${HOME}/tailscale.local.sh"
+		if ! [ -f "${__file}" ]; then
+			echo_date "'${__file}' does not exist" && return 1
+		elif [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
+			echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
+		fi
+		echo_date "Starting 'tailscaled' in the background..."
+		sudo tailscaled &
+		echo_date "Starting 'tailscale'..."
+		sudo tailscale up --accept-dns --accept-routes \
+			--auth-key="file:${__file}" \
+			--login-server="${TAILSCALE_LOGIN_SERVER}"
 	}
 	ts_down() {
-		if [ $# -eq 0 ]; then
-			echo_date "Cleaning 'tailscaled'..." || return $?
-			sudo tailscaled --cleanup
-			echo_date "Killing 'tailscaled'..." || return $?
-			sudo pkill tailscaled
-			echo_date "Logging out of 'tailscale'..." || return $?
-			sudo tailscale logout
-			return 0
-		else
+		if [ $# -ne 0 ]; then
 			echo_date "'ts_down' accepts no arguments" && return 1
 		fi
+		echo_date "Cleaning 'tailscaled'..."
+		sudo tailscaled --cleanup
+		echo_date "Killing 'tailscaled'..."
+		sudo pkill tailscaled
+		echo_date "Logging out of 'tailscale'..."
+		sudo tailscale logout
 	}
 	ts_status() {
-		if [ $# -eq 0 ]; then
-			tailscale status
-		else
+		if [ $# -ne 0 ]; then
 			echo_date "'ts_status' accepts no arguments" && return 1
 		fi
+		tailscale status
 	}
 	if command -v jq >/dev/null 2>&1; then
 		ts_ssh() {
-			if [ $# -eq 0 ]; then
-				if [ -z "${SSH_HOME_USER}" ]; then
-					echo_date "'\$SSH_HOME_USER' does not exist" && return 1
-				elif [ -z "${TAILSCALE_PEER_HOST_NAME}" ]; then
-					echo_date "'\$TAILSCALE_PEER_HOST_NAME' does not exist" && return 1
-				else
-					__host_name=$(tailscale status --json | jq -r --arg hostname "${TAILSCALE_PEER_HOST_NAME}" '.Peer[] | select(.HostName == $hostname) | .TailscaleIPs[0]')
-					ssh "${SSH_HOME_USER}@${__host_name}" || return $?
-				fi
-			else
+			if [ $# -ne 0 ]; then
 				echo_date "'ts_ssh' accepts no arguments" && return 1
+			elif [ -z "${SSH_HOME_USER}" ]; then
+				echo_date "'\$SSH_HOME_USER' does not exist" && return 1
+			elif [ -z "${TAILSCALE_PEER_HOST_NAME}" ]; then
+				echo_date "'\$TAILSCALE_PEER_HOST_NAME' does not exist" && return 1
 			fi
+			__host=$(tailscale status --json | jq -r --arg host "${TAILSCALE_PEER_HOST_NAME}" '.Peer[] | select(.HostName == $host) | .TailscaleIPs[0]')
+			ssh "${SSH_HOME_USER}@${__host}"
 		}
 	fi
 	if command -v watch >/dev/null 2>&1; then
 		wts_status() {
-			if [ $# -eq 0 ]; then
-				watch --color --differences --interval=0.5 -- tailscale status
-			else
+			if [ $# -ne 0 ]; then
 				echo_date "'wts_status' accepts no arguments" && return 1
 			fi
+			watch --color --differences --interval=0.5 -- tailscale status
 		}
 	fi
 fi
@@ -630,22 +612,20 @@ fi
 # tmux
 if command -v tmux >/dev/null 2>&1; then
 	tmux_attach() {
-		unset __tmux_attach_window
 		if [ $# -eq 0 ]; then
-			__tmux_attach_window=0
+			__window=0
 		elif [ $# -eq 1 ]; then
-			__tmux_attach_window="$1"
+			__window="$1"
 		else
 			echo_date "'tmux_attach' accepts [0..1] arguments" && return 1
 		fi
-		tmux attach -t "${__tmux_attach_window}" || return $?
+		tmux attach -t "${__window}"
 	}
 	tmux_ls() {
-		if [ $# -eq 0 ]; then
-			tmux ls || return $?
-		else
+		if [ $# -ne 0 ]; then
 			echo_date "'tmux_ls' accepts no arguments" && return 1
 		fi
+		tmux ls
 	}
 	if [ -z "$TMUX" ]; then
 		# not inside tmux
@@ -654,12 +634,11 @@ if command -v tmux >/dev/null 2>&1; then
 			tmux new-session -c "${PWD}"
 		elif [ -n "$SSH_CONNECTION" ]; then
 			# is over SSH
-			__tmux_session_count="$(tmux ls 2>/dev/null | wc -l)"
-			if [ "${__tmux_session_count}" -eq 0 ]; then
+			__count="$(tmux ls 2>/dev/null | wc -l)"
+			if [ "${__count}" -eq 0 ]; then
 				tmux new
-			elif [ "${__tmux_session_count}" -eq 1 ]; then
-				__tmux_session="$(tmux ls | cut -d: -f1)"
-				tmux attach -t "${__tmux_session}"
+			elif [ "${__count}" -eq 1 ]; then
+				tmux attach -t "$(tmux ls | cut -d: -f1)"
 			else
 				echo_date "Multiple 'tmux' sessions detected:"
 				tmux ls
