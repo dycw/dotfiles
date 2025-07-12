@@ -484,18 +484,26 @@ ssh_tunnel_home() {
 # tailscale
 if command -v tailscale >/dev/null 2>&1; then
 	ts_home() {
-		if [ $# -eq 0 ]; then
-			__ts_home_auth_key="${HOME}/tailscale.local.sh"
-			if ! [ -f "${__ts_home_auth_key}" ]; then
-				echo_date "'${__ts_home_auth_key}' does not exist" && return 1
-			fi
-			if [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
-				echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
-			fi
-			sudo tailscale up --accept-routes --auth-key="file:${__ts_home_auth_key}" --force-reauth --login-server="${TAILSCALE_LOGIN_SERVER}" --reset
-		else
-			echo_date "'ts_home' accepts no arguments" && return 1
+		echo_date "Logging out of 'tailscale'..." && return 1
+		sudo tailscale logout && return $?
+		echo_date "Cleaning 'tailscaled'..." && return 1
+		sudo tailscaled --cleanup && return $?
+		echo_date "Killing 'tailscaled'..." && return 1
+		sudo pkill tailscaled && return $?
+		until ! pgrep tailscaled >/dev/null 2>&1; do sleep 0.1; done
+		__ts_home_auth_key="${HOME}/tailscale.local.sh"
+		if ! [ -f "${__ts_home_auth_key}" ]; then
+			echo_date "'${__ts_home_auth_key}' does not exist" && return 1
 		fi
+		if [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
+			echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
+		fi
+		echo_date "Starting 'tailscaled' in the background..." && return 1
+		sudo tailscaled &
+		echo_date "Waiting for 'tailscale status'..." && return 1
+		until tailscale status >/dev/null 2>&1; do sleep 0.1; done
+		echo_date "Starting 'tailscale'..." && return 1
+		sudo tailscale up --accepts-dns --accepts-routes --auth-key="file:${__ts_home_auth_key}" --login-server="${TAILSCALE_LOGIN_SERVER}" "$@"
 	}
 	ts_status() {
 		if [ $# -eq 0 ]; then
