@@ -483,6 +483,20 @@ ssh_tunnel_home() {
 
 # tailscale
 if command -v tailscale >/dev/null 2>&1; then
+	ts_home() {
+		if [ $# -eq 0 ]; then
+			__ts_home_auth_key="${HOME}/tailscale.local.sh"
+			if ! [ -f "${__ts_home_auth_key}" ]; then
+				echo_date "'${__ts_home_auth_key}' does not exist" && return 1
+			fi
+			if [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
+				echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
+			fi
+			sudo tailscale up --accept-routes --auth-key="file:${__ts_home_auth_key}" --force-reauth --login-server="${TAILSCALE_LOGIN_SERVER}" --reset
+		else
+			echo_date "'ts_home' accepts no arguments" && return 1
+		fi
+	}
 	ts_status() {
 		if [ $# -eq 0 ]; then
 			tailscale status

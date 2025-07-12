@@ -367,7 +367,7 @@ if command -v git >/dev/null 2>&1; then
 	# fetch
 	gf() {
 		if [ $# -eq 0 ]; then
-			git fetch --all && __delete_gone_branches || return $?
+			git fetch --all --force && __delete_gone_branches || return $?
 		else
 			echo_date "'gf' accepts no arguments" && return 1
 		fi
