@@ -252,11 +252,10 @@ fi
 # git
 if command -v git >/dev/null 2>&1; then
 	cdr() {
-		if [ $# -eq 0 ]; then
-			cd "$(repo_root)" && return 1
-		else
+		if [ $# -ne 0 ]; then
 			echo_date "'cdr' accepts no arguments" && return 1
 		fi
+		cd "$(repo_root)" || return $?
 	}
 fi
 __file="${HOME}/dotfiles/git/aliases.sh"
@@ -264,29 +263,50 @@ if [ -f "$__file" ]; then
 	. "$__file"
 fi
 git_aliases() {
-	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}"/dotfiles/git/aliases.sh
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'git_aliases' accepts no arguments" && return 1
 	fi
+	${EDITOR} "${HOME}"/dotfiles/git/aliases.sh
 }
 git_ignore() {
-	if [ $# -eq 0 ]; then
-		${EDITOR} "$(repo_root)"/.gitignore
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'git_ignore' accepts no arguments" && return 1
 	fi
+	${EDITOR} "$(repo_root)"/.gitignore
 }
 
 # hypothesis
-hypothesis_ci() { export HYPOTHESIS_PROFILE='ci'; }
-hypothesis_debug() { export HYPOTHESIS_PROFILE='debug'; }
-hypothesis_default() { export HYPOTHESIS_PROFILE='default'; }
+hypothesis_ci() {
+	if [ $# -ne 0 ]; then
+		echo_date "'hypothesis_ci' accepts no arguments" && return 1
+	fi
+	export HYPOTHESIS_PROFILE='ci'
+}
+hypothesis_debug() {
+	if [ $# -ne 0 ]; then
+		echo_date "'hypothesis_debug' accepts no arguments" && return 1
+	fi
+	export HYPOTHESIS_PROFILE='debug'
+}
+hypothesis_default() {
+	if [ $# -ne 0 ]; then
+		echo_date "'hypothesis_default' accepts no arguments" && return 1
+	fi
+	export HYPOTHESIS_PROFILE='default'
+}
 hypothesis_dev() {
+	if [ $# -ne 0 ]; then
+		echo_date "'hypothesis_dev' accepts no arguments" && return 1
+	fi
 	export HYPOTHESIS_PROFILE='dev'
 	hypothesis_no_shrink
 }
-hypothesis_no_shrink() { export HYPOTHESIS_NO_SHRINK='1'; }
+hypothesis_no_shrink() {
+	if [ $# -ne 0 ]; then
+		echo_date "'hypothesis_no_shrink' accepts no arguments" && return 1
+	fi
+	export HYPOTHESIS_NO_SHRINK='1'
+}
 
 # input
 set bell-style none
