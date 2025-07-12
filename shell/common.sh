@@ -4,56 +4,53 @@
 
 # ancestor
 ancestor() {
-	if [ $# -eq 2 ]; then
-		__ancestor_type="$1"
-		__ancestor_name="$2"
-		__ancestor_dir="$(pwd)"
-		while [ "${__ancestor_dir}" != "/" ]; do
-			__ancestor_candidate="${__ancestor_dir}"/"${__ancestor_name}"
-			case "${__ancestor_type}" in
-			file)
-				if [ -f "${__ancestor_candidate}" ]; then
-					echo "${__ancestor_dir}" && return 0
-				fi
-				;;
-			directory)
-				if [ -d "${__ancestor_candidate}" ]; then
-					echo "${__ancestor_dir}" && return 0
-				fi
-				;;
-			*)
-				echo_date "'ancestor' accepts 'file' or 'directory' for the first argument; got ${__ancestor_type}" && return 1
-				;;
-			esac
-			__ancestor_dir="$(dirname "${__ancestor_dir}")"
-		done
-		echo_date "'ancestor' did not find an ancestor containing a ${__ancestor_type} named '${__ancestor_name}'" && return 1
-	else
+	if [ $# -ne 2 ]; then
 		echo_date "'ancestor' accepts 2 arguments" && return 1
 	fi
+	__type="$1"
+	__name="$2"
+	__dir="$(pwd)"
+	while [ "${__dir}" != "/" ]; do
+		__candidate="${__dir}"/"${__name}"
+		case "${__type}" in
+		file) if [ -f "${__candidate}" ]; then echo "${__dir}"; fi ;;
+		directory) if [ -d "${__candidate}" ]; then echo "${__dir}"; fi ;;
+		*) echo_date "'ancestor' accepts 'file' or 'directory' for the first argument; got ${__type}" && return 1 ;;
+		esac
+		__dir="$(dirname "${__dir}")"
+	done
+	echo_date "'ancestor' did not find an ancestor containing a ${__type} named '${__name}'" && return 1
 }
 
 ancestor_edit() {
-	if [ $# -eq 1 ]; then
-		__ancestor_edit_name="$1"
-		__ancestor_edit_candidate=$(ancestor file "${__ancestor_edit_name}" 2>/dev/null)
-		__ancestor_edit_code=$?
-		if [ "${__ancestor_edit_code}" -eq 0 ]; then
-			"${EDITOR}" "${__ancestor_edit_candidate}"/"${__ancestor_edit_name}" && return 0
-		else
-			echo_date "'ancestor_edit' did not find an ancestor containing a file named '${__ancestor_edit_name}'" && return 1
-		fi
-	else
+	if [ $# -ne 1 ]; then
 		echo_date "'ancestor_edit' accepts 1 arguments" && return 1
 	fi
+	__name="$1"
+	__candidate=$(ancestor file "${__name}" 2>/dev/null)
+	__code=$?
+	if [ "${__code}" -ne 0 ]; then
+		echo_date "'ancestor_edit' did not find an ancestor containing a file named '${__name}'" && return 1
+	fi
+	"${EDITOR}" "${__candidate}"/"${__name}"
 }
 
 # bat
 if command -v bat >/dev/null 2>&1; then
 	cat() { bat "$@"; }
 	catp() { bat --style=plain "$@"; }
-	tf() { __tf_base "$1" --language=log; }
-	tfp() { __tf_base "$1"; }
+	tf() {
+		if [ $# -ne 1 ]; then
+			echo_date "'tf' accepts 1 argument" && return 1
+		fi
+		__tf_base "$1" --language=log
+	}
+	tfp() {
+		if [ $# -ne 1 ]; then
+			echo_date "'tfp' accepts 1 argument" && return 1
+		fi
+		__tf_base "$1"
+	}
 	__tf_base() {
 		__file="$1"
 		shift
@@ -66,11 +63,10 @@ if command -v btm >/dev/null 2>&1; then
 	htop() { btm "$@"; }
 fi
 bottom_toml() {
-	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}"/dotfiles/bottom/bottom.toml
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'bottom_toml' accepts no arguments" && return 1
 	fi
+	${EDITOR} "${HOME}"/dotfiles/bottom/bottom.toml
 }
 
 # cd
@@ -79,80 +75,107 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 cdcache() {
-	if [ $# -eq 0 ]; then
-		cd "${XDG_CONFIG_HOME:-"${HOME}/.cache"}" || return $?
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'cdcache' accepts no arguments" && return 1
 	fi
+	cd "${XDG_CONFIG_HOME:-"${HOME}/.cache"}" || return $?
 }
 cdconfig() {
-	if [ $# -eq 0 ]; then
-		cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}" || return $?
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'cdconfig' accepts no arguments" && return 1
 	fi
+	cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}" || return $?
 }
 cddb() {
-	if [ $# -eq 0 ]; then
-		cd "${HOME}/Dropbox" || return $?
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'cddb' accepts no arguments" && return 1
 	fi
+	cd "${HOME}/Dropbox" || return $?
 }
 cddbt() {
-	if [ $# -eq 0 ]; then
-		cd "${HOME}/Dropbox/Temporary" || return $?
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'cddbt' accepts no arguments" && return 1
 	fi
+	cd "${HOME}/Dropbox/Temporary" || return $?
 }
 cddf() {
-	if [ $# -eq 0 ]; then
-		cd "${HOME}/dotfiles" || return $?
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'cddl' accepts no arguments" && return 1
 	fi
+	cd "${HOME}/dotfiles" || return $?
 }
 cddl() {
-	if [ $# -eq 0 ]; then
-		cd "${HOME}/Downloads" || return $?
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'cddl' accepts no arguments" && return 1
 	fi
+	cd "${HOME}/Downloads" || return $?
 }
 cd_here() {
-	if [ $# -eq 0 ]; then
-		__cd_here_pwd="$(pwd)"
-		cd / || return $?
-		cd "${__cd_here_pwd}" || return $?
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'cd_here' accepts no arguments" && return 1
 	fi
+	__pwd="$(pwd)"
+	cd / || return $?
+	cd "${__pwd}" || return $?
 }
 cdw() {
-	if [ $# -eq 0 ]; then
-		cd "${HOME}/work" || return $?
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'cdw' accepts no arguments" && return 1
 	fi
+	cd "${HOME}/work" || return $?
 }
 
 # chmod
-chmod_files() { find . -type f -exec chmod "$1" {} \;; }
-chmod_dirs() { find . -type d -exec chmod "$1" {} \;; }
-chown_files() { find . -type f -exec chown "$1" {} \;; }
-chown_dirs() { find . -type d -exec chown "$1" {} \;; }
+chmod_files() {
+	if [ $# -ne 1 ]; then
+		echo_date "'chmod_files' accepts 1 argument" && return 1
+	fi
+	find . -type f -exec chmod "$1" {} \;
+}
+chmod_dirs() {
+	if [ $# -ne 1 ]; then
+		echo_date "'chmod_dirs' accepts 1 argument" && return 1
+	fi
+	find . -type d -exec chmod "$1" {} \;
+}
+chown_files() {
+	if [ $# -ne 1 ]; then
+		echo_date "'chown_files' accepts 1 argument" && return 1
+	fi
+	find . -type f -exec chown "$1" {} \;
+}
+chown_dirs() {
+	if [ $# -ne 1 ]; then
+		echo_date "'chown_dirs' accepts 1 argument" && return 1
+	fi
+	find . -type d -exec chown "$1" {} \;
+}
 
 # coverage
 alias open-cov='open .coverage/html/index.html'
 
 # debug
-set_debug() { export DEBUG='1'; }
-clear_debug() { unset DEBUG; }
+set_debug() {
+	if [ $# -ne 0 ]; then
+		echo_date "'set_debug' accepts no arguments" && return 1
+	fi
+	export DEBUG='1'
+}
+clear_debug() {
+	if [ $# -ne 0 ]; then
+		echo_date "'clear_debug' accepts no arguments" && return 1
+	fi
+	unset DEBUG
+}
 
 # direnv
 if command -v direnv >/dev/null 2>&1; then
-	alias dea='direnv allow'
+	dea() {
+		if [ $# -ne 0 ]; then
+			echo_date "'dea' accepts no arguments" && return 1
+		fi
+		direnv allow
+	}
 fi
 
 # echo
@@ -164,8 +187,7 @@ if command -v eza >/dev/null 2>&1; then
 		eza --all --classify=always --group-directories-first "$@"
 	}
 	__eza_long() {
-		__eza_base --git --group --header --long \
-			--time-style=long-iso "$@"
+		__eza_base --git --group --header --long --time-style=long-iso "$@"
 	}
 	l() { __eza_long --git-ignore "$@"; }
 	la() { __eza_long "$@"; }
