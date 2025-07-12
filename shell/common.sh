@@ -312,19 +312,6 @@ if command -v nvim >/dev/null 2>&1; then
 	n() { nvim "$@"; }
 fi
 
-# openvpn
-if command -v openvpn >/dev/null 2>&1; then
-	openvpn_home() {
-		__openvpn_home_file=$(find "${HOME}/Dropbox/qrt" -type f -name '*.ovpn' -print -quit)
-		if [ -f "${__openvpn_home_file}" ]; then
-			echo_date "Connecting home using ${__openvpn_home_file}..."
-			sudo openvpn --config "${__openvpn_home_file}" --auth-user-pass "${HOME}/openvpn.local"
-		else
-			echo_date "ERROR: no '*.ovpn' file found"
-		fi
-	}
-fi
-
 # path
 echo_path() {
 	if [ $# -eq 0 ]; then
@@ -344,7 +331,7 @@ if command -v pre-commit >/dev/null 2>&1; then
 fi
 pre_commit_config() {
 	if [ $# -eq 0 ]; then
-		ancestor_edit .pre-commit-config.yaml
+		ancestor_edit .pre-commit-config.yaml && return $?
 	else
 		echo_date "'pre_commit_config' accepts no arguments" && return 1
 	fi
@@ -482,9 +469,10 @@ ssh_tunnel_home() {
 }
 
 # tailscale
-if command -v tailscale >/dev/null 2>&1; then
-	ts_home() {
+if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1; then
+	ts_up() {
 		if [ $# -eq 0 ]; then
+			ts_down || return $?
 			__ts_home_auth_key="${HOME}/tailscale.local.sh"
 			if ! [ -f "${__ts_home_auth_key}" ]; then
 				echo_date "'${__ts_home_auth_key}' does not exist" && return 1
@@ -492,9 +480,25 @@ if command -v tailscale >/dev/null 2>&1; then
 			if [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
 				echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
 			fi
-			sudo tailscale up --accept-routes --auth-key="file:${__ts_home_auth_key}" --force-reauth --login-server="${TAILSCALE_LOGIN_SERVER}" --reset
+			echo_date "Starting 'tailscaled' in the background..." || return $?
+			sudo tailscaled &
+			echo_date "Starting 'tailscale'..." || return $?
+			sudo tailscale up --accept-dns --accept-routes --auth-key="file:${__ts_home_auth_key}" --login-server="${TAILSCALE_LOGIN_SERVER}" "$@" && return $?
 		else
-			echo_date "'ts_home' accepts no arguments" && return 1
+			echo_date "'ts_up' accepts no arguments" && return 1
+		fi
+	}
+	ts_down() {
+		if [ $# -eq 0 ]; then
+			echo_date "Logging out of 'tailscale'..." || return $?
+			sudo tailscale logout
+			echo_date "Cleaning 'tailscaled'..." || return $?
+			sudo tailscaled --cleanup
+			echo_date "Killing 'tailscaled'..." || return $?
+			sudo pkill tailscaled
+			return 0
+		else
+			echo_date "'ts_down' accepts no arguments" && return 1
 		fi
 	}
 	ts_status() {
@@ -504,6 +508,15 @@ if command -v tailscale >/dev/null 2>&1; then
 			echo_date "'ts_status' accepts no arguments" && return 1
 		fi
 	}
+	if command -v watch >/dev/null 2>&1; then
+		wts_status() {
+			if [ $# -eq 0 ]; then
+				watch --color --differences --interval=0.5 -- tailscale status
+			else
+				echo_date "'wts_status' accepts no arguments" && return 1
+			fi
+		}
+	fi
 fi
 
 # tmux
