@@ -473,9 +473,9 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 	ts_up() {
 		if [ $# -eq 0 ]; then
 			ts_down || return $?
-			__ts_home_auth_key="${HOME}/tailscale.local.sh"
-			if ! [ -f "${__ts_home_auth_key}" ]; then
-				echo_date "'${__ts_home_auth_key}' does not exist" && return 1
+			__ts_up_auth_key="${HOME}/tailscale.local.sh"
+			if ! [ -f "${__ts_up_auth_key}" ]; then
+				echo_date "'${__ts_up_auth_key}' does not exist" && return 1
 			fi
 			if [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
 				echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
@@ -483,7 +483,7 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			echo_date "Starting 'tailscaled' in the background..." || return $?
 			sudo tailscaled &
 			echo_date "Starting 'tailscale'..." || return $?
-			sudo tailscale up --accept-dns --accept-routes --auth-key="file:${__ts_home_auth_key}" --login-server="${TAILSCALE_LOGIN_SERVER}" "$@" && return $?
+			sudo tailscale up --accept-dns --accept-routes --auth-key="file:${__ts_up_auth_key}" --login-server="${TAILSCALE_LOGIN_SERVER}" "$@" && return $?
 		else
 			echo_date "'ts_up' accepts no arguments" && return 1
 		fi
