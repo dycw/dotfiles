@@ -647,65 +647,74 @@ if command -v tmux >/dev/null 2>&1; then
 	fi
 fi
 tmux_conf_local() {
-	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}"/.config/tmux/tmux.conf.local
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'tmux_conf_local' accepts no arguments" && return 1
 	fi
+	${EDITOR} "${HOME}"/.config/tmux/tmux.conf.local
 }
 
 # uv
 if command -v uv >/dev/null 2>&1; then
 	ipy() {
-		if [ $# -eq 0 ]; then
-			uv run --with=ipython --active --managed-python ipython || return $?
-		else
+		if [ $# -ne 0 ]; then
 			echo_date "'ipy' accepts no arguments" && return 1
 		fi
+		uv run --with=ipython --active --managed-python ipython
 	}
 	jl() {
-		if [ $# -eq 0 ]; then
-			uv run --with=altair,beartype,hvplot,jupyterlab,jupyterlab-code-formatter,jupyterlab-vim,matplotlib,rich,vegafusion,vegafusion-python-embed,vl-convert-python --active --managed-python jupyter lab || return $?
-		else
+		if [ $# -ne 0 ]; then
 			echo_date "'jl' accepts no arguments" && return 1
 		fi
+		uv run --with=altair \
+			--with=beartype \
+			--with=hvplot \
+			--with=jupyterlab \
+			--with=jupyterlab-code-formatter \
+			--with=jupyterlab-vim \
+			--with=matplotlib \
+			--with=rich \
+			--with=vegafusion \
+			--with=vegafusion-python-embed \
+			--with=vl-convert-python \
+			--active --managed-python jupyter lab
 	}
 	mar() {
-		if [ $# -eq 0 ]; then
-			uv run --with='beartype,hvplot,marimo[recommended],matplotlib,rich' --active --managed-python marimo new
-		else
+		if [ $# -ne 0 ]; then
 			echo_date "'mar' accepts no arguments" && return 1
 		fi
+		uv run --with=beartype \
+			--with=beartype \
+			--with=hvplot \
+			--with='marimo[recommended]' \
+			--with=matplotlib \
+			--with=rich \
+			--active --managed-python marimo new
 	}
 	uva() { uv add --active --managed-python "$@"; }
 	uvpi() { uv pip install --managed-python "$@"; }
 	uvpl() {
 		if [ $# -eq 0 ]; then
-			uv pip list || return $?
+			uv pip list
 		elif [ $# -eq 1 ]; then
-			(uv pip list | grep "$1") || return $?
+			(uv pip list | grep "$1")
 		else
 			echo_date "'uvpl' accepts [0..1] arguments" && return 1
 		fi
-
 	}
 	uvplo() {
-		if [ $# -eq 0 ]; then
-			uv pip list --outdated || return $?
-		else
+		if [ $# -ne 0 ]; then
 			echo_date "'uvplo' accepts no arguments" && return 1
 		fi
+		uv pip list --outdated
 	}
 	uvpu() { uv pip uninstall "$@"; }
 	uvr() { uv remove --active --managed-python "$@"; }
 	uvs() {
-		if [ $# -eq 0 ]; then
-			uv sync --upgrade || return $?
-		else
+		if [ $# -ne 0 ]; then
 			echo_date "'uvs' accepts no arguments" && return 1
 		fi
+		uv sync --upgrade
 	}
-
 	if command -v watch >/dev/null 2>&1; then
 		wuvpi() { watch --color --differences --interval=0.5 -- uv pip install "$@"; }
 	fi
@@ -713,21 +722,19 @@ fi
 
 # venv
 venv_recreate() {
-	if [ $# -eq 0 ]; then
-		__venv_recreate_candidate=$(ancestor file .envrc 2>/dev/null)
-		__venv_recreate_code=$?
-		if [ "${__venv_recreate_code}" -eq 0 ]; then
-			__venv_recreate_venv="${__venv_recreate_candidate}"/.venv
-			if [ -d "${__venv_recreate_venv}" ]; then
-				rm -rf "${__venv_recreate_venv}" || return $?
-			fi
-			cd_here || return $?
-		else
-			echo_date "'venv_recreate' did not find an ancestor containg a file named '.envrc'" && return 1
-		fi
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'venv_recreate' accepts no arguments" && return 1
 	fi
+	__candidate=$(ancestor file .envrc 2>/dev/null)
+	__code=$?
+	if [ "${__code}" -ne 0 ]; then
+		echo_date "'venv_recreate' did not find an ancestor containg a file named '.envrc'" && return 1
+	fi
+	__venv="${__candidate}"/.venv
+	if [ -d "${__venv}" ]; then
+		rm -rf "${__venv}"
+	fi
+	cd_here
 }
 
 # private
