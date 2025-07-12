@@ -403,56 +403,52 @@ pre_commit_config() {
 
 # ps + pgrep
 pgrepf() {
-	if [ $# -eq 1 ]; then
-		__pids=$(pgrep -f "$1" | tr '\n' ' ')
-		if [ -n "${__pids}" ]; then
-			ps -fp "${__pids}" && return $?
-		else
-			echo_date "No process matched: $1" && return 1
-		fi
-	else
+	if [ $# -ne 1 ]; then
 		echo_date "'pgrepf' accepts 1 argument" && return 1
 	fi
+	__pids=$(pgrep -f "$1" | tr '\n' ' ')
+	if [ -z "${__pids}" ]; then
+		echo_date "No process matched: $1" && return 1
+	fi
+	# shellcheck disable=SC2046
+	ps -fp "${__pids}"
 }
 if command -v fzf >/dev/null 2>&1; then
 	pgrep_kill() {
-		if [ $# -eq 1 ]; then
-			__pattern=$1
-			__pids=$(pgrep -f "$__pattern" | tr '\n' ' ')
-			if [ -n "$__pids" ]; then
-				__results=$(ps -fp "$__pids")
-				__selected=$(printf '%s\n' "$__results" | awk 'NR>1' | fzf --multi \
+		if [ $# -ne 1 ]; then
+			echo_date "'pgrep_kill' accepts 1 argument" && return 1
+		fi
+		__pattern=$1
+		__pids=$(pgrep -f "$__pattern" | tr '\n' ' ')
+		if [ -z "$__pids" ]; then
+			echo_date "No process matched '$__pattern'" && return 0
+		fi
+		__results=$(ps -fp "$__pids")
+		__selected=$(
+			printf '%s\n' "$__results" |
+				awk 'NR>1' |
+				fzf --multi \
 					--header-lines=0 \
 					--prompt="Kill which $__pattern process? " \
 					--preview="printf '%s\n' \"$__results\" | head -1; echo {}; " \
-					--preview-window=up:3:wrap)
-				if [ -n "$__selected" ]; then
-					# shellcheck disable=SC2046
-					set -- $(printf '%s\n' "$__selected" | awk '{print $2}')
-					echo_date "Killing PIDs: $*"
-					kill -9 "$@"
-				else
-					echo_date "No process selected"
-					return 0
-				fi
-
-			else
-				echo_date "No process matched: $__pattern"
-				return 1
-			fi
-		else
-			echo_date "'pgrep_kill' accepts 1 argument" >&2
-			return 1
+					--preview-window=up:3:wrap
+		)
+		if [ -z "$__selected" ]; then
+			echo_date "No process selected" && return 0
 		fi
+		# shellcheck disable=SC2046
+		set -- $(printf '%s\n' "$__selected" | awk '{print $2}')
+		echo_date "Killing PIDs: $*"
+		kill -9 "$@"
 	}
 fi
 if command -v watch >/dev/null 2>&1; then
-	wps_pgrep() {
-		if [ $# -eq 1 ]; then
-			watch --color --differences --interval=0.5 -- "pids=\$(pgrep -f \"$1\"); if [ -n \"\${pids}\" ]; then ps -fp \${pids}; else echo \"No process matched: $1\"; fi"
-		else
-			echo_date "'wps_pgrep' accepts 1 argument" && return 1
+	wpgrepf() {
+		if [ $# -ne 0 ]; then
+			echo_date "'wpgrepf' accepts 1 argument" && return 1
 		fi
+		watch --color --differences --interval=0.5 -- \
+			"pids=\$(pgrep -f \"$1\"); if [ -n \"\${pids}\" ]; then ps -fp \${pids}; else echo \"No process matched: $1\"; fi"
 	}
 fi
 
