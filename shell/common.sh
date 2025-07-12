@@ -338,67 +338,46 @@ pre_commit_config() {
 }
 
 # ps + pgrep
-ps_pgrep() {
+pgrepf() {
 	if [ $# -eq 1 ]; then
-		__pids=$(__get_pids_by_pattern "$1")
-		if [ -n "$__pids" ]; then
-			# shellcheck disable=SC2046
-			ps -fp $(printf '%s' "$__pids") && return $?
+		__pids=$(pgrep -f "$1" | tr '\n' ' ')
+		if [ -n "${__pids}" ]; then
+			ps -fp "${__pids}" && return $?
 		else
 			echo_date "No process matched: $1" && return 1
 		fi
 	else
-		echo_date "'ps_pgrep' accepts 1 argument" && return 1
-	fi
-}
-__get_pids_by_pattern() {
-	if [ $# -eq 1 ]; then
-		__pids=$(pgrep -f "$1")
-		if [ -n "${__pids}" ]; then
-			# shellcheck disable=SC2086
-			printf '%s\n' $__pids
-			return 0
-		else
-			return 1
-		fi
-	else
-		echo_date "'__get_pids_by_pattern' accepts 1 argument" && return 1
+		echo_date "'pgrepf' accepts 1 argument" && return 1
 	fi
 }
 if command -v fzf >/dev/null 2>&1; then
-	ps_pgrep_kill() {
+	pgrep_kill() {
 		if [ $# -eq 1 ]; then
+			__pattern=$1
+			__pids=$(pgrep -f "$__pattern" | tr '\n' ' ')
+			if [ -n "$__pids" ]; then
+				__results=$(ps -fp "$__pids")
+				__selected=$(printf '%s\n' "$__results" | awk 'NR>1' | fzf --multi \
+					--header-lines=0 \
+					--prompt="Kill which $__pattern process? " \
+					--preview="printf '%s\n' \"$__results\" | head -1; echo {}; " \
+					--preview-window=up:3:wrap)
+				if [ -n "$__selected" ]; then
+					# shellcheck disable=SC2046
+					set -- $(printf '%s\n' "$__selected" | awk '{print $2}')
+					echo_date "Killing PIDs: $*"
+					kill -9 "$@"
+				else
+					echo_date "No process selected"
+					return 0
+				fi
 
-			match=$1
-			pids=$(pgrep -f "$match" | tr '\n' ' ')
-
-			if [ -z "$pids" ]; then
-				echo "No process matched: $match"
+			else
+				echo_date "No process matched: $__pattern"
 				return 1
 			fi
-
-			ps_out=$(ps -fp "$pids")
-
-			# Skip header for fzf, preview header in preview window
-			selected=$(printf '%s\n' "$ps_out" | awk 'NR>1' | fzf --multi \
-				--header-lines=0 \
-				--prompt="Kill which $match process? " \
-				--preview="printf '%s\n' \"$ps_out\" | head -1; echo {}; " \
-				--preview-window=up:3:wrap)
-
-			if [ -z "$selected" ]; then
-				echo "No process selected"
-				return 0
-			fi
-
-			# Convert newline-separated PIDs to positional args
-			# shellcheck disable=SC2046
-			set -- $(printf '%s\n' "$selected" | awk '{print $2}')
-
-			echo "Killing PIDs: $*"
-			kill -9 "$@"
 		else
-			echo "'ps_pgrep_kill' accepts 1 argument" >&2
+			echo_date "'pgrep_kill' accepts 1 argument" >&2
 			return 1
 		fi
 	}
