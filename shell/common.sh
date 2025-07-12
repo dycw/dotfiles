@@ -368,10 +368,31 @@ echo_path() {
 
 # pre-commit
 if command -v pre-commit >/dev/null 2>&1; then
-	alias pca='pre-commit run -a'
-	alias pcav='pre-commit run -av'
-	alias pcau='pre-commit autoupdate'
-	alias pci='pre-commit install'
+	pca() {
+		if [ $# -ne 0 ]; then
+			echo_date "'pca' accepts no arguments" && return 1
+		fi
+		pre-commit run --all-files
+	}
+	pcav() {
+		if [ $# -ne 0 ]; then
+			echo_date "'pcav' accepts no arguments" && return 1
+		fi
+		pre-commit run --all-files --verbose
+	}
+	pcau() {
+
+		if [ $# -ne 0 ]; then
+			echo_date "'pcau' accepts no arguments" && return 1
+		fi
+		pre-commit autoupdate
+	}
+	pci() {
+		if [ $# -ne 0 ]; then
+			echo_date "'pci' accepts no arguments" && return 1
+		fi
+		pre-commit install
+	}
 fi
 pre_commit_config() {
 	if [ $# -eq 0 ]; then
