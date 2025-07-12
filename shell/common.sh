@@ -483,7 +483,7 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			echo_date "Starting 'tailscaled' in the background..." || return $?
 			sudo tailscaled &
 			echo_date "Starting 'tailscale'..." || return $?
-			sudo tailscale up --accept-dns --accept-routes --auth-key="file:${__ts_up_auth_key}" --login-server="${TAILSCALE_LOGIN_SERVER}" "$@" && return $?
+			sudo tailscale up --accept-dns --accept-routes --auth-key="file:${__ts_up_auth_key}" --login-server="${TAILSCALE_LOGIN_SERVER}" && return $?
 		else
 			echo_date "'ts_up' accepts no arguments" && return 1
 		fi
