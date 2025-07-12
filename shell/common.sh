@@ -736,5 +736,3 @@ venv_recreate() {
 	fi
 	cd_here
 }
-
-# private
