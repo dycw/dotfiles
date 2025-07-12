@@ -328,34 +328,30 @@ fi
 
 # marimo
 marimo_toml() {
-	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}"/dotfiles/marimo/marimo.toml
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'marimo_toml' accepts no arguments" && return 1
 	fi
+	${EDITOR} "${HOME}"/dotfiles/marimo/marimo.toml
 }
 
 # neovim
 cdplugins() {
-	if [ $# -eq 0 ]; then
-		cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}/nvim/lua/plugins" || return $?
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'cdplugins' accepts no arguments" && return 1
 	fi
+	cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}/nvim/lua/plugins" || return $?
 }
 lua_snippets() {
-	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'lua_snippets' accepts no arguments" && return 1
 	fi
+	${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua
 }
 plugins_dial() {
-	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}"/dotfiles/nvim/lua/plugins/dial.lua
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'plugins_dial' accepts no arguments" && return 1
 	fi
+	${EDITOR} "${HOME}"/dotfiles/nvim/lua/plugins/dial.lua
 }
 if command -v nvim >/dev/null 2>&1; then
 	n() { nvim "$@"; }
@@ -363,12 +359,11 @@ fi
 
 # path
 echo_path() {
-	if [ $# -eq 0 ]; then
-		echo_date "\$PATH:" || return 0
-		echo "${PATH}" | tr ':' '\n' | nl || return 0
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'echo_path' accepts no arguments" && return 1
 	fi
+	echo_date "\$PATH:"
+	echo "${PATH}" | tr ':' '\n' | nl
 }
 
 # pre-commit
