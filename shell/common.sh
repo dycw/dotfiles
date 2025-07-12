@@ -395,11 +395,10 @@ if command -v pre-commit >/dev/null 2>&1; then
 	}
 fi
 pre_commit_config() {
-	if [ $# -eq 0 ]; then
-		ancestor_edit .pre-commit-config.yaml && return $?
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'pre_commit_config' accepts no arguments" && return 1
 	fi
+	ancestor_edit .pre-commit-config.yaml
 }
 
 # ps + pgrep
