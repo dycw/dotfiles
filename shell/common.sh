@@ -490,12 +490,12 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 	}
 	ts_down() {
 		if [ $# -eq 0 ]; then
-			echo_date "Logging out of 'tailscale'..." || return $?
-			tailscale logout
 			echo_date "Cleaning 'tailscaled'..." || return $?
-			tailscaled --cleanup
+			sudo tailscaled --cleanup
 			echo_date "Killing 'tailscaled'..." || return $?
-			pkill tailscaled
+			sudo pkill tailscaled
+			echo_date "Logging out of 'tailscale'..." || return $?
+			sudo tailscale logout
 			return 0
 		else
 			echo_date "'ts_down' accepts no arguments" && return 1
