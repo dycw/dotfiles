@@ -471,27 +471,35 @@ ssh_tunnel_home() {
 # tailscale
 if command -v tailscale >/dev/null 2>&1; then
 	ts_home() {
-		ts_down || return $?
-		__ts_home_auth_key="${HOME}/tailscale.local.sh"
-		if ! [ -f "${__ts_home_auth_key}" ]; then
-			echo_date "'${__ts_home_auth_key}' does not exist" && return 1
+		if [ $# -eq 0 ]; then
+			ts_down || return $?
+			__ts_home_auth_key="${HOME}/tailscale.local.sh"
+			if ! [ -f "${__ts_home_auth_key}" ]; then
+				echo_date "'${__ts_home_auth_key}' does not exist" && return 1
+			fi
+			if [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
+				echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
+			fi
+			echo_date "Starting 'tailscaled' in the background..." || return $?
+			sudo tailscaled &
+			echo_date "Starting 'tailscale'..." || return $?
+			sudo tailscale up --accept-dns --accept-routes --auth-key="file:${__ts_home_auth_key}" --login-server="${TAILSCALE_LOGIN_SERVER}" "$@" && return $?
+		else
+			echo_date "'ts_home' accepts no arguments" && return 1
 		fi
-		if [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
-			echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
-		fi
-		echo_date "Starting 'tailscaled' in the background..." || return $?
-		sudo tailscaled &
-		echo_date "Starting 'tailscale'..." || return $?
-		sudo tailscale up --accept-dns --accept-routes --auth-key="file:${__ts_home_auth_key}" --login-server="${TAILSCALE_LOGIN_SERVER}" "$@" && return $?
 	}
 	ts_down() {
-		echo_date "Logging out of 'tailscale'..." || return $?
-		sudo tailscale logout || return $?
-		echo_date "Cleaning 'tailscaled'..." || return $?
-		sudo tailscaled --cleanup || return $?
-		echo_date "Killing 'tailscaled'..." || return $?
-		sudo pkill tailscaled || return $?
-		until ! pgrep tailscaled >/dev/null 2>&1; do sleep 0.1; done
+		if [ $# -eq 0 ]; then
+			echo_date "Logging out of 'tailscale'..." || return $?
+			sudo tailscale logout || return $?
+			echo_date "Cleaning 'tailscaled'..." || return $?
+			sudo tailscaled --cleanup || return $?
+			echo_date "Killing 'tailscaled'..." || return $?
+			sudo pkill tailscaled || return $?
+			until ! pgrep tailscaled >/dev/null 2>&1; do sleep 0.1; done
+		else
+			echo_date "'ts_down' accepts no arguments" && return 1
+		fi
 	}
 	ts_status() {
 		if [ $# -eq 0 ]; then
@@ -500,6 +508,15 @@ if command -v tailscale >/dev/null 2>&1; then
 			echo_date "'ts_status' accepts no arguments" && return 1
 		fi
 	}
+	if command -v watch >/dev/null 2>&1; then
+		wts_status() {
+			if [ $# -eq 0 ]; then
+				watch --color --differences --interval=0.5 -- tailscale status
+			else
+				echo_date "'wts_status' accepts no arguments" && return 1
+			fi
+		}
+	fi
 fi
 
 # tmux
