@@ -314,11 +314,10 @@ set editing-mode vi
 
 # ipython
 ipython_startup() {
-	if [ $# -eq 0 ]; then
-		${EDITOR} "${HOME}"/dotfiles/ipython/startup.py
-	else
+	if [ $# -ne 0 ]; then
 		echo_date "'ipython_startup' accepts no arguments" && return 1
 	fi
+	${EDITOR} "${HOME}"/dotfiles/ipython/startup.py
 }
 
 # local
