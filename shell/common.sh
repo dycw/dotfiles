@@ -508,6 +508,22 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			echo_date "'ts_status' accepts no arguments" && return 1
 		fi
 	}
+	if command -v jq >/dev/null 2>&1; then
+		ts_ssh() {
+			if [ $# -eq 0 ]; then
+				if [ -z "${SSH_HOME_USER}" ]; then
+					echo_date "'\$SSH_HOME_USER' does not exist" && return 1
+				elif [ -z "${TAILSCALE_PEER_HOST_NAME}" ]; then
+					echo_date "'\$TAILSCALE_PEER_HOST_NAME' does not exist" && return 1
+				else
+					__host_name=$(tailscale status --json | jq -r --arg hostname "${TAILSCALE_PEER_HOST_NAME}" '.Peer[] | select(.HostName == $hostname) | .TailscaleIPs[0]')
+					ssh "${SSH_HOME_USER}@${__host_name}" || return $?
+				fi
+			else
+				echo_date "'ts_ssh' accepts no arguments" && return 1
+			fi
+		}
+	fi
 	if command -v watch >/dev/null 2>&1; then
 		wts_status() {
 			if [ $# -eq 0 ]; then

@@ -155,6 +155,7 @@ brew_install fzf
 brew_install gh
 [ -n "${IS_MAC}" ] && brew_install gitweb yoannfleurydev/gitweb/gitweb
 [ -n "${IS_MAC}" ] && brew_install gsed gnu-sed
+brew_install jq
 brew_install just
 [ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
 brew_install luacheck
