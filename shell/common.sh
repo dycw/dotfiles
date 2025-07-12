@@ -469,8 +469,8 @@ ssh_tunnel_home() {
 }
 
 # tailscale
-if command -v tailscale >/dev/null 2>&1; then
-	ts_home() {
+if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1; then
+	ts_up() {
 		if [ $# -eq 0 ]; then
 			ts_down || return $?
 			__ts_home_auth_key="${HOME}/tailscale.local.sh"
@@ -485,18 +485,18 @@ if command -v tailscale >/dev/null 2>&1; then
 			echo_date "Starting 'tailscale'..." || return $?
 			sudo tailscale up --accept-dns --accept-routes --auth-key="file:${__ts_home_auth_key}" --login-server="${TAILSCALE_LOGIN_SERVER}" "$@" && return $?
 		else
-			echo_date "'ts_home' accepts no arguments" && return 1
+			echo_date "'ts_up' accepts no arguments" && return 1
 		fi
 	}
 	ts_down() {
 		if [ $# -eq 0 ]; then
 			echo_date "Logging out of 'tailscale'..." || return $?
-			sudo tailscale logout || return $?
+			sudo tailscale logout
 			echo_date "Cleaning 'tailscaled'..." || return $?
-			sudo tailscaled --cleanup || return $?
+			sudo tailscaled --cleanup
 			echo_date "Killing 'tailscaled'..." || return $?
-			sudo pkill tailscaled || return $?
-			until ! pgrep tailscaled >/dev/null 2>&1; do sleep 0.1; done
+			sudo pkill tailscaled
+			return 0
 		else
 			echo_date "'ts_down' accepts no arguments" && return 1
 		fi
