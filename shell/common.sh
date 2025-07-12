@@ -340,14 +340,29 @@ pre_commit_config() {
 # ps + pgrep
 ps_pgrep() {
 	if [ $# -eq 1 ]; then
-		pids=$(pgrep -f "$1" | tr '\n' ' ')
-		if [ -n "${pids}" ]; then
-			ps -fp "${pids}" && return $?
+		__pids=$(__get_pids_by_pattern "$1")
+		if [ -n "$__pids" ]; then
+			# shellcheck disable=SC2046
+			ps -fp $(printf '%s' "$__pids") && return $?
 		else
 			echo_date "No process matched: $1" && return 1
 		fi
 	else
 		echo_date "'ps_pgrep' accepts 1 argument" && return 1
+	fi
+}
+__get_pids_by_pattern() {
+	if [ $# -eq 1 ]; then
+		__pids=$(pgrep -f "$1")
+		if [ -n "${__pids}" ]; then
+			# shellcheck disable=SC2086
+			printf '%s\n' $__pids
+			return 0
+		else
+			return 1
+		fi
+	else
+		echo_date "'__get_pids_by_pattern' accepts 1 argument" && return 1
 	fi
 }
 if command -v fzf >/dev/null 2>&1; then
