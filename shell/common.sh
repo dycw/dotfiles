@@ -338,18 +338,50 @@ pre_commit_config() {
 }
 
 # ps + pgrep
-ps_pgrep() {
+pgrepf() {
 	if [ $# -eq 1 ]; then
-		pids=$(pgrep -f "$1" | tr '\n' ' ')
-		if [ -n "${pids}" ]; then
-			ps -fp "${pids}" && return $?
+		__pids=$(pgrep -f "$1" | tr '\n' ' ')
+		if [ -n "${__pids}" ]; then
+			ps -fp "${__pids}" && return $?
 		else
 			echo_date "No process matched: $1" && return 1
 		fi
 	else
-		echo_date "'ps_pgrep' accepts 1 argument" && return 1
+		echo_date "'pgrepf' accepts 1 argument" && return 1
 	fi
 }
+if command -v fzf >/dev/null 2>&1; then
+	pgrep_kill() {
+		if [ $# -eq 1 ]; then
+			__pattern=$1
+			__pids=$(pgrep -f "$__pattern" | tr '\n' ' ')
+			if [ -n "$__pids" ]; then
+				__results=$(ps -fp "$__pids")
+				__selected=$(printf '%s\n' "$__results" | awk 'NR>1' | fzf --multi \
+					--header-lines=0 \
+					--prompt="Kill which $__pattern process? " \
+					--preview="printf '%s\n' \"$__results\" | head -1; echo {}; " \
+					--preview-window=up:3:wrap)
+				if [ -n "$__selected" ]; then
+					# shellcheck disable=SC2046
+					set -- $(printf '%s\n' "$__selected" | awk '{print $2}')
+					echo_date "Killing PIDs: $*"
+					kill -9 "$@"
+				else
+					echo_date "No process selected"
+					return 0
+				fi
+
+			else
+				echo_date "No process matched: $__pattern"
+				return 1
+			fi
+		else
+			echo_date "'pgrep_kill' accepts 1 argument" >&2
+			return 1
+		fi
+	}
+fi
 if command -v watch >/dev/null 2>&1; then
 	wps_pgrep() {
 		if [ $# -eq 1 ]; then
