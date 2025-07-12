@@ -312,19 +312,6 @@ if command -v nvim >/dev/null 2>&1; then
 	n() { nvim "$@"; }
 fi
 
-# openvpn
-if command -v openvpn >/dev/null 2>&1; then
-	openvpn_home() {
-		__openvpn_home_file=$(find "${HOME}/Dropbox/qrt" -type f -name '*.ovpn' -print -quit)
-		if [ -f "${__openvpn_home_file}" ]; then
-			echo_date "Connecting home using ${__openvpn_home_file}..."
-			sudo openvpn --config "${__openvpn_home_file}" --auth-user-pass "${HOME}/openvpn.local"
-		else
-			echo_date "ERROR: no '*.ovpn' file found"
-		fi
-	}
-fi
-
 # path
 echo_path() {
 	if [ $# -eq 0 ]; then
@@ -344,7 +331,7 @@ if command -v pre-commit >/dev/null 2>&1; then
 fi
 pre_commit_config() {
 	if [ $# -eq 0 ]; then
-		ancestor_edit .pre-commit-config.yaml
+		ancestor_edit .pre-commit-config.yaml && return $?
 	else
 		echo_date "'pre_commit_config' accepts no arguments" && return 1
 	fi
@@ -484,13 +471,7 @@ ssh_tunnel_home() {
 # tailscale
 if command -v tailscale >/dev/null 2>&1; then
 	ts_home() {
-		echo_date "Logging out of 'tailscale'..." && return 1
-		sudo tailscale logout && return $?
-		echo_date "Cleaning 'tailscaled'..." && return 1
-		sudo tailscaled --cleanup && return $?
-		echo_date "Killing 'tailscaled'..." && return 1
-		sudo pkill tailscaled && return $?
-		until ! pgrep tailscaled >/dev/null 2>&1; do sleep 0.1; done
+		ts_down || return $?
 		__ts_home_auth_key="${HOME}/tailscale.local.sh"
 		if ! [ -f "${__ts_home_auth_key}" ]; then
 			echo_date "'${__ts_home_auth_key}' does not exist" && return 1
@@ -498,12 +479,19 @@ if command -v tailscale >/dev/null 2>&1; then
 		if [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
 			echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
 		fi
-		echo_date "Starting 'tailscaled' in the background..." && return 1
+		echo_date "Starting 'tailscaled' in the background..." || return $?
 		sudo tailscaled &
-		echo_date "Waiting for 'tailscale status'..." && return 1
-		until tailscale status >/dev/null 2>&1; do sleep 0.1; done
-		echo_date "Starting 'tailscale'..." && return 1
-		sudo tailscale up --accepts-dns --accepts-routes --auth-key="file:${__ts_home_auth_key}" --login-server="${TAILSCALE_LOGIN_SERVER}" "$@"
+		echo_date "Starting 'tailscale'..." || return $?
+		sudo tailscale up --accept-dns --accept-routes --auth-key="file:${__ts_home_auth_key}" --login-server="${TAILSCALE_LOGIN_SERVER}" "$@" && return $?
+	}
+	ts_down() {
+		echo_date "Logging out of 'tailscale'..." || return $?
+		sudo tailscale logout || return $?
+		echo_date "Cleaning 'tailscaled'..." || return $?
+		sudo tailscaled --cleanup || return $?
+		echo_date "Killing 'tailscaled'..." || return $?
+		sudo pkill tailscaled || return $?
+		until ! pgrep tailscaled >/dev/null 2>&1; do sleep 0.1; done
 	}
 	ts_status() {
 		if [ $# -eq 0 ]; then
