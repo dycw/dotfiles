@@ -350,6 +350,43 @@ ps_pgrep() {
 		echo_date "'ps_pgrep' accepts 1 argument" && return 1
 	fi
 }
+if command -v fzf >/dev/null 2>&1; then
+	ps_pgrep_kill() {
+		if [ $# -ne 1 ]; then
+			echo "'ps_pgrep_kill' accepts 1 argument" >&2
+			return 1
+		fi
+
+		match=$1
+		pids=$(pgrep -f "$match" | tr '\n' ' ')
+
+		if [ -z "$pids" ]; then
+			echo "No process matched: $match"
+			return 1
+		fi
+
+		ps_out=$(ps -fp "$pids")
+
+		# Skip header for fzf, preview header in preview window
+		selected=$(printf '%s\n' "$ps_out" | awk 'NR>1' | fzf --multi \
+			--header-lines=0 \
+			--prompt="Kill which $match process? " \
+			--preview="printf '%s\n' \"$ps_out\" | head -1; echo {}; " \
+			--preview-window=up:3:wrap)
+
+		if [ -z "$selected" ]; then
+			echo "No process selected"
+			return 0
+		fi
+
+		# Convert newline-separated PIDs to positional args
+		# shellcheck disable=SC2046
+		set -- $(printf '%s\n' "$selected" | awk '{print $2}')
+
+		echo "Killing PIDs: $*"
+		kill -9 "$@"
+	}
+fi
 if command -v watch >/dev/null 2>&1; then
 	wps_pgrep() {
 		if [ $# -eq 1 ]; then
