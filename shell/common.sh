@@ -199,9 +199,9 @@ if command -v eza >/dev/null 2>&1; then
 	if command -v watch >/dev/null 2>&1; then
 		__watch_eza_base() {
 			watch --color --differences --interval=0.5 -- \
-				eza --all --classify=always --color=always --git \
-				--group --group-directories-first --header --long \
-				--reverse --sort=modified --time-style=long-iso "$@"
+				eza --all --classify=always --color=always --git --group \
+				--group-directories-first --header --long --reverse \
+				--sort=modified --time-style=long-iso "$@"
 		}
 		wl() { __watch_eza_base --git-ignore "$@"; }
 		wla() { __watch_eza_base "$@"; }
@@ -210,10 +210,18 @@ fi
 
 # fd
 if command -v fd >/dev/null 2>&1; then
-	fdd() { fd -Htd "$@"; }
-	fde() { fd -Hte "$@"; }
-	fdf() { fd -Htf "$@"; }
-	fds() { fd -Hts "$@"; }
+	fdd() { __fd_base 'directory' "$@"; }
+	fde() { __fd_base 'empty' "$@"; }
+	fdf() { __fd_base 'file' "$@"; }
+	fds() { __fd_base 'symlink' "$@"; }
+	__fd_base() {
+		if [ $# -le 0 ]; then
+			echo_date "'__fd_base' accepts [1,..] arguments" && return 1
+		fi
+		__type=$1
+		shift
+		fd --hidden --type="$__type" "$@"
+	}
 fi
 
 # fzf
