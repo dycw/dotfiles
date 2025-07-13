@@ -580,25 +580,24 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 		echo_date "Logging out of 'tailscale'..."
 		sudo tailscale logout
 	}
+	ts_ssh() {
+		if [ $# -ne 0 ]; then
+			echo_date "'ts_ssh' accepts no arguments" && return 1
+		elif [ -z "${SSH_HOME_USER}" ]; then
+			echo_date "'\$SSH_HOME_USER' does not exist" && return 1
+		elif [ -z "${TAILSCALE_HOST_NAME}" ]; then
+			echo_date "'\$TAILSCALE_HOST_NAME' does not exist" && return 1
+		fi
+		__host=$(dig +short "${TAILSCALE_HOST_NAME}")
+		echo_date "$__host"
+		ssh "${SSH_HOME_USER}@${__host}"
+	}
 	ts_status() {
 		if [ $# -ne 0 ]; then
 			echo_date "'ts_status' accepts no arguments" && return 1
 		fi
 		sudo tailscale status
 	}
-	if command -v jq >/dev/null 2>&1; then
-		ts_ssh() {
-			if [ $# -ne 0 ]; then
-				echo_date "'ts_ssh' accepts no arguments" && return 1
-			elif [ -z "${SSH_HOME_USER}" ]; then
-				echo_date "'\$SSH_HOME_USER' does not exist" && return 1
-			elif [ -z "${TAILSCALE_PEER_HOST_NAME}" ]; then
-				echo_date "'\$TAILSCALE_PEER_HOST_NAME' does not exist" && return 1
-			fi
-			__host=$(sudo tailscale status --json | jq -r --arg host "${TAILSCALE_PEER_HOST_NAME}" '.Peer[] | select(.HostName == $host) | .TailscaleIPs[0]')
-			ssh "${SSH_HOME_USER}@${__host}"
-		}
-	fi
 	if command -v watch >/dev/null 2>&1; then
 		wts_status() {
 			if [ $# -ne 0 ]; then
@@ -620,6 +619,12 @@ if command -v tmux >/dev/null 2>&1; then
 			echo_date "'tmux_attach' accepts [0..1] arguments" && return 1
 		fi
 		tmux attach -t "${__window}"
+	}
+	tmux_detach() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tmux_detach' accepts no arguments" && return 1
+		fi
+		tmux detach
 	}
 	tmux_ls() {
 		if [ $# -ne 0 ]; then
