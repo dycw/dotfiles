@@ -13,8 +13,16 @@ ancestor() {
 	while [ "${__dir}" != "/" ]; do
 		__candidate="${__dir}"/"${__name}"
 		case "${__type}" in
-		file) if [ -f "${__candidate}" ]; then echo "${__dir}"; fi ;;
-		directory) if [ -d "${__candidate}" ]; then echo "${__dir}"; fi ;;
+		file)
+			if [ -f "${__candidate}" ]; then
+				echo "${__dir}" && return 0
+			fi
+			;;
+		directory)
+			if [ -d "${__candidate}" ]; then
+				echo "${__dir}" && return 0
+			fi
+			;;
 		*) echo_date "'ancestor' accepts 'file' or 'directory' for the first argument; got ${__type}" && return 1 ;;
 		esac
 		__dir="$(dirname "${__dir}")"
