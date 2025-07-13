@@ -584,7 +584,7 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 		if [ $# -ne 0 ]; then
 			echo_date "'ts_status' accepts no arguments" && return 1
 		fi
-		tailscale status
+		sudo tailscale status
 	}
 	if command -v jq >/dev/null 2>&1; then
 		ts_ssh() {
@@ -595,7 +595,7 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			elif [ -z "${TAILSCALE_PEER_HOST_NAME}" ]; then
 				echo_date "'\$TAILSCALE_PEER_HOST_NAME' does not exist" && return 1
 			fi
-			__host=$(tailscale status --json | jq -r --arg host "${TAILSCALE_PEER_HOST_NAME}" '.Peer[] | select(.HostName == $host) | .TailscaleIPs[0]')
+			__host=$(sudo tailscale status --json | jq -r --arg host "${TAILSCALE_PEER_HOST_NAME}" '.Peer[] | select(.HostName == $host) | .TailscaleIPs[0]')
 			ssh "${SSH_HOME_USER}@${__host}"
 		}
 	fi
@@ -604,7 +604,7 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			if [ $# -ne 0 ]; then
 				echo_date "'wts_status' accepts no arguments" && return 1
 			fi
-			watch --color --differences --interval=0.5 -- tailscale status
+			watch --color --differences --interval=0.5 -- sudo tailscale status
 		}
 	fi
 fi
