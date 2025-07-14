@@ -452,7 +452,7 @@ if command -v fzf >/dev/null 2>&1; then
 fi
 if command -v watch >/dev/null 2>&1; then
 	wpgrepf() {
-		if [ $# -ne 0 ]; then
+		if [ $# -ne 1 ]; then
 			echo_date "'wpgrepf' accepts 1 argument" && return 1
 		fi
 		watch --color --differences --interval=0.5 -- \
