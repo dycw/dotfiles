@@ -666,6 +666,33 @@ tmux_conf_local() {
 	${EDITOR} "${HOME}"/.config/tmux/tmux.conf.local
 }
 
+# tsunami
+if command -v tsunami >/dev/null 2>&1; then
+	tsunami_get() {
+		if [ $# -ne 1 ]; then
+			echo_date "'tsunami_get' accepts 1 argument" && return 1
+		fi
+		__path="${HOME}/work/tsunami/in"
+		mkdir -p "${__path}"
+		__host="$(dig +short "$1")"
+		__cmd=$(printf 'set rate 70M\nset speedup 9/10\nset slowdown 10/9\nset blocksize 1200\nset error 10%%\nconnect %s\nget *\nquit\n' "${__host}")
+		(
+			cd "${__path}" || exit 1
+			echo "${__cmd}" | tsunami
+		)
+	}
+fi
+if command -v tsunamid >/dev/null 2>&1; then
+	tsunami_serve() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tsunami_serve' accepts 0 arguments" && return 1
+		fi
+		__path="${HOME}/work/tsunami/out"
+		mkdir -p "${__path}"
+		tsunamid "${__path}/*"
+	}
+fi
+
 # uv
 if command -v uv >/dev/null 2>&1; then
 	ipy() {
