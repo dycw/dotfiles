@@ -141,6 +141,8 @@ brew_install() {
 }
 
 [ -n "${IS_MAC}" ] && brew_install 1password --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install autoconf # for c
+[ -n "${IS_MAC_MINI}" ] && brew_install automake # for c
 brew_install bat
 brew_install btm bottom
 brew_install bump-my-version
@@ -158,6 +160,7 @@ brew_install gh
 brew_install jq
 brew_install just
 [ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install libtool # for c
 brew_install luacheck
 brew_install nvim neovim
 brew_install openvpn
@@ -195,7 +198,6 @@ brew_install watchexec
 [ -n "${IS_MAC}" ] && brew_install yq
 [ -n "${IS_MAC_MINI}" ] && brew_install zoom --cask
 brew_install zoxide
-
 # brew/fzf
 fzf_zsh="${XDG_CONFIG_HOME:-${HOME}/.config}/fzf/fzf.zsh"
 if [ -f "$fzf_zsh" ]; then
