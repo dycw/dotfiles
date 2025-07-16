@@ -398,6 +398,7 @@ ls.add_snippets("python", {
     s("sq-or", { t({ "from sqlalchemy import or_", "" }) }),
     s("sq-select", { t({ "from sqlalchemy import select", "" }) }),
     s("sq-text", { t({ "from sqlalchemy import text", "" }) }),
+    s("sq-url", { t({ "from sqlalchemy.engine.url import URL", "" }) }),
 
     -- statistics
     s("st-fmean", { t({ "from statistics import fmean", "" }) }),
@@ -503,7 +504,7 @@ ls.add_snippets("python", {
     s("ut-get-logger", { t({ "from utilities.logging import get_logger", "" }) }),
     s("ut-get-now", { t({ "from utilities.whenever import get_now", "" }) }),
     s("ut-get-now-local", { t({ "from utilities.whenever import get_now_local", "" }) }),
-    s("ut-get-repo-root", { t({ "from utilities.git import get_repo_root", "" }) }),
+    s("ut-get-repo-root", { t({ "from utilities.pathlib import get_repo_root", "" }) }),
     s("ut-get-root", { t({ "from utilities.pathlib import get_root", "" }) }),
     s("ut-get-state", { t({ "from utilities.random import get_state", "" }) }),
     s("ut-get-table", { t({ "from utilities.sqlalchemy import get_table", "" }) }),
@@ -539,6 +540,7 @@ ls.add_snippets("python", {
     s("ut-parse-date", { t({ "from utilities.whenever import parse_date", "" }) }),
     s("ut-parse-enum", { t({ "from utilities.enum import parse_enum", "" }) }),
     s("ut-partial", { t({ "from utilities.functools import partial", "" }) }),
+    s("ut-partition", { t({ "from utilities.more_itertools import partition_list", "" }) }),
     s("ut-path-like", { t({ "from utilities.types import PathLike", "" }) }),
     s("ut-peekable", { t({ "from utilities.more_itertools import peekable", "" }) }),
     s("ut-period", { t({ "from utilities.period import Period", "" }) }),

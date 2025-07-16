@@ -65,7 +65,7 @@
   },
   "gitsigns.nvim": {
     "branch": "main",
-    "commit": "4666d040b60d1dc0e474ccd9a3fd3c4d67b4767c"
+    "commit": "bbee149e00c404aa9f7a7c248b981cde953b252a"
   },
   "inc-rename.nvim": {
     "branch": "main",
@@ -109,7 +109,7 @@
   },
   "mason-lspconfig.nvim": {
     "branch": "main",
-    "commit": "7815740f4d0afb74ada00956c36e18ad695ed9e3"
+    "commit": "acb2d97a5c5e3f58156cb387fdf6035c34cd2768"
   },
   "mason-tool-installer.nvim": {
     "branch": "main",
@@ -122,10 +122,6 @@
   "mkdir.nvim": {
     "branch": "main",
     "commit": "c55d1dee4f099528a1853b28bb28caa802eba217"
-  },
-  "neoscroll.nvim": {
-    "branch": "master",
-    "commit": "f957373912e88579e26fdaea4735450ff2ef5c9c"
   },
   "nvim-autopairs": {
     "branch": "master",
@@ -161,7 +157,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "dbdb80d3bd311989d21029c63918d67a786d5013"
+    "commit": "8c5efd1269160fc2fdf61e3d7176be5015860a8f"
   },
   "nvim-neoclip.lua": {
     "branch": "main",
@@ -201,7 +197,7 @@
   },
   "nvim-web-devicons": {
     "branch": "master",
-    "commit": "a1366758b3a232036dc97be8ca41184aa3f50506"
+    "commit": "0422a19d9aa3aad2c7e5cca167e5407b13407a9d"
   },
   "plenary.nvim": {
     "branch": "master",
@@ -269,7 +265,7 @@
   },
   "vim-just": {
     "branch": "main",
-    "commit": "c31036662e632acb6f9e7c318725ed9fe25bb82f"
+    "commit": "e0c04b6433b9c636274f074356744fdfae039b7e"
   },
   "vim-mergetool": {
     "branch": "master",
@@ -285,7 +281,7 @@
   },
   "vim-tmux-navigator": {
     "branch": "master",
-    "commit": "412c474e97468e7934b9c217064025ea7a69e05e"
+    "commit": "c45243dc1f32ac6bcf6068e5300f3b2b237e576a"
   },
   "vim-visual-multi": {
     "branch": "master",

@@ -79,6 +79,15 @@ case ":${PATH}:" in
 *) export PATH="${__dir}:${PATH}" ;;
 esac
 
+# tsunami
+for __name in client server; do
+	__dir="${HOME}"/work/tsunami-udp/tsunami-udp/"${__name}"
+	case ":${PATH}:" in
+	*:"${__dir}":*) ;;
+	*) export PATH="${__dir}:${PATH}" ;;
+	esac
+done
+
 # xdg
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}"
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"

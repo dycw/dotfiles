@@ -1467,6 +1467,7 @@ try:
     import sqlalchemy as sqla
     import sqlalchemy.orm
     from sqlalchemy import Column, MetaData, Table, func, select
+    from sqlalchemy.engine.url import URL
     from sqlalchemy.orm import selectinload
 except ModuleNotFoundError:
     pass
@@ -1475,12 +1476,13 @@ else:
         Column,
         MetaData,
         Table,
+        URL,
+        func,
+        select,
+        selectinload,
         sqla,
         sqlalchemy,
         sqlalchemy.orm,
-        select,
-        func,
-        selectinload,
     ]
     try:
         from utilities.sqlalchemy import (
