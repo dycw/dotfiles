@@ -689,7 +689,11 @@ if command -v tsunamid >/dev/null 2>&1; then
 		fi
 		__path="${HOME}/work/tsunami/out"
 		mkdir -p "${__path}"
-		tsunamid "${__path}/*"
+		(
+			cd "${__path}" || exit 1
+			# shellcheck disable=SC2035
+			tsunamid *
+		)
 	}
 fi
 
