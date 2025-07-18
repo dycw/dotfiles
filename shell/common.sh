@@ -484,6 +484,35 @@ pyproject() {
 # q
 start_q() { QHOME="${HOME}"/q rlwrap -r "$HOME/q/m64/q" "$@"; }
 
+# reboot/shutdown
+reboot_now() {
+	if [ $# -ne 0 ]; then
+		echo_date "'reboot_now' accepts no arguments" && return 1
+	fi
+	__run_shutdown 'Reboot' 'r'
+}
+shutdown_now() {
+	if [ $# -ne 0 ]; then
+		echo_date "'shutdown_now' accepts no arguments" && return 1
+	fi
+	__run_shutdown 'Shut down' 'h'
+}
+__run_shutdown() {
+	if [ $# -ne 2 ]; then
+		echo_date "'__run_shutdown' accepts no arguments" && return 1
+	fi
+	__desc="$1"
+	__flag="$1"
+	printf "%s now? [Y/n] " % "${__desc}"
+	read -r __response
+	__shutdown=$(printf "%s" "${__response}" | tr '[:upper:]' '[:lower:]')
+	if [ -z "${__shutdown}" ] || [ "${__shutdown}" = "y" ] || [ "${__shutdown}" = "yes" ]; then
+		sudo shutdown -"${__flag}" now
+	else
+		echo_date "%s cancelled" "${__desc}"
+	fi
+}
+
 # rg
 if command -v rg >/dev/null 2>&1; then
 	env_rg() {
