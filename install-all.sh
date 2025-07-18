@@ -49,8 +49,8 @@ esac
 
 # groups
 unset IS_MAC_MINI IS_MAC
-if [ -n "${IS_MAC_MINI}" ] || [ -n "${IS_MAC_MINI}" ]; then
-	IS_MAC=1
+if [ -n "${IS_MAC_MINI_DW}" ] || [ -n "${IS_MAC_MINI_RH}" ]; then
+	IS_MAC_MINI=1
 fi
 if [ -n "${IS_MAC_MINI}" ] || [ -n "${IS_MACBOOK}" ]; then
 	IS_MAC=1
