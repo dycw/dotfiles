@@ -19,7 +19,6 @@ import datetime as dt
 import decimal
 import enum
 import fractions
-import ftplib
 import functools
 import gettext
 import glob
@@ -300,7 +299,6 @@ _ = [
     findall,
     fmean,
     fractions,
-    ftplib,
     functools,
     getLogger,
     get_event_loop,
@@ -1034,7 +1032,6 @@ try:
         to_datetime,
         to_pickle,
     )
-    from pandas._libs.missing import NAType
     from pandas.testing import assert_index_equal
     from pandas.tseries.offsets import (
         BDay,
@@ -1072,7 +1069,6 @@ else:
         MonthEnd,
         MultiIndex,
         NA,
-        NAType,
         Nano,
         RangeIndex,
         Second,
@@ -1466,7 +1462,7 @@ try:
     import sqlalchemy
     import sqlalchemy as sqla
     import sqlalchemy.orm
-    from sqlalchemy import Column, MetaData, Table, func, select
+    from sqlalchemy import Column, MetaData, Table, delete, func, select, tuple_
     from sqlalchemy.engine.url import URL
     from sqlalchemy.orm import selectinload
 except ModuleNotFoundError:
@@ -1477,12 +1473,14 @@ else:
         MetaData,
         Table,
         URL,
+        delete,
         func,
         select,
         selectinload,
         sqla,
         sqlalchemy,
         sqlalchemy.orm,
+        tuple_,
     ]
     try:
         from utilities.sqlalchemy import (
@@ -1645,6 +1643,7 @@ try:
         YEAR,
         ZERO_DAYS,
         ZERO_TIME,
+        format_compact,
         get_now,
         get_now_local,
         get_today,
@@ -1700,6 +1699,7 @@ else:
         ewm_parameters,
         extract_group,
         extract_groups,
+        format_compact,
         get_args,
         get_class,
         get_class_name,

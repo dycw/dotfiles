@@ -495,6 +495,7 @@ ls.add_snippets("python", {
     s("ut-expr-like", { t({ "from utilities.polars import ExprLike", "" }) }),
     s("ut-extract-group", { t({ "from utilities.re import extract_group", "" }) }),
     s("ut-extract-groups", { t({ "from utilities.re import extract_groups", "" }) }),
+    s("ut-format-comapct", { t({ "from utilities.whenever import format_compact", "" }) }),
     s("ut-get-args", { t({ "from utilities.typing import get_args", "" }) }),
     s("ut-get-class-name", { t({ "from utilities.functions import get_class_name", "" }) }),
     s("ut-get-env-var", { t({ "from utilities.os import get_env_var", "" }) }),
