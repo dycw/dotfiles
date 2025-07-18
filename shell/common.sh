@@ -558,54 +558,55 @@ ssh_tunnel_home() {
 }
 
 # tailscale
+ts_ssh() {
+	if [ $# -ne 0 ]; then
+		echo_date "'ts_ssh' accepts no arguments" && return 1
+	elif [ -z "${SSH_HOME_USER}" ]; then
+		echo_date "'\$SSH_HOME_USER' does not exist" && return 1
+	elif [ -z "${TAILSCALE_HOST_NAME}" ]; then
+		echo_date "'\$TAILSCALE_HOST_NAME' does not exist" && return 1
+	fi
+	__host=$(dig +short "${TAILSCALE_HOST_NAME}")
+	echo_date "${__host}"
+	ssh "${SSH_HOME_USER}@${__host}"
+}
 if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1; then
-	ts_up() {
-		if [ $# -ne 0 ]; then
-			echo_date "'ts_up' accepts no arguments" && return 1
-		fi
-		ts_down
-		__file="${HOME}/tailscale.local.sh"
-		if ! [ -f "${__file}" ]; then
-			echo_date "'${__file}' does not exist" && return 1
-		elif [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
-			echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
-		fi
-		echo_date "Starting 'tailscaled' in the background..."
-		sudo tailscaled &
-		echo_date "Starting 'tailscale'..."
-		sudo tailscale up --accept-dns --accept-routes \
-			--auth-key="file:${__file}" \
-			--login-server="${TAILSCALE_LOGIN_SERVER}"
-	}
-	ts_down() {
-		if [ $# -ne 0 ]; then
-			echo_date "'ts_down' accepts no arguments" && return 1
-		fi
-		echo_date "Cleaning 'tailscaled'..."
-		sudo tailscaled --cleanup
-		echo_date "Killing 'tailscaled'..."
-		sudo pkill tailscaled
-		echo_date "Logging out of 'tailscale'..."
-		sudo tailscale logout
-	}
-	ts_ssh() {
-		if [ $# -ne 0 ]; then
-			echo_date "'ts_ssh' accepts no arguments" && return 1
-		elif [ -z "${SSH_HOME_USER}" ]; then
-			echo_date "'\$SSH_HOME_USER' does not exist" && return 1
-		elif [ -z "${TAILSCALE_HOST_NAME}" ]; then
-			echo_date "'\$TAILSCALE_HOST_NAME' does not exist" && return 1
-		fi
-		__host=$(dig +short "${TAILSCALE_HOST_NAME}")
-		echo_date "$__host"
-		ssh "${SSH_HOME_USER}@${__host}"
-	}
 	ts_status() {
 		if [ $# -ne 0 ]; then
 			echo_date "'ts_status' accepts no arguments" && return 1
 		fi
 		sudo tailscale status
 	}
+	if command -v tailscaled >/dev/null 2>&1; then
+		ts_up() {
+			if [ $# -ne 0 ]; then
+				echo_date "'ts_up' accepts no arguments" && return 1
+			fi
+			__file="${HOME}/tailscale-auth-key"
+			if ! [ -f "${__file}" ]; then
+				echo_date "'${__file}' does not exist" && return 1
+			elif [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
+				echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
+			fi
+			echo_date "Starting 'tailscaled' in the background..."
+			sudo tailscaled &
+			echo_date "Starting 'tailscale'..."
+			sudo tailscale up --accept-dns --accept-routes \
+				--auth-key="file:${__file}" \
+				--login-server="${TAILSCALE_LOGIN_SERVER}"
+		}
+		ts_down() {
+			if [ $# -ne 0 ]; then
+				echo_date "'ts_down' accepts no arguments" && return 1
+			fi
+			echo_date "Cleaning 'tailscaled'..."
+			sudo tailscaled --cleanup
+			echo_date "Killing 'tailscaled'..."
+			sudo pkill tailscaled
+			echo_date "Logging out of 'tailscale'..."
+			sudo tailscale logout
+		}
+	fi
 	if command -v watch >/dev/null 2>&1; then
 		wts_status() {
 			if [ $# -ne 0 ]; then
@@ -615,6 +616,7 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 		}
 	fi
 fi
+# tailscale + tailscaled
 
 # tmux
 if command -v tmux >/dev/null 2>&1; then
