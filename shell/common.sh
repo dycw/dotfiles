@@ -583,7 +583,7 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 				echo_date "'ts_up' accepts no arguments" && return 1
 			fi
 			ts_down
-			__file="${HOME}/tailscale.local.sh"
+			__file="${HOME}/tailscale-auth-key"
 			if ! [ -f "${__file}" ]; then
 				echo_date "'${__file}' does not exist" && return 1
 			elif [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
