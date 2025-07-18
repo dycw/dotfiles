@@ -186,13 +186,14 @@ brew_install luacheck
 brew_install nvim neovim
 brew_install pgadmin4 --cask
 brew_install pgcli
-[ -n "${IS_MAC}" ] && brew_install postgres postgresql@17
+[ -n "${IS_MAC}" ] && brew_install postgres@17
 [ -n "${IS_MAC_MINI}" ] && brew_install postico --cask
 brew_install pre-commit
 brew_install prettier
 [ -n "${IS_MAC}" ] && brew_install protonvpn --cask
-[ -n "${IS_MAC_MINI}" ] && brew_install redis-stack-server redis-stack --tap=redis-stack/redist
 [ -n "${IS_MAC_MINI_DW}" ] && brew_install restic
+[ -n "${IS_MAC_MINI}" ] && brew_install redis
+[ -n "${IS_MAC_MINI}" ] && brew_install redis-insight --cask
 brew_install rg ripgrep
 [ -n "${IS_MAC}" ] && brew_install rlwrap
 brew_install ruff
