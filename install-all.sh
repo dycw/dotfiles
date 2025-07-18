@@ -4,15 +4,19 @@
 echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 
 # detect OS/Mac model
-unset OS_NAME MAC_MODEL IS_MAC_MINI IS_MACBOOK DISTRO IS_UBUNTU
+unset OS_NAME MAC_MODEL IS_MAC_MINI_DW IS_MAC_MINI_RH IS_MACBOOK DISTRO IS_UBUNTU
 OS_NAME="$(uname)"
 case "$OS_NAME" in
 Darwin)
 	MAC_MODEL=$(system_profiler SPHardwareDataType | awk -F': ' '/Model Identifier/ {print $2}')
 	case "${MAC_MODEL}" in
 	Mac14,12)
-		echo_date "Detected Mac-Mini..."
-		IS_MAC_MINI=1
+		echo_date "Detected DW Mac-Mini..."
+		IS_MAC_MINI_DW=1
+		;;
+	Mac14,3)
+		echo_date "Detected RH Mac-Mini..."
+		IS_MAC_MINI_RH=1
 		;;
 	MacBook*)
 		echo_date "Detected MacBook..."
@@ -44,44 +48,57 @@ Linux)
 esac
 
 # groups
-unset IS_MAC
+unset IS_MAC_MINI IS_MAC
+if [ -n "${IS_MAC_MINI_DW}" ] || [ -n "${IS_MAC_MINI_RH}" ]; then
+	IS_MAC_MINI=1
+fi
 if [ -n "${IS_MAC_MINI}" ] || [ -n "${IS_MACBOOK}" ]; then
 	IS_MAC=1
 fi
 
-# machine-specific
-if [ -n "${IS_MAC_MINI}" ]; then
-	# power management
-	set_pm_value() {
-		key=$1
-		value=$2
-		current=$(pmset -g custom | awk "/[[:space:]]${key}[[:space:]]/ {print \$2}")
-		if [ "${current}" = "${value}" ]; then
-			echo_date "'${key}' is already set"
-		else
-			echo_date "Setting ${key}..."
-			sudo pmset -a "${key}" "${value}"
-		fi
-	}
+# machine - power management
+set_pm_value() {
+	__key=$1
+	__value=$2
+	__current=$(pmset -g custom | awk "/[[:space:]]${__key}[[:space:]]/ {print \$2}")
+	if [ "${__current}" = "${__value}" ]; then
+		echo_date "'${__key}' is already set"
+	else
+		echo_date "Setting ${__key}..."
+		sudo pmset -a "${__key}" "${__value}"
+	fi
+}
+if [ -n "${IS_MAC_MINI_DW}" ]; then
 	set_pm_value sleep 0
 	set_pm_value disksleep 10
 	set_pm_value displaysleep 10
+fi
 
-	# system configuration
-	set_scutil_value() {
-		key=$1
-		value=$2
-		current=$(scutil --get "${key}" 2>/dev/null || echo "")
-		if [ "${current}" = "${value}" ]; then
-			echo_date "'${key}' is already set"
-		else
-			echo_date "Setting ${key}..."
-			sudo scutil --set "${key}" "${value}"
-		fi
-	}
-	set_scutil_value ComputerName 'DW-Mac'
-	set_scutil_value HostName 'DW-Mac'
-	set_scutil_value LocalHostName 'DW-Mac'
+# machine - system configuration
+set_scutil_names() {
+	set_scutil_value ComputerName "$1"
+	set_scutil_value HostName "$1"
+	set_scutil_value LocalHostName "$1"
+
+}
+set_scutil_value() {
+	__key="$1"
+	__value="$2"
+	__current=$(scutil --get "${__key}" 2>/dev/null || echo "")
+	if [ "${__current}" = "${__value}" ]; then
+		echo_date "'${__key}' is already set"
+	else
+		echo_date "Setting ${__key}..."
+		sudo scutil --set "${__key}" "${__value}"
+	fi
+}
+
+if [ -n "${IS_MAC_MINI_DW}" ]; then
+	set_scutil_names 'DW-Mac'
+elif [ -n "${IS_MAC_MINI_RH}" ]; then
+	set_scutil_names 'RH-Mac'
+elif [ -n "${IS_MACBOOK}" ]; then
+	set_scutil_names 'RH-MacBook'
 fi
 
 # brew
@@ -98,43 +115,48 @@ fi
 
 # brew/install
 brew_install() {
-	unset __brew_install_app __brew_install_iname __brew_install_cask __brew_install_tap
+	unset __app __cask __iname __tap
 	while [ "$1" ]; do
 		case "$1" in
 		--cask)
-			__brew_install_cask=1
+			__cask=1
 			shift
 			;;
 		--tap)
-			__brew_install_tap="$2"
+			__tap="$2"
 			shift 2
 			;;
 		*)
-			if [ -z "$__brew_install_app" ]; then
-				__brew_install_app="$1"
-			elif [ -z "$__brew_install_iname" ]; then
-				__brew_install_iname="$1"
+			if [ -z "${__app}" ]; then
+				__app="$1"
+			elif [ -z "${__iname}" ]; then
+				__iname="$1"
 			fi
 			shift
 			;;
 		esac
 	done
-
-	if { [ -n "${__brew_install_cask}" ] && brew list --cask "${__brew_install_app}" >/dev/null 2>&1; } ||
-		{ [ -n "${__brew_install_cask}" ] && find /Applications -maxdepth 1 -type d -iname "*${__brew_install_app}*.app" | grep -q .; } ||
-		{ [ -z "${__brew_install_cask}" ] && command -v "${__brew_install_app}" >/dev/null 2>&1; }; then
-		echo_date "'${__brew_install_app}' is already installed"
-		return 0
-	elif ! command -v brew >/dev/null 2>&1; then
+	if [ -z "${__app}" ]; then
+		echo_date "ERROR: 'app' not defined"
+		return 1
+	elif [ -z "${__iname}" ]; then
+		__iname="${__app}"
+	fi
+	if ! command -v brew >/dev/null 2>&1; then
 		echo_date "ERROR: 'brew' is not installed"
 		return 1
+	elif { [ -n "${__cask}" ] && brew list --cask "${__app}" >/dev/null 2>&1; } ||
+		{ [ -n "${__cask}" ] && find /Applications -maxdepth 1 -type d -iname "*${__app}*.app" | grep -q .; } ||
+		{ [ -z "${__cask}" ] && command -v "${__app}" >/dev/null 2>&1; }; then
+		echo_date "'${__app}' is already installed"
+		return 0
 	else
-		echo_date "Installing '${__brew_install_app}'..."
-		[ -n "${__brew_install_tap}" ] && brew tap "$__brew_install_tap"
-		if [ -n "${__brew_install_cask}" ]; then
-			brew install --cask "${__brew_install_app}"
+		echo_date "Installing '${__app}'..."
+		[ -n "${__tap}" ] && brew tap "${__tap}"
+		if [ -n "${__cask}" ]; then
+			brew install --cask "${__app}"
 		else
-			brew install "${__brew_install_iname}"
+			brew install "${__iname}"
 		fi
 	fi
 
@@ -160,10 +182,8 @@ brew_install gh
 brew_install jq
 brew_install just
 [ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
-[ -n "${IS_MAC_MINI}" ] && brew_install libtool # for c
 brew_install luacheck
 brew_install nvim neovim
-brew_install openvpn
 brew_install pgadmin4 --cask
 brew_install pgcli
 [ -n "${IS_MAC}" ] && brew_install postgres postgresql@17
@@ -171,8 +191,9 @@ brew_install pgcli
 brew_install pre-commit
 brew_install prettier
 [ -n "${IS_MAC}" ] && brew_install protonvpn --cask
-[ -n "${IS_MAC_MINI}" ] && brew_install redis-stack-server redis-stack --tap=redis-stack/redist
-[ -n "${IS_MAC_MINI}" ] && brew_install restic
+[ -n "${IS_MAC_MINI_DW}" ] && brew_install restic
+[ -n "${IS_MAC_MINI}" ] && brew_install redis-cli redis
+[ -n "${IS_MAC_MINI}" ] && brew_install redis-insight --cask
 brew_install rg ripgrep
 [ -n "${IS_MAC}" ] && brew_install rlwrap
 brew_install ruff
@@ -197,10 +218,11 @@ brew_install watchexec
 [ -n "${IS_UBUNTU}" ] && brew_install xsel
 [ -n "${IS_MAC}" ] && brew_install yq
 [ -n "${IS_MAC_MINI}" ] && brew_install zoom --cask
+brew_install zoom --cask
 brew_install zoxide
 # brew/fzf
-fzf_zsh="${XDG_CONFIG_HOME:-${HOME}/.config}/fzf/fzf.zsh"
-if [ -f "$fzf_zsh" ]; then
+__fzf_zsh="${XDG_CONFIG_HOME:-${HOME}/.config}/fzf/fzf.zsh"
+if [ -f "${__fzf_zsh}" ]; then
 	echo_date "'fzf' is already setup"
 else
 	echo_date "Setting up 'fzf'..."
@@ -214,21 +236,18 @@ fi
 
 # brew/services
 brew_services() {
-	unset __brew_services_app
-	__brew_services_app="$1"
-
+	__app="$1"
 	if ! command -v brew >/dev/null 2>&1; then
 		echo_date "ERROR: 'brew' is not installed"
 		return 1
-	elif brew services list | grep -q "^${__brew_services_app}[[:space:]]\+started"; then
-		echo_date "'${__brew_services_app}' is already started"
+	elif brew services list | grep -q "^${__app}[[:space:]]\+started"; then
+		echo_date "'${__app}' is already started"
 		return 0
 	else
-		echo_date "Starting '${__brew_services_app}'..."
-		brew services start "${__brew_services_app}"
+		echo_date "Starting '${__app}'..."
+		brew services start "${__app}"
 	fi
 }
-brew_services openvpn
 [ -n "${IS_MAC_MINI}" ] && brew_services postgresql@17
 [ -n "${IS_MAC_MINI}" ] && brew_services redis
 
@@ -244,17 +263,15 @@ fi
 
 # ubuntu/apt
 apt_install() {
-	unset __apt_install_app __apt_install_iname
-	__apt_install_app="$1"
-	__apt_install_iname="${2:-$1}"
-
-	if command -v "${__apt_install_app}" >/dev/null 2>&1; then
-		echo_date "'${__apt_install_app}' is already installed"
+	__app="$1"
+	__iname="${2:-$1}"
+	if command -v "${__app}" >/dev/null 2>&1; then
+		echo_date "'${__app}' is already installed"
 		return 0
 	else
-		echo_date "Installing '${__apt_install_app}'..."
+		echo_date "Installing '${__app}'..."
 		sudo apt-get update
-		sudo apt-get install -y "${__apt_install_iname}"
+		sudo apt-get install -y "${__iname}"
 	fi
 }
 if [ -n "${IS_UBUNTU}" ]; then
@@ -283,15 +300,13 @@ fi
 
 # ubuntu/snap
 snap_install() {
-	unset __snap_install_app
-	__snap_install_app="$1"
-
-	if command -v "${__snap_install_app}" >/dev/null 2>&1; then
-		echo_date "'${__snap_install_app}' is already installed"
+	__app="$1"
+	if command -v "${__app}" >/dev/null 2>&1; then
+		echo_date "'${__app}' is already installed"
 		return 0
 	else
-		echo_date "Installing '${__snap_install_app}'..."
-		sudo snap install -y "${__snap_install_app}"
+		echo_date "Installing '${__app}'..."
+		sudo snap install -y "${__app}"
 	fi
 }
 if [ -n "${IS_UBUNTU}" ]; then
