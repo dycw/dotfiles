@@ -3,3 +3,11 @@
 
 # prettier
 node_modules/
+
+# secrets
+**/*credentials*
+**/*auth*
+**/*login*
+**/*password*
+**/*key*
+**/*token*
