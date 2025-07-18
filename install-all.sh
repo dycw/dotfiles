@@ -217,7 +217,6 @@ brew_install watchexec
 [ -n "${IS_UBUNTU}" ] && brew_install xsel
 [ -n "${IS_MAC}" ] && brew_install yq
 [ -n "${IS_MAC_MINI}" ] && brew_install zoom --cask
-echo installing zoom
 brew_install zoom --cask
 brew_install zoxide
 # brew/fzf
