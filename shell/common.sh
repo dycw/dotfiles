@@ -557,6 +557,20 @@ ssh_tunnel_home() {
 		"${SSH_HOME_USER}@${SSH_HOME_HOST}"
 }
 
+# shutdown
+shutdown_now() {
+	if [ $# -ne 0 ]; then
+		echo_date "'shutdown' accepts no arguments" && return 1
+	fi
+	printf "Shut down now? [Y/n] "
+	read -r __response
+	__shutdown=$(printf "%s" "${__response}" | tr '[:upper:]' '[:lower:]')
+	if [ -z "${__shutdown}" ] || [ "${__shutdown}" = "y" ] || [ "${__shutdown}" = "yes" ]; then
+		sudo shutdown -h now
+	else
+		echo_date "Shutdown cancelled"
+	fi
+}
 # tailscale
 ts_ssh() {
 	if [ $# -ne 0 ]; then
