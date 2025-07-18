@@ -245,7 +245,7 @@ brew_services() {
 		return 0
 	else
 		echo_date "Starting '${__app}'..."
-		sudo brew services start "${__app}"
+		brew services start "${__app}"
 	fi
 }
 [ -n "${IS_MAC_MINI}" ] && brew_services postgresql@17
