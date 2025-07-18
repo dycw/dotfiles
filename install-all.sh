@@ -58,14 +58,14 @@ fi
 
 # machine - power management
 set_pm_value() {
-	key=$1
-	value=$2
-	current=$(pmset -g custom | awk "/[[:space:]]${key}[[:space:]]/ {print \$2}")
-	if [ "${current}" = "${value}" ]; then
-		echo_date "'${key}' is already set"
+	__key=$1
+	__value=$2
+	__current=$(pmset -g custom | awk "/[[:space:]]${__key}[[:space:]]/ {print \$2}")
+	if [ "${__current}" = "${__value}" ]; then
+		echo_date "'${__key}' is already set"
 	else
-		echo_date "Setting ${key}..."
-		sudo pmset -a "${key}" "${value}"
+		echo_date "Setting ${__key}..."
+		sudo pmset -a "${__key}" "${__value}"
 	fi
 }
 if [ -n "${IS_MAC_MINI_DW}" ]; then
@@ -82,14 +82,14 @@ set_scutil_names() {
 
 }
 set_scutil_value() {
-	key="$1"
-	value="$2"
-	current=$(scutil --get "${key}" 2>/dev/null || echo "")
-	if [ "${current}" = "${value}" ]; then
-		echo_date "'${key}' is already set"
+	__key="$1"
+	__value="$2"
+	__current=$(scutil --get "${__key}" 2>/dev/null || echo "")
+	if [ "${__current}" = "${__value}" ]; then
+		echo_date "'${__key}' is already set"
 	else
-		echo_date "Setting ${key}..."
-		sudo scutil --set "${key}" "${value}"
+		echo_date "Setting ${__key}..."
+		sudo scutil --set "${__key}" "${__value}"
 	fi
 }
 
@@ -221,8 +221,8 @@ echo installing zoom
 brew_install zoom --cask
 brew_install zoxide
 # brew/fzf
-fzf_zsh="${XDG_CONFIG_HOME:-${HOME}/.config}/fzf/fzf.zsh"
-if [ -f "$fzf_zsh" ]; then
+__fzf_zsh="${XDG_CONFIG_HOME:-${HOME}/.config}/fzf/fzf.zsh"
+if [ -f "${__fzf_zsh}" ]; then
 	echo_date "'fzf' is already setup"
 else
 	echo_date "Setting up 'fzf'..."
@@ -236,18 +236,16 @@ fi
 
 # brew/services
 brew_services() {
-	unset __brew_services_app
-	__brew_services_app="$1"
-
+	__app="$1"
 	if ! command -v brew >/dev/null 2>&1; then
 		echo_date "ERROR: 'brew' is not installed"
 		return 1
-	elif brew services list | grep -q "^${__brew_services_app}[[:space:]]\+started"; then
-		echo_date "'${__brew_services_app}' is already started"
+	elif brew services list | grep -q "^${__app}[[:space:]]\+started"; then
+		echo_date "'${__app}' is already started"
 		return 0
 	else
-		echo_date "Starting '${__brew_services_app}'..."
-		brew services start "${__brew_services_app}"
+		echo_date "Starting '${__app}'..."
+		brew services start "${__app}"
 	fi
 }
 [ -n "${IS_MAC_MINI_DW}" ] && brew_services postgresql@17
@@ -265,17 +263,15 @@ fi
 
 # ubuntu/apt
 apt_install() {
-	unset __apt_install_app __apt_install_iname
-	__apt_install_app="$1"
-	__apt_install_iname="${2:-$1}"
-
-	if command -v "${__apt_install_app}" >/dev/null 2>&1; then
-		echo_date "'${__apt_install_app}' is already installed"
+	__app="$1"
+	__iname="${2:-$1}"
+	if command -v "${__app}" >/dev/null 2>&1; then
+		echo_date "'${__app}' is already installed"
 		return 0
 	else
-		echo_date "Installing '${__apt_install_app}'..."
+		echo_date "Installing '${__app}'..."
 		sudo apt-get update
-		sudo apt-get install -y "${__apt_install_iname}"
+		sudo apt-get install -y "${__iname}"
 	fi
 }
 if [ -n "${IS_UBUNTU}" ]; then
@@ -304,15 +300,13 @@ fi
 
 # ubuntu/snap
 snap_install() {
-	unset __snap_install_app
-	__snap_install_app="$1"
-
-	if command -v "${__snap_install_app}" >/dev/null 2>&1; then
-		echo_date "'${__snap_install_app}' is already installed"
+	__app="$1"
+	if command -v "${__app}" >/dev/null 2>&1; then
+		echo_date "'${__app}' is already installed"
 		return 0
 	else
-		echo_date "Installing '${__snap_install_app}'..."
-		sudo snap install -y "${__snap_install_app}"
+		echo_date "Installing '${__app}'..."
+		sudo snap install -y "${__app}"
 	fi
 }
 if [ -n "${IS_UBUNTU}" ]; then
