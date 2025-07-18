@@ -11,11 +11,11 @@ Darwin)
 	MAC_MODEL=$(system_profiler SPHardwareDataType | awk -F': ' '/Model Identifier/ {print $2}')
 	case "${MAC_MODEL}" in
 	Mac14,12)
-		echo_date "Detected primary Mac-Mini..."
+		echo_date "Detected DW Mac-Mini..."
 		IS_MAC_MINI_DW=1
 		;;
 	Mac14,3)
-		echo_date "Detected secondary Mac-Mini..."
+		echo_date "Detected RH Mac-Mini..."
 		IS_MAC_MINI_RH=1
 		;;
 	MacBook*)
@@ -48,8 +48,11 @@ Linux)
 esac
 
 # groups
-unset IS_MAC
-if [ -n "${IS_MAC_MINI_DW}" ] || [ -n "${IS_MAC_MINI_RH}" ] || [ -n "${IS_MACBOOK}" ]; then
+unset IS_MAC_MINI IS_MAC
+if [ -n "${IS_MAC_MINI}" ] || [ -n "${IS_MAC_MINI}" ]; then
+	IS_MAC=1
+fi
+if [ -n "${IS_MAC_MINI}" ] || [ -n "${IS_MACBOOK}" ]; then
 	IS_MAC=1
 fi
 
@@ -112,43 +115,49 @@ fi
 
 # brew/install
 brew_install() {
-	unset __brew_install_app __brew_install_iname __brew_install_cask __brew_install_tap
+	unset __app __cask __iname __tap
 	while [ "$1" ]; do
 		case "$1" in
 		--cask)
-			__brew_install_cask=1
+			__cask=1
 			shift
 			;;
 		--tap)
-			__brew_install_tap="$2"
+			__tap="$2"
 			shift 2
 			;;
 		*)
-			if [ -z "$__brew_install_app" ]; then
-				__brew_install_app="$1"
-			elif [ -z "$__brew_install_iname" ]; then
-				__brew_install_iname="$1"
+			if [ -z "${__app}" ]; then
+				__app="$1"
+			elif [ -z "${__iname}" ]; then
+				__iname="$1"
 			fi
 			shift
 			;;
 		esac
 	done
-
-	if { [ -n "${__brew_install_cask}" ] && brew list --cask "${__brew_install_app}" >/dev/null 2>&1; } ||
-		{ [ -n "${__brew_install_cask}" ] && find /Applications -maxdepth 1 -type d -iname "*${__brew_install_app}*.app" | grep -q .; } ||
-		{ [ -z "${__brew_install_cask}" ] && command -v "${__brew_install_app}" >/dev/null 2>&1; }; then
-		echo_date "'${__brew_install_app}' is already installed"
-		return 0
-	elif ! command -v brew >/dev/null 2>&1; then
+	if [ -z "${__app}" ]; then
+		echo_date "ERROR: 'app' not defined"
+		return 1
+	elif [ -z "${__iname}" ]; then
+		__iname="${__app}"
+	fi
+	if ! command -v brew >/dev/null 2>&1; then
 		echo_date "ERROR: 'brew' is not installed"
 		return 1
+	elif { [ -n "${__cask}" ] && brew list --cask "${__app}" >/dev/null 2>&1; } ||
+		{ [ -n "${__cask}" ] && find /Applications -maxdepth 1 -type d -iname "*${__app}*.app" | grep -q .; } ||
+		{ [ -z "${__cask}" ] && command -v "${__app}" >/dev/null 2>&1; }; then
+		echo_date "'${__app}' is already installed"
+		return 0
 	else
-		echo_date "Installing '${__brew_install_app}'..."
-		[ -n "${__brew_install_tap}" ] && brew tap "$__brew_install_tap"
-		if [ -n "${__brew_install_cask}" ]; then
-			brew install --cask "${__brew_install_app}"
+		echo_date "Installing '${__app}'..."
+		[ -n "${__tap}" ] && brew tap "${__tap}"
+		if [ -n "${__cask}" ]; then
+			brew install --cask "${__app}"
 		else
-			brew install "${__brew_install_iname}"
+			echo "${__iname}"
+			brew install "${__iname}"
 		fi
 	fi
 
@@ -173,24 +182,24 @@ brew_install gh
 [ -n "${IS_MAC}" ] && brew_install gsed gnu-sed
 brew_install jq
 brew_install just
-[ -n "${IS_MAC_MINI_DW}" ] && brew_install libreoffice --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
 brew_install luacheck
 brew_install nvim neovim
 brew_install pgadmin4 --cask
 brew_install pgcli
 [ -n "${IS_MAC}" ] && brew_install postgres postgresql@17
-[ -n "${IS_MAC_MINI_DW}" ] && brew_install postico --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install postico --cask
 brew_install pre-commit
 brew_install prettier
 [ -n "${IS_MAC}" ] && brew_install protonvpn --cask
-[ -n "${IS_MAC_MINI_DW}" ] && brew_install redis-stack-server redis-stack --tap=redis-stack/redist
+[ -n "${IS_MAC_MINI}" ] && brew_install redis-stack-server redis-stack --tap=redis-stack/redist
 [ -n "${IS_MAC_MINI_DW}" ] && brew_install restic
 brew_install rg ripgrep
 [ -n "${IS_MAC}" ] && brew_install rlwrap
 brew_install ruff
 brew_install shellcheck
 brew_install shfmt
-[ -n "${IS_MAC_MINI_DW}" ] && brew_install spotify --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install spotify --cask
 brew_install sshpass
 brew_install starship
 brew_install stylua
@@ -204,11 +213,13 @@ brew_install uv
 [ -n "${IS_MAC}" ] && brew_install watch
 brew_install watchexec
 [ -n "${IS_MAC}" ] && brew_install wezterm --cask
-[ -n "${IS_MAC_MINI_DW}" ] && brew_install whatsapp --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install whatsapp --cask
 [ -n "${IS_UBUNTU}" ] && brew_install xclip
 [ -n "${IS_UBUNTU}" ] && brew_install xsel
 [ -n "${IS_MAC}" ] && brew_install yq
-[ -n "${IS_MAC_MINI_DW}" ] && brew_install zoom --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install zoom --cask
+echo installing zoom
+brew_install zoom --cask
 brew_install zoxide
 # brew/fzf
 fzf_zsh="${XDG_CONFIG_HOME:-${HOME}/.config}/fzf/fzf.zsh"
