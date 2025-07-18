@@ -192,7 +192,7 @@ brew_install pre-commit
 brew_install prettier
 [ -n "${IS_MAC}" ] && brew_install protonvpn --cask
 [ -n "${IS_MAC_MINI_DW}" ] && brew_install restic
-[ -n "${IS_MAC_MINI}" ] && brew_install redis
+[ -n "${IS_MAC_MINI}" ] && brew_install redis-cli redis
 [ -n "${IS_MAC_MINI}" ] && brew_install redis-insight --cask
 brew_install rg ripgrep
 [ -n "${IS_MAC}" ] && brew_install rlwrap
@@ -245,7 +245,7 @@ brew_services() {
 		return 0
 	else
 		echo_date "Starting '${__app}'..."
-		brew services start "${__app}"
+		sudo brew services start "${__app}"
 	fi
 }
 [ -n "${IS_MAC_MINI}" ] && brew_services postgresql@17
