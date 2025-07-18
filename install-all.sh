@@ -248,7 +248,7 @@ brew_services() {
 		brew services start "${__app}"
 	fi
 }
-[ -n "${IS_MAC_MINI}" ] && brew_services postgresql@17
+[ -n "${IS_MAC_MINI}" ] && brew_services postgres postgresql@17
 [ -n "${IS_MAC_MINI}" ] && brew_services redis
 
 # mac mini/rust
