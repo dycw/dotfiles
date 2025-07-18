@@ -5,9 +5,10 @@
 node_modules/
 
 # secrets
-**/*credentials*
 **/*auth*
+**/*credential*
+**/*key*
 **/*login*
 **/*password*
-**/*key*
+**/*secret*
 **/*token*
