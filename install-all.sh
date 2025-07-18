@@ -156,7 +156,6 @@ brew_install() {
 		if [ -n "${__cask}" ]; then
 			brew install --cask "${__app}"
 		else
-			echo "${__iname}"
 			brew install "${__iname}"
 		fi
 	fi
