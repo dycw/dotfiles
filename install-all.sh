@@ -168,7 +168,7 @@ brew_install() {
 brew_install bat
 brew_install btm bottom
 brew_install bump-my-version
-[ -n "${IS_MAC_MINI_DW}" ] && brew_install db-browser-for-sqlite --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install db-browser-for-sqlite --cask
 brew_install delta git-delta
 brew_install direnv
 [ -n "${IS_MAC}" ] && brew_install dropbox --cask
@@ -205,10 +205,10 @@ brew_install stylua
 brew_install tailscale
 brew_install tmux
 brew_install topgrade
-[ -n "${IS_MAC_MINI_DW}" ] && brew_install transmission --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install transmission --cask
 brew_install uv
-[ -n "${IS_MAC_MINI_DW}" ] && brew_install visual-studio-code --cask
-[ -n "${IS_MAC_MINI_DW}" ] && brew_install vlc --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install visual-studio-code --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install vlc --cask
 [ -n "${IS_MAC}" ] && brew_install watch
 brew_install watchexec
 [ -n "${IS_MAC}" ] && brew_install wezterm --cask
@@ -248,11 +248,11 @@ brew_services() {
 		brew services start "${__app}"
 	fi
 }
-[ -n "${IS_MAC_MINI_DW}" ] && brew_services postgresql@17
-[ -n "${IS_MAC_MINI_DW}" ] && brew_services redis
+[ -n "${IS_MAC_MINI}" ] && brew_services postgresql@17
+[ -n "${IS_MAC_MINI}" ] && brew_services redis
 
 # mac mini/rust
-if [ -n "${IS_MAC_MINI_DW}" ]; then
+if [ -n "${IS_MAC_MINI}" ]; then
 	if [ -d "${HOME}"/.cargo ]; then
 		echo_date "'rust' is already installed"
 	else
