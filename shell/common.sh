@@ -604,7 +604,7 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 		if [ $# -ne 0 ]; then
 			echo_date "'ts_status' accepts no arguments" && return 1
 		fi
-		sudo tailscale status
+		tailscale status
 	}
 	if command -v tailscaled >/dev/null 2>&1; then
 		ts_up() {
@@ -641,7 +641,7 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			if [ $# -ne 0 ]; then
 				echo_date "'wts_status' accepts no arguments" && return 1
 			fi
-			watch --color --differences --interval=0.5 -- sudo tailscale status
+			watch --color --differences --interval=0.5 -- tailscale status
 		}
 	fi
 fi
