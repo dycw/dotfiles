@@ -502,7 +502,7 @@ __run_shutdown() {
 		echo_date "'__run_shutdown' accepts no arguments" && return 1
 	fi
 	__desc="$1"
-	__flag="$1"
+	__flag="$2"
 	printf "%s now? [Y/n] " % "${__desc}"
 	read -r __response
 	__shutdown=$(printf "%s" "${__response}" | tr '[:upper:]' '[:lower:]')
