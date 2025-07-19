@@ -503,7 +503,7 @@ __run_shutdown() {
 	fi
 	__desc="$1"
 	__flag="$2"
-	printf "%s now? [Y/n] " % "${__desc}"
+	printf "%s now? [Y/n] " "${__desc}"
 	read -r __response
 	__shutdown=$(printf "%s" "${__response}" | tr '[:upper:]' '[:lower:]')
 	if [ -z "${__shutdown}" ] || [ "${__shutdown}" = "y" ] || [ "${__shutdown}" = "yes" ]; then
