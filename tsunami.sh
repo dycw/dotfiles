@@ -1,57 +1,112 @@
 #!/usr/bin/env bash
 
-# Default flags
-host="dw-mac.tailnet"
-rate="70M"
-speedup="9/10"
-slowdown="10/9"
-blocksize="1200"
-error="10%"
+# Default internal flags
+__host="dw-mac.tailnet"
+__rate="70M"
+__speedup="9/10"
+__slowdown="10/9"
+__blocksize="1200"
+__error="10%"
+unset __all # means interactive mode unless set
 
-# Usage helper
+# Usage
 usage() {
-    echo "Usage: $0 [file1 file2 ...]"
-    echo "If no files given, interactive fzf selection is used."
+    cat <<EOF
+Usage: $0 [options]
+
+Options:
+  --host=HOST             Target host (default: $__host)
+  --rate=RATE             Transfer rate limit (default: $__rate)
+  --speedup=RATIO         Speedup ratio (default: $__speedup)
+  --slowdown=RATIO        Slowdown ratio (default: $__slowdown)
+  --blocksize=SIZE        Block size (default: $__blocksize)
+  --error=PERCENT         Allowable error percentage (default: $__error)
+  --all                   Download all files (equivalent to get '*')
+  --help                  Show this message
+
+If --all is not specified, fzf will be used to select files interactively.
+EOF
     exit 1
 }
 
-# Validate args: allow zero or more filenames (you can modify to exactly 0 or 1 arg)
-if [ "$#" -gt 1 ]; then
-    usage
-fi
+# Parse CLI flags
+while [ $# -gt 0 ]; do
+    case "$1" in
+    --host=*) __host="${1#*=}" ;;
+    --rate=*) __rate="${1#*=}" ;;
+    --speedup=*) __speedup="${1#*=}" ;;
+    --slowdown=*) __slowdown="${1#*=}" ;;
+    --blocksize=*) __blocksize="${1#*=}" ;;
+    --error=*) __error="${1#*=}" ;;
+    --all) __all=1 ;; # presence of var is the flag
+    --help) usage ;;
+    --*)
+        echo "Unknown option: $1" >&2
+        usage
+        ;;
+    *)
+        echo "Unexpected positional argument: $1" >&2
+        usage
+        ;;
+    esac
+    shift
+done
 
-# 1. Capture tsunami directory listing (using your existing method)
-script -q /tmp/tsunami.log tsunami connect "$host" dir quit
-cleaned=$(tr -d '\r' </tmp/tsunami.log)
-files=$(echo "$cleaned" | grep -E '^[[:space:]]*[0-9]+\)' |
-    sed -E 's/^[[:space:]]*[0-9]+\)[[:space:]]+(.+[^[:space:]])[[:space:]]+[0-9]+ bytes$/\1/')
+# 1. Remove carriage returns (very common with `script`)
+__cleaned=$(tr -d '\r' </tmp/tsunami.log)
+
+# 2. Extract filenames from numbered lines
+
+__files=$(tr -d '\r' </tmp/tsunami.log | awk '
+  /^[[:space:]]*[0-9]+\)/ {
+    sub(/^[[:space:]]*[0-9]+\)[[:space:]]*/, "", $0)        # Remove " 1) " prefix
+    sub(/[[:space:]]+[0-9]+ bytes$/, "", $0)               # Remove "    5 bytes" suffix
+    print $0
+  }
+')
+# __files=$(echo "$__cleaned" |
+#     grep -E '^[[:space:]]*[0-9]+\)' |
+#     sed -E 's/^[[:space:]]*[0-9]+\)[[:space:]]+(.+[^[:space:]])[[:space:]]+[0-9]+ bytes.*$/\1/')
 
 # 2. Determine selection
-if [ "$#" -eq 1 ]; then
-    # Use positional argument as the selected file (single)
-    selected="$1"
+if [ -n "$__all" ]; then
+    __selected="*"
 else
-    # Use fzf for multi-select
-    selected=$(echo "$files" | fzf -m)
-fi
-
-if [ -z "$selected" ]; then
-    echo "No files selected."
-    exit 0
+    __selected=$(echo "$__files" | fzf -m)
+    if [ -z "$__selected" ]; then
+        echo "No files selected."
+        exit 0
+    fi
 fi
 
 # 3. Build tsunami command
+set -- connect "$__host" \
+    set rate "$__rate" \
+    set speedup "$__speedup" \
+    set slowdown "$__slowdown" \
+    set blocksize "$__blocksize" \
+    set error "$__error"
 
-set -- connect "$host" set rate "$rate" set speedup "$speedup" set slowdown "$slowdown" set blocksize "$blocksize" set error "$error"
+# 4. Add get commands
+if [ "$__selected" = "*" ]; then
+    set -- "$@" get '*'
+else
+    while IFS= read -r __file; do
+        set -- "$@" get "$__file"
+    done <<EOF
+$__selected
+EOF
+fi
 
-# Add 'get' commands for each selected file
-# (split lines safely)
-echo "$selected" | while IFS= read -r file; do
-    set -- "$@" get "$file"
-done
-
-# Append quit
 set -- "$@" quit
 
-# 4. Run tsunami with all flags and file commands
+# Debug: print the command to be run
+printf 'Running command:\n'
+printf 'tsunami'
+for arg in "$@"; do
+    printf ' %s' "$(printf '%s' "$arg" | sed "s/'/'\\\\''/g")"
+done
+printf '\n\n'
+
+# 5. Run tsunami
 tsunami "$@"
