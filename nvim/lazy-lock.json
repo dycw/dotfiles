@@ -93,7 +93,7 @@
   },
   "lsp_signature.nvim": {
     "branch": "master",
-    "commit": "c6aeb2f1d2538bbdfdaab1664d9d4c3c75aa9db8"
+    "commit": "2b30d8582126a12a493b737e9761969eb869a05b"
   },
   "lualine.nvim": {
     "branch": "master",
@@ -157,7 +157,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "dbfd8da6206b4ab0e2fe9b72a538f82e2b410102"
+    "commit": "f6da6f19b7d83a5133745adc41042170bdff835a"
   },
   "nvim-neoclip.lua": {
     "branch": "main",
@@ -205,11 +205,11 @@
   },
   "rainbow-delimiters.nvim": {
     "branch": "master",
-    "commit": "5ebe9f26e0263ac724211e8637874df8ab9e7cc4"
+    "commit": "2ea65fb81022eaaa89510e8b96cb7ea540d1880b"
   },
   "sort.nvim": {
     "branch": "main",
-    "commit": "beeeb285cce3d8ae8a5c777b015fa60b80ed9cae"
+    "commit": "278a40e8a2e979197b76741973194124be33c344"
   },
   "sqlite.lua": {
     "branch": "master",
