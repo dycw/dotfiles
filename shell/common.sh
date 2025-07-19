@@ -604,7 +604,7 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 		if [ $# -ne 0 ]; then
 			echo_date "'ts_status' accepts no arguments" && return 1
 		fi
-		sudo tailscale status
+		tailscale status
 	}
 	if command -v tailscaled >/dev/null 2>&1; then
 		ts_up() {
@@ -641,11 +641,10 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			if [ $# -ne 0 ]; then
 				echo_date "'wts_status' accepts no arguments" && return 1
 			fi
-			watch --color --differences --interval=0.5 -- sudo tailscale status
+			watch --color --differences --interval=0.5 -- tailscale status
 		}
 	fi
 fi
-# tailscale + tailscaled
 
 # tmux
 if command -v tmux >/dev/null 2>&1; then
@@ -700,28 +699,112 @@ tmux_conf_local() {
 # tsunami
 if command -v tsunami >/dev/null 2>&1; then
 	tsunami_get() {
-		if [ $# -ne 1 ]; then
-			echo_date "'tsunami_get' accepts 1 argument" && return 1
+		unset __host __all
+		__rate="70M"
+		__speedup="9/10"
+		__slowdown="10/9"
+		__blocksize="1200"
+		__error="10%"
+
+		usage() {
+			cat <<EOF
+Usage: $0 [options] host
+
+Options:
+  --rate=RATE
+  --speedup=RATIO
+  --slowdown=RATIO
+  --blocksize=SIZE
+  --error=PERCENT
+  --all
+EOF
+			return 1
+		}
+
+		while [ $# -gt 0 ]; do
+			case "$1" in
+			--rate=*) __rate="${1#*=}" ;;
+			--speedup=*) __speedup="${1#*=}" ;;
+			--slowdown=*) __slowdown="${1#*=}" ;;
+			--blocksize=*) __blocksize="${1#*=}" ;;
+			--error=*) __error="${1#*=}" ;;
+			--all) __all=1 ;;
+			--help)
+				usage
+				return $?
+				;;
+			--*)
+				echo_date "ERROR: Unknown option '$1'"
+				usage
+				return 1
+				;;
+			*) break ;;
+			esac
+			shift
+		done
+
+		if [ "$#" -ne 1 ]; then
+			echo_date "ERROR: 'tsunami_get' accepts 1 positiona argment"
+			usage
+			return 1
 		fi
-		__path="${HOME}/work/tsunami/in"
-		mkdir -p "${__path}"
-		__host="$(dig +short "$1")"
-		__cmd=$(printf 'set rate 70M\nset speedup 9/10\nset slowdown 10/9\nset blocksize 1200\nset error 10%%\nconnect %s\nget *\nquit\n' "${__host}")
-		(
-			cd "${__path}" || exit 1
-			echo "${__cmd}" | tsunami
-		)
+		__host=$1
+		shift
+
+		# build command
+		set -- connect "$__host" \
+			set rate "$__rate" \
+			set speedup "$__speedup" \
+			set slowdown "$__slowdown" \
+			set blocksize "$__blocksize" \
+			set error "$__error"
+
+		# select files
+		if [ -n "${__all}" ]; then
+			set -- "$@" get '*'
+		else
+			if ! command -v fzf >/dev/null 2>&1; then
+				echo_date "ERROR: 'fzf' not found" && return 1
+			fi
+
+			__tmp_file=$(mktemp)
+			trap 'rm -f "${__tmp_file}"' EXIT
+			script -q "${__tmp_file}" tsunami connect "${__host}" dir quit
+			__files=$(tr -d '\r' <"${__tmp_file}" | awk '
+            /^[[:space:]]*[0-9]+\)/ {
+                sub(/^[[:space:]]*[0-9]+\)[[:space:]]*/, "", $0)
+                sub(/[[:space:]]+[0-9]+ bytes$/, "", $0)
+                print $0
+            }')
+			__selected=$(printf '%s\n' "${__files}" | fzf -m)
+			if [ -z "${__selected}" ]; then
+				echo_date "ERROR: no files selected" && return 1
+			fi
+			while IFS= read -r __file; do
+				set -- "$@" get "${__file}"
+			done <<EOF
+${__selected}
+EOF
+		fi
+
+		# execute
+		tsunami "$@" quit
 	}
 fi
 if command -v tsunamid >/dev/null 2>&1; then
 	tsunami_serve() {
-		if [ $# -ne 0 ]; then
+		if [ $# -eq 0 ]; then
+			__dir="${HOME}/work/tsunami/out"
+		elif [ $# -eq 1 ]; then
+			__dir="$1"
+		else
 			echo_date "'tsunami_serve' accepts 0 arguments" && return 1
 		fi
-		__path="${HOME}/work/tsunami/out"
-		mkdir -p "${__path}"
+		if ! [ -d "${__dir}" ]; then
+			echo_date "ERROR: '${__dir}' does not exist" && return 1
+		fi
 		(
-			cd "${__path}" || exit 1
+			cd "${__dir}" || exit 1
 			# shellcheck disable=SC2035
 			tsunamid *
 		)
