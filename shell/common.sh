@@ -645,7 +645,6 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 		}
 	fi
 fi
-# tailscale + tailscaled
 
 # tmux
 if command -v tmux >/dev/null 2>&1; then
@@ -700,28 +699,58 @@ tmux_conf_local() {
 # tsunami
 if command -v tsunami >/dev/null 2>&1; then
 	tsunami_get() {
-		if [ $# -ne 1 ]; then
-			echo_date "'tsunami_get' accepts 1 argument" && return 1
+		output=$(tsunami connect dw-mac.tailnet dir quit)
+
+		# 2. Extract just the filenames (2nd column after number + parenthesis)
+		files=$(echo "$output" | awk '/^[[:space:]]+[0-9]+\)/ {print $2}')
+
+		# 3. Use fzf to select files
+		selected=$(echo "$files" | fzf -m)
+
+		# 4. If files were selected, build and execute tsunami get commands
+		if [ -n "$selected" ]; then
+			cmds=$(echo "$selected" | sed 's/^/get /')
+			{
+				echo "$cmds"
+				echo "quit"
+			} | tsunami connect dw-mac.tailnet
 		fi
-		__path="${HOME}/work/tsunami/in"
-		mkdir -p "${__path}"
-		__host="$(dig +short "$1")"
-		__cmd=$(printf 'set rate 70M\nset speedup 9/10\nset slowdown 10/9\nset blocksize 1200\nset error 10%%\nconnect %s\nget *\nquit\n' "${__host}")
-		(
-			cd "${__path}" || exit 1
-			echo "${__cmd}" | tsunami
-		)
+
+		# if [ $# -ne 1 ]; then
+		#     echo_date "'tsunami_get' accepts 1 argument" && return 1
+		# fi
+		# __path="${HOME}/work/tsunami/in"
+		# mkdir -p "${__path}"
+		# # 1. Get the remote file list (simulate or capture from tsunami)
+		# file_list=$(tsunami connect dw-mac.tailnet dir quit |
+		#     awk '/^[[:space:]]+[0-9]+\)/ {print $2}')
+		#
+		# # 2. Pass file_list to fzf for selection
+		# selected_files=$(echo "$file_list" | fzf -m)
+		#
+		# # 3. Build tsunami get command for each selected file
+		# if [ -n "$selected_files" ]; then
+		#     get_cmd=$(echo "$selected_files" | sed 's/^/get /' | tr '\n' ' ')
+		#     # 4. Append quit at the end and run tsunami
+		#     tsunami connect dw-mac.tailnet $get_cmd quit
+		# fi
+
 	}
 fi
 if command -v tsunamid >/dev/null 2>&1; then
 	tsunami_serve() {
-		if [ $# -ne 0 ]; then
+		if [ $# -eq 0 ]; then
+			__dir="${HOME}/work/tsunami/out"
+		elif [ $# -eq 1 ]; then
+			__dir="$1"
+		else
 			echo_date "'tsunami_serve' accepts 0 arguments" && return 1
 		fi
-		__path="${HOME}/work/tsunami/out"
-		mkdir -p "${__path}"
+		if ! [ -d "${__dir}" ]; then
+			echo_date "ERROR: '${__dir}' does not exist" && return 1
+		fi
 		(
-			cd "${__path}" || exit 1
+			cd "${__dir}" || exit 1
 			# shellcheck disable=SC2035
 			tsunamid *
 		)
