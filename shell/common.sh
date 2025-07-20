@@ -595,9 +595,7 @@ ts_ssh() {
 	elif [ -z "${TAILSCALE_HOST_NAME}" ]; then
 		echo_date "'\$TAILSCALE_HOST_NAME' does not exist" && return 1
 	fi
-	__host=$(dig +short "${TAILSCALE_HOST_NAME}")
-	echo_date "${__host}"
-	ssh "${SSH_HOME_USER}@${__host}"
+	ssh "${SSH_HOME_USER}@${TAILSCALE_HOST_NAME}"
 }
 if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1; then
 	ts_status() {
