@@ -595,9 +595,7 @@ ts_ssh() {
 	elif [ -z "${TAILSCALE_HOST_NAME}" ]; then
 		echo_date "'\$TAILSCALE_HOST_NAME' does not exist" && return 1
 	fi
-	__host=$(dig +short "${TAILSCALE_HOST_NAME}")
-	echo_date "${__host}"
-	ssh "${SSH_HOME_USER}@${__host}"
+	ssh "${SSH_HOME_USER}@${TAILSCALE_HOST_NAME}"
 }
 if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1; then
 	ts_status() {
@@ -650,13 +648,21 @@ fi
 if command -v tmux >/dev/null 2>&1; then
 	tmux_attach() {
 		if [ $# -eq 0 ]; then
-			__window=0
+			__count="$(tmux ls 2>/dev/null | wc -l)"
+			if [ "${__count}" -eq 0 ]; then
+				tmux new
+				return
+			elif [ "${__count}" -eq 1 ]; then
+				__session="$(tmux ls | cut -d: -f1)"
+			else
+				echo_date "ERROR: %d sessions found" "${__count}"
+			fi
 		elif [ $# -eq 1 ]; then
-			__window="$1"
+			__session="$1"
 		else
 			echo_date "'tmux_attach' accepts [0..1] arguments" && return 1
 		fi
-		tmux attach -t "${__window}"
+		tmux attach -t "${__session}"
 	}
 	tmux_detach() {
 		if [ $# -ne 0 ]; then
