@@ -149,7 +149,7 @@ from itertools import (
     starmap,
     takewhile,
 )
-from logging import Formatter, LogRecord, StreamHandler, basicConfig, getLogger
+from logging import Formatter, LogRecord, StreamHandler, getLogger
 from multiprocessing import Pool, cpu_count
 from operator import add, and_, attrgetter, itemgetter, mul, neg, or_, pos, sub, truediv
 from os import environ, getenv
@@ -190,12 +190,16 @@ from zlib import crc32
 from zoneinfo import ZoneInfo
 
 _LOGGER = getLogger("startup.py")
-basicConfig(
-    format="{asctime} | {process} | {name}:{lineno} | {message}",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    style="{",
-    level="DEBUG",
+_LOGGER.addHandler(handler := StreamHandler(stdout))
+handler.setFormatter(
+    Formatter(
+        fmt="{asctime} | {process} | {name}:{lineno} | {message}",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        style="{",
+    )
 )
+handler.setLevel("INFO")
+_LOGGER.setLevel("INFO")
 _ = _LOGGER.info("Running `startup.py`...")
 
 
@@ -694,6 +698,15 @@ else:
 
 
 try:
+    import inflect
+except ModuleNotFoundError:
+    pass
+else:
+    _LOGGER.info("Importing `inflect`...")
+    _ = [inflect]
+
+
+try:
     import joblib
 except ModuleNotFoundError:
     pass
@@ -872,6 +885,7 @@ except ModuleNotFoundError:
 
     _ = [inf, log, nan]
 else:
+    _LOGGER.info("Importing `numpy`...")
     _ = [
         Generator,
         LinAlgError,
@@ -950,6 +964,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `optuna`...")
     _ = [RandomSampler, Trial, create_study, create_trial, optuna]
 
     try:
@@ -965,6 +980,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `orjson`...")
     _ = [orjson]
 
     try:
@@ -978,84 +994,12 @@ else:
 try:
     import pandas  # noqa: ICN001
     import pandas as pd
-    from pandas import (
-        NA,
-        BooleanDtype,
-        DateOffset,
-        DatetimeIndex,
-        Index,
-        Int64Dtype,
-        MultiIndex,
-        RangeIndex,
-        StringDtype,
-        Timedelta,
-        TimedeltaIndex,
-        Timestamp,
-        bdate_range,
-        qcut,
-        read_sql,
-        read_table,
-        set_option,
-        to_datetime,
-        to_pickle,
-    )
-    from pandas.testing import assert_index_equal
-    from pandas.tseries.offsets import (
-        BDay,
-        Hour,
-        Micro,
-        Milli,
-        Minute,
-        MonthBegin,
-        MonthEnd,
-        Nano,
-        Second,
-        Week,
-    )
+    from pandas import set_option
 except ModuleNotFoundError:
-    try:
-        from utilities.pickle import read_pickle
-    except ModuleNotFoundError:
-        ...
-    else:
-        _ = [read_pickle]
+    pass
 else:
-    _ = [
-        BDay,
-        BooleanDtype,
-        DateOffset,
-        DateOffset,
-        DatetimeIndex,
-        Hour,
-        Index,
-        Int64Dtype,
-        Micro,
-        Milli,
-        Minute,
-        MonthBegin,
-        MonthEnd,
-        MultiIndex,
-        NA,
-        Nano,
-        RangeIndex,
-        Second,
-        StringDtype,
-        Timedelta,
-        TimedeltaIndex,
-        Timestamp,
-        Week,
-        assert_index_equal,
-        bdate_range,
-        pandas,
-        pd,
-        qcut,
-        read_pickle,
-        read_sql,
-        read_table,
-        set_option,
-        to_datetime,
-        to_pickle,
-    ]
+    _LOGGER.info("Importing `pandas`...")
+    _ = [pandas, pd]
 
     set_option(
         "display.float_format",
@@ -1156,32 +1100,9 @@ try:
         thousands_separator=True,
     )
 except ModuleNotFoundError:
-    try:
-        from pandas import (
-            DataFrame,
-            Series,
-            concat,
-            date_range,
-            read_csv,
-            read_excel,
-            read_parquet,
-        )
-        from pandas.testing import assert_frame_equal, assert_series_equal
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [
-            DataFrame,
-            Series,
-            assert_frame_equal,
-            assert_series_equal,
-            concat,
-            date_range,
-            read_csv,
-            read_excel,
-            read_parquet,
-        ]
+    pass
 else:
+    _LOGGER.info("Importing `polars`...")
     _ = [
         Array,
         Binary,
@@ -1330,6 +1251,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `polars_ols`...")
     _ = [polars_ols]
 
     try:
@@ -1344,6 +1266,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `pqdm`...")
     _ = [pqdm]
 
 
@@ -1353,6 +1276,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `pydantic`...")
     _ = [pydantic, BaseModel]
 
 
@@ -1361,6 +1285,7 @@ try:
 except ImportError:
     pass
 else:
+    _LOGGER.info("Importing `pytest`...")
     _ = [fixture, mark, param]
 
     try:
@@ -1372,11 +1297,13 @@ else:
 
 
 try:
+    import redis
     from redis.asyncio import Redis
 except ModuleNotFoundError:
     pass
 else:
-    _ = [Redis]
+    _LOGGER.info("Importing `redis`...")
+    _ = [redis, Redis]
 
     try:
         from utilities.redis import redis_hash_map_key, redis_key
@@ -1391,6 +1318,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `requests`...")
     _ = [requests]
 
 
@@ -1399,13 +1327,11 @@ try:
     from rich import inspect, print
     from rich import print as p
     from rich.pretty import pprint, pretty_repr
-    from rich.traceback import install as _install
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `rich`...")
     _ = [inspect, p, pprint, pretty_repr, print, rich]
-
-    _install()
 
 
 try:
@@ -1414,6 +1340,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `scipy`...")
     _ = [scipy, sp]
 
 
@@ -1422,6 +1349,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `semver`...")
     _ = [semver]
 
 
@@ -1435,6 +1363,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `sqlalchemy`...")
     _ = [
         Column,
         MetaData,
@@ -1474,6 +1403,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `streamlit`...")
     _ = [st, streamlit]
 
 
@@ -1482,6 +1412,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `stringcase`...")
     _ = [stringcase]
 
 
@@ -1490,6 +1421,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `tabulate`...")
     _ = [tabulate]
 
 
@@ -1499,6 +1431,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `tenacity`...")
     _ = [retry, tenacity]
 
 
@@ -1507,6 +1440,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `tqdm`...")
     _ = [tqdm]
 
 
@@ -1515,7 +1449,9 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `tzdata`...")
     _ = [tzdata]
+
     try:
         from utilities.tzdata import HongKong, Tokyo, USCentral, USEastern
     except ModuleNotFoundError:
@@ -1529,7 +1465,9 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `tzlocal`...")
     _ = [tzlocal]
+
     try:
         from utilities.tzlocal import (
             LOCAL_TIME_ZONE,
@@ -1622,6 +1560,8 @@ except ModuleNotFoundError:
 
     _ = [shuffle]
 else:
+    _LOGGER.info("Importing `utilities`...")
+
     _ = [
         BackgroundTask,
         CPU_COUNT,
@@ -1723,6 +1663,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `xarray`...")
     _ = [xarray, DataArray, Dataset]
 
 
@@ -1742,6 +1683,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `whenever`...")
     _ = [
         Date,
         DateDelta,
@@ -1774,6 +1716,4 @@ def _add_src_to_sys_path() -> None:
 _ = _add_src_to_sys_path()
 
 
-builtins.print(  # noqa: T201
-    f"{dt.datetime.now():%Y-%m-%d %H:%M:%S}: Finished running `startup.py`"  # noqa: DTZ005
-)
+_LOGGER.info("Finished running `startup.py`")
