@@ -151,10 +151,12 @@ from itertools import (
     takewhile,
 )
 from logging import Formatter, LogRecord, StreamHandler, getLogger
+from math import inf, log, nan
 from multiprocessing import Pool, cpu_count
 from operator import add, and_, attrgetter, itemgetter, mul, neg, or_, pos, sub, truediv
 from os import environ, getenv
 from pathlib import Path
+from random import shuffle
 from re import escape, findall, search
 from shutil import copyfile, rmtree
 from statistics import fmean, mean
@@ -323,6 +325,7 @@ _ = [
     hashlib,
     heapq,
     imaplib,
+    inf,
     inspect,
     io,
     is_dataclass,
@@ -339,6 +342,7 @@ _ = [
     itertools,
     json,
     locale,
+    log,
     logging,
     lru_cache,
     make_dataclass,
@@ -347,6 +351,7 @@ _ = [
     mean,
     mul,
     multiprocessing,
+    nan,
     neg,
     new_event_loop,
     numbers,
@@ -677,6 +682,7 @@ if find_spec("more_itertools") is not None:
         always_iterable,
         one,
         partition,
+        peekable,
         split_at,
         unique_everseen,
         unique_justseen,
@@ -690,6 +696,7 @@ if find_spec("more_itertools") is not None:
         more_itertools,
         one,
         partition,
+        peekable,
         split_at,
         unique_everseen,
         unique_justseen,
@@ -698,61 +705,29 @@ if find_spec("more_itertools") is not None:
     ]
 
     if find_spec("utilities") is not None:
-        from utilities.iterables import (
-            OneEmptyError,
-            OneError,
-            OneNonUniqueError,
-            always_iterable,
-            check_duplicates,
-            check_iterables_equal,
-            check_lengths_equal,
-            check_mappings_equal,
-            check_sets_equal,
-            check_subset,
-            check_superset,
-            groupby_lists,
-            one,
-            one_maybe,
-            one_str,
-            one_unique,
-            transpose,
-            unique_everseen,
+        from utilities.more_itertools import (
+            BucketMappingError,
+            Split,
+            bucket_mapping,
+            partition_list,
+            partition_typeguard,
+            peekable,
+            yield_splits,
         )
 
         _ = [
-            OneEmptyError,
-            OneError,
-            OneNonUniqueError,
-            always_iterable,
-            check_duplicates,
-            check_iterables_equal,
-            check_lengths_equal,
-            check_mappings_equal,
-            check_sets_equal,
-            check_subset,
-            check_superset,
-            groupby_lists,
-            one,
-            one_maybe,
-            one_str,
-            one_unique,
-            transpose,
-            unique_everseen,
-        ]
-    try:
-        from utilities.more_itertools import (
+            BucketMappingError,
+            Split,
             bucket_mapping,
+            partition_list,
             partition_typeguard,
             peekable,
-        )
-    except ModuleNotFoundError:
-        from more_itertools import peekable
+            yield_splits,
+        ]
 
-        _ = [peekable]
-    else:
-        _ = [bucket_mapping, partition_typeguard, peekable]
+if find_spec("numpy") is not None:
+    _LOGGER.info("Importing `numpy`...")
 
-try:
     import numpy  # noqa: ICN001
     import numpy as np
     from numpy import (
@@ -818,12 +793,7 @@ try:
     from numpy.linalg import LinAlgError, cholesky, inv
     from numpy.random import Generator, RandomState, default_rng
     from numpy.typing import NDArray
-except ModuleNotFoundError:
-    from math import inf, log, nan
 
-    _ = [inf, log, nan]
-else:
-    _LOGGER.info("Importing `numpy`...")
     _ = [
         Generator,
         LinAlgError,
@@ -895,48 +865,40 @@ else:
     ]
 
 
-try:
+if find_spec("optuna") is not None:
+    _LOGGER.info("Importing `optuna`...")
     import optuna
     from optuna import Trial, create_study, create_trial
     from optuna.samplers import RandomSampler
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `optuna`...")
+
     _ = [RandomSampler, Trial, create_study, create_trial, optuna]
 
-    try:
+    if find_spec("utilities") is not None:
         from utilities.optuna import get_best_params, make_objective, suggest_bool
-    except ModuleNotFoundError:
-        pass
-    else:
+
         _ = [get_best_params, make_objective, suggest_bool]
 
 
-try:
-    import orjson
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("orjson") is not None:
     _LOGGER.info("Importing `orjson`...")
+
+    import orjson
+
     _ = [orjson]
 
-    try:
+    if find_spec("utilities") is not None:
         from utilities.orjson import deserialize, read_object, serialize, write_object
-    except ModuleNotFoundError:
-        pass
-    else:
+
         _ = [deserialize, read_object, serialize, write_object]
 
 
-try:
+if find_spec("pandas") is not None:
+    _LOGGER.info("Importing `pandas`...")
+
     import pandas  # noqa: ICN001
     import pandas as pd
     from pandas import set_option
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `pandas`...")
+
     _ = [pandas, pd]
 
     set_option(
@@ -951,7 +913,9 @@ else:
     )
 
 
-try:
+if find_spec("polars") is not None:
+    _LOGGER.info("Importing `polars`...")
+
     import polars  # noqa: ICN001
     import polars as pl
     from polars import (
@@ -1037,10 +1001,6 @@ try:
         tbl_cols=_PANDAS_POLARS_COLS,
         thousands_separator=True,
     )
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `polars`...")
     _ = [
         Array,
         Binary,
@@ -1114,7 +1074,8 @@ else:
         sum_horizontal,
         when,
     ]
-    try:
+
+    if find_spec("utilities") is not None:
         from utilities.polars import (
             DatetimeHongKong,
             DatetimeTokyo,
@@ -1147,9 +1108,7 @@ else:
             try_reify_expr,
             zoned_datetime,
         )
-    except ModuleNotFoundError:
-        pass
-    else:
+
         _ = [
             DatetimeHongKong,
             DatetimeTokyo,
@@ -1183,125 +1142,117 @@ else:
             zoned_datetime,
         ]
 
+        if find_spec("sqlalchemy") is not None:
+            from utilities.sqlalchemy_polars import (
+                insert_dataframe,
+                select_to_dataframe,
+            )
 
-try:
-    import polars_ols
-except ModuleNotFoundError:
-    pass
-else:
+            _ = [insert_dataframe, select_to_dataframe]
+
+
+if find_spec("polars_ols") is not None:
     _LOGGER.info("Importing `polars_ols`...")
+
+    import polars_ols
+
     _ = [polars_ols]
 
-    try:
+    if find_spec("utilities") is not None:
         from utilities.polars_ols import compute_rolling_ols
-    except ModuleNotFoundError:
-        pass
-    else:
+
         _ = [compute_rolling_ols]
 
-try:
-    from pqdm.processes import pqdm
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("pqdm") is not None:
     _LOGGER.info("Importing `pqdm`...")
+
+    from pqdm.processes import pqdm
+
     _ = [pqdm]
 
 
-try:
+if find_spec("pydantic") is not None:
+    _LOGGER.info("Importing `pydantic`...")
+
     import pydantic
     from pydantic import BaseModel
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `pydantic`...")
+
     _ = [pydantic, BaseModel]
 
 
-try:
-    from pytest import fixture, mark, param  # noqa: PT013
-except ImportError:
-    pass
-else:
+if find_spec("pytest") is not None:
     _LOGGER.info("Importing `pytest`...")
+
+    from pytest import fixture, mark, param  # noqa: PT013
+
     _ = [fixture, mark, param]
 
-    try:
+    if find_spec("utilities") is not None:
         from utilities.pytest import throttle
-    except ModuleNotFoundError:
-        pass
-    else:
+
         _ = [throttle]
 
 
-try:
+if find_spec("redis") is not None:
+    _LOGGER.info("Importing `redis`...")
+
     import redis
     from redis.asyncio import Redis
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `redis`...")
+
     _ = [redis, Redis]
 
-    try:
+    if find_spec("utilities") is not None:
         from utilities.redis import redis_hash_map_key, redis_key
-    except ModuleNotFoundError:
-        pass
-    else:
+
         _ = [redis_hash_map_key, redis_key]
 
 
-try:
-    import requests
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("requests") is not None:
     _LOGGER.info("Importing `requests`...")
+
+    import requests
+
     _ = [requests]
 
 
-try:
+if find_spec("rich") is not None:
+    _LOGGER.info("Importing `rich`...")
+
     import rich
     from rich import inspect, print
     from rich import print as p
     from rich.pretty import pprint, pretty_repr
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `rich`...")
+
     _ = [inspect, p, pprint, pretty_repr, print, rich]
 
 
-try:
+if find_spec("scipy") is not None:
+    _LOGGER.info("Importing `scipy`...")
+
     import scipy
     import scipy as sp
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `scipy`...")
+
     _ = [scipy, sp]
 
 
-try:
-    import semver
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("semver") is not None:
     _LOGGER.info("Importing `semver`...")
+
+    import semver
+
     _ = [semver]
 
 
-try:
+if find_spec("sqlalchemy") is not None:
+    _LOGGER.info("Importing `sqlalchemy`...")
+
     import sqlalchemy
     import sqlalchemy as sqla
     import sqlalchemy.orm
     from sqlalchemy import Column, MetaData, Table, delete, func, select, tuple_
     from sqlalchemy.engine.url import URL
     from sqlalchemy.orm import selectinload
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `sqlalchemy`...")
+
     _ = [
         Column,
         MetaData,
@@ -1316,7 +1267,7 @@ else:
         sqlalchemy.orm,
         tuple_,
     ]
-    try:
+    if find_spec("utilities") is not None:
         from utilities.sqlalchemy import (
             create_engine,
             ensure_tables_created,
@@ -1324,9 +1275,7 @@ else:
             get_table,
             insert_items,
         )
-    except ModuleNotFoundError:
-        pass
-    else:
+
         _ = [
             create_engine,
             ensure_tables_created,
@@ -1334,91 +1283,87 @@ else:
             get_table,
             insert_items,
         ]
+        if find_spec("polars") is not None:
+            from utilities.sqlalchemy_polars import (
+                insert_dataframe,
+                select_to_dataframe,
+            )
 
-try:
+            _ = [insert_dataframe, select_to_dataframe]
+
+if find_spec("streamlit") is not None:
+    _LOGGER.info("Importing `streamlit`...")
+
     import streamlit
     import streamlit as st
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `streamlit`...")
+
     _ = [st, streamlit]
 
 
-try:
-    import stringcase
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("stringcase") is not None:
     _LOGGER.info("Importing `stringcase`...")
+
+    import stringcase
+
     _ = [stringcase]
 
 
-try:
-    from tabulate import tabulate
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("tabulate") is not None:
     _LOGGER.info("Importing `tabulate`...")
+
+    from tabulate import tabulate
+
     _ = [tabulate]
 
 
-try:
+if find_spec("tenacity") is not None:
+    _LOGGER.info("Importing `tenacity`...")
+
     import tenacity
     from tenacity import retry
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `tenacity`...")
+
     _ = [retry, tenacity]
 
 
-try:
-    from tqdm import tqdm
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("tqdm") is not None:
     _LOGGER.info("Importing `tqdm`...")
+
+    from tqdm import tqdm
+
     _ = [tqdm]
 
 
-try:
-    import tzdata
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("tzdata") is not None:
     _LOGGER.info("Importing `tzdata`...")
+
+    import tzdata
+
     _ = [tzdata]
 
-    try:
+    if find_spec("utilities") is not None:
         from utilities.tzdata import HongKong, Tokyo, USCentral, USEastern
-    except ModuleNotFoundError:
-        pass
-    else:
+
         _ = [HongKong, Tokyo, USCentral, USEastern]
 
 
-try:
+if find_spec("tzlocal") is not None:
     import tzlocal
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `tzlocal`...")
+
     _ = [tzlocal]
 
-    try:
+    if find_spec("utilities") is not None:
         from utilities.tzlocal import (
             LOCAL_TIME_ZONE,
             LOCAL_TIME_ZONE_NAME,
             get_local_time_zone,
         )
-    except ModuleNotFoundError:
-        pass
-    else:
+
         _ = [LOCAL_TIME_ZONE, LOCAL_TIME_ZONE_NAME, get_local_time_zone]
 
 
-try:
+if find_spec("utilities") is not None:
+    _LOGGER.info("Importing `utilities`...")
+
     from utilities.asyncio import (
         EnhancedTaskGroup,
         sleep_max,
@@ -1442,12 +1387,29 @@ try:
     )
     from utilities.functools import partial
     from utilities.iterables import (
+        OneEmptyError,
+        OneError,
+        OneNonUniqueError,
+        always_iterable,
+        check_duplicates,
+        check_iterables_equal,
+        check_lengths_equal,
+        check_mappings_equal,
+        check_sets_equal,
+        check_subset,
+        check_superset,
         chunked,
         group_consecutive_integers,
         groupby_lists,
         one,
+        one_maybe,
+        one_str,
+        one_unique,
+        transpose,
         ungroup_consecutive_integers,
+        unique_everseen,
     )
+    from utilities.jupyter import show
     from utilities.logging import (
         SizeAndTimeRotatingFileHandler,
         basic_config,
@@ -1493,12 +1455,6 @@ try:
         get_today_local,
     )
     from utilities.zoneinfo import UTC, ensure_time_zone, get_time_zone_name
-except ModuleNotFoundError:
-    from random import shuffle
-
-    _ = [shuffle]
-else:
-    _LOGGER.info("Importing `utilities`...")
 
     _ = [
         BackgroundTask,
@@ -1513,6 +1469,9 @@ else:
         MONTH,
         MaybeIterable,
         Number,
+        OneEmptyError,
+        OneError,
+        OneNonUniqueError,
         SECOND,
         SYSTEM_RANDOM,
         SizeAndTimeRotatingFileHandler,
@@ -1527,7 +1486,15 @@ else:
         ZERO_DAYS,
         ZERO_TIME,
         ZonedDateTimePeriod,
+        always_iterable,
         basic_config,
+        check_duplicates,
+        check_iterables_equal,
+        check_lengths_equal,
+        check_mappings_equal,
+        check_sets_equal,
+        check_subset,
+        check_superset,
         chunked,
         dataclass_repr,
         dataclass_to_dict,
@@ -1564,6 +1531,9 @@ else:
         list_dir,
         make_isinstance,
         one,
+        one_maybe,
+        one_str,
+        one_unique,
         parse_bool,
         parse_none,
         partial,
@@ -1571,41 +1541,33 @@ else:
         run_in_background,
         safe_round,
         setup_logging,
+        show,
         shuffle,
         sleep_max,
         sleep_rounded,
         sleep_td,
         sleep_until,
+        transpose,
         ungroup_consecutive_integers,
+        unique_everseen,
         write_pickle,
         yield_fields,
         yield_shelf,
     ]
-    try:
-        from utilities.jupyter import show
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [show]
-    try:
-        from utilities.sqlalchemy_polars import insert_dataframe, select_to_dataframe
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [insert_dataframe, select_to_dataframe]
 
 
-try:
+if find_spec("xarray") is not None:
+    _LOGGER.info("Importing `xarray`...")
+
     import xarray
     from xarray import DataArray, Dataset
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `xarray`...")
+
     _ = [xarray, DataArray, Dataset]
 
 
-try:
+if find_spec("whenever") is not None:
+    _LOGGER.info("Importing `whenever`...")
+
     import whenever
     from whenever import (
         Date,
@@ -1618,10 +1580,7 @@ try:
         YearMonth,
         ZonedDateTime,
     )
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `whenever`...")
+
     _ = [
         Date,
         DateDelta,
