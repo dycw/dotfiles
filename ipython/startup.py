@@ -435,6 +435,7 @@ if find_spec("altair") is not None:
     _ = [Chart, alt, altair, condition, datum]
 
     alt.data_transformers.enable("vegafusion")
+
     if find_spec("utilities") is not None:
         from utilities.altair import (
             plot_dataframes,
@@ -452,129 +453,112 @@ if find_spec("altair") is not None:
             vconcat_charts,
         ]
 
-try:
-    import atomicwrites
-except ModuleNotFoundError:
-    pass
-else:
+
+if find_spec("atomicwrites") is not None:
     _LOGGER.info("Importing `atomicwrites`...")
+
+    import atomicwrites
+
     _ = [atomicwrites]
 
-    try:
+    if find_spec("utilities") is not None:
         from utilities.atomicwrites import writer
-    except ModuleNotFoundError:
-        pass
-    else:
+
         _ = [writer]
 
 
-try:
-    from beartype import beartype
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("beartype") is not None:
     _LOGGER.info("Importing `beartype`...")
+
+    from beartype import beartype
+
     _ = [beartype]
 
 
-try:
-    from bidict import bidict
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("beartype") is not None:
     _LOGGER.info("Importing `beartype`...")
+
+    from bidict import bidict
+
     _ = [bidict]
 
 
-try:
-    import bs4
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("bs4") is not None:
     _LOGGER.info("Importing `bs4`...")
+
+    import bs4
+
     _ = [bs4]
 
 
-try:
+if find_spec("cachetools") is not None:
     import cachetools
     from cachetools.func import ttl_cache
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `cachetools`...")
+
     _ = [cachetools, ttl_cache]
 
 
-try:
-    import click
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("click") is not None:
     _LOGGER.info("Importing `click`...")
+
+    import click
+
     _ = [click]
 
 
-try:
+if find_spec("cvxpy") is not None:
+    _LOGGER.info("Importing `cvxpy`...")
+
     import cvxpy
     import cxvpy as cp
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `cvxpy`...")
+
     _ = [cp, cvxpy]
 
 
-try:
+if find_spec("dacite") is not None:
+    _LOGGER.info("Importing `dacite`...")
+
     import dacite
     from dacite import from_dict
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `dacite`...")
+
     _ = [dacite, from_dict]
 
 
-try:
-    import eventkit
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("eventkit") is not None:
     _LOGGER.info("Importing `eventkit`...")
+
+    import eventkit
+
     _ = [eventkit]
 
-    try:
+    if find_spec("utilities") is not None:
         from utilities.eventkit import add_listener
-    except ModuleNotFoundError:
-        pass
-    else:
+
         _ = [add_listener]
 
-try:
-    from frozendict import frozendict
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("frozendict") is not None:
     _LOGGER.info("Importing `frozendict`...")
+
+    from frozendict import frozendict
+
     _ = [frozendict]
 
 
-try:
-    import humanize
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("humanize") is not None:
     _LOGGER.info("Importing `humanize`...")
+
+    import humanize
+
     _ = [humanize]
 
 
-try:
+if find_spec("holoviews") is not None:
+    _LOGGER.info("Importing `holoviews`...")
+
     import holoviews  # noqa: ICN001
     import holoviews as hv
     from holoviews import extension
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `holoviews`...")
+
     HVPLOT_OPTS = {
         "active_tools": ["box_zoom"],
         "default_tools": ["box_zoom", "hover"],
@@ -585,42 +569,33 @@ else:
     _ = [extension, holoviews, hv]
 
 
-try:
-    import hvplot
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("hvplot") is not None:
     _LOGGER.info("Importing `hvplot`...")
-    try:
+
+    if find_spec("pandas") is not None:
         import hvplot.pandas
-    except (AttributeError, ModuleNotFoundError):
-        pass
-    else:
+
         _ = [hvplot.pandas]
-    try:
+    if find_spec("polars") is not None:
         import hvplot.polars
-    except (AttributeError, ModuleNotFoundError):
-        pass
-    else:
+
         _ = [hvplot.polars]
-    try:
+    if find_spec("xarray") is not None:
         import hvplot.xarray
-    except (AttributeError, ModuleNotFoundError):
-        pass
-    else:
+
         _ = [hvplot.xarray]
 
-
-try:
-    import hypothesis
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("hypothesis") is not None:
     _LOGGER.info("Importing `hypothesis`...")
+
+    import hypothesis
+
     _ = [hypothesis]
 
 
-try:
+if find_spec("ib_async") is not None:
+    _LOGGER.info("Importing `ib_async`...")
+
     import ib_async
     from ib_async import (
         IB,
@@ -641,10 +616,7 @@ try:
         Trade,
         TradeLogEntry,
     )
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `ib_async`...")
+
     _ = [
         BarDataList,
         ContFuture,
@@ -667,65 +639,65 @@ else:
     ]
 
 
-try:
-    import inflect
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("inflect") is not None:
     _LOGGER.info("Importing `inflect`...")
+
+    import inflect
+
     _ = [inflect]
 
 
-try:
-    import joblib
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("joblib") is not None:
     _LOGGER.info("Importing `joblib`...")
+
+    import joblib
+
     _ = [joblib]
 
 
-try:
-    import lightweight_charts
-except ModuleNotFoundError:
-    pass
-else:
+if find_spec("lightweight_charts") is not None:
     _LOGGER.info("Importing `lightweight_charts`...")
+
+    import lightweight_charts
+
     _ = [lightweight_charts]
 
-    try:
+    if find_spec("utilities") is not None:
         from utilities.lightweight_charts import save_chart, yield_chart
-    except ModuleNotFoundError:
-        pass
-    else:
+
         _ = [save_chart, yield_chart]
 
 
-try:
+if find_spec("more_itertools") is not None:
+    _LOGGER.info("Importing `more_itertools`...")
+
     import more_itertools
     import more_itertools as mi
     from more_itertools import (
+        always_iterable,
+        one,
         partition,
         split_at,
+        unique_everseen,
         unique_justseen,
         windowed,
         windowed_complete,
     )
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `more_itertools`...")
+
     _ = [
+        always_iterable,
         mi,
         more_itertools,
+        one,
         partition,
         split_at,
+        unique_everseen,
         unique_justseen,
         windowed,
         windowed_complete,
     ]
 
-    try:
+    if find_spec("utilities") is not None:
         from utilities.iterables import (
             OneEmptyError,
             OneError,
@@ -746,11 +718,7 @@ else:
             transpose,
             unique_everseen,
         )
-    except ModuleNotFoundError:
-        from more_itertools import always_iterable, one, unique_everseen
 
-        _ = [always_iterable, one, unique_everseen]
-    else:
         _ = [
             OneEmptyError,
             OneError,
