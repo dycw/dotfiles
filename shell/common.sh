@@ -186,6 +186,15 @@ if command -v direnv >/dev/null 2>&1; then
 	}
 fi
 
+# docker
+if command -v docker >/dev/null 2>&1; then
+	dps() {
+		if [ $# -ne 0 ]; then
+			echo_date "'dps' accepts no arguments" && return 1
+		fi
+		docker ps
+	}
+fi
 # echo
 echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 

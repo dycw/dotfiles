@@ -480,6 +480,7 @@ ls.add_snippets("python", {
     s("ut-cpu-count", { t({ "from utilities.os import CPU_COUNT", "" }) }),
     s("ut-dataclass-repr", { t({ "from utilities.dataclasses import dataclass_repr", "" }) }),
     s("ut-dataclass-to-dict", { t({ "from utilities.dataclasses import dataclass_to_dict", "" }) }),
+    s("ut-datetime-utc", { t({ "from utilities.polars import DatetimeUTC", "" }) }),
     s("ut-deserialize", { t({ "from utilities.orjson import deserialize", "" }) }),
     s("ut-duration", { t({ "from utilities.types import Duration", "" }) }),
     s("ut-enhanced-queue", { t({ "from utilities.asyncio import EnhancedQueue", "" }) }),
