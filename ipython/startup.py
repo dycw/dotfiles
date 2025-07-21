@@ -125,6 +125,7 @@ from dataclasses import (
 from enum import Enum, IntEnum, auto
 from functools import lru_cache, partial, reduce, wraps
 from hashlib import md5
+from importlib.util import find_spec
 from inspect import (
     isasyncgen,
     isasyncgenfunction,
@@ -417,33 +418,6 @@ _ = [
 ]
 
 
-# standard library imports
-
-
-try:
-    from collections.abc import Buffer  # python 3.11
-except ImportError:
-    pass
-else:
-    _ = [Buffer]
-
-
-try:
-    from enum import StrEnum  # python 3.11
-except ImportError:
-    pass
-else:
-    _ = [StrEnum]
-
-
-try:
-    import tomllib  # python 3.11
-except ModuleNotFoundError:
-    pass
-else:
-    _ = [tomllib]
-
-
 # third party imports
 
 
@@ -451,19 +425,17 @@ _PANDAS_POLARS_ROWS = 6
 _PANDAS_POLARS_COLS = 100
 
 
-try:
+if find_spec("altair") is not None:
+    _LOGGER.info("Importing `altair`...")
+
     import altair  # noqa: ICN001
     import altair as alt
     from altair import Chart, condition, datum
-except ModuleNotFoundError:
-    pass
-else:
-    _LOGGER.info("Importing `altair`...")
+
     _ = [Chart, alt, altair, condition, datum]
 
     alt.data_transformers.enable("vegafusion")
-
-    try:
+    if find_spec("utilities") is not None:
         from utilities.altair import (
             plot_dataframes,
             plot_intraday_dataframe,
@@ -471,9 +443,7 @@ else:
             save_charts_as_pdf,
             vconcat_charts,
         )
-    except ModuleNotFoundError:
-        pass
-    else:
+
         _ = [
             plot_dataframes,
             plot_intraday_dataframe,
