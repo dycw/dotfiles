@@ -311,7 +311,7 @@ ls.add_snippets("python", {
     s("mx", { t({ "@mark.xfail", "" }) }),
     s("pyi", {
         t({ "from hypothesis import Phase, reproduce_failure, settings", "" }),
-        t({ "from pytest import RaisesGroup, mark, param, raises", "" }),
+        t({ "from pytest import RaisesGroup, fixture, mark, param, raises", "" }),
         t({ "from utilities.contextvars import set_global_breakpoint", "" }),
     }),
     s("py-approx", { t({ "from pytest import approx", "" }) }),
