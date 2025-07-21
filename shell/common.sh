@@ -838,7 +838,8 @@ if command -v uv >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'jl' accepts no arguments" && return 1
 		fi
-		uv run --with=altair \
+		uv run --with . \
+			--with=altair \
 			--with=beartype \
 			--with=hvplot \
 			--with=jupyterlab \
