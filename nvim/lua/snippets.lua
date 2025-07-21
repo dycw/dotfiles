@@ -512,6 +512,7 @@ ls.add_snippets("python", {
     s("ut-get-table", { t({ "from utilities.sqlalchemy import get_table", "" }) }),
     s("ut-get-today", { t({ "from utilities.whenever import get_today", "" }) }),
     s("ut-get-today-local", { t({ "from utilities.whenever import get_today_local", "" }) }),
+    s("ut-groupby-lists", { t({ "from utilities.iterables import groupby_lists", "" }) }),
     s("ut-hong-kong", { t({ "from utilities.tzdata import HongKong", "" }) }),
     s("ut-hour", { t({ "from utilities.whenever import HOUR", "" }) }),
     s("ut-impossible-case-error", { t({ "from utilities.errors import ImpossibleCaseError", "" }) }),

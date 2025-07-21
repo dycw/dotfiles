@@ -149,7 +149,7 @@ from itertools import (
     starmap,
     takewhile,
 )
-from logging import Formatter, LogRecord, StreamHandler, getLogger
+from logging import Formatter, LogRecord, StreamHandler, basicConfig, getLogger
 from multiprocessing import Pool, cpu_count
 from operator import add, and_, attrgetter, itemgetter, mul, neg, or_, pos, sub, truediv
 from os import environ, getenv
@@ -189,7 +189,14 @@ from uuid import UUID, uuid4
 from zlib import crc32
 from zoneinfo import ZoneInfo
 
-builtins.print(f"{dt.datetime.now():%Y-%m-%d %H:%M:%S}: Running `startup.py`...")  # noqa: DTZ005, T201
+_LOGGER = getLogger("startup.py")
+basicConfig(
+    format="{asctime} | {process} | {name}:{lineno} | {message}",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    style="{",
+    level="DEBUG",
+)
+_ = _LOGGER.info("Running `startup.py`...")
 
 
 _ = [
@@ -447,6 +454,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `altair`...")
     _ = [Chart, alt, altair, condition, datum]
 
     alt.data_transformers.enable("vegafusion")
@@ -475,6 +483,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `atomicwrites`...")
     _ = [atomicwrites]
 
     try:
@@ -490,6 +499,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `beartype`...")
     _ = [beartype]
 
 
@@ -498,6 +508,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `beartype`...")
     _ = [bidict]
 
 
@@ -506,6 +517,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `bs4`...")
     _ = [bs4]
 
 
@@ -515,6 +527,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `cachetools`...")
     _ = [cachetools, ttl_cache]
 
 
@@ -523,6 +536,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `click`...")
     _ = [click]
 
 
@@ -532,6 +546,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `cvxpy`...")
     _ = [cp, cvxpy]
 
 
@@ -541,6 +556,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `dacite`...")
     _ = [dacite, from_dict]
 
 
@@ -549,6 +565,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `eventkit`...")
     _ = [eventkit]
 
     try:
@@ -563,6 +580,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `frozendict`...")
     _ = [frozendict]
 
 
@@ -571,6 +589,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `humanize`...")
     _ = [humanize]
 
 
@@ -581,6 +600,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `holoviews`...")
     HVPLOT_OPTS = {
         "active_tools": ["box_zoom"],
         "default_tools": ["box_zoom", "hover"],
@@ -592,23 +612,29 @@ else:
 
 
 try:
-    import hvplot.pandas
-except (AttributeError, ModuleNotFoundError):
+    import hvplot
+except ModuleNotFoundError:
     pass
 else:
-    _ = [hvplot.pandas]
-try:
-    import hvplot.polars
-except (AttributeError, ModuleNotFoundError):
-    pass
-else:
-    _ = [hvplot.polars]
-try:
-    import hvplot.xarray
-except (AttributeError, ModuleNotFoundError):
-    pass
-else:
-    _ = [hvplot.xarray]
+    _LOGGER.info("Importing `hvplot`...")
+    try:
+        import hvplot.pandas
+    except (AttributeError, ModuleNotFoundError):
+        pass
+    else:
+        _ = [hvplot.pandas]
+    try:
+        import hvplot.polars
+    except (AttributeError, ModuleNotFoundError):
+        pass
+    else:
+        _ = [hvplot.polars]
+    try:
+        import hvplot.xarray
+    except (AttributeError, ModuleNotFoundError):
+        pass
+    else:
+        _ = [hvplot.xarray]
 
 
 try:
@@ -616,6 +642,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `hypothesis`...")
     _ = [hypothesis]
 
 
@@ -643,6 +670,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `ib_async`...")
     _ = [
         BarDataList,
         ContFuture,
@@ -670,6 +698,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `joblib`...")
     _ = [joblib]
 
 
@@ -678,6 +707,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `lightweight_charts`...")
     _ = [lightweight_charts]
 
     try:
@@ -686,72 +716,6 @@ else:
         pass
     else:
         _ = [save_chart, yield_chart]
-
-
-try:
-    import loguru
-    from loguru import logger
-except ModuleNotFoundError:
-    pass
-else:
-    _ = [logger, loguru]
-
-    try:
-        from utilities.loguru import (
-            LogLevel,
-            get_logging_level_name,
-            get_logging_level_number,
-        )
-    except ModuleNotFoundError:
-        pass
-    else:
-        _ = [LogLevel, get_logging_level_number, get_logging_level_name]
-
-
-try:
-    import luigi
-    from luigi import (
-        BoolParameter,
-        DictParameter,
-        EnumParameter,
-        ExternalTask,
-        FloatParameter,
-        IntParameter,
-        LocalTarget,
-        Task,
-        TaskParameter,
-        TupleParameter,
-        WrapperTask,
-        build,
-    )
-except ModuleNotFoundError:
-    pass
-else:
-    _ = [
-        luigi,
-        BoolParameter,
-        DictParameter,
-        EnumParameter,
-        ExternalTask,
-        FloatParameter,
-        IntParameter,
-        LocalTarget,
-        Task,
-        TaskParameter,
-        TupleParameter,
-        WrapperTask,
-        build,
-    ]
-
-
-try:
-    import matplotlib as mpl
-    import matplotlib.pyplot as plt
-    from matplotlib.pyplot import gca, gcf, subplot, twinx, twiny
-except ModuleNotFoundError:
-    pass
-else:
-    _ = [gca, gcf, mpl, plt, subplot, twinx, twiny]
 
 
 try:
@@ -767,6 +731,7 @@ try:
 except ModuleNotFoundError:
     pass
 else:
+    _LOGGER.info("Importing `more_itertools`...")
     _ = [
         mi,
         more_itertools,
@@ -790,6 +755,7 @@ else:
             check_sets_equal,
             check_subset,
             check_superset,
+            groupby_lists,
             one,
             one_maybe,
             one_str,
@@ -814,6 +780,7 @@ else:
             check_sets_equal,
             check_subset,
             check_superset,
+            groupby_lists,
             one,
             one_maybe,
             one_str,
@@ -1484,7 +1451,7 @@ else:
     ]
     try:
         from utilities.sqlalchemy import (
-            create_async_engine,
+            create_engine,
             ensure_tables_created,
             ensure_tables_dropped,
             get_table,
@@ -1494,7 +1461,7 @@ else:
         pass
     else:
         _ = [
-            create_async_engine,
+            create_engine,
             ensure_tables_created,
             ensure_tables_dropped,
             get_table,
