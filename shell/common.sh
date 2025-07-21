@@ -186,6 +186,15 @@ if command -v direnv >/dev/null 2>&1; then
 	}
 fi
 
+# docker
+if command -v docker >/dev/null 2>&1; then
+	dps() {
+		if [ $# -ne 0 ]; then
+			echo_date "'dps' accepts no arguments" && return 1
+		fi
+		docker ps
+	}
+fi
 # echo
 echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 
@@ -823,13 +832,13 @@ if command -v uv >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'ipy' accepts no arguments" && return 1
 		fi
-		uv run --with=ipython --active --managed-python ipython
+		__uv_run --with=ipython ipython
 	}
 	jl() {
 		if [ $# -ne 0 ]; then
 			echo_date "'jl' accepts no arguments" && return 1
 		fi
-		uv run --with=altair \
+		__uv_run --with=altair \
 			--with=beartype \
 			--with=hvplot \
 			--with=jupyterlab \
@@ -840,19 +849,17 @@ if command -v uv >/dev/null 2>&1; then
 			--with=vegafusion \
 			--with=vegafusion-python-embed \
 			--with=vl-convert-python \
-			--active --managed-python jupyter lab
+			jupyter lab
 	}
 	mar() {
 		if [ $# -ne 0 ]; then
 			echo_date "'mar' accepts no arguments" && return 1
 		fi
 		uv run --with=beartype \
-			--with=beartype \
 			--with=hvplot \
 			--with='marimo[recommended]' \
 			--with=matplotlib \
-			--with=rich \
-			--active --managed-python marimo new
+			marimo new
 	}
 	uva() { uv add --active --managed-python "$@"; }
 	uvpi() { uv pip install --managed-python "$@"; }
@@ -878,6 +885,9 @@ if command -v uv >/dev/null 2>&1; then
 			echo_date "'uvs' accepts no arguments" && return 1
 		fi
 		uv sync --upgrade
+	}
+	__uv_run() {
+		uv run --all-extras --with=. --with=rich --active --managed-python "$@"
 	}
 	if command -v watch >/dev/null 2>&1; then
 		wuvpi() { watch --color --differences --interval=0.5 -- uv pip install "$@"; }

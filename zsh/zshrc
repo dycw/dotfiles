@@ -40,8 +40,10 @@ fi
 
 # docker
 __dir="${HOME}/.docker/completions"
+mkdir -p "${__dir}"
 if [ -d "${__dir}" ];  then
-  fpath=("${__dir}" $fpath)
+  docker completion zsh > "${__dir}"
+  FPATH="${__dir}:$FPATH"
   autoload -Uz compinit
 fi
 
