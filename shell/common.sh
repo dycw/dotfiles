@@ -626,8 +626,6 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			if [ $# -ne 0 ]; then
 				echo_date "'ts_down' accepts no arguments" && return 1
 			fi
-			echo_date "Cleaning 'tailscaled'..."
-			sudo tailscaled --cleanup
 			echo_date "Killing 'tailscaled'..."
 			sudo pkill tailscaled
 			echo_date "Logging out of 'tailscale'..."
