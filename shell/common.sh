@@ -118,9 +118,9 @@ cddl() {
 	fi
 	cd "${HOME}/Downloads" || return $?
 }
-cd_here() {
+cdh() {
 	if [ $# -ne 0 ]; then
-		echo_date "'cd_here' accepts no arguments" && return 1
+		echo_date "'cdh' accepts no arguments" && return 1
 	fi
 	__pwd="$(pwd)"
 	cd / || return $?
@@ -887,7 +887,7 @@ if command -v uv >/dev/null 2>&1; then
 		uv sync --upgrade
 	}
 	__uv_run() {
-		uv run --all-extras --with=. --with=rich --active --managed-python "$@"
+		uv run --all-extras --all-groups --with=. --with=rich --active --managed-python "$@"
 	}
 	if command -v watch >/dev/null 2>&1; then
 		wuvpi() { watch --color --differences --interval=0.5 -- uv pip install "$@"; }
@@ -908,5 +908,5 @@ venv_recreate() {
 	if [ -d "${__venv}" ]; then
 		rm -rf "${__venv}"
 	fi
-	cd_here
+	cdh
 }

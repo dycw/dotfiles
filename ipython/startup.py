@@ -1226,6 +1226,14 @@ if find_spec("rich") is not None:
     _ = [inspect, p, pprint, pretty_repr, print, rich]
 
 
+if find_spec("sklearn") is not None:
+    _LOGGER.info("Importing `sklearn`...")
+
+    import sklearn
+
+    _ = [sklearn]
+
+
 if find_spec("scipy") is not None:
     _LOGGER.info("Importing `scipy`...")
 

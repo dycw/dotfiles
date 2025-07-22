@@ -22,101 +22,97 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	# add + commit + push
-	gac() { __git_add_commit_push 0 0 0 "$@" || return $?; }
-	gacn() { __git_add_commit_push 1 0 0 "$@" || return $?; }
-	gacf() { __git_add_commit_push 0 1 0 "$@" || return $?; }
-	gacnf() { __git_add_commit_push 1 1 0 "$@" || return $?; }
-	gacw() { __git_add_commit_push 0 0 1 "$@" || return $?; }
-	gacnw() { __git_add_commit_push 1 0 1 "$@" || return $?; }
-	gacfw() { __git_add_commit_push 0 1 1 "$@" || return $?; }
-	gacnfw() { __git_add_commit_push 1 1 1 "$@" || return $?; }
+	gac() { __git_add_commit_push 0 0 0 "$@"; }
+	gacn() { __git_add_commit_push 1 0 0 "$@"; }
+	gacf() { __git_add_commit_push 0 1 0 "$@"; }
+	gacnf() { __git_add_commit_push 1 1 0 "$@"; }
+	gacw() { __git_add_commit_push 0 0 1 "$@"; }
+	gacnw() { __git_add_commit_push 1 0 1 "$@"; }
+	gacfw() { __git_add_commit_push 0 1 1 "$@"; }
+	gacnfw() { __git_add_commit_push 1 1 1 "$@"; }
 	__git_add_commit_push() {
-		if [ "$#" -ge 3 ]; then
-			__git_acp_no_verify="$1"
-			__git_acp_force="$2"
-			__git_acp_web="$3"
-			shift 3
-
-			__git_acp_count_file=0
-			__git_acp_count_non_file=0
-			__git_acp_message=""
-			__git_acp_file_names=""
-			__git_acp_file_args=""
-
-			for arg in "$@"; do
-				if [ "${__git_acp_count_non_file}" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
-					__git_acp_file_args="${__git_acp_file_args} \"$arg\""
-					__git_acp_file_names="${__git_acp_file_names}${__git_acp_file_names:+ }$arg"
-					__git_acp_count_file=$((__git_acp_count_file + 1))
-				else
-					__git_acp_count_non_file=$((__git_acp_count_non_file + 1))
-					__git_acp_message="$arg"
-				fi
-			done
-
-			__git_acp_file_list=""
-			for f in ${__git_acp_file_names}; do
-				__git_acp_file_list="${__git_acp_file_list}'${f}',"
-			done
-			__git_acp_file_list="${__git_acp_file_list%,}"
-
-			if [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
-				ga || return $?
-				if ! __git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_web}"; then
-					ga || return $?
-					__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_web}" || return $?
-				fi
-			elif [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
-				ga || return $?
-				if ! __git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_web}"; then
-					ga || return $?
-					__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_web}" || return $?
-				fi
-			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
-				eval "ga ${__git_acp_file_args}" || return $?
-				__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_web}" || return $?
-			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
-				eval "ga ${__git_acp_file_args}" || return $?
-				__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_web}" || return $?
-			else
-				echo_date "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__git_acp_count_file} file(s) ${__git_acp_file_list:-'(none)'} and ${__git_acp_count_non_file} message(s)" && return 1
-			fi
-		else
+		if [ $# -le 2 ]; then
 			echo_date "'__git_add_commit_push' requires at least 3 arguments" && return 1
+		fi
+		__no_verify="$1"
+		__force="$2"
+		__web="$3"
+		shift 3
+
+		__count_file=0
+		__count_non_file=0
+		__message=""
+		__file_names=""
+		__file_args=""
+
+		for arg in "$@"; do
+			if [ "${__count_non_file}" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
+				__file_args="${__file_args} \"$arg\""
+				__file_names="${__file_names}${__file_names:+ }$arg"
+				__count_file=$((__count_file + 1))
+			else
+				__count_non_file=$((__count_non_file + 1))
+				__message="$arg"
+			fi
+		done
+
+		__file_list=""
+		for f in ${__file_names}; do
+			__file_list="${__file_list}'${f}',"
+		done
+		__file_list="${__file_list%,}"
+
+		if [ "${__count_file}" -eq 0 ] && [ "${__count_non_file}" -eq 0 ]; then
+			ga
+			if ! __git_commit_push "${__no_verify}" "" "${__force}" "${__web}"; then
+				ga
+				__git_commit_push "${__no_verify}" "" "${__force}" "${__web}"
+			fi
+		elif [ "${__count_file}" -eq 0 ] && [ "${__count_non_file}" -eq 1 ]; then
+			ga
+			if ! __git_commit_push "${__no_verify}" "${__message}" "${__force}" "${__web}"; then
+				ga
+				__git_commit_push "${__no_verify}" "${__message}" "${__force}" "${__web}"
+			fi
+		elif [ "${__count_file}" -ge 1 ] && [ "${__count_non_file}" -eq 0 ]; then
+			eval "ga ${__file_args}"
+			__git_commit_push "${__no_verify}" "" "${__force}" "${__web}"
+		elif [ "${__count_file}" -ge 1 ] && [ "${__count_non_file}" -eq 1 ]; then
+			eval "ga ${__file_args}"
+			__git_commit_push "${__no_verify}" "${__message}" "${__force}" "${__web}"
+		else
+			echo_date "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__count_file} file(s) ${__file_list:-'(none)'} and ${__count_non_file} message(s)" && return 1
 		fi
 	}
 	# branch
 	gb() {
-		if [ $# -eq 0 ]; then
-			git branch -alv --sort=-committerdate || return $?
-		else
+		if [ $# -ne 0 ]; then
 			echo_date "'gb' accepts no arguments" && return 1
 		fi
+		git branch -alv --sort=-committerdate
 	}
 	gbd() {
-		unset __gbd_branch
 		if [ $# -eq 0 ]; then
-			__gbd_branch="$(__select_local_branch)"
+			__branch="$(__select_local_branch)"
 		elif [ $# -eq 1 ]; then
-			__gbd_branch="$1"
+			__branch="$1"
 		else
 			echo_date "'gbd' accepts [0..1] arguments" && return 1
 		fi
-		if __branch_exists "${__gbd_branch}"; then
-			git branch -D "${__gbd_branch}" || return $?
+		if __branch_exists "${__branch}"; then
+			git branch -D "${__branch}"
 		fi
 	}
 	gbdr() {
-		unset __gbdr_branch
 		if [ $# -eq 0 ]; then
-			__gbdr_branch="$(__select_remote_branch)"
+			__branch="$(__select_remote_branch)"
 		elif [ $# -eq 1 ]; then
-			__gbdr_branch="$1"
+			__branch="$1"
 		else
 			echo_date "'gbdr' accepts [0..1] arguments" && return 1
 		fi
-		gf || return $?
-		git push origin -d "${__gbdr_branch}" || return $?
+		gf
+		git push origin -d "${__branch}"
 	}
 	gbm() { git branch -m "$1"; }
 	__delete_gone_branches() {
@@ -130,108 +126,101 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# checkout
 	gcm() {
-		if [ $# -eq 0 ]; then
-			gco master || return $?
-		else
+		if [ $# -ne 0 ]; then
 			echo_date "'gcm' accepts no arguments" && return 1
 		fi
+		gco master
 	}
 	gcmd() {
-		unset __gcmd_branch
-		if [ $# -eq 0 ]; then
-			if __is_current_branch_master; then
-				gcof || return $?
-				gcm || return $?
-			else
-				__gcmd_branch="$(current_branch)"
-				gcof || return $?
-				gcm || return $?
-				gbd "${__gcmd_branch}" || return $?
-			fi
-		else
+		if [ $# -ne 0 ]; then
 			echo_date "'gcmd' accepts no arguments" && return 1
+		fi
+		if __is_current_branch_master; then
+			gcof
+			gcm
+		else
+			__branch="$(current_branch)"
+			gcof
+			gcm
+			gbd "${__branch}"
 		fi
 	}
 	gco() {
-		unset __gco_branch
 		if [ $# -eq 0 ]; then
-			__gco_branch="$(__select_local_branch)"
+			__branch="$(__select_local_branch)"
 		elif [ $# -eq 1 ]; then
-			__gco_branch="$1"
+			__branch="$1"
 		else
 			echo_date "'gco' accepts [0..1] arguments" && return 1
 		fi
-		git checkout "${__gco_branch}" || return $?
-		gpl || return $?
+		git checkout "${__branch}"
+		gpl
 	}
 	gcob() {
-		unset __gcob_branch __gcob_title __gcob_num __gcob_desc
+		unset __title __num __desc
 		if [ $# -eq 0 ]; then
-			if __is_current_branch_master; then
-				__gcob_branch='dev'
-			else
+			if ! __is_current_branch_master; then
 				echo_date "'gcob' off 'master' requires 1 argument 'branch'" && return 1
 			fi
+			__branch='dev'
 		elif [ $# -eq 1 ]; then
-			__gcob_title="$1"
-			__gcob_branch="$(__to_valid_branch "${__gcob_title}")"
+			__title="$1"
+			__branch="$(__to_valid_branch "${__title}")"
 		elif [ $# -eq 2 ]; then
-			__gcob_title="$1"
-			__gcob_num="$2"
-			__gcob_desc="$(__to_valid_branch "${__gcob_title}")"
-			__gcob_branch="$2-${__gcob_desc}"
+			__title="$1"
+			__num="$2"
+			__desc="$(__to_valid_branch "${__title}")"
+			__branch="$2-${__desc}"
 		else
 			echo_date "'gcob' accepts [0..2] arguments" && return 1
 		fi
-		gf || return $?
-		git checkout -b "${__gcob_branch}" origin/master || return $?
-		if (command -v gh >/dev/null 2>&1) && [ $# -eq 1 ] && [ -n "${__gcob_title}" ]; then
-			gp || return $?
-			__git_commit_empty_auto_message || return $?
-			gp || return $?
-			ghc "${__gcob_title}" || return $?
-		elif (command -v gh >/dev/null 2>&1) && [ $# -eq 2 ] && [ -n "${__gcob_title}" ] && [ -n "${__gcob_num}" ]; then
-			gp || return $?
-			__git_commit_empty_auto_message || return $?
-			gp || return $?
-			ghc "${__gcob_title}" "${__gcob_num}" || return $?
+		gf
+		git checkout -b "${__branch}" origin/master
+		if (command -v gh >/dev/null 2>&1) && [ $# -eq 1 ] && [ -n "${__title}" ]; then
+			gp
+			__git_commit_empty_auto_message
+			gp
+			ghc "${__title}"
+		elif (command -v gh >/dev/null 2>&1) && [ $# -eq 2 ] && [ -n "${__title}" ] && [ -n "${__num}" ]; then
+			gp
+			__git_commit_empty_auto_message
+			gp
+			ghc "${__title}" "${__num}"
 		fi
 	}
 	gcobt() {
-		unset __gcobt_branch
 		if [ $# -eq 0 ]; then
-			__gcobt_branch="$(__select_remote_branch)"
+			__branch="$(__select_remote_branch)"
 		elif [ $# -eq 1 ]; then
-			__gcobt_branch="$1"
+			__branch="$1"
 		else
 			echo_date "'gcobt' accepts [0..1] arguments" && return 1
 		fi
-		if ! __is_current_branch_master; then
-			gco master && return 1
+		if __is_current_branch_master; then
+			gf
+			git checkout -b "${__branch}" -t "origin/${__branch}"
+		else
+			gco master
 		fi
-		gf || return $?
-		git checkout -b "${__gcobt_branch}" -t "origin/${__gcobt_branch}" || return $?
 	}
 	gcof() {
-		unset __gcof_branch
 		if [ $# -eq 0 ]; then
-			git checkout -- . || return $?
+			git checkout -- .
 		else
 			if __is_valid_ref "$1"; then
-				__gcof_branch="$1"
+				__branch="$1"
 				shift
-				git checkout "${__gcof_branch}" -- "$@" || return $?
+				git checkout "${__branch}" -- "$@" || return $?
 			else
 				git checkout -- "$@" || return $?
 			fi
 		fi
 	}
 	gcofm() {
-		if [ $# -ge 1 ]; then
-			gcof origin/master "$@" || return $?
-		else
+		if [ $# -eq 0 ]; then
 			echo_date "'gcofm' requires [1..] arguments" && return 1
 		fi
+		gcof origin/master "$@" || return $?
 	}
 	gcop() {
 		git checkout --patch "$@" && return 1
@@ -245,52 +234,51 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# checkout + branch
 	gbr() {
-		unset __gbr_branch
-		if [ $# -eq 0 ]; then
-			if __is_current_branch_master; then
-				echo_date "'gcobr' cannot be run on master" && return 1
-			else
-				__gbr_branch="$(current_branch)"
-				gcof || return $?
-				gcm || return $?
-				gbd "${__gbr_branch}" || return $?
-				gcob "${__gbr_branch}" || return $?
-			fi
+		if [ $# -ne 0 ]; then
+			echo_date "'gcobr' accepts no arguments" && return 1
+		elif __is_current_branch_master; then
+			echo_date "'gcobr' cannot be run on master" && return 1
 		else
-			echo_date "'gcobr' accepts no arguments" || return
+			__branch="$(current_branch)"
+			gcof
+			gcm
+			gbd "${__branch}"
+			gcob "${__branch}"
 		fi
 	}
 	# cherry-pick
 	gcp() { git cherry-pick "$@"; }
 	# clone
 	gcl() {
-		if [ $# -ge 1 ] && [ $# -le 2 ]; then
-			git clone --recurse-submodules "$@" || return $?
-		else
+		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
 			echo_date "'gcl' accepts [1..2] arguments" && return 1
 		fi
+		git clone --recurse-submodules "$@"
 	}
 	# commit
 	__git_commit() {
-		if [ $# -eq 2 ]; then
-			__git_commit_no_verify="$1"
-			__git_commit_message="$2"
-			if [ -z "${__git_commit_message}" ]; then
-				__git_commit_message="$(__git_commit_auto_message)"
-			fi
-			if [ "${__git_commit_no_verify}" -eq 0 ]; then
-				git commit -m "${__git_commit_message}" || __tree_is_clean || return $?
-			elif [ "${__git_commit_no_verify}" -eq 1 ]; then
-				git commit --no-verify -m "${__git_commit_message}" || __tree_is_clean || return $?
-			else
-				echo_date "'__git_commit' accepts {0, 1} for the 'no-verify' flag; got ${__git_commit_no_verify}" && return 1
-			fi
-		else
+		if [ $# -ne 2 ]; then
 			echo_date "'__git_commit' requires 2 arguments" && return 1
 		fi
+		__no_verify="$1"
+		__message="$2"
+		if [ -z "${__message}" ]; then
+			__message="$(__auto_message)"
+		fi
+		if [ "${__no_verify}" -eq 0 ]; then
+			git commit -m "${__message}"
+		elif [ "${__no_verify}" -eq 1 ]; then
+			git commit --no-verify -m "${__message}"
+		else
+			echo_date "'_' accepts {0, 1} for the 'no-verify' flag; got ${__no_verify}" && return 1
+		fi
 	}
-	__git_commit_auto_message() { echo "Commited by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"; }
-	__git_commit_empty_auto_message() { git commit --allow-empty -m "$(__git_commit_auto_message)" --no-verify; }
+	__git_commit_auto_message() {
+		echo "Commited by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
+	}
+	__git_commit_empty_auto_message() {
+		git commit --allow-empty -m "$(__git_commit_auto_message)" --no-verify
+	}
 	# commit + push
 	gc() {
 		if [ $# -le 1 ]; then

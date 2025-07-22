@@ -568,6 +568,7 @@ ls.add_snippets("python", {
         "ut-suppress-super-object-attribute-error",
         { t({ "from utilities.contextlib import suppress_super_object_attribute_error", "" }) }
     ),
+    s("ut-suppress-warnings", { t({ "from utilities.warnings import suppress_warnings", "" }) }),
     s("ut-system-random", { t({ "from utilities.random import SYSTEM_RANDOM", "" }) }),
     s("ut-take", { t({ "from utilities.iterables import take", "" }) }),
     s("ut-temp-environ", { t({ "from utilities.os import temp_environ", "" }) }),
