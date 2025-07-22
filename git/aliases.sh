@@ -189,40 +189,38 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	gcobt() {
-		unset __gcobt_branch
 		if [ $# -eq 0 ]; then
-			__gcobt_branch="$(__select_remote_branch)"
+			__branch="$(__select_remote_branch)"
 		elif [ $# -eq 1 ]; then
-			__gcobt_branch="$1"
+			__branch="$1"
 		else
 			echo_date "'gcobt' accepts [0..1] arguments" && return 1
 		fi
-		if ! __is_current_branch_master; then
-			gco master && return 1
+		if __is_current_branch_master; then
+			gf
+			git checkout -b "${__branch}" -t "origin/${__branch}"
+		else
+			gco master
 		fi
-		gf || return $?
-		git checkout -b "${__gcobt_branch}" -t "origin/${__gcobt_branch}" || return $?
 	}
 	gcof() {
-		unset __gcof_branch
 		if [ $# -eq 0 ]; then
-			git checkout -- . || return $?
+			git checkout -- .
 		else
 			if __is_valid_ref "$1"; then
-				__gcof_branch="$1"
+				__branch="$1"
 				shift
-				git checkout "${__gcof_branch}" -- "$@" || return $?
+				git checkout "${__branch}" -- "$@" || return $?
 			else
 				git checkout -- "$@" || return $?
 			fi
 		fi
 	}
 	gcofm() {
-		if [ $# -ge 1 ]; then
-			gcof origin/master "$@" || return $?
-		else
+		if [ $# -eq 0 ]; then
 			echo_date "'gcofm' requires [1..] arguments" && return 1
 		fi
+		gcof origin/master "$@" || return $?
 	}
 	gcop() {
 		git checkout --patch "$@" && return 1
@@ -236,52 +234,51 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# checkout + branch
 	gbr() {
-		unset __gbr_branch
-		if [ $# -eq 0 ]; then
-			if __is_current_branch_master; then
-				echo_date "'gcobr' cannot be run on master" && return 1
-			else
-				__gbr_branch="$(current_branch)"
-				gcof || return $?
-				gcm || return $?
-				gbd "${__gbr_branch}" || return $?
-				gcob "${__gbr_branch}" || return $?
-			fi
+		if [ $# -ne 0 ]; then
+			echo_date "'gcobr' accepts no arguments" && return 1
+		elif __is_current_branch_master; then
+			echo_date "'gcobr' cannot be run on master" && return 1
 		else
-			echo_date "'gcobr' accepts no arguments" || return
+			__branch="$(current_branch)"
+			gcof
+			gcm
+			gbd "${__branch}"
+			gcob "${__branch}"
 		fi
 	}
 	# cherry-pick
 	gcp() { git cherry-pick "$@"; }
 	# clone
 	gcl() {
-		if [ $# -ge 1 ] && [ $# -le 2 ]; then
-			git clone --recurse-submodules "$@" || return $?
-		else
+		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
 			echo_date "'gcl' accepts [1..2] arguments" && return 1
 		fi
+		git clone --recurse-submodules "$@"
 	}
 	# commit
 	__git_commit() {
-		if [ $# -eq 2 ]; then
-			__git_commit_no_verify="$1"
-			__git_commit_message="$2"
-			if [ -z "${__git_commit_message}" ]; then
-				__git_commit_message="$(__git_commit_auto_message)"
-			fi
-			if [ "${__git_commit_no_verify}" -eq 0 ]; then
-				git commit -m "${__git_commit_message}" || __tree_is_clean || return $?
-			elif [ "${__git_commit_no_verify}" -eq 1 ]; then
-				git commit --no-verify -m "${__git_commit_message}" || __tree_is_clean || return $?
-			else
-				echo_date "'__git_commit' accepts {0, 1} for the 'no-verify' flag; got ${__git_commit_no_verify}" && return 1
-			fi
-		else
+		if [ $# -ne 2 ]; then
 			echo_date "'__git_commit' requires 2 arguments" && return 1
 		fi
+		__no_verify="$1"
+		__message="$2"
+		if [ -z "${__message}" ]; then
+			__message="$(__auto_message)"
+		fi
+		if [ "${__no_verify}" -eq 0 ]; then
+			git commit -m "${__message}"
+		elif [ "${__no_verify}" -eq 1 ]; then
+			git commit --no-verify -m "${__message}"
+		else
+			echo_date "'_' accepts {0, 1} for the 'no-verify' flag; got ${__no_verify}" && return 1
+		fi
 	}
-	__git_commit_auto_message() { echo "Commited by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"; }
-	__git_commit_empty_auto_message() { git commit --allow-empty -m "$(__git_commit_auto_message)" --no-verify; }
+	__git_commit_auto_message() {
+		echo "Commited by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
+	}
+	__git_commit_empty_auto_message() {
+		git commit --allow-empty -m "$(__git_commit_auto_message)" --no-verify
+	}
 	# commit + push
 	gc() {
 		if [ $# -le 1 ]; then
