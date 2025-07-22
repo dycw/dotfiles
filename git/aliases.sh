@@ -32,54 +32,54 @@ if command -v git >/dev/null 2>&1; then
 	gacnfw() { __git_add_commit_push 1 1 1 "$@" || return $?; }
 	__git_add_commit_push() {
 		if [ "$#" -ge 3 ]; then
-			__git_acp_no_verify="$1"
-			__git_acp_force="$2"
-			__git_acp_web="$3"
+			__no_verify="$1"
+			__force="$2"
+			__web="$3"
 			shift 3
 
-			__git_acp_count_file=0
-			__git_acp_count_non_file=0
-			__git_acp_message=""
-			__git_acp_file_names=""
-			__git_acp_file_args=""
+			__count_file=0
+			__count_non_file=0
+			__message=""
+			__file_names=""
+			__file_args=""
 
 			for arg in "$@"; do
-				if [ "${__git_acp_count_non_file}" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
-					__git_acp_file_args="${__git_acp_file_args} \"$arg\""
-					__git_acp_file_names="${__git_acp_file_names}${__git_acp_file_names:+ }$arg"
-					__git_acp_count_file=$((__git_acp_count_file + 1))
+				if [ "${__count_non_file}" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
+					__file_args="${__file_args} \"$arg\""
+					__file_names="${__file_names}${__file_names:+ }$arg"
+					__count_file=$((__count_file + 1))
 				else
-					__git_acp_count_non_file=$((__git_acp_count_non_file + 1))
-					__git_acp_message="$arg"
+					__count_non_file=$((__count_non_file + 1))
+					__message="$arg"
 				fi
 			done
 
-			__git_acp_file_list=""
-			for f in ${__git_acp_file_names}; do
-				__git_acp_file_list="${__git_acp_file_list}'${f}',"
+			__file_list=""
+			for f in ${__file_names}; do
+				__file_list="${__file_list}'${f}',"
 			done
-			__git_acp_file_list="${__git_acp_file_list%,}"
+			__file_list="${__file_list%,}"
 
-			if [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
+			if [ "${__count_file}" -eq 0 ] && [ "${__count_non_file}" -eq 0 ]; then
 				ga || return $?
-				if ! __git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_web}"; then
+				if ! __git_commit_push "${__no_verify}" "" "${__force}" "${__web}"; then
 					ga || return $?
-					__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_web}" || return $?
+					__git_commit_push "${__no_verify}" "" "${__force}" "${__web}" || return $?
 				fi
-			elif [ "${__git_acp_count_file}" -eq 0 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
+			elif [ "${__count_file}" -eq 0 ] && [ "${__count_non_file}" -eq 1 ]; then
 				ga || return $?
-				if ! __git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_web}"; then
+				if ! __git_commit_push "${__no_verify}" "${__message}" "${__force}" "${__web}"; then
 					ga || return $?
-					__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_web}" || return $?
+					__git_commit_push "${__no_verify}" "${__message}" "${__force}" "${__web}" || return $?
 				fi
-			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 0 ]; then
-				eval "ga ${__git_acp_file_args}" || return $?
-				__git_commit_push "${__git_acp_no_verify}" "" "${__git_acp_force}" "${__git_acp_web}" || return $?
-			elif [ "${__git_acp_count_file}" -ge 1 ] && [ "${__git_acp_count_non_file}" -eq 1 ]; then
-				eval "ga ${__git_acp_file_args}" || return $?
-				__git_commit_push "${__git_acp_no_verify}" "${__git_acp_message}" "${__git_acp_force}" "${__git_acp_web}" || return $?
+			elif [ "${__count_file}" -ge 1 ] && [ "${__count_non_file}" -eq 0 ]; then
+				eval "ga ${__file_args}" || return $?
+				__git_commit_push "${__no_verify}" "" "${__force}" "${__web}" || return $?
+			elif [ "${__count_file}" -ge 1 ] && [ "${__count_non_file}" -eq 1 ]; then
+				eval "ga ${__file_args}" || return $?
+				__git_commit_push "${__no_verify}" "${__message}" "${__force}" "${__web}" || return $?
 			else
-				echo_date "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__git_acp_count_file} file(s) ${__git_acp_file_list:-'(none)'} and ${__git_acp_count_non_file} message(s)" && return 1
+				echo_date "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__count_file} file(s) ${__file_list:-'(none)'} and ${__count_non_file} message(s)" && return 1
 			fi
 		else
 			echo_date "'__git_add_commit_push' requires at least 3 arguments" && return 1
