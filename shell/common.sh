@@ -627,20 +627,21 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			echo_date "Starting 'tailscaled' in the background..."
 			sudo tailscaled &
 			echo_date "Starting 'tailscale'..."
-			sudo tailscale up --accept-dns --accept-routes \
-				--auth-key="file:${__file}" \
+			sudo tailscale up --auth-key="file:${__file}" \
 				--login-server="${TAILSCALE_LOGIN_SERVER}"
 		}
 		ts_down() {
 			if [ $# -ne 0 ]; then
 				echo_date "'ts_down' accepts no arguments" && return 1
 			fi
+			echo_date "Stopping 'tailscale'..."
+			sudo tailscale down
+			echo_date "Logging out of 'tailscale'..."
+			sudo tailscale logout
 			echo_date "Cleaning 'tailscaled'..."
 			sudo tailscaled --cleanup
 			echo_date "Killing 'tailscaled'..."
 			sudo pkill tailscaled
-			echo_date "Logging out of 'tailscale'..."
-			sudo tailscale logout
 		}
 	fi
 	if command -v watch >/dev/null 2>&1; then
@@ -832,24 +833,13 @@ if command -v uv >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'ipy' accepts no arguments" && return 1
 		fi
-		__uv_run --with=ipython ipython
+		ipython
 	}
 	jl() {
 		if [ $# -ne 0 ]; then
 			echo_date "'jl' accepts no arguments" && return 1
 		fi
-		__uv_run --with=altair \
-			--with=beartype \
-			--with=hvplot \
-			--with=jupyterlab \
-			--with=jupyterlab-code-formatter \
-			--with=jupyterlab-vim \
-			--with=matplotlib \
-			--with=rich \
-			--with=vegafusion \
-			--with=vegafusion-python-embed \
-			--with=vl-convert-python \
-			jupyter lab
+		jupyter lab
 	}
 	mar() {
 		if [ $# -ne 0 ]; then
@@ -885,9 +875,6 @@ if command -v uv >/dev/null 2>&1; then
 			echo_date "'uvs' accepts no arguments" && return 1
 		fi
 		uv sync --upgrade
-	}
-	__uv_run() {
-		uv run --all-extras --all-groups --with=. --with=rich --active --managed-python "$@"
 	}
 	if command -v watch >/dev/null 2>&1; then
 		wuvpi() { watch --color --differences --interval=0.5 -- uv pip install "$@"; }

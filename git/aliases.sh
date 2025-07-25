@@ -263,7 +263,7 @@ if command -v git >/dev/null 2>&1; then
 		__no_verify="$1"
 		__message="$2"
 		if [ -z "${__message}" ]; then
-			__message="$(__auto_message)"
+			__message="$(__git_commit_auto_message)"
 		fi
 		if [ "${__no_verify}" -eq 0 ]; then
 			git commit -m "${__message}"
@@ -274,7 +274,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	__git_commit_auto_message() {
-		echo "Commited by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
+		echo "<${USER}/$(hostname)/$(date +"%Y%m%dT%H%M%S (%a)")>"
 	}
 	__git_commit_empty_auto_message() {
 		git commit --allow-empty -m "$(__git_commit_auto_message)" --no-verify
