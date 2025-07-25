@@ -1106,7 +1106,8 @@ if find_spec("polars") is not None:
             serialize_dataframe,
             touch,
             try_reify_expr,
-            zoned_datetime,
+            zoned_datetime_dtype,
+            zoned_datetime_period_dtype,
         )
 
         _ = [
@@ -1139,7 +1140,8 @@ if find_spec("polars") is not None:
             serialize_dataframe,
             touch,
             try_reify_expr,
-            zoned_datetime,
+            zoned_datetime_dtype,
+            zoned_datetime_period_dtype,
         ]
 
         if find_spec("sqlalchemy") is not None:

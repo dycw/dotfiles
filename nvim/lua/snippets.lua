@@ -393,8 +393,11 @@ ls.add_snippets("python", {
 
     -- sqlalchemy
     s("sq-and", { t({ "from sqlalchemy import and_", "" }) }),
+    s("sq-column", { t({ "from sqlalchemy import Column", "" }) }),
     s("sq-func", { t({ "from sqlalchemy import func", "" }) }),
     s("sq-insert", { t({ "from sqlalchemy import insert", "" }) }),
+    s("sq-multiple-results-found", { t({ "from sqlalchemy.exc import MultipleResultsFound", "" }) }),
+    s("sq-no-result-found", { t({ "from sqlalchemy.exc import NoResultFound", "" }) }),
     s("sq-or", { t({ "from sqlalchemy import or_", "" }) }),
     s("sq-select", { t({ "from sqlalchemy import select", "" }) }),
     s("sq-text", { t({ "from sqlalchemy import text", "" }) }),
@@ -447,8 +450,8 @@ ls.add_snippets("python", {
         t({ "    assert_never(never)", "" }),
     }),
     s("im-typing", { t({ "import typing", "" }) }),
-    s("ty-any", { t({ "from typing import Any", "" }) }),
-    s("ty-cast", { t({ "from typing import cast", "" }) }),
+    s("ty-any", { t({ "from typing import Any, cast", "" }) }),
+    s("ty-cast", { t({ "from typing import Any, cast", "" }) }),
     s("ty-class-var", { t({ "from typing import ClassVar", "" }) }),
     s("ty-generic", { t({ "from typing import Generic", "" }) }),
     s("ty-literal", { t({ "from typing import Literal", "" }) }),
@@ -564,6 +567,7 @@ ls.add_snippets("python", {
     s("ut-sleep-td", { t({ "from utilities.asyncio import sleep_td", "" }) }),
     s("ut-str-mapping", { t({ "from utilities.types import StrMapping", "" }) }),
     s("ut-strip-and-dedent", { t({ "from utilities.text import strip_and_dedent", "" }) }),
+    s("ut-struct-dtype", { t({ "from utilities.polars import struct_dtype", "" }) }),
     s(
         "ut-suppress-super-object-attribute-error",
         { t({ "from utilities.contextlib import suppress_super_object_attribute_error", "" }) }
@@ -579,11 +583,11 @@ ls.add_snippets("python", {
     s("ut-text-ascii-upper", { t({ "from utilities.hypothesis import text_ascii_upper", "" }) }),
     s("ut-throttle", { t({ "from utilities.pytest import throttle", "" }) }),
     s("ut-timeout-td", { t({ "from utilities.asyncio import timeout_td", "" }) }),
-    s("ut-try-reify-expr", { t({ "from utilities.polars import try_reify_expr", "" }) }),
     s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
     s("ut-tokyo", { t({ "from utilities.tzdata import Tokyo", "" }) }),
     s("ut-trace", { t({ "from utilities.traceback import trace", "" }) }),
     s("ut-transpose", { t({ "from utilities.iterables import transpose", "" }) }),
+    s("ut-try-reify-expr", { t({ "from utilities.polars import try_reify_expr", "" }) }),
     s("ut-unique-str", { t({ "from utilities.text import unique_str", "" }) }),
     s("ut-us-central", { t({ "from utilities.tzdata import USCentral", "" }) }),
     s("ut-us-eastern", { t({ "from utilities.tzdata import USEastern", "" }) }),
@@ -595,7 +599,8 @@ ls.add_snippets("python", {
     s("ut-writer", { t({ "from utilities.atomicwrites import writer", "" }) }),
     s("ut-yield-fields", { t({ "from utilities.dataclasses import yield_fields", "" }) }),
     s("ut-yield-shelf", { t({ "from utilities.shelve import yield_shelf", "" }) }),
-    s("ut-zoned-datetime", { t({ "from utilities.polars import zoned_datetime", "" }) }),
+    s("ut-zoned-datetime-dtype", { t({ "from utilities.polars import zoned_datetime_dtype", "" }) }),
+    s("ut-zoned-datetime-period-dtype", { t({ "from utilities.polars import zoned_datetime_period_dtype", "" }) }),
     s("ut-zoned-datetimes", { t({ "from utilities.hypothesis import zoned_datetimes", "" }) }),
 
     -- whenever
