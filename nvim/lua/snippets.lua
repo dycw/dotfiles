@@ -105,6 +105,8 @@ ls.add_snippets("python", {
     s("im-enum", { t({ "import enum", "" }) }),
     s("en-auto", { t({ "from enum import auto", "" }) }),
     s("en-enum", { t({ "from enum import Enum", "" }) }),
+    s("en-str-enum", { t({ "from enum import StrEnum", "" }) }),
+    s("en-unique", { t({ "from enum import unique", "" }) }),
 
     -- errors
     s("no-t201", { t({ "# noqa: T201", "" }) }),
@@ -553,11 +555,13 @@ ls.add_snippets("python", {
     s("ut-read-json", { t({ "from utilities.orjson import read_json", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
     s("ut-replace-non-sentinel", { t({ "from utilities.dataclasses import replace_non_sentinel", "" }) }),
+    s("ut-round", { t({ "from utilities.math import round_", "" }) }),
     s("ut-safe-round", { t({ "from utilities.math import safe_round", "" }) }),
     s("ut-second", { t({ "from utilities.whenever import SECOND", "" }) }),
     s("ut-seed", { t({ "from utilities.types import Seed", "" }) }),
     s("ut-select-to-dataframe", { t({ "from utilities.sqlalchemy_polars import select_to_dataframe", "" }) }),
     s("ut-sentinel", { t({ "from utilities.sentinel import sentinel, Sentinel", "" }) }),
+    s("ut-sequence-str", { t({ "from utilities.types import SequenceStr" }) }),
     s("ut-serialize", { t({ "from utilities.orjson import serialize", "" }) }),
     s("ut-serialize-duration", { t({ "from utilities.whenever import serialize_duration", "" }) }),
     s("ut-serialize-zoned-datetime", { t({ "from utilities.whenever import serialize_zoned_datetime" }) }),
