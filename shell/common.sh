@@ -621,6 +621,8 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			__file="${HOME}/tailscale-auth-key"
 			if ! [ -f "${__file}" ]; then
 				echo_date "'${__file}' does not exist" && return 1
+			elif [ -z "${TAILSCALE_EXIT_NODE}" ]; then
+				echo_date "'\$TAILSCALE_EXIT_NODE' does not exist" && return 1
 			elif [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
 				echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
 			fi
@@ -628,7 +630,8 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			sudo tailscaled &
 			echo_date "Starting 'tailscale'..."
 			sudo tailscale up --auth-key="file:${__file}" \
-				--login-server="${TAILSCALE_LOGIN_SERVER}"
+				--login-server="${TAILSCALE_LOGIN_SERVER}" \
+				--reset
 		}
 		ts_down() {
 			if [ $# -ne 0 ]; then

@@ -235,15 +235,14 @@ if command -v git >/dev/null 2>&1; then
 	# checkout + branch
 	gbr() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gcobr' accepts no arguments" && return 1
+			echo_date "'gbr' accepts no arguments" && return 1
 		elif __is_current_branch_master; then
-			echo_date "'gcobr' cannot be run on master" && return 1
+			echo_date "'gbr' cannot be run on master" && return 1
 		else
-			__branch="$(current_branch)"
+			__gbr_branch="$(current_branch)" # do not name '__branch'
 			gcof
 			gcm
-			gbd "${__branch}"
-			gcob "${__branch}"
+			gcob "${__gbr_branch}"
 		fi
 	}
 	# cherry-pick
