@@ -632,10 +632,6 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			sudo tailscale up --auth-key="file:${__file}" \
 				--login-server="${TAILSCALE_LOGIN_SERVER}" \
 				--reset
-			# --accept-dns=true \
-			# --exit-node="${TAILSCALE_EXIT_NODE}" \
-			# --exit-node-allow-lan-access=false \
-			# --accept-routes=true \
 		}
 		ts_down() {
 			if [ $# -ne 0 ]; then
