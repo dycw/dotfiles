@@ -251,6 +251,7 @@ brew_services() {
 }
 [ -n "${IS_MAC_MINI}" ] && brew_services postgresql@17
 [ -n "${IS_MAC_MINI}" ] && brew_services redis
+[ -n "${IS_MAC_MINI}" ] && brew_services syncthing
 [ -n "${IS_MAC_MINI}" ] && brew_services tailscale
 
 # mac mini/rust

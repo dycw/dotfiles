@@ -989,6 +989,7 @@ if find_spec("polars") is not None:
         InvalidOperationError,
         NoRowsReturnedError,
     )
+    from polars.selectors import matches
     from polars.testing import (
         assert_frame_equal,
         assert_frame_not_equal,
@@ -1053,6 +1054,7 @@ if find_spec("polars") is not None:
         int_range,
         int_ranges,
         lit,
+        matches,
         max_horizontal,
         mean_horizontal,
         min_horizontal,
