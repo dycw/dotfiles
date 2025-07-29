@@ -4,6 +4,7 @@ local config = wezterm.config_builder()
 
 -- always
 config.audible_bell = "Disabled"
+config.font_size = 12.0
 config.initial_cols = 200
 config.initial_rows = 100
 config.keys = {
@@ -22,7 +23,7 @@ if wezterm.hostname() == "RH-MacBook" then
     config.cursor_blink_ease_in = "Constant"
     config.cursor_blink_ease_out = "Constant"
     config.enable_scroll_bar = false
-    config.font_size = 12.0
+    config.font_size = 11.0 -- smaller
     config.freetype_load_target = "Light"
     config.freetype_render_target = "HorizontalLcd"
     config.macos_window_background_blur = 0
