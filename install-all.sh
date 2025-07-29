@@ -203,6 +203,7 @@ brew_install shfmt
 brew_install sshpass
 brew_install starship
 brew_install stylua
+brew_install syncthing
 brew_install tailscale
 brew_install tmux
 brew_install topgrade
