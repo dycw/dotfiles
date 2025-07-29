@@ -12,7 +12,7 @@ config.cursor_blink_ease_out = "Constant"
 config.font_size = 12.0
 config.initial_cols = 200
 config.initial_rows = 100
-config.max_fps = 60
+config.max_fps = 30
 config.window_close_confirmation = "NeverPrompt"
 
 config.keys = {
