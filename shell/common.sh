@@ -596,16 +596,6 @@ ssh_tunnel_home() {
 }
 
 # tailscale
-ts_ssh() {
-	if [ $# -ne 0 ]; then
-		echo_date "'ts_ssh' accepts no arguments" && return 1
-	elif [ -z "${SSH_HOME_USER}" ]; then
-		echo_date "'\$SSH_HOME_USER' does not exist" && return 1
-	elif [ -z "${TAILSCALE_HOST_NAME}" ]; then
-		echo_date "'\$TAILSCALE_HOST_NAME' does not exist" && return 1
-	fi
-	ssh "${SSH_HOME_USER}@${TAILSCALE_HOST_NAME}"
-}
 if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1; then
 	ts_status() {
 		if [ $# -ne 0 ]; then
@@ -621,8 +611,6 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			__file="${HOME}/tailscale-auth-key"
 			if ! [ -f "${__file}" ]; then
 				echo_date "'${__file}' does not exist" && return 1
-			elif [ -z "${TAILSCALE_EXIT_NODE}" ]; then
-				echo_date "'\$TAILSCALE_EXIT_NODE' does not exist" && return 1
 			elif [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
 				echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
 			fi
