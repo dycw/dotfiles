@@ -1434,7 +1434,6 @@ if find_spec("utilities") is not None:
         get_root,
         list_dir,
     )
-    from utilities.period import DatePeriod, ZonedDateTimePeriod
     from utilities.pickle import read_pickle, write_pickle
     from utilities.random import SYSTEM_RANDOM, get_state, shuffle
     from utilities.re import extract_group, extract_groups
@@ -1458,6 +1457,8 @@ if find_spec("utilities") is not None:
         YEAR,
         ZERO_DAYS,
         ZERO_TIME,
+        DatePeriod,
+        ZonedDateTimePeriod,
         format_compact,
         get_now,
         get_now_local,
