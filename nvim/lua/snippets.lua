@@ -182,6 +182,10 @@ ls.add_snippets("python", {
     s("hy-settings", { t({ "from hypothesis import settings", "" }) }),
     s("hy-tuples", { t({ "from hypothesis.strategies import tuples", "" }) }),
     s("settings-filter-too-much", { t({ "@settings(suppress_health_check={HealthCheck.filter_too_much})", "" }) }),
+    s(
+        "settings-function-scoped-fixture",
+        { t({ "@settings(suppress_health_check={HealthCheck.function_scoped_fixture})", "" }) }
+    ),
     s("settings-generate-only", { t({ "@settings(phases={Phase.generate})", "" }) }),
     s("settings-max-examples", { t({ "@settings(max_examples=1)", "" }) }),
 
@@ -334,7 +338,7 @@ ls.add_snippets("python", {
     s("ms", { t({ "@mark.skip", "" }) }),
     s("mx", { t({ "@mark.xfail", "" }) }),
     s("pyi", {
-        t({ "from hypothesis import Phase, reproduce_failure, settings", "" }),
+        t({ "from hypothesis import HealthCheck, Phase, given, reproduce_failure, settings", "" }),
         t({ "from pytest import RaisesGroup, fixture, mark, param, raises", "" }),
         t({ "from utilities.contextvars import set_global_breakpoint", "" }),
     }),
