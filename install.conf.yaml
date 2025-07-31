@@ -19,7 +19,6 @@
       description: Installing submodules...
 
 - link:
-    /etc/ssh/sshd_config.d/local: ssh/sshd_config
     ~/.config/bottom/bottom.toml: bottom/bottom.toml
     ~/.config/direnv/direnv.toml: direnv/direnv.toml
     ~/.config/direnv/direnvrc: direnv/direnvrc
@@ -56,19 +55,9 @@
     ~/Library/LaunchAgents/com.redis-stack.redis-stack-server.plist: redis/com.redis-stack.redis-stack-server.plist
 
 - shell:
-    - command: ./install-all.sh
-      description: Running installer...
-      # - [
-      #     "[ -f ${HOME}/.config/fzf/fzf.zsh ] || $(brew --prefix)/opt/fzf/install --xdg --key-bindings --completion --no-update-rc --no-fish",
-      #     Configuring fzf,
-      #   ]
-      # - [brew services start postgresql@17, Configuring postgresql]
-      # - [brew services start redis, Configuring redis]
-      # - [
-      #     "command -v harlequin >/dev/null 2>&1 || uv tool install harlequin",
-      #     Installing harlequin,
-      #   ]
-      # - [
-      #     "launchctl load ~/Library/LaunchAgents/com.redis-stack.redis-stack-server.plist",
-      #     Launching redis-stack-server,
-      #   ]
+    # - command: ./install-all.sh
+    #   description: Installing applications...
+    - command: ./install-ssh.sh
+      description: Installing applications...
+    - command: if ! [ -L /etc/ssh/sshd_config.d/local ]; then sudo ln -s "$HOME/dotfiles/ssh/sshd_config" /etc/ssh/sshd_config.d/local; fi
+      description: Setting up SSHD config...
