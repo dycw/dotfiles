@@ -104,7 +104,6 @@ fi
 # machine - SSH
 enable_sshd() {
 	if launchctl print system/com.openssh.sshd >/dev/null 2>&1; then
-
 		echo_date "'sshd' is already set"
 	else
 		echo_date "Enabling 'sshd'..."
