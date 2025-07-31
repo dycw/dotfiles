@@ -279,6 +279,8 @@ ls.add_snippets("python", {
 
     -- polars
     s("im-pl", { t({ "import polars as pl", "" }) }),
+    s("po-all-horizontal", { t({ "from polars import all_horizontal", "" }) }),
+    s("po-any-horizontal", { t({ "from polars import any_horizontal", "" }) }),
     s("po-assert-frame-equal", { t({ "from polars.testing import assert_frame_equal", "" }) }),
     s("po-assert-series-equal", { t({ "from polars.testing import assert_series_equal", "" }) }),
     s("po-boolean", { t({ "from polars import Boolean", "" }) }),

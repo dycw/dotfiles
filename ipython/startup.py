@@ -926,7 +926,6 @@ if find_spec("polars") is not None:
         Config,
         DataFrame,
         DataType,
-        Date,
         Datetime,
         Decimal,
         Duration,
@@ -1012,7 +1011,6 @@ if find_spec("polars") is not None:
         DataFrame,
         DataType,
         DataTypeClass,
-        Date,
         Datetime,
         Decimal,
         Duration,
@@ -1154,6 +1152,11 @@ if find_spec("polars") is not None:
 
             _ = [insert_dataframe, select_to_dataframe]
 
+    if find_spec("whenever") is None:
+        from polars import Date
+    else:
+        from whenever import Date
+    _ = [Date]
 
 if find_spec("polars_ols") is not None:
     _LOGGER.info("Importing `polars_ols`...")
