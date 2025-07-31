@@ -102,6 +102,14 @@ elif [ -n "${IS_MACBOOK}" ]; then
 fi
 
 # machine - SSH
+add_private_key() {
+	__path="${HOME}/.ssh/id_ed25519"
+	if [ -f "${__path}" ]; then
+		ssh-add --apple-use-keychain "${__path}"
+	else
+		echo_date "ERROR: SSH private key not found"
+	fi
+}
 enable_sshd() {
 	if launchctl print system/com.openssh.sshd >/dev/null 2>&1; then
 		echo_date "'sshd' is already set"
@@ -110,7 +118,7 @@ enable_sshd() {
 		sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 	fi
 }
-
+[ -n "${IS_MAC}" ] && add_private_key
 [ -n "${IS_MAC}" ] && enable_sshd
 
 # brew
