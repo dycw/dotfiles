@@ -101,6 +101,15 @@ elif [ -n "${IS_MACBOOK}" ]; then
 	set_scutil_names 'RH-MacBook'
 fi
 
+# machine - SSH
+if [ -n "${IS_MAC}" ]; then
+	if [ -f "${HOME}/.ssh/id_ed25519" ]; then
+		ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+	else
+		echo_date "ERROR: SSH private key not found"
+	fi
+fi
+
 # brew
 if command -v brew >/dev/null 2>&1; then
 	echo_date "'brew' is already installed"
@@ -251,6 +260,7 @@ brew_services() {
 }
 [ -n "${IS_MAC_MINI}" ] && brew_services postgresql@17
 [ -n "${IS_MAC_MINI}" ] && brew_services redis
+[ -n "${IS_MAC_MINI}" ] && brew_services syncthing
 [ -n "${IS_MAC_MINI}" ] && brew_services tailscale
 
 # mac mini/rust
