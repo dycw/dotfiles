@@ -239,7 +239,7 @@ brew_install watchexec
 [ -n "${IS_UBUNTU}" ] && brew_install xsel
 [ -n "${IS_MAC}" ] && brew_install yq
 [ -n "${IS_MAC_MINI}" ] && brew_install zoom --cask
-brew_install zoom --cask
+[ -n "${IS_MAC}" ] && brew_install zoom --cask
 brew_install zoxide
 # brew/fzf
 __fzf_zsh="${XDG_CONFIG_HOME:-${HOME}/.config}/fzf/fzf.zsh"

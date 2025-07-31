@@ -48,7 +48,12 @@
     ~/.jupyter/lab/user-settings/jupyterlab_code_formatter/settings.jupyterlab-settings: jupyter/jupyterlab_code_formatter/settings.jsonc
     ~/.pdbrc: pdb/pdbrc
     ~/.psqlrc: psql/psqlrc
-    ~/.ssh/config: ssh/config
+    ~/.ssh/config:
+      path: ssh/ssh/mac
+      if: "[ `uname` = Darwin ]"
+    ~/.ssh/config:
+      path: ssh/ssh/linux
+      if: "[ `uname` = Linux ]"
     ~/.zimrc: zsh/zimrc
     ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
@@ -57,5 +62,5 @@
 - shell:
     - command: ./install-all.sh
       description: Installing applications...
-    - command: if ! [ -L /etc/ssh/sshd_config.d/local ]; then sudo ln -s "$HOME/dotfiles/ssh/sshd" /etc/ssh/sshd_config.d/local; fi
+    - command: if ! [ /etc/ssh/sshd_config.d/local ]; then sudo ln -s "$HOME/dotfiles/ssh/sshd" /etc/ssh/sshd_config.d/local; fi
       description: Setting up 'sshd'...
