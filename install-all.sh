@@ -102,13 +102,24 @@ elif [ -n "${IS_MACBOOK}" ]; then
 fi
 
 # machine - SSH
-if [ -n "${IS_MAC}" ]; then
-	if [ -f "${HOME}/.ssh/id_ed25519" ]; then
-		ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+add_private_key() {
+	__path="${HOME}/.ssh/id_ed25519"
+	if [ -f "${__path}" ]; then
+		ssh-add --apple-use-keychain "${__path}"
 	else
 		echo_date "ERROR: SSH private key not found"
 	fi
-fi
+}
+enable_sshd() {
+	if launchctl print system/com.openssh.sshd >/dev/null 2>&1; then
+		echo_date "'sshd' is already set"
+	else
+		echo_date "Enabling 'sshd'..."
+		sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
+	fi
+}
+[ -n "${IS_MAC}" ] && add_private_key
+[ -n "${IS_MAC}" ] && enable_sshd
 
 # brew
 if command -v brew >/dev/null 2>&1; then
@@ -193,7 +204,7 @@ brew_install just
 [ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
 brew_install luacheck
 brew_install nvim neovim
-brew_install pgadmin4 --cask
+[ -n "${IS_MAC_MINI}" ] && brew_install pgadmin4 --cask
 brew_install pgcli
 [ -n "${IS_MAC}" ] && brew_install postgres postgresql@17
 [ -n "${IS_MAC_MINI}" ] && brew_install postico --cask
