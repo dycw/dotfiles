@@ -57,5 +57,5 @@
 - shell:
     - command: ./install-all.sh
       description: Installing applications...
-    - command: if ! [ -L /etc/ssh/sshd_config.d/local ]; then sudo ln -s "$HOME/dotfiles/ssh/sshd_config" /etc/ssh/sshd_config.d/local; fi
+    - command: if ! [ -L /etc/ssh/sshd_config.d/local ]; then sudo ln -s "$HOME/dotfiles/ssh/sshd" /etc/ssh/sshd_config.d/local; fi
       description: Setting up SSHD config...
