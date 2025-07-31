@@ -299,9 +299,10 @@ apt_install() {
 }
 if [ -n "${IS_UBUNTU}" ]; then
 	apt_install curl
+	apt_install git
 	apt_install libpq-dev
 	apt_install nautilus-dropbox
-	apt_install git
+	apt_install openssh-server
 	apt_install zsh
 fi
 
@@ -336,6 +337,19 @@ if [ -n "${IS_UBUNTU}" ]; then
 	snap_install pdfarranger
 	snap_install whatsapp-linux-app
 fi
+
+# ubuntu/systemctl
+set_systemctl() {
+	__app="$1"
+	if systemctl is-enabled "${__app}"; then
+		echo_date "'${__app}' is already enabled..."
+	else
+		echo_date "Enabling '${__app}'..."
+		sudo systemctl enable --now "${__app}"
+	fi
+}
+[ -n "${IS_UBUNTU}" ] && set_systemctl redis-server
+[ -n "${IS_UBUNTU}" ] && set_systemctl ssh
 
 # ubuntu/wezterm
 if [ -n "${IS_UBUNTU}" ]; then
