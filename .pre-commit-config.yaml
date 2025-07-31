@@ -1,12 +1,12 @@
 repos:
   # fixers
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.4
+    rev: v0.12.7
     hooks:
       - id: ruff-check
         args: [--fix]
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.11.1
+    rev: 0.11.3
     hooks:
       - id: run-bump-my-version
       - id: run-ruff-format
