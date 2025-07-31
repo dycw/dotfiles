@@ -72,6 +72,11 @@ case ":${PATH}:" in
 *) export PATH="${__dir}:${PATH}" ;;
 esac
 
+# SSH
+if ! pgrep -u "${USER}" ssh-agent >/dev/null; then
+	eval "$(ssh-agent -s)"
+fi
+
 # tailscale
 __dir='/Applications/Tailscale.app/Contents/MacOS'
 case ":${PATH}:" in
