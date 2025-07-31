@@ -193,7 +193,7 @@ brew_install just
 [ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
 brew_install luacheck
 brew_install nvim neovim
-brew_install pgadmin4 --cask
+[ -n "${IS_MAC}" ] && brew_install pgadmin4 --cask
 brew_install pgcli
 [ -n "${IS_MAC}" ] && brew_install postgres postgresql@17
 [ -n "${IS_MAC_MINI}" ] && brew_install postico --cask
