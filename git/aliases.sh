@@ -139,10 +139,10 @@ if command -v git >/dev/null 2>&1; then
 			gcof
 			gcm
 		else
-			__branch="$(current_branch)"
+			__gcmd_branch="$(current_branch)"
 			gcof
 			gcm
-			gbd "${__branch}"
+			gbd "${__gcmd_branch}"
 		fi
 	}
 	gco() {
@@ -453,7 +453,6 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# rebase
 	grb() {
-		unset __grb_branch
 		if [ $# -eq 0 ]; then
 			__grb_branch='origin/master'
 		elif [ $# -eq 1 ]; then
