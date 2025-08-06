@@ -199,6 +199,7 @@ brew_install fzf
 brew_install gh
 [ -n "${IS_MAC}" ] && brew_install gitweb yoannfleurydev/gitweb/gitweb
 [ -n "${IS_MAC}" ] && brew_install gsed gnu-sed
+[ -n "${IS_MAC}" ] && brew_install iperf3
 brew_install jq
 brew_install just
 [ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
