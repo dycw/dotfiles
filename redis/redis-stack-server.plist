@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.redis-stack.redis-stack-server</string>
+    <string>com.local.redis-stack-server</string>
     <key>ProgramArguments</key>
     <array>
         <string>/opt/homebrew/Caskroom/redis-stack-server/7.4.0-v0/bin/redis-stack-server</string>
@@ -12,5 +12,9 @@
     <true/>
     <key>KeepAlive</key>
     <true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/redis-stack-server.out</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/redis-stack-server.err</string>
 </dict>
 </plist>
