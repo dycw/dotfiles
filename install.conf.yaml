@@ -57,7 +57,8 @@
     ~/.zimrc: zsh/zimrc
     ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
-    ~/Library/LaunchAgents/com.redis-stack.redis-stack-server.plist: redis/com.redis-stack.redis-stack-server.plist
+    ~/Library/LaunchAgents/com.local.iperf3.plist: iperf3/iperf3.plist
+    ~/Library/LaunchAgents/com.local.redis-stack-server.plist: redis/redis-stack-server.plist
 
 - shell:
     - command: ./install-all.sh
