@@ -26,7 +26,6 @@
     ~/.config/git/ignore: git/ignore
     ~/.config/marimo/marimo.toml: marimo/marimo.toml
     ~/.config/nvim: nvim
-    ~/.config/pip/pip.conf: pip/pip.conf
     ~/.config/ripgreprc: ripgrep/ripgreprc
     ~/.config/starship.toml: starship/starship.toml
     ~/.config/tmux/tmux.conf.local: tmux/tmux.conf.local
