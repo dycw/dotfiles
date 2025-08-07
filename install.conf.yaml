@@ -26,6 +26,7 @@
     ~/.config/git/ignore: git/ignore
     ~/.config/marimo/marimo.toml: marimo/marimo.toml
     ~/.config/nvim: nvim
+    ~/.config/pip/pip.conf: pip/pip.conf
     ~/.config/ripgreprc: ripgrep/ripgreprc
     ~/.config/starship.toml: starship/starship.toml
     ~/.config/tmux/tmux.conf.local: tmux/tmux.conf.local
@@ -53,15 +54,9 @@
     ~/.ssh/config:
       path: ssh/ssh/linux
       if: "[ `uname` = Linux ]"
-    ~/.zimrc:
-      path: zsh/zimrc
-      if: "[ `uname` = Darwin ]"
-    ~/.zshenv:
-      path: zsh/zshenv
-      if: "[ `uname` = Darwin ]"
-    ~/.zshrc:
-      path: zsh/zshrc
-      if: "[ `uname` = Darwin ]"
+    ~/.zimrc: zsh/zimrc
+    ~/.zshenv: zsh/zshenv
+    ~/.zshrc: zsh/zshrc
     ~/Library/LaunchAgents/com.local.iperf3.plist: iperf3/iperf3.plist
     ~/Library/LaunchAgents/com.local.redis-stack-server.plist: redis/redis-stack-server.plist
 
