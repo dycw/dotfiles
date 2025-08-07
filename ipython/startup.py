@@ -515,7 +515,7 @@ if find_spec("cvxpy") is not None:
     _LOGGER.info("Importing `cvxpy`...")
 
     import cvxpy
-    import cxvpy as cp
+    import cvxpy as cp
 
     _ = [cp, cvxpy]
 
@@ -1414,14 +1414,12 @@ if find_spec("utilities") is not None:
         check_subset,
         check_superset,
         chunked,
-        group_consecutive_integers,
         groupby_lists,
         one,
         one_maybe,
         one_str,
         one_unique,
         transpose,
-        ungroup_consecutive_integers,
         unique_everseen,
     )
     from utilities.jupyter import show
@@ -1455,6 +1453,8 @@ if find_spec("utilities") is not None:
         MILLISECOND,
         MINUTE,
         MONTH,
+        NOW_LOCAL,
+        NOW_UTC,
         SECOND,
         TODAY_LOCAL,
         TODAY_UTC,
@@ -1484,6 +1484,8 @@ if find_spec("utilities") is not None:
         MINUTE,
         MONTH,
         MaybeIterable,
+        NOW_LOCAL,
+        NOW_UTC,
         Number,
         OneEmptyError,
         OneError,
@@ -1541,7 +1543,6 @@ if find_spec("utilities") is not None:
         get_time_zone_name,
         get_today,
         get_today_local,
-        group_consecutive_integers,
         groupby_lists,
         is_integral,
         list_dir,
@@ -1564,7 +1565,6 @@ if find_spec("utilities") is not None:
         sleep_td,
         sleep_until,
         transpose,
-        ungroup_consecutive_integers,
         unique_everseen,
         write_pickle,
         yield_fields,
