@@ -224,6 +224,7 @@ ls.add_snippets("python", {
     s("it-product", { t({ "from itertools import product", "" }) }),
     s("it-repeat", { t({ "from itertools import repeat", "" }) }),
     s("it-starmap", { t({ "from itertools import starmap", "" }) }),
+    s("it-takewhile", { t({ "from itertools import takewhile", "" }) }),
 
     -- logging
     s("lo-formatter", { t({ "from logging import Formatter", "" }) }),
@@ -235,6 +236,7 @@ ls.add_snippets("python", {
     -- math
     s("ma-inf", { t({ "from math import inf", "" }) }),
     s("ma-isclose", { t({ "from math import isclose", "" }) }),
+    s("ma-isnan", { t({ "from math import isnan", "" }) }),
     s("ma-nan", { t({ "from math import nan", "" }) }),
 
     -- more-itertools
@@ -326,6 +328,7 @@ ls.add_snippets("python", {
 
     -- pytest
     s("a0", { t({ "assert 0, '!!!'", "" }) }),
+    s("a1", { t({ "from rich.pretty import pretty_repr", "", "assert 0, pretty_repr(locals())", "" }) }),
     s("mo", { t({ "@mark.only", "" }) }),
     s("mmo", { t({ "marks=mark.only", "" }) }),
     s("mms", { t({ "marks=mark.skip", "" }) }),
@@ -514,6 +517,7 @@ ls.add_snippets("python", {
     s("ut-dataclass-repr", { t({ "from utilities.dataclasses import dataclass_repr", "" }) }),
     s("ut-dataclass-to-dict", { t({ "from utilities.dataclasses import dataclass_to_dict", "" }) }),
     s("ut-datetime-utc", { t({ "from utilities.polars import DatetimeUTC", "" }) }),
+    s("ut-delta", { t({ "from utilities.types import Delta", "" }) }),
     s("ut-deserialize", { t({ "from utilities.orjson import deserialize", "" }) }),
     s("ut-duration", { t({ "from utilities.types import Duration", "" }) }),
     s("ut-enhanced-queue", { t({ "from utilities.asyncio import EnhancedQueue", "" }) }),
