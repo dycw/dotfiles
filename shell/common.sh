@@ -241,6 +241,18 @@ if command -v fd >/dev/null 2>&1; then
 	}
 fi
 
+# find
+clean_dirs() {
+	if [ $# -eq 0 ]; then
+		__dir="$(pwd)"
+	elif [ $# -eq 1 ]; then
+		__dir="$1"
+	else
+		echo_date "'uvpyc' accepts 1 argument" && return 1
+	fi
+	find "${__dir}" -type d -delete
+}
+
 # fzf
 if command -v fzf >/dev/null 2>&1; then
 	export FZF_DEFAULT_COMMAND='fd -HL --exclude .git'
@@ -860,6 +872,17 @@ if command -v uv >/dev/null 2>&1; then
 		uv pip list --outdated
 	}
 	uvpu() { uv pip uninstall "$@"; }
+	uvpyc() {
+		if [ $# -eq 0 ]; then
+			__dir="$(pwd)"
+		elif [ $# -eq 1 ]; then
+			__dir="$1"
+		else
+			echo_date "'uvpyc' accepts 1 argument" && return 1
+		fi
+		uv tool run pyclean "${__dir}"
+		clean_dirs "${__dir}"
+	}
 	uvr() { uv remove --active --managed-python "$@"; }
 	uvs() {
 		if [ $# -ne 0 ]; then
