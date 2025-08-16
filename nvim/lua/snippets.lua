@@ -227,10 +227,10 @@ ls.add_snippets("python", {
     s("it-takewhile", { t({ "from itertools import takewhile", "" }) }),
 
     -- logging
+    s("logger-name", { t({ "from utilities.logging import to_logger", "", "_LOGGER = to_logger(__name__)", "" }) }),
     s("lo-formatter", { t({ "from logging import Formatter", "" }) }),
     s("lo-get-logger", { t({ "from logging import getLogger", "" }) }),
     s("lo-handler", { t({ "from logging import Handler", "" }) }),
-    s("lo-logger", { t({ "from logging import getLogger", "", "_LOGGER = getLogger(__name__)", "" }) }),
     s("lo-stream-handler", { t({ "from logging import StreamHandler", "" }) }),
 
     -- math
@@ -531,6 +531,7 @@ ls.add_snippets("python", {
     s("ut-ensure-str", { t({ "from utilities.text import ensure_str", "" }) }),
     s("ut-ensure-suffix", { t({ "from utilities.pathlib import ensure_suffix", "" }) }),
     s("ut-expr-like", { t({ "from utilities.polars import ExprLike", "" }) }),
+    s("ut-expr-or-series", { t({ "from utilities.polars import ExprOrSeries", "" }) }),
     s("ut-extract-group", { t({ "from utilities.re import extract_group", "" }) }),
     s("ut-extract-groups", { t({ "from utilities.re import extract_groups", "" }) }),
     s("ut-format-comapct", { t({ "from utilities.whenever import format_compact", "" }) }),
@@ -586,6 +587,7 @@ ls.add_snippets("python", {
     s("ut-period", { t({ "from utilities.period import Period", "" }) }),
     s("ut-read-json", { t({ "from utilities.orjson import read_json", "" }) }),
     s("ut-read-pickle", { t({ "from utilities.pickle import read_pickle", "" }) }),
+    s("ut-read-object", { t({ "from utilities.orjson import read_object", "" }) }),
     s("ut-replace-non-sentinel", { t({ "from utilities.dataclasses import replace_non_sentinel", "" }) }),
     s("ut-round", { t({ "from utilities.math import round_", "" }) }),
     s("ut-safe-round", { t({ "from utilities.math import safe_round", "" }) }),
@@ -621,6 +623,7 @@ ls.add_snippets("python", {
     s("ut-timeout-td", { t({ "from utilities.asyncio import timeout_td", "" }) }),
     s("ut-timer", { t({ "from utilities.timer import Timer", "" }) }),
     s("ut-tokyo", { t({ "from utilities.tzdata import Tokyo", "" }) }),
+    s("ut-to-logger", { t({ "from utilities.logging import to_logger", "" }) }),
     s("ut-trace", { t({ "from utilities.traceback import trace", "" }) }),
     s("ut-transpose", { t({ "from utilities.iterables import transpose", "" }) }),
     s("ut-try-reify-expr", { t({ "from utilities.polars import try_reify_expr", "" }) }),
