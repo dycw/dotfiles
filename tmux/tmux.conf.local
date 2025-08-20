@@ -27,19 +27,26 @@ set -g mode-keys vi
 
 # replace C-b by C-a instead of using both prefixes
 set -gu prefix2
-unbind C-a
-unbind C-b
+unbind-key C-a
+unbind-key C-b
 set -g prefix `
 bind-key ` send-prefix
 
 # -- own customizations --------------------------------------------------------
 # layouts
+unbind-key 6  # window 6
+unbind-key 7  # window 7
+unbind-key 8  # window 8
+unbind-key 9  # window 9
+unbind-key 0  # window 0
+unbind-key Space  # next-layout
+bind-key 7 select-layout even-horizontal
+bind-key u select-layout main-horizontal
+bind-key U select-layout main-horizontal-mirrored
+bind-key 8 select-layout even-vertical
+bind-key i select-layout main-vertical
+bind-key I select-layout main-vertical-mirrored
 bind-key t select-layout tiled
-bind-key | select-layout even-horizontal
-bind-key "'" select-layout main-horizontal
-bind-key _ select-layout even-vertical
-bind-key + select-layout main-vertical
-unbind Space  # disable `next-layout`
 
 # reduce `repeat-time`
 set -g repeat-time 200
