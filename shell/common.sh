@@ -195,6 +195,7 @@ if command -v docker >/dev/null 2>&1; then
 		docker ps
 	}
 fi
+
 # echo
 echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 
@@ -694,6 +695,12 @@ if command -v tmux >/dev/null 2>&1; then
 			echo_date "'tmux_ls' accepts no arguments" && return 1
 		fi
 		tmux ls
+	}
+	tmux_reload() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tmux_reload' accepts no arguments" && return 1
+		fi
+		tmux source-file "${XDG_CONFIG_HOME:-"${HOME}/.config"}/tmux/tmux.conf"
 	}
 	# layouts
 	tmux_even_horizontal() {
