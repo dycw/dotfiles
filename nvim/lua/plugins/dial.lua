@@ -47,6 +47,7 @@ return {
             { "head", "tail" },
             { "height", "width" },
             { "high", "low" },
+            { "horizontal", "vertical" },
             { "init", "post" },
             { "key", "value" },
             { "keys", "values" },

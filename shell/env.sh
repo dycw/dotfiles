@@ -22,6 +22,9 @@ case ":${PATH}:" in
 *) export PATH="${__dir}:${PATH}" ;;
 esac
 
+# gitlab
+export GITLAB_HOME="${HOME}/gitlab-docker"
+
 # kdb
 export QHOME="${HOME}"/q
 __dir="${QHOME}"/m64

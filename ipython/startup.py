@@ -537,7 +537,7 @@ if find_spec("eventkit") is not None:
     _ = [eventkit]
 
     if find_spec("utilities") is not None:
-        from utilities.eventkit import add_listener
+        from utilities.aeventkit import add_listener
 
         _ = [add_listener]
 
@@ -1094,6 +1094,7 @@ if find_spec("polars") is not None:
             dataclass_to_dataframe,
             dataclass_to_schema,
             deserialize_dataframe,
+            deserialize_series,
             ensure_expr_or_series,
             get_data_type_or_series_time_zone,
             insert_after,
@@ -1107,6 +1108,7 @@ if find_spec("polars") is not None:
             read_series,
             replace_time_zone,
             serialize_dataframe,
+            serialize_series,
             struct_dtype,
             to_false,
             to_not_false,
@@ -1138,6 +1140,7 @@ if find_spec("polars") is not None:
             dataclass_to_dataframe,
             dataclass_to_schema,
             deserialize_dataframe,
+            deserialize_series,
             ensure_expr_or_series,
             get_data_type_or_series_time_zone,
             insert_after,
@@ -1151,6 +1154,7 @@ if find_spec("polars") is not None:
             read_series,
             replace_time_zone,
             serialize_dataframe,
+            serialize_series,
             struct_dtype,
             to_false,
             to_not_false,
@@ -1508,7 +1512,7 @@ if find_spec("utilities") is not None:
         to_years,
         to_zoned_date_time,
     )
-    from utilities.zoneinfo import UTC, ensure_time_zone, get_time_zone_name
+    from utilities.zoneinfo import UTC, to_time_zone_name, to_zone_info
 
     _ = [
         BackgroundTask,
@@ -1562,7 +1566,6 @@ if find_spec("utilities") is not None:
         ensure_plain_date_time,
         ensure_str,
         ensure_suffix,
-        ensure_time_zone,
         ensure_zoned_date_time,
         ewm_parameters,
         extract_group,
@@ -1578,7 +1581,6 @@ if find_spec("utilities") is not None:
         get_repo_root,
         get_root,
         get_state,
-        get_time_zone_name,
         get_today,
         get_today_local,
         groupby_lists,
@@ -1617,8 +1619,10 @@ if find_spec("utilities") is not None:
         to_py_time_delta,
         to_seconds,
         to_time_delta,
+        to_time_zone_name,
         to_weeks,
         to_years,
+        to_zone_info,
         to_zoned_date_time,
         transpose,
         unique_everseen,
