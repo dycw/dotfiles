@@ -63,6 +63,7 @@ bind-key C-m choose-tree -Zs "join-pane -t '%%'"
 
 # split windows in the current directory
 bind-key \\ split-window -c "#{pane_current_path}" -h
+bind-key | split-window -c "#{pane_current_path}" -h
 bind-key - split-window -c "#{pane_current_path}" -v
 
 # -- tmux & nvim ---------------------------------------------------------------
