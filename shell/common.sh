@@ -690,6 +690,15 @@ if command -v tmux >/dev/null 2>&1; then
 		fi
 		tmux detach
 	}
+	tmux_list_keys() {
+		if [ $# -eq 0 ]; then
+			tmux list-keys
+		elif [ $# -eq 1 ]; then
+			tmux list-keys -T "$1"
+		else
+			echo_date "'tmux_list_keys' accepts [0..1] arguments" && return 1
+		fi
+	}
 	tmux_ls() {
 		if [ $# -ne 0 ]; then
 			echo_date "'tmux_ls' accepts no arguments" && return 1

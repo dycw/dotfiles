@@ -33,23 +33,33 @@ set -g prefix `
 bind-key ` send-prefix
 
 # -- own customizations --------------------------------------------------------
+# copy mode
+unbind-key [
+unbind-key ]
+bind-key v copy-mode
+bind-key p paste-buffer
+
 # layouts
-unbind-key 6  # window 6
-unbind-key 7  # window 7
 unbind-key 8  # window 8
 unbind-key 9  # window 9
 unbind-key 0  # window 0
 unbind-key Space  # next-layout
-bind-key 7 select-layout even-horizontal
-bind-key u select-layout main-horizontal
-bind-key U select-layout main-horizontal-mirrored
-bind-key 8 select-layout even-vertical
+unbind-key M-1  # even-horizontal
+unbind-key M-2  # even-vertical
+unbind-key M-3  # main-horizontal
+unbind-key M-4  # main-vertical
+unbind-key M-5  # tiled
+unbind-key M-6  # main-horizontal-mirrored
+unbind-key M-7  # main-vertical-mirrored
+bind-key 8 select-layout even-horizontal
 bind-key i select-layout main-vertical
 bind-key I select-layout main-vertical-mirrored
+bind-key 9 select-layout even-vertical
+bind-key o select-layout main-horizontal
+bind-key O select-layout main-horizontal-mirrored
 bind-key t select-layout tiled
 
 # new window
-unbind-key c  # new-window
 bind-key n new-window
 
 # reduce `repeat-time`
@@ -71,22 +81,22 @@ bind-key | split-window -c "#{pane_current_path}" -h
 bind-key - split-window -c "#{pane_current_path}" -v
 
 # -- tmux & nvim ---------------------------------------------------------------
-bind-key -n 'C-h' select-pane -L
-bind-key -n 'C-j' select-pane -D
-bind-key -n 'C-k' select-pane -U
-bind-key -n 'C-l' select-pane -R
+bind-key -n C-h select-pane -L
+bind-key -n C-j select-pane -D
+bind-key -n C-k select-pane -U
+bind-key -n C-l select-pane -R
 
-bind-key -T copy-mode-vi 'C-h' select-pane -L
-bind-key -T copy-mode-vi 'C-j' select-pane -D
-bind-key -T copy-mode-vi 'C-k' select-pane -U
-bind-key -T copy-mode-vi 'C-l' select-pane -R
-bind-key -T copy-mode-vi 'C-\' select-pane -l
+bind-key -T copy-mode-vi C-h select-pane -L
+bind-key -T copy-mode-vi C-j select-pane -D
+bind-key -T copy-mode-vi C-k select-pane -U
+bind-key -T copy-mode-vi C-l select-pane -R
+bind-key -T copy-mode-vi C-\\ select-pane -l
 
 # -- resize
-bind-key -n 'M-h' resize-pane -L 10
-bind-key -n 'M-j' resize-pane -D 5
-bind-key -n 'M-k' resize-pane -U 5
-bind-key -n 'M-l' resize-pane -R 10
+bind-key -n M-h resize-pane -L 10
+bind-key -n M-j resize-pane -D 5
+bind-key -n M-k resize-pane -U 5
+bind-key -n M-l resize-pane -R 10
 
 bind-key -T copy-mode-vi M-h resize-pane -L 10
 bind-key -T copy-mode-vi M-j resize-pane -D 5
