@@ -58,6 +58,8 @@ bind-key 9 select-layout even-vertical
 bind-key o select-layout main-horizontal
 bind-key O select-layout main-horizontal-mirrored
 bind-key t select-layout tiled
+set -g main-pane-height 67%
+set -g main-pane-width 67%
 
 # new window
 bind-key n new-window
