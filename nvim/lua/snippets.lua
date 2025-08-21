@@ -228,6 +228,7 @@ ls.add_snippets("python", {
 
     -- logging
     s("logger-name", { t({ "from utilities.logging import to_logger", "", "_LOGGER = to_logger(__name__)", "" }) }),
+    s("logger-adapter", { t({ "logger: LoggerAdapter = field(init=False)", "" }) }),
     s("lo-formatter", { t({ "from logging import Formatter", "" }) }),
     s("lo-get-logger", { t({ "from logging import getLogger", "" }) }),
     s("lo-handler", { t({ "from logging import Handler", "" }) }),
@@ -242,6 +243,7 @@ ls.add_snippets("python", {
     -- more-itertools
     s("mi-chunked", { t({ "from more_itertools import chunked", "" }) }),
     s("mi-iterate", { t({ "from more_itertools import iterate", "" }) }),
+    s("mi-map-except", { t({ "from more_itertools import map_except", "" }) }),
     s("mi-partition", { t({ "from more_itertools import partition", "" }) }),
     s("mi-split-at", { t({ "from more_itertools import split_after", "" }) }),
 

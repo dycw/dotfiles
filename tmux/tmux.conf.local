@@ -111,4 +111,5 @@ bind-key | split-window -c "#{pane_current_path}" -h
 bind-key - split-window -c "#{pane_current_path}" -v
 
 # swap pane
-bind-key s display-panes -d 750 \; command-prompt -1 -p "Swap with pane:" "swap-pane -t '%%'"
+bind-key s display-panes -d 750 \; \
+  command-prompt -1p "Swap with pane:" "swap-pane -dt '%%' \; select-pane -t '%%'"
