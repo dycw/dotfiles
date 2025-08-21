@@ -1422,7 +1422,6 @@ if find_spec("utilities") is not None:
         ensure_zoned_date_time,
         get_class,
         get_class_name,
-        make_isinstance,
     )
     from utilities.functools import partial
     from utilities.iterables import (
@@ -1469,7 +1468,15 @@ if find_spec("utilities") is not None:
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
     from utilities.types import MaybeIterable, Number, StrMapping, TimeZone
-    from utilities.typing import get_args, get_literal_elements
+    from utilities.typing import (
+        get_args,
+        get_literal_elements,
+        is_dataclass_class,
+        is_dataclass_instance,
+        is_instance_gen,
+        is_subclass_gen,
+        make_isinstance,
+    )
     from utilities.whenever import (
         DAY,
         HOUR,
@@ -1583,7 +1590,11 @@ if find_spec("utilities") is not None:
         get_today,
         get_today_local,
         groupby_lists,
+        is_dataclass_class,
+        is_dataclass_instance,
+        is_instance_gen,
         is_integral,
+        is_subclass_gen,
         list_dir,
         make_isinstance,
         one,
