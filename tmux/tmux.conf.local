@@ -39,6 +39,9 @@ unbind-key ]
 bind-key v copy-mode
 bind-key p paste-buffer
 
+# history
+bind-key H command-prompt -p 'save history to filename:' -I '~/tmux-history.txt' 'capture-pane -S -32768 ; save-buffer %1 ; delete-buffer'
+
 # layouts
 unbind-key 8  # window 8
 unbind-key 9  # window 9
@@ -64,25 +67,24 @@ set -g main-pane-width 67%
 # new window
 bind-key n new-window
 
-# reduce `repeat-time`
+# repeat time
 set -g repeat-time 200
 
 # reload config
 bind-key R source-file ~/.config/tmux/tmux.conf
 
-# save history
-bind-key P command-prompt -p 'save history to filename:' -I '~/tmux-history.txt' 'capture-pane -S -32768 ; save-buffer %1 ; delete-buffer'
+# resize pane
+bind-key -n M-h resize-pane -L 10
+bind-key -n M-j resize-pane -D 5
+bind-key -n M-k resize-pane -U 5
+bind-key -n M-l resize-pane -R 10
 
-# send pane interactively (https://bit.ly/30iQi1i)
-bind-key M choose-tree -Zw "join-pane -t '%%'"
-bind-key C-m choose-tree -Zs "join-pane -t '%%'"
+bind-key -T copy-mode-vi M-h resize-pane -L 10
+bind-key -T copy-mode-vi M-j resize-pane -D 5
+bind-key -T copy-mode-vi M-k resize-pane -U 5
+bind-key -T copy-mode-vi M-l resize-pane -R 10
 
-# split windows in the current directory
-bind-key \\ split-window -c "#{pane_current_path}" -h
-bind-key | split-window -c "#{pane_current_path}" -h
-bind-key - split-window -c "#{pane_current_path}" -v
-
-# -- tmux & nvim ---------------------------------------------------------------
+# select pane
 bind-key -n C-h select-pane -L
 bind-key -n C-j select-pane -D
 bind-key -n C-k select-pane -U
@@ -94,13 +96,14 @@ bind-key -T copy-mode-vi C-k select-pane -U
 bind-key -T copy-mode-vi C-l select-pane -R
 bind-key -T copy-mode-vi C-\\ select-pane -l
 
-# -- resize
-bind-key -n M-h resize-pane -L 10
-bind-key -n M-j resize-pane -D 5
-bind-key -n M-k resize-pane -U 5
-bind-key -n M-l resize-pane -R 10
+# send pane interactively (https://bit.ly/30iQi1i)
+bind-key M choose-tree -Zw "join-pane -t '%%'"
+bind-key C-m choose-tree -Zs "join-pane -t '%%'"
 
-bind-key -T copy-mode-vi M-h resize-pane -L 10
-bind-key -T copy-mode-vi M-j resize-pane -D 5
-bind-key -T copy-mode-vi M-k resize-pane -U 5
-bind-key -T copy-mode-vi M-l resize-pane -R 10
+# split windows in the current directory
+bind-key \\ split-window -c "#{pane_current_path}" -h
+bind-key | split-window -c "#{pane_current_path}" -h
+bind-key - split-window -c "#{pane_current_path}" -v
+
+# swap pane
+bind-key s display-panes -d 750 \; command-prompt -1 -p "Swap with pane:" "swap-pane -t '%%'"
