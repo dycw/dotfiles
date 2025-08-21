@@ -163,6 +163,10 @@
     "branch": "main",
     "commit": "831a97c7697736411a05ff8b91e8798ea4c2d6fb"
   },
+  "nvim-rip-substitute": {
+    "branch": "main",
+    "commit": "4f9ad4ce47f940e6ac7419493074ed63de5b4fa9"
+  },
   "nvim-spectre": {
     "branch": "master",
     "commit": "72f56f7585903cd7bf92c665351aa585e150af0f"

@@ -195,6 +195,7 @@ if command -v docker >/dev/null 2>&1; then
 		docker ps
 	}
 fi
+
 # echo
 echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 
@@ -677,17 +678,81 @@ if command -v tmux >/dev/null 2>&1; then
 		fi
 		tmux attach -t "${__session}"
 	}
+	tmux_current_window() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tmux_detach' accepts no arguments" && return 1
+		fi
+		tmux display-message -p '#S:#I'
+	}
 	tmux_detach() {
 		if [ $# -ne 0 ]; then
 			echo_date "'tmux_detach' accepts no arguments" && return 1
 		fi
 		tmux detach
 	}
+	tmux_list_keys() {
+		if [ $# -eq 0 ]; then
+			tmux list-keys
+		elif [ $# -eq 1 ]; then
+			tmux list-keys -T "$1"
+		else
+			echo_date "'tmux_list_keys' accepts [0..1] arguments" && return 1
+		fi
+	}
 	tmux_ls() {
 		if [ $# -ne 0 ]; then
 			echo_date "'tmux_ls' accepts no arguments" && return 1
 		fi
 		tmux ls
+	}
+	tmux_reload() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tmux_reload' accepts no arguments" && return 1
+		fi
+		tmux source-file "${XDG_CONFIG_HOME:-"${HOME}/.config"}/tmux/tmux.conf"
+	}
+	# layouts
+	tmux_even_horizontal() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tmux_even_horizontal' accepts no arguments" && return 1
+		fi
+		tmux select-layout -t "$(tmux_current_window)" even-horizontal
+	}
+	tmux_even_vertical() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tmux_even_vertical' accepts no arguments" && return 1
+		fi
+		tmux select-layout -t "$(tmux_current_window)" even-vertical
+	}
+	tmux_main_horizontal() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tmux_main_horizontal' accepts no arguments" && return 1
+		fi
+		tmux select-layout -t "$(tmux_current_window)" main-horizontal
+	}
+	tmux_main_horizontal_mirrored() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tmux_main_horizontal_mirrored' accepts no arguments" && return 1
+		fi
+		tmux select-layout -t "$(tmux_current_window)" main-horizontal-mirrored
+	}
+	tmux_main_vertical() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tmux_main_vertical' accepts no arguments" && return 1
+		fi
+		tmux select-layout -t "$(tmux_current_window)" main-vertical
+	}
+	tmux_main_vertical_mirrored() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tmux_main_vertical_mirrored' accepts no arguments" && return 1
+		fi
+		tmux select-layout -t "$(tmux_current_window)" main-vertical-mirrored
+	}
+	tmux_tiled() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tmux_tiled' accepts no arguments" && return 1
+		fi
+		tmux select-layout -t "$(tmux_current_window)" tiled
 	}
 	if [ -z "$TMUX" ]; then
 		# not inside tmux

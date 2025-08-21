@@ -7,6 +7,9 @@ if [ -f "$__file" ]; then
     . "$__file"
 fi
 
+# echo
+echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
+
 # fzf
 __file="${HOME}/.config/fzf/fzf.bash"
 if [ -f "$__file" ]; then
@@ -16,7 +19,18 @@ fi
 # shell - paths (end)
 
 # bash
-bashrc() { ${EDITOR} "${HOME}/.bashrc"; }
+bashrc() {
+    if [ $# -ne 0 ]; then
+        echo_date "'bashrc' accepts no arguments" && return 1
+    fi
+    ${EDITOR} "${HOME}/.bashrc"
+}
+bashrc_reload() {
+    if [ $# -ne 0 ]; then
+        echo_date "'bashrc_reload' accepts no arguments" && return 1
+    fi
+    . "${HOME}/.bashrc"
+}
 
 # direnv
 if command -v direnv >/dev/null 2>&1; then
