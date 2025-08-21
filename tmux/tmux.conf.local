@@ -14,23 +14,29 @@ tmux_conf_24b_colour=true
 tmux_conf_copy_to_os_clipboard=true
 
 # -- user customizations -------------------------------------------------------
-# increase history size
+# history size
 set -g history-limit 10000
 
-# start with mouse mode enabled
+# main pane size
+set -g main-pane-height 67%
+set -g main-pane-width 67%
+
+# mouse mode
 set -g mouse on
 
-# force Vi mode
-#   really you should export VISUAL or EDITOR environment variable, see manual
-set -g status-keys vi
-set -g mode-keys vi
-
-# replace C-b by C-a instead of using both prefixes
+# prefix
 set -gu prefix2
 unbind-key C-a
 unbind-key C-b
 set -g prefix `
 bind-key ` send-prefix
+
+# repeat time
+set -g repeat-time 200
+
+# vi mode
+set -g status-keys vi
+set -g mode-keys vi
 
 # -- own customizations --------------------------------------------------------
 # copy mode
@@ -41,6 +47,9 @@ bind-key p paste-buffer
 
 # history
 bind-key H command-prompt -p 'save history to filename:' -I '~/tmux-history.txt' 'capture-pane -S -32768 ; save-buffer %1 ; delete-buffer'
+
+# kill session
+bind-key X confirm-before -p "kill-window #I? (y/n)" kill-window
 
 # layouts
 unbind-key 8  # window 8
@@ -61,14 +70,9 @@ bind-key 9 select-layout even-vertical
 bind-key o select-layout main-horizontal
 bind-key O select-layout main-horizontal-mirrored
 bind-key t select-layout tiled
-set -g main-pane-height 67%
-set -g main-pane-width 67%
 
 # new window
 bind-key n new-window
-
-# repeat time
-set -g repeat-time 200
 
 # reload config
 bind-key R source-file ~/.config/tmux/tmux.conf
