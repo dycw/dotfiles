@@ -680,7 +680,7 @@ if command -v tmux >/dev/null 2>&1; then
 	}
 	tmux_current_window() {
 		if [ $# -ne 0 ]; then
-			echo_date "'tmux_detach' accepts no arguments" && return 1
+			echo_date "'tmux_current_window' accepts no arguments" && return 1
 		fi
 		tmux display-message -p '#S:#I'
 	}
@@ -689,6 +689,12 @@ if command -v tmux >/dev/null 2>&1; then
 			echo_date "'tmux_detach' accepts no arguments" && return 1
 		fi
 		tmux detach
+	}
+	tmux_kill_window() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tmux_kill_window' accepts no arguments" && return 1
+		fi
+		tmux kill-window
 	}
 	tmux_list_keys() {
 		if [ $# -eq 0 ]; then

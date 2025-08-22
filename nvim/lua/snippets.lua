@@ -652,6 +652,7 @@ ls.add_snippets("python", {
     s("ut-zoned-datetimes", { t({ "from utilities.hypothesis import zoned_datetimes", "" }) }),
 
     -- whenever
+    s("im-whenever", { t({ "import whenever", "" }) }),
     s("wh-date", { t({ "from whenever import Date", "" }) }),
     s("wh-date-delta", { t({ "from whenever import DateDelta", "" }) }),
     s("wh-date-time-delta", { t({ "from whenever import DateTimeDelta", "" }) }),
