@@ -1405,6 +1405,10 @@ if find_spec("utilities") is not None:
 
     from utilities.asyncio import (
         EnhancedTaskGroup,
+        get_items,
+        get_items_nowait,
+        put_items,
+        put_items_nowait,
         sleep_max,
         sleep_rounded,
         sleep_td,
@@ -1580,6 +1584,8 @@ if find_spec("utilities") is not None:
         get_args,
         get_class,
         get_class_name,
+        get_items,
+        get_items_nowait,
         get_literal_elements,
         get_now,
         get_now_local,
@@ -1604,6 +1610,8 @@ if find_spec("utilities") is not None:
         parse_bool,
         parse_none,
         partial,
+        put_items,
+        put_items_nowait,
         read_pickle,
         run_in_background,
         safe_round,
