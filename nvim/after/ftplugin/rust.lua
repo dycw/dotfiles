@@ -1,7 +1,7 @@
 -- luacheck: push ignore
 local v = vim
 -- luacheck: pop
---
+
 local bufnr = v.api.nvim_get_current_buf()
 
 v.keymap.set("n", "<leader>a", function()
