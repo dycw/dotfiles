@@ -43,6 +43,20 @@ ancestor_edit() {
 	"${EDITOR}" "${__candidate}"/"${__name}"
 }
 
+# bacon
+if command -v bacon >/dev/null 2>&1; then
+	bt() {
+		if [ $# -eq 0 ]; then
+			bacon test -- -- --nocapture
+		elif [ $# -eq 1 ]; then
+			bacon test -- "$1" -- --nocapture
+		elif [ $# -eq 2 ]; then
+			bacon test -- --test "$1" "$2" -- --nocapture
+		else
+			echo_date "'bt' accepts [0..2] arguments" && return 1
+		fi
+	}
+fi
 # bat
 if command -v bat >/dev/null 2>&1; then
 	cat() { bat "$@"; }
