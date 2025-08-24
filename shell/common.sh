@@ -11,7 +11,7 @@ if command -v aichat >/dev/null 2>&1; then
 		fi
 		__session="$1"
 		shift
-		aichat --role='%code%' --session="${__session}" "$@"
+		aichat --session="%code%:${__session}" "$@"
 	}
 fi
 
