@@ -1,0 +1,19 @@
+# ---- llm ----
+model: qwen3-coder:30b
+
+# ---- behavior ----
+editor: vim
+
+# ---- prelude ----
+repl_prelude: session:work
+
+# ---- session ----
+save_session: null
+
+# ---- clients ----
+clients:
+  - type: openai-compatible
+    name: qrt-ollama
+    api_base: http://???.???.???.???:???/v1
+    models:
+      - name: qwen3-coder:30b
