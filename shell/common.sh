@@ -2,6 +2,12 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2120,SC2033
 
+# aichat
+if command -v aichat >/dev/null 2>&1; then
+	a() { aichat "$@"; }
+	a0() { aichat --session= "$@"; }
+fi
+
 # ancestor
 ancestor() {
 	if [ $# -ne 2 ]; then

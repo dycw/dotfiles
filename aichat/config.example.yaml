@@ -2,7 +2,7 @@
 model: qrt-ollama:qwen3-coder:30b
 
 # ---- behavior ----
-editor: vim
+editor: nvim
 
 # ---- prelude ----
 repl_prelude: session:work
