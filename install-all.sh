@@ -183,11 +183,14 @@ brew_install() {
 }
 
 [ -n "${IS_MAC}" ] && brew_install 1password --cask
+brew_install aichat
 [ -n "${IS_MAC_MINI}" ] && brew_install autoconf # for c
 [ -n "${IS_MAC_MINI}" ] && brew_install automake # for c
 brew_install bat
 brew_install btm bottom
 brew_install bump-my-version
+[ -n "${IS_MAC_MINI}" ] && brew_install cargo-binstall
+[ -n "${IS_MAC_MINI}" ] && brew_install cargo-nextest
 [ -n "${IS_MAC_MINI}" ] && brew_install db-browser-for-sqlite --cask
 brew_install delta git-delta
 brew_install direnv
@@ -204,6 +207,7 @@ brew_install jq
 brew_install just
 [ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
 brew_install luacheck
+[ -n "${IS_MAC_MINI}" ] && brew_install maturin
 brew_install nvim neovim
 [ -n "${IS_MAC_MINI}" ] && brew_install pgadmin4 --cask
 brew_install pgcli
