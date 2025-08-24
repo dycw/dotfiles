@@ -47,16 +47,17 @@ ancestor_edit() {
 if command -v bacon >/dev/null 2>&1; then
 	bt() {
 		if [ $# -eq 0 ]; then
-			bacon test -- -- --nocapture
+			bacon nextest -- -- --nocapture
 		elif [ $# -eq 1 ]; then
-			bacon test -- "$1" -- --nocapture
+			bacon nextest -- "$1" -- --nocapture
 		elif [ $# -eq 2 ]; then
-			bacon test -- --test "$1" "$2" -- --nocapture
+			bacon nextest -- --test "$1" "$2" -- --nocapture
 		else
 			echo_date "'bt' accepts [0..2] arguments" && return 1
 		fi
 	}
 fi
+
 # bat
 if command -v bat >/dev/null 2>&1; then
 	cat() { bat "$@"; }
@@ -364,6 +365,14 @@ ipython_startup() {
 	${EDITOR} "${HOME}"/dotfiles/ipython/startup.py
 }
 
+# justfile
+justfile() {
+	if [ $# -ne 0 ]; then
+		echo_date "'justfile' accepts no arguments" && return 1
+	fi
+	ancestor_edit justfile
+}
+
 # local
 __file="${HOME}/common.local.sh"
 if [ -f "$__file" ]; then
@@ -572,6 +581,14 @@ rmrf() { rm -rf "$@"; }
 if command -v ruff >/dev/null 2>&1; then
 	rcw() { ruff check -w "$@"; }
 fi
+
+# rust
+cargo_toml() {
+	if [ $# -ne 0 ]; then
+		echo_date "'cargo_toml' accepts no arguments" && return 1
+	fi
+	ancestor_edit Cargo.toml
+}
 
 # secrets
 secrets_toml() {

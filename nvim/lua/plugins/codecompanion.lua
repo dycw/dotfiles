@@ -1,11 +1,24 @@
+-- luacheck: push ignore
+local v = vim
+-- luacheck: pop
+
 return {
     "olimorris/codecompanion.nvim",
     config = function()
         local keymap_set = require("utilities").keymap_set
-        keymap_set({ "n", "v" }, "<C-a>", "<Cmd>CodeCompanionActions<CR>", "CodeCompanion [a]ctions")
-        keymap_set({ "n", "v" }, "<Leader>c", "<Cmd>CodeCompanionChat Toggle<CR>", "CodeCompanion [c]hat")
+        keymap_set({ "n", "v" }, "<Leader>ca", "<Cmd>CodeCompanionActions<CR>", "CodeCompanion [a]ctions")
+        keymap_set("n", "<Leader>c", "<Cmd>CodeCompanionChat Toggle<CR>", "[C]odeCompanion")
+        keymap_set("v", "<Leader>c", "<Cmd>CodeCompanion<CR>", "[C]odeCompanion")
         keymap_set("v", "ga", "<Cmd>CodeCompanionChat Add<CR>", "CodeCompanion [a]dd")
+        v.cmd([[cab cc CodeCompanion]])
 
+        local strategy = {
+            adapter = {
+                name = "qrt_ollama",
+                model = "qwen3-coder:30b",
+                -- model = "gpt-oss:20b",
+            },
+        }
         require("codecompanion").setup({
             adapters = {
                 qrt_ollama = function()
@@ -25,24 +38,9 @@ return {
                 end,
             },
             strategies = {
-                chat = {
-                    adapter = {
-                        name = "qrt_ollama",
-                        model = "gpt-oss:20b",
-                    },
-                },
-                inline = {
-                    adapter = {
-                        name = "qrt_ollama",
-                        model = "gpt-oss:20b",
-                    },
-                },
-                cmd = {
-                    adapter = {
-                        name = "qrt_ollama",
-                        model = "gpt-oss:20b",
-                    },
-                },
+                chat = strategy,
+                inline = strategy,
+                cmd = strategy,
             },
         })
     end,

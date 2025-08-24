@@ -56,6 +56,9 @@
     ~/.zimrc: zsh/zimrc
     ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
+    ~/Library/Application Support/oterm/config.json:
+      path: oterm/config.json
+      if: "[ `uname` = Darwin ]"
     ~/Library/LaunchAgents/com.local.iperf3.plist: iperf3/iperf3.plist
     ~/Library/LaunchAgents/com.local.redis-stack-server.plist: redis/redis-stack-server.plist
 
