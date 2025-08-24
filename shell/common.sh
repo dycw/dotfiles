@@ -2,6 +2,7 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2120,SC2033
 
+# aichat
 # ancestor
 ancestor() {
 	if [ $# -ne 2 ]; then
