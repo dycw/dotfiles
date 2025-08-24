@@ -7,23 +7,11 @@ return {
     config = function()
         local lint = require("lint")
         lint.linters_by_ft = {
-            css = { "biomejs" },
             haskell = { "hlint" },
-            html = { "biomejs" },
-            htmldjango = { "biomejs" },
-            javascript = { "biomejs" },
-            javascriptreact = { "biomejs" },
-            json = { "biomejs" },
-            jsonc = { "biomejs" },
             lua = { "luacheck" },
-            markdown = { "biomejs" },
             python = { "ruff" },
             sh = { "shellcheck" },
             sql = { "sqlfluff" },
-            svelte = { "biomejs" },
-            typescript = { "biomejs" },
-            typescriptreact = { "biomejs" },
-            vue = { "biomejs" },
             zsh = { "shellcheck" },
         }
 
