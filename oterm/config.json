@@ -1,1 +1,4 @@
-{ "theme": "textual-dark", "splash-screen": false }
+{
+  "theme": "textual-dark",
+  "splash-screen": false
+}
