@@ -5,7 +5,14 @@
 # aichat
 if command -v aichat >/dev/null 2>&1; then
 	a() { aichat "$@"; }
-	a0() { aichat --session= "$@"; }
+	as() {
+		if [ $# -eq 0 ]; then
+			echo_date "'ancestor' accepts [1..) arguments" && return 1
+		fi
+		__session="$1"
+		shift
+		aichat --session="$1" "$@"
+	}
 fi
 
 # ancestor
@@ -255,7 +262,7 @@ if command -v fd >/dev/null 2>&1; then
 	fds() { __fd_base 'symlink' "$@"; }
 	__fd_base() {
 		if [ $# -le 0 ]; then
-			echo_date "'__fd_base' accepts [1,..] arguments" && return 1
+			echo_date "'__fd_base' accepts [1..) arguments" && return 1
 		fi
 		__type=$1
 		shift
