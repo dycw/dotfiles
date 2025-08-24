@@ -1,5 +1,5 @@
 # ---- llm ----
-model: qwen3-coder:30b
+model: qrt-ollama:qwen3-coder:30b
 
 # ---- behavior ----
 editor: vim
@@ -8,7 +8,7 @@ editor: vim
 repl_prelude: session:work
 
 # ---- session ----
-save_session: null
+save_session: true
 
 # ---- clients ----
 clients:
