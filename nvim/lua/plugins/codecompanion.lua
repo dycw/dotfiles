@@ -15,18 +15,14 @@ return {
         local strategy = {
             adapter = {
                 name = "qrt_ollama",
-                model = "qwen3-coder:30b",
-                -- model = "gpt-oss:20b",
+                model = "gpt-oss:20b",
             },
         }
         require("codecompanion").setup({
             adapters = {
                 qrt_ollama = function()
                     return require("codecompanion.adapters").extend("ollama", {
-                        env = {
-                            url = "OLLAMA_URL",
-                            api_key = "OLLAMA_API_KEY",
-                        },
+                        env = { url = "OLLAMA_SERVER" },
                         headers = {
                             ["Content-Type"] = "application/json",
                             ["Authorization"] = "Bearer ${api_key}",
