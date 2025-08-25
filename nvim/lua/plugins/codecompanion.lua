@@ -15,7 +15,7 @@ return {
         local strategy = {
             adapter = {
                 name = "my_ollama",
-                model = "gpt-oss:20b",
+                model = "qwen3-coder:30b",
             },
         }
         require("codecompanion").setup({
