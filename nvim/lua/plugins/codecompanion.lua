@@ -20,11 +20,9 @@ return {
         }
         require("codecompanion").setup({
             adapters = {
-                mqy_ollama = function()
+                my_ollama = function()
                     return require("codecompanion.adapters").extend("ollama", {
-                        env = {
-                            url = "OLLAMA_SERVER",
-                        },
+                        env = { url = "OLLAMA_SERVER" },
                         headers = {
                             ["Content-Type"] = "application/json",
                             ["Authorization"] = "Bearer ${api_key}",
