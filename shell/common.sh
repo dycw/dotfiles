@@ -22,11 +22,11 @@ if command -v aichat >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			echo_date "'acs' accepts [1..) arguments" && return 1
 		elif [ $# -eq 1 ]; then
-			aichat --session="dw-code:$1"
+			aichat --role='dw-code' --session="$1"
 		else
 			__session="$1"
 			shift
-			aichat --session="dw-code:${__session}" "$*"
+			aichat --role='dw-code' --session="${__session}" "$*"
 		fi
 	}
 	as() {
