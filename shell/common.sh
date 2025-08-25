@@ -29,8 +29,12 @@ if command -v aichat >/dev/null 2>&1; then
 	}
 	as() {
 		if [ $# -eq 0 ]; then
-			aichat --session="${__session}"
+			echo_date "'as' accepts [1..) arguments" && return 1
+		elif [ $# -eq 1 ]; then
+			aichat --session="$1"
 		else
+			__session="$1"
+			shift
 			aichat --session="${__session}" "$*"
 		fi
 	}
