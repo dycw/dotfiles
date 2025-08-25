@@ -4,14 +4,39 @@
 
 # aichat
 if command -v aichat >/dev/null 2>&1; then
-	a() { aichat --role='%code%' "$@"; }
+	a() {
+		if [ $# -eq 0 ]; then
+			aichat
+		else
+			aichat "$*"
+		fi
+	}
+	ac() {
+		if [ $# -eq 0 ]; then
+			aichat --role='%code%'
+		else
+			aichat --role='%code%' "$*"
+		fi
+	}
+	acs() {
+		if [ $# -eq 0 ]; then
+			aichat --session="%code%:${__session}"
+		else
+			__session="$1"
+			shift
+			aichat --session="%code%:${__session}" "$*"
+		fi
+	}
 	as() {
 		if [ $# -eq 0 ]; then
 			echo_date "'as' accepts [1..) arguments" && return 1
+		elif [ $# -eq 1 ]; then
+			aichat --session="$1"
+		else
+			__session="$1"
+			shift
+			aichat --session="${__session}" "$*"
 		fi
-		__session="$1"
-		shift
-		aichat --session="%code%:${__session}" "$@"
 	}
 fi
 

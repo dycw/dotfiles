@@ -288,6 +288,7 @@ if [ -n "${IS_MAC_MINI}" ]; then
 	else
 		echo_date "Installing 'rust'..."
 		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+		rustup default stable
 	fi
 fi
 
