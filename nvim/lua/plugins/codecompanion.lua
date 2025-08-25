@@ -24,8 +24,7 @@ return {
                 qrt_ollama = function()
                     return require("codecompanion.adapters").extend("ollama", {
                         env = {
-                            url = "OLLAMA_URL",
-                            api_key = "OLLAMA_API_KEY",
+                            url = "OLLAMA_SERVER",
                         },
                         headers = {
                             ["Content-Type"] = "application/json",
