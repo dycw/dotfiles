@@ -14,14 +14,13 @@ return {
 
         local strategy = {
             adapter = {
-                name = "qrt_ollama",
-                model = "qwen3-coder:30b",
-                -- model = "gpt-oss:20b",
+                name = "my_ollama",
+                model = "gpt-oss:20b",
             },
         }
         require("codecompanion").setup({
             adapters = {
-                qrt_ollama = function()
+                mqy_ollama = function()
                     return require("codecompanion.adapters").extend("ollama", {
                         env = {
                             url = "OLLAMA_SERVER",
