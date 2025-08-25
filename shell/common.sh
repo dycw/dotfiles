@@ -4,14 +4,14 @@
 
 # aichat
 if command -v aichat >/dev/null 2>&1; then
-	a() { aichat "$@"; }
+	a() { aichat --role='%code%' "$@"; }
 	as() {
 		if [ $# -eq 0 ]; then
-			echo_date "'ancestor' accepts [1..) arguments" && return 1
+			echo_date "'as' accepts [1..) arguments" && return 1
 		fi
 		__session="$1"
 		shift
-		aichat --session="$1" "$@"
+		aichat --session="%code%:${__session}" "$@"
 	}
 fi
 

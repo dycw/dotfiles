@@ -33,7 +33,7 @@
   },
   "codecompanion.nvim": {
     "branch": "main",
-    "commit": "53b6f5041704edfef3b2d1f6731769d03563bdb9"
+    "commit": "b02a7da50e8d1ee473a31f79152dcdf8f7abf5d5"
   },
   "comment.nvim": {
     "branch": "master",
@@ -97,7 +97,7 @@
   },
   "lsp_signature.nvim": {
     "branch": "master",
-    "commit": "2b30d8582126a12a493b737e9761969eb869a05b"
+    "commit": "c6aeb2f1d2538bbdfdaab1664d9d4c3c75aa9db8"
   },
   "lualine.nvim": {
     "branch": "master",
@@ -161,7 +161,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "16878c7a018cba66a6e990286bdb6afc29ca13d3"
+    "commit": "aaa807fb2ea8d3caf41c153a174c6b7e472a8428"
   },
   "nvim-neoclip.lua": {
     "branch": "main",
@@ -205,7 +205,7 @@
   },
   "nvim-web-devicons": {
     "branch": "master",
-    "commit": "c2599a81ecabaae07c49ff9b45dcd032a8d90f1a"
+    "commit": "6b2d69fc1866024f338ed51eaa2d229852d203ee"
   },
   "plenary.nvim": {
     "branch": "master",
@@ -217,7 +217,7 @@
   },
   "render-markdown.nvim": {
     "branch": "main",
-    "commit": "c4ff9acddcf0f79b3187393319adb5cac5865bd3"
+    "commit": "b7dad793f4750b7e95884c0db374b917898a979b"
   },
   "rustaceanvim": {
     "branch": "master",
