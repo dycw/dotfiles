@@ -13,18 +13,20 @@ if command -v aichat >/dev/null 2>&1; then
 	}
 	ac() {
 		if [ $# -eq 0 ]; then
-			aichat --role='%code%'
+			aichat --role='dw-code'
 		else
-			aichat --role='%code%' "$*"
+			aichat --role='dw-code' "$*"
 		fi
 	}
 	acs() {
 		if [ $# -eq 0 ]; then
-			aichat --session="%code%:${__session}"
+			echo_date "'acs' accepts [1..) arguments" && return 1
+		elif [ $# -eq 1 ]; then
+			aichat --role='dw-code' --session="$1"
 		else
 			__session="$1"
 			shift
-			aichat --session="%code%:${__session}" "$*"
+			aichat --role='dw-code' --session="${__session}" "$*"
 		fi
 	}
 	as() {
