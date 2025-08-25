@@ -186,6 +186,7 @@ brew_install() {
 brew_install aichat
 [ -n "${IS_MAC_MINI}" ] && brew_install autoconf # for c
 [ -n "${IS_MAC_MINI}" ] && brew_install automake # for c
+[ -n "${IS_MAC_MINI}" ] && brew_install bacon
 brew_install bat
 brew_install btm bottom
 brew_install bump-my-version
