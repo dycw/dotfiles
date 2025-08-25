@@ -242,7 +242,6 @@ brew_install uv
 [ -n "${IS_MAC_MINI}" ] && brew_install vlc --cask
 [ -n "${IS_MAC}" ] && brew_install watch
 brew_install watchexec
-[ -n "${IS_MAC}" ] && brew_install wezterm --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install whatsapp --cask
 [ -n "${IS_UBUNTU}" ] && brew_install xclip
 [ -n "${IS_UBUNTU}" ] && brew_install xsel
