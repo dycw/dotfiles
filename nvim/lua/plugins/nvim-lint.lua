@@ -10,7 +10,6 @@ return {
             haskell = { "hlint" },
             lua = { "luacheck" },
             python = { "ruff" },
-            rust = { "rust_analyzer" },
             sh = { "shellcheck" },
             sql = { "sqlfluff" },
             zsh = { "shellcheck" },
