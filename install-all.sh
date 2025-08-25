@@ -201,6 +201,7 @@ brew_install eza
 brew_install fd
 brew_install fzf
 brew_install gh
+brew_install ghostty --cask
 brew_install glab
 [ -n "${IS_MAC}" ] && brew_install gitweb yoannfleurydev/gitweb/gitweb
 [ -n "${IS_MAC}" ] && brew_install gsed gnu-sed
