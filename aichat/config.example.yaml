@@ -1,5 +1,5 @@
 # ---- llm ----
-model: qrt-gpt:qwen3-coder:30b
+model: qrt-gpt:gpt-oss:20b
 
 # ---- behavior ----
 keybindings: vi
