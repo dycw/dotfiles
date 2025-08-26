@@ -386,6 +386,15 @@ ls.add_snippets("python", {
             "",
         }),
     }),
+    s("with-raises", {
+        t("with raises("),
+        i(1, "Exception"),
+        t(', match="'),
+        i(2, "match"),
+        t('") as error:'),
+        t(""),
+        t("    pass"),
+    }),
 
     -- pytest-benchmark
     s("py-benchmark-fixture", { t({ "from pytest_benchmark.fixture import BenchmarkFixture", "" }) }),
