@@ -115,17 +115,17 @@ format = '[${symbol}${version}](${style})'
 version_format = '${raw}'
 
 [python]
-format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )](${style})'
+format = '[${symbol}${pyenv_prefix}(\($virtualenv\) )](${style})'
 version_format = '${raw}'
 
 [rust]
-format = '[$symbol($version )](${style})'
+format = '[${symbol}](${style})'
 version_format = '${raw}'
 
 [time]
 disabled = false
-format = '[$time](${style})'
+format = '[${time}](${style})'
 time_format = '%F %T'
 
 [username]
-format = '[$user](${style})'
+format = '[${user}](${style})'
