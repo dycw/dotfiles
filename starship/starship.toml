@@ -1,6 +1,5 @@
 format = """
-${time}${username}${hostname}${localip}${shlvl}\
-${singularity}${kubernetes}${directory}\
+${time}${directory}${username}${hostname}${localip}${shlvl}\
 ${vcsh}${fossil_branch}${fossil_metrics}${git_branch}${git_commit}${git_state}${git_metrics}${git_status}${hg_branch}${pijul_channel}${docker_context}\
 ${package}\
 ${c}${cmake}${cobol}${daml}${dart}${deno}${dotnet}${elixir}${elm}${erlang}${fennel}${gleam}${golang}${guix_shell}${haskell}${haxe}${helm}${java}${julia}${kotlin}${gradle}${lua}${nim}${nodejs}${ocaml}${opa}${perl}${php}${pulumi}${purescript}${python}${quarto}${raku}${rlang}${red}${ruby}${rust}${scala}${solidity}${swift}${terraform}${typst}${vlang}${vagrant}${zig}\
@@ -54,4 +53,5 @@ style = 'bold blue'
 time_format = '%F %T'
 
 [username]
-format = '[${user}](${style}) '
+format = '[${user}](${style})@'
+show_always = true
