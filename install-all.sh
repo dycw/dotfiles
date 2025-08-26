@@ -214,7 +214,7 @@ brew_install luacheck
 brew_install nvim neovim
 [ -n "${IS_MAC_MINI}" ] && brew_install pgadmin4 --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install pgcli
-[ -n "${IS_MAC}" ] && brew_install postgres postgresql@17
+[ -n "${IS_MAC_MINI}" ] && brew_install postgres postgresql@17
 [ -n "${IS_MAC_MINI}" ] && brew_install postico --cask
 brew_install pre-commit
 brew_install prettier
