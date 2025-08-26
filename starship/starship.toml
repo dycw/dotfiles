@@ -2,9 +2,20 @@
 truncation_length = 8
 truncation_symbol = ".../"
 
+[git_branch]
+format = "[$symbol$branch(:$remote_branch)]($style) "
+
 [hostname]
-format = '[$ssh_symbol$hostname]($style) '
+format = "[$ssh_symbol$hostname]($style) "
 ssh_only = false
 
+[package]
+format = "[$symbol$version]($style) "
+version_format = "${raw}"
+
+[python]
+format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+version_format = "${raw}"
+
 [username]
-format = '[$user]($style) '
+format = "[$user]($style) "
