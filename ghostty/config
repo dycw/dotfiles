@@ -1,2 +1,3 @@
 font-family = Monaco
+shell-integration-features = sudo
 theme = tokyonight
