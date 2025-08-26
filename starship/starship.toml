@@ -3,4 +3,8 @@ truncation_length = 8
 truncation_symbol = ".../"
 
 [hostname]
+format = '[$ssh_symbol$hostname]($style) '
 ssh_only = false
+
+[username]
+format = '[$user]($style) '
