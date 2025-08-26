@@ -21,5 +21,9 @@ version_format = '${raw}'
 format = '[$symbol($version )]($style)'
 version_format = '${raw}'
 
+[time]
+disabled = false
+format = '[$time]($style) '
+
 [username]
 format = '[$user]($style) '
