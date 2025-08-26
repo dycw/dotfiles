@@ -205,7 +205,7 @@ brew_install ghostty --cask
 brew_install glab
 [ -n "${IS_MAC}" ] && brew_install gitweb yoannfleurydev/gitweb/gitweb
 [ -n "${IS_MAC}" ] && brew_install gsed gnu-sed
-[ -n "${IS_MAC}" ] && brew_install iperf3
+[ -n "${IS_MAC_MINI}" ] && brew_install iperf3
 brew_install jq
 brew_install just
 [ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
@@ -213,8 +213,8 @@ brew_install luacheck
 [ -n "${IS_MAC_MINI}" ] && brew_install maturin
 brew_install nvim neovim
 [ -n "${IS_MAC_MINI}" ] && brew_install pgadmin4 --cask
-brew_install pgcli
-[ -n "${IS_MAC}" ] && brew_install postgres postgresql@17
+[ -n "${IS_MAC_MINI}" ] && brew_install pgcli
+[ -n "${IS_MAC_MINI}" ] && brew_install postgres postgresql@17
 [ -n "${IS_MAC_MINI}" ] && brew_install postico --cask
 brew_install pre-commit
 brew_install prettier
@@ -229,10 +229,9 @@ brew_install rust-analyzer
 brew_install shellcheck
 brew_install shfmt
 [ -n "${IS_MAC_MINI}" ] && brew_install spotify --cask
-brew_install sshpass
 brew_install starship
 brew_install stylua
-brew_install syncthing
+[ -n "${IS_MAC_MINI}" ] && brew_install syncthing
 brew_install tailscale
 brew_install tmux
 brew_install topgrade

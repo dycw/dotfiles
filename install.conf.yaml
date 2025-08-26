@@ -19,8 +19,7 @@
       description: Installing submodules...
 
 - link:
-    ~/.config/aichat/config.yaml: aichat/config.yaml
-    ~/.config/aichat/roles: aichat/roles
+    ~/.config/aichat: aichat
     ~/.config/bottom/bottom.toml: bottom/bottom.toml
     ~/.config/direnv/direnv.toml: direnv/direnv.toml
     ~/.config/direnv/direnvrc: direnv/direnvrc
