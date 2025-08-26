@@ -39,7 +39,6 @@ version_format = '${raw}'
 
 [hostname]
 format = '[${ssh_symbol}${hostname}](${style}) '
-ssh_only = false
 ssh_symbol = '🌐'
 
 [nodejs]
