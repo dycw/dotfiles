@@ -26,10 +26,10 @@ truncation_length = 8
 truncation_symbol = '.../'
 
 [git_branch]
-format = '[${symbol}${branch}(:${remote_branch})](${style})'
+format = '[${symbol}${branch}(:${remote_branch})](${style}) '
 
 [golang]
-format = '[${symbol}](${style})'
+format = '[${symbol}](${style}) '
 version_format = '${raw}'
 
 [hostname]
@@ -37,8 +37,7 @@ format = '[${ssh_symbol}${hostname}](${style}) '
 ssh_only = false
 
 [package]
-format = '[${symbol}${version}](${style}) '
-version_format = '${raw}'
+disabled = true
 
 [python]
 format = '[${symbol}](${style}) '
