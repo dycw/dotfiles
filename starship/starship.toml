@@ -24,6 +24,7 @@ version_format = '${raw}'
 [time]
 disabled = false
 format = '[$time]($style) '
+time_format = '%F %T'
 
 [username]
 format = '[$user]($style) '
