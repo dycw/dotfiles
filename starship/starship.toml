@@ -1,3 +1,97 @@
+format = """
+${time} ${username}\
+${hostname}\
+${localip}\
+${shlvl}\
+${singularity}\
+${kubernetes}\
+${directory}\
+${vcsh}\
+${fossil_branch}\
+${fossil_metrics}\
+${git_branch}\
+${git_commit}\
+${git_state}\
+${git_metrics}\
+${git_status}\
+${hg_branch}\
+${pijul_channel}\
+${docker_context}\
+${package}\
+${c}\
+${cmake}\
+${cobol}\
+${daml}\
+${dart}\
+${deno}\
+${dotnet}\
+${elixir}\
+${elm}\
+${erlang}\
+${fennel}\
+${gleam}\
+${golang}\
+${guix_shell}\
+${haskell}\
+${haxe}\
+${helm}\
+${java}\
+${julia}\
+${kotlin}\
+${gradle}\
+${lua}\
+${nim}\
+${nodejs}\
+${ocaml}\
+${opa}\
+${perl}\
+${php}\
+${pulumi}\
+${purescript}\
+${python}\
+${quarto}\
+${raku}\
+${rlang}\
+${red}\
+${ruby}\
+${rust}\
+${scala}\
+${solidity}\
+${swift}\
+${terraform}\
+${typst}\
+${vlang}\
+${vagrant}\
+${zig}\
+${buf}\
+${nix_shell}\
+${conda}\
+${meson}\
+${spack}\
+${memory_usage}\
+${aws}\
+${gcloud}\
+${openstack}\
+${azure}\
+${nats}\
+${direnv}\
+${env_var}\
+${mise}\
+${crystal}\
+${custom}\
+${sudo}\
+${cmd_duration}\
+${line_break}\
+${jobs}\
+${battery}\
+${time}\
+${status}\
+${os}\
+${container}\
+${netns}\
+${shell}\
+${character}"""
+
 [[battery.display]]
 threshold = 20
 
@@ -6,32 +100,32 @@ truncation_length = 8
 truncation_symbol = '.../'
 
 [git_branch]
-format = '[$symbol$branch(:$remote_branch)]($style) '
+format = '[$symbol$branch(:$remote_branch)](${style})'
 
-[go]
-format = '[$symbol($version )]($style)'
+[golang]
+format = '[$symbol($version)](${style})'
 version_format = '${raw}'
 
 [hostname]
-format = '[$ssh_symbol$hostname]($style) '
+format = '[$ssh_symbol$hostname](${style})'
 ssh_only = false
 
 [package]
-format = '[$symbol$version]($style) '
+format = '[${symbol}${version}](${style})'
 version_format = '${raw}'
 
 [python]
-format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )](${style})'
 version_format = '${raw}'
 
 [rust]
-format = '[$symbol($version )]($style)'
+format = '[$symbol($version )](${style})'
 version_format = '${raw}'
 
 [time]
 disabled = false
-format = '[$time]($style) '
+format = '[$time](${style})'
 time_format = '%F %T'
 
 [username]
-format = '[$user]($style) '
+format = '[$user](${style})'
