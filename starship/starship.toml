@@ -27,7 +27,7 @@ format = '[${duration}](${style}) '
 
 [directory]
 truncation_length = 8
-truncation_symbol = '.../'
+truncation_symbol = './'
 
 [git_branch]
 format = '[${symbol}${branch}(:${remote_branch})](${style}) '
