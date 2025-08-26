@@ -5,6 +5,10 @@ model: qrt-gpt:gpt-oss:20b
 keybindings: vi
 editor: nvim
 
+# ---- prelude ----
+repl_prelude: role:general
+cmd_prelude: role:general
+
 # ---- session ----
 save_session: true
 
