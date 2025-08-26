@@ -201,6 +201,7 @@ brew_install eza
 brew_install fd
 brew_install fzf
 brew_install gh
+brew_install ghostty --cask
 brew_install glab
 [ -n "${IS_MAC}" ] && brew_install gitweb yoannfleurydev/gitweb/gitweb
 [ -n "${IS_MAC}" ] && brew_install gsed gnu-sed
@@ -241,12 +242,10 @@ brew_install uv
 [ -n "${IS_MAC_MINI}" ] && brew_install vlc --cask
 [ -n "${IS_MAC}" ] && brew_install watch
 brew_install watchexec
-[ -n "${IS_MAC}" ] && brew_install wezterm --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install whatsapp --cask
 [ -n "${IS_UBUNTU}" ] && brew_install xclip
 [ -n "${IS_UBUNTU}" ] && brew_install xsel
-[ -n "${IS_MAC}" ] && brew_install yq
-[ -n "${IS_MAC_MINI}" ] && brew_install zoom --cask
+brew_install yq
 [ -n "${IS_MAC}" ] && brew_install zoom --cask
 brew_install zoxide
 # brew/fzf
