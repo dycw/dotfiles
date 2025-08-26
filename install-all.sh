@@ -205,7 +205,7 @@ brew_install ghostty --cask
 brew_install glab
 [ -n "${IS_MAC}" ] && brew_install gitweb yoannfleurydev/gitweb/gitweb
 [ -n "${IS_MAC}" ] && brew_install gsed gnu-sed
-[ -n "${IS_MAC}" ] && brew_install iperf3
+[ -n "${IS_MAC_MINI}" ] && brew_install iperf3
 brew_install jq
 brew_install just
 [ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
