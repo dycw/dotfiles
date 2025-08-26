@@ -33,26 +33,27 @@ truncation_symbol = '.../'
 format = '[${symbol}${branch}(:${remote_branch})](${style}) '
 
 [golang]
-format = '[${symbol}](${style}) '
+format = '[${symbol}](${style})'
 version_format = '${raw}'
 
 [hostname]
 format = '[${ssh_symbol}${hostname}](${style}) '
 ssh_only = false
+ssh_symbol = '🌐'
 
 [nodejs]
-format = '[${symbol}](${style}) '
+format = '[${symbol}](${style})'
 version_format = '${raw}'
 
 [package]
 disabled = true
 
 [python]
-format = '[${symbol}](${style}) '
+format = '[${symbol}](${style})'
 version_format = '${raw}'
 
 [rust]
-format = '[${symbol}](${style}) '
+format = '[${symbol}](${style})'
 version_format = '${raw}'
 
 [time]
