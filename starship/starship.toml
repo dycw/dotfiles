@@ -56,4 +56,3 @@ time_format = '%F %T'
 
 [username]
 format = '[${user}](${style})@'
-show_always = true
