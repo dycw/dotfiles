@@ -229,7 +229,6 @@ brew_install rust-analyzer
 brew_install shellcheck
 brew_install shfmt
 [ -n "${IS_MAC_MINI}" ] && brew_install spotify --cask
-brew_install sshpass
 brew_install starship
 brew_install stylua
 [ -n "${IS_MAC_MINI}" ] && brew_install syncthing
