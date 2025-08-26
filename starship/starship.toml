@@ -37,6 +37,10 @@ version_format = '${raw}'
 format = '[${ssh_symbol}${hostname}](${style}) '
 ssh_only = false
 
+[nodejs]
+format = '[${symbol}](${style}) '
+version_format = '${raw}'
+
 [package]
 disabled = true
 
@@ -55,4 +59,4 @@ style = 'bold blue'
 time_format = '%F %T'
 
 [username]
-format = '[${user}](${style})@'
+format = '[${user}](${style}) '
