@@ -22,6 +22,9 @@ ${character}"""
 [[battery.display]]
 threshold = 20
 
+[cmd_duration]
+format = '[${duration}](${style}) '
+
 [directory]
 truncation_length = 8
 truncation_symbol = '.../'
