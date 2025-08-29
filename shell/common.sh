@@ -231,6 +231,15 @@ clear_debug() {
 	unset DEBUG
 }
 
+# dns
+refresh_dns() {
+	if [ $# -ne 0 ]; then
+		echo_date "'refresh_dns' accepts no arguments" && return 1
+	fi
+	sudo dscacheutil -flushcache
+	sudo killall -HUP mDNSResponder
+}
+
 # direnv
 if command -v direnv >/dev/null 2>&1; then
 	dea() {
