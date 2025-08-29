@@ -240,7 +240,6 @@ brew_install uv
 [ -n "${IS_MAC_MINI}" ] && brew_install vlc --cask
 [ -n "${IS_MAC}" ] && brew_install watch
 brew_install watchexec
-[ -n "${IS_MAC}" ] && brew_install wezterm --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install whatsapp --cask
 [ -n "${IS_UBUNTU}" ] && brew_install xclip
 [ -n "${IS_UBUNTU}" ] && brew_install xsel
@@ -357,17 +356,3 @@ set_systemctl() {
 }
 [ -n "${IS_UBUNTU}" ] && set_systemctl redis-server
 [ -n "${IS_UBUNTU}" ] && set_systemctl ssh
-
-# ubuntu/wezterm
-if [ -n "${IS_UBUNTU}" ]; then
-	if command -v wezterm >/dev/null 2>&1; then
-		echo_date "'wezterm' is already installed"
-	else
-		echo_date "Installing 'wezterm'..."
-		curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg
-		echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list
-		sudo chmod 644 /usr/share/keyrings/wezterm-fury.gpg
-		sudo apt update
-		sudo apt install wezterm
-	fi
-fi
