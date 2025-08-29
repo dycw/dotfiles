@@ -230,7 +230,7 @@ brew_install shfmt
 [ -n "${IS_MAC_MINI}" ] && brew_install spotify --cask
 brew_install starship
 brew_install stylua
-[ -n "${IS_MAC_MINI}" ] && brew_install syncthing
+[ -n "${IS_MAC_MINI_DW}" ] && brew_install syncthing
 brew_install tailscale
 brew_install tmux
 brew_install topgrade
@@ -276,7 +276,7 @@ brew_services() {
 }
 [ -n "${IS_MAC_MINI}" ] && brew_services postgresql@17
 [ -n "${IS_MAC_MINI}" ] && brew_services redis
-[ -n "${IS_MAC_MINI}" ] && brew_services syncthing
+[ -n "${IS_MAC_MINI_DW}" ] && brew_services syncthing
 [ -n "${IS_MAC_MINI}" ] && brew_services tailscale
 
 # mac mini/rust
