@@ -899,10 +899,7 @@ EOF
 			--blocksize=*) __blocksize="${1#*=}" ;;
 			--error=*) __error="${1#*=}" ;;
 			--all) __all=1 ;;
-			--help)
-				usage
-				return $?
-				;;
+			--help) usage ;;
 			--*)
 				echo_date "ERROR: Unknown option '$1'"
 				usage
