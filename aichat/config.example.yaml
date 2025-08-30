@@ -1,5 +1,5 @@
 # ---- llm ----
-model: qrt-gpt:gpt-oss:20b
+model: gpt:gpt-oss
 
 # ---- behavior ----
 keybindings: vi
@@ -14,13 +14,15 @@ save_session: true
 
 # ---- clients ----
 clients:
-  - type: openai-compatible
-    name: qrt-gpt
+  - name: gpt
+    type: openai-compatible
     api_base: http://???.???.???.???:???/v1
-    models:
-      - name: gpt-oss:20b
-  - type: openai-compatible
-    name: qrt-qwen3
+  - name: qwen30b
+    type: openai-compatible
     api_base: http://???.???.???.???:???/v1
-    models:
-      - name: qwen3-coder:30b
+  - name: qwen30bmlx
+    type: openai-compatible
+    api_base: http://???.???.???.???:???/v1
+  - name: qwen7b
+    type: openai-compatible
+    api_base: http://???.???.???.???:???/v1
