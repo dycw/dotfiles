@@ -40,6 +40,7 @@ version_format = '${raw}'
 
 [hostname]
 format = '[${ssh_symbol}${hostname}](${style}) '
+ssh_only = false
 ssh_symbol = '🌐'
 
 [nodejs]
@@ -65,3 +66,4 @@ time_format = '%F %T'
 
 [username]
 format = '[${user}](${style}) '
+show_always = true
