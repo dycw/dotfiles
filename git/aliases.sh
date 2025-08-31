@@ -155,28 +155,29 @@ if command -v git >/dev/null 2>&1; then
 		git checkout "${__branch}" && gpl
 	}
 	gcob() {
-		unset __title __num __desc
 		if [ $# -eq 0 ]; then
 			if ! __is_current_branch_master; then
 				echo_date "'gcob' off 'master' requires 1 argument 'branch'" && return 1
 			fi
-			__branch='dev'
+			unset __gcob_title __gcob_num __gcob_desc
+			__gcob_branch='dev'
 		elif [ $# -eq 1 ]; then
-			__title="$1"
-			__branch="$(__to_valid_branch "${__title}")"
+			unset __gcob_num __gcob_desc
+			__gcob_title="$1"
+			__gcob_branch="$(__to_valid_branch "${__gcob_title}")"
 		elif [ $# -eq 2 ]; then
-			__title="$1"
-			__num="$2"
-			__desc="$(__to_valid_branch "${__title}")"
-			__branch="$2-${__desc}"
+			__gcob_title="$1"
+			__gcob_num="$2"
+			__gcob_desc="$(__to_valid_branch "${__gcob_title}")"
+			__gcob_branch="$2-${__gcob_desc}"
 		else
 			echo_date "'gcob' accepts [0..2] arguments" && return 1
 		fi
-		gf && git checkout -b "${__branch}" origin/master && return $?
-		if (command -v gh >/dev/null 2>&1) && [ $# -eq 1 ] && [ -n "${__title}" ]; then
-			gp && __git_commit_empty_auto_message && gp && ghc "${__title}"
-		elif (command -v gh >/dev/null 2>&1) && [ $# -eq 2 ] && [ -n "${__title}" ] && [ -n "${__num}" ]; then
-			gp && __git_commit_empty_auto_message && gp && ghc "${__title}" "${__num}"
+		gf && git checkout -b "${__gcob_branch}" origin/master && return $?
+		if (command -v gh >/dev/null 2>&1) && [ $# -eq 1 ] && [ -n "${__gcob_title}" ]; then
+			gp && __git_commit_empty_auto_message && gp && ghc "${__gcob_title}"
+		elif (command -v gh >/dev/null 2>&1) && [ $# -eq 2 ] && [ -n "${__gcob_title}" ] && [ -n "${__gcob_num}" ]; then
+			gp && __git_commit_empty_auto_message && gp && ghc "${__gcob_title}" "${__gcob_num}"
 		fi
 	}
 	gcobt() {
