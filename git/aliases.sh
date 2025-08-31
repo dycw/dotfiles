@@ -135,24 +135,21 @@ if command -v git >/dev/null 2>&1; then
 			echo_date "'gcmd' accepts no arguments" && return 1
 		fi
 		if __is_current_branch_master; then
-			gcof
-			gcm
+			gcof && gcm
 		else
 			__gcmd_branch="$(current_branch)"
-			gcof
-			gcm
-			gbd "${__gcmd_branch}"
+			gcof && gcm && gbd "${__gcmd_branch}"
 		fi
 	}
 	gco() {
 		if [ $# -eq 0 ]; then
-			__branch="$(__select_local_branch)"
+			__gco_branch="$(__select_local_branch)"
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__gco_branch="$1"
 		else
 			echo_date "'gco' accepts [0..1] arguments" && return 1
 		fi
-		git checkout "${__branch}" && gpl
+		git checkout "${__gco_branch}" && gpl
 	}
 	gcob() {
 		if [ $# -eq 0 ]; then
@@ -230,10 +227,8 @@ if command -v git >/dev/null 2>&1; then
 		elif __is_current_branch_master; then
 			echo_date "'gbr' cannot be run on master" && return 1
 		else
-			__gbr_branch="$(current_branch)" # do not name '__branch'
-			gcof
-			gcm
-			gcob "${__gbr_branch}"
+			__gbr_branch="$(current_branch)"
+			gcof && gcm && gcob "${__gbr_branch}"
 		fi
 	}
 	# cherry-pick
