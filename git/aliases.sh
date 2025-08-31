@@ -594,8 +594,8 @@ if command -v gh >/dev/null 2>&1; then
 		elif [ $# -eq 1 ]; then
 			unset __ghiv_branch
 			__ghiv_num="$1"
-			if [ "$1" -eq "$1" ] 2>/dev/null; then
-				gh issue view "$1" -w
+			if [ "${__ghiv_num}" -eq "${__ghiv_num}" ] 2>/dev/null; then
+				gh issue view "${__ghiv_num}" -w
 			else
 				echo_date "'ghiv' requries an integer" && return 1
 			fi
@@ -642,48 +642,48 @@ if command -v gh >/dev/null 2>&1; then
 		if [ $# -ne 4 ]; then
 			echo_date "'__gh_pr_create_or_edit_web' requires 4 arguments" && return 1
 		fi
-		__gh_pr_create_or_edit_verb="$1"
-		__gh_pr_create_or_edit_title="$2"
-		__gh_pr_create_or_edit_body="$3"
-		__gh_pr_create_or_edit_web="$4"
-		if [ -z "${__gh_pr_create_or_edit_title}" ]; then
-			__gh_pr_create_or_edit_title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
+		__gh_pr_ce_verb="$1"
+		__gh_pr_ce_title="$2"
+		__gh_pr_ce_body="$3"
+		__gh_pr_ce_web="$4"
+		if [ -z "${__gh_pr_ce_title}" ]; then
+			__gh_pr_ce_title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
 		fi
-		if [ -n "${__gh_pr_create_or_edit_body}" ] && __is_int "${__gh_pr_create_or_edit_body}"; then
-			__gh_pr_create_or_edit_body="Closes #${__gh_pr_create_or_edit_body}"
+		if [ -n "${__gh_pr_ce_body}" ] && __is_int "${__gh_pr_ce_body}"; then
+			__gh_pr_ce_body="Closes #${__gh_pr_ce_body}"
 		fi
-		gh pr "${__gh_pr_create_or_edit_verb}" -t="${__gh_pr_create_or_edit_title}" -b="${__gh_pr_create_or_edit_body}" || return $?
-		if [ "${__gh_pr_create_or_edit_web}" -eq 0 ]; then
+		gh pr "${__gh_pr_ce_verb}" -t="${__gh_pr_ce_title}" -b="${__gh_pr_ce_body}" || return $?
+		if [ "${__gh_pr_ce_web}" -eq 0 ]; then
 			:
-		elif [ "${__gh_pr_create_or_edit_web}" -eq 1 ]; then
+		elif [ "${__gh_pr_ce_web}" -eq 1 ]; then
 			ghv
 		else
-			echo_date "'__gh_pr_create_or_edit_web' accepts {0, 1} for the 'web' flag; got ${__gh_pr_create_or_edit_web}" && return 1
+			echo_date "'__gh_pr_create_or_edit' accepts {0, 1} for the 'web' flag; got ${__gh_pr_ce_web}" && return 1
 		fi
 	}
 	__gh_pr_merge() {
 		if [ $# -ne 2 ]; then
 			echo_date "'__gh_pr_merge' requires 2 arguments" && return 1
 		fi
-		__gh_pr_merge_delete="$1"
-		__gh_pr_merge_view="$2"
-		__gh_pr_merge_branch="$(current_branch)"
+		__gh_pr_m_delete="$1"
+		__gh_pr_m_view="$2"
+		__gh_pr_m_branch="$(current_branch)"
 		gh pr merge -s --auto || return $?
-		if [ "${__gh_pr_merge_delete}" -eq 0 ]; then
+		if [ "${__gh_pr_m_delete}" -eq 0 ]; then
 			:
-		elif [ "${__gh_pr_merge_delete}" -eq 1 ]; then
-			if __branch_exists __gh_pr_merge_branch; then
+		elif [ "${__gh_pr_m_delete}" -eq 1 ]; then
+			if __branch_exists "${__gh_pr_m_branch}"; then
 				gcmd || return $?
 			fi
 		else
-			echo_date "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__gh_pr_merge_delete}" && return 1
+			echo_date "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__gh_pr_m_delete}" && return 1
 		fi
-		if [ "${__gh_pr_merge_view}" -eq 0 ]; then
+		if [ "${__gh_pr_m_view}" -eq 0 ]; then
 			:
-		elif [ "${__gh_pr_merge_view}" -eq 1 ]; then
+		elif [ "${__gh_pr_m_view}" -eq 1 ]; then
 			ghv
 		else
-			echo_date "'__git_pr_merge' accepts {0, 1} for the 'view' flag; got ${__gh_pr_merge_view}" && return 1
+			echo_date "'__git_pr_merge' accepts {0, 1} for the 'view' flag; got ${__gh_pr_m_view}" && return 1
 		fi
 	}
 fi
@@ -729,25 +729,25 @@ if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 		if [ $# -ne 3 ]; then
 			echo_date "'__git_add_gh_pr_create' requires 3 arguments" && return 1
 		fi
-		__git_add_gh_pr_create_first="$1"
-		__git_add_gh_pr_create_second="$2"
-		__git_add_gh_pr_create_view="$3"
+		__ga_gh_pr_c_first="$1"
+		__ga_gh_pr_c_second="$2"
+		__ga_gh_pr_c_view="$3"
 		gac || return $?
-		if [ -z "${__git_add_gh_pr_create_first}" ] && [ -z "${__git_add_gh_pr_create_second}" ]; then
+		if [ -z "${__ga_gh_pr_c_first}" ] && [ -z "${__ga_gh_pr_c_second}" ]; then
 			ghc || return $?
-		elif [ -n "${__git_add_gh_pr_create_first}" ] && [ -z "${__git_add_gh_pr_create_second}" ]; then
-			ghc "${__git_add_gh_pr_create_first}" || return $?
-		elif [ -n "${__git_add_gh_pr_create_first}" ] && [ -n "${__git_add_gh_pr_create_second}" ]; then
-			ghc "${__git_add_gh_pr_create_first}" "${__git_add_gh_pr_create_second}" || return $?
+		elif [ -n "${__ga_gh_pr_c_first}" ] && [ -z "${__ga_gh_pr_c_second}" ]; then
+			ghc "${__ga_gh_pr_c_first}" || return $?
+		elif [ -n "${__ga_gh_pr_c_first}" ] && [ -n "${__ga_gh_pr_c_second}" ]; then
+			ghc "${__ga_gh_pr_c_first}" "${__ga_gh_pr_c_second}" || return $?
 		else
-			echo_date "'__git_add_gh_pr_create' is missing first but got second ${__git_add_gh_pr_create_second}" && return 1
+			echo_date "'__git_add_gh_pr_create' is missing first but got second ${__ga_gh_pr_c_second}" && return 1
 		fi
-		if [ "${__git_add_gh_pr_create_view}" -eq 0 ]; then
+		if [ "${__ga_gh_pr_c_view}" -eq 0 ]; then
 			:
-		elif [ "${__git_add_gh_pr_create_view}" -eq 1 ]; then
+		elif [ "${__ga_gh_pr_c_view}" -eq 1 ]; then
 			ghv
 		else
-			echo_date "'__git_add_gh_pr_create' accepts {0, 1} for the 'view' flag; got ${__git_add_gh_pr_create_view}" && return 1
+			echo_date "'__git_add_gh_pr_create' accepts {0, 1} for the 'view' flag; got ${__ga_gh_pr_c_view}" && return 1
 		fi
 	}
 fi
