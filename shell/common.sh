@@ -740,6 +740,12 @@ fi
 
 # tmux
 if command -v tmux >/dev/null 2>&1; then
+	tmkw() {
+		if [ $# -ne 0 ]; then
+			echo_date "'tmuxkw' accepts no arguments" && return 1
+		fi
+		tmux kill-window
+	}
 	tmux_attach() {
 		if [ $# -eq 0 ]; then
 			__count="$(tmux ls 2>/dev/null | wc -l)"
