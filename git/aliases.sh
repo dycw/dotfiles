@@ -87,7 +87,6 @@ if command -v git >/dev/null 2>&1; then
 	# branch
 	gb() {
 		if [ $# -ne 0 ]; then
-
 			echo_date "'gb' accepts no arguments" && return 1
 		fi
 		git branch -alv --sort=-committerdate
