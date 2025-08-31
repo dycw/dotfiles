@@ -111,8 +111,7 @@ if command -v git >/dev/null 2>&1; then
 		else
 			echo_date "'gbdr' accepts [0..1] arguments" && return 1
 		fi
-		gf
-		git push origin -d "${__branch}"
+		gf && git push origin -d "${__branch}"
 	}
 	gbm() { git branch -m "$1"; }
 	__delete_gone_branches() {
@@ -153,8 +152,7 @@ if command -v git >/dev/null 2>&1; then
 		else
 			echo_date "'gco' accepts [0..1] arguments" && return 1
 		fi
-		git checkout "${__branch}"
-		gpl
+		git checkout "${__branch}" && gpl
 	}
 	gcob() {
 		unset __title __num __desc
@@ -174,18 +172,11 @@ if command -v git >/dev/null 2>&1; then
 		else
 			echo_date "'gcob' accepts [0..2] arguments" && return 1
 		fi
-		gf
-		git checkout -b "${__branch}" origin/master
+		gf && git checkout -b "${__branch}" origin/master && return $?
 		if (command -v gh >/dev/null 2>&1) && [ $# -eq 1 ] && [ -n "${__title}" ]; then
-			gp
-			__git_commit_empty_auto_message
-			gp
-			ghc "${__title}"
+			gp && __git_commit_empty_auto_message && gp && ghc "${__title}"
 		elif (command -v gh >/dev/null 2>&1) && [ $# -eq 2 ] && [ -n "${__title}" ] && [ -n "${__num}" ]; then
-			gp
-			__git_commit_empty_auto_message
-			gp
-			ghc "${__title}" "${__num}"
+			gp && __git_commit_empty_auto_message && gp && ghc "${__title}" "${__num}"
 		fi
 	}
 	gcobt() {
