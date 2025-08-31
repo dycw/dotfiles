@@ -335,8 +335,7 @@ if command -v git >/dev/null 2>&1; then
 		__git_commit_push_message="$2"
 		__git_commit_push_force="$3"
 		__git_commit_push_web="$4"
-		__git_commit "${__git_commit_push_no_verify}" "${__git_commit_push_message}"
-		__git_push "${__git_commit_push_force}" "${__git_commit_push_web}"
+		__git_commit "${__git_commit_push_no_verify}" "${__git_commit_push_message}" && __git_push "${__git_commit_push_force}" "${__git_commit_push_web}"
 	}
 	# diff
 	gd() { git diff "$@"; }
