@@ -691,19 +691,15 @@ if command -v gh >/dev/null 2>&1; then
 	}
 	__gh_pr_merging() {
 		__gh_pr_m_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || return 1
-		echo "__gh_pr_m_branch=$__gh_pr_m_branch"
 		if [ -z "${__gh_pr_m_branch}" ]; then
 			return 1
 		fi
-		__gh_pr_m_json=$(gh pr view --json state,mergedAt,headRefName 2>/dev/null) || return 1
-		echo "__gh_pr_m_json=$__gh_pr_m_json"
+		__gh_pr_m_json=$(gh pr view --json state 2>/dev/null) || return 1
 		__gh_pr_m_state=$(printf "%s" "$__gh_pr_m_json" | jq -r '.state')
-		echo "__gh_pr_m_state=$__gh_pr_m_state"
 		if [ "${__gh_pr_m_state}" = 'CLOSED' ]; then
 			return 1
 		fi
 		__gh_pr_m_repo=$(gh repo view --json nameWithOwner -q .nameWithOwner)
-		echo "__gh_pr_m_repo=$__gh_pr_m_repo"
 		if gh api "repos/${__gh_pr_m_repo}/branches/${__gh_pr_m_branch}" >/dev/null 2>&1; then
 			return 0
 		fi
