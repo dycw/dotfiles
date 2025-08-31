@@ -710,7 +710,8 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			echo_date "Starting 'tailscaled' in the background..."
 			sudo tailscaled &
 			echo_date "Starting 'tailscale'..."
-			sudo tailscale up --auth-key="file:${__file}" \
+			sudo tailscale up --accept-routes \
+				--auth-key="file:${__file}" \
 				--login-server="${TAILSCALE_LOGIN_SERVER}" \
 				--reset
 		}
