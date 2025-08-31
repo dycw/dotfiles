@@ -93,25 +93,25 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gbd() {
 		if [ $# -eq 0 ]; then
-			__branch="$(__select_local_branch)"
+			__gbd_branch="$(__select_local_branch)"
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__gbd_branch="$1"
 		else
 			echo_date "'gbd' accepts [0..1] arguments" && return 1
 		fi
-		if __branch_exists "${__branch}"; then
-			git branch -D "${__branch}"
+		if __branch_exists "${__gbd_branch}"; then
+			git branch -D "${__gbd_branch}"
 		fi
 	}
 	gbdr() {
 		if [ $# -eq 0 ]; then
-			__branch="$(__select_remote_branch)"
+			__gbdr_branch="$(__select_remote_branch)"
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__gbdr_branch="$1"
 		else
 			echo_date "'gbdr' accepts [0..1] arguments" && return 1
 		fi
-		gf && git push origin -d "${__branch}"
+		gf && git push origin -d "${__gbdr_branch}"
 	}
 	gbm() { git branch -m "$1"; }
 	__delete_gone_branches() {
