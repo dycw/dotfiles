@@ -182,15 +182,14 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gcobt() {
 		if [ $# -eq 0 ]; then
-			__branch="$(__select_remote_branch)"
+			__gcobt_branch="$(__select_remote_branch)"
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__gcobt_branch="$1"
 		else
 			echo_date "'gcobt' accepts [0..1] arguments" && return 1
 		fi
 		if __is_current_branch_master; then
-			gf
-			git checkout -b "${__branch}" -t "origin/${__branch}"
+			gf && git checkout -b "${__gcobt_branch}" -t "origin/${__gcobt_branch}"
 		else
 			gco master
 		fi
