@@ -452,11 +452,7 @@ if command -v git >/dev/null 2>&1; then
 		git rebase --skip
 	}
 	# rebase (squash)
-	gsqm() {
-		gf &&
-			git reset --soft "$(git merge-base HEAD master)" &&
-			gcf "$@"
-	}
+	gsqm() { gf && git reset --soft "$(git merge-base HEAD master)" && gcf "$@"; }
 	# reset
 	gr() { git reset "$@"; }
 	grp() { git reset --patch "$@"; }
