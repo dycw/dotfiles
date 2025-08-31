@@ -199,9 +199,9 @@ if command -v git >/dev/null 2>&1; then
 			git checkout -- .
 		else
 			if __is_valid_ref "$1"; then
-				__branch="$1"
+				__gcof_branch="$1"
 				shift
-				git checkout "${__branch}" -- "$@"
+				git checkout "${__gcof_branch}" -- "$@"
 			else
 				git checkout -- "$@"
 			fi
