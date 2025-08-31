@@ -498,13 +498,10 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# status
 	gs() {
-		if [ $# -eq 0 ]; then
-			git status
-		elif [ $# -eq 1 ]; then
-			git status "$1"
-		else
+		if [ $# -ge 2 ]; then
 			echo_date "'gs' accepts [0..1] arguments" && return 1
 		fi
+		git status "$@"
 	}
 	__tree_is_clean() {
 		if [ $# -ne 0 ]; then
@@ -528,13 +525,9 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -ne 2 ]; then
 			echo_date "'gta' accepts 2 arguments" && return 1
 		fi
-		git tag -a "$1" "$2" -m "$1"
-		git push -u origin --tags
+		git tag -a "$1" "$2" -m "$1" && git push -u origin --tags
 	}
-	gtd() {
-		git tag -d "$@"
-		git push -d origin "$@"
-	}
+	gtd() { git tag -d "$@" && git push -d origin "$@"; }
 fi
 
 # gh
