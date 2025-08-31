@@ -245,17 +245,17 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -ne 2 ]; then
 			echo_date "'__git_commit' requires 2 arguments" && return 1
 		fi
-		__no_verify="$1"
-		__message="$2"
-		if [ -z "${__message}" ]; then
-			__message="$(__git_commit_auto_message)"
+		__gc_no_verify="$1"
+		__gc_message="$2"
+		if [ -z "${__gc_message}" ]; then
+			__gc_message="$(__git_commit_auto_message)"
 		fi
-		if [ "${__no_verify}" -eq 0 ]; then
-			git commit -m "${__message}"
-		elif [ "${__no_verify}" -eq 1 ]; then
-			git commit --no-verify -m "${__message}"
+		if [ "${__gc_no_verify}" -eq 0 ]; then
+			git commit -m "${__gc_message}"
+		elif [ "${__gc_no_verify}" -eq 1 ]; then
+			git commit --no-verify -m "${__gc_message}"
 		else
-			echo_date "'_' accepts {0, 1} for the 'no-verify' flag; got ${__no_verify}" && return 1
+			echo_date "'_' accepts {0, 1} for the 'no-verify' flag; got ${__gc_no_verify}" && return 1
 		fi
 	}
 	__git_commit_auto_message() {
@@ -317,12 +317,12 @@ if command -v git >/dev/null 2>&1; then
 		if [ "$#" -ne 4 ]; then
 			echo_date "'__git_commit_push' requires 4 arguments" && return 1
 		fi
-		__git_commit_push_no_verify="$1"
-		__git_commit_push_message="$2"
-		__git_commit_push_force="$3"
-		__git_commit_push_web="$4"
-		__git_commit "${__git_commit_push_no_verify}" "${__git_commit_push_message}" &&
-			__git_push "${__git_commit_push_force}" "${__git_commit_push_web}"
+		__gcp_no_verify="$1"
+		__gcp_message="$2"
+		__gcp_force="$3"
+		__gcp_web="$4"
+		__git_commit "${__gcp_no_verify}" "${__gcp_message}" &&
+			__git_push "${__gcp_force}" "${__gcp_web}"
 	}
 	# diff
 	gd() { git diff "$@"; }
