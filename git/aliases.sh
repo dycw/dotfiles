@@ -335,7 +335,8 @@ if command -v git >/dev/null 2>&1; then
 		__git_commit_push_message="$2"
 		__git_commit_push_force="$3"
 		__git_commit_push_web="$4"
-		__git_commit "${__git_commit_push_no_verify}" "${__git_commit_push_message}" && __git_push "${__git_commit_push_force}" "${__git_commit_push_web}"
+		__git_commit "${__git_commit_push_no_verify}" "${__git_commit_push_message}" &&
+			__git_push "${__git_commit_push_force}" "${__git_commit_push_web}"
 	}
 	# diff
 	gd() { git diff "$@"; }
@@ -408,7 +409,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 		__git_push_force="$1"
 		__git_push_web="$2"
-		__git_push_current_branch "${__git_push_force}"
+		__git_push_current_branch "${__git_push_force}" || return $?
 		if [ "${__git_push_web}" -eq 0 ]; then
 			:
 		elif [ "${__git_push_web}" -eq 1 ]; then
@@ -439,8 +440,7 @@ if command -v git >/dev/null 2>&1; then
 		else
 			echo_date "'grb' accepts [0..1] arguments" && return 1
 		fi
-		gf
-		git rebase -s recursive -X theirs "${__grb_branch}"
+		gf && git rebase -s recursive -X theirs "${__grb_branch}"
 	}
 	grba() {
 		if [ $# -ne 0 ]; then
@@ -462,9 +462,9 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# rebase (squash)
 	gsqm() {
-		gf
-		git reset --soft "$(git merge-base HEAD master)"
-		gcf "$@"
+		gf &&
+			git reset --soft "$(git merge-base HEAD master)" &&
+			gcf "$@"
 	}
 	# reset
 	gr() { git reset "$@"; }
@@ -573,8 +573,8 @@ if command -v gh >/dev/null 2>&1; then
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
 			echo_date "'ghcm' accepts [1..2] arguments" && return 1
 		fi
-		ghc "$@"
-		ghm
+		ghc "$@" &&
+			ghm
 	}
 	ghe() {
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
@@ -675,7 +675,7 @@ if command -v gh >/dev/null 2>&1; then
 		if [ -n "${__gh_pr_create_or_edit_body}" ] && __is_int "${__gh_pr_create_or_edit_body}"; then
 			__gh_pr_create_or_edit_body="Closes #${__gh_pr_create_or_edit_body}"
 		fi
-		gh pr "${__gh_pr_create_or_edit_verb}" -t="${__gh_pr_create_or_edit_title}" -b="${__gh_pr_create_or_edit_body}"
+		gh pr "${__gh_pr_create_or_edit_verb}" -t="${__gh_pr_create_or_edit_title}" -b="${__gh_pr_create_or_edit_body}" || return $?
 		if [ "${__gh_pr_create_or_edit_web}" -eq 0 ]; then
 			:
 		elif [ "${__gh_pr_create_or_edit_web}" -eq 1 ]; then
@@ -691,12 +691,12 @@ if command -v gh >/dev/null 2>&1; then
 		__gh_pr_merge_delete="$1"
 		__gh_pr_merge_view="$2"
 		__gh_pr_merge_branch="$(current_branch)"
-		gh pr merge -s --auto
+		gh pr merge -s --auto || return $?
 		if [ "${__gh_pr_merge_delete}" -eq 0 ]; then
 			:
 		elif [ "${__gh_pr_merge_delete}" -eq 1 ]; then
 			if __branch_exists __gh_pr_merge_branch; then
-				gcmd
+				gcmd || return $?
 			fi
 		else
 			echo_date "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__gh_pr_merge_delete}" && return 1
@@ -743,10 +743,10 @@ if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
 			echo_date "'gaccmd' accepts [1..2] arguments" && return 1
 		fi
-		gac
-		ghc "$@"
-		ghm
-		gcmd
+		gac &&
+			ghc "$@" &&
+			ghm &&
+			gcmd
 	}
 	__git_add_gh_pr_create() {
 		if [ $# -ne 3 ]; then
@@ -755,13 +755,13 @@ if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 		__git_add_gh_pr_create_first="$1"
 		__git_add_gh_pr_create_second="$2"
 		__git_add_gh_pr_create_view="$3"
-		gac
+		gac || return $?
 		if [ -z "${__git_add_gh_pr_create_first}" ] && [ -z "${__git_add_gh_pr_create_second}" ]; then
-			ghc
+			ghc || return $?
 		elif [ -n "${__git_add_gh_pr_create_first}" ] && [ -z "${__git_add_gh_pr_create_second}" ]; then
-			ghc "${__git_add_gh_pr_create_first}"
+			ghc "${__git_add_gh_pr_create_first}" || return $?
 		elif [ -n "${__git_add_gh_pr_create_first}" ] && [ -n "${__git_add_gh_pr_create_second}" ]; then
-			ghc "${__git_add_gh_pr_create_first}" "${__git_add_gh_pr_create_second}"
+			ghc "${__git_add_gh_pr_create_first}" "${__git_add_gh_pr_create_second}" || return $?
 		else
 			echo_date "'__git_add_gh_pr_create' is missing first but got second ${__git_add_gh_pr_create_second}" && return 1
 		fi
