@@ -141,7 +141,7 @@ cdcache() {
 	if [ $# -ne 0 ]; then
 		echo_date "'cdcache' accepts no arguments" && return 1
 	fi
-	cd "${XDG_CONFIG_HOME:-"${HOME}/.cache"}" || return $?
+	cd "${XDG_CACHE_HOME:-"${HOME}/.cache"}" || return $?
 }
 cdconfig() {
 	if [ $# -ne 0 ]; then
