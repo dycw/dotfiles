@@ -132,6 +132,28 @@ bottom_toml() {
 	${EDITOR} "${HOME}"/dotfiles/bottom/bottom.toml
 }
 
+# bump-my-version
+if command -v bump-my-version >/dev/null 2>&1; then
+	bump_patch() {
+		if [ $# -ne 0 ]; then
+			echo_date "'bump_patch' accepts 0 arguments" && return 1
+		fi
+		bump-my-version bump patch
+	}
+	bump_minor() {
+		if [ $# -ne 0 ]; then
+			echo_date "'bump_minor' accepts 0 arguments" && return 1
+		fi
+		bump-my-version bump minor
+	}
+	bump_major() {
+		if [ $# -ne 0 ]; then
+			echo_date "'bump_major' accepts 0 arguments" && return 1
+		fi
+		bump-my-version bump major
+	}
+fi
+
 # cd
 alias ~='cd "${HOME}"'
 alias ..='cd ..'
