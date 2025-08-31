@@ -560,8 +560,7 @@ if command -v gh >/dev/null 2>&1; then
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
 			echo_date "'ghcm' accepts [1..2] arguments" && return 1
 		fi
-		ghc "$@" &&
-			ghm
+		ghc "$@" && ghm
 	}
 	ghe() {
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
