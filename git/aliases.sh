@@ -592,7 +592,6 @@ if command -v gh >/dev/null 2>&1; then
 		gh issue list
 	}
 	ghiv() {
-		unset __ghiv_branch __ghiv_num
 		if [ $# -eq 0 ]; then
 			__ghiv_branch="$(current_branch)"
 			__ghiv_num="${__ghiv_branch%%-*}"
@@ -602,6 +601,7 @@ if command -v gh >/dev/null 2>&1; then
 				echo_date "'ghiv' cannot be run on a branch without an issue number" && return 1
 			fi
 		elif [ $# -eq 1 ]; then
+			unset __ghiv_branch
 			__ghiv_num="$1"
 			if [ "$1" -eq "$1" ] 2>/dev/null; then
 				gh issue view "$1" -w
