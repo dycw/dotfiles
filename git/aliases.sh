@@ -34,54 +34,54 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -le 2 ]; then
 			echo_date "'__git_add_commit_push' requires at least 3 arguments" && return 1
 		fi
-		__no_verify="$1"
-		__force="$2"
-		__web="$3"
+		__gacp_no_verify="$1"
+		__gacp_force="$2"
+		__gacp_web="$3"
 		shift 3
 
-		__count_file=0
-		__count_non_file=0
-		__message=""
-		__file_names=""
-		__file_args=""
+		__gacp_count_file=0
+		__gacp_count_non_file=0
+		__gacp_message=""
+		__gacp_file_names=""
+		__gacp_file_args=""
 
 		for arg in "$@"; do
-			if [ "${__count_non_file}" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
-				__file_args="${__file_args} \"$arg\""
-				__file_names="${__file_names}${__file_names:+ }$arg"
-				__count_file=$((__count_file + 1))
+			if [ "${__gacp_count_non_file}" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
+				__gacp_file_args="${__gacp_file_args} \"$arg\""
+				__gacp_file_names="${__gacp_file_names}${__gacp_file_names:+ }$arg"
+				__gacp_count_file=$((__gacp_count_file + 1))
 			else
-				__count_non_file=$((__count_non_file + 1))
-				__message="$arg"
+				__gacp_count_non_file=$((__gacp_count_non_file + 1))
+				__gacp_message="$arg"
 			fi
 		done
 
-		__file_list=""
-		for f in ${__file_names}; do
-			__file_list="${__file_list}'${f}',"
+		__gacp_file_list=""
+		for f in ${__gacp_file_names}; do
+			__gacp_file_list="${__gacp_file_list}'${f}',"
 		done
-		__file_list="${__file_list%,}"
+		__gacp_file_list="${__gacp_file_list%,}"
 
-		if [ "${__count_file}" -eq 0 ] && [ "${__count_non_file}" -eq 0 ]; then
+		if [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
 			ga
-			if ! __git_commit_push "${__no_verify}" "" "${__force}" "${__web}"; then
+			if ! __git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"; then
 				ga
-				__git_commit_push "${__no_verify}" "" "${__force}" "${__web}"
+				__git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"
 			fi
-		elif [ "${__count_file}" -eq 0 ] && [ "${__count_non_file}" -eq 1 ]; then
+		elif [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 1 ]; then
 			ga
-			if ! __git_commit_push "${__no_verify}" "${__message}" "${__force}" "${__web}"; then
+			if ! __git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"; then
 				ga
-				__git_commit_push "${__no_verify}" "${__message}" "${__force}" "${__web}"
+				__git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"
 			fi
-		elif [ "${__count_file}" -ge 1 ] && [ "${__count_non_file}" -eq 0 ]; then
-			eval "ga ${__file_args}"
-			__git_commit_push "${__no_verify}" "" "${__force}" "${__web}"
-		elif [ "${__count_file}" -ge 1 ] && [ "${__count_non_file}" -eq 1 ]; then
-			eval "ga ${__file_args}"
-			__git_commit_push "${__no_verify}" "${__message}" "${__force}" "${__web}"
+		elif [ "${__gacp_count_file}" -ge 1 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
+			eval "ga ${__gacp_file_args}"
+			__git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"
+		elif [ "${__gacp_count_file}" -ge 1 ] && [ "${__gacp_count_non_file}" -eq 1 ]; then
+			eval "ga ${__gacp_file_args}"
+			__git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"
 		else
-			echo_date "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__count_file} file(s) ${__file_list:-'(none)'} and ${__count_non_file} message(s)" && return 1
+			echo_date "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__gacp_count_file} file(s) ${__gacp_file_list:-'(none)'} and ${__gacp_count_non_file} message(s)" && return 1
 		fi
 	}
 	# branch
@@ -93,26 +93,25 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gbd() {
 		if [ $# -eq 0 ]; then
-			__branch="$(__select_local_branch)"
+			__gbd_branch="$(__select_local_branch)"
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__gbd_branch="$1"
 		else
 			echo_date "'gbd' accepts [0..1] arguments" && return 1
 		fi
-		if __branch_exists "${__branch}"; then
-			git branch -D "${__branch}"
+		if __branch_exists "${__gbd_branch}"; then
+			git branch -D "${__gbd_branch}"
 		fi
 	}
 	gbdr() {
 		if [ $# -eq 0 ]; then
-			__branch="$(__select_remote_branch)"
+			__gbdr_branch="$(__select_remote_branch)"
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__gbdr_branch="$1"
 		else
 			echo_date "'gbdr' accepts [0..1] arguments" && return 1
 		fi
-		gf
-		git push origin -d "${__branch}"
+		gf && git push origin -d "${__gbdr_branch}"
 	}
 	gbm() { git branch -m "$1"; }
 	__delete_gone_branches() {
@@ -136,69 +135,58 @@ if command -v git >/dev/null 2>&1; then
 			echo_date "'gcmd' accepts no arguments" && return 1
 		fi
 		if __is_current_branch_master; then
-			gcof
-			gcm
+			gcof && gcm
 		else
 			__gcmd_branch="$(current_branch)"
-			gcof
-			gcm
-			gbd "${__gcmd_branch}"
+			gcof && gcm && gbd "${__gcmd_branch}"
 		fi
 	}
 	gco() {
 		if [ $# -eq 0 ]; then
-			__branch="$(__select_local_branch)"
+			__gco_branch="$(__select_local_branch)"
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__gco_branch="$1"
 		else
 			echo_date "'gco' accepts [0..1] arguments" && return 1
 		fi
-		git checkout "${__branch}"
-		gpl
+		git checkout "${__gco_branch}" && gpl
 	}
 	gcob() {
-		unset __title __num __desc
 		if [ $# -eq 0 ]; then
 			if ! __is_current_branch_master; then
 				echo_date "'gcob' off 'master' requires 1 argument 'branch'" && return 1
 			fi
-			__branch='dev'
+			unset __gcob_title __gcob_num __gcob_desc
+			__gcob_branch='dev'
 		elif [ $# -eq 1 ]; then
-			__title="$1"
-			__branch="$(__to_valid_branch "${__title}")"
+			unset __gcob_num __gcob_desc
+			__gcob_title="$1"
+			__gcob_branch="$(__to_valid_branch "${__gcob_title}")"
 		elif [ $# -eq 2 ]; then
-			__title="$1"
-			__num="$2"
-			__desc="$(__to_valid_branch "${__title}")"
-			__branch="$2-${__desc}"
+			__gcob_title="$1"
+			__gcob_num="$2"
+			__gcob_desc="$(__to_valid_branch "${__gcob_title}")"
+			__gcob_branch="$2-${__gcob_desc}"
 		else
 			echo_date "'gcob' accepts [0..2] arguments" && return 1
 		fi
-		gf
-		git checkout -b "${__branch}" origin/master
-		if (command -v gh >/dev/null 2>&1) && [ $# -eq 1 ] && [ -n "${__title}" ]; then
-			gp
-			__git_commit_empty_auto_message
-			gp
-			ghc "${__title}"
-		elif (command -v gh >/dev/null 2>&1) && [ $# -eq 2 ] && [ -n "${__title}" ] && [ -n "${__num}" ]; then
-			gp
-			__git_commit_empty_auto_message
-			gp
-			ghc "${__title}" "${__num}"
+		gf && git checkout -b "${__gcob_branch}" origin/master && return $?
+		if (command -v gh >/dev/null 2>&1) && [ $# -eq 1 ] && [ -n "${__gcob_title}" ]; then
+			gp && __git_commit_empty_auto_message && gp && ghc "${__gcob_title}"
+		elif (command -v gh >/dev/null 2>&1) && [ $# -eq 2 ] && [ -n "${__gcob_title}" ] && [ -n "${__gcob_num}" ]; then
+			gp && __git_commit_empty_auto_message && gp && ghc "${__gcob_title}" "${__gcob_num}"
 		fi
 	}
 	gcobt() {
 		if [ $# -eq 0 ]; then
-			__branch="$(__select_remote_branch)"
+			__gcobt_branch="$(__select_remote_branch)"
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__gcobt_branch="$1"
 		else
 			echo_date "'gcobt' accepts [0..1] arguments" && return 1
 		fi
 		if __is_current_branch_master; then
-			gf
-			git checkout -b "${__branch}" -t "origin/${__branch}"
+			gf && git checkout -b "${__gcobt_branch}" -t "origin/${__gcobt_branch}"
 		else
 			gco master
 		fi
@@ -208,9 +196,9 @@ if command -v git >/dev/null 2>&1; then
 			git checkout -- .
 		else
 			if __is_valid_ref "$1"; then
-				__branch="$1"
+				__gcof_branch="$1"
 				shift
-				git checkout "${__branch}" -- "$@"
+				git checkout "${__gcof_branch}" -- "$@"
 			else
 				git checkout -- "$@"
 			fi
@@ -239,10 +227,8 @@ if command -v git >/dev/null 2>&1; then
 		elif __is_current_branch_master; then
 			echo_date "'gbr' cannot be run on master" && return 1
 		else
-			__gbr_branch="$(current_branch)" # do not name '__branch'
-			gcof
-			gcm
-			gcob "${__gbr_branch}"
+			__gbr_branch="$(current_branch)"
+			gcof && gcm && gcob "${__gbr_branch}"
 		fi
 	}
 	# cherry-pick
@@ -259,17 +245,17 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -ne 2 ]; then
 			echo_date "'__git_commit' requires 2 arguments" && return 1
 		fi
-		__no_verify="$1"
-		__message="$2"
-		if [ -z "${__message}" ]; then
-			__message="$(__git_commit_auto_message)"
+		__gc_no_verify="$1"
+		__gc_message="$2"
+		if [ -z "${__gc_message}" ]; then
+			__gc_message="$(__git_commit_auto_message)"
 		fi
-		if [ "${__no_verify}" -eq 0 ]; then
-			git commit -m "${__message}"
-		elif [ "${__no_verify}" -eq 1 ]; then
-			git commit --no-verify -m "${__message}"
+		if [ "${__gc_no_verify}" -eq 0 ]; then
+			git commit -m "${__gc_message}"
+		elif [ "${__gc_no_verify}" -eq 1 ]; then
+			git commit --no-verify -m "${__gc_message}"
 		else
-			echo_date "'_' accepts {0, 1} for the 'no-verify' flag; got ${__no_verify}" && return 1
+			echo_date "'_' accepts {0, 1} for the 'no-verify' flag; got ${__gc_no_verify}" && return 1
 		fi
 	}
 	__git_commit_auto_message() {
@@ -331,11 +317,12 @@ if command -v git >/dev/null 2>&1; then
 		if [ "$#" -ne 4 ]; then
 			echo_date "'__git_commit_push' requires 4 arguments" && return 1
 		fi
-		__git_commit_push_no_verify="$1"
-		__git_commit_push_message="$2"
-		__git_commit_push_force="$3"
-		__git_commit_push_web="$4"
-		__git_commit "${__git_commit_push_no_verify}" "${__git_commit_push_message}" && __git_push "${__git_commit_push_force}" "${__git_commit_push_web}"
+		__gcp_no_verify="$1"
+		__gcp_message="$2"
+		__gcp_force="$3"
+		__gcp_web="$4"
+		__git_commit "${__gcp_no_verify}" "${__gcp_message}" &&
+			__git_push "${__gcp_force}" "${__gcp_web}"
 	}
 	# diff
 	gd() { git diff "$@"; }
@@ -408,7 +395,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 		__git_push_force="$1"
 		__git_push_web="$2"
-		__git_push_current_branch "${__git_push_force}"
+		__git_push_current_branch "${__git_push_force}" || return $?
 		if [ "${__git_push_web}" -eq 0 ]; then
 			:
 		elif [ "${__git_push_web}" -eq 1 ]; then
@@ -439,8 +426,7 @@ if command -v git >/dev/null 2>&1; then
 		else
 			echo_date "'grb' accepts [0..1] arguments" && return 1
 		fi
-		gf
-		git rebase -s recursive -X theirs "${__grb_branch}"
+		gf && git rebase -s recursive -X theirs "${__grb_branch}"
 	}
 	grba() {
 		if [ $# -ne 0 ]; then
@@ -461,11 +447,7 @@ if command -v git >/dev/null 2>&1; then
 		git rebase --skip
 	}
 	# rebase (squash)
-	gsqm() {
-		gf
-		git reset --soft "$(git merge-base HEAD master)"
-		gcf "$@"
-	}
+	gsqm() { gf && git reset --soft "$(git merge-base HEAD master)" && gcf "$@"; }
 	# reset
 	gr() { git reset "$@"; }
 	grp() { git reset --patch "$@"; }
@@ -516,13 +498,10 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# status
 	gs() {
-		if [ $# -eq 0 ]; then
-			git status
-		elif [ $# -eq 1 ]; then
-			git status "$1"
-		else
+		if [ $# -ge 2 ]; then
 			echo_date "'gs' accepts [0..1] arguments" && return 1
 		fi
+		git status "$@"
 	}
 	__tree_is_clean() {
 		if [ $# -ne 0 ]; then
@@ -546,13 +525,12 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -ne 2 ]; then
 			echo_date "'gta' accepts 2 arguments" && return 1
 		fi
-		git tag -a "$1" "$2" -m "$1"
-		git push -u origin --tags
+		__gta_tag="$1"
+		__gta_sha="$2"
+		git tag -a "${__gta_tag}" "${__gta_sha}" -m "${__gta_tag}" &&
+			git push -u origin --tags
 	}
-	gtd() {
-		git tag -d "$@"
-		git push -d origin "$@"
-	}
+	gtd() { git tag -d "$@" && git push -d origin "$@"; }
 fi
 
 # gh
@@ -573,8 +551,7 @@ if command -v gh >/dev/null 2>&1; then
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
 			echo_date "'ghcm' accepts [1..2] arguments" && return 1
 		fi
-		ghc "$@"
-		ghm
+		ghc "$@" && ghm
 	}
 	ghe() {
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
@@ -606,7 +583,6 @@ if command -v gh >/dev/null 2>&1; then
 		gh issue list
 	}
 	ghiv() {
-		unset __ghiv_branch __ghiv_num
 		if [ $# -eq 0 ]; then
 			__ghiv_branch="$(current_branch)"
 			__ghiv_num="${__ghiv_branch%%-*}"
@@ -616,9 +592,10 @@ if command -v gh >/dev/null 2>&1; then
 				echo_date "'ghiv' cannot be run on a branch without an issue number" && return 1
 			fi
 		elif [ $# -eq 1 ]; then
+			unset __ghiv_branch
 			__ghiv_num="$1"
-			if [ "$1" -eq "$1" ] 2>/dev/null; then
-				gh issue view "$1" -w
+			if [ "${__ghiv_num}" -eq "${__ghiv_num}" ] 2>/dev/null; then
+				gh issue view "${__ghiv_num}" -w
 			else
 				echo_date "'ghiv' requries an integer" && return 1
 			fi
@@ -665,48 +642,48 @@ if command -v gh >/dev/null 2>&1; then
 		if [ $# -ne 4 ]; then
 			echo_date "'__gh_pr_create_or_edit_web' requires 4 arguments" && return 1
 		fi
-		__gh_pr_create_or_edit_verb="$1"
-		__gh_pr_create_or_edit_title="$2"
-		__gh_pr_create_or_edit_body="$3"
-		__gh_pr_create_or_edit_web="$4"
-		if [ -z "${__gh_pr_create_or_edit_title}" ]; then
-			__gh_pr_create_or_edit_title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
+		__gh_pr_ce_verb="$1"
+		__gh_pr_ce_title="$2"
+		__gh_pr_ce_body="$3"
+		__gh_pr_ce_web="$4"
+		if [ -z "${__gh_pr_ce_title}" ]; then
+			__gh_pr_ce_title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
 		fi
-		if [ -n "${__gh_pr_create_or_edit_body}" ] && __is_int "${__gh_pr_create_or_edit_body}"; then
-			__gh_pr_create_or_edit_body="Closes #${__gh_pr_create_or_edit_body}"
+		if [ -n "${__gh_pr_ce_body}" ] && __is_int "${__gh_pr_ce_body}"; then
+			__gh_pr_ce_body="Closes #${__gh_pr_ce_body}"
 		fi
-		gh pr "${__gh_pr_create_or_edit_verb}" -t="${__gh_pr_create_or_edit_title}" -b="${__gh_pr_create_or_edit_body}"
-		if [ "${__gh_pr_create_or_edit_web}" -eq 0 ]; then
+		gh pr "${__gh_pr_ce_verb}" -t="${__gh_pr_ce_title}" -b="${__gh_pr_ce_body}" || return $?
+		if [ "${__gh_pr_ce_web}" -eq 0 ]; then
 			:
-		elif [ "${__gh_pr_create_or_edit_web}" -eq 1 ]; then
+		elif [ "${__gh_pr_ce_web}" -eq 1 ]; then
 			ghv
 		else
-			echo_date "'__gh_pr_create_or_edit_web' accepts {0, 1} for the 'web' flag; got ${__gh_pr_create_or_edit_web}" && return 1
+			echo_date "'__gh_pr_create_or_edit' accepts {0, 1} for the 'web' flag; got ${__gh_pr_ce_web}" && return 1
 		fi
 	}
 	__gh_pr_merge() {
 		if [ $# -ne 2 ]; then
 			echo_date "'__gh_pr_merge' requires 2 arguments" && return 1
 		fi
-		__gh_pr_merge_delete="$1"
-		__gh_pr_merge_view="$2"
-		__gh_pr_merge_branch="$(current_branch)"
-		gh pr merge -s --auto
-		if [ "${__gh_pr_merge_delete}" -eq 0 ]; then
+		__gh_pr_m_delete="$1"
+		__gh_pr_m_view="$2"
+		__gh_pr_m_branch="$(current_branch)"
+		gh pr merge -s --auto || return $?
+		if [ "${__gh_pr_m_delete}" -eq 0 ]; then
 			:
-		elif [ "${__gh_pr_merge_delete}" -eq 1 ]; then
-			if __branch_exists __gh_pr_merge_branch; then
-				gcmd
+		elif [ "${__gh_pr_m_delete}" -eq 1 ]; then
+			if __branch_exists "${__gh_pr_m_branch}"; then
+				gcmd || return $?
 			fi
 		else
-			echo_date "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__gh_pr_merge_delete}" && return 1
+			echo_date "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__gh_pr_m_delete}" && return 1
 		fi
-		if [ "${__gh_pr_merge_view}" -eq 0 ]; then
+		if [ "${__gh_pr_m_view}" -eq 0 ]; then
 			:
-		elif [ "${__gh_pr_merge_view}" -eq 1 ]; then
+		elif [ "${__gh_pr_m_view}" -eq 1 ]; then
 			ghv
 		else
-			echo_date "'__git_pr_merge' accepts {0, 1} for the 'view' flag; got ${__gh_pr_merge_view}" && return 1
+			echo_date "'__git_pr_merge' accepts {0, 1} for the 'view' flag; got ${__gh_pr_m_view}" && return 1
 		fi
 	}
 fi
@@ -743,34 +720,34 @@ if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
 			echo_date "'gaccmd' accepts [1..2] arguments" && return 1
 		fi
-		gac
-		ghc "$@"
-		ghm
-		gcmd
+		gac &&
+			ghc "$@" &&
+			ghm &&
+			gcmd
 	}
 	__git_add_gh_pr_create() {
 		if [ $# -ne 3 ]; then
 			echo_date "'__git_add_gh_pr_create' requires 3 arguments" && return 1
 		fi
-		__git_add_gh_pr_create_first="$1"
-		__git_add_gh_pr_create_second="$2"
-		__git_add_gh_pr_create_view="$3"
-		gac
-		if [ -z "${__git_add_gh_pr_create_first}" ] && [ -z "${__git_add_gh_pr_create_second}" ]; then
-			ghc
-		elif [ -n "${__git_add_gh_pr_create_first}" ] && [ -z "${__git_add_gh_pr_create_second}" ]; then
-			ghc "${__git_add_gh_pr_create_first}"
-		elif [ -n "${__git_add_gh_pr_create_first}" ] && [ -n "${__git_add_gh_pr_create_second}" ]; then
-			ghc "${__git_add_gh_pr_create_first}" "${__git_add_gh_pr_create_second}"
+		__ga_gh_pr_c_first="$1"
+		__ga_gh_pr_c_second="$2"
+		__ga_gh_pr_c_view="$3"
+		gac || return $?
+		if [ -z "${__ga_gh_pr_c_first}" ] && [ -z "${__ga_gh_pr_c_second}" ]; then
+			ghc || return $?
+		elif [ -n "${__ga_gh_pr_c_first}" ] && [ -z "${__ga_gh_pr_c_second}" ]; then
+			ghc "${__ga_gh_pr_c_first}" || return $?
+		elif [ -n "${__ga_gh_pr_c_first}" ] && [ -n "${__ga_gh_pr_c_second}" ]; then
+			ghc "${__ga_gh_pr_c_first}" "${__ga_gh_pr_c_second}" || return $?
 		else
-			echo_date "'__git_add_gh_pr_create' is missing first but got second ${__git_add_gh_pr_create_second}" && return 1
+			echo_date "'__git_add_gh_pr_create' is missing first but got second ${__ga_gh_pr_c_second}" && return 1
 		fi
-		if [ "${__git_add_gh_pr_create_view}" -eq 0 ]; then
+		if [ "${__ga_gh_pr_c_view}" -eq 0 ]; then
 			:
-		elif [ "${__git_add_gh_pr_create_view}" -eq 1 ]; then
+		elif [ "${__ga_gh_pr_c_view}" -eq 1 ]; then
 			ghv
 		else
-			echo_date "'__git_add_gh_pr_create' accepts {0, 1} for the 'view' flag; got ${__git_add_gh_pr_create_view}" && return 1
+			echo_date "'__git_add_gh_pr_create' accepts {0, 1} for the 'view' flag; got ${__ga_gh_pr_c_view}" && return 1
 		fi
 	}
 fi
