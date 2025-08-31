@@ -525,7 +525,10 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -ne 2 ]; then
 			echo_date "'gta' accepts 2 arguments" && return 1
 		fi
-		git tag -a "$1" "$2" -m "$1" && git push -u origin --tags
+		__gta_tag="$1"
+		__gta_sha="$2"
+		git tag -a "${__gta_tag}" "${__gta_sha}" -m "${__gta_tag}" &&
+			git push -u origin --tags
 	}
 	gtd() { git tag -d "$@" && git push -d origin "$@"; }
 fi
