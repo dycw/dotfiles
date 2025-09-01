@@ -821,14 +821,9 @@ if command -v glab >/dev/null 2>&1; then
 		fi
 		__gl_mr_m_json1=$(printf "%s" "${__gl_mr_m_json_all}" | jq '.[0]')
 		__gl_mr_m_state=$(printf "%s" "${__gl_mr_m_json1}" | jq -r '.state')
-
-		__gh_pr_m_json=$(gh pr view --json state 2>/dev/null) || return 1
-		__gh_pr_m_state=$(printf "%s" "$__gh_pr_m_json" | jq -r '.state')
-		if [ "${__gh_pr_m_state}" != 'opened' ]; then
-			return 1
-		fi
-		__gl_mr_m_mergeable=$(printf "%s" "${__gl_mr_m_json1}" | jq -r '.detailed_merge_status')
-		if [ "${__gl_mr_m_mergeable}" != 'can_be_merged' ]; then
+		echo "__gl_mr_m_state=$__gl_mr_m_state"
+		if [ "${__gl_mr_m_state}" != 'opened' ]; then
+			echo "__gl_mr_m_state=$__gl_mr_m_state>>1"
 			return 1
 		fi
 		if git ls-remote --exit-code origin "${__gl_mr_m_branch}" >/dev/null 2>&1; then
