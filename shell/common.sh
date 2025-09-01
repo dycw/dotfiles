@@ -209,6 +209,12 @@ cdw() {
 	fi
 	cd "${HOME}/work" || return $?
 }
+cdwg() {
+	if [ $# -ne 0 ]; then
+		echo_date "'cdwg' accepts no arguments" && return 1
+	fi
+	cd "${HOME}/work-gitlab" || return $?
+}
 
 # chmod
 chmod_files() {
