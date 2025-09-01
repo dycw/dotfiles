@@ -817,14 +817,14 @@ if command -v glab >/dev/null 2>&1; then
 		fi
 		__gl_mr_m_json_all=$(glab mr list --source-branch "${__gl_mr_m_branch}" --output=json 2>/dev/null) || return 1
 		__gl_mr_m_num=$(printf "%s" "${__gl_mr_m_json_all}" | jq 'length')
-		if [ "${__gl_mr_m_num}" -ne 1 ]; then
-			echo_date "'__gl_mr_merging' expects a unique MR" && return 1
+		if [ "${__gl_mr_m_num}" -eq 0 ]; then
+			echo_date "'__gl_mr_merging' expects an MR for '${__gl_mr_m_branch}'; got none" && return 1
+		elif [ "${__gl_mr_m_num}" -ge 2 ]; then
+			echo_date "'__gl_mr_merging' expects a unique MR for '${__gl_mr_m_branch}'; got ${__gl_mr_m_num}" && return 1
 		fi
 		__gl_mr_m_json1=$(printf "%s" "${__gl_mr_m_json_all}" | jq '.[0]')
 		__gl_mr_m_state=$(printf "%s" "${__gl_mr_m_json1}" | jq -r '.state')
-		echo "__gl_mr_m_state=$__gl_mr_m_state"
 		if [ "${__gl_mr_m_state}" != 'opened' ]; then
-			echo "__gl_mr_m_state=$__gl_mr_m_state>>1"
 			return 1
 		fi
 		if git ls-remote --exit-code origin "${__gl_mr_m_branch}" >/dev/null 2>&1; then
