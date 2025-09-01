@@ -69,7 +69,7 @@ if command -v git >/dev/null 2>&1; then
 			done
 		elif [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 1 ]; then
 			ga
-			until __git_commit_push "${__gacp_no_verify}    echo "Push failed with exit code $?"" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"; do
+			until __git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"; do
 				ga
 			done
 		elif [ "${__gacp_count_file}" -ge 1 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
@@ -668,7 +668,7 @@ if command -v gh >/dev/null 2>&1; then
 		if [ "${__gh_pr_m_delete}" -eq 0 ]; then
 			:
 		elif [ "${__gh_pr_m_delete}" -eq 1 ]; then
-			__gh_pr_await_merged "${__gl_mr_m_branch}" && gcmd || return $?
+			__gh_pr_await_merged "${__gh_pr_m_branch}" && gcmd || return $?
 		else
 			echo_date "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__gh_pr_m_delete}" && return 1
 		fi
