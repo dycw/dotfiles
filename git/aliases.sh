@@ -64,16 +64,14 @@ if command -v git >/dev/null 2>&1; then
 
 		if [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
 			ga
-			if ! __git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"; then
+			until __git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"; do
 				ga
-				__git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"
-			fi
+			done
 		elif [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 1 ]; then
 			ga
-			if ! __git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"; then
+			until __git_commit_push "${__gacp_no_verify}    echo "Push failed with exit code $?"" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"; do
 				ga
-				__git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"
-			fi
+			done
 		elif [ "${__gacp_count_file}" -ge 1 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
 			eval "ga ${__gacp_file_args}"
 			__git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"
@@ -239,6 +237,9 @@ if command -v git >/dev/null 2>&1; then
 	__git_commit() {
 		if [ $# -ne 2 ]; then
 			echo_date "'__git_commit' accepts 2 arguments" && return 1
+		fi
+		if git diff --cached --quiet && git diff --quiet; then
+			return 0
 		fi
 		__gc_no_verify="$1"
 		__gc_message="$2"
