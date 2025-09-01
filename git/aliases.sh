@@ -32,7 +32,7 @@ if command -v git >/dev/null 2>&1; then
 	gacnfw() { __git_add_commit_push 1 1 1 "$@"; }
 	__git_add_commit_push() {
 		if [ $# -le 2 ]; then
-			echo_date "'__git_add_commit_push' requires at least 3 arguments" && return 1
+			echo_date "'__git_add_commit_push' accepts [3..) arguments" && return 1
 		fi
 		__gacp_no_verify="$1"
 		__gacp_force="$2"
@@ -64,16 +64,14 @@ if command -v git >/dev/null 2>&1; then
 
 		if [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
 			ga
-			if ! __git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"; then
+			until __git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"; do
 				ga
-				__git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"
-			fi
+			done
 		elif [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 1 ]; then
 			ga
-			if ! __git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"; then
+			until __git_commit_push "${__gacp_no_verify}    echo "Push failed with exit code $?"" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"; do
 				ga
-				__git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"
-			fi
+			done
 		elif [ "${__gacp_count_file}" -ge 1 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
 			eval "ga ${__gacp_file_args}"
 			__git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"
@@ -154,7 +152,7 @@ if command -v git >/dev/null 2>&1; then
 	gcob() {
 		if [ $# -eq 0 ]; then
 			if ! __is_current_branch_master; then
-				echo_date "'gcob' off 'master' requires 1 argument 'branch'" && return 1
+				echo_date "'gcob' off 'master' accepts 1 argument" && return 1
 			fi
 			unset __gcob_title __gcob_num __gcob_desc
 			__gcob_branch='dev'
@@ -206,7 +204,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gcofm() {
 		if [ $# -eq 0 ]; then
-			echo_date "'gcofm' requires [1..] arguments" && return 1
+			echo_date "'gcofm' accepts [1..] arguments" && return 1
 		fi
 		gcof origin/master "$@"
 	}
@@ -234,16 +232,14 @@ if command -v git >/dev/null 2>&1; then
 	# cherry-pick
 	gcp() { git cherry-pick "$@"; }
 	# clone
-	gcl() {
-		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-			echo_date "'gcl' accepts [1..2] arguments" && return 1
-		fi
-		git clone --recurse-submodules "$@"
-	}
+	gcl() { git clone --recurse-submodules "$@"; }
 	# commit
 	__git_commit() {
 		if [ $# -ne 2 ]; then
-			echo_date "'__git_commit' requires 2 arguments" && return 1
+			echo_date "'__git_commit' accepts 2 arguments" && return 1
+		fi
+		if git diff --cached --quiet && git diff --quiet; then
+			return 0
 		fi
 		__gc_no_verify="$1"
 		__gc_message="$2"
@@ -315,7 +311,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 	__git_commit_push() {
 		if [ "$#" -ne 4 ]; then
-			echo_date "'__git_commit_push' requires 4 arguments" && return 1
+			echo_date "'__git_commit_push' accepts 4 arguments" && return 1
 		fi
 		__gcp_no_verify="$1"
 		__gcp_message="$2"
@@ -345,14 +341,14 @@ if command -v git >/dev/null 2>&1; then
 	# merge
 	gma() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gma' requires 0 arguments" && return 1
+			echo_date "'gma' accepts 0 arguments" && return 1
 		fi
 		git merge --abort
 	}
 	# mv
 	gmv() {
 		if [ $# -ne 2 ]; then
-			echo_date "'gmv' requires 2 arguments" && return 1
+			echo_date "'gmv' accepts 2 arguments" && return 1
 		fi
 		git mv "$1" "$2"
 	}
@@ -391,7 +387,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 	__git_push() {
 		if [ $# -ne 2 ]; then
-			echo_date "'__git_push' requires 2 arguments" && return 1
+			echo_date "'__git_push' accepts 2 arguments" && return 1
 		fi
 		__git_push_force="$1"
 		__git_push_web="$2"
@@ -406,7 +402,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 	__git_push_current_branch() {
 		if [ $# -ne 1 ]; then
-			echo_date "'__git_push_current_branch' requires 1 arguments" && return 1
+			echo_date "'__git_push_current_branch' accepts 1 argument" && return 1
 		fi
 		__git_push_current_branch_force="$1"
 		if [ "${__git_push_force}" -eq 0 ]; then
@@ -514,7 +510,7 @@ if command -v git >/dev/null 2>&1; then
 	gstd() { git stash drop "$@"; }
 	gstp() { git stash pop "$@"; }
 	# submodules
-	gsub_update() {
+	gsu() {
 		if [ $# -ne 0 ]; then
 			echo_date "'gsub_update' accepts no arguments" && return 1
 		fi
@@ -640,7 +636,7 @@ if command -v gh >/dev/null 2>&1; then
 	}
 	__gh_pr_create_or_edit() {
 		if [ $# -ne 4 ]; then
-			echo_date "'__gh_pr_create_or_edit_web' requires 4 arguments" && return 1
+			echo_date "'__gh_pr_create_or_edit_web' accepts 4 arguments" && return 1
 		fi
 		__gh_pr_ce_verb="$1"
 		__gh_pr_ce_title="$2"
@@ -663,7 +659,7 @@ if command -v gh >/dev/null 2>&1; then
 	}
 	__gh_pr_merge() {
 		if [ $# -ne 2 ]; then
-			echo_date "'__gh_pr_merge' requires 2 arguments" && return 1
+			echo_date "'__gh_pr_merge' accepts 2 arguments" && return 1
 		fi
 		__gh_pr_m_delete="$1"
 		__gh_pr_m_view="$2"
@@ -672,12 +668,7 @@ if command -v gh >/dev/null 2>&1; then
 		if [ "${__gh_pr_m_delete}" -eq 0 ]; then
 			:
 		elif [ "${__gh_pr_m_delete}" -eq 1 ]; then
-			while __gh_pr_merging; do
-				echo_date "'${__gh_pr_m_branch}' is still merging..."
-				sleep 1
-			done
-			echo_date "'${__gh_pr_m_branch}' has finished merging"
-			gcmd || return $?
+			__gh_pr_await_merged "${__gl_mr_m_branch}" && gcmd || return $?
 		else
 			echo_date "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__gh_pr_m_delete}" && return 1
 		fi
@@ -705,6 +696,16 @@ if command -v gh >/dev/null 2>&1; then
 		fi
 		return 1
 	}
+	__gh_pr_await_merged() {
+		if [ $# -ne 1 ]; then
+			echo_date "'__gh_pr_await_merged' accepts 1 argument"
+		fi
+		while __gh_pr_merging; do
+			echo_date "'$1' is still merging..."
+			sleep 1
+		done
+		echo_date "'$1' has finished merging"
+	}
 fi
 
 # gh + gitweb
@@ -719,6 +720,13 @@ if command -v gh >/dev/null 2>&1 && command -v gitweb >/dev/null 2>&1; then
 			gitweb
 		fi
 	}
+fi
+
+# git + watch
+if command -v git >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
+	wgd() { watch -d -n 0.5 -- git diff "$@"; }
+	wgl() { watch -d -n 0.5 -- git log --abbrev-commit --decorate=short --oneline; }
+	wgs() { watch -d -n 0.5 -- git status "$@"; }
 fi
 
 # git + gh
@@ -746,7 +754,7 @@ if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 	}
 	__git_add_gh_pr_create() {
 		if [ $# -ne 3 ]; then
-			echo_date "'__git_add_gh_pr_create' requires 3 arguments" && return 1
+			echo_date "'__git_add_gh_pr_create' accepts 3 arguments" && return 1
 		fi
 		__ga_gh_pr_c_first="$1"
 		__ga_gh_pr_c_second="$2"
@@ -771,20 +779,68 @@ if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
 	}
 fi
 
-# git + watch
-if command -v git >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
-	wgd() { watch -d -n 0.5 -- git diff "$@"; }
-	wgl() { watch -d -n 0.5 -- git log --abbrev-commit --decorate=short --oneline; }
-	wgs() { watch -d -n 0.5 -- git status "$@"; }
-fi
-
-# github + watch
+# gh + watch
 if command -v gh >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
 	ghs() {
 		if [ $# -ne 0 ]; then
 			echo_date "'ghs' accepts no arguments" && return 1
 		fi
 		watch -d -n 1.0 'gh pr status'
+	}
+fi
+
+# glab
+if command -v glab >/dev/null 2>&1; then
+	glc() {
+		if [ $# -ne 1 ]; then
+			echo_date "'glc' accepts 1 argument" && return 1
+		fi
+		glab mr create --description='.' --title "$1"
+	}
+	glm() {
+		if [ $# -ne 0 ]; then
+			echo_date "'glm' accepts 0 arguments" && return 1
+		fi
+		glab mr merge --remove-source-branch --squash --yes
+	}
+	glmd() {
+		if [ $# -ne 0 ]; then
+			echo_date "'glmd' accepts 0 arguments" && return 1
+		fi
+		__glmd_branch="$(current_branch)"
+		glm && __gl_mr_await_merged "${__glmd_branch}" && gcmd
+	}
+	__gl_mr_merging() {
+		__gl_mr_m_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || return 1
+		if [ -z "${__gl_mr_m_branch}" ]; then
+			return 1
+		fi
+		__gl_mr_m_json_all=$(glab mr list --source-branch "${__gl_mr_m_branch}" --output=json 2>/dev/null) || return 1
+		__gl_mr_m_num=$(printf "%s" "${__gl_mr_m_json_all}" | jq 'length')
+		if [ "${__gl_mr_m_num}" -eq 0 ]; then
+			echo_date "'__gl_mr_merging' expects an MR for '${__gl_mr_m_branch}'; got none" && return 1
+		elif [ "${__gl_mr_m_num}" -ge 2 ]; then
+			echo_date "'__gl_mr_merging' expects a unique MR for '${__gl_mr_m_branch}'; got ${__gl_mr_m_num}" && return 1
+		fi
+		__gl_mr_m_json1=$(printf "%s" "${__gl_mr_m_json_all}" | jq '.[0]')
+		__gl_mr_m_state=$(printf "%s" "${__gl_mr_m_json1}" | jq -r '.state')
+		if [ "${__gl_mr_m_state}" != 'opened' ]; then
+			return 1
+		fi
+		if git ls-remote --exit-code origin "${__gl_mr_m_branch}" >/dev/null 2>&1; then
+			return 0
+		fi
+		return 1
+	}
+	__gl_mr_await_merged() {
+		if [ $# -ne 1 ]; then
+			echo_date "'__gl_mr_await_merged' accepts 1 argument"
+		fi
+		while __gl_mr_merging; do
+			echo_date "'$1' is still merging..."
+			sleep 1
+		done
+		echo_date "'$1' has finished merging"
 	}
 fi
 
