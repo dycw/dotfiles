@@ -61,16 +61,25 @@ if command -v git >/dev/null 2>&1; then
 			__gacp_file_list="${__gacp_file_list}'${f}',"
 		done
 		__gacp_file_list="${__gacp_file_list%,}"
+		__gacp_attempts=0
 
 		if [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
 			ga
 			until __git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"; do
 				ga
+				__gacp_attempts=$((__gacp_attempts + 1))
+				if [ "${__gacp_attempts}" -ge 5 ]; then
+					return 1
+				fi
 			done
 		elif [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 1 ]; then
 			ga
 			until __git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"; do
 				ga
+				__gacp_attempts=$((__gacp_attempts + 1))
+				if [ "${__gacp_attempts}" -ge 5 ]; then
+					return 1
+				fi
 			done
 		elif [ "${__gacp_count_file}" -ge 1 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
 			eval "ga ${__gacp_file_args}"

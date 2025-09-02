@@ -48,6 +48,10 @@ bind-key p paste-buffer
 # history
 bind-key H command-prompt -p 'save history to filename:' -I '~/tmux-history.txt' 'capture-pane -S -32768 ; save-buffer %1 ; delete-buffer'
 
+# kill pane
+unbind-key X
+bind-key x kill-pane
+
 # kill session
 bind-key X confirm-before -p "kill-window #I? (y/n)" kill-window
 
