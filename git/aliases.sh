@@ -177,7 +177,7 @@ if command -v git >/dev/null 2>&1; then
 		else
 			echo_date "'gcob' accepts [0..2] arguments" && return 1
 		fi
-		gf && echo $? && echo 'did fetch' && git checkout -b "${__gcob_branch}" origin/master || return $?
+		gf && git checkout -b "${__gcob_branch}" origin/master || return $?
 		if (command -v gh >/dev/null 2>&1) && [ $# -eq 1 ] && [ -n "${__gcob_title}" ]; then
 			gp && __git_commit_empty_auto_message && gp && ghc "${__gcob_title}"
 		elif (command -v gh >/dev/null 2>&1) && [ $# -eq 2 ] && [ -n "${__gcob_title}" ] && [ -n "${__gcob_num}" ]; then
