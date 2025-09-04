@@ -48,5 +48,5 @@ if command -v starship >/dev/null 2>&1; then
 else
 	curl -sS https://starship.rs/install.sh | sh &&
 		printf "\n# starship\neval \"\$(starship init bash)\"" >>"${HOME}/.bashrc" &&
-		echo_date "Finished installing 'neovim'"
+		echo_date "Finished installing 'starship'"
 fi
