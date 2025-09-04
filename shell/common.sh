@@ -152,6 +152,12 @@ if command -v bump-my-version >/dev/null 2>&1; then
 		fi
 		bump-my-version bump major
 	}
+	bump_set() {
+		if [ $# -ne 1 ]; then
+			echo_date "'bump_set' accepts 1 argument" && return 1
+		fi
+		bump-my-version replace --new-version "$1"
+	}
 fi
 
 # cd

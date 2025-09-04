@@ -177,11 +177,12 @@ if command -v git >/dev/null 2>&1; then
 		else
 			echo_date "'gcob' accepts [0..2] arguments" && return 1
 		fi
-		gf && git checkout -b "${__gcob_branch}" origin/master && return $?
+		gf && echo $? && echo 'did fetch' && git checkout -b "${__gcob_branch}" origin/master || return $?
 		if (command -v gh >/dev/null 2>&1) && [ $# -eq 1 ] && [ -n "${__gcob_title}" ]; then
 			gp && __git_commit_empty_auto_message && gp && ghc "${__gcob_title}"
 		elif (command -v gh >/dev/null 2>&1) && [ $# -eq 2 ] && [ -n "${__gcob_title}" ] && [ -n "${__gcob_num}" ]; then
-			gp && __git_commit_empty_auto_message && gp && ghc "${__gcob_title}" "${__gcob_num}"
+			gp && __git_commit_empty_auto_message && gp &&
+				ghc "${__gcob_title}" "${__gcob_num}"
 		fi
 	}
 	gcobt() {
@@ -217,10 +218,11 @@ if command -v git >/dev/null 2>&1; then
 		fi
 		gcof origin/master "$@"
 	}
-	gcop() {
-		git checkout --patch "$@"
-	}
+	gcop() { git checkout --patch "$@"; }
 	__to_valid_branch() {
+		if [ $# -ne 1 ]; then
+			echo_date "'__to_valid_branch' accepts 1 argument" && return 1
+		fi
 		echo "$1" |
 			tr '[:upper:]' '[:lower:]' |
 			sed -E 's/[^a-z0-9]+/-/g' |
@@ -818,6 +820,12 @@ if command -v glab >/dev/null 2>&1; then
 		fi
 		__glmd_branch="$(current_branch)"
 		glm && __gl_mr_await_merged "${__glmd_branch}" && gcmd
+	}
+	glml() {
+		if [ $# -ne 0 ]; then
+			echo_date "'glml' accepts 0 arguments" && return 1
+		fi
+		glab mr list
 	}
 	__gl_mr_merging() {
 		__gl_mr_m_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || return 1

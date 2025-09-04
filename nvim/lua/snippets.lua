@@ -322,6 +322,7 @@ ls.add_snippets("python", {
     s("po-min-horizontal", { t({ "from polars import min_horizontal", "" }) }),
     s("po-no-rows-returned-error", { t({ "from polars.exceptions import NoRowsReturnedError", "" }) }),
     s("po-read-ipc", { t({ "from polars import read_ipc", "" }) }),
+    s("po-repeat", { t({ "from polars import repeat", "" }) }),
     s("po-schema-dict", { t({ "from polars._typing import SchemaDict", "" }) }),
     s("po-series", { t({ "from polars import Series", "" }) }),
     s("po-uint16", { t({ "from polars import UInt16", "" }) }),
