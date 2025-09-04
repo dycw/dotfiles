@@ -20,7 +20,7 @@ if command -v direnv >/dev/null 2>&1; then
 else
 	echo_date "Installing 'direnv'..."
 	curl -sfL https://direnv.net/install.sh | bash &&
-		printf "\n# direnv\nexport PATH=\"\$PATH:\$HOME/bin\"" >>~/.bashrc &&
+		printf "\n# direnv\nexport PATH=\"\$PATH:\$HOME/bin\"" >>"${HOME}/.bashrc" &&
 		echo_date "Finished installing 'direnv'"
 fi
 
@@ -28,8 +28,8 @@ fi
 if command -v just >/dev/null 2>&1; then
 	echo_date "'just' is already installed"
 else
-	(curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to "$HOME/bin") &&
-		printf "\n# just\neval \"\$(direnv hook bash)\"" >>~/.bashrc &&
+	(curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to "${HOME}/bin") &&
+		printf "\n# just\neval \"\$(direnv hook bash)\"" >>"${HOME}/.bashrc" &&
 		echo_date "Finished installing 'just'"
 fi
 
@@ -38,7 +38,7 @@ if command -v just >/dev/null 2>&1; then
 	echo_date "'just' is already installed"
 else
 	sudo apt install -y neovim &&
-		printf '\n# neovim\nalias n="nvim"' >>~/.bashrc &&
+		printf '\n# neovim\nalias n="nvim"' >>"${HOME}/.bashrc" &&
 		echo_date "Finished installing 'neovim'"
 fi
 
@@ -47,6 +47,6 @@ if command -v starship >/dev/null 2>&1; then
 	echo_date "'starship' is already installed"
 else
 	curl -sS https://starship.rs/install.sh | sh &&
-		printf "\n# starship\neval \"\$(starship init bash)\"" >>~/.bashrc &&
+		printf "\n# starship\neval \"\$(starship init bash)\"" >>"${HOME}/.bashrc" &&
 		echo_date "Finished installing 'neovim'"
 fi
