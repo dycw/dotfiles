@@ -455,6 +455,13 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# rebase (squash)
 	gsqm() { gf && git reset --soft "$(git merge-base HEAD master)" && gcf "$@"; }
+	# remote
+	grmv() {
+		if [ $# -ne 0 ]; then
+			echo_date "'grmv' accepts 0 arguments" && return 1
+		fi
+		git remote -v
+	}
 	# reset
 	gr() { git reset "$@"; }
 	grp() { git reset --patch "$@"; }
