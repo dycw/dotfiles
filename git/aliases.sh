@@ -834,6 +834,26 @@ fi
 
 # glab
 if command -v glab >/dev/null 2>&1; then
+	__glab_mr_json() {
+		if [ $# -ne 0 ]; then
+			echo_date "'__glab_mr_json' accepts 0 arguments; got $#" && return 1
+		fi
+		__gl_mr_j_branch="$(current_branch)"
+		__gl_mr_j_json=$(glab mr list --output=json --source-branch="${__gl_mr_j_branch}" 2>/dev/null) || return 1
+		__gl_mr_m_num=$(printf "%s" "${__gl_mr_j_json}" | jq 'length')
+		if [ "${__gl_mr_m_num}" -eq 0 ]; then
+			echo_date "'__glab_mr_json' expects an MR for '${__gl_mr_j_branch}'; got none" && return 1
+		elif [ "${__gl_mr_m_num}" -ge 2 ]; then
+			echo_date "'__glab_mr_json' expects a unique MR for '${__gl_mr_j_branch}'; got ${__gl_mr_m_num}" && return 1
+		fi
+		printf "%s" "${__gl_mr_j_json}" | jq '.[0]' | jq
+	}
+	__glab_mr_num() {
+		if [ $# -ne 0 ]; then
+			echo_date "'__glab_mr_num' accepts 0 arguments; got $#" && return 1
+		fi
+		printf "%s\n" "$(__glab_mr_json)" | jq -r '.iid'
+	}
 	glc() {
 		if [ $# -ne 1 ]; then
 			echo_date "'glc' accepts 1 argument" && return 1
@@ -854,10 +874,7 @@ if command -v glab >/dev/null 2>&1; then
 		glm && __gl_mr_await_merged "${__glmd_branch}" && gcmd
 	}
 	__gl_mr_merging() {
-		__gl_mr_m_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || return 1
-		if [ -z "${__gl_mr_m_branch}" ]; then
-			return 1
-		fi
+		__gl_mr_m_branch="$(current_branch)"
 		__gl_mr_m_json_all=$(glab mr list --source-branch "${__gl_mr_m_branch}" --output=json 2>/dev/null) || return 1
 		__gl_mr_m_num=$(printf "%s" "${__gl_mr_m_json_all}" | jq 'length')
 		if [ "${__gl_mr_m_num}" -eq 0 ]; then
