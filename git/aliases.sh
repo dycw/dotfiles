@@ -153,15 +153,17 @@ if command -v git >/dev/null 2>&1; then
 		git checkout "${__branch}" && gpl
 	}
 	gcob() {
-		unset __title __num
 		if [ $# -eq 0 ]; then
 			if ! __is_current_branch_master; then
 				echo_date "'gcob' off 'master' accepts 1 argument; got $#" && return 1
 			fi
 			__branch='dev'
+			__title="$(__git_commit_auto_message) > ${__branch}"
+			unset __num
 		elif [ $# -eq 1 ]; then
 			__title="$1"
 			__branch="$(__to_valid_branch "${__title}")"
+			unset __num
 		elif [ $# -eq 2 ]; then
 			__title="$1"
 			__num="$2"
@@ -170,11 +172,12 @@ if command -v git >/dev/null 2>&1; then
 		else
 			echo_date "'gcob' accepts [0..2] arguments; got $#" && return 1
 		fi
-		gf && git checkout -b "${__branch}" origin/master || return $?
-		if [ $# -eq 1 ] && [ -n "${__title}" ]; then
-			gp && __git_commit_empty_auto_message && gp && ghc "${__title}"
-		elif [ $# -eq 2 ] && [ -n "${__title}" ] && [ -n "${__num}" ]; then
-			gp && __git_commit_empty_auto_message && gp && ghc "${__title}" "${__num}"
+		gf && git checkout -b "${__branch}" origin/master && gp &&
+			__git_commit_empty_auto_message && gp
+		if [ -z "${__num}" ]; then
+			ghc "${__title}"
+		else
+			ghc "${__title}" "${__num}"
 		fi
 	}
 	gcobac() {
