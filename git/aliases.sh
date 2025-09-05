@@ -733,7 +733,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 				echo_date "'${__branch}' PR needs to be opened" && return 1
 			fi
 			__start="$(date +%s)"
-			until ! [ "$(__glab_mr_merge_status)" = 'mergeable' ]; do
+			until [ "$(__glab_mr_merge_status)" = 'mergeable' ]; do
 				__elapsed="$(($(date +%s) - __start))"
 				echo_date "'${__branch}' is still merging (${__elapsed}s)..."
 				sleep 1
