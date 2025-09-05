@@ -82,13 +82,13 @@ fi
 # zsh
 zshrc() {
     if [ $# -ne 0 ]; then
-        echo_date "'zshrc' accepts no arguments" && return 1
+        echo_date "'zshrc' accepts no arguments; got $#" && return 1
     fi
     ${EDITOR} "${HOME}/.zshrc"
 }
 zshrc_reload() {
     if [ $# -ne 0 ]; then
-        echo_date "'zshrc_reload' accepts no arguments" && return 1
+        echo_date "'zshrc_reload' accepts no arguments; got $#" && return 1
     fi
     . "${HOME}/.zshrc"
 }

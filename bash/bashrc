@@ -21,13 +21,13 @@ fi
 # bash
 bashrc() {
     if [ $# -ne 0 ]; then
-        echo_date "'bashrc' accepts no arguments" && return 1
+        echo_date "'bashrc' accepts no arguments; got $#" && return 1
     fi
     ${EDITOR} "${HOME}/.bashrc"
 }
 bashrc_reload() {
     if [ $# -ne 0 ]; then
-        echo_date "'bashrc_reload' accepts no arguments" && return 1
+        echo_date "'bashrc_reload' accepts no arguments; got $#" && return 1
     fi
     . "${HOME}/.bashrc"
 }
