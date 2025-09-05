@@ -730,12 +730,15 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			echo_date "'__gh_pr_merge' accepts 1 argument; got $#" && return 1
 		fi
 		__delete="$1"
+		__start="$(date +%s)"
 		__host="$(__repo_host)" || return 1
 		__branch="$(current_branch)" || return 1
 		if [ "${__host}" = 'github' ]; then
 			gh pr merge --auto --delete-branch --squash || return $?
 			while __gh_pr_merging; do
-				echo_date "'${__branch}' is still merging..."
+				__now="$(date +%s)"
+				__elapsed="$((__now - __start))"
+				echo_date "'${__branch}' is still merging... (${__elapsed}s)"
 				sleep 1
 			done
 		elif [ "${__host}" = 'gitlab' ]; then
@@ -747,7 +750,6 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			elif [ "${__status}" = 'not open' ]; then
 				echo_date "'${__branch}' PR needs to be opened" && return 1
 			fi
-			__start="$(date +%s)"
 			while true; do
 				glab mr merge --remove-source-branch --squash --yes >/dev/null 2>&1 || true
 				if __gh_pr_merging; then
