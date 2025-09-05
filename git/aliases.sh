@@ -138,7 +138,7 @@ if command -v git >/dev/null 2>&1; then
 		if __is_current_branch_master; then
 			gcof && gcm
 		else
-			__gcmd_branch="$(current_branch)"
+			__gcmd_branch="$(current_branch)" || return 1
 			gcof && gcm && gbd "${__gcmd_branch}"
 		fi
 	}
@@ -230,7 +230,7 @@ if command -v git >/dev/null 2>&1; then
 		elif __is_current_branch_master; then
 			echo_date "'gbr' cannot be run on master" && return 1
 		else
-			__gbr_branch="$(current_branch)"
+			__gbr_branch="$(current_branch)" || return 1
 			gcof && gcm && gcob "${__gbr_branch}"
 		fi
 	}
@@ -543,13 +543,15 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# tag
 	gta() {
-		if [ $# -ne 2 ]; then
-			echo_date "'gta' accepts 2 arguments" && return 1
+		if [ $(($# % 2)) -ne 0 ]; then
+			echo_date "'gta' accepts an even number of arguments; got $#" && return 1
 		fi
-		__gta_tag="$1"
-		__gta_sha="$2"
-		git tag -a "${__gta_tag}" "${__gta_sha}" -m "${__gta_tag}" &&
-			git push --set-upstream origin --tags
+		while [ $# -gt 0 ]; do
+			__gta_tag="$1"
+			__gta_sha="$2"
+			git tag -a "${__gta_tag}" "${__gta_sha}" -m "${__gta_tag}" &&
+				git push --set-upstream origin --tags
+		done
 	}
 	gtd() { git tag --delete "$@" && git push --delete origin "$@"; }
 fi
@@ -578,7 +580,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ $# -eq 0 ] || [ $# -ge 4 ]; then
 			echo_date "'ghic' accepts [1..3] arguments" && return 1
 		fi
-		__ghic_host="$(__repo_host)"
+		__ghic_host="$(__repo_host)" || return 1
 		if [ "$(__ghic_host)" = 'github' ] && [ $# -eq 1 ]; then
 			gh issue create -t="$1" -b='.'
 		elif [ "$(__ghic_host)" = 'github' ] && [ $# -eq 2 ]; then
@@ -599,7 +601,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'ghil' accepts no arguments" && return 1
 		fi
-		__ghil_host="$(__repo_host)"
+		__ghil_host="$(__repo_host)" || return 1
 		if [ "$(__ghil_host)" = 'github' ]; then
 			gh issue list
 		elif [ "$(__ghil_host)" = 'gitlab' ]; then
@@ -610,7 +612,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 	}
 	ghiv() {
 		if [ $# -eq 0 ]; then
-			__ghiv_branch="$(current_branch)"
+			__ghiv_branch="$(current_branch)" || return 1
 			__ghiv_num="${__ghiv_branch%%-*}"
 			__ghiv_msg="'ghiv' cannot be run on a branch without an issue number"
 		elif [ $# -eq 1 ]; then
@@ -622,7 +624,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if ! [ "${__ghiv_num}" -eq "${__ghiv_num}" ] 2>/dev/null; then
 			echo_date "${__ghiv_num}" && return 1
 		fi
-		__ghiv_host="$(__repo_host)"
+		__ghiv_host="$(__repo_host)" || return 1
 		if [ "$(__ghiv_host)" = 'github' ]; then
 			gh issue view "${__ghiv_num}" --web
 		elif [ "$(__ghiv_host)" = 'gitlab' ]; then
@@ -647,7 +649,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'ghv' accepts no arguments" && return 1
 		fi
-		__ghv_host="$(__repo_host)"
+		__ghv_host="$(__repo_host)" || return 1
 		if [ "${__ghv_host}" = 'github' ]; then
 			if gh pr ready >/dev/null 2>&1; then
 				gh pr view -w
@@ -673,7 +675,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		__gh_pr_ce_verb="$1"
 		__gh_pr_ce_title="$2"
 		__gh_pr_ce_body="$3"
-		__gh_pr_ce_host="$(__repo_host)"
+		__gh_pr_ce_host="$(__repo_host)" || return 1
 		if [ -z "${__gh_pr_ce_title}" ]; then
 			__gh_pr_ce_title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
 		fi
@@ -697,8 +699,8 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			echo_date "'__gh_pr_merge' accepts 1 argument" && return 1
 		fi
 		__gh_pr_m_delete="$1"
-		__gh_pr_m_host="$(__repo_host)"
-		__gh_pr_m_branch="$(current_branch)"
+		__gh_pr_m_host="$(__repo_host)" || return 1
+		__gh_pr_m_branch="$(current_branch)" || return 1
 		if [ "${__gh_pr_m_host}" = 'github' ]; then
 			gh pr merge --auto --delete-branch --squash || return $?
 		elif [ "${__gh_pr_m_host}" = 'gitlab' ]; then
@@ -715,8 +717,8 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 	}
 	__gh_pr_merging() {
-		__gh_pr_merging_host="$(__repo_host)"
-		__gh_pr_merging_branch="$(current_branch)"
+		__gh_pr_merging_host="$(__repo_host)" || return 1
+		__gh_pr_merging_branch="$(current_branch)" || return 1
 		if [ "${__gh_pr_merging_host}" = 'github' ]; then
 			if [ "$(gh pr view --json state 2>/dev/null | jq -r '.state')" != "OPEN" ]; then
 				return 1
@@ -757,7 +759,7 @@ if (command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1) && command
 		if [ $# -ne 0 ]; then
 			echo_date "'gw' accepts no arguments" && return 1
 		fi
-		__gw_host="$(__repo_host)"
+		__gw_host="$(__repo_host)" || return 1
 		if [ "${__gw_host}" = 'github' ]; then
 			if gh pr ready >/dev/null 2>&1; then
 				ghv
@@ -765,7 +767,11 @@ if (command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1) && command
 				gitweb
 			fi
 		elif [ "${__gw_host}" = 'gitlab' ]; then
-			echo 'not impl?'
+			if __glab_mr_json >/dev/null 2>&1; then
+				ghv
+			else
+				gitweb
+			fi
 		else
 			echo_date "'gw' must be for GitHub/GitLab; got '${__gw_host}'" && return 1
 		fi
@@ -835,7 +841,7 @@ if command -v gh >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'ghs' accepts no arguments" && return 1
 		fi
-		__ghs_host="$(__repo_host)"
+		__ghs_host="$(__repo_host)" || return 1
 		if [ "${__ghs_host}" = 'github' ]; then
 			watch -d -n 1.0 'gh pr status'
 		else
@@ -850,15 +856,16 @@ if command -v glab >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'__glab_mr_json' accepts 0 arguments; got $#" && return 1
 		fi
-		__gl_mr_j_branch="$(current_branch)"
+		__gl_mr_j_branch="$(current_branch)" || return 1
 		__gl_mr_j_json=$(glab mr list --output=json --source-branch="${__gl_mr_j_branch}" 2>/dev/null) || return 1
-		__gl_mr_m_num=$(printf "%s" "${__gl_mr_j_json}" | jq 'length')
-		if [ "${__gl_mr_m_num}" -eq 0 ]; then
+		__gl_mr_j_num=$(printf "%s" "${__gl_mr_j_json}" | jq 'length')
+		if [ "${__gl_mr_j_num}" -eq 0 ]; then
 			echo_date "'__glab_mr_json' expects an MR for '${__gl_mr_j_branch}'; got none" && return 1
-		elif [ "${__gl_mr_m_num}" -ge 2 ]; then
-			echo_date "'__glab_mr_json' expects a unique MR for '${__gl_mr_j_branch}'; got ${__gl_mr_m_num}" && return 1
+		elif [ "${__gl_mr_j_num}" -eq 1 ]; then
+			printf "%s" "${__gl_mr_j_json}" | jq '.[0]' | jq
+		else
+			echo_date "'__glab_mr_json' expects a unique MR for '$(current_branch)'; got ${__gl_mr_j_num}" && return 1
 		fi
-		printf "%s" "${__gl_mr_j_json}" | jq '.[0]' | jq
 	}
 	__glab_mr_num() {
 		if [ $# -ne 0 ]; then
