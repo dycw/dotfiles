@@ -20,7 +20,7 @@ if command -v aichat >/dev/null 2>&1; then
 	}
 	acs() {
 		if [ $# -eq 0 ]; then
-			echo_date "'acs' accepts [1..) arguments" && return 1
+			echo_date "'acs' accepts [1..) arguments; got $#" && return 1
 		elif [ $# -eq 1 ]; then
 			aichat --role='coding' --session="$1"
 		else
@@ -31,7 +31,7 @@ if command -v aichat >/dev/null 2>&1; then
 	}
 	as() {
 		if [ $# -eq 0 ]; then
-			echo_date "'as' accepts [1..) arguments" && return 1
+			echo_date "'as' accepts [1..) arguments; got $#" && return 1
 		elif [ $# -eq 1 ]; then
 			aichat --session="$1"
 		else
@@ -45,7 +45,7 @@ fi
 # ancestor
 ancestor() {
 	if [ $# -ne 2 ]; then
-		echo_date "'ancestor' accepts 2 arguments" && return 1
+		echo_date "'ancestor' accepts 2 arguments; got $#" && return 1
 	fi
 	__type="$1"
 	__name="$2"
@@ -72,7 +72,7 @@ ancestor() {
 
 ancestor_edit() {
 	if [ $# -ne 1 ]; then
-		echo_date "'ancestor_edit' accepts 1 arguments" && return 1
+		echo_date "'ancestor_edit' accepts 1 arguments; got $#" && return 1
 	fi
 	__name="$1"
 	__candidate=$(ancestor file "${__name}" 2>/dev/null)
@@ -93,7 +93,7 @@ if command -v bacon >/dev/null 2>&1; then
 		elif [ $# -eq 2 ]; then
 			bacon nextest -- --test "$1" "$2" -- --nocapture
 		else
-			echo_date "'bt' accepts [0..2] arguments" && return 1
+			echo_date "'bt' accepts [0..2] arguments; got $#" && return 1
 		fi
 	}
 fi
@@ -104,13 +104,13 @@ if command -v bat >/dev/null 2>&1; then
 	catp() { bat --style=plain "$@"; }
 	tf() {
 		if [ $# -ne 1 ]; then
-			echo_date "'tf' accepts 1 argument" && return 1
+			echo_date "'tf' accepts 1 argument; got $#" && return 1
 		fi
 		__tf_base "$1" --language=log
 	}
 	tfp() {
 		if [ $# -ne 1 ]; then
-			echo_date "'tfp' accepts 1 argument" && return 1
+			echo_date "'tfp' accepts 1 argument; got $#" && return 1
 		fi
 		__tf_base "$1"
 	}
@@ -136,25 +136,25 @@ bottom_toml() {
 if command -v bump-my-version >/dev/null 2>&1; then
 	bump_patch() {
 		if [ $# -ne 0 ]; then
-			echo_date "'bump_patch' accepts 0 arguments" && return 1
+			echo_date "'bump_patch' accepts 0 arguments; got $#" && return 1
 		fi
 		bump-my-version bump patch
 	}
 	bump_minor() {
 		if [ $# -ne 0 ]; then
-			echo_date "'bump_minor' accepts 0 arguments" && return 1
+			echo_date "'bump_minor' accepts 0 arguments; got $#" && return 1
 		fi
 		bump-my-version bump minor
 	}
 	bump_major() {
 		if [ $# -ne 0 ]; then
-			echo_date "'bump_major' accepts 0 arguments" && return 1
+			echo_date "'bump_major' accepts 0 arguments; got $#" && return 1
 		fi
 		bump-my-version bump major
 	}
 	bump_set() {
 		if [ $# -ne 1 ]; then
-			echo_date "'bump_set' accepts 1 argument" && return 1
+			echo_date "'bump_set' accepts 1 argument; got $#" && return 1
 		fi
 		bump-my-version replace --new-version "$1"
 	}
@@ -225,25 +225,25 @@ cdwg() {
 # chmod
 chmod_files() {
 	if [ $# -ne 1 ]; then
-		echo_date "'chmod_files' accepts 1 argument" && return 1
+		echo_date "'chmod_files' accepts 1 argument; got $#" && return 1
 	fi
 	find . -type f -exec chmod "$1" {} \;
 }
 chmod_dirs() {
 	if [ $# -ne 1 ]; then
-		echo_date "'chmod_dirs' accepts 1 argument" && return 1
+		echo_date "'chmod_dirs' accepts 1 argument; got $#" && return 1
 	fi
 	find . -type d -exec chmod "$1" {} \;
 }
 chown_files() {
 	if [ $# -ne 1 ]; then
-		echo_date "'chown_files' accepts 1 argument" && return 1
+		echo_date "'chown_files' accepts 1 argument; got $#" && return 1
 	fi
 	find . -type f -exec chown "$1" {} \;
 }
 chown_dirs() {
 	if [ $# -ne 1 ]; then
-		echo_date "'chown_dirs' accepts 1 argument" && return 1
+		echo_date "'chown_dirs' accepts 1 argument; got $#" && return 1
 	fi
 	find . -type d -exec chown "$1" {} \;
 }
@@ -332,7 +332,7 @@ if command -v fd >/dev/null 2>&1; then
 	fds() { __fd_base 'symlink' "$@"; }
 	__fd_base() {
 		if [ $# -le 0 ]; then
-			echo_date "'__fd_base' accepts [1..) arguments" && return 1
+			echo_date "'__fd_base' accepts [1..) arguments; got $#" && return 1
 		fi
 		__type=$1
 		shift
@@ -347,7 +347,7 @@ clean_dirs() {
 	elif [ $# -eq 1 ]; then
 		__dir="$1"
 	else
-		echo_date "'uvpyc' accepts 1 argument" && return 1
+		echo_date "'uvpyc' accepts 1 argument; got $#" && return 1
 	fi
 	find "${__dir}" -type d -delete
 }
@@ -540,7 +540,7 @@ pre_commit_config() {
 # ps + pgrep
 pgrepf() {
 	if [ $# -ne 1 ]; then
-		echo_date "'pgrepf' accepts 1 argument" && return 1
+		echo_date "'pgrepf' accepts 1 argument; got $#" && return 1
 	fi
 	__pids=$(pgrep -f "$1" | tr '\n' ' ')
 	if [ -z "${__pids}" ]; then
@@ -552,7 +552,7 @@ pgrepf() {
 if command -v fzf >/dev/null 2>&1; then
 	pgrep_kill() {
 		if [ $# -ne 1 ]; then
-			echo_date "'pgrep_kill' accepts 1 argument" && return 1
+			echo_date "'pgrep_kill' accepts 1 argument; got $#" && return 1
 		fi
 		__pattern=$1
 		__pids=$(pgrep -f "$__pattern" | tr '\n' ' ')
@@ -581,7 +581,7 @@ fi
 if command -v watch >/dev/null 2>&1; then
 	wpgrepf() {
 		if [ $# -ne 1 ]; then
-			echo_date "'wpgrepf' accepts 1 argument" && return 1
+			echo_date "'wpgrepf' accepts 1 argument; got $#" && return 1
 		fi
 		watch --color --differences --interval=0.5 -- \
 			"pids=\$(pgrep -f \"$1\"); if [ -n \"\${pids}\" ]; then ps -fp \${pids}; else echo \"No process matched: $1\"; fi"
@@ -645,7 +645,7 @@ __run_shutdown() {
 if command -v rg >/dev/null 2>&1; then
 	env_rg() {
 		if [ $# -ne 1 ]; then
-			echo_date "'env_rg' accepts 1 argument" && return 1
+			echo_date "'env_rg' accepts 1 argument; got $#" && return 1
 		fi
 		env | rg "$1"
 	}
@@ -795,7 +795,7 @@ if command -v tmux >/dev/null 2>&1; then
 		elif [ $# -eq 1 ]; then
 			__session="$1"
 		else
-			echo_date "'tmux_attach' accepts [0..1] arguments" && return 1
+			echo_date "'tmux_attach' accepts [0..1] arguments; got $#" && return 1
 		fi
 		tmux attach -t "${__session}"
 	}
@@ -823,7 +823,7 @@ if command -v tmux >/dev/null 2>&1; then
 		elif [ $# -eq 1 ]; then
 			tmux list-keys -T "$1"
 		else
-			echo_date "'tmux_list_keys' accepts [0..1] arguments" && return 1
+			echo_date "'tmux_list_keys' accepts [0..1] arguments; got $#" && return 1
 		fi
 	}
 	tmux_ls() {
@@ -1006,7 +1006,7 @@ if command -v tsunamid >/dev/null 2>&1; then
 		elif [ $# -eq 1 ]; then
 			__dir="$1"
 		else
-			echo_date "'tsunami_serve' accepts 0 arguments" && return 1
+			echo_date "'tsunami_serve' accepts 0 arguments; got $#" && return 1
 		fi
 		if ! [ -d "${__dir}" ]; then
 			echo_date "ERROR: '${__dir}' does not exist" && return 1
@@ -1051,7 +1051,7 @@ if command -v uv >/dev/null 2>&1; then
 		elif [ $# -eq 1 ]; then
 			(uv pip list | grep "$1")
 		else
-			echo_date "'uvpl' accepts [0..1] arguments" && return 1
+			echo_date "'uvpl' accepts [0..1] arguments; got $#" && return 1
 		fi
 	}
 	uvplo() {
@@ -1067,7 +1067,7 @@ if command -v uv >/dev/null 2>&1; then
 		elif [ $# -eq 1 ]; then
 			__dir="$1"
 		else
-			echo_date "'uvpyc' accepts 1 argument" && return 1
+			echo_date "'uvpyc' accepts 1 argument; got $#" && return 1
 		fi
 		uv tool run pyclean "${__dir}"
 		clean_dirs "${__dir}"
