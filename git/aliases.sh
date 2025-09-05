@@ -456,15 +456,15 @@ if command -v git >/dev/null 2>&1; then
         fi
         git remote -v
     }
-    github_or_gitlab() {
+    __repo_host() {
         if [ $# -ne 0 ]; then
-            echo_date "'github_or_gitlab' accepts 0 arguments" && return 1
+            echo_date "'__repo_host' accepts 0 arguments" && return 1
         fi
-        __ghl_url=$(git remote get-url origin 2>/dev/null)
-        case "${__ghl_url}" in
+        __rh_url=$(git remote get-url origin 2>/dev/null)
+        case "${__rh_url}" in
         *github*) echo "github" ;;
         *gitlab*) echo "gitlab" ;;
-        *) echo "unknown" ;;
+        *) echo_date "'__repo_host' must return 'github' or 'gitlab'; got '${__rh_url}'" && return 1 ;;
         esac
     }
     # reset
@@ -576,7 +576,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
         if [ $# -eq 0 ] || [ $# -ge 4 ]; then
             echo_date "'ghic' accepts [1..3] arguments" && return 1
         fi
-        __ghic_ghl=$(github_or_gitlab)
+        __ghic_ghl=$(__repo_host)
         if [ "${__ghic_ghl}" = 'github' ] && [ $# -eq 1 ]; then
             gh issue create -t="$1" -b='.'
         elif [ "${__ghic_ghl}" = 'github' ] && [ $# -eq 2 ]; then
@@ -597,7 +597,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
         if [ $# -ne 0 ]; then
             echo_date "'ghil' accepts no arguments" && return 1
         fi
-        __ghil_ghl=$(github_or_gitlab)
+        __ghil_ghl=$(__repo_host)
         if [ "${__ghil_ghl}" = 'github' ]; then
             gh issue list
         elif [ "${__ghil_ghl}" = 'gitlab' ]; then
@@ -660,6 +660,23 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
             echo_date "'ghmdv' accepts no arguments" && return 1
         fi
         __gh_pr_merge 1 1
+    }
+    ghv() {
+        if [ $# -ne 0 ]; then
+            echo_date "'ghv' accepts no arguments" && return 1
+        fi
+        case "$(__repo_host)" in
+        *github*)
+            if gh pr ready >/dev/null 2>&1; then
+                gh pr view -w
+            else
+                echo_date "'ghv' cannot find an open PR" && return 1
+            fi
+            gh issue view "${__ghiv_num}" -w
+            ;;
+        *gitlab*) glab issue view "${__ghiv_num}" --web ;;
+        *) echo_date "'ghv' must be for GitHub/GitLab" && return 1 ;;
+        esac
     }
     __gh_pr_create_or_edit() {
         if [ $# -ne 3 ]; then
@@ -727,17 +744,26 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
     }
 fi
 
-# gh + gitweb
-if command -v gh >/dev/null 2>&1 && command -v gitweb >/dev/null 2>&1; then
+# gh/lab + gitweb
+if (command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1) && command -v gitweb >/dev/null 2>&1; then
     gw() {
         if [ $# -ne 0 ]; then
             echo_date "'gw' accepts no arguments" && return 1
         fi
-        if gh pr ready >/dev/null 2>&1; then
-            ghv
-        else
-            gitweb
-        fi
+        case "$(__repo_host)" in
+        *github*)
+            if gh pr ready >/dev/null 2>&1; then
+                ghv
+            else
+                gitweb
+            fi
+            ;;
+        *gitlab*)
+            echo '?'
+            glab issue view "${__ghiv_num}" --web
+            ;;
+        *) echo_date "'gw' must be for GitHub/GitLab" && return 1 ;;
+        esac
     }
 fi
 
