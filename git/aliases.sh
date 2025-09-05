@@ -411,11 +411,11 @@ if command -v git >/dev/null 2>&1; then
 		fi
 		__gpcb_force="$1"
 		if [ "${__gpcb_force}" -eq 0 ]; then
-			git push --set-upstream=origin "$(current_branch)"
+			git push --set-upstream origin "$(current_branch)"
 		elif [ "${__gpcb_force}" -eq 1 ]; then
-			git push --force --set-upstream=origin "$(current_branch)"
+			git push --force --set-upstream origin "$(current_branch)"
 		else
-			echo_date "'__git_push_current_branch' accepts {0, 1} for the 'force' flag; got ${__git_push_current_branch_force}" && return 1
+			echo_date "'__git_push_current_branch' accepts {0, 1} for the 'force' flag; got ${__gpcb_force}" && return 1
 		fi
 	}
 	# rebase
@@ -547,7 +547,7 @@ if command -v git >/dev/null 2>&1; then
 		__gta_tag="$1"
 		__gta_sha="$2"
 		git tag -a "${__gta_tag}" "${__gta_sha}" -m "${__gta_tag}" &&
-			git push --set-upstream=origin --tags
+			git push --set-upstream origin --tags
 	}
 	gtd() { git tag --delete "$@" && git push --delete origin "$@"; }
 fi
