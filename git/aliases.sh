@@ -647,7 +647,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ "${__ghl_host}" = 'github' ]; then
 			gh pr list
 		elif [ "${__ghl_host}" = 'gitlab' ]; then
-			gh mr list
+			glab mr list
 		else
 			echo_date "'ghl' must be for GitHub/GitLab; got '${__ghiv_host}'" && return 1
 		fi
