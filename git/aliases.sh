@@ -648,24 +648,22 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			echo_date "'ghv' accepts no arguments" && return 1
 		fi
 		__ghv_host="$(__repo_host)"
-		if [ "$(__ghic_host)" = 'github' ]; then
+		if [ "${__ghv_host}" = 'github' ]; then
 			if gh pr ready >/dev/null 2>&1; then
 				gh pr view -w
 			else
 				echo_date "'ghv' cannot find an open PR" && return 1
 			fi
-		elif [ "$(__ghic_host)" = 'github' ]; then
-
-			__ghv_branch=$(current_branch)
-			__ghv_mr_list=$(glab mr list --output=json --source-branch="${__ghv_branch}")
-			__ghv_num=$(echo "${__ghv_mr_list}" | jq -r '.[] | select(.draft == false) | .iid' | head -n1)
+		elif [ "${__ghv_host}" = 'gitlab' ]; then
+			__ghv_num="$(__glab_mr_num)"
 			if [ -n "${__ghv_num}" ]; then
 				glab mr view "${__ghv_num}" --web
 			else
 				echo_date "'ghv' cannot find an open PR" && return 1
 			fi
 		else
-			echo_date "'ghv' must be for GitHub/GitLab; got '${__ghv_host}'" && return 1
+			echo_date "'ghv' must be for GitHub/GitLab
+            got '${__ghv_host}'" && return 1
 		fi
 	}
 	__gh_pr_create_or_edit() {
