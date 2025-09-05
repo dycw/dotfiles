@@ -697,8 +697,8 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			echo_date "'__gh_pr_merge' accepts 1 argument" && return 1
 		fi
 		__gh_pr_m_delete="$1"
-		__gh_pr_m_branch="$(current_branch)"
 		__gh_pr_m_host="$(__repo_host)"
+		__gh_pr_m_branch="$(current_branch)"
 		if [ "${__gh_pr_m_host}" = 'github' ]; then
 			gh pr merge --auto --delete-branch --squash || return $?
 		elif [ "${__gh_pr_m_host}" = 'gitlab' ]; then
@@ -715,18 +715,27 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 	}
 	__gh_pr_merging() {
-		__gh_pr_m_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || return 1
-		if [ -z "${__gh_pr_m_branch}" ]; then
-			return 1
-		fi
-		__gh_pr_m_json=$(gh pr view --json state 2>/dev/null) || return 1
-		__gh_pr_m_state=$(printf "%s" "$__gh_pr_m_json" | jq -r '.state')
-		if [ "${__gh_pr_m_state}" = 'CLOSED' ]; then
-			return 1
-		fi
-		__gh_pr_m_repo=$(gh repo view --json nameWithOwner -q .nameWithOwner)
-		if gh api "repos/${__gh_pr_m_repo}/branches/${__gh_pr_m_branch}" >/dev/null 2>&1; then
-			return 0
+		__gh_pr_merging_host="$(__repo_host)"
+		__gh_pr_merging_branch="$(current_branch)"
+		if [ "${__gh_pr_merging_host}" = 'github' ]; then
+			if [ "$(gh pr view --json state 2>/dev/null | jq -r '.state')" != "OPEN" ]; then
+				return 1
+			fi
+			__gh_pr_merging_repo=$(gh repo view --json nameWithOwner -q .nameWithOwner)
+			if gh api "repos/${__gh_pr_merging_repo}/branches/${__gh_pr_merging_branch}" >/dev/null 2>&1; then
+				return 0
+			fi
+		elif [ "${__gh_pr_merging_host}" = 'gitlab' ]; then
+			__gh_pr_merging_json="$(__glab_mr_json)"
+			if [ "$(printf "%s" "$__gh_pr_merging_json" | jq -r '.state')" != "opened" ]; then
+				return 1
+			fi
+			__gh_pr_merging_pid=$(printf "%s" "${__gh_pr_merging_json}" | jq -r '.target_project_id')
+			if glab api "projects/${__gh_pr_merging_pid}/repository/branches/${__gh_pr_merging_branch}" >/dev/null 2>&1; then
+				return 0
+			fi
+		else
+			echo_date "'__gh_pr_merging' must be for GitHub/GitLab; got '${__gh_pr_merging_host}'" && return 1
 		fi
 		return 1
 	}
@@ -851,54 +860,6 @@ if command -v glab >/dev/null 2>&1; then
 			echo_date "'__glab_mr_num' accepts 0 arguments; got $#" && return 1
 		fi
 		printf "%s\n" "$(__glab_mr_json)" | jq -r '.iid'
-	}
-	glc() {
-		if [ $# -ne 1 ]; then
-			echo_date "'glc' accepts 1 argument" && return 1
-		fi
-		glab mr create --description='.' --title "$1"
-	}
-	glm() {
-		if [ $# -ne 0 ]; then
-			echo_date "'glm' accepts 0 arguments" && return 1
-		fi
-		glab mr merge --remove-source-branch --squash --yes
-	}
-	glmd() {
-		if [ $# -ne 0 ]; then
-			echo_date "'glmd' accepts 0 arguments" && return 1
-		fi
-		__glmd_branch="$(current_branch)"
-		glm && __gl_mr_await_merged "${__glmd_branch}" && gcmd
-	}
-	__gl_mr_merging() {
-		__gl_mr_m_branch="$(current_branch)"
-		__gl_mr_m_json_all=$(glab mr list --source-branch "${__gl_mr_m_branch}" --output=json 2>/dev/null) || return 1
-		__gl_mr_m_num=$(printf "%s" "${__gl_mr_m_json_all}" | jq 'length')
-		if [ "${__gl_mr_m_num}" -eq 0 ]; then
-			echo_date "'__gl_mr_merging' expects an MR for '${__gl_mr_m_branch}'; got none" && return 1
-		elif [ "${__gl_mr_m_num}" -ge 2 ]; then
-			echo_date "'__gl_mr_merging' expects a unique MR for '${__gl_mr_m_branch}'; got ${__gl_mr_m_num}" && return 1
-		fi
-		__gl_mr_m_json1=$(printf "%s" "${__gl_mr_m_json_all}" | jq '.[0]')
-		__gl_mr_m_state=$(printf "%s" "${__gl_mr_m_json1}" | jq -r '.state')
-		if [ "${__gl_mr_m_state}" != 'opened' ]; then
-			return 1
-		fi
-		if git ls-remote --exit-code origin "${__gl_mr_m_branch}" >/dev/null 2>&1; then
-			return 0
-		fi
-		return 1
-	}
-	__gl_mr_await_merged() {
-		if [ $# -ne 1 ]; then
-			echo_date "'__gl_mr_await_merged' accepts 1 argument"
-		fi
-		while __gl_mr_merging; do
-			echo_date "'$1' is still merging..."
-			sleep 1
-		done
-		echo_date "'$1' has finished merging"
 	}
 fi
 
