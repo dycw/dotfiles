@@ -144,39 +144,38 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gco() {
 		if [ $# -eq 0 ]; then
-			__gco_branch="$(__select_local_branch)"
+			__branch="$(__select_local_branch)"
 		elif [ $# -eq 1 ]; then
-			__gco_branch="$1"
+			__branch="$1"
 		else
 			echo_date "'gco' accepts [0..1] arguments" && return 1
 		fi
-		git checkout "${__gco_branch}" && gpl
+		git checkout "${__branch}" && gpl
 	}
 	gcob() {
 		if [ $# -eq 0 ]; then
 			if ! __is_current_branch_master; then
 				echo_date "'gcob' off 'master' accepts 1 argument" && return 1
 			fi
-			unset __gcob_title __gcob_num __gcob_desc
-			__gcob_branch='dev'
+			unset __title __num
+			__branch='dev'
 		elif [ $# -eq 1 ]; then
-			unset __gcob_num __gcob_desc
-			__gcob_title="$1"
-			__gcob_branch="$(__to_valid_branch "${__gcob_title}")"
+			unset __num
+			__title="$1"
+			__branch="$(__to_valid_branch "${__title}")"
 		elif [ $# -eq 2 ]; then
-			__gcob_title="$1"
-			__gcob_num="$2"
-			__gcob_desc="$(__to_valid_branch "${__gcob_title}")"
-			__gcob_branch="$2-${__gcob_desc}"
+			__title="$1"
+			__num="$2"
+			__desc="$(__to_valid_branch "${__title}")"
+			__branch="$2-${__desc}"
 		else
 			echo_date "'gcob' accepts [0..2] arguments" && return 1
 		fi
-		gf && git checkout -b "${__gcob_branch}" origin/master || return $?
-		if [ $# -eq 1 ] && [ -n "${__gcob_title}" ]; then
-			gp && __git_commit_empty_auto_message && gp && ghc "${__gcob_title}"
-		elif [ $# -eq 2 ] && [ -n "${__gcob_title}" ] && [ -n "${__gcob_num}" ]; then
-			gp && __git_commit_empty_auto_message && gp &&
-				ghc "${__gcob_title}" "${__gcob_num}"
+		gf && git checkout -b "${__branch}" origin/master || return $?
+		if [ $# -eq 1 ] && [ -n "${__title}" ]; then
+			gp && __git_commit_empty_auto_message && gp && ghc "${__title}"
+		elif [ $# -eq 2 ] && [ -n "${__title}" ] && [ -n "${__num}" ]; then
+			gp && __git_commit_empty_auto_message && gp && ghc "${__title}" "${__num}"
 		fi
 	}
 	gcobt() {
@@ -198,9 +197,9 @@ if command -v git >/dev/null 2>&1; then
 			git checkout -- .
 		else
 			if __is_valid_ref "$1"; then
-				__gcof_branch="$1"
+				__branch="$1"
 				shift
-				git checkout "${__gcof_branch}" -- "$@"
+				git checkout "${__branch}" -- "$@"
 			else
 				git checkout -- "$@"
 			fi
@@ -586,57 +585,57 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ $# -eq 0 ] || [ $# -ge 4 ]; then
 			echo_date "'ghic' accepts [1..3] arguments" && return 1
 		fi
-		__ghic_host="$(__repo_host)" || return 1
-		if [ "$(__ghic_host)" = 'github' ] && [ $# -eq 1 ]; then
-			gh issue create -t="$1" -b='.'
-		elif [ "$(__ghic_host)" = 'github' ] && [ $# -eq 2 ]; then
-			gh issue create -t="$1" -l="$2" -b='.'
-		elif [ "$(__ghic_host)" = 'github' ] && [ $# -eq 3 ]; then
-			gh issue create -t="$1" -l="$2" -b="$3"
-		elif [ "$(__ghic_host)" = 'gitlab' ] && [ $# -eq 1 ]; then
-			glab issue create -t="$1" -d='.'
-		elif [ "$(__ghic_host)" = 'gitlab' ] && [ $# -eq 2 ]; then
-			glab issue create -t="$1" -l="$2" -d='.'
-		elif [ "$(__ghic_host)" = 'gitlab' ] && [ $# -eq 3 ]; then
-			glab issue create -t="$1" -l="$2" -d="$3"
+		__host="$(__repo_host)" || return $?
+		if [ "${__host}" = 'github' ] && [ $# -eq 1 ]; then
+			gh issue create --title="$1" --body='.'
+		elif [ "${__host}" = 'github' ] && [ $# -eq 2 ]; then
+			gh issue create --title="$1" --label="$2" --body='.'
+		elif [ "${__host}" = 'github' ] && [ $# -eq 3 ]; then
+			gh issue create --title="$1" --label="$2" --body="$3"
+		elif [ "${__host}" = 'gitlab' ] && [ $# -eq 1 ]; then
+			glab issue create --title="$1" --description='.'
+		elif [ "${__host}" = 'gitlab' ] && [ $# -eq 2 ]; then
+			glab issue create --title="$1" --label="$2" --description='.'
+		elif [ "${__host}" = 'gitlab' ] && [ $# -eq 3 ]; then
+			glab issue create --title="$1" --label="$2" --description="$3"
 		else
-			echo_date "'ghic' must be for GitHub/GitLab; got '${__ghic_host}'" && return 1
+			echo_date "'ghic' must be for GitHub/GitLab; got '${__host}'" && return 1
 		fi
 	}
 	ghil() {
 		if [ $# -ne 0 ]; then
 			echo_date "'ghil' accepts no arguments; got $#" && return 1
 		fi
-		__ghil_host="$(__repo_host)" || return 1
-		if [ "$(__ghil_host)" = 'github' ]; then
+		__host="$(__repo_host)" || return $?
+		if [ "${__host}" = 'github' ]; then
 			gh issue list
-		elif [ "$(__ghil_host)" = 'gitlab' ]; then
+		elif [ "${__host}" = 'gitlab' ]; then
 			glab issue list
 		else
-			echo_date "'ghil' must be for GitHub/GitLab; got '${__ghil_host}'" && return 1
+			echo_date "'ghil' must be for GitHub/GitLab; got '${__host}'" && return 1
 		fi
 	}
 	ghiv() {
 		if [ $# -eq 0 ]; then
-			__ghiv_branch="$(current_branch)" || return 1
-			__ghiv_num="${__ghiv_branch%%-*}"
-			__ghiv_msg="'ghiv' cannot be run on a branch without an issue number"
+			__branch="$(current_branch)" || return $?
+			__num="${__branch%%-*}"
+			__msg="'ghiv' cannot be run on a branch without an issue number"
 		elif [ $# -eq 1 ]; then
-			__ghiv_num="$1"
-			__ghiv_msg="'ghiv' issue number must be an integer; got '$1'"
+			__num="$1"
+			__msg="'ghiv' issue number must be an integer; got '$1'"
 		else
 			echo_date "'ghiv' accepts [0..1] arguments; got $#" && return 1
 		fi
-		if ! [ "${__ghiv_num}" -eq "${__ghiv_num}" ] 2>/dev/null; then
-			echo_date "${__ghiv_num}" && return 1
+		if ! [ "${__num}" -eq "${__num}" ] 2>/dev/null; then
+			echo_date "${__num}" && return 1
 		fi
-		__ghiv_host="$(__repo_host)" || return 1
-		if [ "$(__ghiv_host)" = 'github' ]; then
-			gh issue view "${__ghiv_num}" --web
-		elif [ "$(__ghiv_host)" = 'gitlab' ]; then
-			glab issue view "${__ghiv_num}" --web
+		__host="$(__repo_host)" || return $?
+		if [ "${__host}" = 'github' ]; then
+			gh issue view "${__num}" --web
+		elif [ "${__host}" = 'gitlab' ]; then
+			glab issue view "${__num}" --web
 		else
-			echo_date "'ghiv' must be for GitHub/GitLab; got '${__ghiv_host}'" && return 1
+			echo_date "'ghiv' must be for GitHub/GitLab; got '${__host}'" && return 1
 		fi
 	}
 	ghl() {
@@ -649,7 +648,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		elif [ "${__ghl_host}" = 'gitlab' ]; then
 			glab mr list
 		else
-			echo_date "'ghl' must be for GitHub/GitLab; got '${__ghiv_host}'" && return 1
+			echo_date "'ghl' must be for GitHub/GitLab; got '${__host}'" && return 1
 		fi
 	}
 	ghm() {
@@ -668,71 +667,79 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'ghv' accepts no arguments; got $#" && return 1
 		fi
-		__ghv_host="$(__repo_host)" || return 1
-		if [ "${__ghv_host}" = 'github' ]; then
+		__host="$(__repo_host)" || return 1
+		if [ "${__host}" = 'github' ]; then
 			if gh pr ready >/dev/null 2>&1; then
 				gh pr view -w
 			else
 				echo_date "'ghv' cannot find an open PR" && return 1
 			fi
-		elif [ "${__ghv_host}" = 'gitlab' ]; then
-			__ghv_num="$(__glab_mr_num)"
-			if [ -n "${__ghv_num}" ]; then
-				glab mr view "${__ghv_num}" --web
+		elif [ "${__host}" = 'gitlab' ]; then
+			__num="$(__glab_mr_num)"
+			if [ -n "${__num}" ]; then
+				glab mr view "${__num}" --web
 			else
 				echo_date "'ghv' cannot find an open PR" && return 1
 			fi
 		else
 			echo_date "'ghv' must be for GitHub/GitLab
-            got '${__ghv_host}'" && return 1
+            got '${__host}'" && return 1
 		fi
 	}
 	__gh_pr_create_or_edit() {
 		if [ $# -ne 3 ]; then
 			echo_date "'__gh_pr_create_or_edit' accepts 3 arguments" && return 1
 		fi
-		__gh_pr_ce_verb="$1"
-		__gh_pr_ce_title="$2"
-		__gh_pr_ce_body="$3"
-		__gh_pr_ce_host="$(__repo_host)" || return 1
-		if [ -z "${__gh_pr_ce_title}" ]; then
-			__gh_pr_ce_title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
+		__verb="$1"
+		__title="$2"
+		__body="$3"
+		__host="$(__repo_host)" || return 1
+		if [ -z "${__title}" ]; then
+			__title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
 		fi
-		if [ -n "${__gh_pr_ce_body}" ] && __is_int "${__gh_pr_ce_body}"; then
-			__gh_pr_ce_body="Closes #${__gh_pr_ce_body}"
+		if [ -n "${__body}" ] && __is_int "${__body}"; then
+			__body="Closes #${__body}"
 		fi
-		if [ "${__gh_pr_ce_host}" = 'github' ]; then
-			gh pr "${__gh_pr_ce_verb}" --title="${__gh_pr_ce_title}" --body="${__gh_pr_ce_body}"
-		elif [ "${__gh_pr_ce_host}" = 'gitlab' ]; then
-			if [ "${__gh_pr_ce_verb}" = 'edit' ]; then
-				glab mr update "$(__glab_mr_num)" --title="${__gh_pr_ce_title}" --description="${__gh_pr_ce_body}"
+		if [ "${__host}" = 'github' ]; then
+			gh pr "${__verb}" --title="${__title}" --body="${__body}"
+		elif [ "${__host}" = 'gitlab' ]; then
+			if [ "${__verb}" = 'edit' ]; then
+				glab mr update "$(__glab_mr_num)" \
+					--title="${__title}" --description="${__body}"
 			else
-				glab mr "${__gh_pr_ce_verb}" --title="${__gh_pr_ce_title}" --description="${__gh_pr_ce_body}"
+				glab mr "${__verb}" \
+					--title="${__title}" --description="${__body}" \
+					--push --remove-source-branch --squash-before-merge
 			fi
 		else
-			echo_date "'__gh_pr_create_or_edit' must be for GitHub/GitLab; got '${__gh_pr_ce_host}'" && return 1
+			echo_date "'__gh_pr_create_or_edit' must be for GitHub/GitLab; got '${__host}'" && return 1
 		fi
 	}
 	__gh_pr_merge() {
 		if [ $# -ne 1 ]; then
 			echo_date "'__gh_pr_merge' accepts 1 argument" && return 1
 		fi
-		__gh_pr_m_delete="$1"
-		__gh_pr_m_host="$(__repo_host)" || return 1
-		__gh_pr_m_branch="$(current_branch)" || return 1
-		if [ "${__gh_pr_m_host}" = 'github' ]; then
+		__delete="$1"
+		__host="$(__repo_host)" || return 1
+		__branch="$(current_branch)" || return 1
+		if [ "${__host}" = 'github' ]; then
 			gh pr merge --auto --delete-branch --squash || return $?
-		elif [ "${__gh_pr_m_host}" = 'gitlab' ]; then
-			glab mr merge --remove-source-branch --squash --yes || return $?
+		elif [ "${__host}" = 'gitlab' ]; then
+			__start="$(date +%s)"
+			until glab mr merge --remove-source-branch --squash --yes; do
+				__elapsed="$(($(date +%s) - __start))"
+				echo_date "'${__branch}' is still merging (${__elapsed}s)..."
+				sleep 1
+			done
 		else
-			echo_date "'__gh_pr_merge' must be for GitHub/GitLab; got '${__gh_pr_m_host}'" && return 1
+			echo_date "'__gh_pr_merge' must be for GitHub/GitLab; got '${__host}'" && return 1
 		fi
-		if [ "${__gh_pr_m_delete}" -eq 0 ]; then
+		if [ "${__delete}" -eq 0 ]; then
 			:
-		elif [ "${__gh_pr_m_delete}" -eq 1 ]; then
-			__gh_pr_await_merged "${__gh_pr_m_branch}" && gcmd || return $?
+		elif [ "${__delete}" -eq 1 ]; then
+			__gh_pr_await_merged "${__branch}" && gcmd || return $?
 		else
-			echo_date "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__gh_pr_m_delete}" && return 1
+			echo_date "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__delete}" && return 1
 		fi
 	}
 	__gh_pr_merging() {
@@ -872,34 +879,44 @@ if command -v glab >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'__glab_mr_json' accepts 0 arguments; got $#" && return 1
 		fi
-		__gl_mr_j_branch="$(current_branch)" || return 1
-		__gl_mr_j_json=$(glab mr list --output=json --source-branch="${__gl_mr_j_branch}" 2>/dev/null) || return 1
-		__gl_mr_j_num=$(printf "%s" "${__gl_mr_j_json}" | jq 'length')
-		if [ "${__gl_mr_j_num}" -eq 0 ]; then
-			echo_date "'__glab_mr_json' expects an MR for '${__gl_mr_j_branch}'; got none" && return 1
-		elif [ "${__gl_mr_j_num}" -eq 1 ]; then
-			printf "%s" "${__gl_mr_j_json}" | jq '.[0]' | jq
+		__branch="$(current_branch)" || return 1
+		__json=$(glab mr list --output=json --source-branch="${__branch}" 2>/dev/null) || return 1
+		__num=$(printf "%s" "${__json}" | jq 'length') || return 1
+		if [ "${__num}" -eq 0 ]; then
+			echo_date "'__glab_mr_json' expects an MR for '${__branch}'; got none" && return 1
+		elif [ "${__num}" -eq 1 ]; then
+			printf "%s" "${__json}" | jq '.[0]' | jq
 		else
-			echo_date "'__glab_mr_json' expects a unique MR for '$(current_branch)'; got ${__gl_mr_j_num}" && return 1
+			echo_date "'__glab_mr_json' expects a unique MR for '${__branch}'; got ${__num}" && return 1
 		fi
 	}
 	__glab_mr_num() {
 		if [ $# -ne 0 ]; then
 			echo_date "'__glab_mr_num' accepts 0 arguments; got $#" && return 1
 		fi
-		printf "%s\n" "$(__glab_mr_json)" | jq -r '.iid'
+		__json="$(__glab_mr_json)" || return 1
+		printf "%s\n" "${__json}" | jq -r '.iid'
 	}
 	__glab_mr_pid() {
 		if [ $# -ne 0 ]; then
 			echo_date "'__glab_mr_pid' accepts 0 arguments; got $#" && return 1
 		fi
-		printf "%s\n" "$(__glab_mr_json)" | jq -r '.target_project_id'
+		__json="$(__glab_mr_json)" || return 1
+		printf "%s\n" "${__json}" | jq -r '.target_project_id'
+	}
+	__glab_mr_merge_status() {
+		if [ $# -ne 0 ]; then
+			echo_date "'__glab_mr_merge_status' accepts 0 arguments; got $#" && return 1
+		fi
+		__json="$(__glab_mr_json)" || return 1
+		printf "%s\n" "${__json}" | jq -r '.detailed_merge_status'
 	}
 	__glab_mr_state() {
 		if [ $# -ne 0 ]; then
 			echo_date "'__glab_mr_state' accepts 0 arguments; got $#" && return 1
 		fi
-		printf "%s\n" "$(__glab_mr_json)" | jq -r '.state'
+		__json="$(__glab_mr_json)" || return 1
+		printf "%s\n" "${__json}" | jq -r '.state'
 	}
 fi
 
