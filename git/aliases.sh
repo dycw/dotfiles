@@ -725,19 +725,19 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			if gh api "repos/${__gh_pr_merging_repo}/branches/${__gh_pr_merging_branch}" >/dev/null 2>&1; then
 				return 0
 			fi
+			return 1
 		elif [ "${__gh_pr_merging_host}" = 'gitlab' ]; then
 			__gh_pr_merging_json="$(__glab_mr_json)"
-			if [ "$(printf "%s" "$__gh_pr_merging_json" | jq -r '.state')" != "opened" ]; then
+			if [ "$(__glab_mr_state)" != "opened" ]; then
 				return 1
 			fi
-			__gh_pr_merging_pid=$(printf "%s" "${__gh_pr_merging_json}" | jq -r '.target_project_id')
-			if glab api "projects/${__gh_pr_merging_pid}/repository/branches/${__gh_pr_merging_branch}" >/dev/null 2>&1; then
+			if glab api "projects/$(__glab_mr_pid)/repository/branches/${__gh_pr_merging_branch}" >/dev/null 2>&1; then
 				return 0
 			fi
+			return 1
 		else
 			echo_date "'__gh_pr_merging' must be for GitHub/GitLab; got '${__gh_pr_merging_host}'" && return 1
 		fi
-		return 1
 	}
 	__gh_pr_await_merged() {
 		if [ $# -ne 1 ]; then
@@ -835,7 +835,12 @@ if command -v gh >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'ghs' accepts no arguments" && return 1
 		fi
-		watch -d -n 1.0 'gh pr status'
+		__ghs_host="$(__repo_host)"
+		if [ "${__ghs_host}" = 'github' ]; then
+			watch -d -n 1.0 'gh pr status'
+		else
+			echo_date "'ghs' must be for GitHub; got '${__ghs_host}'" && return 1
+		fi
 	}
 fi
 
@@ -860,6 +865,18 @@ if command -v glab >/dev/null 2>&1; then
 			echo_date "'__glab_mr_num' accepts 0 arguments; got $#" && return 1
 		fi
 		printf "%s\n" "$(__glab_mr_json)" | jq -r '.iid'
+	}
+	__glab_mr_pid() {
+		if [ $# -ne 0 ]; then
+			echo_date "'__glab_mr_pid' accepts 0 arguments; got $#" && return 1
+		fi
+		printf "%s\n" "$(__glab_mr_json)" | jq -r '.target_project_id'
+	}
+	__glab_mr_state() {
+		if [ $# -ne 0 ]; then
+			echo_date "'__glab_mr_state' accepts 0 arguments; got $#" && return 1
+		fi
+		printf "%s\n" "$(__glab_mr_json)" | jq -r '.state'
 	}
 fi
 
