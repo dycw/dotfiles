@@ -735,11 +735,17 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 				echo_date "'${__branch}' needs to be rebased" && return 1
 			elif [ "${__status}" = 'not open' ]; then
 				echo_date "'${__branch}' PR needs to be opened" && return 1
+			else
+				echo_date "'${__branch}' has status ${__status}"
 			fi
-			while __gh_pr_merging; do
-				glab mr merge --remove-source-branch --squash --yes || true
+			__start="$(date +%s)"
+			while true; do
+				glab mr merge --remove-source-branch --squash --yes >/dev/null 2>&1 || true
 				if __gh_pr_merging; then
-					echo_date "'${__branch}' is still merging..."
+					__status="$(__glab_mr_merge_status)"
+					__now="$(date +%s)"
+					__elapsed="$((__now - __start))"
+					echo_date "'${__branch}' is still merging... ('${__status}', ${__elapsed}s)"
 					sleep 1
 				else
 					break
@@ -757,28 +763,28 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 	}
 	__gh_pr_merging() {
-		__gh_pr_merging_host="$(__repo_host)" || return 1
-		__gh_pr_merging_branch="$(current_branch)" || return 1
-		if [ "${__gh_pr_merging_host}" = 'github' ]; then
+		__host="$(__repo_host)" || return 1
+		__branch="$(current_branch)" || return 1
+		if [ "${__host}" = 'github' ]; then
 			if [ "$(gh pr view --json state 2>/dev/null | jq -r '.state')" != "OPEN" ]; then
 				return 1
 			fi
-			__gh_pr_merging_repo=$(gh repo view --json nameWithOwner -q .nameWithOwner)
-			if gh api "repos/${__gh_pr_merging_repo}/branches/${__gh_pr_merging_branch}" >/dev/null 2>&1; then
+			__repo=$(gh repo view --json nameWithOwner -q .nameWithOwner)
+			if gh api "repos/${__repo}/branches/${__branch}" >/dev/null 2>&1; then
 				return 0
 			fi
 			return 1
-		elif [ "${__gh_pr_merging_host}" = 'gitlab' ]; then
+		elif [ "${__host}" = 'gitlab' ]; then
 			__gh_pr_merging_json="$(__glab_mr_json)"
 			if [ "$(__glab_mr_state)" != "opened" ]; then
 				return 1
 			fi
-			if glab api "projects/$(__glab_mr_pid)/repository/branches/${__gh_pr_merging_branch}" >/dev/null 2>&1; then
+			if glab api "projects/$(__glab_mr_pid)/repository/branches/${__branch}" >/dev/null 2>&1; then
 				return 0
 			fi
 			return 1
 		else
-			echo_date "'__gh_pr_merging' must be for GitHub/GitLab; got '${__gh_pr_merging_host}'" && return 1
+			echo_date "'__gh_pr_merging' must be for GitHub/GitLab; got '${__host}'" && return 1
 		fi
 	}
 fi
