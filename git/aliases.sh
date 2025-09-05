@@ -570,6 +570,12 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 		ghc "$@" && ghm
 	}
+	ghcmd() {
+		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
+			echo_date "'ghcmd' accepts [1..2] arguments" && return 1
+		fi
+		ghc "$@" && ghm && gcmd
+	}
 	ghe() {
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
 			echo_date "'ghe' accepts [1..2] arguments" && return 1
@@ -803,10 +809,7 @@ if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
 			echo_date "'gaccmd' accepts [1..2] arguments" && return 1
 		fi
-		gac &&
-			ghc "$@" &&
-			ghm &&
-			gcmd
+		gac && ghcmd "$@"
 	}
 	__git_add_gh_pr_create() {
 		if [ $# -ne 3 ]; then
