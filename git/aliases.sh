@@ -186,11 +186,17 @@ if command -v git >/dev/null 2>&1; then
 		fi
 		gcob "$@" && gac
 	}
-	gcobaccmd() {
-		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-			echo_date "'gcobaccmd' accepts [0..2] arguments; got $#" && return 1
+	gcobacm() {
+		if [ $# -ge 3 ]; then
+			echo_date "'gcobacm' accepts [0..2] arguments; got $#" && return 1
 		fi
-		gcob "$@" && gaccmd
+		gcob "$@" && gacm
+	}
+	gcobacmd() {
+		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
+			echo_date "'gcobacmd' accepts [0..2] arguments; got $#" && return 1
+		fi
+		gcob "$@" && gacmd
 	}
 	gcobt() {
 		if [ $# -eq 0 ]; then
@@ -564,6 +570,7 @@ if command -v git >/dev/null 2>&1; then
 			__gta_sha="$2"
 			git tag -a "${__gta_tag}" "${__gta_sha}" -m "${__gta_tag}" &&
 				git push --set-upstream origin --tags
+			shift 2
 		done
 	}
 	gtd() { git tag --delete "$@" && git push --delete origin "$@"; }
