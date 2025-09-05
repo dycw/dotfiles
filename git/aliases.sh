@@ -592,7 +592,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		elif [ "$(__ghic_host)" = 'gitlab' ] && [ $# -eq 3 ]; then
 			glab issue create -t="$1" -l="$2" -d="$3"
 		else
-			echo_date "'ghic' must be for GitHub/GitLab; got ${__ghic_host}" && return 1
+			echo_date "'ghic' must be for GitHub/GitLab; got '${__ghic_host}'" && return 1
 		fi
 	}
 	ghil() {
@@ -605,30 +605,30 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		elif [ "$(__ghil_host)" = 'gitlab' ]; then
 			glab issue list
 		else
-			echo_date "'ghil' must be for GitHub/GitLab; got ${__ghil_host}" && return 1
+			echo_date "'ghil' must be for GitHub/GitLab; got '${__ghil_host}'" && return 1
 		fi
 	}
 	ghiv() {
 		if [ $# -eq 0 ]; then
-			__ghiv_branch=$(current_branch)
+			__ghiv_branch="$(current_branch)"
 			__ghiv_num="${__ghiv_branch%%-*}"
 			__ghiv_msg="'ghiv' cannot be run on a branch without an issue number"
 		elif [ $# -eq 1 ]; then
 			__ghiv_num="$1"
 			__ghiv_msg="'ghiv' issue number must be an integer; got '$1'"
 		else
-			echo_date "'ghiv' accepts [0..1] arguments" && return 1
+			echo_date "'ghiv' accepts [0..1] arguments; got $#" && return 1
 		fi
 		if ! [ "${__ghiv_num}" -eq "${__ghiv_num}" ] 2>/dev/null; then
 			echo_date "${__ghiv_num}" && return 1
 		fi
-		__ghiv_host=$(__repo_host)
+		__ghiv_host="$(__repo_host)"
 		if [ "$(__ghiv_host)" = 'github' ]; then
 			gh issue view "${__ghiv_num}" --web
 		elif [ "$(__ghiv_host)" = 'gitlab' ]; then
 			glab issue view "${__ghiv_num}" --web
 		else
-			echo_date "'ghiv' must be for GitHub/GitLab" && return 1
+			echo_date "'ghiv' must be for GitHub/GitLab; got '${__ghiv_host}'" && return 1
 		fi
 	}
 	ghm() {
@@ -647,7 +647,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'ghv' accepts no arguments" && return 1
 		fi
-		__ghv_host=$(__repo_host)
+		__ghv_host="$(__repo_host)"
 		if [ "$(__ghic_host)" = 'github' ]; then
 			if gh pr ready >/dev/null 2>&1; then
 				gh pr view -w
@@ -665,7 +665,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 				echo_date "'ghv' cannot find an open PR" && return 1
 			fi
 		else
-			echo_date "'ghv' must be for GitHub/GitLab" && return 1
+			echo_date "'ghv' must be for GitHub/GitLab; got '${__ghv_host}'" && return 1
 		fi
 	}
 	__gh_pr_create_or_edit() {
@@ -675,13 +675,13 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		__gh_pr_ce_verb="$1"
 		__gh_pr_ce_title="$2"
 		__gh_pr_ce_body="$3"
+		__gh_pr_ce_host="$(__repo_host)"
 		if [ -z "${__gh_pr_ce_title}" ]; then
 			__gh_pr_ce_title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
 		fi
 		if [ -n "${__gh_pr_ce_body}" ] && __is_int "${__gh_pr_ce_body}"; then
 			__gh_pr_ce_body="Closes #${__gh_pr_ce_body}"
 		fi
-		__gh_pr_ce_host=$(__repo_host)
 		if [ "${__gh_pr_ce_host}" = 'github' ]; then
 			gh pr "${__gh_pr_ce_verb}" --title="${__gh_pr_ce_title}" --body="${__gh_pr_ce_body}"
 		elif [ "${__gh_pr_ce_host}" = 'gitlab' ]; then
@@ -691,7 +691,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 				glab mr "${__gh_pr_ce_verb}" --title="${__gh_pr_ce_title}" --description="${__gh_pr_ce_body}"
 			fi
 		else
-			echo_date "'__gh_pr_create_or_edit' must be for GitHub/GitLab" && return 1
+			echo_date "'__gh_pr_create_or_edit' must be for GitHub/GitLab; got '${__gh_pr_ce_host}'" && return 1
 		fi
 	}
 	__gh_pr_merge() {
@@ -706,7 +706,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		elif [ "${__gh_pr_m_host}" = 'gitlab' ]; then
 			glab mr merge --remove-source-branch --squash --yes
 		else
-			echo_date "'__gh_pr_merge' must be for GitHub/GitLab" && return 1
+			echo_date "'__gh_pr_merge' must be for GitHub/GitLab; got '${__gh_pr_m_host}'" && return 1
 		fi
 		if [ "${__gh_pr_m_delete}" -eq 0 ]; then
 			:
@@ -750,17 +750,17 @@ if (command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1) && command
 		if [ $# -ne 0 ]; then
 			echo_date "'gw' accepts no arguments" && return 1
 		fi
-		__gw_host=$(__repo_host)
-		if [ "$(__gw_host)" = 'github' ]; then
+		__gw_host="$(__repo_host)"
+		if [ "${__gw_host}" = 'github' ]; then
 			if gh pr ready >/dev/null 2>&1; then
 				ghv
 			else
 				gitweb
 			fi
-		elif [ "$(__gw_host)" = 'gitlab' ]; then
+		elif [ "${__gw_host}" = 'gitlab' ]; then
 			echo 'not impl?'
 		else
-			echo_date "'gw' must be for GitHub/GitLab" && return 1
+			echo_date "'gw' must be for GitHub/GitLab; got '${__gw_host}'" && return 1
 		fi
 	}
 fi
