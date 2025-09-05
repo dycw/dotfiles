@@ -725,15 +725,20 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			gh pr merge --auto --delete-branch --squash || return $?
 		elif [ "${__host}" = 'gitlab' ]; then
 			__status="$(__glab_mr_merge_status)"
-			if [ "${__status}" = 'need_rebase' ]; then
+			if [ "${__status}" = 'conflict' ]; then
+				echo_date "'${__branch}' has conflicts" && return 1
+			elif [ "${__status}" = 'need_rebase' ]; then
 				echo_date "'${__branch}' needs to be rebased" && return 1
+			elif [ "${__status}" = 'not open' ]; then
+				echo_date "'${__branch}' PR needs to be opened" && return 1
 			fi
 			__start="$(date +%s)"
-			until ! [ "${__status}" = 'unchecked' ]; do
+			until ! [ "$(__glab_mr_merge_status)" = 'mergeable' ]; do
 				__elapsed="$(($(date +%s) - __start))"
 				echo_date "'${__branch}' is still merging (${__elapsed}s)..."
 				sleep 1
 			done
+			echo_date "'${__branch}' finished!!"
 			glab mr merge --remove-source-branch --squash --yes
 		else
 			echo_date "'__gh_pr_merge' must be for GitHub/GitLab; got '${__host}'" && return 1
