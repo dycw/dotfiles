@@ -88,7 +88,7 @@ if command -v git >/dev/null 2>&1; then
 	# branch
 	gb() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gb' accepts no arguments" && return 1
+			echo_date "'gb' accepts no arguments; got $#" && return 1
 		fi
 		git branch --all --list --sort=-committerdate --verbose
 	}
@@ -127,13 +127,13 @@ if command -v git >/dev/null 2>&1; then
 	# checkout
 	gcm() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gcm' accepts no arguments" && return 1
+			echo_date "'gcm' accepts no arguments; got $#" && return 1
 		fi
 		gco master
 	}
 	gcmd() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gcmd' accepts no arguments" && return 1
+			echo_date "'gcmd' accepts no arguments; got $#" && return 1
 		fi
 		if __is_current_branch_master; then
 			gcof && gcm
@@ -226,7 +226,7 @@ if command -v git >/dev/null 2>&1; then
 	# checkout + branch
 	gbr() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gbr' accepts no arguments" && return 1
+			echo_date "'gbr' accepts no arguments; got $#" && return 1
 		elif __is_current_branch_master; then
 			echo_date "'gbr' cannot be run on master" && return 1
 		else
@@ -332,14 +332,14 @@ if command -v git >/dev/null 2>&1; then
 	# fetch
 	gf() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gf' accepts no arguments" && return 1
+			echo_date "'gf' accepts no arguments; got $#" && return 1
 		fi
 		git fetch --all --force && __delete_gone_branches
 	}
 	# log
 	gl() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gl' accepts no arguments" && return 1
+			echo_date "'gl' accepts no arguments; got $#" && return 1
 		fi
 		git log --abbrev-commit --decorate=short --pretty=format:'%C(red)%h%C(reset) |%C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)'
 	}
@@ -360,7 +360,7 @@ if command -v git >/dev/null 2>&1; then
 	# pull
 	gpl() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gpl' accepts no arguments" && return 1
+			echo_date "'gpl' accepts no arguments; got $#" && return 1
 		fi
 		git pull --force
 		gf
@@ -368,25 +368,25 @@ if command -v git >/dev/null 2>&1; then
 	# push
 	gp() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gp' accepts no arguments" && return 1
+			echo_date "'gp' accepts no arguments; got $#" && return 1
 		fi
 		__git_push 0 0
 	}
 	gpf() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gpf' accepts no arguments" && return 1
+			echo_date "'gpf' accepts no arguments; got $#" && return 1
 		fi
 		__git_push 1 0
 	}
 	gpw() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gpw' accepts no arguments" && return 1
+			echo_date "'gpw' accepts no arguments; got $#" && return 1
 		fi
 		__git_push 0 1
 	}
 	gpfw() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gpfw' accepts no arguments" && return 1
+			echo_date "'gpfw' accepts no arguments; got $#" && return 1
 		fi
 		__git_push 1 1
 	}
@@ -431,19 +431,19 @@ if command -v git >/dev/null 2>&1; then
 	}
 	grba() {
 		if [ $# -ne 0 ]; then
-			echo_date "'grba' accepts no arguments" && return 1
+			echo_date "'grba' accepts no arguments; got $#" && return 1
 		fi
 		git rebase --abort
 	}
 	grbc() {
 		if [ $# -ne 0 ]; then
-			echo_date "'grbc' accepts no arguments" && return 1
+			echo_date "'grbc' accepts no arguments; got $#" && return 1
 		fi
 		git rebase --continue
 	}
 	grbs() {
 		if [ $# -ne 0 ]; then
-			echo_date "'grbs' accepts no arguments" && return 1
+			echo_date "'grbs' accepts no arguments; got $#" && return 1
 		fi
 		git rebase --skip
 	}
@@ -475,13 +475,13 @@ if command -v git >/dev/null 2>&1; then
 	# rev-parse
 	current_branch() {
 		if [ $# -ne 0 ]; then
-			echo_date "'current_branch' accepts no arguments" && return 1
+			echo_date "'current_branch' accepts no arguments; got $#" && return 1
 		fi
 		git rev-parse --abbrev-ref HEAD
 	}
 	repo_root() {
 		if [ $# -ne 0 ]; then
-			echo_date "'repo_root' accepts no arguments" && return 1
+			echo_date "'repo_root' accepts no arguments; got $#" && return 1
 		fi
 		git rev-parse --show-toplevel
 	}
@@ -526,7 +526,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 	__tree_is_clean() {
 		if [ $# -ne 0 ]; then
-			echo_date "'__tree_is_clean' accepts no arguments" && return 1
+			echo_date "'__tree_is_clean' accepts no arguments; got $#" && return 1
 		fi
 		[ -z "$(git status --porcelain)" ]
 	}
@@ -537,7 +537,7 @@ if command -v git >/dev/null 2>&1; then
 	# submodules
 	gsu() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gsub_update' accepts no arguments" && return 1
+			echo_date "'gsub_update' accepts no arguments; got $#" && return 1
 		fi
 		git submodule foreach --recursive 'git checkout master && git pull --ff-only'
 	}
@@ -605,7 +605,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 	}
 	ghil() {
 		if [ $# -ne 0 ]; then
-			echo_date "'ghil' accepts no arguments" && return 1
+			echo_date "'ghil' accepts no arguments; got $#" && return 1
 		fi
 		__ghil_host="$(__repo_host)" || return 1
 		if [ "$(__ghil_host)" = 'github' ]; then
@@ -639,21 +639,34 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			echo_date "'ghiv' must be for GitHub/GitLab; got '${__ghiv_host}'" && return 1
 		fi
 	}
+	ghl() {
+		if [ $# -ne 0 ]; then
+			echo_date "'ghl' accepts no arguments; got $#" && return 1
+		fi
+		__ghl_host="$(__repo_host)" || return 1
+		if [ "$(__ghiv_host)" = 'github' ]; then
+			gh pr list
+		elif [ "$(__ghiv_host)" = 'gitlab' ]; then
+			gh mr list
+		else
+			echo_date "'ghl' must be for GitHub/GitLab; got '${__ghiv_host}'" && return 1
+		fi
+	}
 	ghm() {
 		if [ $# -ne 0 ]; then
-			echo_date "'ghm' accepts no arguments" && return 1
+			echo_date "'ghm' accepts no arguments; got $#" && return 1
 		fi
 		__gh_pr_merge 0
 	}
 	ghmd() {
 		if [ $# -ne 0 ]; then
-			echo_date "'ghmd' accepts no arguments" && return 1
+			echo_date "'ghmd' accepts no arguments; got $#" && return 1
 		fi
 		__gh_pr_merge 1
 	}
 	ghv() {
 		if [ $# -ne 0 ]; then
-			echo_date "'ghv' accepts no arguments" && return 1
+			echo_date "'ghv' accepts no arguments; got $#" && return 1
 		fi
 		__ghv_host="$(__repo_host)" || return 1
 		if [ "${__ghv_host}" = 'github' ]; then
@@ -763,7 +776,7 @@ fi
 if (command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1) && command -v gitweb >/dev/null 2>&1; then
 	gw() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gw' accepts no arguments" && return 1
+			echo_date "'gw' accepts no arguments; got $#" && return 1
 		fi
 		__gw_host="$(__repo_host)" || return 1
 		if [ "${__gw_host}" = 'github' ]; then
@@ -842,7 +855,7 @@ fi
 if command -v gh >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
 	ghs() {
 		if [ $# -ne 0 ]; then
-			echo_date "'ghs' accepts no arguments" && return 1
+			echo_date "'ghs' accepts no arguments; got $#" && return 1
 		fi
 		__ghs_host="$(__repo_host)" || return 1
 		if [ "${__ghs_host}" = 'github' ]; then
