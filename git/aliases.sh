@@ -684,7 +684,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			gh pr "${__gh_pr_ce_verb}" --title="${__gh_pr_ce_title}" --body="${__gh_pr_ce_body}"
 		elif [ "${__gh_pr_ce_host}" = 'gitlab' ]; then
 			if [ "${__gh_pr_ce_verb}" = 'edit' ]; then
-				glab mr update --title="${__gh_pr_ce_title}" --description="${__gh_pr_ce_body}"
+				glab mr update "$(__glab_mr_num)" --title="${__gh_pr_ce_title}" --description="${__gh_pr_ce_body}"
 			else
 				glab mr "${__gh_pr_ce_verb}" --title="${__gh_pr_ce_title}" --description="${__gh_pr_ce_body}"
 			fi
