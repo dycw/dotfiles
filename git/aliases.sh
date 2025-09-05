@@ -592,15 +592,20 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'ghil' accepts no arguments" && return 1
 		fi
-		if [ "${__ghic_host}" = 'github' ] && [ $# -eq 1 ]; then
+		__ghil_host=$(__repo_host)
+		if [ "${__ghil_host}" = 'github' ]; then
 			gh issue list
-		elif [ "${__ghic_host}" = 'gitlab' ]; then
-			gh issue list
+		elif [ "${__ghil_host}" = 'gitlab' ]; then
+			glab issue list
 		else
 			echo_date "'ghil' must be for GitHub/GitLab" && return 1
 		fi
 	}
 	ghiv() {
+		if [ $# -ge 2 ]; then
+			echo_date "'ghiv' accepts [0..1] arguments" && return
+		fi
+		__ghiv_host=$(__repo_host)
 		if [ $# -eq 0 ]; then
 			__ghiv_branch="$(current_branch)"
 			__ghiv_num="${__ghiv_branch%%-*}"
