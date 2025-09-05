@@ -578,7 +578,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ $# -eq 0 ] || [ $# -ge 4 ]; then
 			echo_date "'ghic' accepts [1..3] arguments" && return 1
 		fi
-		__ghic_host=$(__repo_host)
+		__ghic_host="$(__repo_host)"
 		if [ "$(__ghic_host)" = 'github' ] && [ $# -eq 1 ]; then
 			gh issue create -t="$1" -b='.'
 		elif [ "$(__ghic_host)" = 'github' ] && [ $# -eq 2 ]; then
@@ -592,20 +592,20 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		elif [ "$(__ghic_host)" = 'gitlab' ] && [ $# -eq 3 ]; then
 			glab issue create -t="$1" -l="$2" -d="$3"
 		else
-			echo_date "'ghic' must be for GitHub/GitLab" && return 1
+			echo_date "'ghic' must be for GitHub/GitLab; got ${__ghic_host}" && return 1
 		fi
 	}
 	ghil() {
 		if [ $# -ne 0 ]; then
 			echo_date "'ghil' accepts no arguments" && return 1
 		fi
-		__ghil_host=$(__repo_host)
+		__ghil_host="$(__repo_host)"
 		if [ "$(__ghil_host)" = 'github' ]; then
 			gh issue list
 		elif [ "$(__ghil_host)" = 'gitlab' ]; then
 			glab issue list
 		else
-			echo_date "'ghil' must be for GitHub/GitLab" && return 1
+			echo_date "'ghil' must be for GitHub/GitLab; got ${__ghil_host}" && return 1
 		fi
 	}
 	ghiv() {
@@ -700,7 +700,14 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 		__gh_pr_m_delete="$1"
 		__gh_pr_m_branch="$(current_branch)"
-		gh pr merge -s --auto || return $?
+		__gh_pr_m_host="$(__repo_host)"
+		if [ "${__gh_pr_m_host}" = 'github' ]; then
+			gh pr merge --auto --delete-branch --squash || return $?
+		elif [ "${__gh_pr_m_host}" = 'gitlab' ]; then
+			glab mr merge --remove-source-branch --squash --yes
+		else
+			echo_date "'__gh_pr_merge' must be for GitHub/GitLab" && return 1
+		fi
 		if [ "${__gh_pr_m_delete}" -eq 0 ]; then
 			:
 		elif [ "${__gh_pr_m_delete}" -eq 1 ]; then
@@ -743,20 +750,18 @@ if (command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1) && command
 		if [ $# -ne 0 ]; then
 			echo_date "'gw' accepts no arguments" && return 1
 		fi
-		case "$(__repo_host)" in
-		*github*)
+		__gw_host=$(__repo_host)
+		if [ "$(__gw_host)" = 'github' ]; then
 			if gh pr ready >/dev/null 2>&1; then
 				ghv
 			else
 				gitweb
 			fi
-			;;
-		*gitlab*)
-			echo '?'
-			glab issue view "${__ghiv_num}" --web
-			;;
-		*) echo_date "'gw' must be for GitHub/GitLab" && return 1 ;;
-		esac
+		elif [ "$(__gw_host)" = 'gitlab' ]; then
+			echo 'not impl?'
+		else
+			echo_date "'gw' must be for GitHub/GitLab" && return 1
+		fi
 	}
 fi
 
@@ -767,8 +772,8 @@ if command -v git >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
 	wgs() { watch -d -n 0.5 -- git status "$@"; }
 fi
 
-# git + gh
-if command -v git >/dev/null 2>&1 && command -v gh >/dev/null 2>&1; then
+# git + gh/glab
+if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1); then
 	gacc() {
 		if [ $# -ge 3 ]; then
 			echo_date "'gacc' accepts [0..2] arguments" && return 1
@@ -847,12 +852,6 @@ if command -v glab >/dev/null 2>&1; then
 		fi
 		__glmd_branch="$(current_branch)"
 		glm && __gl_mr_await_merged "${__glmd_branch}" && gcmd
-	}
-	glml() {
-		if [ $# -ne 0 ]; then
-			echo_date "'glml' accepts 0 arguments" && return 1
-		fi
-		glab mr list
 	}
 	__gl_mr_merging() {
 		__gl_mr_m_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || return 1
