@@ -28,61 +28,61 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -le 2 ]; then
 			echo_date "'__git_add_commit_push' accepts [3..) arguments" && return 1
 		fi
-		__gacp_no_verify="$1"
-		__gacp_force="$2"
-		__gacp_web="$3"
+		__no_verify="$1"
+		__force="$2"
+		__web="$3"
 		shift 3
 
-		__gacp_count_file=0
-		__gacp_count_non_file=0
-		__gacp_message=""
-		__gacp_file_names=""
-		__gacp_file_args=""
+		__count_file=0
+		__count_non_file=0
+		__message=""
+		__file_names=""
+		__file_args=""
 
 		for arg in "$@"; do
-			if [ "${__gacp_count_non_file}" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
-				__gacp_file_args="${__gacp_file_args} \"$arg\""
-				__gacp_file_names="${__gacp_file_names}${__gacp_file_names:+ }$arg"
-				__gacp_count_file=$((__gacp_count_file + 1))
+			if [ "${__count_non_file}" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
+				__file_args="${__file_args} \"$arg\""
+				__file_names="${__file_names}${__file_names:+ }$arg"
+				__count_file=$((__count_file + 1))
 			else
-				__gacp_count_non_file=$((__gacp_count_non_file + 1))
-				__gacp_message="$arg"
+				__count_non_file=$((__count_non_file + 1))
+				__message="$arg"
 			fi
 		done
 
-		__gacp_file_list=""
-		for f in ${__gacp_file_names}; do
-			__gacp_file_list="${__gacp_file_list}'${f}',"
+		__file_list=""
+		for f in ${__file_names}; do
+			__file_list="${__file_list}'${f}',"
 		done
-		__gacp_file_list="${__gacp_file_list%,}"
-		__gacp_attempts=0
+		__file_list="${__file_list%,}"
+		__attempts=0
 
-		if [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
+		if [ "${__count_file}" -eq 0 ] && [ "${__count_non_file}" -eq 0 ]; then
 			ga
-			until __git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"; do
+			until __git_commit_push "${__no_verify}" "" "${__force}" "${__web}"; do
 				ga
-				__gacp_attempts=$((__gacp_attempts + 1))
-				if [ "${__gacp_attempts}" -ge 5 ]; then
+				__attempts=$((__attempts + 1))
+				if [ "${__attempts}" -ge 5 ]; then
 					return 1
 				fi
 			done
-		elif [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 1 ]; then
+		elif [ "${__count_file}" -eq 0 ] && [ "${__count_non_file}" -eq 1 ]; then
 			ga
-			until __git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"; do
+			until __git_commit_push "${__no_verify}" "${__message}" "${__force}" "${__web}"; do
 				ga
-				__gacp_attempts=$((__gacp_attempts + 1))
-				if [ "${__gacp_attempts}" -ge 5 ]; then
+				__attempts=$((__attempts + 1))
+				if [ "${__attempts}" -ge 5 ]; then
 					return 1
 				fi
 			done
-		elif [ "${__gacp_count_file}" -ge 1 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
-			eval "ga ${__gacp_file_args}"
-			__git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"
-		elif [ "${__gacp_count_file}" -ge 1 ] && [ "${__gacp_count_non_file}" -eq 1 ]; then
-			eval "ga ${__gacp_file_args}"
-			__git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"
+		elif [ "${__count_file}" -ge 1 ] && [ "${__count_non_file}" -eq 0 ]; then
+			eval "ga ${__file_args}"
+			__git_commit_push "${__no_verify}" "" "${__force}" "${__web}"
+		elif [ "${__count_file}" -ge 1 ] && [ "${__count_non_file}" -eq 1 ]; then
+			eval "ga ${__file_args}"
+			__git_commit_push "${__no_verify}" "${__message}" "${__force}" "${__web}"
 		else
-			echo_date "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__gacp_count_file} file(s) ${__gacp_file_list:-'(none)'} and ${__gacp_count_non_file} message(s)" && return 1
+			echo_date "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__count_file} file(s) ${__file_list:-'(none)'} and ${__count_non_file} message(s)" && return 1
 		fi
 	}
 	# branch
@@ -153,14 +153,13 @@ if command -v git >/dev/null 2>&1; then
 		git checkout "${__branch}" && gpl
 	}
 	gcob() {
+		unset __title __num
 		if [ $# -eq 0 ]; then
 			if ! __is_current_branch_master; then
 				echo_date "'gcob' off 'master' accepts 1 argument" && return 1
 			fi
-			unset __title __num
 			__branch='dev'
 		elif [ $# -eq 1 ]; then
-			unset __num
 			__title="$1"
 			__branch="$(__to_valid_branch "${__title}")"
 		elif [ $# -eq 2 ]; then
@@ -180,14 +179,14 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gcobt() {
 		if [ $# -eq 0 ]; then
-			__gcobt_branch="$(__select_remote_branch)"
+			__branch="$(__select_remote_branch)"
 		elif [ $# -eq 1 ]; then
-			__gcobt_branch="$1"
+			__branch="$1"
 		else
 			echo_date "'gcobt' accepts [0..1] arguments" && return 1
 		fi
 		if __is_current_branch_master; then
-			gf && git checkout -b "${__gcobt_branch}" --track="origin/${__gcobt_branch}"
+			gf && git checkout -b "${__branch}" --track="origin/${__branch}"
 		else
 			gco master
 		fi
