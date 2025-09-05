@@ -702,7 +702,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ "${__gh_pr_m_host}" = 'github' ]; then
 			gh pr merge --auto --delete-branch --squash || return $?
 		elif [ "${__gh_pr_m_host}" = 'gitlab' ]; then
-			glab mr merge --remove-source-branch --squash --yes
+			glab mr merge --remove-source-branch --squash --yes || return $?
 		else
 			echo_date "'__gh_pr_merge' must be for GitHub/GitLab; got '${__gh_pr_m_host}'" && return 1
 		fi
