@@ -635,51 +635,38 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'ghm' accepts no arguments" && return 1
 		fi
-		__gh_pr_merge 0 0
+		__gh_pr_merge 0
 	}
 	ghmd() {
 		if [ $# -ne 0 ]; then
 			echo_date "'ghmd' accepts no arguments" && return 1
 		fi
-		__gh_pr_merge 1 0
-	}
-	ghmv() {
-		if [ $# -ne 0 ]; then
-			echo_date "'ghmv' accepts no arguments" && return 1
-		fi
-		__gh_pr_merge 0 1
-	}
-	ghmdv() {
-		if [ $# -ne 0 ]; then
-			echo_date "'ghmdv' accepts no arguments" && return 1
-		fi
-		__gh_pr_merge 1 1
+		__gh_pr_merge 1
 	}
 	ghv() {
 		if [ $# -ne 0 ]; then
 			echo_date "'ghv' accepts no arguments" && return 1
 		fi
-		case "$(__repo_host)" in
-		*github*)
+		__ghv_host=$(__repo_host)
+		if [ "$(__ghic_host)" = 'github' ]; then
 			if gh pr ready >/dev/null 2>&1; then
 				gh pr view -w
 			else
 				echo_date "'ghv' cannot find an open PR" && return 1
 			fi
-			;;
-		*gitlab*)
+		elif [ "$(__ghic_host)" = 'github' ]; then
+
 			__ghv_branch=$(current_branch)
 			__ghv_mr_list=$(glab mr list --output=json --source-branch="${__ghv_branch}")
 			__ghv_num=$(echo "${__ghv_mr_list}" | jq -r '.[] | select(.draft == false) | .iid' | head -n1)
-			echo $__ghv_mr_list
 			if [ -n "${__ghv_num}" ]; then
 				glab mr view "${__ghv_num}" --web
 			else
 				echo_date "'ghv' cannot find an open PR" && return 1
 			fi
-			;;
-		*) echo_date "'ghv' must be for GitHub/GitLab" && return 1 ;;
-		esac
+		else
+			echo_date "'ghv' must be for GitHub/GitLab" && return 1
+		fi
 	}
 	__gh_pr_create_or_edit() {
 		if [ $# -ne 3 ]; then
@@ -694,15 +681,24 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ -n "${__gh_pr_ce_body}" ] && __is_int "${__gh_pr_ce_body}"; then
 			__gh_pr_ce_body="Closes #${__gh_pr_ce_body}"
 		fi
-		# case "$(__repo_host)" in
-		gh pr "${__gh_pr_ce_verb}" -t="${__gh_pr_ce_title}" -b="${__gh_pr_ce_body}"
+		__gh_pr_ce_host=$(__repo_host)
+		if [ "${__gh_pr_ce_host}" = 'github' ]; then
+			gh pr "${__gh_pr_ce_verb}" --title="${__gh_pr_ce_title}" --body="${__gh_pr_ce_body}"
+		elif [ "${__gh_pr_ce_host}" = 'gitlab' ]; then
+			if [ "${__gh_pr_ce_verb}" = 'edit' ]; then
+				glab mr update --title="${__gh_pr_ce_title}" --description="${__gh_pr_ce_body}"
+			else
+				glab mr "${__gh_pr_ce_verb}" --title="${__gh_pr_ce_title}" --description="${__gh_pr_ce_body}"
+			fi
+		else
+			echo_date "'__gh_pr_create_or_edit' must be for GitHub/GitLab" && return 1
+		fi
 	}
 	__gh_pr_merge() {
-		if [ $# -ne 2 ]; then
-			echo_date "'__gh_pr_merge' accepts 2 arguments" && return 1
+		if [ $# -ne 1 ]; then
+			echo_date "'__gh_pr_merge' accepts 1 argument" && return 1
 		fi
 		__gh_pr_m_delete="$1"
-		__gh_pr_m_view="$2"
 		__gh_pr_m_branch="$(current_branch)"
 		gh pr merge -s --auto || return $?
 		if [ "${__gh_pr_m_delete}" -eq 0 ]; then
@@ -711,13 +707,6 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			__gh_pr_await_merged "${__gh_pr_m_branch}" && gcmd || return $?
 		else
 			echo_date "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__gh_pr_m_delete}" && return 1
-		fi
-		if [ "${__gh_pr_m_view}" -eq 0 ]; then
-			:
-		elif [ "${__gh_pr_m_view}" -eq 1 ]; then
-			ghv
-		else
-			echo_date "'__git_pr_merge' accepts {0, 1} for the 'view' flag; got ${__gh_pr_m_view}" && return 1
 		fi
 	}
 	__gh_pr_merging() {
