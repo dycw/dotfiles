@@ -723,6 +723,10 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		__branch="$(current_branch)" || return 1
 		if [ "${__host}" = 'github' ]; then
 			gh pr merge --auto --delete-branch --squash || return $?
+			while __gh_pr_merging; do
+				echo_date "'${__branch}' is still merging..."
+				sleep 1
+			done
 		elif [ "${__host}" = 'gitlab' ]; then
 			__status="$(__glab_mr_merge_status)"
 			if [ "${__status}" = 'conflict' ]; then
@@ -732,15 +736,14 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			elif [ "${__status}" = 'not open' ]; then
 				echo_date "'${__branch}' PR needs to be opened" && return 1
 			fi
-			__start="$(date +%s)"
-			while true; do
-				__elapsed="$(($(date +%s) - __start))"
-				__status="$(__glab_mr_merge_status)"
-				if [ "${__status}" = 'mergeable' ]; then
-					glab mr merge --remove-source-branch --squash --yes
+			while __gh_pr_merging; do
+				glab mr merge --remove-source-branch --squash --yes || true
+				if __gh_pr_merging; then
+					echo_date "'${__branch}' is still merging..."
+					sleep 1
+				else
+					break
 				fi
-				echo_date "'${__branch}' is still merging (${__status}; ${__elapsed}s)..."
-				sleep 1
 			done
 		else
 			echo_date "'__gh_pr_merge' must be for GitHub/GitLab; got '${__host}'" && return 1
@@ -748,7 +751,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ "${__delete}" -eq 0 ]; then
 			:
 		elif [ "${__delete}" -eq 1 ]; then
-			__gh_pr_await_merged "${__branch}" && gcmd || return $?
+			gcmd
 		else
 			echo_date "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__delete}" && return 1
 		fi
@@ -777,16 +780,6 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		else
 			echo_date "'__gh_pr_merging' must be for GitHub/GitLab; got '${__gh_pr_merging_host}'" && return 1
 		fi
-	}
-	__gh_pr_await_merged() {
-		if [ $# -ne 1 ]; then
-			echo_date "'__gh_pr_await_merged' accepts 1 argument" && return 1
-		fi
-		while __gh_pr_merging; do
-			echo_date "'$1' is still merging..."
-			sleep 1
-		done
-		echo_date "'$1' has finished merging"
 	}
 fi
 
