@@ -733,13 +733,15 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 				echo_date "'${__branch}' PR needs to be opened" && return 1
 			fi
 			__start="$(date +%s)"
-			until [ "$(__glab_mr_merge_status)" = 'mergeable' ]; do
+			while true; do
 				__elapsed="$(($(date +%s) - __start))"
-				echo_date "'${__branch}' is still merging (${__elapsed}s)..."
+				__status="$(__glab_mr_merge_status)"
+				if [ "${__status}" = 'mergeable' ]; then
+					glab mr merge --remove-source-branch --squash --yes
+				fi
+				echo_date "'${__branch}' is still merging (${__status}; ${__elapsed}s)..."
 				sleep 1
 			done
-			echo_date "'${__branch}' finished!!"
-			glab mr merge --remove-source-branch --squash --yes
 		else
 			echo_date "'__gh_pr_merge' must be for GitHub/GitLab; got '${__host}'" && return 1
 		fi
