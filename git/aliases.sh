@@ -461,11 +461,13 @@ if command -v git >/dev/null 2>&1; then
 			echo_date "'__repo_host' accepts 0 arguments" && return 1
 		fi
 		__rh_url=$(git remote get-url origin 2>/dev/null)
-		case "${__rh_url}" in
-		*github*) echo "github" ;;
-		*gitlab*) echo "gitlab" ;;
-		*) echo_date "'__repo_host' must return 'github' or 'gitlab'; got '${__rh_url}'" && return 1 ;;
-		esac
+		if echo "$__rh_url" | grep -q "github"; then
+			echo "github"
+		elif echo "$__rh_url" | grep -q "gitlab"; then
+			echo "gitlab"
+		else
+			echo_date "'__repo_host' must return 'github' or 'gitlab'; got '$__rh_url'" && return 1
+		fi
 	}
 	# reset
 	gr() { git reset "$@"; }
@@ -576,37 +578,35 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ $# -eq 0 ] || [ $# -ge 4 ]; then
 			echo_date "'ghic' accepts [1..3] arguments" && return 1
 		fi
-		case $(__repo_host) in
-		*github*)
-			if [ $# -eq 1 ]; then
-				gh issue create -t="$1" -b='.'
-			elif [ $# -eq 2 ]; then
-				gh issue create -t="$1" -l="$2" -b='.'
-			else
-				gh issue create -t="$1" -l="$2" -b="$3"
-			fi
-			;;
-		*gitlab*)
-			if [ $# -eq 1 ]; then
-				glab issue create -t="$1" -d='.'
-			elif [ $# -eq 2 ]; then
-				glab issue create -t="$1" -l="$2" -d='.'
-			else
-				glab issue create -t="$1" -l="$2" -d="$3"
-			fi
-			;;
-		*) echo_date "'ghic' must be for GitHub/GitLab" && return 1 ;;
-		esac
+		__ghic_host=$(__repo_host)
+		if [ "$(__ghic_host)" = 'github' ] && [ $# -eq 1 ]; then
+			gh issue create -t="$1" -b='.'
+		elif [ "$(__ghic_host)" = 'github' ] && [ $# -eq 2 ]; then
+			gh issue create -t="$1" -l="$2" -b='.'
+		elif [ "$(__ghic_host)" = 'github' ] && [ $# -eq 3 ]; then
+			gh issue create -t="$1" -l="$2" -b="$3"
+		elif [ "$(__ghic_host)" = 'gitlab' ] && [ $# -eq 1 ]; then
+			glab issue create -t="$1" -d='.'
+		elif [ "$(__ghic_host)" = 'gitlab' ] && [ $# -eq 2 ]; then
+			glab issue create -t="$1" -l="$2" -d='.'
+		elif [ "$(__ghic_host)" = 'gitlab' ] && [ $# -eq 3 ]; then
+			glab issue create -t="$1" -l="$2" -d="$3"
+		else
+			echo_date "'ghic' must be for GitHub/GitLab" && return 1
+		fi
 	}
 	ghil() {
 		if [ $# -ne 0 ]; then
 			echo_date "'ghil' accepts no arguments" && return 1
 		fi
-		case $(__repo_host) in
-		*github*) gh issue list ;;
-		*gitlab*) glab issue list ;;
-		*) echo_date "'ghil' must be for GitHub/GitLab" && return 1 ;;
-		esac
+		__ghil_host=$(__repo_host)
+		if [ "$(__ghil_host)" = 'github' ]; then
+			gh issue list
+		elif [ "$(__ghil_host)" = 'gitlab' ]; then
+			glab issue list
+		else
+			echo_date "'ghil' must be for GitHub/GitLab" && return 1
+		fi
 	}
 	ghiv() {
 		if [ $# -eq 0 ]; then
@@ -622,23 +622,14 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if ! [ "${__ghiv_num}" -eq "${__ghiv_num}" ] 2>/dev/null; then
 			echo_date "${__ghiv_num}" && return 1
 		fi
-		case "$(current_branch)" in
-		*github*) gh issue view "${__ghiv_num}" -w ;;
-		*gitlab*) glab issue view "${__ghiv_num}" --web ;;
-		*) echo_date "'ghiv' must be for GitHub/GitLab" && return 1 ;;
-		esac
-		# elif [ $# -eq 1 ]; then
-		#     unset __ghiv_branch
-		#     __ghiv_num="$1"
-		#     if [ "${__ghiv_num}" -eq "${__ghiv_num}" ] 2>/dev/null; then
-		#         gh issue view "${__ghiv_num}" -w
-		#     else
-		#         echo_date "'ghiv' requries an integer" && return 1
-		#     fi
-		# else
-		#     echo_date "'ghiv' accepts [0..1] arguments" && return 1
-		# fi
-
+		__ghiv_host=$(__repo_host)
+		if [ "$(__ghiv_host)" = 'github' ]; then
+			gh issue view "${__ghiv_num}" --web
+		elif [ "$(__ghiv_host)" = 'gitlab' ]; then
+			glab issue view "${__ghiv_num}" --web
+		else
+			echo_date "'ghiv' must be for GitHub/GitLab" && return 1
+		fi
 	}
 	ghm() {
 		if [ $# -ne 0 ]; then
@@ -675,9 +666,18 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			else
 				echo_date "'ghv' cannot find an open PR" && return 1
 			fi
-			gh issue view "${__ghiv_num}" -w
 			;;
-		*gitlab*) glab issue view "${__ghiv_num}" --web ;;
+		*gitlab*)
+			__ghv_branch=$(current_branch)
+			__ghv_mr_list=$(glab mr list --output=json --source-branch="${__ghv_branch}")
+			__ghv_num=$(echo "${__ghv_mr_list}" | jq -r '.[] | select(.draft == false) | .iid' | head -n1)
+			echo $__ghv_mr_list
+			if [ -n "${__ghv_num}" ]; then
+				glab mr view "${__ghv_num}" --web
+			else
+				echo_date "'ghv' cannot find an open PR" && return 1
+			fi
+			;;
 		*) echo_date "'ghv' must be for GitHub/GitLab" && return 1 ;;
 		esac
 	}
@@ -694,6 +694,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ -n "${__gh_pr_ce_body}" ] && __is_int "${__gh_pr_ce_body}"; then
 			__gh_pr_ce_body="Closes #${__gh_pr_ce_body}"
 		fi
+		# case "$(__repo_host)" in
 		gh pr "${__gh_pr_ce_verb}" -t="${__gh_pr_ce_title}" -b="${__gh_pr_ce_body}"
 	}
 	__gh_pr_merge() {
