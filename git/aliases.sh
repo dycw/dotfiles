@@ -543,13 +543,15 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# tag
 	gta() {
-		if [ $# -ne 2 ]; then
-			echo_date "'gta' accepts 2 arguments" && return 1
+		if [ $(($# % 2)) -ne 0 ]; then
+			echo_date "'gta' accepts an even number of arguments; got $#" && return 1
 		fi
-		__gta_tag="$1"
-		__gta_sha="$2"
-		git tag -a "${__gta_tag}" "${__gta_sha}" -m "${__gta_tag}" &&
-			git push --set-upstream origin --tags
+		while [ $# -gt 0 ]; do
+			__gta_tag="$1"
+			__gta_sha="$2"
+			git tag -a "${__gta_tag}" "${__gta_sha}" -m "${__gta_tag}" &&
+				git push --set-upstream origin --tags
+		done
 	}
 	gtd() { git tag --delete "$@" && git push --delete origin "$@"; }
 fi
