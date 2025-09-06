@@ -188,7 +188,7 @@ if command -v git >/dev/null 2>&1; then
 			echo_date "'gcob' accepts [0..2] arguments; got $#" && return 1
 		fi
 		gf && git checkout -b "${__branch}" origin/master && gp &&
-			__git_commit_empty_auto_message && gp
+			__git_commit_empty_auto_message && gp || return $?
 		if [ -z "${__num}" ]; then
 			ghc "${__title}"
 		else
@@ -280,17 +280,17 @@ if command -v git >/dev/null 2>&1; then
 		if git diff --cached --quiet && git diff --quiet; then
 			return 0
 		fi
-		__gc_no_verify="$1"
-		__gc_message="$2"
-		if [ -z "${__gc_message}" ]; then
-			__gc_message="$(__git_commit_auto_message)"
+		__no_verify="$1"
+		__message="$2"
+		if [ -z "${__message}" ]; then
+			__message="$(__git_commit_auto_message)"
 		fi
-		if [ "${__gc_no_verify}" -eq 0 ]; then
-			git commit --message="${__gc_message}"
-		elif [ "${__gc_no_verify}" -eq 1 ]; then
-			git commit --message="${__gc_message}" --no-verify
+		if [ "${__no_verify}" -eq 0 ]; then
+			git commit --message="${__message}"
+		elif [ "${__no_verify}" -eq 1 ]; then
+			git commit --message="${__message}" --no-verify
 		else
-			echo_date "'_' accepts {0, 1} for the 'no-verify' flag; got ${__gc_no_verify}" && return 1
+			echo_date "'__git_commit' accepts {0, 1} for the 'no-verify' flag; got ${__no_verify}" && return 1
 		fi
 	}
 	__git_commit_auto_message() {
@@ -820,6 +820,12 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 		ghm && gcmd
 	}
+	ghmde() {
+		if [ $# -ne 0 ]; then
+			echo_date "'ghmde' accepts no arguments; got $#" && return 1
+		fi
+		ghmd && exit
+	}
 	ghv() {
 		if [ $# -ne 0 ]; then
 			echo_date "'ghv' accepts no arguments; got $#" && return 1
@@ -933,25 +939,84 @@ if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -
 		if [ $# -ne 0 ]; then
 			echo_date "'gacm' accepts 0 arguments; got $#" && return 1
 		fi
-		gac && ghm
+		__add_merge 0 0
 	}
 	gacmd() {
 		if [ $# -ne 0 ]; then
 			echo_date "'gacmd' accepts 0 arguments; got $#" && return 1
 		fi
-		gac && ghmd
+		__add_merge 1 0
+	}
+	gacme() {
+		if [ $# -ne 0 ]; then
+			echo_date "'gacme' accepts 0 arguments; got $#" && return 1
+		fi
+		__add_merge 0 1
+	}
+	gacmde() {
+		if [ $# -ne 0 ]; then
+			echo_date "'gacmde' accepts 0 arguments; got $#" && return 1
+		fi
+		__add_merge 1 1
 	}
 	gcobacm() {
 		if [ $# -ge 3 ]; then
 			echo_date "'gcobacm' accepts [0..2] arguments; got $#" && return 1
 		fi
-		gcob "$@" && gacm
+		__create_add_merge 0 0 0 "$@"
 	}
 	gcobacmd() {
 		if [ $# -ge 3 ]; then
 			echo_date "'gcobacmd' accepts [0..2] arguments; got $#" && return 1
 		fi
-		gcob "$@" && gacmd
+		__create_add_merge 1 1 0 "$@"
+	}
+	gcobacmde() {
+		if [ $# -ge 3 ]; then
+			echo_date "'gcobacmde' accepts [0..2] arguments; got $#" && return 1
+		fi
+		__create_add_merge 1 1 1 "$@"
+	}
+	__add_merge() {
+		if [ $# -ne 2 ]; then
+			echo_date "'__add_merge' accepts 2 arguments; got $#" && return 1
+		fi
+		__delete="$1"
+		__exit="$2"
+		gac && ghm || return $?
+		if [ "${__delete}" -eq 0 ]; then
+			:
+		elif [ "${__delete}" -eq 1 ]; then
+			gcmd
+		else
+			echo_date "'__add_merge' accepts {0, 1} for the 'delete' flag; got ${__delete}" && return 1
+		fi
+		if [ "${__exit}" -eq 0 ]; then
+			:
+		elif [ "${__exit}" -eq 1 ]; then
+			exit
+		else
+			echo_date "'_' accepts {0, 1} for the 'exit' flag; got ${__exit}" && return 1
+		fi
+	}
+	__create_add_merge() {
+		if [ $# -le 2 ]; then
+			echo_date "'__create_add_merge' accepts [3..) arguments; got $#" && return 1
+		fi
+		__merge="$1"
+		__delete="$2"
+		__exit="$3"
+		shift 3
+
+		gcob "$@" && gac && ghm || return $?
+		if [ "${__merge}" -eq 0 ]; then
+			:
+		elif [ "${__merge}" -eq 1 ]; then
+			gcmd || return $?
+		else
+			echo_date "'__add_merge' accepts {0, 1} for the 'mergre' flag; got ${__merge}" && return 1
+		fi
+		__add_merge "${__delete}" "${__exit}"
 	}
 fi
 
