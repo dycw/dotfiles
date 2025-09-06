@@ -16,22 +16,31 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gap() { git add --all --patch "$@"; }
 	# add + commit + push
-	gac() { __git_add_commit_push 0 0 0 "$@"; }
-	gacn() { __git_add_commit_push 1 0 0 "$@"; }
-	gacf() { __git_add_commit_push 0 1 0 "$@"; }
-	gacnf() { __git_add_commit_push 1 1 0 "$@"; }
-	gacw() { __git_add_commit_push 0 0 1 "$@"; }
-	gacnw() { __git_add_commit_push 1 0 1 "$@"; }
-	gacfw() { __git_add_commit_push 0 1 1 "$@"; }
-	gacnfw() { __git_add_commit_push 1 1 1 "$@"; }
+	gac() { __git_add_commit_push 0 0 0 0 "$@"; }
+	gacn() { __git_add_commit_push 1 0 0 0 "$@"; }
+	gacf() { __git_add_commit_push 0 1 0 0 "$@"; }
+	gacnf() { __git_add_commit_push 1 1 0 0 "$@"; }
+	gacw() { __git_add_commit_push 0 0 1 0 "$@"; }
+	gacnw() { __git_add_commit_push 1 0 1 0 "$@"; }
+	gacfw() { __git_add_commit_push 0 1 1 0 "$@"; }
+	gacnfw() { __git_add_commit_push 1 1 1 0 "$@"; }
+	gace() { __git_add_commit_push 0 0 0 1 "$@"; }
+	gacne() { __git_add_commit_push 1 0 0 1 "$@"; }
+	gacfe() { __git_add_commit_push 0 1 0 1 "$@"; }
+	gacnfe() { __git_add_commit_push 1 1 0 1 "$@"; }
+	gacwe() { __git_add_commit_push 0 0 1 1 "$@"; }
+	gacnwe() { __git_add_commit_push 1 0 1 1 "$@"; }
+	gacfwe() { __git_add_commit_push 0 1 1 1 "$@"; }
+	gacnfwe() { __git_add_commit_push 1 1 1 1 "$@"; }
 	__git_add_commit_push() {
 		if [ $# -le 2 ]; then
-			echo_date "'__git_add_commit_push' accepts [3..) arguments; got $#" && return 1
+			echo_date "'__git_add_commit_push' accepts [4..) arguments; got $#" && return 1
 		fi
 		__gacp_no_verify="$1"
 		__gacp_force="$2"
 		__gacp_web="$3"
-		shift 3
+		__gacp_exit="$4"
+		shift 4
 
 		__gacp_count_file=0
 		__gacp_count_non_file=0
@@ -59,7 +68,7 @@ if command -v git >/dev/null 2>&1; then
 
 		if [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
 			ga
-			until __git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"; do
+			until __git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}" "${__gacp_exit}"; do
 				ga
 				__gacp_attempts=$((__gacp_attempts + 1))
 				if [ "${__gacp_attempts}" -ge 5 ]; then
@@ -68,7 +77,7 @@ if command -v git >/dev/null 2>&1; then
 			done
 		elif [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 1 ]; then
 			ga
-			until __git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"; do
+			until __git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}" "${__gacp_exit}"; do
 				ga
 				__gacp_attempts=$((__gacp_attempts + 1))
 				if [ "${__gacp_attempts}" -ge 5 ]; then
@@ -77,10 +86,10 @@ if command -v git >/dev/null 2>&1; then
 			done
 		elif [ "${__gacp_count_file}" -ge 1 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
 			eval "ga ${__gacp_file_args}"
-			__git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}"
+			__git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}" "${__gacp_exit}"
 		elif [ "${__gacp_count_file}" -ge 1 ] && [ "${__gacp_count_non_file}" -eq 1 ]; then
 			eval "ga ${__gacp_file_args}"
-			__git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}"
+			__git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}" "${__gacp_exit}"
 		else
 			echo_date "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__gacp_count_file} file(s) ${__gacp_file_list:-'(none)'} and ${__gacp_count_non_file} message(s)" && return 1
 		fi
@@ -138,9 +147,15 @@ if command -v git >/dev/null 2>&1; then
 		if __is_current_branch_master; then
 			gcof && gcm
 		else
-			__gcmd_branch="$(current_branch)" || return 1
-			gcof && gcm && gbd "${__gcmd_branch}"
+			__branch="$(current_branch)" || return 1
+			gcof && gcm && gbd "${__branch}"
 		fi
+	}
+	gcmde() {
+		if [ $# -ne 0 ]; then
+			echo_date "'gcmde' accepts no arguments; got $#" && return 1
+		fi
+		ghcm && exit
 	}
 	gco() {
 		if [ $# -eq 0 ]; then
@@ -289,60 +304,109 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -ge 2 ]; then
 			echo_date "'gc' accepts [0..1] arguments; got $#" && return 1
 		fi
-		__git_commit_push 0 "${1:-}" 0 0
+		__git_commit_push 0 "${1:-}" 0 0 0
 	}
 	gcn() {
 		if [ $# -ge 2 ]; then
 			echo_date "'gcn' accepts [0..1] arguments; got $#" && return 1
 		fi
-		__git_commit_push 1 "${1:-}" 0 0
+		__git_commit_push 1 "${1:-}" 0 0 0
 	}
 	gcf() {
 		if [ $# -ge 2 ]; then
 			echo_date "'gcf' accepts [0..1] arguments; got $#" && return 1
 		fi
-		__git_commit_push 0 "${1:-}" 1 0
+		__git_commit_push 0 "${1:-}" 1 0 0
 	}
 	gcnf() {
 		if [ $# -ge 2 ]; then
 			echo_date "'gcnf' accepts [0..1] arguments; got $#" && return 1
 		fi
-		__git_commit_push 1 "${1:-}" 1 0
+		__git_commit_push 1 "${1:-}" 1 0 0
 	}
 	gcw() {
 		if [ $# -ge 2 ]; then
 			echo_date "'gcw' accepts [0..1] arguments; got $#" && return 1
 		fi
-		__git_commit_push 0 "${1:-}" 0 1
+		__git_commit_push 0 "${1:-}" 0 1 0
 	}
 	gcnw() {
 		if [ $# -ge 2 ]; then
 			echo_date "'gcnw' accepts [0..1] arguments; got $#" && return 1
 		fi
-		__git_commit_push 1 "${1:-}" 0 1
+		__git_commit_push 1 "${1:-}" 0 1 0
 	}
 	gcfw() {
 		if [ $# -ge 2 ]; then
 			echo_date "'gcfw' accepts [0..1] arguments; got $#" && return 1
 		fi
-		__git_commit_push 0 "${1:-}" 1 1
+		__git_commit_push 0 "${1:-}" 1 1 0
 	}
 	gcnfw() {
 		if [ $# -ge 2 ]; then
 			echo_date "'gcnfw' accepts [0..1] arguments; got $#" && return 1
 		fi
-		__git_commit_push 1 "${1:-}" 1 1
+		__git_commit_push 1 "${1:-}" 1 1 0
+	}
+	gce() {
+		if [ $# -ge 2 ]; then
+			echo_date "'gce' accepts [0..1] arguments; got $#" && return 1
+		fi
+		__git_commit_push 0 "${1:-}" 0 0 1
+	}
+	gcne() {
+		if [ $# -ge 2 ]; then
+			echo_date "'gcne' accepts [0..1] arguments; got $#" && return 1
+		fi
+		__git_commit_push 1 "${1:-}" 0 0 1
+	}
+	gcfe() {
+		if [ $# -ge 2 ]; then
+			echo_date "'gcfe' accepts [0..1] arguments; got $#" && return 1
+		fi
+		__git_commit_push 0 "${1:-}" 1 0 1
+	}
+	gcnfe() {
+		if [ $# -ge 2 ]; then
+			echo_date "'gcnfe' accepts [0..1] arguments; got $#" && return 1
+		fi
+		__git_commit_push 1 "${1:-}" 1 0 1
+	}
+	gcwe() {
+		if [ $# -ge 2 ]; then
+			echo_date "'gcwe' accepts [0..1] arguments; got $#" && return 1
+		fi
+		__git_commit_push 0 "${1:-}" 0 1 1
+	}
+	gcnwe() {
+		if [ $# -ge 2 ]; then
+			echo_date "'gcnwe' accepts [0..1] arguments; got $#" && return 1
+		fi
+		__git_commit_push 1 "${1:-}" 0 1 1
+	}
+	gcfwe() {
+		if [ $# -ge 2 ]; then
+			echo_date "'gcfwe' accepts [0..1] arguments; got $#" && return 1
+		fi
+		__git_commit_push 0 "${1:-}" 1 1 1
+	}
+	gcnfwe() {
+		if [ $# -ge 2 ]; then
+			echo_date "'gcnfwe' accepts [0..1] arguments; got $#" && return 1
+		fi
+		__git_commit_push 1 "${1:-}" 1 1 1
 	}
 	__git_commit_push() {
-		if [ "$#" -ne 4 ]; then
-			echo_date "'__git_commit_push' accepts 4 arguments; got $#" && return 1
+		if [ "$#" -ne 5 ]; then
+			echo_date "'__git_commit_push' accepts 5 arguments; got $#" && return 1
 		fi
 		__gcp_no_verify="$1"
 		__gcp_message="$2"
 		__gcp_force="$3"
 		__gcp_web="$4"
+		__gcp_exit="$5"
 		__git_commit "${__gcp_no_verify}" "${__gcp_message}" &&
-			__git_push "${__gcp_force}" "${__gcp_web}"
+			__git_push "${__gcp_force}" "${__gcp_web}" "${__gcp_exit}"
 	}
 	# diff
 	gd() { git diff "$@"; }
@@ -594,7 +658,13 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
 			echo_date "'ghcmd' accepts [1..2] arguments; got $#" && return 1
 		fi
-		ghc "$@" && echo 'did ghc' && ghm && echo 'did ghm' && gcmd && echo 'did gcmd'
+		ghc "$@" && ghm && gcmd
+	}
+	ghcmde() {
+		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
+			echo_date "'ghcmde' accepts [1..2] arguments; got $#" && return 1
+		fi
+		ghc "$@" && ghm && gcmd && exit
 	}
 	ghe() {
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
@@ -676,13 +746,47 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'ghm' accepts no arguments; got $#" && return 1
 		fi
-		__gh_pr_merge 0
+		__start="$(date +%s)"
+		__host="$(__repo_host)" || return 1
+		__branch="$(current_branch)" || return 1
+		if [ "${__host}" = 'github' ]; then
+			gh pr merge --auto --delete-branch --squash || return $?
+			while __gh_pr_merging; do
+				__now="$(date +%s)"
+				__elapsed="$((__now - __start))"
+				echo_date "'${__branch}' is still merging... (${__elapsed}s)"
+				sleep 1
+			done
+		elif [ "${__host}" = 'gitlab' ]; then
+			__status="$(__glab_mr_merge_status)"
+			if [ "${__status}" = 'conflict' ]; then
+				echo_date "'${__branch}' has conflicts" && return 1
+			elif [ "${__status}" = 'need_rebase' ]; then
+				echo_date "'${__branch}' needs to be rebased" && return 1
+			elif [ "${__status}" = 'not open' ]; then
+				echo_date "'${__branch}' PR needs to be opened" && return 1
+			fi
+			while true; do
+				glab mr merge --remove-source-branch --squash --yes >/dev/null 2>&1 || true
+				if __gh_pr_merging; then
+					__status="$(__glab_mr_merge_status)"
+					__now="$(date +%s)"
+					__elapsed="$((__now - __start))"
+					echo_date "'${__branch}' is still merging... ('${__status}', ${__elapsed}s)"
+					sleep 1
+				else
+					break
+				fi
+			done
+		else
+			echo_date "'ghm' must be for GitHub/GitLab; got '${__host}'" && return 1
+		fi
 	}
 	ghmd() {
 		if [ $# -ne 0 ]; then
 			echo_date "'ghmd' accepts no arguments; got $#" && return 1
 		fi
-		__gh_pr_merge 1
+		ghm && gcmd
 	}
 	ghv() {
 		if [ $# -ne 0 ]; then
@@ -730,54 +834,6 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 				--title="${__title}" --description="${__body}"
 		else
 			echo_date "'__gh_pr_create_or_edit' must be for GitHub/GitLab; got '${__host}'" && return 1
-		fi
-	}
-	__gh_pr_merge() {
-		if [ $# -ne 1 ]; then
-			echo_date "'__gh_pr_merge' accepts 1 argument; got $#" && return 1
-		fi
-		__delete="$1"
-		__start="$(date +%s)"
-		__host="$(__repo_host)" || return 1
-		__branch="$(current_branch)" || return 1
-		if [ "${__host}" = 'github' ]; then
-			gh pr merge --auto --delete-branch --squash || return $?
-			while __gh_pr_merging; do
-				__now="$(date +%s)"
-				__elapsed="$((__now - __start))"
-				echo_date "'${__branch}' is still merging... (${__elapsed}s)"
-				sleep 1
-			done
-		elif [ "${__host}" = 'gitlab' ]; then
-			__status="$(__glab_mr_merge_status)"
-			if [ "${__status}" = 'conflict' ]; then
-				echo_date "'${__branch}' has conflicts" && return 1
-			elif [ "${__status}" = 'need_rebase' ]; then
-				echo_date "'${__branch}' needs to be rebased" && return 1
-			elif [ "${__status}" = 'not open' ]; then
-				echo_date "'${__branch}' PR needs to be opened" && return 1
-			fi
-			while true; do
-				glab mr merge --remove-source-branch --squash --yes >/dev/null 2>&1 || true
-				if __gh_pr_merging; then
-					__status="$(__glab_mr_merge_status)"
-					__now="$(date +%s)"
-					__elapsed="$((__now - __start))"
-					echo_date "'${__branch}' is still merging... ('${__status}', ${__elapsed}s)"
-					sleep 1
-				else
-					break
-				fi
-			done
-		else
-			echo_date "'__gh_pr_merge' must be for GitHub/GitLab; got '${__host}'" && return 1
-		fi
-		if [ "${__delete}" -eq 0 ]; then
-			:
-		elif [ "${__delete}" -eq 1 ]; then
-			gcmd
-		else
-			echo_date "'__gh_pr_merge' accepts {0, 1} for the 'delete' flag; got ${__delete}" && return 1
 		fi
 	}
 	__gh_pr_merging() {
