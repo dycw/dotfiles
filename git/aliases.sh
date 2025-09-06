@@ -480,9 +480,9 @@ if command -v git >/dev/null 2>&1; then
 			echo_date "'__repo_host' accepts 0 arguments; got $#" && return 1
 		fi
 		__rh_url=$(git remote get-url origin 2>/dev/null)
-		if echo "$__rh_url" | grep -q "github"; then
+		if echo "$__rh_url" | grep -q 'github'; then
 			echo "github"
-		elif echo "$__rh_url" | grep -q "gitlab"; then
+		elif echo "$__rh_url" | grep -q 'gitlab'; then
 			echo "gitlab"
 		else
 			echo_date "'__repo_host' must return 'github' or 'gitlab'; got '$__rh_url'" && return 1
