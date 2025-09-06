@@ -206,6 +206,9 @@ ls.add_snippets("python", {
     s("ib-stock", { t({ "from ib_async import Stock", "" }) }),
     s("ib-trade", { t({ "from ib_async import Trade", "" }) }),
 
+    -- importlib
+    s("im-files", { t({ "from importlib.resources import files", "" }) }),
+
     -- inspect
     s("in-signature", { t({ "from inspect import signature", "" }) }),
 
@@ -298,6 +301,7 @@ ls.add_snippets("python", {
     s("po-compute-error", { t({ "from polars.exceptions import ComputeError", "" }) }),
     s("po-concat", { t({ "from polars import concat", "" }) }),
     s("po-dataframe", { t({ "from polars import DataFrame", "" }) }),
+    s("po-date", { t({ "from polars import Date", "" }) }),
     s("po-date-range", { t({ "from polars import date_range", "" }) }),
     s("po-date-ranges", { t({ "from polars import date_ranges", "" }) }),
     s("po-datetime", { t({ "from polars import Datetime", "" }) }),
