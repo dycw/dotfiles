@@ -453,32 +453,57 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'gp' accepts no arguments; got $#" && return 1
 		fi
-		__git_push 0 0
+		__git_push 0 0 0
 	}
 	gpf() {
 		if [ $# -ne 0 ]; then
 			echo_date "'gpf' accepts no arguments; got $#" && return 1
 		fi
-		__git_push 1 0
+		__git_push 1 0 0
 	}
 	gpw() {
 		if [ $# -ne 0 ]; then
 			echo_date "'gpw' accepts no arguments; got $#" && return 1
 		fi
-		__git_push 0 1
+		__git_push 0 1 0
 	}
 	gpfw() {
 		if [ $# -ne 0 ]; then
 			echo_date "'gpfw' accepts no arguments; got $#" && return 1
 		fi
-		__git_push 1 1
+		__git_push 1 1 0
+	}
+	gpe() {
+		if [ $# -ne 0 ]; then
+			echo_date "'gpe' accepts no arguments; got $#" && return 1
+		fi
+		__git_push 0 0 1
+	}
+	gpfe() {
+		if [ $# -ne 0 ]; then
+			echo_date "'gpfe' accepts no arguments; got $#" && return 1
+		fi
+		__git_push 1 0 1
+	}
+	gpwe() {
+		if [ $# -ne 0 ]; then
+			echo_date "'gpwe' accepts no arguments; got $#" && return 1
+		fi
+		__git_push 0 1 1
+	}
+	gpfwe() {
+		if [ $# -ne 0 ]; then
+			echo_date "'gpfwe' accepts no arguments; got $#" && return 1
+		fi
+		__git_push 1 1 1
 	}
 	__git_push() {
-		if [ $# -ne 2 ]; then
-			echo_date "'__git_push' accepts 2 arguments; got $#" && return 1
+		if [ $# -ne 3 ]; then
+			echo_date "'__git_push' accepts 3 arguments; got $#" && return 1
 		fi
 		__gp_force="$1"
 		__gp_web="$2"
+		__gp_exit="$3"
 		__git_push_current_branch "${__gp_force}" || return $?
 		if [ "${__gp_web}" -eq 0 ]; then
 			:
@@ -486,6 +511,13 @@ if command -v git >/dev/null 2>&1; then
 			gw
 		else
 			echo_date "'__git_push' accepts {0, 1} for the 'web' flag; got ${__gp_web}" && return 1
+		fi
+		if [ "${__gp_exit}" -eq 0 ]; then
+			:
+		elif [ "${__gp_exit}" -eq 1 ]; then
+			exit
+		else
+			echo_date "'__git_push' accepts {0, 1} for the 'exit' flag; got ${__gp_exit}" && return 1
 		fi
 	}
 	__git_push_current_branch() {
