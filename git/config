@@ -1,71 +1,79 @@
 [apply]
-	whitespace = nowarn
+  whitespace = nowarn
+
 [branch]
-	autoSetupMerge = always
-	autoSetupRebase = always
+  autoSetupMerge = always
+  autoSetupRebase = always
+
 [checkout]
-	defaultRemote = origin
+  defaultRemote = origin
+
 [commit]
-	verbose = true
+  verbose = true
+
 [core]
 	excludesfile = ~/.config/git/ignore
-	pager = delta
-	bare = false
+  pager = delta
+
 [diff]
-	colorMoved = default
+  colorMoved = default
+
 [delta]
-	navigate = true
+  navigate = true
+
 [fetch]
-	prune = true
-	pruneTags = true
+  prune = true
+  pruneTags = true
+
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
-[filter "age"]
-	clean = git-age clean -- %f
-	smudge = git-age smudge -- %f
-	required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+
 [help]
-	autoCorrect = 1
+  autoCorrect = 1
+
 [interactive]
-	diffFilter = delta --color-only
+  diffFilter = delta --color-only
+
 [init]
-	defaultBranch = master
+  defaultBranch = master
+
 [log]
-	abbrevCommit = true
-	date = format:%Y-%m-%d %H:%M:%S (%a)
-	decorate = full
+  abbrevCommit = true
+  date = format:%Y-%m-%d %H:%M:%S (%a)
+  decorate = full
+
 [merge]
-	conflictstyle = diff3
-	tool = nvimdiff
+  conflictstyle = diff3
+  tool = nvimdiff
+
 [mergetool "nvimdiff"]
-	cmd = "nvim -d \"$LOCAL\" \"$REMOTE\" \"$MERGED\" -c \"wincmd w\""
+  cmd = nvim -d \"$LOCAL\" \"$REMOTE\" \"$MERGED\" -c \"wincmd w\"
+
 [pull]
-	default = upstream
-	ff = only
+  default = upstream
+  ff = only
+
 [push]
-	default = simple
-	followTags = true
+  default = simple
+  followTags = true
+
 [rebase]
-	abbreviateCommands = true
-	autoSquash = true
-	stat = true
+  abbreviateCommands = true
+  autoSquash = true
+  stat = true
+
 [status]
-	branch = true
+  branch = true
+
 [submodule]
-	fetchJobs = 0
+  fetchJobs = 0
+
 [tag]
-	sort = version:refname
+  sort = version:refname
+
 [user]
-	email = d.wan@icloud.com
-	name = Derek Wan
-[filter "strongbox"]
-	clean = strongbox -clean %f
-	smudge = strongbox -smudge %f
-	required = true
-[diff "strongbox"]
-	textconv = strongbox -diff
-[merge "strongbox"]
-	driver = strongbox -merge-file %O -merge-file %A -merge-file %B -merge-file %L -merge-file %P -merge-file %S -merge-file %X -merge-file %Y
+  email = d.wan@icloud.com
+  name = Derek Wan
