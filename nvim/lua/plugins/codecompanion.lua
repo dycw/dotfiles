@@ -20,23 +20,25 @@ return {
         }
         require("codecompanion").setup({
             adapters = {
-                my_ollama = function()
-                    return require("codecompanion.adapters").extend("ollama", {
-                        env = { url = "OLLAMA_SERVER" },
-                        headers = {
-                            ["Content-Type"] = "application/json",
-                            ["Authorization"] = "Bearer ${api_key}",
-                        },
-                        parameters = {
-                            sync = true,
-                        },
-                    })
-                end,
-            },
-            strategies = {
-                chat = strategy,
-                inline = strategy,
-                cmd = strategy,
+                http = {
+                    my_ollama = function()
+                        return require("codecompanion.adapters").extend("ollama", {
+                            env = { url = "OLLAMA_SERVER" },
+                            headers = {
+                                ["Content-Type"] = "application/json",
+                                ["Authorization"] = "Bearer ${api_key}",
+                            },
+                            parameters = {
+                                sync = true,
+                            },
+                        })
+                    end,
+                },
+                strategies = {
+                    chat = strategy,
+                    inline = strategy,
+                    cmd = strategy,
+                },
             },
         })
     end,

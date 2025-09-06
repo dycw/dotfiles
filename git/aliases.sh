@@ -207,7 +207,7 @@ if command -v git >/dev/null 2>&1; then
 			echo_date "'gcobt' accepts [0..1] arguments; got $#" && return 1
 		fi
 		if __is_current_branch_master; then
-			gf && git checkout -b "${__branch}" --track="origin/${__branch}"
+			gf && git checkout -b "${__branch}" --track='direct'
 		else
 			gco master
 		fi
