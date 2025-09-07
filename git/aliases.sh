@@ -828,10 +828,13 @@ fi
 # gh/glab
 if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 	ghc() {
-		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-			echo_date "'ghc' accepts [1..2] arguments; got $#" && return 1
+		if [ $# -eq 1 ]; then
+			__gh_create "$1" '.'
+		elif [ $# -eq 2 ]; then
+			__gh_create "$1" "$@"
+		else
+			echo_date "'gcb' accepts [0..2] arguments; got $#" && return 1
 		fi
-		ghc "$@"
 	}
 	ghic() {
 		if __is_github && [ $# -eq 1 ]; then
@@ -951,7 +954,8 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			echo_date "'__gh_exists' accepts no arguments; got $#" && return 1
 		fi
 		if __is_github; then
-			if gh pr view >/dev/null 2>&1; then
+			__gh_exists_num="$(gh pr list --json number --jq '. | length')"
+			if [ "${__gh_exists_num}" -eq 1 ]; then
 				true
 			else
 				false
@@ -962,6 +966,8 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			else
 				false
 			fi
+		else
+			echo_date "'__gh_exists' impossible case" && return 1
 		fi
 	}
 	__gh_merge() {
@@ -1052,51 +1058,6 @@ if command -v git >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
 	wgd() { watch -d -n 0.5 -- git diff "$@"; }
 	wgl() { watch -d -n 0.5 -- git log --abbrev-commit --decorate=short --oneline; }
 	wgs() { watch -d -n 0.5 -- git status "$@"; }
-fi
-
-# git + gh/glab
-if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1); then
-	gcbacm() {
-		if [ $# -ge 3 ]; then
-			echo_date "'gcbacm' accepts [0..2] arguments; got $#" && return 1
-		fi
-		__create_add_merge 'none' "$@"
-	}
-	gcbacd() {
-		if [ $# -ge 3 ]; then
-			echo_date "'gcbacd' accepts [0..2] arguments; got $#" && return 1
-		fi
-		__create_add_merge 'delete' "$@"
-	}
-	gcbace() {
-		if [ $# -ge 3 ]; then
-			echo_date "'gcbace' accepts [0..2] arguments; got $#" && return 1
-		fi
-		__create_add_merge 'delete+exit' "$@"
-	}
-	__add_merge() {
-		if [ $# -ne 1 ]; then
-			echo_date "'__add_merge' accepts 1 argument; got $#" && return 1
-		fi
-		# $1 = action
-		case "$1" in
-		'none' | 'delete' | 'delete+exit') ;;
-		*) echo_date "'__add_merge' invalid action; got '$1'" && return 1 ;;
-		esac
-		gac && __gh_merge "$1"
-	}
-	__create_add_merge() {
-		if [ $# -eq 0 ]; then
-			echo_date "'__create_add_merge' accepts [1..) arguments; got $#" && return 1
-		fi
-		__action="$1"
-		shift
-		case "${__action}" in
-		'none' | 'delete' | 'delete+exit') ;;
-		*) echo_date "'__create_add_merge' invalid action; got '${__action}'" && return 1 ;;
-		esac
-		gcb "$@" && __add_merge "${__action}"
-	}
 fi
 
 # gh + watch
