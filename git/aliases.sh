@@ -391,7 +391,7 @@ if command -v git >/dev/null 2>&1; then
 			echo_date "'__git_checkout_create' impossible case; got '$1' and '$2'" && return 1
 		fi
 		git checkout -b "${__git_checkout_create_branch}" origin/master &&
-			__git_push false 'none' &&
+			# __git_push false 'none' &&
 			__git_commit_empty_msg &&
 			__git_push false 'none' &&
 			__gh_create "${__git_checkout_create_title}" "${__git_checkout_create_body}"
@@ -892,13 +892,13 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			if gh pr view >/dev/null 2>&1; then
 				true
 			else
-				true
+				false
 			fi
 		elif __is_gitlab; then
 			if __glab_mr_num >/dev/null 2>&1; then
 				true
 			else
-				true
+				false
 			fi
 		fi
 	}
