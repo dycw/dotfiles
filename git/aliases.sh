@@ -244,99 +244,99 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gcac() {
 		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
-		__gcac_title="$1" && shift && __git_checkout_all "${__gcac_title}" false false 'none' "$@"
+		__gcac_title="$1" && shift && __git_create_all "${__gcac_title}" false false 'none' "$@"
 	}
 	gcacn() {
 		[ $# -eq 0 ] && echo_date "'gcacn' accepts [1..) arguments; got $#" && return 1
-		__gcacn_title="$1" && shift && __git_checkout_all "${__gcacn_title}" true true false 'none' "$@"
+		__gcacn_title="$1" && shift && __git_create_all "${__gcacn_title}" true true false 'none' "$@"
 	}
 	gcacf() {
 		[ $# -eq 0 ] && echo_date "'gcacf' accepts [1..) arguments; got $#" && return 1
-		__gcacf_title="$1" && shift && __git_checkout_all "" true false true 'none' "$@"
+		__gcacf_title="$1" && shift && __git_create_all "" true false true 'none' "$@"
 	}
 	gcacnf() {
 		[ $# -eq 0 ] && echo_date "'gcacnf' accepts [1..) arguments; got $#" && return 1
-		__gcacnf_title="$1" && shift && __git_checkout_all "" true true true 'none' "$@"
+		__gcacnf_title="$1" && shift && __git_create_all "" true true true 'none' "$@"
 	}
 	gcacw() {
 		[ $# -eq 0 ] && echo_date "'gcacw' accepts [1..) arguments; got $#" && return 1
-		__gcacw_title="$1" && shift && __git_checkout_all "" true false false 'web' "$@"
+		__gcacw_title="$1" && shift && __git_create_all "" true false false 'web' "$@"
 	}
 	gcacnw() {
 		[ $# -eq 0 ] && echo_date "'gcacnw' accepts [1..) arguments; got $#" && return 1
-		__gcacnw_title="$1" && shift && __git_checkout_all "" true true false 'web' "$@"
+		__gcacnw_title="$1" && shift && __git_create_all "" true true false 'web' "$@"
 	}
 	gcacfw() {
 		[ $# -eq 0 ] && echo_date "'gcacfw' accepts [1..) arguments; got $#" && return 1
-		__gcacfw_title="$1" && shift && __git_checkout_all "" true false true 'web' "$@"
+		__gcacfw_title="$1" && shift && __git_create_all "" true false true 'web' "$@"
 	}
 	gcacnfw() {
 		[ $# -eq 0 ] && echo_date "'gcacnfw' accepts [1..) arguments; got $#" && return 1
-		__gcacnfw_title="$1" && shift && __git_checkout_all "" true true true 'web' "$@"
+		__gcacnfw_title="$1" && shift && __git_create_all "" true true true 'web' "$@"
 	}
 	gcace() {
 		[ $# -eq 0 ] && echo_date "'gcace' accepts [1..) arguments; got $#" && return 1
-		__gcace_title="$1" && shift && __git_checkout_all "" true false false 'exit' "$@"
+		__gcace_title="$1" && shift && __git_create_all "" true false false 'exit' "$@"
 	}
 	gcacne() {
 		[ $# -eq 0 ] && echo_date "'gcacne' accepts [1..) arguments; got $#" && return 1
-		__gcacne_title="$1" && shift && __git_checkout_all "" true true false 'exit' "$@"
+		__gcacne_title="$1" && shift && __git_create_all "" true true false 'exit' "$@"
 	}
 	gcacfe() {
 		[ $# -eq 0 ] && echo_date "'gcacfe' accepts [1..) arguments; got $#" && return 1
-		__gcacfe_title="$1" && shift && __git_checkout_all "" true false true 'exit' "$@"
+		__gcacfe_title="$1" && shift && __git_create_all "" true false true 'exit' "$@"
 	}
 	gcacnfe() {
 		[ $# -eq 0 ] && echo_date "'gcacnfe' accepts [1..) arguments; got $#" && return 1
-		__gcacnfe_title="$1" && shift && __git_checkout_all "" true true true 'exit' "$@"
+		__gcacnfe_title="$1" && shift && __git_create_all "" true true true 'exit' "$@"
 	}
 	gcacwe() {
 		[ $# -eq 0 ] && echo_date "'gcacwe' accepts [1..) arguments; got $#" && return 1
-		__gcacwe_title="$1" && shift && __git_checkout_all "" true false false 'web+exit' "$@"
+		__gcacwe_title="$1" && shift && __git_create_all "" true false false 'web+exit' "$@"
 	}
 	gcacnwe() {
 		[ $# -eq 0 ] && echo_date "'gcacnwe' accepts [1..) arguments; got $#" && return 1
-		__gcacnwe_title="$1" && shift && __git_checkout_all "" true true false 'web+exit' "$@"
+		__gcacnwe_title="$1" && shift && __git_create_all "" true true false 'web+exit' "$@"
 	}
 	gcacfwe() {
 		[ $# -eq 0 ] && echo_date "'gcacfwe' accepts [1..) arguments; got $#" && return 1
-		__gcacfwe_title="$1" && shift && __git_checkout_all "" true false true 'web+exit' "$@"
+		__gcacfwe_title="$1" && shift && __git_create_all "" true false true 'web+exit' "$@"
 	}
 	gcacnfwe() {
 		[ $# -eq 0 ] && echo_date "'gcacnfwe' accepts [1..) arguments; got $#" && return 1
-		__gcacnfwe_title="$1" && shift && __git_checkout_all "" true true true 'web+exit' "$@"
+		__gcacnfwe_title="$1" && shift && __git_create_all "" true true true 'web+exit' "$@"
 	}
 	gcacm() {
 		[ $# -eq 0 ] && echo_date "'gcacm' accepts [1..) arguments; got $#" && return 1
-		__gcacm_title="$1" && shift && __git_checkout_all "" true false false 'merge' "$@"
+		__gcacm_title="$1" && shift && __git_create_all "" true false false 'merge' "$@"
 	}
 	gcacnm() {
 		[ $# -eq 0 ] && echo_date "'gcacnm' accepts [1..) arguments; got $#" && return 1
-		__gcacnm_title="$1" && shift && __git_checkout_all "" true true false 'merge' "$@"
+		__gcacnm_title="$1" && shift && __git_create_all "" true true false 'merge' "$@"
 	}
 	gcacfm() {
 		[ $# -eq 0 ] && echo_date "'gcacfm' accepts [1..) arguments; got $#" && return 1
-		__gcacfm_title="$1" && shift && __git_checkout_all "" true false true 'merge' "$@"
+		__gcacfm_title="$1" && shift && __git_create_all "" true false true 'merge' "$@"
 	}
 	gcacnfm() {
 		[ $# -eq 0 ] && echo_date "'gcacnfm' accepts [1..) arguments; got $#" && return 1
-		__gcacnfm_title="$1" && shift && __git_checkout_all "" true true true 'merge' "$@"
+		__gcacnfm_title="$1" && shift && __git_create_all "" true true true 'merge' "$@"
 	}
 	gcacx() {
 		[ $# -eq 0 ] && echo_date "'gcacx' accepts [1..) arguments; got $#" && return 1
-		__gcacx_title="$1" && shift && __git_checkout_all "" true false false 'merge+exit' "$@"
+		__gcacx_title="$1" && shift && __git_create_all "" true false false 'merge+exit' "$@"
 	}
 	gcacnx() {
 		[ $# -eq 0 ] && echo_date "'gcacnx' accepts [1..) arguments; got $#" && return 1
-		__gcacnx_title="$1" && shift && __git_checkout_all "" true true false 'merge+exit' "$@"
+		__gcacnx_title="$1" && shift && __git_create_all "" true true false 'merge+exit' "$@"
 	}
 	gcacfx() {
 		[ $# -eq 0 ] && echo_date "'gcacfx' accepts [1..) arguments; got $#" && return 1
-		__gcacfx_title="$1" && shift && __git_checkout_all "" true false true 'merge+exit' "$@"
+		__gcacfx_title="$1" && shift && __git_create_all "" true false true 'merge+exit' "$@"
 	}
 	gcacnfx() {
 		[ $# -eq 0 ] && echo_date "'gcacnfx' accepts [1..) arguments; got $#" && return 1
-		__gcacnfx_title="$1" && shift && __git_checkout_all "" true true true 'merge+exit' "$@"
+		__gcacnfx_title="$1" && shift && __git_create_all "" true true true 'merge+exit' "$@"
 	}
 	gcbt() {
 		if [ $# -eq 0 ]; then
@@ -396,26 +396,21 @@ if command -v git >/dev/null 2>&1; then
 		gcof origin/master "$@"
 	}
 	gcop() { git checkout --patch "$@"; }
-	__git_checkout_all() {
-		[ $# -le 3 ] && echo_date "'__git_checkout_all' accepts [4..) arguments; got $#" && return 1
-		__git_checkout_all_title="$1"
-		__git_checkout_all_no_verify="$2"
-		__git_checkout_all_force="$3"
-		__git_checkout_all_action="$4"
-		echo "debug: here with \$1=$1, \$2=$2, \$3=$3, \$4=$4"
-		shift 4
-		case "${__git_checkout_all_action}" in
-		'none' | 'web' | 'exit' | 'web+exit' | 'merge' | 'merge+exit') ;;
-		*) echo_date "'__git_checkout_all' invalid action; got '${__git_checkout_all_action}'" && return 1 ;;
+	__git_checkout_master() {
+		[ $# -ne 1 ] && echo_date "'__git_checkout_master' accepts 1 argument; got $#" && return 1
+		# $1 = action = {none/delete/delete+exit}
+		case "$1" in
+		'none' | 'delete' | 'delete+exit') ;;
+		*) echo_date "'__git_checkout_master' invalid action; got '$1'" && return 1 ;;
 		esac
-		if [ $# -ge 1 ] && __is_int "$1"; then
-			__git_checkout_all_num="$1"
-			shift
-		else
-			__git_checkout_all_num=''
+		__git_checkout_master_branch="$(current_branch)" || return $?
+		gco master
+		if [ "$1" = 'delete' ] || [ "$1" = 'delete+exit' ]; then
+			gbd "${__git_checkout_master_branch}" || return $?
 		fi
-		__git_create "${__git_checkout_all_title}" "${__git_checkout_all_num}" &&
-			__git_all true "${__git_checkout_all_no_verify}" "${__git_checkout_all_force}" "${__git_checkout_all_action}" "$@"
+		if [ "$1" = 'delete+exit' ]; then
+			exit
+		fi
 	}
 	__git_create() {
 		[ $# -ne 2 ] && echo_date "'__git_create' accepts 2 arguments; got $#" && return 1
@@ -447,21 +442,25 @@ if command -v git >/dev/null 2>&1; then
 			__git_push false 'none' &&
 			__gh_create "${__git_create_title}" "${__git_create_body}"
 	}
-	__git_checkout_master() {
-		[ $# -ne 1 ] && echo_date "'__git_checkout_master' accepts 1 argument; got $#" && return 1
-		# $1 = action = {none/delete/delete+exit}
-		case "$1" in
-		'none' | 'delete' | 'delete+exit') ;;
-		*) echo_date "'__git_checkout_master' invalid action; got '$1'" && return 1 ;;
+	__git_create_all() {
+		[ $# -le 3 ] && echo_date "'__git_create_all' accepts [4..) arguments; got $#" && return 1
+		__git_create_all_title="$1"
+		__git_create_all_nv="$2"
+		__git_create_all_force="$3"
+		__git_create_all_action="$4"
+		shift 4
+		case "${__git_create_all_action}" in
+		'none' | 'web' | 'exit' | 'web+exit' | 'merge' | 'merge+exit') ;;
+		*) echo_date "'__git_create_all' invalid action; got '${__git_create_all_action}'" && return 1 ;;
 		esac
-		__git_checkout_master_branch="$(current_branch)" || return $?
-		gco master
-		if [ "$1" = 'delete' ] || [ "$1" = 'delete+exit' ]; then
-			gbd "${__git_checkout_master_branch}" || return $?
+		if [ $# -ge 1 ] && __is_int "$1"; then
+			__git_create_all_num="$1"
+			shift
+		else
+			__git_create_all_num=''
 		fi
-		if [ "$1" = 'delete+exit' ]; then
-			exit
-		fi
+		__git_create "${__git_create_all_title}" "${__git_create_all_num}" &&
+			__git_all true "${__git_create_all_nv}" "${__git_create_all_force}" "${__git_create_all_action}" "$@"
 	}
 	__to_valid_branch() {
 		[ $# -ne 1 ] && echo_date "'__to_valid_branch' accepts 1 argument; got $#" && return 1
