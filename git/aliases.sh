@@ -138,24 +138,19 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'gcm' accepts no arguments; got $#" && return 1
 		fi
-		gco master
+		__git_checkout_master 0
 	}
 	gcmd() {
 		if [ $# -ne 0 ]; then
 			echo_date "'gcmd' accepts no arguments; got $#" && return 1
 		fi
-		if __is_current_branch_master; then
-			gcof && gcm
-		else
-			__branch="$(current_branch)" || return 1
-			gcof && gcm && gbd "${__branch}"
-		fi
+		__git_checkout_master 1
 	}
-	gcmde() {
+	gcme() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gcmde' accepts no arguments; got $#" && return 1
+			echo_date "'gcme' accepts no arguments; got $#" && return 1
 		fi
-		ghcm && exit
+		__git_checkout_master 2
 	}
 	gco() {
 		if [ $# -eq 0 ]; then
@@ -247,6 +242,33 @@ if command -v git >/dev/null 2>&1; then
 		gcof origin/master "$@"
 	}
 	gcop() { git checkout --patch "$@"; }
+	__git_checkout_master() {
+		if [ $# -ne 1 ]; then
+			echo_date "'__git_checkout_master' accepts 1 argument; got $#" && return 1
+		fi
+		__action="$1"
+		__branch="$(current_branch)" || return $?
+		gcof
+		if [ "${__branch}" = 'master' ]; then
+			gpl
+		else
+			gco master && gbd "${__branch}" || return $?
+		fi
+		if [ "${__action}" -eq 0 ]; then
+			:
+		elif [ "${__action}" -eq 1 ]; then
+			if [ "${__branch}" != 'master' ]; then
+				gbd "${__branch}" || return $?
+			fi
+		elif [ "${__action}" -eq 2 ]; then
+			if [ "${__branch}" != 'master' ]; then
+				gbd "${__branch}" || return $?
+			fi
+			exit
+		else
+			echo_date "'__git_checkout_master' accepts {0, 1, 2} for the 'action' flag; got ${__action}" && return 1
+		fi
+	}
 	__to_valid_branch() {
 		if [ $# -ne 1 ]; then
 			echo_date "'__to_valid_branch' accepts 1 argument; got $#" && return 1
