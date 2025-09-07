@@ -208,6 +208,12 @@ if command -v git >/dev/null 2>&1; then
 		fi
 		gcob "$@" && gacmd
 	}
+	gcobacme() {
+		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
+			echo_date "'gcobacme' accepts [0..2] arguments; got $#" && return 1
+		fi
+		gcob "$@" && gacme
+	}
 	gcobt() {
 		if [ $# -eq 0 ]; then
 			__branch="$(__select_remote_branch)"
