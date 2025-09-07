@@ -827,24 +827,12 @@ fi
 
 # gh/glab
 if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
-	# ghcm() {
-	#     if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-	#         echo_date "'ghcm' accepts [1..2] arguments; got $#" && return 1
-	#     fi
-	#     ghc "$@" && ghm
-	# }
-	# ghcmd() {
-	#     if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-	#         echo_date "'ghcmd' accepts [1..2] arguments; got $#" && return 1
-	#     fi
-	#     ghc "$@" && ghm && gcmd
-	# }
-	# ghcme() {
-	#     if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-	#         echo_date "'ghcme' accepts [1..2] arguments; got $#" && return 1
-	#     fi
-	#     ghc "$@" && ghm && gcmd && exit
-	# }
+	ghc() {
+		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
+			echo_date "'ghc' accepts [1..2] arguments; got $#" && return 1
+		fi
+		ghc "$@"
+	}
 	ghic() {
 		if __is_github && [ $# -eq 1 ]; then
 			gh issue create --title="$1" --body='.'
