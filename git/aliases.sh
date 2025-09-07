@@ -233,11 +233,11 @@ if command -v git >/dev/null 2>&1; then
 	# checkout
 	gcb() {
 		if [ $# -eq 0 ]; then
-			__git_checkout_create '' ''
+			__git_create '' ''
 		elif [ $# -eq 1 ]; then
-			__git_checkout_create "$1" ''
+			__git_create "$1" ''
 		elif [ $# -eq 2 ]; then
-			__git_checkout_create "$1" "$2"
+			__git_create "$1" "$2"
 		else
 			echo_date "'gcb' accepts [0..2] arguments; got $#" && return 1
 		fi
@@ -414,39 +414,38 @@ if command -v git >/dev/null 2>&1; then
 		else
 			__git_checkout_all_num=''
 		fi
-		__git_checkout_create "${__git_checkout_all_title}" "${__git_checkout_all_num}" &&
+		__git_create "${__git_checkout_all_title}" "${__git_checkout_all_num}" &&
 			__git_all true "${__git_checkout_all_no_verify}" "${__git_checkout_all_force}" "${__git_checkout_all_action}" "$@"
 	}
-	__git_checkout_create() {
-		[ $# -ne 2 ] && echo_date "'__git_checkout_create' accepts 2 arguments; got $#" && return 1
+	__git_create() {
+		[ $# -ne 2 ] && echo_date "'__git_create' accepts 2 arguments; got $#" && return 1
 		# $1 = title
 		# $2 = body/num
 		gf || return $?
 		echo "debug: here with \$1=$1, \$2=$2"
 		if [ "$1" = '' ] && [ "$2" = '' ]; then
-			__git_checkout_create_branch='dev'
-			__git_checkout_create_title="$(__auto_msg)"
-			__git_checkout_create_body='.'
+			__git_create_branch='dev'
+			__git_create_title="$(__auto_msg)"
+			__git_create_body='.'
 		elif [ "$1" != '' ] && [ "$2" = '' ]; then
-			__git_checkout_create_title="$1"
-			__git_checkout_create_branch="$(__to_valid_branch "$1")" || return $?
-			__git_checkout_create_body='.'
+			__git_create_title="$1"
+			__git_create_branch="$(__to_valid_branch "$1")" || return $?
+			__git_create_body='.'
 		elif [ "$1" != '' ] && [ "$2" != '' ] && __is_int "$2"; then
-			__git_checkout_create_title="$1"
-			__git_checkout_create_branch="$2-$(__to_valid_branch "$1")" || return $?
-			__git_checkout_create_body="Closes $2"
+			__git_create_title="$1"
+			__git_create_branch="$2-$(__to_valid_branch "$1")" || return $?
+			__git_create_body="Closes $2"
 		elif [ "$1" != '' ] && [ "$2" != '' ] && ! __is_int "$2"; then
-			__git_checkout_create_title="$1"
-			__git_checkout_create_branch="$(__to_valid_branch "$1")" || return $?
-			__git_checkout_create_body="$2"
+			__git_create_title="$1"
+			__git_create_branch="$(__to_valid_branch "$1")" || return $?
+			__git_create_body="$2"
 		else
-			echo_date "'__git_checkout_create' impossible case; got '$1' and '$2'" && return 1
+			echo_date "'__git_create' impossible case; got '$1' and '$2'" && return 1
 		fi
-		git checkout -b "${__git_checkout_create_branch}" origin/master &&
-			# __git_push false 'none' &&
+		git checkout -b "${__git_create_branch}" origin/master &&
 			__git_commit_empty_msg &&
 			__git_push false 'none' &&
-			__gh_create "${__git_checkout_create_title}" "${__git_checkout_create_body}"
+			__gh_create "${__git_create_title}" "${__git_create_body}"
 	}
 	__git_checkout_master() {
 		[ $# -ne 1 ] && echo_date "'__git_checkout_master' accepts 1 argument; got $#" && return 1
