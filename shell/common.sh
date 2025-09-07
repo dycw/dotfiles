@@ -136,19 +136,19 @@ bottom_toml() {
 if command -v bump-my-version >/dev/null 2>&1; then
 	bump_patch() {
 		if [ $# -ne 0 ]; then
-			echo_date "'bump_patch' accepts 0 arguments; got $#" && return 1
+			echo_date "'bump_patch' accepts no arguments; got $#" && return 1
 		fi
 		bump-my-version bump patch
 	}
 	bump_minor() {
 		if [ $# -ne 0 ]; then
-			echo_date "'bump_minor' accepts 0 arguments; got $#" && return 1
+			echo_date "'bump_minor' accepts no arguments; got $#" && return 1
 		fi
 		bump-my-version bump minor
 	}
 	bump_major() {
 		if [ $# -ne 0 ]; then
-			echo_date "'bump_major' accepts 0 arguments; got $#" && return 1
+			echo_date "'bump_major' accepts no arguments; got $#" && return 1
 		fi
 		bump-my-version bump major
 	}
@@ -1006,7 +1006,7 @@ if command -v tsunamid >/dev/null 2>&1; then
 		elif [ $# -eq 1 ]; then
 			__dir="$1"
 		else
-			echo_date "'tsunami_serve' accepts 0 arguments; got $#" && return 1
+			echo_date "'tsunami_serve' accepts no arguments; got $#" && return 1
 		fi
 		if ! [ -d "${__dir}" ]; then
 			echo_date "ERROR: '${__dir}' does not exist" && return 1
