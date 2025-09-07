@@ -252,12 +252,10 @@ if command -v git >/dev/null 2>&1; then
 			echo_date "'gcb' accepts [0..2] arguments; got $#" && return 1
 		fi
 	}
-	# gcbac() {
-	#     if [ $# -ge 3 ]; then
-	#         echo_date "'gcbac' accepts [0..2] arguments; got $#" && return 1
-	#     fi
-	#     gcb "$@" && gac
-	# }
+	gcac() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcac_title="$1" && shift && __git_checkout_all "${__gcac_title}" false false 'none' "$@"
+	}
 	# gcbacm() {
 	#     if [ $# -ge 3 ]; then
 	#         echo_date "'gcbacm' accepts [0..2] arguments; got $#" && return 1
@@ -276,49 +274,49 @@ if command -v git >/dev/null 2>&1; then
 	#     fi
 	#     gcb "$@" && gace
 	# }
-	# gcbt() {
-	#     if [ $# -eq 0 ]; then
-	#         __branch="$(__select_remote_branch)"
-	#     elif [ $# -eq 1 ]; then
-	#         __branch="$1"
-	#     else
-	#         echo_date "'gcbt' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     if __is_current_branch_master; then
-	#         gf && git checkout -b "${__branch}" --track='direct'
-	#     else
-	#         gco master
-	#     fi
-	# }
-	# gm() {
-	#     if [ $# -ne 0 ]; then
-	#         echo_date "'gm' accepts no arguments; got $#" && return 1
-	#     fi
-	#     __git_checkout_master 'none'
-	# }
-	# gmd() {
-	#     if [ $# -ne 0 ]; then
-	#         echo_date "'gmd' accepts no arguments; got $#" && return 1
-	#     fi
-	#     __git_checkout_master 'delete'
-	# }
-	# gme() {
-	#     if [ $# -ne 0 ]; then
-	#         echo_date "'gme' accepts no arguments; got $#" && return 1
-	#     fi
-	#     __git_checkout_master 'delete+exit'
-	# }
+	gcbt() {
+		if [ $# -eq 0 ]; then
+			__branch="$(__select_remote_branch)"
+		elif [ $# -eq 1 ]; then
+			__branch="$1"
+		else
+			echo_date "'gcbt' accepts [0..1] arguments; got $#" && return 1
+		fi
+		if __is_current_branch_master; then
+			gf && git checkout -b "${__branch}" --track='direct'
+		else
+			gco master
+		fi
+	}
+	gm() {
+		if [ $# -ne 0 ]; then
+			echo_date "'gm' accepts no arguments; got $#" && return 1
+		fi
+		__git_checkout_master 'none'
+	}
+	gmd() {
+		if [ $# -ne 0 ]; then
+			echo_date "'gmd' accepts no arguments; got $#" && return 1
+		fi
+		__git_checkout_master 'delete'
+	}
+	gme() {
+		if [ $# -ne 0 ]; then
+			echo_date "'gme' accepts no arguments; got $#" && return 1
+		fi
+		__git_checkout_master 'delete+exit'
+	}
 	gco() {
 		if [ $# -eq 0 ]; then
-			__target="$(__select_local_branch)" || return $?
+			__gco_target="$(__select_local_branch)" || return $?
 		elif [ $# -eq 1 ]; then
-			__target="$1"
+			__gco_target="$1"
 		else
 			echo_date "'gco' accepts [0..1] arguments; got $#" && return 1
 		fi
-		__current="$(current_branch)" || return $?
-		if [ "${__current}" != "${__target}" ]; then
-			git checkout "${__branch}" || return $?
+		__gco_current="$(current_branch)" || return $?
+		if [ "${__gco_current}" != "${__gco_target}" ]; then
+			git checkout "${__gco_target}" || return $?
 		fi
 		gpl
 	}
@@ -347,24 +345,21 @@ if command -v git >/dev/null 2>&1; then
 			echo_date "'__git_checkout_all' accepts [4..) arguments; got $#" && return 1
 		fi
 		__git_checkout_all_title="$1"
-		shift
+		__git_checkout_all_no_verify="$2"
+		__git_checkout_all_force="$3"
+		__git_checkout_all_action="$4"
+		echo "debug: here with \$1=$1, \$2=$2, \$3=$3, \$4=$4"
+		shift 4
+		case "${__git_checkout_all_action}" in
+		'none' | 'web' | 'exit' | 'web+exit' | 'merge' | 'merge+exit') ;;
+		*) echo_date "'__git_checkout_all' invalid action; got '${__git_checkout_all_action}'" && return 1 ;;
+		esac
 		if [ $# -ge 1 ] && __is_int "$1"; then
 			__git_checkout_all_num="$1"
 			shift
 		else
 			__git_checkout_all_num=''
 		fi
-		if [ $# -le 2 ]; then
-			echo_date "'__git_checkout_all' accepts [3..) more arguments; got $#" && return 1
-		fi
-		__git_checkout_all_no_verify="$1"
-		__git_checkout_all_force="$2"
-		__git_checkout_all_action="$3"
-		shift 3
-		case "${__git_checkout_all_action}" in
-		'none' | 'web' | 'exit' | 'web+exit' | 'merge' | 'merge+exit') ;;
-		*) echo_date "'__git_checkout_all' invalid action; got '${__git_checkout_all_action}'" && return 1 ;;
-		esac
 		__git_checkout_create "${__git_checkout_all_title}" "${__git_checkout_all_num}" &&
 			__git_all true "${__git_checkout_all_no_verify}" "${__git_checkout_all_force}" "${__git_checkout_all_action}" "$@"
 	}
@@ -375,6 +370,7 @@ if command -v git >/dev/null 2>&1; then
 		# $1 = title
 		# $2 = body/num
 		gf || return $?
+		echo "debug: here with \$1=$1, \$2=$2"
 		if [ "$1" = '' ] && [ "$2" = '' ]; then
 			__git_checkout_create_branch='dev'
 			__git_checkout_create_title="$(__auto_msg)"
