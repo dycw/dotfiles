@@ -417,7 +417,6 @@ if command -v git >/dev/null 2>&1; then
 		# $1 = title
 		# $2 = body/num
 		gf || return $?
-		echo "debug: here with \$1=$1, \$2=$2"
 		if [ "$1" = '' ] && [ "$2" = '' ]; then
 			__git_create_branch='dev'
 			__git_create_title="$(__auto_msg)"
