@@ -106,34 +106,55 @@ if command -v git >/dev/null 2>&1; then
         fi
     }
     __git_all() {
-        if [ $# -le 3 ]; then
-            echo_date "'__git_all' accepts [4..) arguments; got $#" && return 1
+        if [ $# -le 4 ]; then
+            echo_date "'__git_all' accepts [5..) arguments; got $#" && return 1
         fi
-        # $1 = no-verify
-        # $2 = message
-        # $3 = force
-        # $4 = action = {none/web/exit/web+exit/merge/merge+exit}
-        __no_verify="$1"
-        __message="$2"
-        __force="$3"
-        __action="$4"
-        shift 4
-        if [ "${__action}" != 'none' ] && [ "${__action}" != 'web' ] &&
-            [ "${__action}" != 'exit' ] && [ "${__action}" != 'web+exit' ] &&
-            [ "${__action}" != 'merge' ] && [ "${__action}" != 'merge+exit' ]; then
-            echo_date "'__git_all' invalid action; got '${__action}'" && return 1
+        __git_all_add="$1"
+        __git_all_no_verify="$2"
+        __git_all_message="$3"
+        __git_all_force="$4"
+        __git_all_action="$5"
+        shift 5
+        if [ "${__git_all_action}" != 'none' ] &&
+            [ "${__git_all_action}" != 'web' ] &&
+            [ "${__git_all_action}" != 'exit' ] &&
+            [ "${__git_all_action}" != 'web+exit' ] &&
+            [ "${__git_all_action}" != 'merge' ] &&
+            [ "${__git_all_action}" != 'merge+exit' ]; then
+            echo_date "'__git_all' invalid git_all_action; got '${__git_all_action}'" && return 1
         fi
-        ga "$@"
-        echo "done"
-        for __i in $(seq 0 4); do
-            echo "${__i}"
-            if __git_commit "${__no_verify}" "${__message}"; then
-                break
-            else
-                ga "$@"
+        if "${__git_all_add}"; then
+            ga "$@"
+            __git_all_committed=false
+            for __i in $(seq 0 4); do
+                if __git_commit "${__git_all_no_verify}" "${__git_all_message}"; then
+                    __git_all_committed=true
+                    break
+                else
+                    ga "$@" || exit $?
+                fi
+            done
+            if ! ${__git_all_committed}; then
+                echo_date "'__git_all' failed to commit after 5 times'" && return 1
             fi
-            echo_date "'__git_all' failed to commit after 5 times'" && return 1
-        done
+        else
+            __git_commit "${__git_all_no_verify}" "${__git_all_message}" || exit $?
+        fi
+        if [ "${__git_all_action}" = 'none' ] ||
+            [ "${__git_all_action}" = 'web' ] ||
+            [ "${__git_all_action}" = 'exit' ] ||
+            [ "${__git_all_action}" = 'web+exit' ]; then
+            __git_push "${__git_all_force}" "${__git_all_action}"
+        elif [ "${__git_all_action}" = 'merge' ] ||
+            [ "${__git_all_action}" = 'merge+exit' ]; then
+            __git_push "${__git_all_force}" 'none'
+        else
+            echo_date "'__git_all' impossible case; got '${__git_all_action}'" && return 1
+        fi
+        #         [ "${__git_all_action}" != 'merge' ] &&
+        # [ "${__git_all_action}" != 'merge+exit' ]; then
+        # echo_date "'__git_all' invalid git_all_action; got '${__git_all_action}'" && return 1
+
     }
     # branch
     gb() {
@@ -351,20 +372,20 @@ if command -v git >/dev/null 2>&1; then
         if [ $# -ne 2 ]; then
             echo_date "'__git_commit' accepts 2 arguments; got $#" && return 1
         fi
-        __no_verify="$1"
-        __message="$2"
+        # $1 = no-verify
+        # $2 = message
         if git diff --cached --quiet && git diff --quiet; then
             return 0
         fi
-        if [ "${__message}" = '' ]; then
-            __message_use="$(__git_commit_auto_msg)"
+        if [ "$2" = '' ]; then
+            __git_commit_msg="$(__git_commit_auto_msg)"
         else
-            __message_use="${__message}"
+            __git_commit_msg="$2"
         fi
-        if "${__no_verify}"; then
-            git commit --message="${__message_use}" --no-verify
+        if "$1"; then
+            git commit --message="${__git_commit_msg}" --no-verify
         else
-            git commit --message="${__message_use}"
+            git commit --message="${__git_commit_msg}"
         fi
     }
     __git_commit_auto_msg() {
@@ -596,7 +617,7 @@ if command -v git >/dev/null 2>&1; then
         elif [ "$2" = 'web+exit' ]; then
             gw && exit
         else
-            echo_date "'__git_push' impossible case" && return 1
+            echo_date "'__git_push' impossible case; got '$2'" && return 1
         fi
     }
     __git_push_current_branch() {
@@ -940,32 +961,29 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
         if [ "$1" != 'none' ] && [ "$1" != 'delete' ] && [ "$1" != 'delete+exit' ]; then
             echo_date "'__gh_merge' invalid action; got '$1'" && return 1
         fi
-        __start="$(date +%s)"
-        __branch="$(current_branch)" || return 1
+        __gh_merge_start="$(date +%s)"
+        __gh_branch="$(current_branch)" || return 1
         if __is_github; then
             gh pr merge --auto --delete-branch --squash || return $?
             while __gh_pr_merging; do
-                __now="$(date +%s)"
-                __elapsed="$((__now - __start))"
-                echo_date "'${__branch}' is still merging... (${__elapsed}s)"
+                __gh_elapsed="$(($(date +%s) - __gh_merge_start))"
+                echo_date "'${__gh_branch}' is still merging... (${__gh_elapsed}s)"
                 sleep 1
             done
         elif __is_gitlab; then
             __status="$(__glab_mr_merge_status)"
             if [ "${__status}" = 'conflict' ]; then
-                echo_date "'${__branch}' has conflicts" && return 1
+                echo_date "'${__gh_branch}' has conflicts" && return 1
             elif [ "${__status}" = 'need_rebase' ]; then
-                echo_date "'${__branch}' needs to be rebased" && return 1
+                echo_date "'${__gh_branch}' needs to be rebased" && return 1
             elif [ "${__status}" = 'not open' ]; then
-                echo_date "'${__branch}' PR needs to be opened" && return 1
+                echo_date "'${__gh_branch}' PR needs to be opened" && return 1
             fi
             while true; do
                 glab mr merge --remove-source-branch --squash --yes >/dev/null 2>&1 || true
                 if __gh_pr_merging; then
-                    __status="$(__glab_mr_merge_status)"
-                    __now="$(date +%s)"
-                    __elapsed="$((__now - __start))"
-                    echo_date "'${__branch}' is still merging... ('${__status}', ${__elapsed}s)"
+                    __gh_elapsed="$(($(date +%s) - __gh_merge_start))"
+                    echo_date "'${__gh_branch}' is still merging... ('$(__glab_mr_merge_status)', ${__gh_elapsed}s)"
                     sleep 1
                 else
                     break
