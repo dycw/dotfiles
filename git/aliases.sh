@@ -256,24 +256,98 @@ if command -v git >/dev/null 2>&1; then
 		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
 		__gcac_title="$1" && shift && __git_checkout_all "${__gcac_title}" false false 'none' "$@"
 	}
-	# gcbacm() {
-	#     if [ $# -ge 3 ]; then
-	#         echo_date "'gcbacm' accepts [0..2] arguments; got $#" && return 1
-	#     fi
-	#     gcb "$@" && gacm
-	# }
-	# gcbacd() {
-	#     if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-	#         echo_date "'gcbacd' accepts [0..2] arguments; got $#" && return 1
-	#     fi
-	#     gcb "$@" && gacd
-	# }
-	# gcbace() {
-	#     if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-	#         echo_date "'gcbace' accepts [0..2] arguments; got $#" && return 1
-	#     fi
-	#     gcb "$@" && gace
-	# }
+	gcacn() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacn_title="$1" && shift && __git_checkout_all "${__gcacn_title}" true true false 'none' "$@"
+	}
+	gcacf() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacf_title="$1" && shift && __git_checkoutll "" true false true 'none' "$@"
+	}
+	gcacnf() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacnf_title="$1" && shift && __git_checkoutll "" true true true 'none' "$@"
+	}
+	gcacw() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacw_title="$1" && shift && __git_checkoutll "" true false false 'web' "$@"
+	}
+	gcacnw() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacnw_title="$1" && shift && __git_checkoutll "" true true false 'web' "$@"
+	}
+	gcacfw() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacfw_title="$1" && shift && __git_checkoutll "" true false true 'web' "$@"
+	}
+	gcacnfw() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacnfw_title="$1" && shift && __git_checkoutll "" true true true 'web' "$@"
+	}
+	gcace() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcace_title="$1" && shift && __git_checkoutll "" true false false 'exit' "$@"
+	}
+	gcacne() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacne_title="$1" && shift && __git_checkoutll "" true true false 'exit' "$@"
+	}
+	gcacfe() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacfe_title="$1" && shift && __git_checkoutll "" true false true 'exit' "$@"
+	}
+	gcacnfe() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacnfe_title="$1" && shift && __git_checkoutll "" true true true 'exit' "$@"
+	}
+	gcacwe() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacwe_title="$1" && shift && __git_checkoutll "" true false false 'web+exit' "$@"
+	}
+	gcacnwe() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacnwe_title="$1" && shift && __git_checkoutll "" true true false 'web+exit' "$@"
+	}
+	gcacfwe() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacfwe_title="$1" && shift && __git_checkoutll "" true false true 'web+exit' "$@"
+	}
+	gcacnfwe() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacnfwe_title="$1" && shift && __git_checkoutll "" true true true 'web+exit' "$@"
+	}
+	gcacm() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacm_title="$1" && shift && __git_checkoutll "" true false false 'merge' "$@"
+	}
+	gcacnm() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacnm_title="$1" && shift && __git_checkoutll "" true true false 'merge' "$@"
+	}
+	gcacfm() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacfm_title="$1" && shift && __git_checkoutll "" true false true 'merge' "$@"
+	}
+	gcacnfm() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacnfm_title="$1" && shift && __git_checkoutll "" true true true 'merge' "$@"
+	}
+	gcacx() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacx_title="$1" && shift && __git_checkoutll "" true false false 'merge+exit' "$@"
+	}
+	gcacnx() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacnx_title="$1" && shift && __git_checkoutll "" true true false 'merge+exit' "$@"
+	}
+	gcacfx() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacfx_title="$1" && shift && __git_checkoutll "" true false true 'merge+exit' "$@"
+	}
+	gcacnfx() {
+		[ $# -eq 0 ] && echo_date "'gcac' accepts [1..) arguments; got $#" && return 1
+		__gcacnfx_title="$1" && shift && __git_checkoutll "" true true true 'merge+exit' "$@"
+	}
 	gcbt() {
 		if [ $# -eq 0 ]; then
 			__branch="$(__select_remote_branch)"
