@@ -48,6 +48,9 @@ if command -v git >/dev/null 2>&1; then
         __gacp_force="$2"
         __gacp_web="$3"
         __gacp_action="$4"
+        if [ "${__gacp_action}" != 'none' ] && [ "${__gacp_action}" != 'delete' ] && [ "${__gacp_action}" != 'delete' ] && [ "${__gacp_action}" != 'delete+exit' ]; then
+            echo_date "'__create_add_merge' invalid gacp_action; got '${__gacp_action}'" && return 1
+        fi
         shift 4
 
         __gacp_count_file=0
@@ -111,14 +114,15 @@ if command -v git >/dev/null 2>&1; then
     }
     gbd() {
         if [ $# -eq 0 ]; then
-            __gbd_branch="$(__select_local_branch)"
+            __target="$(__select_local_branch)"
         elif [ $# -eq 1 ]; then
-            __gbd_branch="$1"
+            __target="$1"
         else
             echo_date "'gbd' accepts [0..1] arguments; got $#" && return 1
         fi
-        if __branch_exists "${__gbd_branch}"; then
-            git branch --delete --force "${__gbd_branch}"
+        __current="$(current_branch)" || return $?
+        if [ "${__target}" != "${__current}" ] && __branch_exists "${__target}"; then
+            git branch --delete --force "${__target}"
         fi
     }
     gbdr() {
@@ -228,13 +232,17 @@ if command -v git >/dev/null 2>&1; then
     }
     gco() {
         if [ $# -eq 0 ]; then
-            __branch="$(__select_local_branch)"
+            __target="$(__select_local_branch)" || return $?
         elif [ $# -eq 1 ]; then
-            __branch="$1"
+            __target="$1"
         else
             echo_date "'gco' accepts [0..1] arguments; got $#" && return 1
         fi
-        git checkout "${__branch}" && gpl
+        __current="$(current_branch)" || return $?
+        if [ "${__current}" != "${__target}" ]; then
+            git checkout "${__branch}"
+        fi
+        gpl
     }
     gcof() {
         if [ $# -eq 0 ]; then
@@ -261,26 +269,16 @@ if command -v git >/dev/null 2>&1; then
             echo_date "'__git_checkout_master' accepts 1 argument; got $#" && return 1
         fi
         __action="$1"
-        __branch="$(current_branch)" || return $?
-        gcof
-        if [ "${__branch}" = 'master' ]; then
-            gpl
-        else
-            gco master && gbd "${__branch}" || return $?
-        fi
-        if [ "${__action}" = 'none' ]; then
-            :
-        elif [ "${__action}" = 'delete' ]; then
-            if [ "${__branch}" != 'master' ]; then
-                gbd "${__branch}" || return $?
-            fi
-        elif [ "${__action}" = 'delete+exit' ]; then
-            if [ "${__branch}" != 'master' ]; then
-                gbd "${__branch}" || return $?
-            fi
-            exit
-        else
+        if [ "${__action}" != 'none' ] && [ "${__action}" != 'delete' ] && [ "${__action}" != 'delete+exit' ]; then
             echo_date "'__git_checkout_master' invalid action; got '${__action}'" && return 1
+        fi
+        __branch="$(current_branch)" || return $?
+        gco master
+        if { [ "${__action}" = 'delete' ] || [ "${__action}" = 'delete+exit' ]; } && [ "${__branch}" != 'master' ]; then
+            gbd "${__branch}" || return $?
+        fi
+        if [ "${__action}" = 'delete+exit' ]; then
+            exit
         fi
     }
     __to_valid_branch() {
@@ -534,12 +532,11 @@ if command -v git >/dev/null 2>&1; then
         __git_push 1 1 1
     }
     __git_push() {
-        if [ $# -ne 3 ]; then
-            echo_date "'__git_push' accepts 3 arguments; got $#" && return 1
+        if [ $# -ne 2 ]; then
+            echo_date "'__git_push' accepts 2 arguments; got $#" && return 1
         fi
         __gp_force="$1"
-        __gp_web="$2"
-        __gp_exit="$3"
+        __gp_action="$2"
         __git_push_current_branch "${__gp_force}" || return $?
         if [ "${__gp_web}" -eq 0 ]; then
             :
@@ -644,10 +641,10 @@ if command -v git >/dev/null 2>&1; then
         git rev-parse --show-toplevel
     }
     __branch_exists() {
-        if [ $# -ne 0 ]; then
-            echo_date "'__branch_exists' accepts no arguments; got $#" && return 1
+        if [ $# -ne 1 ]; then
+            echo_date "'__branch_exists' accepts 1 argument; got $#" && return 1
         fi
-        if git rev-parse --verify "$@" >/dev/null 2>&1; then
+        if git rev-parse --verify "$1" >/dev/null 2>&1; then
             true
         else
             false
@@ -1018,59 +1015,56 @@ if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -
         if [ $# -ne 0 ]; then
             echo_date "'gacm' accepts no arguments; got $#" && return 1
         fi
-        __add_merge 0
+        __add_merge 'none'
     }
     gacd() {
         if [ $# -ne 0 ]; then
             echo_date "'gacd' accepts no arguments; got $#" && return 1
         fi
-        __add_merge 1
+        __add_merge 'delete'
     }
     gace() {
         if [ $# -ne 0 ]; then
             echo_date "'gace' accepts no arguments; got $#" && return 1
         fi
-        __add_merge 2
+        __add_merge 'delete+exit'
     }
     gcbacm() {
         if [ $# -ge 3 ]; then
             echo_date "'gcbacm' accepts [0..2] arguments; got $#" && return 1
         fi
-        __create_add_merge 0 "$@"
+        __create_add_merge 'none' "$@"
     }
     gcbacd() {
         if [ $# -ge 3 ]; then
             echo_date "'gcbacd' accepts [0..2] arguments; got $#" && return 1
         fi
-        __create_add_merge 1 "$@"
+        __create_add_merge 'delete' "$@"
     }
     gcbace() {
         if [ $# -ge 3 ]; then
             echo_date "'gcbace' accepts [0..2] arguments; got $#" && return 1
         fi
-        __create_add_merge 2 "$@"
+        __create_add_merge 'delete+exit' "$@"
     }
     __add_merge() {
         if [ $# -ne 1 ]; then
             echo_date "'__add_merge' accepts 1 argument; got $#" && return 1
         fi
         __action="$1"
-        gac && ghm || return $?
-        if [ "${__action}" -eq 0 ]; then
-            :
-        elif [ "${__action}" -eq 1 ]; then
-            gcmd
-        elif [ "${__action}" -eq 2 ]; then
-            gcmde
-        else
-            echo_date "'__add_merge' accepts {0, 1, 2} for the 'action' flag; got ${__action}" && return 1
+        if [ "${__action}" != 'none' ] && [ "${__action}" != 'delete' ] && [ "${__action}" != 'delete+exit' ]; then
+            echo_date "'__add_merge' invalid action; got '${__action}'" && return 1
         fi
+        gac && __gh_pr_merge "${__action}"
     }
     __create_add_merge() {
         if [ $# -eq 0 ]; then
             echo_date "'__create_add_merge' accepts [1..) arguments; got $#" && return 1
         fi
         __action="$1"
+        if [ "${__action}" != 'none' ] && [ "${__action}" != 'delete' ] && [ "${__action}" != 'delete+exit' ]; then
+            echo_date "'__create_add_merge' invalid action; got '${__action}'" && return 1
+        fi
         shift 1
         gcb "$@" && __add_merge "${__action}"
     }
