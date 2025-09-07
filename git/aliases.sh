@@ -145,11 +145,9 @@ if command -v git >/dev/null 2>&1; then
 		__git_all_force="$3"
 		__git_all_action="$4"
 		shift 4
-		case "$__git_all_action" in
+		case "${__git_all_action}" in
 		'none' | 'web' | 'exit' | 'web+exit' | 'merge' | 'merge+exit') ;;
-		*)
-			echo_date "'__git_all' invalid git_all_action; got '${__git_all_action}'" && return 1
-			;;
+		*) echo_date "'__git_all' invalid action; got '${__git_all_action}'" && return 1 ;;
 		esac
 		if "${__git_all_add}"; then
 			if [ $# -eq 0 ]; then
@@ -366,10 +364,10 @@ if command -v git >/dev/null 2>&1; then
 			echo_date "'__git_checkout_master' accepts 1 argument; got $#" && return 1
 		fi
 		# $1 = action = {none/delete/delete+exit}
-		if [ "$1" != 'none' ] && [ "$1" != 'delete' ] &&
-			[ "$1" != 'delete+exit' ]; then
-			echo_date "'__git_checkout_master' invalid action; got '$1'" && return 1
-		fi
+		case "$1" in
+		'none' | 'delete' | 'delete+exit') ;;
+		*) echo_date "'__git_checkout_master' invalid action; got '$1'" && return 1 ;;
+		esac
 		__git_checkout_master_branch="$(current_branch)" || return $?
 		gco master
 		if [ "$1" = 'delete' ] || [ "$1" = 'delete+exit' ]; then
@@ -548,10 +546,10 @@ if command -v git >/dev/null 2>&1; then
 		fi
 		# $1 = force
 		# $2 = action = {none/web/exit/web+exit}
-		if [ "$2" != 'none' ] && [ "$2" != 'web' ] && [ "$2" != 'exit' ] &&
-			[ "$2" != 'web+exit' ]; then
-			echo_date "'__gh_push' invalid action; got '$2'" && return 1
-		fi
+		case "$2" in
+		'none' | 'web' | 'exit' | 'web+exit') ;;
+		*) echo_date "'__gh_push' invalid action; got '$2'" && return 1 ;;
+		esac
 		__git_push_current_branch "$1" || return $?
 		if [ "$2" = 'none' ]; then
 			:
@@ -1031,9 +1029,10 @@ if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -
 			echo_date "'__add_merge' accepts 1 argument; got $#" && return 1
 		fi
 		# $1 = action
-		if [ "$1" != 'none' ] && [ "$1" != 'delete' ] && [ "$1" != 'delete+exit' ]; then
-			echo_date "'__add_merge' invalid action; got '$1'" && return 1
-		fi
+		case "$1" in
+		'none' | 'delete' | 'delete+exit') ;;
+		*) echo_date "'__add_merge' invalid action; got '$1'" && return 1 ;;
+		esac
 		gac && __gh_merge "$1"
 	}
 	__create_add_merge() {
@@ -1042,10 +1041,10 @@ if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -
 		fi
 		__action="$1"
 		shift
-		if [ "${__action}" != 'none' ] && [ "${__action}" != 'delete' ] &&
-			[ "${__action}" != 'delete+exit' ]; then
-			echo_date "'__create_add_merge' invalid action; got '${__action}'" && return 1
-		fi
+		case "${__action}" in
+		'none' | 'delete' | 'delete+exit') ;;
+		*) echo_date "'__create_add_merge' invalid action; got '${__action}'" && return 1 ;;
+		esac
 		gcb "$@" && __add_merge "${__action}"
 	}
 fi
