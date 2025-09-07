@@ -867,7 +867,6 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'__gh_pr_exists' accepts no arguments; got $#" && return 1
 		fi
-		__host="$(__repo_host)" || return $?
 		if __is_github; then
 			if gh pr view >/dev/null 2>&1; then
 				true
@@ -880,8 +879,6 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			else
 				true
 			fi
-		else
-			echo_date "'__gh_pr_exists' must be for GitHub/GitLab; got '${__host}'" && return 1
 		fi
 	}
 	__gh_pr_merge() {
@@ -890,7 +887,6 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 		__action="$1"
 		__start="$(date +%s)"
-		__host="$(__repo_host)" || return 1
 		__branch="$(current_branch)" || return 1
 		if __is_github; then
 			gh pr merge --auto --delete-branch --squash || return $?
@@ -921,8 +917,6 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 					break
 				fi
 			done
-		else
-			echo_date "'ghm' must be for GitHub/GitLab; got '${__host}'" && return 1
 		fi
 		if [ "${__action}" -eq 0 ]; then
 			:
@@ -935,7 +929,6 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 	}
 	__gh_pr_merging() {
-		__host="$(__repo_host)" || return 1
 		__branch="$(current_branch)" || return 1
 		if __is_github; then
 			if [ "$(gh pr view --json state 2>/dev/null | jq -r '.state')" != "OPEN" ]; then
@@ -955,8 +948,6 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 				return 0
 			fi
 			return 1
-		else
-			echo_date "'__gh_pr_merging' must be for GitHub/GitLab; got '${__host}'" && return 1
 		fi
 	}
 fi
@@ -967,21 +958,18 @@ if (command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1) && command
 		if [ $# -ne 0 ]; then
 			echo_date "'gw' accepts no arguments; got $#" && return 1
 		fi
-		__gw_host="$(__repo_host)" || return 1
-		if [ "${__gw_host}" = 'github' ]; then
+		if __is_github; then
 			if gh pr ready >/dev/null 2>&1; then
 				ghv
 			else
 				gitweb
 			fi
-		elif [ "${__gw_host}" = 'gitlab' ]; then
+		elif __is_gitlab; then
 			if __glab_mr_json >/dev/null 2>&1; then
 				ghv
 			else
 				gitweb
 			fi
-		else
-			echo_date "'gw' must be for GitHub/GitLab; got '${__gw_host}'" && return 1
 		fi
 	}
 fi
@@ -1063,11 +1051,10 @@ if command -v gh >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'ghs' accepts no arguments; got $#" && return 1
 		fi
-		__ghs_host="$(__repo_host)" || return 1
-		if [ "${__ghs_host}" = 'github' ]; then
+		if __is_github; then
 			watch -d -n 1.0 'gh pr status'
-		else
-			echo_date "'ghs' must be for GitHub; got '${__ghs_host}'" && return 1
+		elif __is_gitlab; then
+			echo_date "'ghs' must be for GitHub" && return 1
 		fi
 	}
 fi
