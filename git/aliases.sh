@@ -894,21 +894,15 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 	}
 	ghm() {
-		if [ $# -ne 0 ]; then
-			echo_date "'ghm' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'ghm' accepts no arguments; got $#" && return 1
 		__gh_merge 'none'
 	}
 	ghd() {
-		if [ $# -ne 0 ]; then
-			echo_date "'ghd' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'ghd' accepts no arguments; got $#" && return 1
 		__gh_merge 'delete'
 	}
 	ghx() {
-		if [ $# -ne 0 ]; then
-			echo_date "'ghx' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'ghx' accepts no arguments; got $#" && return 1
 		__gh_merge 'delete+exit'
 	}
 	ghv() {
