@@ -193,9 +193,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# branch
 	gb() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gb' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'gb' accepts no arguments; got $#" && return 1
 		git branch --all --list --sort=-committerdate --verbose
 	}
 	gbd() {
@@ -223,21 +221,15 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gbm() { git branch -m "$1"; }
 	__delete_gone_branches() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__delete_gone_branches' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__delete_gone_branches' accepts no arguments; got $#" && return 1
 		git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
 	}
 	__select_local_branch() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__select_local_branch' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__select_local_branch' accepts no arguments; got $#" && return 1
 		git branch --format="%(refname:short)" | fzf
 	}
 	__select_remote_branch() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__select_remote_branch' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__select_remote_branch' accepts no arguments; got $#" && return 1
 		git branch --color=never --remotes | awk '!/->/' | fzf | sed -E 's|^[[:space:]]*origin/||'
 	}
 	# checkout
@@ -577,23 +569,17 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# merge
 	gma() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gma' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'gma' accepts no arguments; got $#" && return 1
 		git merge --abort
 	}
 	# mv
 	gmv() {
-		if [ $# -ne 2 ]; then
-			echo_date "'gmv' accepts 2 arguments; got $#" && return 1
-		fi
+		[ $# -ne 2 ] && echo_date "'gmv' accepts 2 arguments; got $#" && return 1
 		git mv "$1" "$2"
 	}
 	# pull
 	gpl() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gpl' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'gpl' accepts no arguments; got $#" && return 1
 		git pull --force && gf
 	}
 	# # push
