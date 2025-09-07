@@ -477,8 +477,8 @@ if command -v git >/dev/null 2>&1; then
 		elif __is_current_branch_master; then
 			echo_date "'gbr' cannot be run on 'master'" && return 1
 		else
-			__gbr_branch="$(current_branch)" || return 1
-			gcof && gcm && gcb "${__gbr_branch}"
+			__branch="$(current_branch)" || return 1
+			gcof && gcm && gcb "${__branch}"
 		fi
 	}
 	# cherry-pick
@@ -619,13 +619,13 @@ if command -v git >/dev/null 2>&1; then
 	# rebase
 	grb() {
 		if [ $# -eq 0 ]; then
-			__grb_branch='origin/master'
+			__branch='origin/master'
 		elif [ $# -eq 1 ]; then
-			__grb_branch="$1"
+			__branch="$1"
 		else
 			echo_date "'grb' accepts [0..1] arguments; got $#" && return 1
 		fi
-		gf && git rebase --strategy=recursive --strategy-option=theirs "${__grb_branch}"
+		gf && git rebase --strategy=recursive --strategy-option=theirs "${__branch}"
 	}
 	grba() {
 		[ $# -ne 0 ] && echo_date "'grba' accepts no arguments; got $#" && return 1
@@ -734,10 +734,9 @@ if command -v git >/dev/null 2>&1; then
 	gta() {
 		[ $(($# % 2)) -ne 0 ] && echo_date "'gta' accepts an even number of arguments; got $#" && return 1
 		while [ $# -gt 0 ]; do
-			__gta_tag="$1"
-			__gta_sha="$2"
-			git tag -a "${__gta_tag}" "${__gta_sha}" -m "${__gta_tag}" &&
-				git push --set-upstream origin --tags
+			# $1 = tag
+			# $2 = sha
+			git tag -a "$1" "$2" -m "$1" && git push --set-upstream origin --tags
 			shift 2
 		done
 	}
