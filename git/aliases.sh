@@ -139,7 +139,7 @@ if command -v git >/dev/null 2>&1; then
 	__git_all() {
 		[ $# -le 3 ] && echo_date "'__git_all' accepts [4..) arguments; got $#" && return 1
 		__git_all_add="$1"
-		__git_all_no_verify="$2"
+		__git_all_nv="$2"
 		__git_all_force="$3"
 		__git_all_action="$4"
 		shift 4
@@ -149,29 +149,29 @@ if command -v git >/dev/null 2>&1; then
 		esac
 		if "${__git_all_add}"; then
 			if [ $# -eq 0 ]; then
-				__git_commit_until "${__git_all_no_verify}" "$(__auto_msg)" || return $?
+				__git_commit_until "${__git_all_nv}" "$(__auto_msg)" || return $?
 			else
-				__git_commit_until_last=''
-				for __git_commit_until_arg in "$@"; do
-					__git_commit_until_last="${__git_commit_until_arg}"
+				__git_all_last=''
+				for __git_commit_arg in "$@"; do
+					__git_all_last="${__git_commit_arg}"
 				done
-				if [ -f "${__git_commit_until_last}" ]; then
-					__git_commit_until "${__git_all_no_verify}" "$(__auto_msg)" || return $?
+				if [ -f "${__git_all_last}" ]; then
+					__git_commit_until "${__git_all_nv}" "$(__auto_msg)" || return $?
 				else
-					__git_commit_until_i=0
-					while [ $((__git_commit_until_i += 1)) -lt "$#" ]; do # https://stackoverflow.com/a/69952637
+					__git_all_i=0
+					while [ $((__git_all_i += 1)) -lt "$#" ]; do # https://stackoverflow.com/a/69952637
 						set -- "$@" "$1"
 						shift
 					done
 					shift
-					__git_commit_until "${__git_all_no_verify}" "${__git_commit_until_last}" "$@" || return $?
+					__git_commit_until "${__git_all_nv}" "${__git_all_last}" "$@" || return $?
 				fi
 			fi
 		else
 			if [ $# -eq 0 ]; then
-				__git_commit_until "${__git_all_no_verify}" "$(__git_commit_until)" || return $?
+				__git_commit_until "${__git_all_nv}" "$(__git_commit_until)" || return $?
 			elif [ $# -eq 1 ]; then
-				__git_commit_until "${__git_all_no_verify}" "$1" || return $?
+				__git_commit_until "${__git_all_nv}" "$1" || return $?
 			else
 				echo_date "'__git_all' in the 'no add' case accepts [0..1] arguments; got '$#'" && return 1
 			fi
@@ -196,26 +196,26 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gbd() {
 		if [ $# -eq 0 ]; then
-			__gbd_target="$(__select_local_branch)"
+			__target="$(__select_local_branch)"
 		elif [ $# -eq 1 ]; then
-			__gbd_target="$1"
+			__target="$1"
 		else
 			echo_date "'gbd' accepts [0..1] arguments; got $#" && return 1
 		fi
-		if [ "${__gbd_target}" != "$(current_branch)" ] &&
-			__branch_exists "${__gbd_target}"; then
-			git branch --delete --force "${__gbd_target}"
+		if [ "${__target}" != "$(current_branch)" ] &&
+			__branch_exists "${__target}"; then
+			git branch --delete --force "${__target}"
 		fi
 	}
 	gbdr() {
 		if [ $# -eq 0 ]; then
-			__gbdr_branch="$(__select_remote_branch)" || return $?
+			__branch="$(__select_remote_branch)" || return $?
 		elif [ $# -eq 1 ]; then
-			__gbdr_branch="$1"
+			__branch="$1"
 		else
 			echo_date "'gbdr' accepts [0..1] arguments; got $#" && return 1
 		fi
-		gf && git push --delete origin "${__gbdr_branch}"
+		gf && git push --delete origin "${__branch}"
 	}
 	gbm() { git branch -m "$1"; }
 	__delete_gone_branches() {
@@ -514,13 +514,12 @@ if command -v git >/dev/null 2>&1; then
 	}
 	__git_commit_until() {
 		[ $# -le 1 ] && echo_date "'__git_commit_until' accepts [2..) arguments; got $#" && return 1
-		__git_commit_until_no_verify="$1"
-		__git_commit_until_message="$2"
+		__git_commit_until_nv="$1"
+		__git_commit_until_msg="$2"
 		shift 2
-		__git_commit_until_success=false
 		for __git_commit_until_i in $(seq 0 4); do
 			ga "$@" || return $?
-			if __git_commit "${__git_commit_until_no_verify}" "${__git_commit_until_message}"; then
+			if __git_commit "${__git_commit_until_nv}" "${__git_commit_until_msg}"; then
 				return 0
 			fi
 		done
@@ -1023,9 +1022,7 @@ if command -v glab >/dev/null 2>&1; then
 		printf "%s\n" "${__json}" | jq -r '.detailed_merge_status'
 	}
 	__glab_mr_state() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__glab_mr_state' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__glab_mr_state' accepts no arguments; got $#" && return 1
 		__json="$(__glab_mr_json)" || return 1
 		printf "%s\n" "${__json}" | jq -r '.state'
 	}
@@ -1033,12 +1030,11 @@ fi
 
 # utilities
 __auto_msg() {
-	if [ $# -ne 0 ]; then
-		echo_date "'__auto_msg' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'__auto_msg' accepts no arguments; got $#" && return 1
 	echo "$(date +"%Y-%m-%d %H:%M:%S (%a)") > $(hostname) > ${USER}"
 }
 __is_int() {
+	[ $# -ne 1 ] && echo_date "'__is_int' accepts 1 argument; got $#" && return 1
 	if printf '%s\n' "$1" | grep -Eq '^-?[0-9]+$'; then
 		true
 	else
