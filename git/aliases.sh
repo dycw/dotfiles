@@ -939,84 +939,61 @@ if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -
 		if [ $# -ne 0 ]; then
 			echo_date "'gacm' accepts 0 arguments; got $#" && return 1
 		fi
-		__add_merge 0 0
+		__add_merge 0
 	}
 	gacmd() {
 		if [ $# -ne 0 ]; then
 			echo_date "'gacmd' accepts 0 arguments; got $#" && return 1
 		fi
-		__add_merge 1 0
+		__add_merge 1
 	}
 	gacme() {
 		if [ $# -ne 0 ]; then
 			echo_date "'gacme' accepts 0 arguments; got $#" && return 1
 		fi
-		__add_merge 0 1
-	}
-	gacmde() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gacmde' accepts 0 arguments; got $#" && return 1
-		fi
-		__add_merge 1 1
+		__add_merge 2
 	}
 	gcobacm() {
 		if [ $# -ge 3 ]; then
 			echo_date "'gcobacm' accepts [0..2] arguments; got $#" && return 1
 		fi
-		__create_add_merge 0 0 0 "$@"
+		__create_add_merge 0 "$@"
 	}
 	gcobacmd() {
 		if [ $# -ge 3 ]; then
 			echo_date "'gcobacmd' accepts [0..2] arguments; got $#" && return 1
 		fi
-		__create_add_merge 1 1 0 "$@"
+		__create_add_merge 1 "$@"
 	}
-	gcobacmde() {
+	gcobacme() {
 		if [ $# -ge 3 ]; then
-			echo_date "'gcobacmde' accepts [0..2] arguments; got $#" && return 1
+			echo_date "'gcobacme' accepts [0..2] arguments; got $#" && return 1
 		fi
-		__create_add_merge 1 1 1 "$@"
+		__create_add_merge 2 "$@"
 	}
 	__add_merge() {
-		if [ $# -ne 2 ]; then
-			echo_date "'__add_merge' accepts 2 arguments; got $#" && return 1
+		if [ $# -ne 1 ]; then
+			echo_date "'__add_merge' accepts 1 argument; got $#" && return 1
 		fi
-		__delete="$1"
-		__exit="$2"
+		__action="$1"
 		gac && ghm || return $?
-		if [ "${__delete}" -eq 0 ]; then
+		if [ "${__action}" -eq 0 ]; then
 			:
-		elif [ "${__delete}" -eq 1 ]; then
+		elif [ "${__action}" -eq 1 ]; then
 			gcmd
+		elif [ "${__action}" -eq 2 ]; then
+			gcmde
 		else
-			echo_date "'__add_merge' accepts {0, 1} for the 'delete' flag; got ${__delete}" && return 1
-		fi
-		if [ "${__exit}" -eq 0 ]; then
-			:
-		elif [ "${__exit}" -eq 1 ]; then
-			exit
-		else
-			echo_date "'_' accepts {0, 1} for the 'exit' flag; got ${__exit}" && return 1
+			echo_date "'__add_merge' accepts {0, 1, 2} for the 'action' flag; got ${__action}" && return 1
 		fi
 	}
 	__create_add_merge() {
-		if [ $# -le 2 ]; then
-			echo_date "'__create_add_merge' accepts [3..) arguments; got $#" && return 1
+		if [ $# -eq 0 ]; then
+			echo_date "'__create_add_merge' accepts [1..) arguments; got $#" && return 1
 		fi
-		__merge="$1"
-		__delete="$2"
-		__exit="$3"
-		shift 3
-
-		gcob "$@" && gac && ghm || return $?
-		if [ "${__merge}" -eq 0 ]; then
-			:
-		elif [ "${__merge}" -eq 1 ]; then
-			gcmd || return $?
-		else
-			echo_date "'__add_merge' accepts {0, 1} for the 'mergre' flag; got ${__merge}" && return 1
-		fi
-		__add_merge "${__delete}" "${__exit}"
+		__action="$1"
+		shift 1
+		gcob "$@" && __add_merge "${__action}"
 	}
 fi
 
