@@ -905,9 +905,9 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 		__gh_merge 'delete'
 	}
-	ghe() {
+	ghx() {
 		if [ $# -ne 0 ]; then
-			echo_date "'ghe' accepts no arguments; got $#" && return 1
+			echo_date "'ghx' accepts no arguments; got $#" && return 1
 		fi
 		__gh_merge 'delete+exit'
 	}
