@@ -200,15 +200,15 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gbd() {
 		if [ $# -eq 0 ]; then
-			__target="$(__select_local_branch)"
+			__gbd_target="$(__select_local_branch)"
 		elif [ $# -eq 1 ]; then
-			__target="$1"
+			__gbd_target="$1"
 		else
 			echo_date "'gbd' accepts [0..1] arguments; got $#" && return 1
 		fi
-		__current="$(current_branch)" || return $?
-		if [ "${__target}" != "${__current}" ] && __branch_exists "${__target}"; then
-			git branch --delete --force "${__target}"
+		if [ "${__gbd_target}" != "$(current_branch)" ] &&
+			__branch_exists "${__gbd_target}"; then
+			git branch --delete --force "${__gbd_target}"
 		fi
 	}
 	gbdr() {
