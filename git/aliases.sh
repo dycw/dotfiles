@@ -151,14 +151,14 @@ if command -v git >/dev/null 2>&1; then
 		esac
 		if "${__git_all_add}"; then
 			if [ $# -eq 0 ]; then
-				__git_commit_until "${__git_all_no_verify}" "$(__git_commit_auto_msg)" || return $?
+				__git_commit_until "${__git_all_no_verify}" "$(__auto_msg)" || return $?
 			else
 				__git_commit_until_last=''
 				for __git_commit_until_arg in "$@"; do
 					__git_commit_until_last="${__git_commit_until_arg}"
 				done
 				if [ -f "${__git_commit_until_last}" ]; then
-					__git_commit_until "${__git_all_no_verify}" "$(__git_commit_auto_msg)" || return $?
+					__git_commit_until "${__git_all_no_verify}" "$(__auto_msg)" || return $?
 				else
 					__git_commit_until_i=0
 					while [ $((__git_commit_until_i += 1)) -lt "$#" ]; do # https://stackoverflow.com/a/69952637
@@ -243,88 +243,71 @@ if command -v git >/dev/null 2>&1; then
 	# checkout
 	gcb() {
 		if [ $# -eq 0 ]; then
-			if ! __is_current_branch_master; then
-				echo_date "'gcb' off 'master' accepts 1 argument; got $#" && return 1
-			fi
-			__branch='dev'
-			__title="$(__git_commit_auto_msg) > ${__branch}"
-			unset __num
+			__git_checkout_create '' ''
 		elif [ $# -eq 1 ]; then
-			__title="$1"
-			__branch="$(__to_valid_branch "${__title}")"
-			unset __num
+			__git_checkout_create "$1" ''
 		elif [ $# -eq 2 ]; then
-			__title="$1"
-			__num="$2"
-			__desc="$(__to_valid_branch "${__title}")"
-			__branch="$2-${__desc}"
+			__git_checkout_create "$1" "$2"
 		else
 			echo_date "'gcb' accepts [0..2] arguments; got $#" && return 1
 		fi
-		gf && git checkout -b "${__branch}" origin/master && gp &&
-			__git_commit_empty_msg && gp || return $?
-		if [ -z "${__num}" ]; then
-			__gh_create "${__title}"
-		else
-			__gh_create "${__title}" "${__num}"
-		fi
 	}
-	gcbac() {
-		if [ $# -ge 3 ]; then
-			echo_date "'gcbac' accepts [0..2] arguments; got $#" && return 1
-		fi
-		gcb "$@" && gac
-	}
-	gcbacm() {
-		if [ $# -ge 3 ]; then
-			echo_date "'gcbacm' accepts [0..2] arguments; got $#" && return 1
-		fi
-		gcb "$@" && gacm
-	}
-	gcbacd() {
-		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-			echo_date "'gcbacd' accepts [0..2] arguments; got $#" && return 1
-		fi
-		gcb "$@" && gacd
-	}
-	gcbace() {
-		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-			echo_date "'gcbace' accepts [0..2] arguments; got $#" && return 1
-		fi
-		gcb "$@" && gace
-	}
-	gcbt() {
-		if [ $# -eq 0 ]; then
-			__branch="$(__select_remote_branch)"
-		elif [ $# -eq 1 ]; then
-			__branch="$1"
-		else
-			echo_date "'gcbt' accepts [0..1] arguments; got $#" && return 1
-		fi
-		if __is_current_branch_master; then
-			gf && git checkout -b "${__branch}" --track='direct'
-		else
-			gco master
-		fi
-	}
-	gm() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gm' accepts no arguments; got $#" && return 1
-		fi
-		__git_checkout_master 'none'
-	}
-	gmd() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gmd' accepts no arguments; got $#" && return 1
-		fi
-		__git_checkout_master 'delete'
-	}
-	gme() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gme' accepts no arguments; got $#" && return 1
-		fi
-		__git_checkout_master 'delete+exit'
-	}
+	# gcbac() {
+	#     if [ $# -ge 3 ]; then
+	#         echo_date "'gcbac' accepts [0..2] arguments; got $#" && return 1
+	#     fi
+	#     gcb "$@" && gac
+	# }
+	# gcbacm() {
+	#     if [ $# -ge 3 ]; then
+	#         echo_date "'gcbacm' accepts [0..2] arguments; got $#" && return 1
+	#     fi
+	#     gcb "$@" && gacm
+	# }
+	# gcbacd() {
+	#     if [ $# -eq 0 ] || [ $# -ge 3 ]; then
+	#         echo_date "'gcbacd' accepts [0..2] arguments; got $#" && return 1
+	#     fi
+	#     gcb "$@" && gacd
+	# }
+	# gcbace() {
+	#     if [ $# -eq 0 ] || [ $# -ge 3 ]; then
+	#         echo_date "'gcbace' accepts [0..2] arguments; got $#" && return 1
+	#     fi
+	#     gcb "$@" && gace
+	# }
+	# gcbt() {
+	#     if [ $# -eq 0 ]; then
+	#         __branch="$(__select_remote_branch)"
+	#     elif [ $# -eq 1 ]; then
+	#         __branch="$1"
+	#     else
+	#         echo_date "'gcbt' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     if __is_current_branch_master; then
+	#         gf && git checkout -b "${__branch}" --track='direct'
+	#     else
+	#         gco master
+	#     fi
+	# }
+	# gm() {
+	#     if [ $# -ne 0 ]; then
+	#         echo_date "'gm' accepts no arguments; got $#" && return 1
+	#     fi
+	#     __git_checkout_master 'none'
+	# }
+	# gmd() {
+	#     if [ $# -ne 0 ]; then
+	#         echo_date "'gmd' accepts no arguments; got $#" && return 1
+	#     fi
+	#     __git_checkout_master 'delete'
+	# }
+	# gme() {
+	#     if [ $# -ne 0 ]; then
+	#         echo_date "'gme' accepts no arguments; got $#" && return 1
+	#     fi
+	#     __git_checkout_master 'delete+exit'
+	# }
 	gco() {
 		if [ $# -eq 0 ]; then
 			__target="$(__select_local_branch)" || return $?
@@ -359,6 +342,64 @@ if command -v git >/dev/null 2>&1; then
 		gcof origin/master "$@"
 	}
 	gcop() { git checkout --patch "$@"; }
+	__git_checkout_all() {
+		if [ $# -le 3 ]; then
+			echo_date "'__git_checkout_all' accepts [4..) arguments; got $#" && return 1
+		fi
+		__git_checkout_all_title="$1"
+		shift
+		if [ $# -ge 1 ] && __is_int "$1"; then
+			__git_checkout_all_num="$1"
+			shift
+		else
+			__git_checkout_all_num=''
+		fi
+		if [ $# -le 2 ]; then
+			echo_date "'__git_checkout_all' accepts [3..) more arguments; got $#" && return 1
+		fi
+		__git_checkout_all_no_verify="$1"
+		__git_checkout_all_force="$2"
+		__git_checkout_all_action="$3"
+		shift 3
+		case "${__git_checkout_all_action}" in
+		'none' | 'web' | 'exit' | 'web+exit' | 'merge' | 'merge+exit') ;;
+		*) echo_date "'__git_checkout_all' invalid action; got '${__git_checkout_all_action}'" && return 1 ;;
+		esac
+		__git_checkout_create "${__git_checkout_all_title}" "${__git_checkout_all_num}" &&
+			__git_all true "${__git_checkout_all_no_verify}" "${__git_checkout_all_force}" "${__git_checkout_all_action}" "$@"
+	}
+	__git_checkout_create() {
+		if [ $# -ne 2 ]; then
+			echo_date "'__git_checkout_create' accepts 2 arguments; got $#" && return 1
+		fi
+		# $1 = title
+		# $2 = body/num
+		gf || return $?
+		if [ "$1" = '' ] && [ "$2" = '' ]; then
+			__git_checkout_create_branch='dev'
+			__git_checkout_create_title="$(__auto_msg)"
+			__git_checkout_create_body='.'
+		elif [ "$1" != '' ] && [ "$2" = '' ]; then
+			__git_checkout_create_title="$1"
+			__git_checkout_create_branch="$(__to_valid_branch "$1")" || return $?
+			__git_checkout_create_body='.'
+		elif [ "$1" != '' ] && [ "$2" != '' ] && __is_int "$2"; then
+			__git_checkout_create_title="$1"
+			__git_checkout_create_branch="$2-$(__to_valid_branch "$1")" || return $?
+			__git_checkout_create_body="Closes $2"
+		elif [ "$1" != '' ] && [ "$2" != '' ] && ! __is_int "$2"; then
+			__git_checkout_create_title="$1"
+			__git_checkout_create_branch="$(__to_valid_branch "$1")" || return $?
+			__git_checkout_create_body="$2"
+		else
+			echo_date "'__git_checkout_create' impossible case; got '$1' and '$2'" && return 1
+		fi
+		git checkout -b "${__git_checkout_create_branch}" origin/master &&
+			__git_push false 'none' &&
+			__git_commit_empty_msg &&
+			__git_push false 'none' &&
+			__gh_create "${__git_checkout_create_title}" "${__git_checkout_create_body}"
+	}
 	__git_checkout_master() {
 		if [ $# -ne 1 ]; then
 			echo_date "'__git_checkout_master' accepts 1 argument; got $#" && return 1
@@ -392,7 +433,7 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -ne 0 ]; then
 			echo_date "'gbr' accepts no arguments; got $#" && return 1
 		elif __is_current_branch_master; then
-			echo_date "'gbr' cannot be run on master" && return 1
+			echo_date "'gbr' cannot be run on 'master'" && return 1
 		else
 			__gbr_branch="$(current_branch)" || return 1
 			gcof && gcm && gcb "${__gbr_branch}"
@@ -413,7 +454,7 @@ if command -v git >/dev/null 2>&1; then
 			return 0
 		fi
 		if [ "$2" = '' ]; then
-			__git_commit_msg="$(__git_commit_auto_msg)"
+			__git_commit_msg="$(__auto_msg)"
 		else
 			__git_commit_msg="$2"
 		fi
@@ -423,17 +464,11 @@ if command -v git >/dev/null 2>&1; then
 			git commit --message="${__git_commit_msg}"
 		fi
 	}
-	__git_commit_auto_msg() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__git_commit_auto_msg' accepts no arguments; got $#" && return 1
-		fi
-		echo "$(date +"%Y-%m-%d %H:%M:%S (%a)") > $(hostname) > ${USER}"
-	}
 	__git_commit_empty_msg() {
 		if [ $# -ne 0 ]; then
 			echo_date "'__git_commit_empty_msg' accepts no arguments; got $#" && return 1
 		fi
-		git commit --allow-empty --message="$(__git_commit_auto_msg)" --no-verify
+		git commit --allow-empty --message="$(__auto_msg)" --no-verify
 	}
 	__git_commit_until() {
 		if [ $# -le 1 ]; then
@@ -491,12 +526,10 @@ if command -v git >/dev/null 2>&1; then
 		fi
 		git pull --force && gf
 	}
-	# push
+	# # push
 	gp() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gp' accepts no arguments; got $#" && return 1
-		fi
-		__git_push false false false
+		[ $# -ne 0 ] && echo_date "'gp' accepts no arguments; got $#" && return 1
+		__git_push false false
 	}
 	gpf() {
 		if [ $# -ne 0 ]; then
@@ -522,24 +555,24 @@ if command -v git >/dev/null 2>&1; then
 		fi
 		__git_push false false false
 	}
-	gpfe() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gpfe' accepts no arguments; got $#" && return 1
-		fi
-		__git_push true false true
-	}
-	gpwe() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gpwe' accepts no arguments; got $#" && return 1
-		fi
-		__git_push false true true
-	}
-	gpfwe() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gpfwe' accepts no arguments; got $#" && return 1
-		fi
-		__git_push true true true
-	}
+	# gpfe() {
+	#     if [ $# -ne 0 ]; then
+	#         echo_date "'gpfe' accepts no arguments; got $#" && return 1
+	#     fi
+	#     __git_push true false true
+	# }
+	# gpwe() {
+	#     if [ $# -ne 0 ]; then
+	#         echo_date "'gpwe' accepts no arguments; got $#" && return 1
+	#     fi
+	#     __git_push false true true
+	# }
+	# gpfwe() {
+	#     if [ $# -ne 0 ]; then
+	#         echo_date "'gpfwe' accepts no arguments; got $#" && return 1
+	#     fi
+	#     __git_push true true true
+	# }
 	__git_push() {
 		if [ $# -ne 2 ]; then
 			echo_date "'__git_push' accepts 2 arguments; got $#" && return 1
@@ -856,23 +889,14 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 		# $1 = title
 		# $2 = body
-		__title="$1"
-		__body="$2"
-		if [ -z "${__title}" ]; then
-			__title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
-		fi
-		if [ -n "${__body}" ] && __is_int "${__body}"; then
-			__body="Closes #${__body}"
-		fi
 		if __is_github && __gh_exists; then
-			gh pr edit --title="${__title}" --body="${__body}"
+			gh pr edit --title="$1" --body="$2"
 		elif __is_github && ! __gh_exists; then
-			gh pr create --title="${__title}" --body="${__body}"
+			gh pr create --title="$1" --body="$2"
 		elif __is_gitlab && __gh_exists; then
-			glab mr update "$(__glab_mr_num)" \
-				--title="${__title}" --description="${__body}"
+			glab mr update "$(__glab_mr_num)" --title="$1" --description="$2"
 		elif __is_gitlab && ! __gh_exists; then
-			glab mr create --title="${__title}" --description="${__body}" \
+			glab mr create --title="$1" --description="$2" \
 				--push --remove-source-branch --squash-before-merge
 		else
 			echo_date "'__gh_create' impossible case" && return 1
@@ -988,24 +1012,6 @@ fi
 
 # git + gh/glab
 if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1); then
-	gacm() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gacm' accepts no arguments; got $#" && return 1
-		fi
-		__add_merge 'none'
-	}
-	gacd() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gacd' accepts no arguments; got $#" && return 1
-		fi
-		__add_merge 'delete'
-	}
-	gace() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gace' accepts no arguments; got $#" && return 1
-		fi
-		__add_merge 'delete+exit'
-	}
 	gcbacm() {
 		if [ $# -ge 3 ]; then
 			echo_date "'gcbacm' accepts [0..2] arguments; got $#" && return 1
@@ -1111,10 +1117,16 @@ if command -v glab >/dev/null 2>&1; then
 fi
 
 # utilities
+__auto_msg() {
+	if [ $# -ne 0 ]; then
+		echo_date "'__auto_msg' accepts no arguments; got $#" && return 1
+	fi
+	echo "$(date +"%Y-%m-%d %H:%M:%S (%a)") > $(hostname) > ${USER}"
+}
 __is_int() {
 	if printf '%s\n' "$1" | grep -Eq '^-?[0-9]+$'; then
-		return 0
+		true
 	else
-		return 1
+		false
 	fi
 }
