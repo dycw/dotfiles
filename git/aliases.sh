@@ -137,9 +137,7 @@ if command -v git >/dev/null 2>&1; then
 		__git_all false true true 'merge+exit' "$@"
 	}
 	__git_all() {
-		if [ $# -le 3 ]; then
-			echo_date "'__git_all' accepts [4..) arguments; got $#" && return 1
-		fi
+		[ $# -le 3 ] && echo_date "'__git_all' accepts [4..) arguments; got $#" && return 1
 		__git_all_add="$1"
 		__git_all_no_verify="$2"
 		__git_all_force="$3"
@@ -355,21 +353,15 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	gm() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gm' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'gm' accepts no arguments; got $#" && return 1
 		__git_checkout_master 'none'
 	}
 	gmd() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gmd' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'gmd' accepts no arguments; got $#" && return 1
 		__git_checkout_master 'delete'
 	}
-	gme() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gme' accepts no arguments; got $#" && return 1
-		fi
+	gmx() {
+		[ $# -ne 0 ] && echo_date "'gmx' accepts no arguments; got $#" && return 1
 		__git_checkout_master 'delete+exit'
 	}
 	gco() {
@@ -400,16 +392,12 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	gcofm() {
-		if [ $# -eq 0 ]; then
-			echo_date "'gcofm' accepts [1..] arguments; got $#" && return 1
-		fi
+		[ $# -eq 0 ] && echo_date "'gcofm' accepts [1..] arguments; got $#" && return 1
 		gcof origin/master "$@"
 	}
 	gcop() { git checkout --patch "$@"; }
 	__git_checkout_all() {
-		if [ $# -le 3 ]; then
-			echo_date "'__git_checkout_all' accepts [4..) arguments; got $#" && return 1
-		fi
+		[ $# -le 3 ] && echo_date "'__git_checkout_all' accepts [4..) arguments; got $#" && return 1
 		__git_checkout_all_title="$1"
 		__git_checkout_all_no_verify="$2"
 		__git_checkout_all_force="$3"
@@ -430,9 +418,7 @@ if command -v git >/dev/null 2>&1; then
 			__git_all true "${__git_checkout_all_no_verify}" "${__git_checkout_all_force}" "${__git_checkout_all_action}" "$@"
 	}
 	__git_checkout_create() {
-		if [ $# -ne 2 ]; then
-			echo_date "'__git_checkout_create' accepts 2 arguments; got $#" && return 1
-		fi
+		[ $# -ne 2 ] && echo_date "'__git_checkout_create' accepts 2 arguments; got $#" && return 1
 		# $1 = title
 		# $2 = body/num
 		gf || return $?
@@ -463,9 +449,7 @@ if command -v git >/dev/null 2>&1; then
 			__gh_create "${__git_checkout_create_title}" "${__git_checkout_create_body}"
 	}
 	__git_checkout_master() {
-		if [ $# -ne 1 ]; then
-			echo_date "'__git_checkout_master' accepts 1 argument; got $#" && return 1
-		fi
+		[ $# -ne 1 ] && echo_date "'__git_checkout_master' accepts 1 argument; got $#" && return 1
 		# $1 = action = {none/delete/delete+exit}
 		case "$1" in
 		'none' | 'delete' | 'delete+exit') ;;
@@ -481,9 +465,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	__to_valid_branch() {
-		if [ $# -ne 1 ]; then
-			echo_date "'__to_valid_branch' accepts 1 argument; got $#" && return 1
-		fi
+		[ $# -ne 1 ] && echo_date "'__to_valid_branch' accepts 1 argument; got $#" && return 1
 		echo "$1" |
 			tr '[:upper:]' '[:lower:]' |
 			sed -E 's/[^a-z0-9]+/-/g' |
@@ -527,15 +509,11 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	__git_commit_empty_msg() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__git_commit_empty_msg' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__git_commit_empty_msg' accepts no arguments; got $#" && return 1
 		git commit --allow-empty --message="$(__auto_msg)" --no-verify
 	}
 	__git_commit_until() {
-		if [ $# -le 1 ]; then
-			echo_date "'__git_commit_until' accepts [2..) arguments; got $#" && return 1
-		fi
+		[ $# -le 1 ] && echo_date "'__git_commit_until' accepts [2..) arguments; got $#" && return 1
 		__git_commit_until_no_verify="$1"
 		__git_commit_until_message="$2"
 		shift 2
@@ -555,16 +533,12 @@ if command -v git >/dev/null 2>&1; then
 	gdm() { git diff origin/master "$@"; }
 	# fetch
 	gf() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gf' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'gf' accepts no arguments; got $#" && return 1
 		git fetch --all --force && __delete_gone_branches
 	}
 	# log
 	gl() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gl' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'gl' accepts no arguments; got $#" && return 1
 		git log --abbrev-commit --decorate=short --pretty=format:'%C(red)%h%C(reset) |%C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)'
 	}
 	# merge
@@ -616,9 +590,7 @@ if command -v git >/dev/null 2>&1; then
 		__git_push true 'web+exit'
 	}
 	__git_push() {
-		if [ $# -ne 2 ]; then
-			echo_date "'__git_push' accepts 2 arguments; got $#" && return 1
-		fi
+		[ $# -ne 2 ] && echo_date "'__git_push' accepts 2 arguments; got $#" && return 1
 		# $1 = force
 		# $2 = action = {none/web/exit/web+exit}
 		case "$2" in
@@ -639,9 +611,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	__git_push_current_branch() {
-		if [ $# -ne 1 ]; then
-			echo_date "'__git_push_current_branch' accepts 1 argument; got $#" && return 1
-		fi
+		[ $# -ne 1 ] && echo_date "'__git_push_current_branch' accepts 1 argument; got $#" && return 1
 		# $1 = force
 		if "$1"; then
 			git push --force --set-upstream origin "$(current_branch)"
@@ -661,36 +631,26 @@ if command -v git >/dev/null 2>&1; then
 		gf && git rebase --strategy=recursive --strategy-option=theirs "${__grb_branch}"
 	}
 	grba() {
-		if [ $# -ne 0 ]; then
-			echo_date "'grba' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'grba' accepts no arguments; got $#" && return 1
 		git rebase --abort
 	}
 	grbc() {
-		if [ $# -ne 0 ]; then
-			echo_date "'grbc' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'grbc' accepts no arguments; got $#" && return 1
 		git rebase --continue
 	}
 	grbs() {
-		if [ $# -ne 0 ]; then
-			echo_date "'grbs' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'grbs' accepts no arguments; got $#" && return 1
 		git rebase --skip
 	}
 	# rebase (squash)
 	gsqm() { gf && git reset --soft "$(git merge-base HEAD master)" && gcf "$@"; }
 	# remote
 	grmv() {
-		if [ $# -ne 0 ]; then
-			echo_date "'grmv' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'grmv' accepts no arguments; got $#" && return 1
 		git remote -v
 	}
 	__is_github() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__is_github' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__is_github' accepts no arguments; got $#" && return 1
 		if git remote get-url origin 2>/dev/null | grep -q 'github'; then
 			true
 		else
@@ -698,9 +658,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	__is_gitlab() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__is_gitlab' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__is_gitlab' accepts no arguments; got $#" && return 1
 		if git remote get-url origin 2>/dev/null | grep -q 'gitlab'; then
 			true
 		else
@@ -712,21 +670,15 @@ if command -v git >/dev/null 2>&1; then
 	grp() { git reset --patch "$@"; }
 	# rev-parse
 	current_branch() {
-		if [ $# -ne 0 ]; then
-			echo_date "'current_branch' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'current_branch' accepts no arguments; got $#" && return 1
 		git rev-parse --abbrev-ref HEAD
 	}
 	repo_root() {
-		if [ $# -ne 0 ]; then
-			echo_date "'repo_root' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'repo_root' accepts no arguments; got $#" && return 1
 		git rev-parse --show-toplevel
 	}
 	__branch_exists() {
-		if [ $# -ne 1 ]; then
-			echo_date "'__branch_exists' accepts 1 argument; got $#" && return 1
-		fi
+		[ $# -ne 1 ] && echo_date "'__branch_exists' accepts 1 argument; got $#" && return 1
 		if git rev-parse --verify "$1" >/dev/null 2>&1; then
 			true
 		else
@@ -734,9 +686,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	__is_current_branch() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__is_current_branch' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__is_current_branch' accepts no arguments; got $#" && return 1
 		if [ "$(current_branch)" = "$1" ]; then
 			true
 		else
@@ -744,15 +694,11 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	__is_current_branch_dev() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__is_current_branch_dev' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__is_current_branch_dev' accepts no arguments; got $#" && return 1
 		__is_current_branch 'dev'
 	}
 	__is_current_branch_master() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__is_current_branch_master' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__is_current_branch_master' accepts no arguments; got $#" && return 1
 		__is_current_branch 'master'
 	}
 	# rm
@@ -763,9 +709,7 @@ if command -v git >/dev/null 2>&1; then
 	grmrf() { git rm -rf "$@"; }
 	# show-ref
 	__is_valid_ref() {
-		if [ $# -ne 1 ]; then
-			echo_date "'__is_valid_ref' accepts 1 argument; got $#" && return 1
-		fi
+		[ $# -ne 1 ] && echo_date "'__is_valid_ref' accepts 1 argument; got $#" && return 1
 		git show-ref --verify --quiet "refs/heads/$1" ||
 			git show-ref --verify --quiet "refs/remotes/$1" ||
 			git show-ref --verify --quiet "refs/tags/$1" ||
@@ -773,15 +717,11 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# status
 	gs() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gs' accepts [0..1] arguments; got $#" && return 1
-		fi
+		[ $# -ge 2 ] && echo_date "'gs' accepts [0..1] arguments; got $#" && return 1
 		git status "$@"
 	}
 	__tree_is_clean() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__tree_is_clean' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__tree_is_clean' accepts no arguments; got $#" && return 1
 		[ -z "$(git status --porcelain)" ]
 	}
 	# stash
@@ -790,16 +730,12 @@ if command -v git >/dev/null 2>&1; then
 	gstp() { git stash pop "$@"; }
 	# submodules
 	gsu() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gsub_update' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'gsub_update' accepts no arguments; got $#" && return 1
 		git submodule foreach --recursive 'git checkout master && git pull --ff-only'
 	}
 	# tag
 	gta() {
-		if [ $(($# % 2)) -ne 0 ]; then
-			echo_date "'gta' accepts an even number of arguments; got $#" && return 1
-		fi
+		[ $(($# % 2)) -ne 0 ] && echo_date "'gta' accepts an even number of arguments; got $#" && return 1
 		while [ $# -gt 0 ]; do
 			__gta_tag="$1"
 			__gta_sha="$2"
@@ -837,6 +773,8 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			glab issue create --title="$1" --label="$2" --description="$3"
 		elif [ $# -eq 0 ] || [ $# -ge 4 ]; then
 			echo_date "'ghic' accepts [1..3] arguments; got $#" && return 1
+		else
+			echo_date "'ghic' impossible case" && return 1
 		fi
 	}
 	ghil() {
@@ -847,6 +785,8 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			gh issue list
 		elif __is_gitlab; then
 			glab issue list
+		else
+			echo_date "'ghil' impossible case" && return 1
 		fi
 	}
 	ghiv() {
@@ -867,6 +807,8 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			gh issue view "${__num}" --web
 		elif __is_gitlab; then
 			glab issue view "${__num}" --web
+		else
+			echo_date "'ghiv' impossible case" && return 1
 		fi
 	}
 	ghl() {
@@ -877,6 +819,8 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			gh pr list
 		elif __is_gitlab; then
 			glab mr list
+		else
+			echo_date "'ghl' impossible case" && return 1
 		fi
 	}
 	ghm() {
@@ -892,9 +836,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		__gh_merge 'delete+exit'
 	}
 	ghv() {
-		if [ $# -ne 0 ]; then
-			echo_date "'ghv' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'ghv' accepts no arguments; got $#" && return 1
 		if __is_github; then
 			if gh pr ready >/dev/null 2>&1; then
 				gh pr view -w
@@ -908,12 +850,12 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			else
 				echo_date "'ghv' cannot find an open PR" && return 1
 			fi
+		else
+			echo_date "'ghv' impossible case" && return 1
 		fi
 	}
 	__gh_create() {
-		if [ $# -ne 2 ]; then
-			echo_date "'__gh_create' accepts 2 arguments; got $#" && return 1
-		fi
+		[ $# -ne 2 ] && echo_date "'__gh_create' accepts 2 arguments; got $#" && return 1
 		# $1 = title
 		# $2 = body
 		if __is_github && __gh_exists; then
@@ -930,9 +872,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 	}
 	__gh_exists() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__gh_exists' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__gh_exists' accepts no arguments; got $#" && return 1
 		if __is_github; then
 			__gh_exists_num="$(gh pr list --json number --jq '. | length')"
 			if [ "${__gh_exists_num}" -eq 1 ]; then
@@ -951,9 +891,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 	}
 	__gh_merge() {
-		if [ $# -ne 1 ]; then
-			echo_date "'__gh_merge' accepts 1 argument; got $#" && return 1
-		fi
+		[ $# -ne 1 ] && echo_date "'__gh_merge' accepts 1 argument; got $#" && return 1
 		# $1 = action = {none/delete/delete+exit}
 		if [ "$1" != 'none' ] && [ "$1" != 'delete' ] &&
 			[ "$1" != 'delete+exit' ]; then
@@ -1014,9 +952,7 @@ fi
 # gh/lab + gitweb
 if (command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1) && command -v gitweb >/dev/null 2>&1; then
 	gw() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gw' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'gw' accepts no arguments; got $#" && return 1
 		if __is_github; then
 			if gh pr ready >/dev/null 2>&1; then
 				ghv
@@ -1029,6 +965,8 @@ if (command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1) && command
 			else
 				gitweb
 			fi
+		else
+			echo_date "'gw' impossible case" && return 1
 		fi
 	}
 fi
@@ -1043,13 +981,13 @@ fi
 # gh + watch
 if command -v gh >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
 	ghs() {
-		if [ $# -ne 0 ]; then
-			echo_date "'ghs' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'ghs' accepts no arguments; got $#" && return 1
 		if __is_github; then
 			watch -d -n 1.0 'gh pr status'
 		elif __is_gitlab; then
 			echo_date "'ghs' must be for GitHub" && return 1
+		else
+			echo_date "'ghs' impossible case" && return 1
 		fi
 	}
 fi
@@ -1057,9 +995,7 @@ fi
 # glab
 if command -v glab >/dev/null 2>&1; then
 	__glab_mr_json() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__glab_mr_json' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__glab_mr_json' accepts no arguments; got $#" && return 1
 		__branch="$(current_branch)" || return 1
 		__json=$(glab mr list --output=json --source-branch="${__branch}" 2>/dev/null) || return 1
 		__num=$(printf "%s" "${__json}" | jq 'length') || return 1
@@ -1072,23 +1008,17 @@ if command -v glab >/dev/null 2>&1; then
 		fi
 	}
 	__glab_mr_num() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__glab_mr_num' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__glab_mr_num' accepts no arguments; got $#" && return 1
 		__json="$(__glab_mr_json)" || return 1
 		printf "%s\n" "${__json}" | jq -r '.iid'
 	}
 	__glab_mr_pid() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__glab_mr_pid' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__glab_mr_pid' accepts no arguments; got $#" && return 1
 		__json="$(__glab_mr_json)" || return 1
 		printf "%s\n" "${__json}" | jq -r '.target_project_id'
 	}
 	__glab_mr_merge_status() {
-		if [ $# -ne 0 ]; then
-			echo_date "'__glab_mr_merge_status' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'__glab_mr_merge_status' accepts no arguments; got $#" && return 1
 		__json="$(__glab_mr_json)" || return 1
 		printf "%s\n" "${__json}" | jq -r '.detailed_merge_status'
 	}
