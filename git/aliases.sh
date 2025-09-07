@@ -28,6 +28,24 @@ if command -v git >/dev/null 2>&1; then
 	gacne() { __git_all true true false 'exit' "$@"; }
 	gacfe() { __git_all true false true 'exit' "$@"; }
 	gacnfe() { __git_all true true true 'exit' "$@"; }
+	gacwe() { __git_all true false false 'web+exit' "$@"; }
+	gacnwe() { __git_all true true false 'web+exit' "$@"; }
+	gacfwe() { __git_all true false true 'web+exit' "$@"; }
+	gacnfwe() { __git_all true true true 'web+exit' "$@"; }
+	gacm() { __git_all true false false 'merge' "$@"; }
+	gacnm() { __git_all true true false 'merge' "$@"; }
+	gacfm() { __git_all true false true 'merge' "$@"; }
+	gacnfm() { __git_all true true true 'merge' "$@"; }
+	gacx() { __git_all true false false 'merge+exit' "$@"; }
+	gacnx() { __git_all true true false 'merge+exit' "$@"; }
+	gacfx() { __git_all true false true 'merge+exit' "$@"; }
+	gacnfx() { __git_all true true true 'merge+exit' "$@"; }
+	gc() {
+		if [ $# -ge 2 ]; then
+			echo_date "'gc' accepts [0..1] arguments; got $#" && return 1
+		fi
+		__git_all false false false 'none' "$@"
+	}
 	__git_add_commit_push() {
 		if [ $# -le 2 ]; then
 			echo_date "'__git_add_commit_push' accepts [4..) arguments; got $#" && return 1
@@ -416,114 +434,102 @@ if command -v git >/dev/null 2>&1; then
 
 	}
 	# commit + push
-	gc() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gc' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 0 "${1:-}" 0 0 0
-	}
-	gcn() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcn' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 1 "${1:-}" 0 0 0
-	}
-	gcf() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcf' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 0 "${1:-}" 1 0 0
-	}
-	gcnf() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcnf' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 1 "${1:-}" 1 0 0
-	}
-	gcw() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcw' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 0 "${1:-}" 0 1 0
-	}
-	gcnw() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcnw' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 1 "${1:-}" 0 1 0
-	}
-	gcfw() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcfw' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 0 "${1:-}" 1 1 0
-	}
-	gcnfw() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcnfw' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 1 "${1:-}" 1 1 0
-	}
-	gce() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gce' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 0 "${1:-}" 0 0 1
-	}
-	gcne() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcne' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 1 "${1:-}" 0 0 1
-	}
-	gcfe() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcfe' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 0 "${1:-}" 1 0 1
-	}
-	gcnfe() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcnfe' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 1 "${1:-}" 1 0 1
-	}
-	gcwe() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcwe' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 0 "${1:-}" 0 1 1
-	}
-	gcnwe() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcnwe' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 1 "${1:-}" 0 1 1
-	}
-	gcfwe() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcfwe' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 0 "${1:-}" 1 1 1
-	}
-	gcnfwe() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gcnfwe' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__git_commit_push 1 "${1:-}" 1 1 1
-	}
-	__git_commit_push() {
-		if [ "$#" -ne 5 ]; then
-			echo_date "'__git_commit_push' accepts 5 arguments; got $#" && return 1
-		fi
-		# $1 = no-verify
-		# $2 = message
-		# $3 = force
-		# $4 = action = {none/web/exit/web+exit}
-		# $4 = action
-		# .............................push only, push+web, push+exit, push+merge+delete, push+merge+delete+exit
-		__git_commit "$1" "$2" && __git_push "$3" "$4" "$5"
-	}
+	# gc() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gc' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 0 "${1:-}" 0 0 0
+	# }
+	# gcn() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcn' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 1 "${1:-}" 0 0 0
+	# }
+	# gcf() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcf' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 0 "${1:-}" 1 0 0
+	# }
+	# gcnf() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcnf' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 1 "${1:-}" 1 0 0
+	# }
+	# gcw() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcw' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 0 "${1:-}" 0 1 0
+	# }
+	# gcnw() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcnw' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 1 "${1:-}" 0 1 0
+	# }
+	# gcfw() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcfw' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 0 "${1:-}" 1 1 0
+	# }
+	# gcnfw() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcnfw' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 1 "${1:-}" 1 1 0
+	# }
+	# gce() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gce' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 0 "${1:-}" 0 0 1
+	# }
+	# gcne() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcne' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 1 "${1:-}" 0 0 1
+	# }
+	# gcfe() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcfe' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 0 "${1:-}" 1 0 1
+	# }
+	# gcnfe() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcnfe' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 1 "${1:-}" 1 0 1
+	# }
+	# gcwe() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcwe' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 0 "${1:-}" 0 1 1
+	# }
+	# gcnwe() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcnwe' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 1 "${1:-}" 0 1 1
+	# }
+	# gcfwe() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcfwe' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 0 "${1:-}" 1 1 1
+	# }
+	# gcnfwe() {
+	#     if [ $# -ge 2 ]; then
+	#         echo_date "'gcnfwe' accepts [0..1] arguments; got $#" && return 1
+	#     fi
+	#     __git_commit_push 1 "${1:-}" 1 1 1
+	# }
 	# diff
 	gd() { git diff "$@"; }
 	gdc() { git diff --cached "$@"; }
