@@ -41,75 +41,100 @@ if command -v git >/dev/null 2>&1; then
 	gacfx() { __git_all true false true 'merge+exit' "$@"; }
 	gacnfx() { __git_all true true true 'merge+exit' "$@"; }
 	gc() {
-		if [ $# -ge 2 ]; then
-			echo_date "'gc' accepts [0..1] arguments; got $#" && return 1
-		fi
+		[ $# -ge 2 ] && echo_date "'gc' accepts [0..1] arguments; got $#" && return 1
 		__git_all false false false 'none' "$@"
 	}
-	__git_add_commit_push() {
-		if [ $# -le 2 ]; then
-			echo_date "'__git_add_commit_push' accepts [4..) arguments; got $#" && return 1
-		fi
-		__gacp_no_verify="$1"
-		__gacp_force="$2"
-		__gacp_web="$3"
-		__gacp_action="$4"
-		if [ "${__gacp_action}" != 'none' ] && [ "${__gacp_action}" != 'delete' ] && [ "${__gacp_action}" != 'delete' ] && [ "${__gacp_action}" != 'delete+exit' ]; then
-			echo_date "'__create_add_merge' invalid gacp_action; got '${__gacp_action}'" && return 1
-		fi
-		shift 4
-
-		__gacp_count_file=0
-		__gacp_count_non_file=0
-		__gacp_message=""
-		__gacp_file_names=""
-		__gacp_file_args=""
-
-		for arg in "$@"; do
-			if [ "${__gacp_count_non_file}" -eq 0 ] && { [ -f "$arg" ] || [ -d "$arg" ]; }; then
-				__gacp_file_args="${__gacp_file_args} \"$arg\""
-				__gacp_file_names="${__gacp_file_names}${__gacp_file_names:+ }$arg"
-				__gacp_count_file=$((__gacp_count_file + 1))
-			else
-				__gacp_count_non_file=$((__gacp_count_non_file + 1))
-				__gacp_message="$arg"
-			fi
-		done
-
-		__gacp_file_list=""
-		for f in ${__gacp_file_names}; do
-			__gacp_file_list="${__gacp_file_list}'${f}',"
-		done
-		__gacp_file_list="${__gacp_file_list%,}"
-		__gacp_attempts=0
-
-		if [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
-			ga
-			until __git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}" "${__gacp_action}"; do
-				ga
-				__gacp_attempts=$((__gacp_attempts + 1))
-				if [ "${__gacp_attempts}" -ge 5 ]; then
-					return 1
-				fi
-			done
-		elif [ "${__gacp_count_file}" -eq 0 ] && [ "${__gacp_count_non_file}" -eq 1 ]; then
-			ga
-			until __git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}" "${__gacp_action}"; do
-				ga
-				__gacp_attempts=$((__gacp_attempts + 1))
-				if [ "${__gacp_attempts}" -ge 5 ]; then
-					return 1
-				fi
-			done
-		elif [ "${__gacp_count_file}" -ge 1 ] && [ "${__gacp_count_non_file}" -eq 0 ]; then
-			eval "ga ${__gacp_file_args}"
-			__git_commit_push "${__gacp_no_verify}" "" "${__gacp_force}" "${__gacp_web}" "${__gacp_action}"
-		elif [ "${__gacp_count_file}" -ge 1 ] && [ "${__gacp_count_non_file}" -eq 1 ]; then
-			eval "ga ${__gacp_file_args}"
-			__git_commit_push "${__gacp_no_verify}" "${__gacp_message}" "${__gacp_force}" "${__gacp_web}" "${__gacp_action}"
-		else
-			echo_date "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__gacp_count_file} file(s) ${__gacp_file_list:-'(none)'} and ${__gacp_count_non_file} message(s)" && return 1
-		fi
+	gcn() {
+		[ $# -ge 2 ] && echo_date "'gcn' accepts [0..1] arguments; got $#" && return 1
+		__git_all false true false 'none' "$@"
+	}
+	gcf() {
+		[ $# -ge 2 ] && echo_date "'gcf' accepts [0..1] arguments; got $#" && return 1
+		__git_all false false true 'none' "$@"
+	}
+	gcnf() {
+		[ $# -ge 2 ] && echo_date "'gcnf' accepts [0..1] arguments; got $#" && return 1
+		__git_all false true true 'none' "$@"
+	}
+	gcw() {
+		[ $# -ge 2 ] && echo_date "'gcw' accepts [0..1] arguments; got $#" && return 1
+		__git_all false false false 'web' "$@"
+	}
+	gcnw() {
+		[ $# -ge 2 ] && echo_date "'gcnw' accepts [0..1] arguments; got $#" && return 1
+		__git_all false true false 'web' "$@"
+	}
+	gcfw() {
+		[ $# -ge 2 ] && echo_date "'gcfw' accepts [0..1] arguments; got $#" && return 1
+		__git_all false false true 'web' "$@"
+	}
+	gcnfw() {
+		[ $# -ge 2 ] && echo_date "'gcnfw' accepts [0..1] arguments; got $#" && return 1
+		__git_all false true true 'web' "$@"
+	}
+	gce() {
+		[ $# -ge 2 ] && echo_date "'gce' accepts [0..1] arguments; got $#" && return 1
+		__git_all false false false 'exit' "$@"
+	}
+	gcne() {
+		[ $# -ge 2 ] && echo_date "'gcne' accepts [0..1] arguments; got $#" && return 1
+		__git_all false true false 'exit' "$@"
+	}
+	gcfe() {
+		[ $# -ge 2 ] && echo_date "'gcfe' accepts [0..1] arguments; got $#" && return 1
+		__git_all false false true 'exit' "$@"
+	}
+	gcnfe() {
+		[ $# -ge 2 ] && echo_date "'gcnfe' accepts [0..1] arguments; got $#" && return 1
+		__git_all false true true 'exit' "$@"
+	}
+	gcwe() {
+		[ $# -ge 2 ] && echo_date "'gcwe' accepts [0..1] arguments; got $#" && return 1
+		__git_all false false false 'web+exit' "$@"
+	}
+	gcnwe() {
+		[ $# -ge 2 ] && echo_date "'gcnwe' accepts [0..1] arguments; got $#" && return 1
+		__git_all false true false 'web+exit' "$@"
+	}
+	gcfwe() {
+		[ $# -ge 2 ] && echo_date "'gcfwe' accepts [0..1] arguments; got $#" && return 1
+		__git_all false false true 'web+exit' "$@"
+	}
+	gcnfwe() {
+		[ $# -ge 2 ] && echo_date "'gcnfwe' accepts [0..1] arguments; got $#" && return 1
+		__git_all false true true 'web+exit' "$@"
+	}
+	gcm() {
+		[ $# -ge 2 ] && echo_date "'gcm' accepts [0..1] arguments; got $#" && return 1
+		__git_all false false false 'merge' "$@"
+	}
+	gcnm() {
+		[ $# -ge 2 ] && echo_date "'gcnm' accepts [0..1] arguments; got $#" && return 1
+		__git_all false true false 'merge' "$@"
+	}
+	gcfm() {
+		[ $# -ge 2 ] && echo_date "'gcfm' accepts [0..1] arguments; got $#" && return 1
+		__git_all false false true 'merge' "$@"
+	}
+	gcnfm() {
+		[ $# -ge 2 ] && echo_date "'gcnfm' accepts [0..1] arguments; got $#" && return 1
+		__git_all false true true 'merge' "$@"
+	}
+	gcx() {
+		[ $# -ge 2 ] && echo_date "'gcx' accepts [0..1] arguments; got $#" && return 1
+		__git_all false false false 'merge+exit' "$@"
+	}
+	gcnx() {
+		[ $# -ge 2 ] && echo_date "'gcnx' accepts [0..1] arguments; got $#" && return 1
+		__git_all false true false 'merge+exit' "$@"
+	}
+	gcfx() {
+		[ $# -ge 2 ] && echo_date "'gcfx' accepts [0..1] arguments; got $#" && return 1
+		__git_all false false true 'merge+exit' "$@"
+	}
+	gcnfx() {
+		[ $# -ge 2 ] && echo_date "'gcnfx' accepts [0..1] arguments; got $#" && return 1
+		__git_all false true true 'merge+exit' "$@"
 	}
 	__git_all() {
 		if [ $# -le 3 ]; then
@@ -120,14 +145,12 @@ if command -v git >/dev/null 2>&1; then
 		__git_all_force="$3"
 		__git_all_action="$4"
 		shift 4
-		if [ "${__git_all_action}" != 'none' ] &&
-			[ "${__git_all_action}" != 'web' ] &&
-			[ "${__git_all_action}" != 'exit' ] &&
-			[ "${__git_all_action}" != 'web+exit' ] &&
-			[ "${__git_all_action}" != 'merge' ] &&
-			[ "${__git_all_action}" != 'merge+exit' ]; then
+		case "$__git_all_action" in
+		'none' | 'web' | 'exit' | 'web+exit' | 'merge' | 'merge+exit') ;;
+		*)
 			echo_date "'__git_all' invalid git_all_action; got '${__git_all_action}'" && return 1
-		fi
+			;;
+		esac
 		if "${__git_all_add}"; then
 			if [ $# -eq 0 ]; then
 				__git_commit_until "${__git_all_no_verify}" "$(__git_commit_auto_msg)" || return $?
@@ -136,19 +159,17 @@ if command -v git >/dev/null 2>&1; then
 				for __git_commit_until_arg in "$@"; do
 					__git_commit_until_last="${__git_commit_until_arg}"
 				done
-				echo "last===${__git_commit_until_last}"
 				if [ -f "${__git_commit_until_last}" ]; then
 					__git_commit_until "${__git_all_no_verify}" "$(__git_commit_auto_msg)" || return $?
 				else
 					__git_commit_until_i=0
-					while [ $((__git_commit_until_i += 1)) -lt $# ]; do # https://stackoverflow.com/a/69952637
+					while [ $((__git_commit_until_i += 1)) -lt "$#" ]; do # https://stackoverflow.com/a/69952637
 						set -- "$@" "$1"
 						shift
 					done
+					shift
 					__git_commit_until "${__git_all_no_verify}" "${__git_commit_until_last}" "$@" || return $?
 				fi
-				# add all
-				#   check last
 			fi
 		else
 			if [ $# -eq 0 ]; then
@@ -156,7 +177,7 @@ if command -v git >/dev/null 2>&1; then
 			elif [ $# -eq 1 ]; then
 				__git_commit_until "${__git_all_no_verify}" "$1" || return $?
 			else
-				echo_date "'__git_all' in the case 'add' == 'false' accepts [0..1] arguments; got '$#'" && return 1
+				echo_date "'__git_all' in the 'no add' case accepts [0..1] arguments; got '$#'" && return 1
 			fi
 		fi
 		if [ "${__git_all_action}" = 'none' ] ||
@@ -288,21 +309,21 @@ if command -v git >/dev/null 2>&1; then
 			gco master
 		fi
 	}
-	gcm() {
+	gm() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gcm' accepts no arguments; got $#" && return 1
+			echo_date "'gm' accepts no arguments; got $#" && return 1
 		fi
 		__git_checkout_master 'none'
 	}
-	gcmd() {
+	gmd() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gcmd' accepts no arguments; got $#" && return 1
+			echo_date "'gmd' accepts no arguments; got $#" && return 1
 		fi
 		__git_checkout_master 'delete'
 	}
-	gcme() {
+	gme() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gcme' accepts no arguments; got $#" && return 1
+			echo_date "'gme' accepts no arguments; got $#" && return 1
 		fi
 		__git_checkout_master 'delete+exit'
 	}
@@ -316,7 +337,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 		__current="$(current_branch)" || return $?
 		if [ "${__current}" != "${__target}" ]; then
-			git checkout "${__branch}"
+			git checkout "${__branch}" || return $?
 		fi
 		gpl
 	}
@@ -433,103 +454,6 @@ if command -v git >/dev/null 2>&1; then
 		return 1
 
 	}
-	# commit + push
-	# gc() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gc' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 0 "${1:-}" 0 0 0
-	# }
-	# gcn() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcn' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 1 "${1:-}" 0 0 0
-	# }
-	# gcf() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcf' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 0 "${1:-}" 1 0 0
-	# }
-	# gcnf() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcnf' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 1 "${1:-}" 1 0 0
-	# }
-	# gcw() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcw' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 0 "${1:-}" 0 1 0
-	# }
-	# gcnw() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcnw' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 1 "${1:-}" 0 1 0
-	# }
-	# gcfw() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcfw' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 0 "${1:-}" 1 1 0
-	# }
-	# gcnfw() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcnfw' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 1 "${1:-}" 1 1 0
-	# }
-	# gce() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gce' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 0 "${1:-}" 0 0 1
-	# }
-	# gcne() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcne' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 1 "${1:-}" 0 0 1
-	# }
-	# gcfe() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcfe' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 0 "${1:-}" 1 0 1
-	# }
-	# gcnfe() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcnfe' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 1 "${1:-}" 1 0 1
-	# }
-	# gcwe() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcwe' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 0 "${1:-}" 0 1 1
-	# }
-	# gcnwe() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcnwe' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 1 "${1:-}" 0 1 1
-	# }
-	# gcfwe() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcfwe' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 0 "${1:-}" 1 1 1
-	# }
-	# gcnfwe() {
-	#     if [ $# -ge 2 ]; then
-	#         echo_date "'gcnfwe' accepts [0..1] arguments; got $#" && return 1
-	#     fi
-	#     __git_commit_push 1 "${1:-}" 1 1 1
-	# }
 	# diff
 	gd() { git diff "$@"; }
 	gdc() { git diff --cached "$@"; }
