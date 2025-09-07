@@ -529,50 +529,36 @@ if command -v git >/dev/null 2>&1; then
 	# # push
 	gp() {
 		[ $# -ne 0 ] && echo_date "'gp' accepts no arguments; got $#" && return 1
-		__git_push false false
+		__git_push false 'none'
 	}
 	gpf() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gpf' accepts no arguments; got $#" && return 1
-		fi
-		__git_push true false false
+		[ $# -ne 0 ] && echo_date "'gpf' accepts no arguments; got $#" && return 1
+		__git_push true 'none'
 	}
 	gpw() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gpw' accepts no arguments; got $#" && return 1
-		fi
-		__git_push false true false
+		[ $# -ne 0 ] && echo_date "'gpw' accepts no arguments; got $#" && return 1
+		__git_push false 'web'
 	}
 	gpfw() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gpfw' accepts no arguments; got $#" && return 1
-		fi
-		__git_push true true false
+		[ $# -ne 0 ] && echo_date "'gpfw' accepts no arguments; got $#" && return 1
+		__git_push true 'web'
 	}
 	gpe() {
-		if [ $# -ne 0 ]; then
-			echo_date "'gpe' accepts no arguments; got $#" && return 1
-		fi
-		__git_push false false false
+		[ $# -ne 0 ] && echo_date "'gpe' accepts no arguments; got $#" && return 1
+		__git_push false 'exit'
 	}
-	# gpfe() {
-	#     if [ $# -ne 0 ]; then
-	#         echo_date "'gpfe' accepts no arguments; got $#" && return 1
-	#     fi
-	#     __git_push true false true
-	# }
-	# gpwe() {
-	#     if [ $# -ne 0 ]; then
-	#         echo_date "'gpwe' accepts no arguments; got $#" && return 1
-	#     fi
-	#     __git_push false true true
-	# }
-	# gpfwe() {
-	#     if [ $# -ne 0 ]; then
-	#         echo_date "'gpfwe' accepts no arguments; got $#" && return 1
-	#     fi
-	#     __git_push true true true
-	# }
+	gpfe() {
+		[ $# -ne 0 ] && echo_date "'gpfe' accepts no arguments; got $#" && return 1
+		__git_push true 'exit'
+	}
+	gpwe() {
+		[ $# -ne 0 ] && echo_date "'gpwe' accepts no arguments; got $#" && return 1
+		__git_push false 'web+exit'
+	}
+	gpfwe() {
+		[ $# -ne 0 ] && echo_date "'gpfwe' accepts no arguments; got $#" && return 1
+		__git_push true 'web+exit'
+	}
 	__git_push() {
 		if [ $# -ne 2 ]; then
 			echo_date "'__git_push' accepts 2 arguments; got $#" && return 1
