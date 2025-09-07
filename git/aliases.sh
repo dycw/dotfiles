@@ -134,6 +134,72 @@ if command -v git >/dev/null 2>&1; then
 		git branch --color=never --remotes | awk '!/->/' | fzf | sed -E 's|^[[:space:]]*origin/||'
 	}
 	# checkout
+	gcb() {
+		if [ $# -eq 0 ]; then
+			if ! __is_current_branch_master; then
+				echo_date "'gcb' off 'master' accepts 1 argument; got $#" && return 1
+			fi
+			__branch='dev'
+			__title="$(__git_commit_auto_message) > ${__branch}"
+			unset __num
+		elif [ $# -eq 1 ]; then
+			__title="$1"
+			__branch="$(__to_valid_branch "${__title}")"
+			unset __num
+		elif [ $# -eq 2 ]; then
+			__title="$1"
+			__num="$2"
+			__desc="$(__to_valid_branch "${__title}")"
+			__branch="$2-${__desc}"
+		else
+			echo_date "'gcb' accepts [0..2] arguments; got $#" && return 1
+		fi
+		gf && git checkout -b "${__branch}" origin/master && gp &&
+			__git_commit_empty_auto_message && gp || return $?
+		if [ -z "${__num}" ]; then
+			ghc "${__title}"
+		else
+			ghc "${__title}" "${__num}"
+		fi
+	}
+	gcbac() {
+		if [ $# -ge 3 ]; then
+			echo_date "'gcbac' accepts [0..2] arguments; got $#" && return 1
+		fi
+		gcb "$@" && gac
+	}
+	gcbacm() {
+		if [ $# -ge 3 ]; then
+			echo_date "'gcbacm' accepts [0..2] arguments; got $#" && return 1
+		fi
+		gcb "$@" && gacm
+	}
+	gcbacmd() {
+		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
+			echo_date "'gcbacmd' accepts [0..2] arguments; got $#" && return 1
+		fi
+		gcb "$@" && gacmd
+	}
+	gcbacme() {
+		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
+			echo_date "'gcbacme' accepts [0..2] arguments; got $#" && return 1
+		fi
+		gcb "$@" && gacme
+	}
+	gcbt() {
+		if [ $# -eq 0 ]; then
+			__branch="$(__select_remote_branch)"
+		elif [ $# -eq 1 ]; then
+			__branch="$1"
+		else
+			echo_date "'gcbt' accepts [0..1] arguments; got $#" && return 1
+		fi
+		if __is_current_branch_master; then
+			gf && git checkout -b "${__branch}" --track='direct'
+		else
+			gco master
+		fi
+	}
 	gcm() {
 		if [ $# -ne 0 ]; then
 			echo_date "'gcm' accepts no arguments; got $#" && return 1
@@ -161,72 +227,6 @@ if command -v git >/dev/null 2>&1; then
 			echo_date "'gco' accepts [0..1] arguments; got $#" && return 1
 		fi
 		git checkout "${__branch}" && gpl
-	}
-	gcob() {
-		if [ $# -eq 0 ]; then
-			if ! __is_current_branch_master; then
-				echo_date "'gcob' off 'master' accepts 1 argument; got $#" && return 1
-			fi
-			__branch='dev'
-			__title="$(__git_commit_auto_message) > ${__branch}"
-			unset __num
-		elif [ $# -eq 1 ]; then
-			__title="$1"
-			__branch="$(__to_valid_branch "${__title}")"
-			unset __num
-		elif [ $# -eq 2 ]; then
-			__title="$1"
-			__num="$2"
-			__desc="$(__to_valid_branch "${__title}")"
-			__branch="$2-${__desc}"
-		else
-			echo_date "'gcob' accepts [0..2] arguments; got $#" && return 1
-		fi
-		gf && git checkout -b "${__branch}" origin/master && gp &&
-			__git_commit_empty_auto_message && gp || return $?
-		if [ -z "${__num}" ]; then
-			ghc "${__title}"
-		else
-			ghc "${__title}" "${__num}"
-		fi
-	}
-	gcobac() {
-		if [ $# -ge 3 ]; then
-			echo_date "'gcobac' accepts [0..2] arguments; got $#" && return 1
-		fi
-		gcob "$@" && gac
-	}
-	gcobacm() {
-		if [ $# -ge 3 ]; then
-			echo_date "'gcobacm' accepts [0..2] arguments; got $#" && return 1
-		fi
-		gcob "$@" && gacm
-	}
-	gcobacmd() {
-		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-			echo_date "'gcobacmd' accepts [0..2] arguments; got $#" && return 1
-		fi
-		gcob "$@" && gacmd
-	}
-	gcobacme() {
-		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-			echo_date "'gcobacme' accepts [0..2] arguments; got $#" && return 1
-		fi
-		gcob "$@" && gacme
-	}
-	gcobt() {
-		if [ $# -eq 0 ]; then
-			__branch="$(__select_remote_branch)"
-		elif [ $# -eq 1 ]; then
-			__branch="$1"
-		else
-			echo_date "'gcobt' accepts [0..1] arguments; got $#" && return 1
-		fi
-		if __is_current_branch_master; then
-			gf && git checkout -b "${__branch}" --track='direct'
-		else
-			gco master
-		fi
 	}
 	gcof() {
 		if [ $# -eq 0 ]; then
@@ -293,7 +293,7 @@ if command -v git >/dev/null 2>&1; then
 			echo_date "'gbr' cannot be run on master" && return 1
 		else
 			__gbr_branch="$(current_branch)" || return 1
-			gcof && gcm && gcob "${__gbr_branch}"
+			gcof && gcm && gcb "${__gbr_branch}"
 		fi
 	}
 	# cherry-pick
@@ -1029,21 +1029,21 @@ if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -
 		fi
 		__add_merge 2
 	}
-	gcobacm() {
+	gcbacm() {
 		if [ $# -ge 3 ]; then
-			echo_date "'gcobacm' accepts [0..2] arguments; got $#" && return 1
+			echo_date "'gcbacm' accepts [0..2] arguments; got $#" && return 1
 		fi
 		__create_add_merge 0 "$@"
 	}
-	gcobacmd() {
+	gcbacmd() {
 		if [ $# -ge 3 ]; then
-			echo_date "'gcobacmd' accepts [0..2] arguments; got $#" && return 1
+			echo_date "'gcbacmd' accepts [0..2] arguments; got $#" && return 1
 		fi
 		__create_add_merge 1 "$@"
 	}
-	gcobacme() {
+	gcbacme() {
 		if [ $# -ge 3 ]; then
-			echo_date "'gcobacme' accepts [0..2] arguments; got $#" && return 1
+			echo_date "'gcbacme' accepts [0..2] arguments; got $#" && return 1
 		fi
 		__create_add_merge 2 "$@"
 	}
@@ -1069,7 +1069,7 @@ if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -
 		fi
 		__action="$1"
 		shift 1
-		gcob "$@" && __add_merge "${__action}"
+		gcb "$@" && __add_merge "${__action}"
 	}
 fi
 
