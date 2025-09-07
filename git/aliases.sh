@@ -196,15 +196,9 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gbd() {
 		if [ $# -eq 0 ]; then
-			__target="$(__select_local_branch)"
-		elif [ $# -eq 1 ]; then
-			__target="$1"
+			__select_local_branches | xargs -r -I{} git branch --delete --force "{}"
 		else
-			echo_date "'gbd' accepts [0..1] arguments; got $#" && return 1
-		fi
-		if [ "${__target}" != "$(current_branch)" ] &&
-			__branch_exists "${__target}"; then
-			git branch --delete --force "${__target}"
+			git branch --delete --force "$@"
 		fi
 	}
 	gbdr() {
@@ -223,6 +217,10 @@ if command -v git >/dev/null 2>&1; then
 	__select_local_branch() {
 		[ $# -ne 0 ] && echo_date "'__select_local_branch' accepts no arguments; got $#" && return 1
 		git branch --format="%(refname:short)" | fzf
+	}
+	__select_local_branches() {
+		[ $# -ne 0 ] && echo_date "'__select_local_branches' accepts no arguments; got $#" && return 1
+		git branch --format="%(refname:short)" | fzf --multi
 	}
 	__select_remote_branch() {
 		[ $# -ne 0 ] && echo_date "'__select_remote_branch' accepts no arguments; got $#" && return 1
