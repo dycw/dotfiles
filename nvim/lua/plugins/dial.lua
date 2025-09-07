@@ -41,6 +41,7 @@ return {
             { "end", "start", "stop" },
             { "entered", "exited" },
             { "entry", "exit" },
+            { "failure", "success" },
             { "first", "last" },
             { "float", "int" },
             { "gateway", "tws" },
