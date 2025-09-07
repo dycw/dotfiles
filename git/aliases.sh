@@ -213,13 +213,13 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gbdr() {
 		if [ $# -eq 0 ]; then
-			__branch="$(__select_remote_branch)" || return $?
+			__gbdr_branch="$(__select_remote_branch)" || return $?
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__gbdr_branch="$1"
 		else
 			echo_date "'gbdr' accepts [0..1] arguments; got $#" && return 1
 		fi
-		gf && git push --delete origin "${__branch}"
+		gf && git push --delete origin "${__gbdr_branch}"
 	}
 	gbm() { git branch -m "$1"; }
 	__delete_gone_branches() {
