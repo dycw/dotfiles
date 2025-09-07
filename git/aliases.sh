@@ -174,17 +174,17 @@ if command -v git >/dev/null 2>&1; then
 		fi
 		gcb "$@" && gacm
 	}
-	gcbacmd() {
+	gcbacd() {
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-			echo_date "'gcbacmd' accepts [0..2] arguments; got $#" && return 1
+			echo_date "'gcbacd' accepts [0..2] arguments; got $#" && return 1
 		fi
-		gcb "$@" && gacmd
+		gcb "$@" && gacd
 	}
-	gcbacme() {
+	gcbace() {
 		if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-			echo_date "'gcbacme' accepts [0..2] arguments; got $#" && return 1
+			echo_date "'gcbace' accepts [0..2] arguments; got $#" && return 1
 		fi
-		gcb "$@" && gacme
+		gcb "$@" && gace
 	}
 	gcbt() {
 		if [ $# -eq 0 ]; then
@@ -835,15 +835,15 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		fi
 		__gh_pr_merge 0
 	}
-	ghmd() {
+	ghd() {
 		if [ $# -ne 0 ]; then
-			echo_date "'ghmd' accepts no arguments; got $#" && return 1
+			echo_date "'ghd' accepts no arguments; got $#" && return 1
 		fi
 		__gh_pr_merge 1
 	}
-	ghme() {
+	ghe() {
 		if [ $# -ne 0 ]; then
-			echo_date "'ghme' accepts no arguments; got $#" && return 1
+			echo_date "'ghe' accepts no arguments; got $#" && return 1
 		fi
 		__gh_pr_merge 2
 	}
@@ -1017,15 +1017,15 @@ if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -
 		fi
 		__add_merge 0
 	}
-	gacmd() {
+	gacd() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gacmd' accepts no arguments; got $#" && return 1
+			echo_date "'gacd' accepts no arguments; got $#" && return 1
 		fi
 		__add_merge 1
 	}
-	gacme() {
+	gace() {
 		if [ $# -ne 0 ]; then
-			echo_date "'gacme' accepts no arguments; got $#" && return 1
+			echo_date "'gace' accepts no arguments; got $#" && return 1
 		fi
 		__add_merge 2
 	}
@@ -1035,15 +1035,15 @@ if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -
 		fi
 		__create_add_merge 0 "$@"
 	}
-	gcbacmd() {
+	gcbacd() {
 		if [ $# -ge 3 ]; then
-			echo_date "'gcbacmd' accepts [0..2] arguments; got $#" && return 1
+			echo_date "'gcbacd' accepts [0..2] arguments; got $#" && return 1
 		fi
 		__create_add_merge 1 "$@"
 	}
-	gcbacme() {
+	gcbace() {
 		if [ $# -ge 3 ]; then
-			echo_date "'gcbacme' accepts [0..2] arguments; got $#" && return 1
+			echo_date "'gcbace' accepts [0..2] arguments; got $#" && return 1
 		fi
 		__create_add_merge 2 "$@"
 	}
