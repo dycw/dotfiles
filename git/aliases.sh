@@ -15,7 +15,7 @@ if command -v git >/dev/null 2>&1; then
         fi
     }
     gap() { git add --all --patch "$@"; }
-    # add + commit + push
+    # all
     gac() { __git_add_commit_push 0 0 0 0 "$@"; }
     gacn() { __git_add_commit_push 1 0 0 0 "$@"; }
     gacf() { __git_add_commit_push 0 1 0 0 "$@"; }
@@ -105,6 +105,36 @@ if command -v git >/dev/null 2>&1; then
             echo_date "'__git_add_commit_push' accepts any number of files followed by [0..1] messages; got ${__gacp_count_file} file(s) ${__gacp_file_list:-'(none)'} and ${__gacp_count_non_file} message(s)" && return 1
         fi
     }
+    __git_all() {
+        if [ $# -le 3 ]; then
+            echo_date "'__git_all' accepts [4..) arguments; got $#" && return 1
+        fi
+        # $1 = no-verify
+        # $2 = message
+        # $3 = force
+        # $4 = action = {none/web/exit/web+exit/merge/merge+exit}
+        __no_verify="$1"
+        __message="$2"
+        __force="$3"
+        __action="$4"
+        shift 4
+        if [ "${__action}" != 'none' ] && [ "${__action}" != 'web' ] &&
+            [ "${__action}" != 'exit' ] && [ "${__action}" != 'web+exit' ] &&
+            [ "${__action}" != 'merge' ] && [ "${__action}" != 'merge+exit' ]; then
+            echo_date "'__git_all' invalid action; got '${__action}'" && return 1
+        fi
+        ga "$@"
+        echo "done"
+        for __i in $(seq 0 4); do
+            echo "${__i}"
+            if __git_commit "${__no_verify}" "${__message}"; then
+                break
+            else
+                ga "$@"
+            fi
+            echo_date "'__git_all' failed to commit after 5 times'" && return 1
+        done
+    }
     # branch
     gb() {
         if [ $# -ne 0 ]; then
@@ -178,9 +208,9 @@ if command -v git >/dev/null 2>&1; then
         gf && git checkout -b "${__branch}" origin/master && gp &&
             __git_commit_empty_msg && gp || return $?
         if [ -z "${__num}" ]; then
-            ghc "${__title}"
+            __gh_create "${__title}"
         else
-            ghc "${__title}" "${__num}"
+            __gh_create "${__title}" "${__num}"
         fi
     }
     gcbac() {
@@ -278,15 +308,16 @@ if command -v git >/dev/null 2>&1; then
             echo_date "'__git_checkout_master' accepts 1 argument; got $#" && return 1
         fi
         __action="$1"
-        if [ "${__action}" != 'none' ] && [ "${__action}" != 'delete' ] && [ "${__action}" != 'delete+exit' ]; then
-            echo_date "'__git_checkout_master' invalid action; got '${__action}'" && return 1
+        # $1 = action = {none/delete/delete+exit}
+        if [ "$1" != 'none' ] && [ "$1" != 'delete' ] && [ "$1" != 'delete+exit' ]; then
+            echo_date "'__git_checkout_master' invalid action; got '$1'" && return 1
         fi
         __branch="$(current_branch)" || return $?
         gco master
-        if { [ "${__action}" = 'delete' ] || [ "${__action}" = 'delete+exit' ]; } && [ "${__branch}" != 'master' ]; then
+        if [ "$1" = 'delete' ] || [ "$1" = 'delete+exit' ]; then
             gbd "${__branch}" || return $?
         fi
-        if [ "${__action}" = 'delete+exit' ]; then
+        if [ "$1" = 'delete+exit' ]; then
             exit
         fi
     }
@@ -320,21 +351,20 @@ if command -v git >/dev/null 2>&1; then
         if [ $# -ne 2 ]; then
             echo_date "'__git_commit' accepts 2 arguments; got $#" && return 1
         fi
-        # $1 = no-verify
-        # $2 = message
+        __no_verify="$1"
+        __message="$2"
         if git diff --cached --quiet && git diff --quiet; then
             return 0
         fi
-        if "$1" && [ -n "$2" ]; then
-            git commit --message="$2" --no-verify
-        elif "$1" && [ -z "$2" ]; then
-            git commit --message="$(__git_commit_auto_msg)" --no-verify
-        elif [ ! "$1" ] && [ -n "$2" ]; then
-            git commit --message="$2"
-        elif [ ! "$1" ] && [ -n "$2" ]; then
-            git commit --message="$(__git_commit_auto_msg)"
+        if [ "${__message}" = '' ]; then
+            __message_use="$(__git_commit_auto_msg)"
         else
-            echo_date "'__git_commit_push' impossible case" && return 1
+            __message_use="${__message}"
+        fi
+        if "${__no_verify}"; then
+            git commit --message="${__message_use}" --no-verify
+        else
+            git commit --message="${__message_use}"
         fi
     }
     __git_commit_auto_msg() {
@@ -453,8 +483,9 @@ if command -v git >/dev/null 2>&1; then
         # $1 = no-verify
         # $2 = message
         # $3 = force
-        # $4 = web
-        # $5 = exit
+        # $4 = action = {none/web/exit/web+exit}
+        # $4 = action
+        # .............................push only, push+web, push+exit, push+merge+delete, push+merge+delete+exit
         __git_commit "$1" "$2" && __git_push "$3" "$4" "$5"
     }
     # diff
@@ -546,18 +577,26 @@ if command -v git >/dev/null 2>&1; then
         __git_push true true true
     }
     __git_push() {
-        if [ $# -ne 3 ]; then
-            echo_date "'__git_push' accepts 3 arguments; got $#" && return 1
+        if [ $# -ne 2 ]; then
+            echo_date "'__git_push' accepts 2 arguments; got $#" && return 1
         fi
         # $1 = force
-        # $2 = web
-        # $3 = exit
-        __git_push_current_branch "$1" || return $?
-        if "$2"; then
-            gw
+        # $2 = action = {none/web/exit/web+exit}
+        if [ "$2" != 'none' ] && [ "$2" != 'web' ] && [ "$2" != 'exit' ] &&
+            [ "$2" != 'web+exit' ]; then
+            echo_date "'__gh_push' invalid action; got '$2'" && return 1
         fi
-        if "$3"; then
+        __git_push_current_branch "$1" || return $?
+        if [ "$2" = 'none' ]; then
+            :
+        elif [ "$2" = 'web' ]; then
+            gw
+        elif [ "$2" = 'exit' ]; then
             exit
+        elif [ "$2" = 'web+exit' ]; then
+            gw && exit
+        else
+            echo_date "'__git_push' impossible case" && return 1
         fi
     }
     __git_push_current_branch() {
@@ -735,53 +774,24 @@ fi
 
 # gh/glab
 if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
-    ghc() {
-        if [ $# -eq 0 ]; then
-            __title="Created by ${USER}@$(hostname) at $(date +"%Y-%m-%d %H:%M:%S (%a)")"
-            __body='.'
-        elif [ $# -eq 1 ]; then
-            __title="$1"
-            __body='.'
-        elif [ $# -eq 2 ]; then
-            __title="$1"
-            if __is_int "$2"; then
-                __body="Closes #$2"
-            else
-                __body="$2"
-            fi
-        else
-            echo_date "'ghc' accepts [0..2] arguments; got $#" && return 1
-        fi
-        if __is_github && __gh_pr_exists; then
-            gh pr edit --title="${__title}" --body="${__body}"
-        elif __is_github && ! __gh_pr_exists; then
-            gh pr create --title="${__title}" --body="${__body}"
-        elif __is_gitlab && __gh_pr_exists; then
-            glab mr update "$(__glab_mr_num)" \
-                --title="${__title}" --description="${__body}"
-        elif __is_gitlab && ! __gh_pr_exists; then
-            glab mr create --title="${__title}" --description="${__body}" \
-                --push --remove-source-branch --squash-before-merge
-        fi
-    }
-    ghcm() {
-        if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-            echo_date "'ghcm' accepts [1..2] arguments; got $#" && return 1
-        fi
-        ghc "$@" && ghm
-    }
-    ghcmd() {
-        if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-            echo_date "'ghcmd' accepts [1..2] arguments; got $#" && return 1
-        fi
-        ghc "$@" && ghm && gcmd
-    }
-    ghcme() {
-        if [ $# -eq 0 ] || [ $# -ge 3 ]; then
-            echo_date "'ghcme' accepts [1..2] arguments; got $#" && return 1
-        fi
-        ghc "$@" && ghm && gcmd && exit
-    }
+    # ghcm() {
+    #     if [ $# -eq 0 ] || [ $# -ge 3 ]; then
+    #         echo_date "'ghcm' accepts [1..2] arguments; got $#" && return 1
+    #     fi
+    #     ghc "$@" && ghm
+    # }
+    # ghcmd() {
+    #     if [ $# -eq 0 ] || [ $# -ge 3 ]; then
+    #         echo_date "'ghcmd' accepts [1..2] arguments; got $#" && return 1
+    #     fi
+    #     ghc "$@" && ghm && gcmd
+    # }
+    # ghcme() {
+    #     if [ $# -eq 0 ] || [ $# -ge 3 ]; then
+    #         echo_date "'ghcme' accepts [1..2] arguments; got $#" && return 1
+    #     fi
+    #     ghc "$@" && ghm && gcmd && exit
+    # }
     ghic() {
         if __is_github && [ $# -eq 1 ]; then
             gh issue create --title="$1" --body='.'
@@ -843,19 +853,19 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
         if [ $# -ne 0 ]; then
             echo_date "'ghm' accepts no arguments; got $#" && return 1
         fi
-        __gh_pr_merge 'none'
+        __gh_merge 'none'
     }
     ghd() {
         if [ $# -ne 0 ]; then
             echo_date "'ghd' accepts no arguments; got $#" && return 1
         fi
-        __gh_pr_merge 'delete'
+        __gh_merge 'delete'
     }
     ghe() {
         if [ $# -ne 0 ]; then
             echo_date "'ghe' accepts no arguments; got $#" && return 1
         fi
-        __gh_pr_merge 'delete+exit'
+        __gh_merge 'delete+exit'
     }
     ghv() {
         if [ $# -ne 0 ]; then
@@ -876,10 +886,12 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
             fi
         fi
     }
-    __gh_pr_create() {
+    __gh_create() {
         if [ $# -ne 2 ]; then
-            echo_date "'__gh_pr_create' accepts 2 arguments; got $#" && return 1
+            echo_date "'__gh_create' accepts 2 arguments; got $#" && return 1
         fi
+        # $1 = title
+        # $2 = body
         __title="$1"
         __body="$2"
         if [ -z "${__title}" ]; then
@@ -888,22 +900,23 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
         if [ -n "${__body}" ] && __is_int "${__body}"; then
             __body="Closes #${__body}"
         fi
-        if __is_github && __gh_pr_exists; then
+        if __is_github && __gh_exists; then
             gh pr edit --title="${__title}" --body="${__body}"
-        elif __is_github && ! __gh_pr_exists; then
+        elif __is_github && ! __gh_exists; then
             gh pr create --title="${__title}" --body="${__body}"
-        elif __is_gitlab && __gh_pr_exists; then
+        elif __is_gitlab && __gh_exists; then
             glab mr update "$(__glab_mr_num)" \
                 --title="${__title}" --description="${__body}"
-        elif __is_gitlab && ! __gh_pr_exists; then
+        elif __is_gitlab && ! __gh_exists; then
             glab mr create --title="${__title}" --description="${__body}" \
                 --push --remove-source-branch --squash-before-merge
+        else
+            echo_date "'__gh_create' impossible case" && return 1
         fi
-
     }
-    __gh_pr_exists() {
+    __gh_exists() {
         if [ $# -ne 0 ]; then
-            echo_date "'__gh_pr_exists' accepts no arguments; got $#" && return 1
+            echo_date "'__gh_exists' accepts no arguments; got $#" && return 1
         fi
         if __is_github; then
             if gh pr view >/dev/null 2>&1; then
@@ -919,13 +932,13 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
             fi
         fi
     }
-    __gh_pr_merge() {
+    __gh_merge() {
         if [ $# -ne 1 ]; then
-            echo_date "'__gh_pr_merge' accepts 1 argument; got $#" && return 1
+            echo_date "'__gh_merge' accepts 1 argument; got $#" && return 1
         fi
-        __action="$1"
-        if [ "${__action}" != 'none' ] && [ "${__action}" != 'delete' ] && [ "${__action}" != 'delete+exit' ]; then
-            echo_date "'__gh_pr_merge' invalid action; got '${__action}'" && return 1
+        # $1 = action = {none/delete/delete+exit}
+        if [ "$1" != 'none' ] && [ "$1" != 'delete' ] && [ "$1" != 'delete+exit' ]; then
+            echo_date "'__gh_merge' invalid action; got '$1'" && return 1
         fi
         __start="$(date +%s)"
         __branch="$(current_branch)" || return 1
@@ -959,7 +972,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
                 fi
             done
         fi
-        __git_checkout_master "${__action}"
+        __git_checkout_master "$1"
     }
     __gh_pr_merging() {
         __branch="$(current_branch)" || return 1
@@ -1056,21 +1069,22 @@ if command -v git >/dev/null 2>&1 && (command -v gh >/dev/null 2>&1 || command -
         if [ $# -ne 1 ]; then
             echo_date "'__add_merge' accepts 1 argument; got $#" && return 1
         fi
-        __action="$1"
-        if [ "${__action}" != 'none' ] && [ "${__action}" != 'delete' ] && [ "${__action}" != 'delete+exit' ]; then
-            echo_date "'__add_merge' invalid action; got '${__action}'" && return 1
+        # $1 = action
+        if [ "$1" != 'none' ] && [ "$1" != 'delete' ] && [ "$1" != 'delete+exit' ]; then
+            echo_date "'__add_merge' invalid action; got '$1'" && return 1
         fi
-        gac && __gh_pr_merge "${__action}"
+        gac && __gh_merge "$1"
     }
     __create_add_merge() {
         if [ $# -eq 0 ]; then
             echo_date "'__create_add_merge' accepts [1..) arguments; got $#" && return 1
         fi
         __action="$1"
-        if [ "${__action}" != 'none' ] && [ "${__action}" != 'delete' ] && [ "${__action}" != 'delete+exit' ]; then
+        shift
+        if [ "${__action}" != 'none' ] && [ "${__action}" != 'delete' ] &&
+            [ "${__action}" != 'delete+exit' ]; then
             echo_date "'__create_add_merge' invalid action; got '${__action}'" && return 1
         fi
-        shift 1
         gcb "$@" && __add_merge "${__action}"
     }
 fi
