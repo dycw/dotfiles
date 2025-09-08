@@ -928,6 +928,8 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 					break
 				fi
 			done
+		else
+			echo_date "'__gh_merge' impossible case" && return 1
 		fi
 		__git_checkout_master "$1"
 	}
@@ -951,6 +953,8 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 				return 0
 			fi
 			return 1
+		else
+			echo_date "'__gh_pr_merging' impossible case" && return 1
 		fi
 	}
 fi
