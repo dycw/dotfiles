@@ -23,4 +23,4 @@ jobs:
       - uses: actions/checkout@v5
       - uses: ludeeus/action-shellcheck@master
         with:
-          ignore_paths: zsh/
+          ignore_paths: ./zsh/*
