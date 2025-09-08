@@ -251,6 +251,8 @@ chown_dirs() {
 # coverage
 alias open-cov='open .coverage/html/index.html'
 
+# curl
+#
 # debug
 set_debug() {
 	if [ $# -ne 0 ]; then

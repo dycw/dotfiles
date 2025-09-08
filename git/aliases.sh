@@ -196,9 +196,13 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gbd() {
 		if [ $# -eq 0 ]; then
-			__select_local_branches | xargs -r -I{} git branch --delete --force "{}"
+			__select_local_branches | while IFS= read -r __gbd_branch; do
+				__git_delete "${__gbd_branch}"
+			done
 		else
-			git branch --delete --force "$@"
+			for __gbd_branch in "$@"; do
+				__git_delete "${__gbd_branch}"
+			done
 		fi
 	}
 	gbdr() {
@@ -213,6 +217,12 @@ if command -v git >/dev/null 2>&1; then
 	__delete_gone_branches() {
 		[ $# -ne 0 ] && echo_date "'__delete_gone_branches' accepts no arguments; got $#" && return 1
 		git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
+	}
+	__git_delete() {
+		[ $# -ne 1 ] && echo_date "'__git_delete' accepts 1 argument; got $#" && return 1
+		if __branch_exists "$1" && [ "$(current_branch)" != "$1" ]; then
+			git branch --delete --force "$!"
+		fi
 	}
 	__select_local_branch() {
 		[ $# -ne 0 ] && echo_date "'__select_local_branch' accepts no arguments; got $#" && return 1
@@ -663,6 +673,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# reset
 	gr() { git reset "$@"; }
+	grhom() { git reset --hard origin/master "$@"; }
 	grp() { git reset --patch "$@"; }
 	# rev-parse
 	current_branch() {
