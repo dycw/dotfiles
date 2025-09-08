@@ -249,7 +249,24 @@ chown_dirs() {
 }
 
 # coverage
-alias open-cov='open .coverage/html/index.html'
+open_cov() {
+	if [ $# -ne 0 ]; then
+		echo_date "'open_cov' accepts 1 argument; got $#" && return 1
+	fi
+	open .coverage/html/index.html
+}
+
+# curl
+if command -v curl >/dev/null 2>&1; then
+	curl_sh() {
+		if [ $# -eq 0 ]; then
+			echo_date "'curl_sh' accepts [1..) arguments; got $#" && return 1
+		fi
+		__url="$1"
+		shift
+		curl -fsSL "${__url}" | sh -s -- "$@"
+	}
+fi
 
 # debug
 set_debug() {
