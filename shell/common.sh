@@ -264,7 +264,7 @@ if command -v curl >/dev/null 2>&1; then
 		fi
 		__url="$1"
 		shift
-		curl -fsSL "$1" | sh -s -- "$@"
+		curl -fsSL "${__url}" | sh -s -- "$@"
 	}
 fi
 
