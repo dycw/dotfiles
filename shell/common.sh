@@ -257,7 +257,7 @@ open_cov() {
 }
 
 # curl
-if ! command -v curl >/dev/null 2>&1; then
+if command -v curl >/dev/null 2>&1; then
 	curl_sh() {
 		if [ $# -eq 0 ]; then
 			echo_date "'curl_sh' accepts [1..) arguments; got $#" && return 1
