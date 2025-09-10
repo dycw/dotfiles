@@ -1227,8 +1227,9 @@ if find_spec("pytest") is not None:
 if find_spec("redis") is not None:
     _LOGGER.info("Importing `redis`...")
 
-    import redis
     from redis.asyncio import Redis
+
+    import redis
 
     _ = [redis, Redis]
 
