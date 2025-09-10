@@ -847,14 +847,14 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			if gh pr ready >/dev/null 2>&1; then
 				gh pr view -w
 			else
-				echo_date "'ghv' cannot find an open PR" && return 1
+				echo_date "'ghv' cannot find an open PR for '$(current_branch)'" && return 1
 			fi
 		elif __is_gitlab; then
 			__num="$(__glab_mr_num)"
 			if [ -n "${__num}" ]; then
 				glab mr view "${__num}" --web
 			else
-				echo_date "'ghv' cannot find an open PR" && return 1
+				echo_date "'ghv' cannot find an open PR for '$(current_branch)'" && return 1
 			fi
 		else
 			echo_date "'ghv' impossible case" && return 1
@@ -902,6 +902,9 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if [ "$1" != 'none' ] && [ "$1" != 'delete' ] &&
 			[ "$1" != 'delete+exit' ]; then
 			echo_date "'__gh_merge' invalid action; got '$1'" && return 1
+		fi
+		if ! __gh_exists; then
+			echo_date "'__gh_merge' cannot find an open PR for '$(current_branch)'" && return 1
 		fi
 		__gh_merge_start="$(date +%s)"
 		if __is_github; then

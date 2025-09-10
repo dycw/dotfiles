@@ -334,7 +334,7 @@ ls.add_snippets("python", {
     s("po-uint64", { t({ "from polars import UInt64", "" }) }),
     s("po-uint8", { t({ "from polars import UInt8", "" }) }),
     s("po-string", { t({ "from polars import String", "" }) }),
-    s("po-struct", { t({ "from polars import struct", "" }) }),
+    s("po-struct", { t({ "from polars import Struct, struct", "" }) }),
     s("po-utf8", { t({ "from polars import Utf8", "" }) }),
     s("po-when", { t({ "from polars import when", "" }) }),
 
