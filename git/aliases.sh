@@ -221,7 +221,7 @@ if command -v git >/dev/null 2>&1; then
 	__git_delete() {
 		[ $# -ne 1 ] && echo_date "'__git_delete' accepts 1 argument; got $#" && return 1
 		if __branch_exists "$1" && [ "$(current_branch)" != "$1" ]; then
-			git branch --delete --force "$!"
+			git branch --delete --force "$1"
 		fi
 	}
 	__select_local_branch() {
@@ -414,7 +414,7 @@ if command -v git >/dev/null 2>&1; then
 		*) echo_date "'__git_checkout_master' invalid action; got '$1'" && return 1 ;;
 		esac
 		__git_checkout_master_branch="$(current_branch)" || return $?
-		gco master
+		gco master || return $?
 		if [ "$1" = 'delete' ] || [ "$1" = 'delete+exit' ]; then
 			gbd "${__git_checkout_master_branch}" || return $?
 		fi
