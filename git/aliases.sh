@@ -149,14 +149,14 @@ if command -v git >/dev/null 2>&1; then
 		esac
 		if "${__git_all_add}"; then
 			if [ $# -eq 0 ]; then
-				__git_commit_until "${__git_all_nv}" "$(__auto_msg)" || return $?
+				__git_commit_until "$(__auto_msg)" "${__git_all_nv}" || return $?
 			else
 				__git_all_last=''
 				for __git_commit_arg in "$@"; do
 					__git_all_last="${__git_commit_arg}"
 				done
 				if [ -f "${__git_all_last}" ]; then
-					__git_commit_until "${__git_all_nv}" "$(__auto_msg)" || return $?
+					__git_commit_until "$(__auto_msg)" "${__git_all_nv}" || return $?
 				else
 					__git_all_i=0
 					while [ $((__git_all_i += 1)) -lt "$#" ]; do # https://stackoverflow.com/a/69952637
@@ -164,14 +164,14 @@ if command -v git >/dev/null 2>&1; then
 						shift
 					done
 					shift
-					__git_commit_until "${__git_all_nv}" "${__git_all_last}" "$@" || return $?
+					__git_commit_until "${__git_all_last}" "${__git_all_nv}" "$@" || return $?
 				fi
 			fi
 		else
 			if [ $# -eq 0 ]; then
-				__git_commit_until "${__git_all_nv}" "$(__git_commit_until)" || return $?
+				__git_commit_until "$(__git_commit_until)" "${__git_all_nv}" || return $?
 			elif [ $# -eq 1 ]; then
-				__git_commit_until "${__git_all_nv}" "$1" || return $?
+				__git_commit_until "$1" "${__git_all_nv}" || return $?
 			else
 				echo_date "'__git_all' in the 'no add' case accepts [0..1] arguments; got '$#'" && return 1
 			fi
@@ -180,11 +180,11 @@ if command -v git >/dev/null 2>&1; then
 			[ "${__git_all_action}" = 'web' ] ||
 			[ "${__git_all_action}" = 'exit' ] ||
 			[ "${__git_all_action}" = 'web+exit' ]; then
-			__git_push "${__git_all_force}" "${__git_all_action}"
+			__git_push "${__git_all_force}" "${__git_all_nv}" "${__git_all_action}"
 		elif [ "${__git_all_action}" = 'merge' ]; then
-			__git_push "${__git_all_force}" 'none' && __gh_merge 'delete'
+			__git_push "${__git_all_force}" "${__git_all_nv}" 'none' && __gh_merge 'delete'
 		elif [ "${__git_all_action}" = 'merge+exit' ]; then
-			__git_push "${__git_all_force}" 'none' && __gh_merge 'delete+exit'
+			__git_push "${__git_all_force}" "${__git_all_nv}" 'none' && __gh_merge 'delete+exit'
 		else
 			echo_date "'__git_all' impossible case; got '${__git_all_action}'" && return 1
 		fi
@@ -448,7 +448,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 		git checkout -b "${__git_create_branch}" origin/master &&
 			__git_commit_empty_msg &&
-			__git_push false 'none' &&
+			__git_push false true 'none' &&
 			__gh_create "${__git_create_title}" "${__git_create_body}"
 	}
 	__git_create_all() {
@@ -499,17 +499,17 @@ if command -v git >/dev/null 2>&1; then
 		if [ $# -ne 2 ]; then
 			echo_date "'__git_commit' accepts 2 arguments; got $#" && return 1
 		fi
-		# $1 = no-verify
-		# $2 = message
+		# $1 = message
+		# $2 = no-verify
 		if git diff --cached --quiet && git diff --quiet; then
 			return 0
 		fi
-		if [ "$2" = '' ]; then
+		if [ "$1" = '' ]; then
 			__git_commit_msg="$(__auto_msg)"
 		else
-			__git_commit_msg="$2"
+			__git_commit_msg="$1"
 		fi
-		if "$1"; then
+		if "$2"; then
 			git commit --message="${__git_commit_msg}" --no-verify
 		else
 			git commit --message="${__git_commit_msg}"
@@ -521,12 +521,12 @@ if command -v git >/dev/null 2>&1; then
 	}
 	__git_commit_until() {
 		[ $# -le 1 ] && echo_date "'__git_commit_until' accepts [2..) arguments; got $#" && return 1
-		__git_commit_until_nv="$1"
-		__git_commit_until_msg="$2"
+		__git_commit_until_msg="$1"
+		__git_commit_until_nv="$2"
 		shift 2
 		for __git_commit_until_i in $(seq 0 4); do
 			ga "$@" || return $?
-			if __git_commit "${__git_commit_until_nv}" "${__git_commit_until_msg}"; then
+			if __git_commit "${__git_commit_until_msg}" "${__git_commit_until_nv}"; then
 				return 0
 			fi
 		done
@@ -565,64 +565,72 @@ if command -v git >/dev/null 2>&1; then
 	# # push
 	gp() {
 		[ $# -ne 0 ] && echo_date "'gp' accepts no arguments; got $#" && return 1
-		__git_push false 'none'
+		__git_push false false 'none'
 	}
 	gpf() {
 		[ $# -ne 0 ] && echo_date "'gpf' accepts no arguments; got $#" && return 1
-		__git_push true 'none'
+		__git_push true false 'none'
 	}
 	gpw() {
 		[ $# -ne 0 ] && echo_date "'gpw' accepts no arguments; got $#" && return 1
-		__git_push false 'web'
+		__git_push false false 'web'
 	}
 	gpfw() {
 		[ $# -ne 0 ] && echo_date "'gpfw' accepts no arguments; got $#" && return 1
-		__git_push true 'web'
+		__git_push true false 'web'
 	}
 	gpe() {
 		[ $# -ne 0 ] && echo_date "'gpe' accepts no arguments; got $#" && return 1
-		__git_push false 'exit'
+		__git_push false false 'exit'
 	}
 	gpfe() {
 		[ $# -ne 0 ] && echo_date "'gpfe' accepts no arguments; got $#" && return 1
-		__git_push true 'exit'
+		__git_push true false 'exit'
 	}
 	gpwe() {
 		[ $# -ne 0 ] && echo_date "'gpwe' accepts no arguments; got $#" && return 1
-		__git_push false 'web+exit'
+		__git_push false false 'web+exit'
 	}
 	gpfwe() {
 		[ $# -ne 0 ] && echo_date "'gpfwe' accepts no arguments; got $#" && return 1
-		__git_push true 'web+exit'
+		__git_push true false 'web+exit'
 	}
 	__git_push() {
-		[ $# -ne 2 ] && echo_date "'__git_push' accepts 2 arguments; got $#" && return 1
+		[ $# -ne 3 ] && echo_date "'__git_push' accepts 3 arguments; got $#" && return 1
 		# $1 = force
-		# $2 = action = {none/web/exit/web+exit}
-		case "$2" in
+		# $2 = no-verify
+		# $3 = action = {none/web/exit/web+exit}
+		case "$3" in
 		'none' | 'web' | 'exit' | 'web+exit') ;;
-		*) echo_date "'__gh_push' invalid action; got '$2'" && return 1 ;;
+		*) echo_date "'__gh_push' invalid action; got '$3'" && return 1 ;;
 		esac
-		__git_push_current_branch "$1" || return $?
-		if [ "$2" = 'none' ]; then
+		__git_push_current_branch "$1" "$2" || return $?
+		if [ "$3" = 'none' ]; then
 			:
-		elif [ "$2" = 'web' ]; then
+		elif [ "$3" = 'web' ]; then
 			gw
-		elif [ "$2" = 'exit' ]; then
+		elif [ "$3" = 'exit' ]; then
 			exit
-		elif [ "$2" = 'web+exit' ]; then
+		elif [ "$3" = 'web+exit' ]; then
 			gw && exit
 		else
-			echo_date "'__git_push' impossible case; got '$2'" && return 1
+			echo_date "'__git_push' impossible case; got '$3'" && return 1
 		fi
 	}
 	__git_push_current_branch() {
-		[ $# -ne 1 ] && echo_date "'__git_push_current_branch' accepts 1 argument; got $#" && return 1
+		[ $# -ne 2 ] && echo_date "'__git_push_current_branch' accepts 2 arguments; got $#" && return 1
 		# $1 = force
-		if "$1"; then
-			git push --force --set-upstream origin "$(current_branch)"
-		else
+		# $2 = no-verify
+		if [ "$1" = 'false' ] && [ "$2" = 'false' ]; then
 			git push --set-upstream origin "$(current_branch)"
+		elif [ "$1" = 'false' ] && [ "$2" = 'true' ]; then
+			git push --set-upstream origin "$(current_branch)" --no-verify
+		elif [ "$1" = 'true' ] && [ "$2" = 'false' ]; then
+			git push --force --set-upstream origin "$(current_branch)"
+		elif [ "$1" = 'true' ] && [ "$2" = 'true' ]; then
+			git push --force --set-upstream origin "$(current_branch)" --no-verify
+		else
+			echo_date "'__git_push_current_branch' impossible case; got '$1' and '$2'" && return 1
 		fi
 	}
 	# rebase
