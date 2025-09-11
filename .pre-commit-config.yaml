@@ -1,3 +1,5 @@
+default_install_hook_types: [pre-commit, pre-push]
+
 repos:
   # fixers
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -6,10 +8,12 @@ repos:
       - id: ruff-check
         args: [--fix]
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.11.3
+    rev: 0.13.7
     hooks:
+      - id: check-submodules-updated
+        args: [--run-every=PT5M]
+      - id: check-version-bumped
       - id: run-bump-my-version
-      - id: run-ruff-format
   - repo: https://github.com/johnnymorganz/stylua
     rev: v2.1.0
     hooks:
