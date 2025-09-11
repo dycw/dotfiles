@@ -11,6 +11,7 @@ repos:
     rev: 0.13.2
     hooks:
       - id: check-submodules-updated
+        args: [--run-every=PT5M]
       - id: run-bump-my-version
   - repo: https://github.com/johnnymorganz/stylua
     rev: v2.1.0
