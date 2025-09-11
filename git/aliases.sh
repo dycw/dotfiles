@@ -196,7 +196,11 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gbd() {
 		if [ $# -eq 0 ]; then
-			__select_local_branches | while IFS= read -r __gbd_branch; do
+			__gbd_branches="$(__select_local_branches)"
+			if [ -z "${__gbd_branches}" ]; then
+				return 0
+			fi
+			printf '%s\n' "$(__select_local_branches)${__gbd_branches}" | while IFS= read -r __gbd_branch; do
 				__git_delete "${__gbd_branch}"
 			done
 		else
@@ -221,7 +225,7 @@ if command -v git >/dev/null 2>&1; then
 	__git_delete() {
 		[ $# -ne 1 ] && echo_date "'__git_delete' accepts 1 argument; got $#" && return 1
 		if __branch_exists "$1" && [ "$(current_branch)" != "$1" ]; then
-			git branch --delete --force "$!"
+			git branch --delete --force "$1"
 		fi
 	}
 	__select_local_branch() {
