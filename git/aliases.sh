@@ -414,7 +414,7 @@ if command -v git >/dev/null 2>&1; then
 		*) echo_date "'__git_checkout_master' invalid action; got '$1'" && return 1 ;;
 		esac
 		__git_checkout_master_branch="$(current_branch)" || return $?
-		gco master
+		gco master || return $?
 		if [ "$1" = 'delete' ] || [ "$1" = 'delete+exit' ]; then
 			gbd "${__git_checkout_master_branch}" || return $?
 		fi
