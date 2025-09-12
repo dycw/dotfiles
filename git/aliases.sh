@@ -438,7 +438,7 @@ if command -v git >/dev/null 2>&1; then
 		elif [ "$1" != '' ] && [ "$2" != '' ] && __is_int "$2"; then
 			__git_create_title="$1"
 			__git_create_branch="$2-$(__to_valid_branch "$1")" || return $?
-			__git_create_body="Closes $2"
+			__git_create_body="Closes #$2"
 		elif [ "$1" != '' ] && [ "$2" != '' ] && ! __is_int "$2"; then
 			__git_create_title="$1"
 			__git_create_branch="$(__to_valid_branch "$1")" || return $?
