@@ -488,9 +488,9 @@ marimo_toml() {
 }
 
 # neovim
-cd_plugins() {
+cdplugins() {
 	if [ $# -ne 0 ]; then
-		echo_date "'cd_plugins' accepts no arguments; got $#" && return 1
+		echo_date "'cdplugins' accepts no arguments; got $#" && return 1
 	fi
 	cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}/nvim/lua/plugins" || return $?
 }
@@ -739,6 +739,14 @@ ssh_tunnel_home() {
 		"${SSH_HOME_USER}@${SSH_HOME_HOST}"
 }
 
+# starship
+starship_toml() {
+	if [ $# -ne 0 ]; then
+		echo_date "'starship_toml' accepts no arguments; got $#" && return 1
+	fi
+	${EDITOR} "${HOME}"/dotfiles/starship/starship.toml
+}
+
 # tailscale
 if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1; then
 	ts_status() {
@@ -921,7 +929,7 @@ tmux_conf_local() {
 	if [ $# -ne 0 ]; then
 		echo_date "'tmux_conf_local' accepts no arguments; got $#" && return 1
 	fi
-	${EDITOR} "${HOME}"/.config/tmux/tmux.conf.local
+	${EDITOR} "${HOME}"/tmux/tmux.conf.local
 }
 
 # tsunami
