@@ -350,14 +350,14 @@ if command -v git >/dev/null 2>&1; then
 	}
 	gcbt() {
 		if [ $# -eq 0 ]; then
-			__branch="$(__select_remote_branch)"
+			__gcbt_branch="$(__select_remote_branch)"
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__gcbt_branch="$1"
 		else
 			echo_date "'gcbt' accepts [0..1] arguments; got $#" && return 1
 		fi
 		if __is_current_branch_master; then
-			gf && git checkout -b "${__branch}" --track='direct'
+			gf && git checkout -b "${__gcbt_branch}" --track='direct'
 		else
 			gco master
 		fi
@@ -393,9 +393,9 @@ if command -v git >/dev/null 2>&1; then
 			git checkout -- .
 		else
 			if __is_valid_ref "$1"; then
-				__branch="$1"
+				__gcof_branch="$1"
 				shift
-				git checkout "${__branch}" -- "$@"
+				git checkout "${__gcof_branch}" -- "$@"
 			else
 				git checkout -- "$@"
 			fi
@@ -915,26 +915,26 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if ! __gh_exists; then
 			echo_date "'__gh_merge' cannot find an open PR for '$(current_branch)'" && return 1
 		fi
-		__start="$(date +%s)"
+		__gh_merge_start="$(date +%s)"
 		if __is_github; then
 			gh pr merge --auto --delete-branch --squash || return $?
 			while __gh_pr_merging; do
-				__elapsed="$(($(date +%s) - __start))"
-				echo_date "'$(current_branch)' is still merging... (${__elapsed}s)"
+				__gh_merge_elapsed="$(($(date +%s) - __gh_merge_start))"
+				echo_date "'$(current_branch)' is still merging... (${__gh_merge_elapsed}s)"
 				sleep 1
 			done
 		elif __is_gitlab; then
-			__status="$(__glab_mr_merge_status)"
-			if [ "${__status}" = 'conflict' ] ||
-				[ "${__status}" = 'need_rebase' ] ||
-				[ "${__status}" = 'not open' ]; then
-				echo_date "'$(current_branch)' cannot be merged; got ${__status}" && return 1
+			__gh_merge_status="$(__glab_mr_merge_status)"
+			if [ "${__gh_merge_status}" = 'conflict' ] ||
+				[ "${__gh_merge_status}" = 'need_rebase' ] ||
+				[ "${__gh_merge_status}" = 'not open' ]; then
+				echo_date "'$(current_branch)' cannot be merged; got ${__gh_merge_status}" && return 1
 			fi
 			while true; do
 				glab mr merge --remove-source-branch --squash --yes >/dev/null 2>&1 || true
 				if __gh_pr_merging; then
-					__elapsed="$(($(date +%s) - __start))"
-					echo_date "'$(current_branch)' is still merging... ('$(__glab_mr_merge_status)', ${__elapsed}s)"
+					__gh_merge_elapsed="$(($(date +%s) - __gh_merge_start))"
+					echo_date "'$(current_branch)' is still merging... ('$(__glab_mr_merge_status)', ${__gh_merge_elapsed}s)"
 					sleep 1
 				else
 					break
