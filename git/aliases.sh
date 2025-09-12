@@ -521,12 +521,12 @@ if command -v git >/dev/null 2>&1; then
 	}
 	__git_commit_until() {
 		[ $# -le 1 ] && echo_date "'__git_commit_until' accepts [2..) arguments; got $#" && return 1
-		# $1 = message
-		# $2 = no-verify
+		__git_commit_until_msg="$1"
+		__git_commit_until_nv="$2"
 		shift 2
 		for __git_commit_until_i in $(seq 0 4); do
 			ga "$@" || return $?
-			if __git_commit "$1" "$2"; then
+			if __git_commit "${__git_commit_until_msg}" "${__git_commit_until_nv}"; then
 				return 0
 			fi
 		done
