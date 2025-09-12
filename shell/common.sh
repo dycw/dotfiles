@@ -488,9 +488,9 @@ marimo_toml() {
 }
 
 # neovim
-cdplugins() {
+cd_plugins() {
 	if [ $# -ne 0 ]; then
-		echo_date "'cdplugins' accepts no arguments; got $#" && return 1
+		echo_date "'cd_plugins' accepts no arguments; got $#" && return 1
 	fi
 	cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}/nvim/lua/plugins" || return $?
 }
