@@ -486,8 +486,8 @@ if command -v git >/dev/null 2>&1; then
 		elif __is_current_branch_master; then
 			echo_date "'gbr' cannot be run on 'master'" && return 1
 		else
-			__branch="$(current_branch)" || return 1
-			gcof && gcm && gcb "${__branch}"
+			__gbr_branch="$(current_branch)" || return 1
+			gcof && gcm && gcb "${__gbr_branch}"
 		fi
 	}
 	# cherry-pick
@@ -521,12 +521,12 @@ if command -v git >/dev/null 2>&1; then
 	}
 	__git_commit_until() {
 		[ $# -le 1 ] && echo_date "'__git_commit_until' accepts [2..) arguments; got $#" && return 1
-		__git_commit_until_msg="$1"
-		__git_commit_until_nv="$2"
+		# $1 = message
+		# $2 = no-verify
 		shift 2
 		for __git_commit_until_i in $(seq 0 4); do
 			ga "$@" || return $?
-			if __git_commit "${__git_commit_until_msg}" "${__git_commit_until_nv}"; then
+			if __git_commit "$1" "$2"; then
 				return 0
 			fi
 		done
@@ -636,13 +636,13 @@ if command -v git >/dev/null 2>&1; then
 	# rebase
 	grb() {
 		if [ $# -eq 0 ]; then
-			__branch='origin/master'
+			__grb_branch='origin/master'
 		elif [ $# -eq 1 ]; then
-			__branch="$1"
+			__grb_branch="$1"
 		else
 			echo_date "'grb' accepts [0..1] arguments; got $#" && return 1
 		fi
-		gf && git rebase --strategy=recursive --strategy-option=theirs "${__branch}"
+		gf && git rebase --strategy=recursive --strategy-option=theirs "${__grb_branch}"
 	}
 	grba() {
 		[ $# -ne 0 ] && echo_date "'grba' accepts no arguments; got $#" && return 1
@@ -805,22 +805,22 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 	}
 	ghiv() {
 		if [ $# -eq 0 ]; then
-			__branch="$(current_branch)" || return $?
-			__num="${__branch%%-*}"
-			__msg="'ghiv' cannot be run on a branch without an issue number"
+			__ghiv_branch="$(current_branch)" || return $?
+			__ghiv_num="${__ghiv_branch%%-*}"
+			__ghiv_msg="'ghiv' cannot be run on a branch without an issue number"
 		elif [ $# -eq 1 ]; then
-			__num="$1"
-			__msg="'ghiv' issue number must be an integer; got '$1'"
+			__ghiv_num="$1"
+			__ghiv_msg="'ghiv' issue number must be an integer; got '$1'"
 		else
 			echo_date "'ghiv' accepts [0..1] arguments; got $#" && return 1
 		fi
-		if ! [ "${__num}" -eq "${__num}" ] 2>/dev/null; then
-			echo_date "${__num}" && return 1
+		if ! [ "${__ghiv_num}" -eq "${__ghiv_num}" ] 2>/dev/null; then
+			echo_date "${__ghiv_num}" && return 1
 		fi
 		if __is_github; then
-			gh issue view "${__num}" --web
+			gh issue view "${__ghiv_num}" --web
 		elif __is_gitlab; then
-			glab issue view "${__num}" --web
+			glab issue view "${__ghiv_num}" --web
 		else
 			echo_date "'ghiv' impossible case" && return 1
 		fi
@@ -888,7 +888,8 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 	__gh_exists() {
 		[ $# -ne 0 ] && echo_date "'__gh_exists' accepts no arguments; got $#" && return 1
 		if __is_github; then
-			__gh_exists_num="$(gh pr list --json number --jq '. | length')"
+			__gh_exists_branch=$(current_branch)
+			__gh_exists_num="$(gh pr list --head="${__gh_exists_branch}" --json number --jq '. | length')"
 			if [ "${__gh_exists_num}" -eq 1 ]; then
 				true
 			else
@@ -914,26 +915,26 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		if ! __gh_exists; then
 			echo_date "'__gh_merge' cannot find an open PR for '$(current_branch)'" && return 1
 		fi
-		__gh_merge_start="$(date +%s)"
+		__start="$(date +%s)"
 		if __is_github; then
 			gh pr merge --auto --delete-branch --squash || return $?
 			while __gh_pr_merging; do
-				__gh_elapsed="$(($(date +%s) - __gh_merge_start))"
-				echo_date "'$(current_branch)' is still merging... (${__gh_elapsed}s)"
+				__elapsed="$(($(date +%s) - __start))"
+				echo_date "'$(current_branch)' is still merging... (${__elapsed}s)"
 				sleep 1
 			done
 		elif __is_gitlab; then
-			__gh_status="$(__glab_mr_merge_status)"
-			if [ "${__gh_status}" = 'conflict' ] ||
-				[ "${__gh_status}" = 'need_rebase' ] ||
-				[ "${__gh_status}" = 'not open' ]; then
-				echo_date "'$(current_branch)' cannot be merged; got ${__gh_status}" && return 1
+			__status="$(__glab_mr_merge_status)"
+			if [ "${__status}" = 'conflict' ] ||
+				[ "${__status}" = 'need_rebase' ] ||
+				[ "${__status}" = 'not open' ]; then
+				echo_date "'$(current_branch)' cannot be merged; got ${__status}" && return 1
 			fi
 			while true; do
 				glab mr merge --remove-source-branch --squash --yes >/dev/null 2>&1 || true
 				if __gh_pr_merging; then
-					__gh_elapsed="$(($(date +%s) - __gh_merge_start))"
-					echo_date "'$(current_branch)' is still merging... ('$(__glab_mr_merge_status)', ${__gh_elapsed}s)"
+					__elapsed="$(($(date +%s) - __start))"
+					echo_date "'$(current_branch)' is still merging... ('$(__glab_mr_merge_status)', ${__elapsed}s)"
 					sleep 1
 				else
 					break
@@ -945,13 +946,13 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		__git_checkout_master "$1"
 	}
 	__gh_pr_merging() {
-		__branch="$(current_branch)" || return 1
+		__gh_pr_merging_branch="$(current_branch)" || return 1
 		if __is_github; then
 			if [ "$(gh pr view --json state 2>/dev/null | jq -r '.state')" != "OPEN" ]; then
 				return 1
 			fi
-			__repo=$(gh repo view --json nameWithOwner -q .nameWithOwner)
-			if gh api "repos/${__repo}/branches/${__branch}" >/dev/null 2>&1; then
+			__gh_pr_merging_repo=$(gh repo view --json nameWithOwner -q .nameWithOwner)
+			if gh api "repos/${__gh_pr_merging_repo}/branches/${__gh_pr_merging_branch}" >/dev/null 2>&1; then
 				return 0
 			fi
 			return 1
@@ -960,7 +961,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			if [ "$(__glab_mr_state)" != "opened" ]; then
 				return 1
 			fi
-			if glab api "projects/$(__glab_mr_pid)/repository/branches/${__branch}" >/dev/null 2>&1; then
+			if glab api "projects/$(__glab_mr_pid)/repository/branches/${__gh_pr_merging_branch}" >/dev/null 2>&1; then
 				return 0
 			fi
 			return 1
@@ -1017,36 +1018,36 @@ fi
 if command -v glab >/dev/null 2>&1; then
 	__glab_mr_json() {
 		[ $# -ne 0 ] && echo_date "'__glab_mr_json' accepts no arguments; got $#" && return 1
-		__branch="$(current_branch)" || return 1
-		__json=$(glab mr list --output=json --source-branch="${__branch}" 2>/dev/null) || return 1
-		__num=$(printf "%s" "${__json}" | jq 'length') || return 1
-		if [ "${__num}" -eq 0 ]; then
-			echo_date "'__glab_mr_json' expects an MR for '${__branch}'; got none" && return 1
-		elif [ "${__num}" -eq 1 ]; then
-			printf "%s" "${__json}" | jq '.[0]' | jq
+		__glab_mr_json_branch="$(current_branch)" || return 1
+		__glab_mr_json_json=$(glab mr list --output=json --source-branch="${__glab_mr_json_branch}" 2>/dev/null) || return 1
+		__glab_mr_json_num=$(printf "%s" "${__glab_mr_json_json}" | jq 'length') || return 1
+		if [ "${__glab_mr_json_num}" -eq 0 ]; then
+			echo_date "'__glab_mr_json' expects an MR for '${__glab_mr_json_branch}'; got none" && return 1
+		elif [ "${__glab_mr_json_num}" -eq 1 ]; then
+			printf "%s" "${__glab_mr_json_json}" | jq '.[0]' | jq
 		else
-			echo_date "'__glab_mr_json' expects a unique MR for '${__branch}'; got ${__num}" && return 1
+			echo_date "'__glab_mr_json' expects a unique MR for '${__glab_mr_json_branch}'; got ${__glab_mr_json_num}" && return 1
 		fi
 	}
 	__glab_mr_num() {
 		[ $# -ne 0 ] && echo_date "'__glab_mr_num' accepts no arguments; got $#" && return 1
-		__json="$(__glab_mr_json)" || return 1
-		printf "%s\n" "${__json}" | jq -r '.iid'
+		__glab_mr_num_json="$(__glab_mr_json)" || return 1
+		printf "%s\n" "${__glab_mr_num_json}" | jq -r '.iid'
 	}
 	__glab_mr_pid() {
 		[ $# -ne 0 ] && echo_date "'__glab_mr_pid' accepts no arguments; got $#" && return 1
-		__json="$(__glab_mr_json)" || return 1
-		printf "%s\n" "${__json}" | jq -r '.target_project_id'
+		__glab_mr_pid_json="$(__glab_mr_json)" || return 1
+		printf "%s\n" "${__glab_mr_pid_json}" | jq -r '.target_project_id'
 	}
 	__glab_mr_merge_status() {
 		[ $# -ne 0 ] && echo_date "'__glab_mr_merge_status' accepts no arguments; got $#" && return 1
-		__json="$(__glab_mr_json)" || return 1
-		printf "%s\n" "${__json}" | jq -r '.detailed_merge_status'
+		__glab_mr_merge_status_json="$(__glab_mr_json)" || return 1
+		printf "%s\n" "${__glab_mr_merge_status_json}" | jq -r '.detailed_merge_status'
 	}
 	__glab_mr_state() {
 		[ $# -ne 0 ] && echo_date "'__glab_mr_state' accepts no arguments; got $#" && return 1
-		__json="$(__glab_mr_json)" || return 1
-		printf "%s\n" "${__json}" | jq -r '.state'
+		__glab_mr_state_json="$(__glab_mr_json)" || return 1
+		printf "%s\n" "${__glab_mr_state_json}" | jq -r '.state'
 	}
 fi
 
