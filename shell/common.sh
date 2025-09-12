@@ -527,24 +527,29 @@ if command -v pre-commit >/dev/null 2>&1; then
 		fi
 		pre-commit run --all-files
 	}
+	pcau() {
+		if [ $# -ne 0 ]; then
+			echo_date "'pcau' accepts no arguments; got $#" && return 1
+		fi
+		pre-commit autoupdate
+	}
 	pcav() {
 		if [ $# -ne 0 ]; then
 			echo_date "'pcav' accepts no arguments; got $#" && return 1
 		fi
 		pre-commit run --all-files --verbose
 	}
-	pcau() {
-
-		if [ $# -ne 0 ]; then
-			echo_date "'pcau' accepts no arguments; got $#" && return 1
-		fi
-		pre-commit autoupdate
-	}
 	pci() {
 		if [ $# -ne 0 ]; then
 			echo_date "'pci' accepts no arguments; got $#" && return 1
 		fi
 		pre-commit install
+	}
+	pcui() {
+		if [ $# -ne 0 ]; then
+			echo_date "'pcui' accepts no arguments; got $#" && return 1
+		fi
+		pre-commit uninstall
 	}
 fi
 pre_commit_config() {
