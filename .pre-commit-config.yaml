@@ -27,6 +27,11 @@ repos:
     hooks:
       - id: pretty-format-toml
         args: [--autofix, --trailing-commas]
+  - repo: https://github.com/pamoller/xmlformatter
+    rev: v0.2.8
+    hooks:
+      - id: xml-formatter
+        types: [plist]
   - repo: local
     hooks:
       - id: prettier
