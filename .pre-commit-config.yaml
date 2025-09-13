@@ -38,7 +38,7 @@ repos:
         name: prettier
         entry: prettier
         language: system
-        types_or: [json]
+        types_or: [json, xml]
         args: [--write, --log-level=silent]
   # linters
   - repo: https://github.com/shellcheck-py/shellcheck-py
