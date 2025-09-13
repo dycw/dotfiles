@@ -9,7 +9,8 @@
       <string>/usr/local/bin/docker</string>
       <string>system</string>
       <string>prune</string>
-      <string>-f</string>
+      <string>--all</string>
+      <string>--force</string>
     </array>
     <key>StartInterval</key>
     <integer>3600</integer>

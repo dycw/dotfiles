@@ -33,6 +33,7 @@ repos:
       - id: xml-formatter
         types: []
         types_or: [plist, xml]
+        args: [--eof-newline]
   - repo: local
     hooks:
       - id: prettier
