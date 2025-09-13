@@ -6,6 +6,9 @@
     <string>com.user.dockerprune</string>
     <key>ProgramArguments</key>
     <array>
+
+
+
       <string>/usr/local/bin/docker</string>
       <string>system</string>
       <string>prune</string>

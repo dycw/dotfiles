@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
+  <dict>
     <key>Label</key>
     <string>com.local.redis-stack-server</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/opt/homebrew/Caskroom/redis-stack-server/7.4.0-v0/bin/redis-stack-server</string>
+      <string>/opt/homebrew/Caskroom/redis-stack-server/7.4.0-v0/bin/redis-stack-server</string>
     </array>
     <key>RunAtLoad</key>
-    <true/>
+    <true></true>
     <key>KeepAlive</key>
-    <true/>
+    <true></true>
     <key>StandardOutPath</key>
     <string>/tmp/redis-stack-server.out</string>
     <key>StandardErrorPath</key>
     <string>/tmp/redis-stack-server.err</string>
-</dict>
+  </dict>
 </plist>
