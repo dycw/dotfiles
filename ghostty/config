@@ -1,7 +1,3 @@
 font-family = Monaco
 shell-integration-features = sudo
 theme = tokyonight
-
-keybind = ctrl+enter=
-keybind = cmd+enter=
-keybind = cmd+ctrl+f=

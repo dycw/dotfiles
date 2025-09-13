@@ -51,11 +51,11 @@ return {
                         })
                     end,
                 },
-                strategies = {
-                    chat = strategy,
-                    inline = strategy,
-                    cmd = strategy,
-                },
+            },
+            strategies = {
+                chat = strategy,
+                inline = strategy,
+                cmd = strategy,
             },
         })
     end,
