@@ -803,6 +803,16 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 	fi
 fi
 
+# touch
+if command -v touch >/dev/null 2>&1; then
+	touch() {
+		for __touch_file in "$@"; do
+			mkdir -p "$(dirname "${__touch_file}")"
+			command touch "${__touch_file}"
+		done
+	}
+fi
+
 # tmux
 if command -v tmux >/dev/null 2>&1; then
 	tmkw() {
