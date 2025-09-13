@@ -27,18 +27,18 @@ repos:
     hooks:
       - id: pretty-format-toml
         args: [--autofix, --trailing-commas]
-  # - repo: https://github.com/pamoller/xmlformatter
-  #   rev: v0.2.8
-  #   hooks:
-  #     - id: xml-formatter
-  #       types_or: [plist, xml]
+  - repo: https://github.com/pamoller/xmlformatter
+    rev: v0.2.8
+    hooks:
+      - id: xml-formatter
+        types_or: [plist, xml]
   - repo: local
     hooks:
       - id: prettier
         name: prettier
         entry: prettier
         language: system
-        types_or: [json, xml]
+        types_or: [json]
         args: [--write, --log-level=silent]
   # linters
   - repo: https://github.com/shellcheck-py/shellcheck-py
