@@ -4,7 +4,10 @@
 <plist version="1.0">
   <dict>
         <key>Label</key>
-    <string   >com.user.dockerprune</string>
+
+
+
+    <string>com.user.dockerprune</string>
     <key>ProgramArguments</key>
     <array>
 
