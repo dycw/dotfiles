@@ -422,6 +422,7 @@ ls.add_snippets("python", {
 
     -- re
     s("im-re", { t({ "import re", "" }) }),
+    s("re-dotall", { t({ "from re import DOTALL", "" }) }),
     s("re-escape", { t({ "from re import escape", "" }) }),
     s("re-findall", { t({ "from re import findall", "" }) }),
     s("re-ignorecase", { t({ "from re import IGNORECASE", "" }) }),
