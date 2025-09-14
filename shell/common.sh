@@ -44,43 +44,39 @@ fi
 
 # ancestor
 ancestor() {
-	if [ $# -ne 2 ]; then
-		echo_date "'ancestor' accepts 2 arguments; got $#" && return 1
-	fi
-	__type="$1"
-	__name="$2"
-	__dir="$(pwd)"
-	while [ "${__dir}" != "/" ]; do
-		__candidate="${__dir}"/"${__name}"
-		case "${__type}" in
+	[ $# -ne 2 ] && echo_date "'ancestor' accepts 2 arguments; got $#" && return 1
+	# $1 = type
+	# $2 = name
+	__ancestor_dir="$(pwd)"
+	while [ "${__ancestor_dir}" != "/" ]; do
+		__ancestor_file="${__ancestor_dir}"/"$2"
+		case "$1" in
 		file)
-			if [ -f "${__candidate}" ]; then
-				echo "${__dir}" && return 0
+			if [ -f "${__ancestor_file}" ]; then
+				echo "${__ancestor_dir}" && return 0
 			fi
 			;;
 		directory)
-			if [ -d "${__candidate}" ]; then
-				echo "${__dir}" && return 0
+			if [ -d "${__ancestor_file}" ]; then
+				echo "${__ancestor_dir}" && return 0
 			fi
 			;;
-		*) echo_date "'ancestor' accepts 'file' or 'directory' for the first argument; got ${__type}" && return 1 ;;
+		*) echo_date "'ancestor' accepts 'file' or 'directory' for the first argument; got '$1'" && return 1 ;;
 		esac
-		__dir="$(dirname "${__dir}")"
+		__ancestor_dir="$(dirname "${__ancestor_dir}")"
 	done
-	echo_date "'ancestor' did not find an ancestor containing a ${__type} named '${__name}'" && return 1
+	echo_date "'ancestor' did not find an ancestor containing a $1 named '$2'" && return 1
 }
 
 ancestor_edit() {
-	if [ $# -ne 1 ]; then
-		echo_date "'ancestor_edit' accepts 1 arguments; got $#" && return 1
+	[ $# -ne 1 ] && echo_date "'ancestor_edit' accepts 1 arguments; got $#" && return 1
+	# $1 = name
+	__ancestor_edit_file=$(ancestor file "$1" 2>/dev/null)
+	__ancestor_edit_code=$?
+	if [ "${__ancestor_edit_code}" -ne 0 ]; then
+		echo_date "'ancestor_edit' did not find an ancestor containing a file named '$1'" && return 1
 	fi
-	__name="$1"
-	__candidate=$(ancestor file "${__name}" 2>/dev/null)
-	__code=$?
-	if [ "${__code}" -ne 0 ]; then
-		echo_date "'ancestor_edit' did not find an ancestor containing a file named '${__name}'" && return 1
-	fi
-	"${EDITOR}" "${__candidate}"/"${__name}"
+	"${EDITOR}" "${__ancestor_edit_file}"/"$1"
 }
 
 # bacon
@@ -103,21 +99,17 @@ if command -v bat >/dev/null 2>&1; then
 	cat() { bat "$@"; }
 	catp() { bat --style=plain "$@"; }
 	tf() {
-		if [ $# -ne 1 ]; then
-			echo_date "'tf' accepts 1 argument; got $#" && return 1
-		fi
+		[ $# -ne 1 ] && echo_date "'tf' accepts 1 argument; got $#" && return 1
 		__tf_base "$1" --language=log
 	}
 	tfp() {
-		if [ $# -ne 1 ]; then
-			echo_date "'tfp' accepts 1 argument; got $#" && return 1
-		fi
+		[ $# -ne 1 ] && echo_date "'tfp' accepts 1 argument; got $#" && return 1
 		__tf_base "$1"
 	}
 	__tf_base() {
-		__file="$1"
+		__tf_base_file="$1"
 		shift
-		tail -F --lines=100 "$__file" | bat --paging=never --style=plain "$@"
+		tail -F --lines=100 "${__tf_base_file}" | bat --paging=never --style=plain "$@"
 	}
 fi
 
@@ -126,36 +118,26 @@ if command -v btm >/dev/null 2>&1; then
 	htop() { btm "$@"; }
 fi
 bottom_toml() {
-	if [ $# -ne 0 ]; then
-		echo_date "'bottom_toml' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'bottom_toml' accepts no arguments; got $#" && return 1
 	${EDITOR} "${HOME}"/dotfiles/bottom/bottom.toml
 }
 
 # bump-my-version
 if command -v bump-my-version >/dev/null 2>&1; then
 	bump_patch() {
-		if [ $# -ne 0 ]; then
-			echo_date "'bump_patch' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'bump_patch' accepts no arguments; got $#" && return 1
 		bump-my-version bump patch
 	}
 	bump_minor() {
-		if [ $# -ne 0 ]; then
-			echo_date "'bump_minor' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'bump_minor' accepts no arguments; got $#" && return 1
 		bump-my-version bump minor
 	}
 	bump_major() {
-		if [ $# -ne 0 ]; then
-			echo_date "'bump_major' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'bump_major' accepts no arguments; got $#" && return 1
 		bump-my-version bump major
 	}
 	bump_set() {
-		if [ $# -ne 1 ]; then
-			echo_date "'bump_set' accepts 1 argument; got $#" && return 1
-		fi
+		[ $# -ne 1 ] && echo_date "'bump_set' accepts 1 argument; got $#" && return 1
 		bump-my-version replace --new-version "$1"
 	}
 fi
@@ -165,114 +147,88 @@ alias ~='cd "${HOME}"'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-cdcache() {
-	if [ $# -ne 0 ]; then
-		echo_date "'cdcache' accepts no arguments; got $#" && return 1
-	fi
+cd_cache() {
+	[ $# -ne 0 ] && echo_date "'cd_cache' accepts no arguments; got $#" && return 1
 	cd "${XDG_CACHE_HOME:-"${HOME}/.cache"}" || return $?
 }
-cdconfig() {
-	if [ $# -ne 0 ]; then
-		echo_date "'cdconfig' accepts no arguments; got $#" && return 1
-	fi
+cd_config() {
+	[ $# -ne 0 ] && echo_date "'cd_config' accepts no arguments; got $#" && return 1
 	cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}" || return $?
 }
 cddb() {
-	if [ $# -ne 0 ]; then
-		echo_date "'cddb' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'cddb' accepts no arguments; got $#" && return 1
 	cd "${HOME}/Dropbox" || return $?
 }
 cddbt() {
-	if [ $# -ne 0 ]; then
-		echo_date "'cddbt' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'cddbt' accepts no arguments; got $#" && return 1
 	cd "${HOME}/Dropbox/Temporary" || return $?
 }
 cddf() {
-	if [ $# -ne 0 ]; then
-		echo_date "'cddl' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'cddf' accepts no arguments; got $#" && return 1
 	cd "${HOME}/dotfiles" || return $?
 }
 cddl() {
-	if [ $# -ne 0 ]; then
-		echo_date "'cddl' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'cddl' accepts no arguments; got $#" && return 1
 	cd "${HOME}/Downloads" || return $?
 }
 cdh() {
-	if [ $# -ne 0 ]; then
-		echo_date "'cdh' accepts no arguments; got $#" && return 1
-	fi
-	__pwd="$(pwd)"
+	[ $# -ne 0 ] && echo_date "'cdh' accepts no arguments; got $#" && return 1
+	__cdh_dir="$(pwd)"
 	cd / || return $?
-	cd "${__pwd}" || return $?
+	cd "${__cdh_dir}" || return $?
 }
 cdw() {
-	if [ $# -ne 0 ]; then
-		echo_date "'cdw' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'cdw' accepts no arguments; got $#" && return 1
 	cd "${HOME}/work" || return $?
 }
 cdwg() {
-	if [ $# -ne 0 ]; then
-		echo_date "'cdwg' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'cdwg' accepts no arguments; got $#" && return 1
 	cd "${HOME}/work-gitlab" || return $?
 }
 
 # chmod
 chmod_files() {
-	if [ $# -ne 1 ]; then
-		echo_date "'chmod_files' accepts 1 argument; got $#" && return 1
-	fi
+	[ $# -ne 1 ] && echo_date "'chmod_files' accepts 1 argument; got $#" && return 1
 	find . -type f -exec chmod "$1" {} \;
 }
 chmod_dirs() {
-	if [ $# -ne 1 ]; then
-		echo_date "'chmod_dirs' accepts 1 argument; got $#" && return 1
-	fi
+	[ $# -ne 1 ] && echo_date "'chmod_dirs' accepts 1 argument; got $#" && return 1
 	find . -type d -exec chmod "$1" {} \;
 }
 chown_files() {
-	if [ $# -ne 1 ]; then
-		echo_date "'chown_files' accepts 1 argument; got $#" && return 1
-	fi
+	[ $# -ne 1 ] && echo_date "'chown_files' accepts 1 argument; got $#" && return 1
 	find . -type f -exec chown "$1" {} \;
 }
 chown_dirs() {
-	if [ $# -ne 1 ]; then
-		echo_date "'chown_dirs' accepts 1 argument; got $#" && return 1
-	fi
+	[ $# -ne 1 ] && echo_date "'chown_dirs' accepts 1 argument; got $#" && return 1
 	find . -type d -exec chown "$1" {} \;
 }
 
 # coverage
 open_cov() {
-	if [ $# -ne 0 ]; then
-		echo_date "'open_cov' accepts 1 argument; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'open_cov' accepts 1 argument; got $#" && return 1
 	open .coverage/html/index.html
+}
+
+# cp
+cpr() {
+	[ $# -le 2 ] && echo_date "'cpr' accepts [2..) arguments; got $#" && return 1
+	cp -r "$@"
 }
 
 # curl
 if command -v curl >/dev/null 2>&1; then
 	curl_sh() {
-		if [ $# -eq 0 ]; then
-			echo_date "'curl_sh' accepts [1..) arguments; got $#" && return 1
-		fi
-		__url="$1"
+		[ $# -eq 0 ] && echo_date "'curl_sh' accepts [1..) arguments; got $#" && return 1
+		__curl_sh_url="$1"
 		shift
-		curl -fsSL "${__url}" | sh -s -- "$@"
+		curl -fsSL "${__curl_sh_url}" | sh -s -- "$@"
 	}
 fi
 
 # debug
 set_debug() {
-	if [ $# -ne 0 ]; then
-		echo_date "'set_debug' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'set_debug' accepts no arguments; got $#" && return 1
 	export DEBUG='1'
 }
 clear_debug() {
