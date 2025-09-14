@@ -232,17 +232,13 @@ set_debug() {
 	export DEBUG='1'
 }
 clear_debug() {
-	if [ $# -ne 0 ]; then
-		echo_date "'clear_debug' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'clear_debug' accepts no arguments; got $#" && return 1
 	unset DEBUG
 }
 
 # dns
 refresh_dns() {
-	if [ $# -ne 0 ]; then
-		echo_date "'refresh_dns' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'refresh_dns' accepts no arguments; got $#" && return 1
 	sudo dscacheutil -flushcache
 	sudo killall -HUP mDNSResponder
 }
@@ -250,9 +246,7 @@ refresh_dns() {
 # direnv
 if command -v direnv >/dev/null 2>&1; then
 	dea() {
-		if [ $# -ne 0 ]; then
-			echo_date "'dea' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'dea' accepts no arguments; got $#" && return 1
 		direnv allow
 	}
 fi
@@ -260,9 +254,7 @@ fi
 # docker
 if command -v docker >/dev/null 2>&1; then
 	dps() {
-		if [ $# -ne 0 ]; then
-			echo_date "'dps' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'dps' accepts no arguments; got $#" && return 1
 		docker ps
 	}
 fi
@@ -272,12 +264,9 @@ echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 
 # eza
 if command -v eza >/dev/null 2>&1; then
-	__eza_base() {
-		eza --all --classify=always --group-directories-first "$@"
-	}
-	__eza_long() {
-		__eza_base --git --group --header --long --time-style=long-iso "$@"
-	}
+	__eza_base() { eza --all --classify=always --group-directories-first "$@"; }
+	__eza_long() { __eza_base --git --group --header --long --time-style=long-iso "$@"; }
+
 	l() { __eza_long --git-ignore "$@"; }
 	la() { __eza_long "$@"; }
 	__eza_short() { __eza_base --across "$@"; }
@@ -304,25 +293,23 @@ if command -v fd >/dev/null 2>&1; then
 	fdf() { __fd_base 'file' "$@"; }
 	fds() { __fd_base 'symlink' "$@"; }
 	__fd_base() {
-		if [ $# -le 0 ]; then
-			echo_date "'__fd_base' accepts [1..) arguments; got $#" && return 1
-		fi
-		__type=$1
+		[ $# -eq 0 ] && echo_date "'__fd_base' accepts [1..) arguments; got $#" && return 1
+		__fd_base_type=$1
 		shift
-		fd --hidden --type="$__type" "$@"
+		fd --hidden --type="${__fd_base_type}" "$@"
 	}
 fi
 
 # find
 clean_dirs() {
 	if [ $# -eq 0 ]; then
-		__dir="$(pwd)"
+		__clean_dirs_dir="$(pwd)"
 	elif [ $# -eq 1 ]; then
-		__dir="$1"
+		__clean_dirs_dir="$1"
 	else
-		echo_date "'uvpyc' accepts 1 argument; got $#" && return 1
+		echo_date "'clean_dirs' accepts [0..1] arguments; got $#" && return 1
 	fi
-	find "${__dir}" -type d -delete
+	find "${__clean_dirs_dir}" -type d -delete
 }
 
 # fzf
@@ -353,9 +340,7 @@ fi
 # git
 if command -v git >/dev/null 2>&1; then
 	cdr() {
-		if [ $# -ne 0 ]; then
-			echo_date "'cdr' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'cdr' accepts no arguments; got $#" && return 1
 		cd "$(repo_root)" || return $?
 	}
 fi
@@ -364,48 +349,34 @@ if [ -f "$__file" ]; then
 	. "$__file"
 fi
 git_aliases() {
-	if [ $# -ne 0 ]; then
-		echo_date "'git_aliases' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'git_aliases' accepts no arguments; got $#" && return 1
 	${EDITOR} "${HOME}"/dotfiles/git/aliases.sh
 }
 git_ignore() {
-	if [ $# -ne 0 ]; then
-		echo_date "'git_ignore' accepts no arguments; got $#" && return 1
-	fi
-	${EDITOR} "$(repo_root)"/.gitignore
+	[ $# -ne 0 ] && echo_date "'git_ignore' accepts no arguments; got $#" && return 1
+	ancestor_edit '.gitignore'
 }
 
 # hypothesis
 hypothesis_ci() {
-	if [ $# -ne 0 ]; then
-		echo_date "'hypothesis_ci' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'hypothesis_ci' accepts no arguments; got $#" && return 1
 	export HYPOTHESIS_PROFILE='ci'
 }
 hypothesis_debug() {
-	if [ $# -ne 0 ]; then
-		echo_date "'hypothesis_debug' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'hypothesis_debug' accepts no arguments; got $#" && return 1
 	export HYPOTHESIS_PROFILE='debug'
 }
 hypothesis_default() {
-	if [ $# -ne 0 ]; then
-		echo_date "'hypothesis_default' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'hypothesis_default' accepts no arguments; got $#" && return 1
 	export HYPOTHESIS_PROFILE='default'
 }
 hypothesis_dev() {
-	if [ $# -ne 0 ]; then
-		echo_date "'hypothesis_dev' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'hypothesis_dev' accepts no arguments; got $#" && return 1
 	export HYPOTHESIS_PROFILE='dev'
 	hypothesis_no_shrink
 }
 hypothesis_no_shrink() {
-	if [ $# -ne 0 ]; then
-		echo_date "'hypothesis_no_shrink' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'hypothesis_no_shrink' accepts no arguments; got $#" && return 1
 	export HYPOTHESIS_NO_SHRINK='1'
 }
 
@@ -415,18 +386,14 @@ set editing-mode vi
 
 # ipython
 ipython_startup() {
-	if [ $# -ne 0 ]; then
-		echo_date "'ipython_startup' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'ipython_startup' accepts no arguments; got $#" && return 1
 	${EDITOR} "${HOME}"/dotfiles/ipython/startup.py
 }
 
 # justfile
 justfile() {
-	if [ $# -ne 0 ]; then
-		echo_date "'justfile' accepts no arguments; got $#" && return 1
-	fi
-	ancestor_edit justfile
+	[ $# -ne 0 ] && echo_date "'justfile' accepts no arguments; got $#" && return 1
+	ancestor_edit 'justfile'
 }
 
 # local
@@ -437,29 +404,21 @@ fi
 
 # marimo
 marimo_toml() {
-	if [ $# -ne 0 ]; then
-		echo_date "'marimo_toml' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'marimo_toml' accepts no arguments; got $#" && return 1
 	${EDITOR} "${HOME}"/dotfiles/marimo/marimo.toml
 }
 
 # neovim
-cdplugins() {
-	if [ $# -ne 0 ]; then
-		echo_date "'cdplugins' accepts no arguments; got $#" && return 1
-	fi
+cd_plugins() {
+	[ $# -ne 0 ] && echo_date "'cd_plugins' accepts no arguments; got $#" && return 1
 	cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}/nvim/lua/plugins" || return $?
 }
 lua_snippets() {
-	if [ $# -ne 0 ]; then
-		echo_date "'lua_snippets' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'lua_snippets' accepts no arguments; got $#" && return 1
 	${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua
 }
 plugins_dial() {
-	if [ $# -ne 0 ]; then
-		echo_date "'plugins_dial' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'plugins_dial' accepts no arguments; got $#" && return 1
 	${EDITOR} "${HOME}"/dotfiles/nvim/lua/plugins/dial.lua
 }
 if command -v nvim >/dev/null 2>&1; then
@@ -468,9 +427,7 @@ fi
 
 # path
 echo_path() {
-	if [ $# -ne 0 ]; then
-		echo_date "'echo_path' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'echo_path' accepts no arguments; got $#" && return 1
 	echo_date "\$PATH:"
 	echo "${PATH}" | tr ':' '\n' | nl
 }
@@ -478,89 +435,70 @@ echo_path() {
 # pre-commit
 if command -v pre-commit >/dev/null 2>&1; then
 	pca() {
-		if [ $# -ne 0 ]; then
-			echo_date "'pca' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'pca' accepts no arguments; got $#" && return 1
 		pre-commit run --all-files
 	}
 	pcau() {
-		if [ $# -ne 0 ]; then
-			echo_date "'pcau' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'pcau' accepts no arguments; got $#" && return 1
 		pre-commit autoupdate
 	}
 	pcav() {
-		if [ $# -ne 0 ]; then
-			echo_date "'pcav' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'pcav' accepts no arguments; got $#" && return 1
 		pre-commit run --all-files --verbose
 	}
 	pci() {
-		if [ $# -ne 0 ]; then
-			echo_date "'pci' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'pci' accepts no arguments; got $#" && return 1
 		pre-commit install
 	}
 	pcui() {
-		if [ $# -ne 0 ]; then
-			echo_date "'pcui' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'pcui' accepts no arguments; got $#" && return 1
 		pre-commit uninstall
 	}
 fi
 pre_commit_config() {
-	if [ $# -ne 0 ]; then
-		echo_date "'pre_commit_config' accepts no arguments; got $#" && return 1
-	fi
-	ancestor_edit .pre-commit-config.yaml
+	[ $# -ne 0 ] && echo_date "'pre_commit_config' accepts no arguments; got $#" && return 1
+	ancestor_edit '.pre-commit-config.yaml'
 }
 
 # ps + pgrep
 pgrepf() {
-	if [ $# -ne 1 ]; then
-		echo_date "'pgrepf' accepts 1 argument; got $#" && return 1
-	fi
-	__pids=$(pgrep -f "$1" | tr '\n' ' ')
-	if [ -z "${__pids}" ]; then
+	[ $# -ne 1 ] && echo_date "'pgrepf' accepts 1 argument; got $#" && return 1
+	__pgrepf_pids=$(pgrep -f "$1" | tr '\n' ' ')
+	if [ -z "${__pgrepf_pids}" ]; then
 		echo_date "No process matched: $1" && return 1
 	fi
 	# shellcheck disable=SC2046
-	ps -fp "${__pids}"
+	ps -fp "${__pgrepf_pids}"
 }
 if command -v fzf >/dev/null 2>&1; then
 	pgrep_kill() {
-		if [ $# -ne 1 ]; then
-			echo_date "'pgrep_kill' accepts 1 argument; got $#" && return 1
+		[ $# -ne 1 ] && echo_date "'pgrep_kill' accepts 1 argument; got $#" && return 1
+		__pgrep_kill_pids=$(pgrep -f "$1" | tr '\n' ' ')
+		if [ -z "${__pgrep_kill_pids}" ]; then
+			echo_date "No process matched '$1'" && return 0
 		fi
-		__pattern=$1
-		__pids=$(pgrep -f "$__pattern" | tr '\n' ' ')
-		if [ -z "$__pids" ]; then
-			echo_date "No process matched '$__pattern'" && return 0
-		fi
-		__results=$(ps -fp "$__pids")
-		__selected=$(
-			printf '%s\n' "$__results" |
+		__pgrep_kill_results=$(ps -fp "${__pgrep_kill_pids}")
+		__pgrep_kill_selected=$(
+			printf '%s\n' "${__pgrep_kill_results}" |
 				awk 'NR>1' |
 				fzf --multi \
 					--header-lines=0 \
-					--prompt="Kill which $__pattern process? " \
-					--preview="printf '%s\n' \"$__results\" | head -1; echo {}; " \
+					--prompt="Kill which $1 process? " \
+					--preview="printf '%s\n' \"${__pgrep_kill_results}\" | head -1; echo {}; " \
 					--preview-window=up:3:wrap
 		)
-		if [ -z "$__selected" ]; then
+		if [ -z "${__pgrep_kill_selected}" ]; then
 			echo_date "No process selected" && return 0
 		fi
 		# shellcheck disable=SC2046
-		set -- $(printf '%s\n' "$__selected" | awk '{print $2}')
+		set -- $(printf '%s\n' "${__pgrep_kill_selected}" | awk '{print $2}')
 		echo_date "Killing PIDs: $*"
 		kill -9 "$@"
 	}
 fi
 if command -v watch >/dev/null 2>&1; then
 	wpgrepf() {
-		if [ $# -ne 1 ]; then
-			echo_date "'wpgrepf' accepts 1 argument; got $#" && return 1
-		fi
+		[ $# -ne 1 ] && echo_date "'wpgrepf' accepts 1 argument; got $#" && return 1
 		watch --color --differences --interval=0.5 -- \
 			"pids=\$(pgrep -f \"$1\"); if [ -n \"\${pids}\" ]; then ps -fp \${pids}; else echo \"No process matched: $1\"; fi"
 	}
@@ -581,10 +519,8 @@ fi
 
 # python
 pyproject() {
-	if [ $# -ne 0 ]; then
-		echo_date "'pyproject' accepts no arguments; got $#" && return 1
-	fi
-	ancestor_edit pyproject.toml
+	[ $# -ne 0 ] && echo_date "'pyproject' accepts no arguments; got $#" && return 1
+	ancestor_edit 'pyproject.toml'
 }
 
 # q
@@ -592,39 +528,33 @@ start_q() { QHOME="${HOME}"/q rlwrap -r "$HOME/q/m64/q" "$@"; }
 
 # reboot/shutdown
 reboot_now() {
-	if [ $# -ne 0 ]; then
-		echo_date "'reboot_now' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'reboot_now' accepts no arguments; got $#" && return 1
 	__run_shutdown 'Reboot' 'r'
 }
 shutdown_now() {
-	if [ $# -ne 0 ]; then
-		echo_date "'shutdown_now' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'shutdown_now' accepts no arguments; got $#" && return 1
 	__run_shutdown 'Shut down' 'h'
 }
 __run_shutdown() {
-	if [ $# -ne 2 ]; then
-		echo_date "'__run_shutdown' accepts no arguments; got $#" && return 1
-	fi
-	__desc="$1"
-	__flag="$2"
-	printf "%s now? [Y/n] " "${__desc}"
-	read -r __response
-	__shutdown=$(printf "%s" "${__response}" | tr '[:upper:]' '[:lower:]')
-	if [ -z "${__shutdown}" ] || [ "${__shutdown}" = "y" ] || [ "${__shutdown}" = "yes" ]; then
-		sudo shutdown -"${__flag}" now
+	[ $# -ne 2 ] && echo_date "'__run_shutdown' accepts no arguments; got $#" && return 1
+	# $1 = desc
+	# $2 = flag
+	printf "%s now? [Y/n] " "$1"
+	read -r __run_shutdown_response
+	__run_shutdown_shutdown=$(printf "%s" "${__run_shutdown_response}" | tr '[:upper:]' '[:lower:]')
+	if [ -z "${__run_shutdown_shutdown}" ] ||
+		[ "${__run_shutdown_shutdown}" = "y" ] ||
+		[ "${__run_shutdown_shutdown}" = "yes" ]; then
+		sudo shutdown -"$1" now
 	else
-		echo_date "%s cancelled" "${__desc}"
+		echo_date "%s cancelled" "$2"
 	fi
 }
 
 # rg
 if command -v rg >/dev/null 2>&1; then
 	env_rg() {
-		if [ $# -ne 1 ]; then
-			echo_date "'env_rg' accepts 1 argument; got $#" && return 1
-		fi
+		[ $# -ne 1 ] && echo_date "'env_rg' accepts 1 argument; got $#" && return 1
 		env | rg "$1"
 	}
 	if command -v watch >/dev/null 2>&1; then
@@ -645,33 +575,19 @@ fi
 
 # rust
 cargo_toml() {
-	if [ $# -ne 0 ]; then
-		echo_date "'cargo_toml' accepts no arguments; got $#" && return 1
-	fi
-	ancestor_edit Cargo.toml
-}
-
-# secrets
-secrets_toml() {
-	if [ $# -ne 0 ]; then
-		echo_date "'secrets_toml' accepts no arguments; got $#" && return 1
-	fi
-	ancestor_edit secrets.toml
+	[ $# -ne 0 ] && echo_date "'cargo_toml' accepts no arguments; got $#" && return 1
+	ancestor_edit 'Cargo.toml'
 }
 
 # settings
 settings_toml() {
-	if [ $# -ne 0 ]; then
-		echo_date "'settings_toml' accepts no arguments; got $#" && return 1
-	fi
-	ancestor_edit settings.toml
+	[ $# -ne 0 ] && echo_date "'settings_toml' accepts no arguments; got $#" && return 1
+	ancestor_edit 'settings.toml'
 }
 
 # shell
 shell_common() {
-	if [ $# -ne 0 ]; then
-		echo_date "'shell_common' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'shell_common' accepts no arguments; got $#" && return 1
 	${EDITOR} "${HOME}"/dotfiles/shell/common.sh
 }
 
@@ -702,28 +618,22 @@ ssh_tunnel_home() {
 
 # starship
 starship_toml() {
-	if [ $# -ne 0 ]; then
-		echo_date "'starship_toml' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'starship_toml' accepts no arguments; got $#" && return 1
 	${EDITOR} "${HOME}"/dotfiles/starship/starship.toml
 }
 
 # tailscale
 if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1; then
 	ts_status() {
-		if [ $# -ne 0 ]; then
-			echo_date "'ts_status' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'ts_status' accepts no arguments; got $#" && return 1
 		tailscale status
 	}
 	if command -v tailscaled >/dev/null 2>&1; then
 		ts_up() {
-			if [ $# -ne 0 ]; then
-				echo_date "'ts_up' accepts no arguments; got $#" && return 1
-			fi
-			__file="${HOME}/tailscale-auth-key"
-			if ! [ -f "${__file}" ]; then
-				echo_date "'${__file}' does not exist" && return 1
+			[ $# -ne 0 ] && echo_date "'ts_up' accepts no arguments; got $#" && return 1
+			__ts_up_file="${HOME}/tailscale-auth-key"
+			if ! [ -f "${__ts_up_file}" ]; then
+				echo_date "'${__ts_up_file}' does not exist" && return 1
 			elif [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
 				echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
 			fi
@@ -731,14 +641,12 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			sudo tailscaled &
 			echo_date "Starting 'tailscale'..."
 			sudo tailscale up --accept-routes \
-				--auth-key="file:${__file}" \
+				--auth-key="file:${__ts_up_file}" \
 				--login-server="${TAILSCALE_LOGIN_SERVER}" \
 				--reset
 		}
 		ts_down() {
-			if [ $# -ne 0 ]; then
-				echo_date "'ts_down' accepts no arguments; got $#" && return 1
-			fi
+			[ $# -ne 0 ] && echo_date "'ts_down' accepts no arguments; got $#" && return 1
 			echo_date "Stopping 'tailscale'..."
 			sudo tailscale down
 			echo_date "Logging out of 'tailscale'..."
@@ -751,9 +659,7 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 	fi
 	if command -v watch >/dev/null 2>&1; then
 		wts_status() {
-			if [ $# -ne 0 ]; then
-				echo_date "'wts_status' accepts no arguments; got $#" && return 1
-			fi
+			[ $# -ne 0 ] && echo_date "'wts_status' accepts no arguments; got $#" && return 1
 			watch --color --differences --interval=0.5 -- tailscale status
 		}
 	fi
@@ -772,45 +678,37 @@ fi
 # tmux
 if command -v tmux >/dev/null 2>&1; then
 	tmkw() {
-		if [ $# -ne 0 ]; then
-			echo_date "'tmuxkw' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'tmkw' accepts no arguments; got $#" && return 1
 		tmux kill-window
 	}
 	tmux_attach() {
 		if [ $# -eq 0 ]; then
-			__count="$(tmux ls 2>/dev/null | wc -l)"
-			if [ "${__count}" -eq 0 ]; then
+			__tmux_attach_count="$(tmux ls 2>/dev/null | wc -l)"
+			if [ "${__tmux_attach_count}" -eq 0 ]; then
 				tmux new
 				return
-			elif [ "${__count}" -eq 1 ]; then
-				__session="$(tmux ls | cut -d: -f1)"
+			elif [ "${__tmux_attach_count}" -eq 1 ]; then
+				__tmux_attach_session="$(tmux ls | cut -d: -f1)"
 			else
-				echo_date "ERROR: %d sessions found" "${__count}"
+				echo_date "ERROR: %d sessions found" "${__tmux_attach_count}"
 			fi
 		elif [ $# -eq 1 ]; then
-			__session="$1"
+			__tmux_attach_session="$1"
 		else
 			echo_date "'tmux_attach' accepts [0..1] arguments; got $#" && return 1
 		fi
-		tmux attach -t "${__session}"
+		tmux attach -t "${__tmux_attach_session}"
 	}
 	tmux_current_window() {
-		if [ $# -ne 0 ]; then
-			echo_date "'tmux_current_window' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'tmux_current_window' accepts no arguments; got $#" && return 1
 		tmux display-message -p '#S:#I'
 	}
 	tmux_detach() {
-		if [ $# -ne 0 ]; then
-			echo_date "'tmux_detach' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'tmux_detach' accepts no arguments; got $#" && return 1
 		tmux detach
 	}
 	tmux_kill_window() {
-		if [ $# -ne 0 ]; then
-			echo_date "'tmux_kill_window' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'tmux_kill_window' accepts no arguments; got $#" && return 1
 		tmux kill-window
 	}
 	tmux_list_keys() {
@@ -823,58 +721,40 @@ if command -v tmux >/dev/null 2>&1; then
 		fi
 	}
 	tmux_ls() {
-		if [ $# -ne 0 ]; then
-			echo_date "'tmux_ls' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'tmux_ls' accepts no arguments; got $#" && return 1
 		tmux ls
 	}
 	tmux_reload() {
-		if [ $# -ne 0 ]; then
-			echo_date "'tmux_reload' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'tmux_reload' accepts no arguments; got $#" && return 1
 		tmux source-file "${XDG_CONFIG_HOME:-"${HOME}/.config"}/tmux/tmux.conf"
 	}
 	# layouts
 	tmux_even_horizontal() {
-		if [ $# -ne 0 ]; then
-			echo_date "'tmux_even_horizontal' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'tmux_even_horizontal' accepts no arguments; got $#" && return 1
 		tmux select-layout -t "$(tmux_current_window)" even-horizontal
 	}
 	tmux_even_vertical() {
-		if [ $# -ne 0 ]; then
-			echo_date "'tmux_even_vertical' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'tmux_even_vertical' accepts no arguments; got $#" && return 1
 		tmux select-layout -t "$(tmux_current_window)" even-vertical
 	}
 	tmux_main_horizontal() {
-		if [ $# -ne 0 ]; then
-			echo_date "'tmux_main_horizontal' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'tmux_main_horizontal' accepts no arguments; got $#" && return 1
 		tmux select-layout -t "$(tmux_current_window)" main-horizontal
 	}
 	tmux_main_horizontal_mirrored() {
-		if [ $# -ne 0 ]; then
-			echo_date "'tmux_main_horizontal_mirrored' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'tmux_main_horizontal_mirrored' accepts no arguments; got $#" && return 1
 		tmux select-layout -t "$(tmux_current_window)" main-horizontal-mirrored
 	}
 	tmux_main_vertical() {
-		if [ $# -ne 0 ]; then
-			echo_date "'tmux_main_vertical' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'tmux_main_vertical' accepts no arguments; got $#" && return 1
 		tmux select-layout -t "$(tmux_current_window)" main-vertical
 	}
 	tmux_main_vertical_mirrored() {
-		if [ $# -ne 0 ]; then
-			echo_date "'tmux_main_vertical_mirrored' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'tmux_main_vertical_mirrored' accepts no arguments; got $#" && return 1
 		tmux select-layout -t "$(tmux_current_window)" main-vertical-mirrored
 	}
 	tmux_tiled() {
-		if [ $# -ne 0 ]; then
-			echo_date "'tmux_tiled' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'tmux_tiled' accepts no arguments; got $#" && return 1
 		tmux select-layout -t "$(tmux_current_window)" tiled
 	}
 	if [ -z "$TMUX" ]; then
@@ -897,9 +777,7 @@ if command -v tmux >/dev/null 2>&1; then
 	fi
 fi
 tmux_conf_local() {
-	if [ $# -ne 0 ]; then
-		echo_date "'tmux_conf_local' accepts no arguments; got $#" && return 1
-	fi
+	[ $# -ne 0 ] && echo_date "'tmux_conf_local' accepts no arguments; got $#" && return 1
 	${EDITOR} "${HOME}"/tmux/tmux.conf.local
 }
 
@@ -1018,21 +896,15 @@ fi
 # uv
 if command -v uv >/dev/null 2>&1; then
 	ipy() {
-		if [ $# -ne 0 ]; then
-			echo_date "'ipy' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'ipy' accepts no arguments; got $#" && return 1
 		ipython
 	}
 	jl() {
-		if [ $# -ne 0 ]; then
-			echo_date "'jl' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'jl' accepts no arguments; got $#" && return 1
 		jupyter lab
 	}
 	mar() {
-		if [ $# -ne 0 ]; then
-			echo_date "'mar' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'mar' accepts no arguments; got $#" && return 1
 		uv run --with=beartype \
 			--with=hvplot \
 			--with='marimo[recommended]' \
@@ -1040,6 +912,7 @@ if command -v uv >/dev/null 2>&1; then
 			marimo new
 	}
 	uva() { uv add --active --managed-python "$@"; }
+	uvad() { uv add --dev --active --managed-python "$@"; }
 	uvpi() { uv pip install --managed-python "$@"; }
 	uvpl() {
 		if [ $# -eq 0 ]; then
@@ -1051,28 +924,24 @@ if command -v uv >/dev/null 2>&1; then
 		fi
 	}
 	uvplo() {
-		if [ $# -ne 0 ]; then
-			echo_date "'uvplo' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'uvplo' accepts no arguments; got $#" && return 1
 		uv pip list --outdated
 	}
 	uvpu() { uv pip uninstall "$@"; }
 	uvpyc() {
 		if [ $# -eq 0 ]; then
-			__dir="$(pwd)"
+			__uvpyc_dir="$(pwd)"
 		elif [ $# -eq 1 ]; then
-			__dir="$1"
+			__uvpyc_dir="$1"
 		else
 			echo_date "'uvpyc' accepts 1 argument; got $#" && return 1
 		fi
-		uv tool run pyclean "${__dir}"
-		clean_dirs "${__dir}"
+		uv tool run pyclean "${__uvpyc_dir}"
+		clean_dirs "${__uvpyc_dir}"
 	}
 	uvr() { uv remove --active --managed-python "$@"; }
 	uvs() {
-		if [ $# -ne 0 ]; then
-			echo_date "'uvs' accepts no arguments; got $#" && return 1
-		fi
+		[ $# -ne 0 ] && echo_date "'uvs' accepts no arguments; got $#" && return 1
 		uv sync --upgrade
 	}
 	if command -v watch >/dev/null 2>&1; then
@@ -1082,17 +951,15 @@ fi
 
 # venv
 venv_recreate() {
-	if [ $# -ne 0 ]; then
-		echo_date "'venv_recreate' accepts no arguments; got $#" && return 1
-	fi
-	__candidate=$(ancestor file .envrc 2>/dev/null)
-	__code=$?
-	if [ "${__code}" -ne 0 ]; then
+	[ $# -ne 0 ] && echo_date "'venv_recreate' accepts no arguments; got $#" && return 1
+	__venv_recreate_file=$(ancestor file .envrc 2>/dev/null)
+	__venv_recreate_code=$?
+	if [ "${__venv_recreate_code}" -ne 0 ]; then
 		echo_date "'venv_recreate' did not find an ancestor containg a file named '.envrc'" && return 1
 	fi
-	__venv="${__candidate}"/.venv
-	if [ -d "${__venv}" ]; then
-		rm -rf "${__venv}"
+	__venv_recreate_dir="${__venv_recreate_file}"/.venv
+	if [ -d "${__venv_recreate_dir}" ]; then
+		rm -rf "${__venv_recreate_dir}"
 	fi
 	cdh
 }
