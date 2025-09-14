@@ -554,7 +554,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# mv
 	gmv() {
-		[ $# -ne 2 ] && echo_date "'gmv' accepts 2 arguments; got $#" && return 1
+		[ $# -le 1 ] && echo_date "'gmv' accepts 2 arguments; got $#" && return 1
 		git mv "$1" "$2"
 	}
 	# pull
