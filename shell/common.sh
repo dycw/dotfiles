@@ -558,7 +558,7 @@ if command -v rg >/dev/null 2>&1; then
 		env | rg "$1"
 	}
 	if command -v watch >/dev/null 2>&1; then
-		wrg() { watch --color --differences --interval=0.5 -- rg "$@"; }
+		wrg() { watch --color --differences --interval=2 -- rg "$@"; }
 	fi
 
 fi
@@ -897,19 +897,15 @@ fi
 if command -v uv >/dev/null 2>&1; then
 	ipy() {
 		[ $# -ne 0 ] && echo_date "'ipy' accepts no arguments; got $#" && return 1
-		ipython
+		uv run --with=ipython ipython
 	}
 	jl() {
 		[ $# -ne 0 ] && echo_date "'jl' accepts no arguments; got $#" && return 1
-		jupyter lab
+		uv run --with=jupyterlab --with=jupyterlab-vim jupyter lab
 	}
 	mar() {
 		[ $# -ne 0 ] && echo_date "'mar' accepts no arguments; got $#" && return 1
-		uv run --with=beartype \
-			--with=hvplot \
-			--with='marimo[recommended]' \
-			--with=matplotlib \
-			marimo new
+		uv run --with='marimo[recommended]' marimo new
 	}
 	uva() { uv add --active --managed-python "$@"; }
 	uvad() { uv add --dev --active --managed-python "$@"; }
@@ -922,6 +918,11 @@ if command -v uv >/dev/null 2>&1; then
 		else
 			echo_date "'uvpl' accepts [0..1] arguments; got $#" && return 1
 		fi
+	}
+	uvpld() {
+		[ $# -ne 0 ] && echo_date "'uvpld' accepts no arguments; got $#" && return 1
+		__uvpld '.project.dependencies[]'
+		__uvpld '.["dependency-groups"].dev[]'
 	}
 	uvplo() {
 		[ $# -ne 0 ] && echo_date "'uvplo' accepts no arguments; got $#" && return 1
@@ -943,6 +944,21 @@ if command -v uv >/dev/null 2>&1; then
 	uvs() {
 		[ $# -ne 0 ] && echo_date "'uvs' accepts no arguments; got $#" && return 1
 		uv sync --upgrade
+	}
+	__uvpld() {
+		[ $# -ne 1 ] && echo_date "'__uvpld' accepts 1 argument; got $#" && return 1
+		__uvpld_deps=$(uv pip list --color=never)
+		yq -r "$1" 'pyproject.toml' |
+			sed 's/[ ,<>=!].*//' |
+			while IFS= read -r __uvpld_dep; do
+				[ -n "${__uvpld_dep}" ] || continue
+				__uvpld_res=$(printf "%s\n" "${__uvpld_deps}" | grep --color=never -i "^${__uvpld_dep} ")
+				if [ -n "${__uvpld_res}" ]; then
+					echo "${__uvpld_res}"
+				else
+					echo "${__uvpld_dep} <--> N/A"
+				fi
+			done
 	}
 	if command -v watch >/dev/null 2>&1; then
 		wuvpi() { watch --color --differences --interval=0.5 -- uv pip install "$@"; }
