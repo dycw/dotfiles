@@ -58,21 +58,21 @@ return {
                 cmd = strategy,
             },
             extensions = {
-                mcphub = {
-                    callback = "mcphub.extensions.codecompanion",
-                    opts = {
-                        -- MCP Tools
-                        make_tools = true,
-                        show_server_tools_in_chat = true,
-                        add_mcp_prefix_to_tool_names = false,
-                        show_result_in_chat = true,
-                        format_tool = nil,
-                        -- MCP Resources
-                        make_vars = true,
-                        -- MCP Prompts
-                        make_slash_commands = true,
-                    },
-                },
+                -- mcphub = {
+                --     callback = "mcphub.extensions.codecompanion",
+                --     opts = {
+                --         -- MCP Tools
+                --         make_tools = true,
+                --         show_server_tools_in_chat = true,
+                --         add_mcp_prefix_to_tool_names = false,
+                --         show_result_in_chat = true,
+                --         format_tool = nil,
+                --         -- MCP Resources
+                --         make_vars = true,
+                --         -- MCP Prompts
+                --         make_slash_commands = true,
+                --     },
+                -- },
                 history = {
                     enabled = true,
                 },
