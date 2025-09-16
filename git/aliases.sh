@@ -701,7 +701,7 @@ if command -v git >/dev/null 2>&1; then
 		git rev-parse --abbrev-ref HEAD
 	}
 	__is_current_branch() {
-		[ $# -ne 0 ] && echo_date "'__is_current_branch' accepts no arguments; got $#" && return 1
+		[ $# -ne 1 ] && echo_date "'__is_current_branch' accepts 1 argument; got $#" && return 1
 		if [ "$(__current_branch)" = "$1" ]; then
 			true
 		else
