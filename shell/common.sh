@@ -949,7 +949,7 @@ if command -v uv >/dev/null 2>&1; then
 		[ $# -ne 1 ] && echo_date "'__uvpld' accepts 1 argument; got $#" && return 1
 		__uvpld_deps=$(uv pip list --color=never)
 		yq -r "$1" 'pyproject.toml' |
-			sed 's/[ ,<>=!].*//' |
+			sed 's/\[.*\]//; s/[ ,<>=!].*//' |
 			while IFS= read -r __uvpld_dep; do
 				[ -n "${__uvpld_dep}" ] || continue
 				__uvpld_res=$(printf "%s\n" "${__uvpld_deps}" | grep --color=never -i "^${__uvpld_dep} ")
