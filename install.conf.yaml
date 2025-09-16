@@ -25,10 +25,10 @@
     ~/.config/direnv/direnv.toml: direnv/direnv.toml
     ~/.config/direnv/direnvrc: direnv/direnvrc
     ~/.config/ghostty/config: ghostty/config
-    ~/.config/mcphub/servers.json: ghostty/config
     ~/.config/git/config: git/config
     ~/.config/git/ignore: git/ignore
     ~/.config/marimo/marimo.toml: marimo/marimo.toml
+    ~/.config/mcphub/servers.json: mcphub/servers.json
     ~/.config/nvim: nvim
     ~/.config/ripgreprc: ripgrep/ripgreprc
     ~/.config/starship.toml: starship/starship.toml
