@@ -220,7 +220,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 	__git_delete() {
 		[ $# -ne 1 ] && echo_date "'__git_delete' accepts 1 argument; got $#" && return 1
-		if __branch_exists "$1" && [ "$(current_branch)" != "$1" ]; then
+		if __branch_exists "$1" && [ "$(__current_branch)" != "$1" ]; then
 			git branch --delete --force "$1"
 		fi
 	}
@@ -382,7 +382,7 @@ if command -v git >/dev/null 2>&1; then
 		else
 			echo_date "'gco' accepts [0..1] arguments; got $#" && return 1
 		fi
-		__gco_current="$(current_branch)" || return $?
+		__gco_current="$(__current_branch)" || return $?
 		if [ "${__gco_current}" != "${__gco_target}" ]; then
 			git checkout "${__gco_target}" || return $?
 		fi
@@ -413,7 +413,7 @@ if command -v git >/dev/null 2>&1; then
 		'none' | 'delete' | 'delete+exit') ;;
 		*) echo_date "'__git_checkout_master' invalid action; got '$1'" && return 1 ;;
 		esac
-		__git_checkout_master_branch="$(current_branch)" || return $?
+		__git_checkout_master_branch="$(__current_branch)" || return $?
 		gco master || return $?
 		if [ "$1" = 'delete' ] || [ "$1" = 'delete+exit' ]; then
 			gbd "${__git_checkout_master_branch}" || return $?
@@ -486,7 +486,7 @@ if command -v git >/dev/null 2>&1; then
 		elif __is_current_branch_master; then
 			echo_date "'gbr' cannot be run on 'master'" && return 1
 		else
-			__gbr_branch="$(current_branch)" || return 1
+			__gbr_branch="$(__current_branch)" || return 1
 			gcof && gcm && gcb "${__gbr_branch}"
 		fi
 	}
@@ -622,13 +622,13 @@ if command -v git >/dev/null 2>&1; then
 		# $1 = force
 		# $2 = no-verify
 		if [ "$1" = 'false' ] && [ "$2" = 'false' ]; then
-			git push --set-upstream origin "$(current_branch)"
+			git push --set-upstream origin "$(__current_branch)"
 		elif [ "$1" = 'false' ] && [ "$2" = 'true' ]; then
-			git push --set-upstream origin "$(current_branch)" --no-verify
+			git push --set-upstream origin "$(__current_branch)" --no-verify
 		elif [ "$1" = 'true' ] && [ "$2" = 'false' ]; then
-			git push --force --set-upstream origin "$(current_branch)"
+			git push --force --set-upstream origin "$(__current_branch)"
 		elif [ "$1" = 'true' ] && [ "$2" = 'true' ]; then
-			git push --force --set-upstream origin "$(current_branch)" --no-verify
+			git push --force --set-upstream origin "$(__current_branch)" --no-verify
 		else
 			echo_date "'__git_push_current_branch' impossible case; got '$1' and '$2'" && return 1
 		fi
@@ -679,19 +679,15 @@ if command -v git >/dev/null 2>&1; then
 			false
 		fi
 	}
+	__repo_name() {
+		[ $# -ne 0 ] && echo_date "'__repo_name' accepts no arguments; got $#" && return 1
+		basename -s .git "$(git remote get-url origin)"
+	}
 	# reset
 	gr() { git reset "$@"; }
 	grhom() { git reset --hard origin/master "$@"; }
 	grp() { git reset --patch "$@"; }
 	# rev-parse
-	current_branch() {
-		[ $# -ne 0 ] && echo_date "'current_branch' accepts no arguments; got $#" && return 1
-		git rev-parse --abbrev-ref HEAD
-	}
-	repo_root() {
-		[ $# -ne 0 ] && echo_date "'repo_root' accepts no arguments; got $#" && return 1
-		git rev-parse --show-toplevel
-	}
 	__branch_exists() {
 		[ $# -ne 1 ] && echo_date "'__branch_exists' accepts 1 argument; got $#" && return 1
 		if git rev-parse --verify "$1" >/dev/null 2>&1; then
@@ -700,9 +696,13 @@ if command -v git >/dev/null 2>&1; then
 			false
 		fi
 	}
+	__current_branch() {
+		[ $# -ne 0 ] && echo_date "'__current_branch' accepts no arguments; got $#" && return 1
+		git rev-parse --abbrev-ref HEAD
+	}
 	__is_current_branch() {
 		[ $# -ne 0 ] && echo_date "'__is_current_branch' accepts no arguments; got $#" && return 1
-		if [ "$(current_branch)" = "$1" ]; then
+		if [ "$(__current_branch)" = "$1" ]; then
 			true
 		else
 			false
@@ -715,6 +715,10 @@ if command -v git >/dev/null 2>&1; then
 	__is_current_branch_master() {
 		[ $# -ne 0 ] && echo_date "'__is_current_branch_master' accepts no arguments; got $#" && return 1
 		__is_current_branch 'master'
+	}
+	__repo_root() {
+		[ $# -ne 0 ] && echo_date "'__repo_root' accepts no arguments; got $#" && return 1
+		git rev-parse --show-toplevel
 	}
 	# rm
 	grm() { git rm "$@"; }
@@ -805,7 +809,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 	}
 	ghiv() {
 		if [ $# -eq 0 ]; then
-			__ghiv_branch="$(current_branch)" || return $?
+			__ghiv_branch="$(__current_branch)" || return $?
 			__ghiv_num="${__ghiv_branch%%-*}"
 			__ghiv_msg="'ghiv' cannot be run on a branch without an issue number"
 		elif [ $# -eq 1 ]; then
@@ -855,14 +859,14 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			if gh pr ready >/dev/null 2>&1; then
 				gh pr view -w
 			else
-				echo_date "'ghv' cannot find an open PR for '$(current_branch)'" && return 1
+				echo_date "'ghv' cannot find an open PR for '$(__current_branch)'" && return 1
 			fi
 		elif __is_gitlab; then
 			__num="$(__glab_mr_num)"
 			if [ -n "${__num}" ]; then
 				glab mr view "${__num}" --web
 			else
-				echo_date "'ghv' cannot find an open PR for '$(current_branch)'" && return 1
+				echo_date "'ghv' cannot find an open PR for '$(__current_branch)'" && return 1
 			fi
 		else
 			echo_date "'ghv' impossible case" && return 1
@@ -888,7 +892,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 	__gh_exists() {
 		[ $# -ne 0 ] && echo_date "'__gh_exists' accepts no arguments; got $#" && return 1
 		if __is_github; then
-			__gh_exists_branch=$(current_branch)
+			__gh_exists_branch=$(__current_branch)
 			__gh_exists_num="$(gh pr list --head="${__gh_exists_branch}" --json number --jq '. | length')"
 			if [ "${__gh_exists_num}" -eq 1 ]; then
 				true
@@ -913,14 +917,14 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			echo_date "'__gh_merge' invalid action; got '$1'" && return 1
 		fi
 		if ! __gh_exists; then
-			echo_date "'__gh_merge' cannot find an open PR for '$(current_branch)'" && return 1
+			echo_date "'__gh_merge' cannot find an open PR for '$(__current_branch)'" && return 1
 		fi
 		__gh_merge_start="$(date +%s)"
 		if __is_github; then
 			gh pr merge --auto --delete-branch --squash || return $?
 			while __gh_pr_merging; do
 				__gh_merge_elapsed="$(($(date +%s) - __gh_merge_start))"
-				echo_date "'$(current_branch)' is still merging... (${__gh_merge_elapsed}s)"
+				echo_date "'$(__repo_name)/$(__current_branch)' is still merging... (${__gh_merge_elapsed}s)"
 				sleep 1
 			done
 		elif __is_gitlab; then
@@ -928,13 +932,13 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			if [ "${__gh_merge_status}" = 'conflict' ] ||
 				[ "${__gh_merge_status}" = 'need_rebase' ] ||
 				[ "${__gh_merge_status}" = 'not open' ]; then
-				echo_date "'$(current_branch)' cannot be merged; got ${__gh_merge_status}" && return 1
+				echo_date "'$(__current_branch)' cannot be merged; got ${__gh_merge_status}" && return 1
 			fi
 			while true; do
 				glab mr merge --remove-source-branch --squash --yes >/dev/null 2>&1 || true
 				if __gh_pr_merging; then
 					__gh_merge_elapsed="$(($(date +%s) - __gh_merge_start))"
-					echo_date "'$(current_branch)' is still merging... ('$(__glab_mr_merge_status)', ${__gh_merge_elapsed}s)"
+					echo_date "'$(__repo_name)/$(__current_branch)' is still merging... ('$(__glab_mr_merge_status)', ${__gh_merge_elapsed}s)"
 					sleep 1
 				else
 					break
@@ -946,7 +950,7 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 		__git_checkout_master "$1"
 	}
 	__gh_pr_merging() {
-		__gh_pr_merging_branch="$(current_branch)" || return 1
+		__gh_pr_merging_branch="$(__current_branch)" || return 1
 		if __is_github; then
 			if [ "$(gh pr view --json state 2>/dev/null | jq -r '.state')" != "OPEN" ]; then
 				return 1
@@ -1018,7 +1022,7 @@ fi
 if command -v glab >/dev/null 2>&1; then
 	__glab_mr_json() {
 		[ $# -ne 0 ] && echo_date "'__glab_mr_json' accepts no arguments; got $#" && return 1
-		__glab_mr_json_branch="$(current_branch)" || return 1
+		__glab_mr_json_branch="$(__current_branch)" || return 1
 		__glab_mr_json_json=$(glab mr list --output=json --source-branch="${__glab_mr_json_branch}" 2>/dev/null) || return 1
 		__glab_mr_json_num=$(printf "%s" "${__glab_mr_json_json}" | jq 'length') || return 1
 		if [ "${__glab_mr_json_num}" -eq 0 ]; then
