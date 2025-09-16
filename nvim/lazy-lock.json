@@ -37,7 +37,7 @@
   },
   "codecompanion.nvim": {
     "branch": "main",
-    "commit": "b8905612ccb08d6b4b166dd2508a458c33db7c84"
+    "commit": "0ba3c7cb08680ba39d6c85ea82287e6b0c49d677"
   },
   "comment.nvim": {
     "branch": "master",
@@ -126,10 +126,6 @@
   "mason.nvim": {
     "branch": "main",
     "commit": "7dc4facca9702f95353d5a1f87daf23d78e31c2a"
-  },
-  "mcphub.nvim": {
-    "branch": "main",
-    "commit": "5e39057c4405bc7b83ef9fd38a37d18c9330e403"
   },
   "mkdir.nvim": {
     "branch": "main",
