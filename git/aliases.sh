@@ -571,6 +571,14 @@ if command -v git >/dev/null 2>&1; then
 		[ $# -ne 0 ] && echo_date "'gpf' accepts no arguments; got $#" && return 1
 		__git_push true false 'none'
 	}
+	gpn() {
+		[ $# -ne 0 ] && echo_date "'gpn' accepts no arguments; got $#" && return 1
+		__git_push false true 'none'
+	}
+	gpfn() {
+		[ $# -ne 0 ] && echo_date "'gpfn' accepts no arguments; got $#" && return 1
+		__git_push true true 'none'
+	}
 	gpw() {
 		[ $# -ne 0 ] && echo_date "'gpw' accepts no arguments; got $#" && return 1
 		__git_push false false 'web'
@@ -578,6 +586,14 @@ if command -v git >/dev/null 2>&1; then
 	gpfw() {
 		[ $# -ne 0 ] && echo_date "'gpfw' accepts no arguments; got $#" && return 1
 		__git_push true false 'web'
+	}
+	gpnw() {
+		[ $# -ne 0 ] && echo_date "'gpnw' accepts no arguments; got $#" && return 1
+		__git_push false true 'web'
+	}
+	gpfnw() {
+		[ $# -ne 0 ] && echo_date "'gpfnw' accepts no arguments; got $#" && return 1
+		__git_push true true 'web'
 	}
 	gpe() {
 		[ $# -ne 0 ] && echo_date "'gpe' accepts no arguments; got $#" && return 1
@@ -587,13 +603,29 @@ if command -v git >/dev/null 2>&1; then
 		[ $# -ne 0 ] && echo_date "'gpfe' accepts no arguments; got $#" && return 1
 		__git_push true false 'exit'
 	}
-	gpwe() {
-		[ $# -ne 0 ] && echo_date "'gpwe' accepts no arguments; got $#" && return 1
+	gpne() {
+		[ $# -ne 0 ] && echo_date "'gpne' accepts no arguments; got $#" && return 1
+		__git_push false true 'exit'
+	}
+	gpfne() {
+		[ $# -ne 0 ] && echo_date "'gpfne' accepts no arguments; got $#" && return 1
+		__git_push true true 'exit'
+	}
+	gpx() {
+		[ $# -ne 0 ] && echo_date "'gpx' accepts no arguments; got $#" && return 1
 		__git_push false false 'web+exit'
 	}
-	gpfwe() {
-		[ $# -ne 0 ] && echo_date "'gpfwe' accepts no arguments; got $#" && return 1
+	gpfx() {
+		[ $# -ne 0 ] && echo_date "'gpfx' accepts no arguments; got $#" && return 1
 		__git_push true false 'web+exit'
+	}
+	gpnx() {
+		[ $# -ne 0 ] && echo_date "'gpnx' accepts no arguments; got $#" && return 1
+		__git_push false true 'web+exit'
+	}
+	gpfnx() {
+		[ $# -ne 0 ] && echo_date "'gpfnx' accepts no arguments; got $#" && return 1
+		__git_push true true 'web+exit'
 	}
 	__git_push() {
 		[ $# -ne 3 ] && echo_date "'__git_push' accepts 3 arguments; got $#" && return 1
