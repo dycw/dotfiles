@@ -544,6 +544,7 @@ ls.add_snippets("python", {
     s("ut-delta", { t({ "from utilities.types import Delta", "" }) }),
     s("ut-deserialize", { t({ "from utilities.orjson import deserialize", "" }) }),
     s("ut-duration", { t({ "from utilities.types import Duration", "" }) }),
+    s("ut-enhanced-environment", { t({ "from utilities.jinja2 import EnhancedEnvironment", "" }) }),
     s("ut-enhanced-queue", { t({ "from utilities.asyncio import EnhancedQueue", "" }) }),
     s("ut-enhanced-task-group", { t({ "from utilities.asyncio import EnhancedTaskGroup", "" }) }),
     s("ut-ensure-date", { t({ "from utilities.functions import ensure_date", "" }) }),

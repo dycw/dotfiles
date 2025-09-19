@@ -1469,7 +1469,15 @@ if find_spec("utilities") is not None:
     from utilities.random import SYSTEM_RANDOM, get_state, shuffle
     from utilities.re import extract_group, extract_groups
     from utilities.shelve import yield_shelf
-    from utilities.text import parse_bool, parse_none
+    from utilities.text import (
+        kebab_case,
+        parse_bool,
+        parse_none,
+        pascal_case,
+        snake_case,
+        split_key_value_pairs,
+        split_str,
+    )
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
     from utilities.types import MaybeIterable, Number, StrMapping, TimeZone
@@ -1602,6 +1610,7 @@ if find_spec("utilities") is not None:
         is_instance_gen,
         is_integral,
         is_subclass_gen,
+        kebab_case,
         list_dir,
         make_isinstance,
         one,
@@ -1611,6 +1620,7 @@ if find_spec("utilities") is not None:
         parse_bool,
         parse_none,
         partial,
+        pascal_case,
         put_items,
         put_items_nowait,
         read_pickle,
@@ -1623,6 +1633,9 @@ if find_spec("utilities") is not None:
         sleep_rounded,
         sleep_td,
         sleep_until,
+        snake_case,
+        split_key_value_pairs,
+        split_str,
         to_date,
         to_date_time_delta,
         to_days,
