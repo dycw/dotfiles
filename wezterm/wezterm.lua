@@ -26,14 +26,15 @@ if wezterm.hostname() == "RH-MacBook" then
     config.font_size = 11.0 -- smaller
     config.freetype_load_target = "Light"
     config.freetype_render_target = "HorizontalLcd"
+    config.hide_tab_bar_if_only_one_tab = true
     config.macos_window_background_blur = 0
     config.max_fps = 30
     config.window_background_opacity = 1.0
     config.window_padding = {
-        left = 0,
-        right = 0,
-        top = 0,
-        bottom = 0,
+        left = "1%",
+        right = "5%",
+        top = "1%",
+        bottom = "1%",
     }
 end
 return config
