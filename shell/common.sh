@@ -900,8 +900,12 @@ if command -v uv >/dev/null 2>&1; then
 		uv run --with=ipython ipython
 	}
 	jl() {
-		[ $# -ne 0 ] && echo_date "'jl' accepts no arguments; got $#" && return 1
-		uv run --with=jupyterlab --with=jupyterlab-vim jupyter lab
+		__jl_ifs=$IFS
+		IFS='
+'
+		__jl_with=$(printf -- '--with=%s\n' "$@")
+		IFS=${__jl_ifs}
+		uv run --with=jupyterlab --with=jupyterlab-vim "${__jl_with}" jupyter lab
 	}
 	mar() {
 		[ $# -ne 0 ] && echo_date "'mar' accepts no arguments; got $#" && return 1

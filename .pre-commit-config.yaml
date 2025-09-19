@@ -40,7 +40,7 @@ repos:
         name: prettier
         entry: prettier
         language: system
-        types_or: [json]
+        types_or: [markdown, yaml]
         args: [--write, --log-level=silent]
   # linters
   - repo: https://github.com/shellcheck-py/shellcheck-py
@@ -51,6 +51,7 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
+      - id: check-executables-have-shebangs
       - id: check-merge-conflict
       - id: check-symlinks
       - id: destroyed-symlinks
@@ -59,4 +60,6 @@ repos:
       - id: mixed-line-ending
         args: [--fix=lf]
       - id: no-commit-to-branch
+      - id: pretty-format-json
+        args: [--autofix]
       - id: trailing-whitespace

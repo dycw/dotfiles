@@ -1,6 +1,5 @@
 # setup-docker
 
-
 1. ```console
    export VM_USERNAME='...'
    export VM_HOST='...'
