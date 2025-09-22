@@ -24,6 +24,9 @@
     ~/.config/bottom/bottom.toml: bottom/bottom.toml
     ~/.config/direnv/direnv.toml: direnv/direnv.toml
     ~/.config/direnv/direnvrc: direnv/direnvrc
+    ~/.config/euporie/config.json:
+      path: euporie/config.json
+      if: "[ `uname` = Linux ]"
     ~/.config/ghostty/config: ghostty/config
     ~/.config/git/config: git/config
     ~/.config/git/ignore: git/ignore
@@ -60,6 +63,9 @@
     ~/.zimrc: zsh/zimrc
     ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
+    ~/Library/Application Support/euporie/config.json:
+      path: euporie/config.json
+      if: "[ `uname` = Darwin ]"
     ~/Library/LaunchAgents/com.local.docker.plist: docker/docker.plist
     ~/Library/LaunchAgents/com.local.iperf3.plist: iperf3/iperf3.plist
     ~/Library/LaunchAgents/com.local.redis-stack-server.plist: redis/redis-stack-server.plist
