@@ -59,10 +59,11 @@ return {
                     "--unfixable=PIE794", -- duplicated-class-field-definition
                     "--unfixable=PLR5501", -- collapsible-else-if
                     "--unfixable=PT014", -- pytest-duplicate-parametrize-test-cases
-                    "--unfixable=RET504", -- unnecessary-assign
-                    "--unfixable=SIM102", -- collapsible-if
                     "--unfixable=PYI016", -- duplicate-union-member
                     "--unfixable=PYI018", -- unused-private-type-var
+                    "--unfixable=RET504", -- unnecessary-assign
+                    "--unfixable=RUF059", -- unused-unpacked-variable
+                    "--unfixable=SIM102", -- collapsible-if
                     "--unfixable=SIM105", -- suppressible-exception
                     "--unfixable=SIM114", -- if-with-same-arms
                     "--unfixable=T201", -- print
