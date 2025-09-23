@@ -5,6 +5,7 @@ local config = wezterm.config_builder()
 -- always
 config.audible_bell = "Disabled"
 config.font_size = 12.0
+config.hide_tab_bar_if_only_one_tab = true
 config.initial_cols = 200
 config.initial_rows = 100
 config.keys = {
