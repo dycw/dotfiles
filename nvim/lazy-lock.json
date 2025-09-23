@@ -27,6 +27,10 @@
     "branch": "master",
     "commit": "b4aab989db276993ea5dcb78872be494ce546521"
   },
+  "dial.nvim": {
+    "branch": "master",
+    "commit": "f0404ec1f83a03f2c3457e60087c6331d1cbb83f"
+  },
   "flash.nvim": {
     "branch": "main",
     "commit": "b68bda044d68e4026c4e1ec6df3c5afd7eb8e341"
@@ -42,6 +46,10 @@
   "grug-far.nvim": {
     "branch": "main",
     "commit": "50d9ee2b5a19634670441948e7e4afaa042f1059"
+  },
+  "inc-rename.nvim": {
+    "branch": "main",
+    "commit": "8ae25b35ae16ca4bd5de3d3c472eec3b574018d4"
   },
   "lazy.nvim": {
     "branch": "main",
@@ -74,6 +82,10 @@
   "mini.pairs": {
     "branch": "main",
     "commit": "3738ea30ff33e0cbf2983dc67319a5468d25b0a9"
+  },
+  "mini.surround": {
+    "branch": "main",
+    "commit": "4b92d30fb5e021cced6cbb68698c73018211fbfa"
   },
   "noice.nvim": {
     "branch": "main",
