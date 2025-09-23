@@ -11,6 +11,10 @@
     "body": "from beartype import beartype\n",
     "prefix": "im-beartype"
   },
+  "From 'bidict' import ...": {
+    "body": "from bidict import bidict\n",
+    "prefix": "im-bidict"
+  },
   "From 'zoneinfo' import ...": {
     "body": "from zoneinfo import ZoneInfo\n",
     "prefix": "im-zoneinfo"
