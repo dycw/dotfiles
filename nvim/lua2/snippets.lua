@@ -82,21 +82,6 @@ ls.add_snippets("python", {
     s("logger-name", { t({ "from utilities.logging import to_logger", "", "_LOGGER = to_logger(__name__)", "" }) }),
     s("logger-adapter", { t({ "logger: LoggerAdapter = field(init=False)", "" }) }),
 
-    -- operator
-    s("op-add", { t({ "from operator import add", "" }) }),
-    s("op-and", { t({ "from operator import and_", "" }) }),
-    s("op-eq", { t({ "from operator import eq", "" }) }),
-    s("op-ge", { t({ "from operator import ge", "" }) }),
-    s("op-gt", { t({ "from operator import gt", "" }) }),
-    s("op-le", { t({ "from operator import le", "" }) }),
-    s("op-lt", { t({ "from operator import lt", "" }) }),
-    s("op-mul", { t({ "from operator import mul", "" }) }),
-    s("op-ne", { t({ "from operator import ne", "" }) }),
-    s("op-neg", { t({ "from operator import neg", "" }) }),
-    s("op-or", { t({ "from operator import or_", "" }) }),
-    s("op-sub", { t({ "from operator import sub", "" }) }),
-    s("op-truediv", { t({ "from operator import truediv", "" }) }),
-
     -- optuna
     s("op-base-pruner", { t({ "from optuna.pruners import BasePruner", "" }) }),
     s("op-base-sampler", { t({ "from optuna.samplers import BaseSampler", "" }) }),
@@ -109,56 +94,6 @@ ls.add_snippets("python", {
 
     -- pathlib
     s("pa-path", { t({ "from pathlib import Path", "" }) }),
-
-    -- polars
-    s("im-pl", { t({ "import polars as pl", "" }) }),
-    s("po-all-horizontal", { t({ "from polars import all_horizontal", "" }) }),
-    s("po-any-horizontal", { t({ "from polars import any_horizontal", "" }) }),
-    s("po-assert-frame-equal", { t({ "from polars.testing import assert_frame_equal", "" }) }),
-    s("po-assert-series-equal", { t({ "from polars.testing import assert_series_equal", "" }) }),
-    s("po-boolean", { t({ "from polars import Boolean", "" }) }),
-    s("po-coalesce", { t({ "from polars import coalesce", "" }) }),
-    s("po-col", { t({ "from polars import col", "" }) }),
-    s("po-column-not-found-error", { t({ "from polars.exceptions import ColumnNotFoundError", "" }) }),
-    s("po-compute-error", { t({ "from polars.exceptions import ComputeError", "" }) }),
-    s("po-concat", { t({ "from polars import concat", "" }) }),
-    s("po-dataframe", { t({ "from polars import DataFrame", "" }) }),
-    s("po-date", { t({ "from polars import Date", "" }) }),
-    s("po-date-range", { t({ "from polars import date_range", "" }) }),
-    s("po-date-ranges", { t({ "from polars import date_ranges", "" }) }),
-    s("po-datetime", { t({ "from polars import Datetime", "" }) }),
-    s("po-datetime-range", { t({ "from polars import datetime_range", "" }) }),
-    s("po-duration", { t({ "from polars import Duration", "" }) }),
-    s("po-element", { t({ "from polars import element", "" }) }),
-    s("po-enum", { t({ "from polars import Enum", "" }) }),
-    s("po-expr", { t({ "from polars import Expr", "" }) }),
-    s("po-float64", { t({ "from polars import Float64", "" }) }),
-    s("po-from-epoch", { t({ "from polars import from_epoch", "" }) }),
-    s("po-int-range", { t({ "from polars import int_range", "" }) }),
-    s("po-int-ranges", { t({ "from polars import int_ranges", "" }) }),
-    s("po-int16", { t({ "from polars import Int16", "" }) }),
-    s("po-int32", { t({ "from polars import Int32", "" }) }),
-    s("po-int64", { t({ "from polars import Int64", "" }) }),
-    s("po-int8", { t({ "from polars import Int8", "" }) }),
-    s("po-into-expr", { t({ "from polars._typing import IntoExpr", "" }) }),
-    s("po-into-expr-column", { t({ "from polars._typing import IntoExprColumn", "" }) }),
-    s("po-list", { t({ "from polars import List", "" }) }),
-    s("po-lit", { t({ "from polars import lit", "" }) }),
-    s("po-max-horizontal", { t({ "from polars import max_horizontal", "" }) }),
-    s("po-min-horizontal", { t({ "from polars import min_horizontal", "" }) }),
-    s("po-no-rows-returned-error", { t({ "from polars.exceptions import NoRowsReturnedError", "" }) }),
-    s("po-read-ipc", { t({ "from polars import read_ipc", "" }) }),
-    s("po-repeat", { t({ "from polars import repeat", "" }) }),
-    s("po-schema-dict", { t({ "from polars._typing import SchemaDict", "" }) }),
-    s("po-series", { t({ "from polars import Series", "" }) }),
-    s("po-uint16", { t({ "from polars import UInt16", "" }) }),
-    s("po-uint32", { t({ "from polars import UInt32", "" }) }),
-    s("po-uint64", { t({ "from polars import UInt64", "" }) }),
-    s("po-uint8", { t({ "from polars import UInt8", "" }) }),
-    s("po-string", { t({ "from polars import String", "" }) }),
-    s("po-struct", { t({ "from polars import Struct, struct", "" }) }),
-    s("po-utf8", { t({ "from polars import Utf8", "" }) }),
-    s("po-when", { t({ "from polars import when", "" }) }),
 
     -- pytest
     s("a0", { t({ "assert 0, '!!!'", "" }) }),
@@ -234,74 +169,6 @@ ls.add_snippets("python", {
         "py-dataframe-regression-fixture",
         { t({ "from pytest_regressions.dataframe_regression import DataFrameRegressionFixture", "" }) }
     ),
-
-    -- random
-    s("ra-choice", { t({ "from random import choice", "" }) }),
-    s("ra-randint", { t({ "from random import randint", "" }) }),
-    s("ra-random", { t({ "from random import Random", "" }) }),
-    s("ra-seed", { t({ "from random import seed", "" }) }),
-    s("ra-shuffle", { t({ "from random import shuffle", "" }) }),
-
-    -- re
-    s("im-re", { t({ "import re", "" }) }),
-    s("re-dotall", { t({ "from re import DOTALL", "" }) }),
-    s("re-escape", { t({ "from re import escape", "" }) }),
-    s("re-findall", { t({ "from re import findall", "" }) }),
-    s("re-ignorecase", { t({ "from re import IGNORECASE", "" }) }),
-    s("re-multiline", { t({ "from re import MULTILINE", "" }) }),
-    s("re-search", { t({ "from re import search", "" }) }),
-    s("re-sub", { t({ "from re import sub", "" }) }),
-
-    -- redis
-    s("re-redis", { t({ "from redis.asyncio import Redis", "" }) }),
-
-    -- reprlib
-    s("im-rep", { t({ "import reprlib", "" }) }),
-    s("re-repr", { t({ "from reprlib import repr", "" }) }),
-
-    -- rich
-    s("rp", { t({ "from rich import print as rp", "" }) }),
-    s("ri-pretty-repr", { t({ "from rich.pretty import pretty_repr", "" }) }),
-
-    -- scripts
-    s("if-name-main", { t({ 'if __name__ == "__main__":', "    main()", "" }) }),
-
-    -- shutil
-    s("sh-rmtree", { t({ "from shutil import rmtree", "" }) }),
-
-    -- sqlalchemy
-    s("sq-and", { t({ "from sqlalchemy import and_", "" }) }),
-    s("sq-column", { t({ "from sqlalchemy import Column", "" }) }),
-    s("sq-func", { t({ "from sqlalchemy import func", "" }) }),
-    s("sq-insert", { t({ "from sqlalchemy import insert", "" }) }),
-    s("sq-multiple-results-found", { t({ "from sqlalchemy.exc import MultipleResultsFound", "" }) }),
-    s("sq-no-result-found", { t({ "from sqlalchemy.exc import NoResultFound", "" }) }),
-    s("sq-or", { t({ "from sqlalchemy import or_", "" }) }),
-    s("sq-select", { t({ "from sqlalchemy import select", "" }) }),
-    s("sq-text", { t({ "from sqlalchemy import text", "" }) }),
-    s("sq-url", { t({ "from sqlalchemy.engine.url import URL", "" }) }),
-
-    -- statistics
-    s("st-fmean", { t({ "from statistics import fmean", "" }) }),
-    s("st-mean", { t({ "from statistics import mean", "" }) }),
-
-    -- string
-    s("st-ascii-letters", { t({ "from string import ascii_letters", "" }) }),
-    s("st-template", { t({ "from string import Template", "" }) }),
-
-    -- subprocess
-    s("su-check-call", { t({ "from subprocess import check_call", "" }) }),
-    s("su-check-output", { t({ "from subprocess import check_output", "" }) }),
-    s("su-run", { t({ "from subprocess import run", "" }) }),
-
-    -- sys
-    s("sy-stdout", { t({ "from sys import stdout", "" }) }),
-
-    -- tabulate
-    s("ta-tabulate", { t({ "from tabulate import tabulate", "" }) }),
-
-    -- tempfile
-    s("te-temporary-directory", { t({ "from tempfile import TemporaryDirectory", "" }) }),
 
     -- tenacity
     s("te-retry", { t({ "from tenacity import retry", "" }) }),

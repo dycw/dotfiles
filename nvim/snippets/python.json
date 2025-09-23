@@ -103,6 +103,74 @@
     "body": "from operator import add, and_, eq, ge, gt, le, lt, mul, ne, neg, or_, sub, truediv\n",
     "prefix": "im-operator"
   },
+  "From 'optuna' import ...": {
+    "body": "from optuna import Study, Trial\nfrom optuna.pruners import BasePruner\nfrom optuna.samplers import BaseSampler\nfrom optuna.study import StudyDirection\n",
+    "prefix": "im-optuna"
+  },
+  "From 'os' import ...": {
+    "body": "from os import environ\n",
+    "prefix": "im-os"
+  },
+  "From 'pathlib' import ...": {
+    "body": "from pathlib import Path\n",
+    "prefix": "im-pathlib"
+  },
+  "From 'polars' import ...": {
+    "body": "import polars as pl\nfrom polars import Boolean, DataFrame, Date, Datetime, Duration, Enum, Expr, Float64, Int8, Int16, Int32, Int64, List, Series, String, Struct, UInt8, UInt16, UInt32, UInt64, Utf8, all_horizontal, any_horizontal, coalesce, col, concat, date_range, date_ranges, datetime_range, element, from_epoch, int_range, int_ranges, lit, max_horizontal, min_horizontal, repeat, struct, when\nfrom polars._typing import IntoExpr, IntoExprColumn, SchemaDict\nfrom polars.exceptions import ColumnNotFoundError, ComputeError, NoRowsReturnedError\n",
+    "prefix": "im-polars"
+  },
+  "From 'random' import ...": {
+    "body": "from random import Random, choice, randint, seed, shuffle\n",
+    "prefix": "im-random"
+  },
+  "From 're' import ...": {
+    "body": "import re\nfrom re import DOTALL, IGNORECASE, MULTILINE, escape, findall, search, sub\n",
+    "prefix": "im-re"
+  },
+  "From 'redis' import ...": {
+    "body": "from redis.asyncio import Redis\n",
+    "prefix": "im-redis"
+  },
+  "From 'reprlib' import ...": {
+    "body": "import reprlib\nfrom reprlib import repr\n",
+    "prefix": "im-reprlib"
+  },
+  "From 'rich' import ...": {
+    "body": "from rich.pretty import pretty_repr\n",
+    "prefix": "im-rich"
+  },
+  "From 'shutil' import ...": {
+    "body": "from shutil import rmtree\n",
+    "prefix": "im-shutil"
+  },
+  "From 'sqlalchemy' import ...": {
+    "body": "from sqlalchemy import Column, and_, func, insert, or_, select, text\nfrom sqlalchemy.engine.url import URL\nfrom sqlalchemy.exc import MultipleResultsFound, NoResultFound\n",
+    "prefix": "im-sqlalchemy"
+  },
+  "From 'statistics' import ...": {
+    "body": "from statistics import fmean, mean\n",
+    "prefix": "im-statistics"
+  },
+  "From 'string' import ...": {
+    "body": "from string import Template, ascii_letters\n",
+    "prefix": "im-string"
+  },
+  "From 'subprocess' import ...": {
+    "body": "from subprocess import check_call, check_output, run\n",
+    "prefix": "im-subprocess"
+  },
+  "From 'sys' import ...": {
+    "body": "from sys import stderr, stdout\n",
+    "prefix": "im-sys"
+  },
+  "From 'tabulate' import ...": {
+    "body": "from tabulate import tabulate\n",
+    "prefix": "im-tabulate"
+  },
+  "From 'tempfile' import ...": {
+    "body": "from tempfile import TemporaryDirectory\n",
+    "prefix": "im-tempfile"
+  },
   "From 'zoneinfo' import ...": {
     "body": "from zoneinfo import ZoneInfo\n",
     "prefix": "im-zoneinfo"
