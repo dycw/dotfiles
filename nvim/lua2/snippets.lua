@@ -17,26 +17,6 @@ ls.add_snippets("python", {
         t({ "set_global_breakpoint()", "" }),
     }),
 
-    -- cachetools
-    s("ca-ttl-cache", { t({ "from cachetools.func import ttl_cache", "" }) }),
-
-    -- click
-    s("cl-argument", { t({ "from click import argument", "" }) }),
-    s("cl-cli-runner", { t({ "from click.testing import CliRunner", "" }) }),
-    s("cl-command", { t({ "from click import command", "" }) }),
-    s("cl-option", { t({ "from click import option", "" }) }),
-
-    -- collections
-    s("co-abstract-set", { t({ "from collections.abc import Set as AbstractSet", "" }) }),
-    s("co-awaitable", { t({ "from collections.abc import Awaitable", "" }) }),
-    s("co-callable", { t({ "from collections.abc import Callable", "" }) }),
-    s("co-counter", { t({ "from collections import Counter", "" }) }),
-    s("co-deque", { t({ "from collections import deque", "" }) }),
-    s("co-iterable", { t({ "from collections.abc import Iterable", "" }) }),
-    s("co-iterator", { t({ "from collections.abc import Iterator", "" }) }),
-    s("co-mapping", { t({ "from collections.abc import Mapping", "" }) }),
-    s("co-sequence", { t({ "from collections.abc import Sequence", "" }) }),
-
     -- contextlib
     s("co-async-exit-stack", { t({ "from contextlib import AsyncExitStack", "" }) }),
     s("co-asynccontextmanager", { t({ "from contextlib import asynccontextmanager", "" }) }),

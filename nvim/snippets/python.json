@@ -19,6 +19,18 @@
     "body": "from cachetools.func import ttl_cache\n",
     "prefix": "im-cachetools"
   },
+  "From 'click' import ...": {
+    "body": "from click import argument, command, option\nfrom click.testing import CliRunner\n",
+    "prefix": "im-click"
+  },
+  "From 'collections' import ...": {
+    "body": "from collections import Counter, deque\nfrom collections.abc import Awaitable, Callable, Iterable, Iterator, Mapping, Sequence\nfrom collections.abc import Set as AbstractSet\n",
+    "prefix": "im-collections"
+  },
+  "From 'contextlib' import ...": {
+    "body": "from contextlib import AsyncExitStack, asynccontextmanager, contextmanager, ExitStack, redirect_stderr, redirect_stdout, suppress\n",
+    "prefix": "im-contextlib"
+  },
   "From 'zoneinfo' import ...": {
     "body": "from zoneinfo import ZoneInfo\n",
     "prefix": "im-zoneinfo"
