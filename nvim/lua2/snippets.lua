@@ -5,36 +5,8 @@ local t = ls.text_node
 
 ls.add_snippets("python", {
 
-    -- breakpoints
-    s("sgb", {
-        t({ "from utilities.contextvars import set_global_breakpoint", "" }),
-        t({ "set_global_breakpoint()", "" }),
-    }),
-
     -- dataclasses
     s("da-dataclass-kw", { t({ "@dataclass(kw_only=True)", "" }) }),
-    s("dataclass-or-un-kw", {
-        t({ "@dataclass(order=True, unsafe_hash=True, kw_only=True)", "" }),
-        t({ "class " }),
-        i(1, "ClassName"),
-        t({ ":", "" }),
-        t("    "),
-        i(2, "field1"),
-        t(": "),
-        i(3, "annotation1"),
-        t({ "", "" }),
-    }),
-    s("dataclass-or-un-kw-sl", {
-        t({ "@dataclass(order=True, unsafe_hash=True, kw_only=True, slots=True)", "" }),
-        t({ "class " }),
-        i(1, "ClassName"),
-        t({ ":", "" }),
-        t("    "),
-        i(2, "field1"),
-        t(": "),
-        i(3, "annotation1"),
-        t({ "", "" }),
-    }),
     s("dataclass-kw", {
         t({ "@dataclass(kw_only=True)", "" }),
         t({ "class " }),
