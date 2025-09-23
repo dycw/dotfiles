@@ -82,16 +82,6 @@ ls.add_snippets("python", {
     s("logger-name", { t({ "from utilities.logging import to_logger", "", "_LOGGER = to_logger(__name__)", "" }) }),
     s("logger-adapter", { t({ "logger: LoggerAdapter = field(init=False)", "" }) }),
 
-    -- numpy
-    s("im-np", { t({ "import numpy as np", "" }) }),
-    s("np-arange", { t({ "from numpy import arange", "" }) }),
-    s("np-full", { t({ "from numpy import full", "" }) }),
-    s("np-isnan", { t({ "from numpy import isnan", "" }) }),
-    s("np-linspace", { t({ "from numpy import linspace", "" }) }),
-    s("np-nan", { t({ "from numpy import nan", "" }) }),
-    s("np-ndarray", { t({ "from numpy import ndarray", "" }) }),
-    s("np-pi", { t({ "from numpy import pi", "" }) }),
-
     -- operator
     s("op-add", { t({ "from operator import add", "" }) }),
     s("op-and", { t({ "from operator import and_", "" }) }),
