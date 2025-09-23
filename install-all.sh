@@ -341,6 +341,7 @@ snap_install() {
 	fi
 }
 if [ -n "${IS_UBUNTU}" ]; then
+	snap_install chatgpt-desktop
 	snap_install pdfarranger
 	snap_install spotify
 	snap_install whatsapp-linux-app
