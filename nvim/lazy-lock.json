@@ -195,6 +195,10 @@
     "branch": "main",
     "commit": "2b49d1f8b8fcf5cfbd0913136f48f118225cca5d"
   },
+  "vim-caser": {
+    "branch": "master",
+    "commit": "6bc9f41d170711c58e0157d882a5fe8c30f34bf6"
+  },
   "vim-cool": {
     "branch": "master",
     "commit": "9ea940c0d537e55de0de4c0298c04b976960fb12"
