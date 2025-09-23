@@ -7,6 +7,10 @@
     "branch": "main",
     "commit": "37c82fd548e3f5ffc2d9d020a65dac1044584f44"
   },
+  "better-escape.nvim": {
+    "branch": "master",
+    "commit": "19a38aab94961016430905ebec30d272a01e9742"
+  },
   "blink.cmp": {
     "branch": "main",
     "commit": "327fff91fe6af358e990be7be1ec8b78037d2138"
@@ -114,6 +118,10 @@
   "snacks.nvim": {
     "branch": "main",
     "commit": "d67a47739dfc652cfcf66c59e929c704a854b37a"
+  },
+  "sort.nvim": {
+    "branch": "main",
+    "commit": "bb92140e1b96d62339bd5ab5b6df1eecca0d5da6"
   },
   "todo-comments.nvim": {
     "branch": "main",
