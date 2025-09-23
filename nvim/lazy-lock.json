@@ -79,6 +79,10 @@
     "branch": "main",
     "commit": "f9a177c11daa7829389b7b6eaaec8b8a5c47052d"
   },
+  "mini.move": {
+    "branch": "main",
+    "commit": "710ff226e31a3b9dd7e14bc9e2993f24d653df20"
+  },
   "mini.pairs": {
     "branch": "main",
     "commit": "3738ea30ff33e0cbf2983dc67319a5468d25b0a9"
