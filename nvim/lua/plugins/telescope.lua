@@ -36,31 +36,9 @@ return {
                 sorting_strategy = "ascending",
                 vimgrep_arguments = vimgrep_arguments,
             },
-            extensions = {
-                adjacent = { level = 2 },
-                project = {
-                    base_dirs = {
-                        { "~", max_depth = 1 },
-                        { "~/work", max_depth = 1 },
-                    },
-                },
-                recent_files = { only_cwd = true },
-            },
         })
 
-        -- extensions
-        telescope.load_extension("adjacent")
-        telescope.load_extension("file_browser")
-        telescope.load_extension("recent-files")
-        telescope.load_extension("ui-select")
-
-        -- key maps
         -- key maps: files
-        keymap_set("n", "<Leader>af", "<Cmd>Telescope adjacent<CR>", "adjacent [f]iles")
-        keymap_set("n", "<Leader>f", function()
-            require("telescope").extensions["recent-files"].recent_files({})
-            -- builtin.find_files
-        end, "[f]iles")
         keymap_set("n", "<Leader>gf", function()
             builtin.git_files({ show_untracked = true })
         end, "git [f]iles")
@@ -104,14 +82,8 @@ return {
         })
     end,
     dependencies = {
-        "maximilianlloyd/adjacent.nvim",
-        "mollerhoj/telescope-recent-files.nvim",
         "nvim-lua/plenary.nvim",
-        "nvim-telescope/telescope-file-browser.nvim",
-        "nvim-telescope/telescope-project.nvim",
-        "nvim-telescope/telescope-ui-select.nvim",
         "nvim-tree/nvim-web-devicons",
     },
-
     event = "VimEnter",
 }
