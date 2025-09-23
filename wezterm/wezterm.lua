@@ -5,6 +5,7 @@ local config = wezterm.config_builder()
 -- always
 config.audible_bell = "Disabled"
 config.font_size = 12.0
+config.hide_tab_bar_if_only_one_tab = true
 config.initial_cols = 200
 config.initial_rows = 100
 config.keys = {
@@ -15,6 +16,12 @@ config.keys = {
     },
 }
 config.window_close_confirmation = "NeverPrompt"
+config.window_padding = {
+    left = "8",
+    right = "8",
+    top = "2",
+    bottom = "2",
+}
 
 -- conditional
 if wezterm.hostname() == "RH-MacBook" then
@@ -30,11 +37,5 @@ if wezterm.hostname() == "RH-MacBook" then
     config.macos_window_background_blur = 0
     config.max_fps = 30
     config.window_background_opacity = 1.0
-    config.window_padding = {
-        left = "1%",
-        right = "5%",
-        top = "1%",
-        bottom = "1%",
-    }
 end
 return config

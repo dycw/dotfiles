@@ -413,6 +413,12 @@ cd_plugins() {
 	[ $# -ne 0 ] && echo_date "'cd_plugins' accepts no arguments; got $#" && return 1
 	cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}/nvim/lua/plugins" || return $?
 }
+clean_neovim() {
+	[ $# -ne 0 ] && echo_date "'clean_neovim' accepts no arguments; got $#" && return 1
+	rm -rf "${HOME}/.local/share/nvim/lazy"
+	rm -rf "${HOME}.local/state/nvim"
+	rm -rf "${XDG_CACHE_HOME:-"${HOME}/.cache"}/nvim"
+}
 lua_snippets() {
 	[ $# -ne 0 ] && echo_date "'lua_snippets' accepts no arguments; got $#" && return 1
 	${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua
@@ -640,7 +646,9 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			echo_date "Starting 'tailscaled' in the background..."
 			sudo tailscaled &
 			echo_date "Starting 'tailscale'..."
-			sudo tailscale up --accept-routes \
+			sudo tailscale up \
+				--accept-dns \
+				--accept-routes \
 				--auth-key="file:${__ts_up_file}" \
 				--login-server="${TAILSCALE_LOGIN_SERVER}" \
 				--reset
@@ -978,4 +986,10 @@ venv_recreate() {
 		rm -rf "${__venv_recreate_dir}"
 	fi
 	cdh
+}
+
+# wezterm
+wezterm_lua() {
+	[ $# -ne 0 ] && echo_date "'wezterm_lua' accepts no arguments; got $#" && return 1
+	${EDITOR} "${HOME}"/dotfiles/wezterm/wezterm.lua
 }
