@@ -6,12 +6,6 @@ local t = ls.text_node
 ls.add_snippets("python", {
 
     -- breakpoints
-    s("bp", { t({ "breakpoint()", "" }) }),
-    s("gb", {
-        t({ "from utilities.contextvars import global_breakpoint", "" }),
-        t({ "global_breakpoint()", "" }),
-    }),
-    s("rnie", { t({ "raise NotImplementedError", "" }) }),
     s("sgb", {
         t({ "from utilities.contextvars import set_global_breakpoint", "" }),
         t({ "set_global_breakpoint()", "" }),

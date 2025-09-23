@@ -3,6 +3,10 @@
     "body": "import datetime as dt\n",
     "prefix": "im-datetime"
   },
+  "breakpoint": {
+    "body": "breakpoint()\n",
+    "prefix": "bp"
+  },
   "from '__future__' import ...": {
     "body": "from __future__ import annotations\n",
     "prefix": "im-future"
@@ -214,5 +218,9 @@
   "from 'zoneinfo' import ...": {
     "body": "from zoneinfo import ZoneInfo\n",
     "prefix": "im-zoneinfo"
+  },
+  "raise NotImplementedError": {
+    "body": "raise NotImplementedError\n",
+    "prefix": "nie"
   }
 }
