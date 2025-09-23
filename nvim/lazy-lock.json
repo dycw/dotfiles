@@ -59,10 +59,6 @@
     "branch": "main",
     "commit": "8ae25b35ae16ca4bd5de3d3c472eec3b574018d4"
   },
-  "iswap.nvim": {
-    "branch": "master",
-    "commit": "e02cc91f2a8feb5c5a595767d208c54b6e3258ec"
-  },
   "lazy.nvim": {
     "branch": "main",
     "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a"
@@ -169,7 +165,7 @@
   },
   "rustaceanvim": {
     "branch": "master",
-    "commit": "12504405821c05874d2d1f6b5ec919f9808e2c99"
+    "commit": "8947b1f941f63cb3d618ebe04e07278bf00714df"
   },
   "snacks.nvim": {
     "branch": "main",
@@ -221,7 +217,7 @@
   },
   "which-key.nvim": {
     "branch": "main",
-    "commit": "370ec46f710e058c9c1646273e6b225acf47cbed"
+    "commit": "904308e6885bbb7b60714c80ab3daf0c071c1492"
   },
   "yanky.nvim": {
     "branch": "main",
