@@ -652,6 +652,8 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 				--auth-key="file:${__ts_up_file}" \
 				--login-server="${TAILSCALE_LOGIN_SERVER}" \
 				--reset
+			echo_date 'Setting exit node...'
+			sudo tailscale set --exit-node='qrt-nanode'
 		}
 		ts_down() {
 			[ $# -ne 0 ] && echo_date "'ts_down' accepts no arguments; got $#" && return 1
