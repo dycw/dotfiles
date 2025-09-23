@@ -4,24 +4,6 @@ local s = ls.snippet
 local t = ls.text_node
 
 ls.add_snippets("python", {
-    -- abc
-    s("ab-abc", { t({ "from abc import ABC", "" }) }),
-    s("ab-abstract-method", { t({ "from abc import abstractmethod", "" }) }),
-
-    -- asyncio
-    s("im-asyncio", { t({ "import asyncio", "" }) }),
-    s("as-create-task", { t({ "from asyncio import create_task", "" }) }),
-    s("as-event", { t({ "from asyncio import Event", "" }) }),
-    s("as-get-event-loop", { t({ "from asyncio import get_event_loop", "" }) }),
-    s("as-lock", { t({ "from asyncio import Lock", "" }) }),
-    s("as-queue", { t({ "from asyncio import Queue", "" }) }),
-    s("as-run", { t({ "from asyncio import run", "" }) }),
-    s("as-sleep", { t({ "from asyncio import sleep", "" }) }),
-    s("as-task", { t({ "from asyncio import Task", "" }) }),
-    s("as-task-group", { t({ "from asyncio import TaskGroup", "" }) }),
-
-    -- beartype
-    s("be-beartype", { t({ "from beartype import beartype", "" }) }),
 
     -- bidict
     s("bi-bidict", { t({ "from bidict import bidict", "" }) }),
@@ -676,7 +658,4 @@ ls.add_snippets("python", {
     s("wh-time", { t({ "from whenever import Time", "" }) }),
     s("wh-time-delta", { t({ "from whenever import TimeDelta", "" }) }),
     s("wh-zoned-date-time", { t({ "from whenever import ZonedDateTime", "" }) }),
-
-    -- zoneinfo
-    s("zo-zoneinfo", { t({ "from zoneinfo import ZoneInfo", "" }) }),
 })

@@ -1,0 +1,18 @@
+{
+  "From 'abc' import ...": {
+    "body": "from abc import ABC, abstractmethod\n",
+    "prefix": "im-abc"
+  },
+  "From 'asyncio' import ...": {
+    "body": "from asyncio import Event, Lock, Queue, Task, TaskGroup, create_task, get_event_loop, run, sleep\n",
+    "prefix": "im-asyncio"
+  },
+  "From 'beartype' import ...": {
+    "body": "from beartype import beartype\n",
+    "prefix": "im-beartype"
+  },
+  "From 'zoneinfo' import ...": {
+    "body": "from zoneinfo import ZoneInfo\n",
+    "prefix": "im-zoneinfo"
+  }
+}
