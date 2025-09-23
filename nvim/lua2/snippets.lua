@@ -17,23 +17,8 @@ ls.add_snippets("python", {
         t({ "set_global_breakpoint()", "" }),
     }),
 
-    -- contextlib
-    s("co-async-exit-stack", { t({ "from contextlib import AsyncExitStack", "" }) }),
-    s("co-asynccontextmanager", { t({ "from contextlib import asynccontextmanager", "" }) }),
-    s("co-contextmanager", { t({ "from contextlib import contextmanager", "" }) }),
-    s("co-exit-stack", { t({ "from contextlib import ExitStack", "" }) }),
-    s("co-redirect-stderr", { t({ "from contextlib import redirect_stderr", "" }) }),
-    s("co-redirect-stdout", { t({ "from contextlib import redirect_stdout", "" }) }),
-    s("co-suppress", { t({ "from contextlib import suppress", "" }) }),
-
     -- dataclasses
-    s("da-asdict", { t({ "from dataclasses import asdict", "" }) }),
-    s("da-astuple", { t({ "from dataclasses import astuple", "" }) }),
-    s("da-dataclass", { t({ "from dataclasses import dataclass", "" }) }),
     s("da-dataclass-kw", { t({ "@dataclass(kw_only=True)", "" }) }),
-    s("da-field", { t({ "from dataclasses import field", "" }) }),
-    s("da-init-var", { t({ "from dataclasses import InitVar", "" }) }),
-    s("da-replace", { t({ "from dataclasses import replace", "" }) }),
     s("dataclass-or-un-kw", {
         t({ "@dataclass(order=True, unsafe_hash=True, kw_only=True)", "" }),
         t({ "class " }),
@@ -79,29 +64,9 @@ ls.add_snippets("python", {
         t({ "", "" }),
     }),
 
-    -- datetime
-    s("im-dt", { t({ "import datetime as dt", "" }) }),
-
-    -- enum
-    s("im-enum", { t({ "import enum", "" }) }),
-    s("en-auto", { t({ "from enum import auto", "" }) }),
-    s("en-enum", { t({ "from enum import Enum", "" }) }),
-    s("en-str-enum", { t({ "from enum import StrEnum", "" }) }),
-    s("en-unique", { t({ "from enum import unique", "" }) }),
-
     -- errors
     s("no-t201", { t({ "# noqa: T201", "" }) }),
     s("ex-n801", { t({ "(Exception): ...  # noqa: N801", "" }) }),
-
-    -- frozendict
-    s("fr-frozendict", { t({ "from frozendict import frozendict", "" }) }),
-
-    -- functools
-    s("fu-cached-property", { t({ "from functools import cached_property", "" }) }),
-    s("fu-partial", { t({ "from functools import partial", "" }) }),
-    s("fu-reduce", { t({ "from functools import reduce", "" }) }),
-    s("fu-total-ordering", { t({ "from functools import total_ordering", "" }) }),
-    s("fu-wraps", { t({ "from functools import wraps", "" }) }),
 
     -- future
     s("fu-annotations", { t({ "from __future__ import annotations", "" }) }),

@@ -1,4 +1,8 @@
 {
+  "From '__future__' import ...": {
+    "body": "from __future__ import annotations\n",
+    "prefix": "im-future"
+  },
   "From 'abc' import ...": {
     "body": "from abc import ABC, abstractmethod\n",
     "prefix": "im-abc"
@@ -28,11 +32,51 @@
     "prefix": "im-collections"
   },
   "From 'contextlib' import ...": {
-    "body": "from contextlib import AsyncExitStack, asynccontextmanager, contextmanager, ExitStack, redirect_stderr, redirect_stdout, suppress\n",
+    "body": "from contextlib import AsyncExitStack, ExitStack, asynccontextmanager, contextmanager, redirect_stderr, redirect_stdout, suppress\n",
     "prefix": "im-contextlib"
+  },
+  "From 'dataclasses' import ...": {
+    "body": "from dataclasses import InitVar, asdict, astuple, dataclass, field, replace\n",
+    "prefix": "im-dataclasses"
+  },
+  "From 'enum' import ...": {
+    "body": "from enum import Enum, StrEnum, auto, unique\n",
+    "prefix": "im-enum"
+  },
+  "From 'frozendict' import ...": {
+    "body": "from frozendict import frozendict\n",
+    "prefix": "im-frozendict"
+  },
+  "From 'functools' import ...": {
+    "body": "from functools import cached_property, partial, reduce, total_ordering, wraps\n",
+    "prefix": "im-functools"
+  },
+  "From 'getpass' import ...": {
+    "body": "from getpass import getuser\n",
+    "prefix": "im-getpass"
+  },
+  "From 'humanize' import ...": {
+    "body": "from humanize import naturaldelta, naturaltime\n",
+    "prefix": "im-humanize"
+  },
+  "From 'hypothesis' import ...": {
+    "body": "from hypothesis import HealthCheck, Phase, assume, given, reproduce_failure, settings\nfrom hypothesis.errors import InvalidArgument\nfrom hypothesis.strategies import binary, booleans, builds, composite, data, DataObject, dates, datetimes, DrawFn, floats, integers, just, lists, none, permutations, randoms, sampled_from, sets, tuples\n",
+    "prefix": "im-hypothesis"
+  },
+  "From 'ib_async' import ...": {
+    "body": "from ib_async import IB, CommissionReport, ContFuture, Contract, ContractDetails, Crypto, Execution, Fill, Forex, Future, Index, Order, OrderStatus, Stock, Trade\n",
+    "prefix": "im-ib-async"
+  },
+  "From 'importlib' import ...": {
+    "body": "from importlib.resources import files\n",
+    "prefix": "im-importlib"
   },
   "From 'zoneinfo' import ...": {
     "body": "from zoneinfo import ZoneInfo\n",
     "prefix": "im-zoneinfo"
+  },
+  "Import 'datetime'": {
+    "body": "import datetime as dt\n",
+    "prefix": "im-datetime"
   }
 }
