@@ -171,6 +171,38 @@
     "body": "from tempfile import TemporaryDirectory\n",
     "prefix": "im-tempfile"
   },
+  "From 'tenacity' import ...": {
+    "body": "from tenacity import retry\n",
+    "prefix": "im-tenacity"
+  },
+  "From 'textwrap' import ...": {
+    "body": "from textwrap import indent\n",
+    "prefix": "im-textwrap"
+  },
+  "From 'threading' import ...": {
+    "body": "from threading import RLock\n",
+    "prefix": "im-threading"
+  },
+  "From 'time' import ...": {
+    "body": "from time import sleep\n",
+    "prefix": "im-time"
+  },
+  "From 'tqdm' import ...": {
+    "body": "from tqdm import tqdm, trange\n",
+    "prefix": "im-tqdm"
+  },
+  "From 'typing' import ...": {
+    "body": "from typing import Any, ClassVar, Generic, Literal, NotRequired, Protocol, Required, Self, TypeVar, TypedDict, assert_never, cast, overload, override\n",
+    "prefix": "im-typing"
+  },
+  "From 'uuid' import ...": {
+    "body": "from uuid import UUID, uuid4\n",
+    "prefix": "im-uuid"
+  },
+  "From 'whenever' import ...": {
+    "body": "from whenever import Date, DateDelta, DateTimeDelta, PlainDateTime, Time, TimeDelta, ZonedDateTime\n",
+    "prefix": "im-whenever"
+  },
   "From 'zoneinfo' import ...": {
     "body": "from zoneinfo import ZoneInfo\n",
     "prefix": "im-zoneinfo"
