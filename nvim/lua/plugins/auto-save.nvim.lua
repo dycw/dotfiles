@@ -13,4 +13,5 @@ return {
             debounce_delay = 10,
         })
     end,
+    event = "VeryLazy",
 }
