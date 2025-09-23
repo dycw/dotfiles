@@ -34,11 +34,12 @@ case ":${PATH}:" in
 esac
 
 # local
-__dir="${HOME}"/.local/bin
-case ":${PATH}:" in
-*:"${__dir}":*) ;;
-*) export PATH="${__dir}:${PATH}" ;;
-esac
+for __dir in "${HOME}"/bin "${HOME}"/.local/bin; do
+	case ":${PATH}:" in
+	*:"${__dir}":*) ;;
+	*) export PATH="${__dir}:${PATH}" ;;
+	esac
+done
 
 # neovim
 if command -v nvim >/dev/null 2>&1; then
