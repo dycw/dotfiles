@@ -170,49 +170,11 @@ ls.add_snippets("python", {
         { t({ "from pytest_regressions.dataframe_regression import DataFrameRegressionFixture", "" }) }
     ),
 
-    -- tenacity
-    s("te-retry", { t({ "from tenacity import retry", "" }) }),
-
-    -- textwrap
-    s("te-indent", { t({ "from textwrap import indent", "" }) }),
-
-    -- threading
-    s("th-rlock", { t({ "from threading import RLock", "" }) }),
-
-    -- time
-    s("ti-sleep", { t({ "from time import sleep", "" }) }),
-
-    -- tqdm
-    s("tq-tqdm", { t({ "from tqdm import tqdm", "" }) }),
-    s("tq-trange", { t({ "from tqdm import trange", "" }) }),
-
-    -- typed-settings
-    s("ty-extended-ts-converter", { t({ "from utilities.typed_settings import ExtendedTSConverter", "" }) }),
-
     -- typing
     s("case-never", {
         t({ "case never:", "" }),
         t({ "    assert_never(never)", "" }),
     }),
-    s("im-typing", { t({ "import typing", "" }) }),
-    s("ty-any", { t({ "from typing import Any, cast", "" }) }),
-    s("ty-assert-never", { t({ "from typing import assert_never", "" }) }),
-    s("ty-cast", { t({ "from typing import Any, cast", "" }) }),
-    s("ty-class-var", { t({ "from typing import ClassVar", "" }) }),
-    s("ty-generic", { t({ "from typing import Generic", "" }) }),
-    s("ty-literal", { t({ "from typing import Literal", "" }) }),
-    s("ty-not-required", { t({ "from typing import NotRequired", "" }) }),
-    s("ty-overload", { t({ "from typing import overload", "" }) }),
-    s("ty-override", { t({ "from typing import override", "" }) }),
-    s("ty-protocol", { t({ "from typing import Protocol", "" }) }),
-    s("ty-required", { t({ "from typing import Required", "" }) }),
-    s("ty-self", { t({ "from typing import Self", "" }) }),
-    s("ty-type-var", { t({ "from typing import TypeVar", "" }) }),
-    s("ty-typed-dict", { t({ "from typing import TypedDict", "" }) }),
-
-    -- uuid
-    s("uu-uuid", { t({ "from uuid import UUID", "" }) }),
-    s("uu-uuid4", { t({ "from uuid import uuid4", "" }) }),
 
     -- utilities
     s("ut-add-listener", { t({ "from utilities.eventkit import add_listener", "" }) }),
