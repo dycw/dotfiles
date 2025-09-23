@@ -68,43 +68,8 @@ ls.add_snippets("python", {
     s("no-t201", { t({ "# noqa: T201", "" }) }),
     s("ex-n801", { t({ "(Exception): ...  # noqa: N801", "" }) }),
 
-    -- future
-    s("fu-annotations", { t({ "from __future__ import annotations", "" }) }),
-
-    -- getpass
-    s("ge-getuser", { t({ "from getpass import getuser", "" }) }),
-
-    -- humanize
-    s("hu-naturaldelta", { t({ "from humanize import naturaldelta", "" }) }),
-    s("hu-naturaltime", { t({ "from humanize import naturaltime", "" }) }),
-
     -- hypothesis
     s("da-data-object", { t({ "data: DataObject" }) }),
-    s("hy-assume", { t({ "from hypothesis import assume", "" }) }),
-    s("hy-binary", { t({ "from hypothesis.strategies import binary", "" }) }),
-    s("hy-booleans", { t({ "from hypothesis.strategies import booleans", "" }) }),
-    s("hy-builds", { t({ "from hypothesis.strategies import builds", "" }) }),
-    s("hy-composite", { t({ "from hypothesis.strategies import composite", "" }) }),
-    s("hy-data", { t({ "from hypothesis.strategies import data, DataObject", "" }) }),
-    s("hy-dates", { t({ "from hypothesis.strategies import dates", "" }) }),
-    s("hy-datetimes", { t({ "from hypothesis.strategies import datetimes", "" }) }),
-    s("hy-draw-fn", { t({ "from hypothesis.strategies import DrawFn", "" }) }),
-    s("hy-floats", { t({ "from hypothesis.strategies import floats", "" }) }),
-    s("hy-given", { t({ "from hypothesis import given", "" }) }),
-    s("hy-health-check", { t({ "from hypothesis import HealthCheck", "" }) }),
-    s("hy-integers", { t({ "from hypothesis.strategies import integers", "" }) }),
-    s("hy-invalid-argument", { t({ "from hypothesis.errors import InvalidArgument", "" }) }),
-    s("hy-just", { t({ "from hypothesis.strategies import just", "" }) }),
-    s("hy-lists", { t({ "from hypothesis.strategies import lists", "" }) }),
-    s("hy-none", { t({ "from hypothesis.strategies import none", "" }) }),
-    s("hy-permutations", { t({ "from hypothesis.strategies import permutations", "" }) }),
-    s("hy-phase", { t({ "from hypothesis import Phase", "" }) }),
-    s("hy-randoms", { t({ "from hypothesis.strategies import randoms", "" }) }),
-    s("hy-reproduce-failure", { t({ "from hypothesis import reproduce_failure", "" }) }),
-    s("hy-sampled-from", { t({ "from hypothesis.strategies import sampled_from", "" }) }),
-    s("hy-sets", { t({ "from hypothesis.strategies import sets", "" }) }),
-    s("hy-settings", { t({ "from hypothesis import settings", "" }) }),
-    s("hy-tuples", { t({ "from hypothesis.strategies import tuples", "" }) }),
     s("settings-filter-too-much", { t({ "@settings(suppress_health_check={HealthCheck.filter_too_much})", "" }) }),
     s(
         "settings-function-scoped-fixture",
@@ -113,66 +78,9 @@ ls.add_snippets("python", {
     s("settings-generate-only", { t({ "@settings(phases={Phase.generate})", "" }) }),
     s("settings-max-examples", { t({ "@settings(max_examples=1)", "" }) }),
 
-    -- ib-async
-    s("ib-commission-report", { t({ "from ib_async import CommissionReport", "" }) }),
-    s("ib-cont-future", { t({ "from ib_async import ContFuture", "" }) }),
-    s("ib-contract", { t({ "from ib_async import Contract", "" }) }),
-    s("ib-contract-details", { t({ "from ib_async import ContractDetails", "" }) }),
-    s("ib-crypto", { t({ "from ib_async import Crypto", "" }) }),
-    s("ib-execution", { t({ "from ib_async import Execution", "" }) }),
-    s("ib-fill", { t({ "from ib_async import Fill", "" }) }),
-    s("ib-forex", { t({ "from ib_async import Forex", "" }) }),
-    s("ib-future", { t({ "from ib_async import Future", "" }) }),
-    s("ib-ib", { t({ "from ib_async import IB", "" }) }),
-    s("ib-index", { t({ "from ib_async import Index", "" }) }),
-    s("ib-order", { t({ "from ib_async import Order", "" }) }),
-    s("ib-order-status", { t({ "from ib_async import OrderStatus", "" }) }),
-    s("ib-stock", { t({ "from ib_async import Stock", "" }) }),
-    s("ib-trade", { t({ "from ib_async import Trade", "" }) }),
-
-    -- importlib
-    s("im-files", { t({ "from importlib.resources import files", "" }) }),
-
-    -- inspect
-    s("in-signature", { t({ "from inspect import signature", "" }) }),
-
-    -- io
-    s("io-string-io", { t({ "from io import StringIO", "" }) }),
-
-    -- itertools
-    s("it-accumulate", { t({ "from itertools import accumulate", "" }) }),
-    s("it-chain", { t({ "from itertools import chain", "" }) }),
-    s("it-count", { t({ "from itertools import count", "" }) }),
-    s("it-cycle", { t({ "from itertools import cycle", "" }) }),
-    s("it-dropwhile", { t({ "from itertools import dropwhile", "" }) }),
-    s("it-groupby", { t({ "from itertools import groupby", "" }) }),
-    s("it-islice", { t({ "from itertools import islice", "" }) }),
-    s("it-pairwise", { t({ "from itertools import pairwise", "" }) }),
-    s("it-product", { t({ "from itertools import product", "" }) }),
-    s("it-repeat", { t({ "from itertools import repeat", "" }) }),
-    s("it-starmap", { t({ "from itertools import starmap", "" }) }),
-    s("it-takewhile", { t({ "from itertools import takewhile", "" }) }),
-
     -- logging
     s("logger-name", { t({ "from utilities.logging import to_logger", "", "_LOGGER = to_logger(__name__)", "" }) }),
     s("logger-adapter", { t({ "logger: LoggerAdapter = field(init=False)", "" }) }),
-    s("lo-formatter", { t({ "from logging import Formatter", "" }) }),
-    s("lo-get-logger", { t({ "from logging import getLogger", "" }) }),
-    s("lo-handler", { t({ "from logging import Handler", "" }) }),
-    s("lo-stream-handler", { t({ "from logging import StreamHandler", "" }) }),
-
-    -- math
-    s("ma-inf", { t({ "from math import inf", "" }) }),
-    s("ma-isclose", { t({ "from math import isclose", "" }) }),
-    s("ma-isnan", { t({ "from math import isnan", "" }) }),
-    s("ma-nan", { t({ "from math import nan", "" }) }),
-
-    -- more-itertools
-    s("mi-chunked", { t({ "from more_itertools import chunked", "" }) }),
-    s("mi-iterate", { t({ "from more_itertools import iterate", "" }) }),
-    s("mi-map-except", { t({ "from more_itertools import map_except", "" }) }),
-    s("mi-partition", { t({ "from more_itertools import partition", "" }) }),
-    s("mi-split-at", { t({ "from more_itertools import split_after", "" }) }),
 
     -- numpy
     s("im-np", { t({ "import numpy as np", "" }) }),

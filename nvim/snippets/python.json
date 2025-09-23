@@ -71,6 +71,38 @@
     "body": "from importlib.resources import files\n",
     "prefix": "im-importlib"
   },
+  "From 'inspect' import ...": {
+    "body": "from inspect import signature\n",
+    "prefix": "im-inspect"
+  },
+  "From 'io' import ...": {
+    "body": "from io import StringIO\n",
+    "prefix": "im-io"
+  },
+  "From 'itertools' import ...": {
+    "body": "from itertools import accumulate, chain, count, cycle, dropwhile, groupby, islice, pairwise, product, repeat, starmap, takewhile\n",
+    "prefix": "im-itertools"
+  },
+  "From 'logging' import ...": {
+    "body": "from logging import Formatter, Handler, StreamHandler, getLogger\n",
+    "prefix": "im-logging"
+  },
+  "From 'math' import ...": {
+    "body": "from math import inf, isclose, isnan, nan\n",
+    "prefix": "im-math"
+  },
+  "From 'more_itertools' import ...": {
+    "body": "from more_itertools import chunked, iterate, map_except, partition, split_after\n",
+    "prefix": "im-more-itertools"
+  },
+  "From 'numpy' import ...": {
+    "body": "import numpy as np\nfrom numpy import arange, full, isnan, linspace, nan, ndarray, pi\n",
+    "prefix": "im-numpy"
+  },
+  "From 'operator' import ...": {
+    "body": "from operator import add, and_, eq, ge, gt, le, lt, mul, ne, neg, or_, sub, truediv\n",
+    "prefix": "im-operator"
+  },
   "From 'zoneinfo' import ...": {
     "body": "from zoneinfo import ZoneInfo\n",
     "prefix": "im-zoneinfo"
