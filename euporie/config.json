@@ -7,6 +7,12 @@
   "enable_language_servers": true,
   "expand": true,
   "formatters": [
-    { "command": ["ruff", "format", "-"], "languages": ["python"] }
-  ]
+    {
+      "command": ["ruff", "format", "-"],
+      "languages": ["python"]
+    }
+  ],
+  "notebook": {
+    "line_numbers": true
+  }
 }
