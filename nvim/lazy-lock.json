@@ -83,6 +83,10 @@
     "branch": "main",
     "commit": "de740991c12411b663994b2860f1a4fd0937c130"
   },
+  "nvim-early-retirement": {
+    "branch": "main",
+    "commit": "14aba23ce4168e6d6acbf78ab1d33739c3894f68"
+  },
   "nvim-lint": {
     "branch": "master",
     "commit": "0864f81c681e15d9bdc1156fe3a17bd07db5a3ed"
