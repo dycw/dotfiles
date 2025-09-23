@@ -15,6 +15,10 @@
     "body": "from bidict import bidict\n",
     "prefix": "im-bidict"
   },
+  "From 'cachetools' import ...": {
+    "body": "from cachetools.func import ttl_cache\n",
+    "prefix": "im-cachetools"
+  },
   "From 'zoneinfo' import ...": {
     "body": "from zoneinfo import ZoneInfo\n",
     "prefix": "im-zoneinfo"

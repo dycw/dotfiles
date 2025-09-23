@@ -5,9 +5,6 @@ local t = ls.text_node
 
 ls.add_snippets("python", {
 
-    -- bidict
-    s("bi-bidict", { t({ "from bidict import bidict", "" }) }),
-
     -- breakpoints
     s("bp", { t({ "breakpoint()", "" }) }),
     s("gb", {
