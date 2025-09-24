@@ -1,0 +1,334 @@
+{
+  "# noqa: T201": {
+    "body": "# noqa: T201\n",
+    "prefix": "noqa-t201"
+  },
+  "@dataclass(kw_only)": {
+    "body": "@dataclass(kw_only=True)\nclass ${1:ClassName}:\n    ${2:field}: ${3:annotation}\n\n",
+    "prefix": "dataclass-k"
+  },
+  "@dataclass(kw_only, slot)": {
+    "body": "@dataclass(kw_only=True, slots=True)\nclass ${1:ClassName}:\n    ${2:field}: ${3:annotation}\n\n",
+    "prefix": "dataclass-ks"
+  },
+  "@dataclass(order, unsafe_hash, kw_only)": {
+    "body": "@dataclass(order=True, unsafe_hash=True, kw_only=True)\nclass ${1:ClassName}:\n    ${2:field}: ${3:annotation}\n\n",
+    "prefix": "dataclass-ohk"
+  },
+  "@dataclass(order, unsafe_hash, kw_only, slots)": {
+    "body": "@dataclass(order=True, unsafe_hash=True, kw_only=True, slots=True)\nclass ${1:ClassName}:\n    ${2:field}: ${3:annotation}\n\n",
+    "prefix": "dataclass-ohks"
+  },
+  "@mark.only": {
+    "body": "@mark.only\n",
+    "prefix": "mo"
+  },
+  "@mark.parametrize": {
+    "body": "@mark.parametrize(\"${1:argname}\", [param(${2:argvalue})])\n",
+    "prefix": "mp"
+  },
+  "@mark.repeat(10)": {
+    "body": "@mark.repeat(10)\n",
+    "prefix": "mr10"
+  },
+  "@mark.skip": {
+    "body": "@mark.skip\n",
+    "prefix": "ms"
+  },
+  "@mark.xfail": {
+    "body": "@mark.xfail\n",
+    "prefix": "mx"
+  },
+  "@settings(filter_too_much)": {
+    "body": "@settings(suppress_health_check={HealthCheck.filter_too_much})\n",
+    "prefix": "settings-filter-too-much"
+  },
+  "@settings(function_scoped_fixture)": {
+    "body": "@settings(suppress_health_check={HealthCheck.function_scoped_fixture})\n",
+    "prefix": "settings-filter-too-much"
+  },
+  "@settings(generate)": {
+    "body": "@settings(phases={Phase.generate})\n",
+    "prefix": "settings-generate"
+  },
+  "@settings(max_examples)": {
+    "body": "@settings(max_examples=1)\n",
+    "prefix": "settings-max-examples"
+  },
+  "Import 'datetime'": {
+    "body": "import datetime as dt\n",
+    "prefix": "im-datetime"
+  },
+  "_LOGGER = to_logger(__name__)": {
+    "body": "from utilities.logging import to_logger\n\n_LOGGER = to_logger(__name__)\n\n",
+    "prefix": "logger-name"
+  },
+  "assert 0, '!!!'": {
+    "body": "assert 0, '!!!'\n",
+    "prefix": "a0"
+  },
+  "assert 0, pretty_repr(locals())": {
+    "body": "from rich.pretty import pretty_repr\n\nassert 0, pretty_repr(locals())\n",
+    "prefix": "a1"
+  },
+  "breakpoint": {
+    "body": "breakpoint()\n",
+    "prefix": "bp"
+  },
+  "case never:": {
+    "body": "case never:\n    assert_never(never)\n",
+    "prefix": "case-never"
+  },
+  "class TestClass:": {
+    "body": "class Test${1:ClassName}:\n    def test_${2:method_name}(self, $3) -> None:\n        ${4:pass}\n\n",
+    "prefix": "class-test"
+  },
+  "data: DataObject": {
+    "body": "data: DataObject",
+    "prefix": "data-object"
+  },
+  "from ... import ... (tests)": {
+    "body": "from hypothesis import HealthCheck, Phase, given, reproduce_failure, settings\nfrom pytest import RaisesGroup, approx, fixture, mark, param, raises, skip\nfrom pytest_benchmark.fixture import BenchmarkFixture\nfrom pytest_lazy_fixtures import lf\nfrom pytest_regressions.dataframe_regression import DataFrameRegressionFixture\nfrom utilities.contextvars import set_global_breakpoint",
+    "prefix": "im-tests"
+  },
+  "from __future__ import ...": {
+    "body": "from __future__ import annotations\n",
+    "prefix": "im-future"
+  },
+  "from abc import ...": {
+    "body": "from abc import ABC, abstractmethod\n",
+    "prefix": "im-abc"
+  },
+  "from asyncio import ...": {
+    "body": "from asyncio import Event, Lock, Queue, Task, TaskGroup, create_task, get_event_loop, run, sleep\n",
+    "prefix": "im-asyncio"
+  },
+  "from beartype import ...": {
+    "body": "from beartype import beartype\n",
+    "prefix": "im-beartype"
+  },
+  "from bidict import ...": {
+    "body": "from bidict import bidict\n",
+    "prefix": "im-bidict"
+  },
+  "from cachetools import ...": {
+    "body": "from cachetools.func import ttl_cache\n",
+    "prefix": "im-cachetools"
+  },
+  "from click import ...": {
+    "body": "from click import argument, command, option\nfrom click.testing import CliRunner\n",
+    "prefix": "im-click"
+  },
+  "from collections import ...": {
+    "body": "from collections import Counter, deque\nfrom collections.abc import Awaitable, Callable, Iterable, Iterator, Mapping, Sequence\nfrom collections.abc import Set as AbstractSet\n",
+    "prefix": "im-collections"
+  },
+  "from contextlib import ...": {
+    "body": "from contextlib import AsyncExitStack, ExitStack, asynccontextmanager, contextmanager, redirect_stderr, redirect_stdout, suppress\n",
+    "prefix": "im-contextlib"
+  },
+  "from dataclasses import ...": {
+    "body": "from dataclasses import InitVar, asdict, astuple, dataclass, field, replace\n",
+    "prefix": "im-dataclasses"
+  },
+  "from enum import ...": {
+    "body": "from enum import Enum, StrEnum, auto, unique\n",
+    "prefix": "im-enum"
+  },
+  "from frozendict import ...": {
+    "body": "from frozendict import frozendict\n",
+    "prefix": "im-frozendict"
+  },
+  "from functools import ...": {
+    "body": "from functools import cached_property, partial, reduce, total_ordering, wraps\n",
+    "prefix": "im-functools"
+  },
+  "from getpass import ...": {
+    "body": "from getpass import getuser\n",
+    "prefix": "im-getpass"
+  },
+  "from humanize import ...": {
+    "body": "from humanize import naturaldelta, naturaltime\n",
+    "prefix": "im-humanize"
+  },
+  "from hypothesis import ...": {
+    "body": "from hypothesis import HealthCheck, Phase, assume, given, reproduce_failure, settings\nfrom hypothesis.errors import InvalidArgument\nfrom hypothesis.strategies import binary, booleans, builds, composite, data, DataObject, dates, datetimes, DrawFn, floats, integers, just, lists, none, permutations, randoms, sampled_from, sets, tuples\n",
+    "prefix": "im-hypothesis"
+  },
+  "from ib_async import ...": {
+    "body": "from ib_async import IB, CommissionReport, ContFuture, Contract, ContractDetails, Crypto, Execution, Fill, Forex, Future, Index, Order, OrderStatus, Stock, Trade\n",
+    "prefix": "im-ib-async"
+  },
+  "from importlib import ...": {
+    "body": "from importlib.resources import files\n",
+    "prefix": "im-importlib"
+  },
+  "from inspect import ...": {
+    "body": "from inspect import signature\n",
+    "prefix": "im-inspect"
+  },
+  "from io import ...": {
+    "body": "from io import StringIO\n",
+    "prefix": "im-io"
+  },
+  "from itertools import ...": {
+    "body": "from itertools import accumulate, chain, count, cycle, dropwhile, groupby, islice, pairwise, product, repeat, starmap, takewhile\n",
+    "prefix": "im-itertools"
+  },
+  "from logging import ...": {
+    "body": "from logging import Formatter, Handler, StreamHandler, getLogger\n",
+    "prefix": "im-logging"
+  },
+  "from math import ...": {
+    "body": "from math import inf, isclose, isnan, nan\n",
+    "prefix": "im-math"
+  },
+  "from more_itertools import ...": {
+    "body": "from more_itertools import chunked, iterate, map_except, partition, split_after\n",
+    "prefix": "im-more-itertools"
+  },
+  "from numpy import ...": {
+    "body": "import numpy as np\nfrom numpy import arange, full, isnan, linspace, nan, ndarray, pi\n",
+    "prefix": "im-numpy"
+  },
+  "from operator import ...": {
+    "body": "from operator import add, and_, eq, ge, gt, le, lt, mul, ne, neg, or_, sub, truediv\n",
+    "prefix": "im-operator"
+  },
+  "from optuna import ...": {
+    "body": "from optuna import Study, Trial\nfrom optuna.pruners import BasePruner\nfrom optuna.samplers import BaseSampler\nfrom optuna.study import StudyDirection\n",
+    "prefix": "im-optuna"
+  },
+  "from os import ...": {
+    "body": "from os import environ\n",
+    "prefix": "im-os"
+  },
+  "from pathlib import ...": {
+    "body": "from pathlib import Path\n",
+    "prefix": "im-pathlib"
+  },
+  "from polars import ...": {
+    "body": "import polars as pl\nfrom polars import Boolean, DataFrame, Date, Datetime, Duration, Enum, Expr, Float64, Int8, Int16, Int32, Int64, List, Series, String, Struct, UInt8, UInt16, UInt32, UInt64, Utf8, all_horizontal, any_horizontal, coalesce, col, concat, date_range, date_ranges, datetime_range, element, from_epoch, int_range, int_ranges, lit, max_horizontal, min_horizontal, repeat, struct, when\nfrom polars._typing import IntoExpr, IntoExprColumn, SchemaDict\nfrom polars.exceptions import ColumnNotFoundError, ComputeError, NoRowsReturnedError\n",
+    "prefix": "im-polars"
+  },
+  "from random import ...": {
+    "body": "from random import Random, choice, randint, seed, shuffle\n",
+    "prefix": "im-random"
+  },
+  "from re import ...": {
+    "body": "import re\nfrom re import DOTALL, IGNORECASE, MULTILINE, escape, findall, search, sub\n",
+    "prefix": "im-re"
+  },
+  "from redis import ...": {
+    "body": "from redis.asyncio import Redis\n",
+    "prefix": "im-redis"
+  },
+  "from reprlib import ...": {
+    "body": "import reprlib\nfrom reprlib import repr\n",
+    "prefix": "im-reprlib"
+  },
+  "from rich import ...": {
+    "body": "from rich.pretty import pretty_repr\n",
+    "prefix": "im-rich"
+  },
+  "from shutil import ...": {
+    "body": "from shutil import rmtree\n",
+    "prefix": "im-shutil"
+  },
+  "from sqlalchemy import ...": {
+    "body": "from sqlalchemy import Column, and_, func, insert, or_, select, text\nfrom sqlalchemy.engine.url import URL\nfrom sqlalchemy.exc import MultipleResultsFound, NoResultFound\n",
+    "prefix": "im-sqlalchemy"
+  },
+  "from statistics import ...": {
+    "body": "from statistics import fmean, mean\n",
+    "prefix": "im-statistics"
+  },
+  "from string import ...": {
+    "body": "from string import Template, ascii_letters\n",
+    "prefix": "im-string"
+  },
+  "from subprocess import ...": {
+    "body": "from subprocess import check_call, check_output, run\n",
+    "prefix": "im-subprocess"
+  },
+  "from sys import ...": {
+    "body": "from sys import stderr, stdout\n",
+    "prefix": "im-sys"
+  },
+  "from tabulate import ...": {
+    "body": "from tabulate import tabulate\n",
+    "prefix": "im-tabulate"
+  },
+  "from tempfile import ...": {
+    "body": "from tempfile import TemporaryDirectory\n",
+    "prefix": "im-tempfile"
+  },
+  "from tenacity import ...": {
+    "body": "from tenacity import retry\n",
+    "prefix": "im-tenacity"
+  },
+  "from textwrap import ...": {
+    "body": "from textwrap import indent\n",
+    "prefix": "im-textwrap"
+  },
+  "from threading import ...": {
+    "body": "from threading import RLock\n",
+    "prefix": "im-threading"
+  },
+  "from time import ...": {
+    "body": "from time import sleep\n",
+    "prefix": "im-time"
+  },
+  "from tqdm import ...": {
+    "body": "from tqdm import tqdm, trange\n",
+    "prefix": "im-tqdm"
+  },
+  "from typing import ...": {
+    "body": "from typing import Any, ClassVar, Generic, Literal, NotRequired, Protocol, Required, Self, TypeVar, TypedDict, assert_never, cast, overload, override\n",
+    "prefix": "im-typing"
+  },
+  "from utilities import ...": {
+    "body": "from utilities.asyncio import BoundedTaskGroup, EnhancedQueue, EnhancedTaskGroup, Looper, sleep_td, timeout_td\nfrom utilities.atomicwrites import writer\nfrom utilities.dataclasses import dataclass_repr, dataclass_to_dict, replace_non_sentinel, yield_fields\nfrom utilities.enum import parse_enum\nfrom utilities.errors import ImpossibleCaseError\nfrom utilities.functions import ensure_date, ensure_float, ensure_int, ensure_member, ensure_not_none, ensure_number, get_class_name, get_func_name\nfrom utilities.functools import cache, partial\nfrom utilities.hypothesis import assume_does_not_raise, int_arrays, lists_fixed_length, pairs, temp_paths, text_ascii, text_ascii_lower, text_ascii_upper, zoned_date_times\nfrom utilities.inflect import counted_noun\nfrom utilities.iterables import OneEmptyError, OneError, OneNonUniqueError, always_iterable, check_duplicates, groupby_lists, merge_mappings, merge_sets, merge_str_mappings, one, take, transpose\nfrom utilities.jupyter import show\nfrom utilities.logging import basic_config, setup_logging, to_logger\nfrom utilities.math import round_, safe_round\nfrom utilities.more_itertools import bucket_mapping, partition_list, peekable\nfrom utilities.orjson import deserialize, read_object, serialize, write_object\nfrom utilities.os import CPU_COUNT, get_env_var, is_debug, is_pytest, temp_environ\nfrom utilities.pathlib import ensure_suffix, get_repo_root, get_root, list_dir\nfrom utilities.pickle import read_pickle, write_pickle\nfrom utilities.polars import DatetimeUTC, ExprLike, ExprOrSeries, check_polars_dataframe, convert_time_zone, insert_after, insert_before, insert_between, struct_dtype, try_reify_expr, zoned_date_time_dtype, zoned_date_time_period_dtype\nfrom utilities.random import SYSTEM_RANDOM, bernoulli, get_state, shuffle\nfrom utilities.re import extract_group, extract_groups\nfrom utilities.sentinel import Sentinel, sentinel\nfrom utilities.shelve import yield_shelf\nfrom utilities.sqlalchemy import get_table, insert_items\nfrom utilities.sqlalchemy_polars import insert_dataframe, select_to_dataframe\nfrom utilities.tempfile import TemporaryDirectory\nfrom utilities.text import strip_and_dedent, to_str, unique_str\nfrom utilities.timer import Timer\nfrom utilities.traceback import format_exception_stack, make_except_hook\nfrom utilities.types import Delta, LogLevel, MaybeIterable, Number, PathLike, Seed, SequenceStr, StrMapping\nfrom utilities.typing import get_args, get_literal_elements\nfrom utilities.tzdata import HongKong, Tokyo, USCentral, USEastern\nfrom utilities.tzlocal import get_local_time_zone\nfrom utilities.version import Version\nfrom utilities.warnings import suppress_warnings\nfrom utilities.whenever import HOUR, MILLISECOND, MINUTE, MONTH, SECOND, WEEK, YEAR, format_compact, get_now, get_now_local, get_today, get_today_local, to_date, to_date_time_delta, to_days, to_hours, to_py_time_delta, to_zoned_date_time\nfrom utilities.zoneinfo import UTC\n",
+    "prefix": "im-utilities"
+  },
+  "from uuid import ...": {
+    "body": "from uuid import UUID, uuid4\n",
+    "prefix": "im-uuid"
+  },
+  "from whenever import ...": {
+    "body": "from whenever import Date, DateDelta, DateTimeDelta, PlainDateTime, Time, TimeDelta, ZonedDateTime\n",
+    "prefix": "im-whenever"
+  },
+  "from zoneinfo import ...": {
+    "body": "from zoneinfo import ZoneInfo\n",
+    "prefix": "im-zoneinfo"
+  },
+  "logger: LoggerAdapter = field(init=False)": {
+    "body": "logger: LoggerAdapter = field(init=False)\n",
+    "prefix": "logger-adapter"
+  },
+  "marks=mark.only": {
+    "body": "marks=mark.only",
+    "prefix": "mmo"
+  },
+  "marks=mark.skip": {
+    "body": "marks=mark.skip",
+    "prefix": "mms"
+  },
+  "raise NotImplementedError": {
+    "body": "raise NotImplementedError\n",
+    "prefix": "nie"
+  },
+  "read_pickle (test)": {
+    "body": "from utilities.pathlib import get_repo_root\nfrom utilities.pickle import read_pickle\n\n${1:obj} = read_pickle(get_repo_root().joinpath(\"pickles\", \"pytest-tmp.gz\"))\n",
+    "prefix": "test-read-pickle"
+  },
+  "with raises(...):": {
+    "body": "with raises(${1:Exception}, match=r\"${2:match}\"):\n    ${3:pass}",
+    "prefix": "with-raises"
+  },
+  "write_pickle (test)": {
+    "body": "from utilities.pathlib import get_repo_root\nfrom utilities.pickle import write_pickle\n\nwrite_pickle(${1:obj}, get_repo_root().joinpath(\"pickles\", \"pytest-tmp.gz\"), overwrite=True)\n",
+    "prefix": "test-write-pickle"
+  }
+}

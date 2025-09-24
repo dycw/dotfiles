@@ -1,7 +1,7 @@
 return {
     "chrisgrieser/nvim-rip-substitute",
     cmd = "RipSubstitute",
-    opts = {},
+    event = "VeryLazy",
     keys = {
         {
             "<leader>fs",
@@ -9,7 +9,7 @@ return {
                 require("rip-substitute").sub()
             end,
             mode = { "n", "x" },
-            desc = " rip substitute",
+            desc = "rip [s]ubstitute",
         },
     },
 }
