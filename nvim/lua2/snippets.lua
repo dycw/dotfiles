@@ -10,17 +10,6 @@ ls.add_snippets("python", {
     s("ex-n801", { t({ "(Exception): ...  # noqa: N801", "" }) }),
 
     -- pytest
-    s("mms", { t({ "marks=mark.skip", "" }) }),
-    s("mp", {
-        t({ '@mark.parametrize("' }),
-        i(1, "arg1"),
-        t({ '", [param(' }),
-        i(2, "param1"),
-        t(")])"),
-    }),
-    s("mr10", { t({ "@mark.repeat(10)", "" }) }),
-    s("ms", { t({ "@mark.skip", "" }) }),
-    s("mx", { t({ "@mark.xfail", "" }) }),
     s("pyi", {
         t({ "from hypothesis import HealthCheck, Phase, given, reproduce_failure, settings", "" }),
         t({ "from pytest import RaisesGroup, approx, fixture, mark, param, raises", "" }),

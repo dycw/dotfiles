@@ -19,9 +19,21 @@
     "body": "@mark.only\n",
     "prefix": "mo"
   },
+  "@mark.parametrize": {
+    "body": "@mark.parametrize(\"${1:argname}\", [param(${2:argvalue})])\n",
+    "prefix": "mp"
+  },
+  "@mark.repeat(10)": {
+    "body": "@mark.repeat(10)\n",
+    "prefix": "mr10"
+  },
   "@mark.skip": {
     "body": "@mark.skip\n",
     "prefix": "ms"
+  },
+  "@mark.xfail": {
+    "body": "@mark.xfail\n",
+    "prefix": "mx"
   },
   "@settings(filter_too_much)": {
     "body": "@settings(suppress_health_check={HealthCheck.filter_too_much})\n",
