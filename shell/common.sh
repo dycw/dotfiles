@@ -341,7 +341,7 @@ fi
 if command -v git >/dev/null 2>&1; then
 	cdr() {
 		[ $# -ne 0 ] && echo_date "'cdr' accepts no arguments; got $#" && return 1
-		cd "$(repo_root)" || return $?
+		cd "$(git rev-parse --show-toplevel)" || return $?
 	}
 fi
 __file="${HOME}/dotfiles/git/aliases.sh"
