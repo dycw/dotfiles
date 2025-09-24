@@ -27,7 +27,9 @@
     ~/.config/euporie/config.json:
       path: euporie/config.json
       if: "[ `uname` = Linux ]"
-    ~/.config/ghostty/config: ghostty/config
+    ~/.config/ghostty/config:
+      path: ghostty/config
+      if: "[ `uname` = Linux ]"
     ~/.config/git/config: git/config
     ~/.config/git/ignore: git/ignore
     ~/.config/marimo/marimo.toml: marimo/marimo.toml
@@ -54,17 +56,14 @@
     ~/.jupyter/lab/user-settings/jupyterlab_code_formatter/settings.jupyterlab-settings: jupyter/jupyterlab_code_formatter/settings.jsonc
     ~/.pdbrc: pdb/pdbrc
     ~/.psqlrc: psql/psqlrc
-    ~/.ssh/config:
-      path: ssh/ssh/mac
-      if: "[ `uname` = Darwin ]"
-    ~/.ssh/config:
-      path: ssh/ssh/linux
-      if: "[ `uname` = Linux ]"
     ~/.zimrc: zsh/zimrc
     ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
     ~/Library/Application Support/euporie/config.json:
       path: euporie/config.json
+      if: "[ `uname` = Darwin ]"
+    ~/Library/Application Support/com.mitchellh.ghostty/config:
+      path: ghostty/config
       if: "[ `uname` = Darwin ]"
     ~/Library/LaunchAgents/com.local.docker.plist: docker/docker.plist
     ~/Library/LaunchAgents/com.local.iperf3.plist: iperf3/iperf3.plist
@@ -73,5 +72,9 @@
 - shell:
     - command: ./install-all.sh
       description: Installing applications...
-    - command: if ! [ /etc/ssh/sshd_config.d/local ]; then sudo ln -s "$HOME/dotfiles/ssh/sshd" /etc/ssh/sshd_config.d/local; fi
+    - command: if [ `uname` = Darwin ] && ! [ -L "${HOME}/.ssh/config" ]; then ln -s "${HOME}/dotfiles/ssh/ssh/mac" "${HOME}/.ssh/config"; fi
+      description: Setting up 'ssh/config' (Mac)...
+    - command: if [ `uname` = Linux ] && ! [ -L "${HOME}/.ssh/config" ]; then ln -s "${HOME}/dotfiles/ssh/ssh/linux" "${HOME}/.ssh/config" (Linux); fi
+      description: Setting up 'ssh/config'...
+    - command: if ! [ /etc/ssh/sshd_config.d/local ]; then sudo ln -s "${HOME}/dotfiles/ssh/sshd" /etc/ssh/sshd_config.d/local; fi
       description: Setting up 'sshd'...
