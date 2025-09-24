@@ -5,37 +5,11 @@ local t = ls.text_node
 
 ls.add_snippets("python", {
 
-    -- dataclasses
-    s("da-dataclass-kw", { t({ "@dataclass(kw_only=True)", "" }) }),
-    s("dataclass-kw", {
-        t({ "@dataclass(kw_only=True)", "" }),
-        t({ "class " }),
-        i(1, "ClassName"),
-        t({ ":", "" }),
-        t("    "),
-        i(2, "field1"),
-        t(": "),
-        i(3, "annotation1"),
-        t({ "", "" }),
-    }),
-    s("dataclass-kw-sl", {
-        t({ "@dataclass(kw_only=True, slots=True)", "" }),
-        t({ "class " }),
-        i(1, "ClassName"),
-        t({ ":", "" }),
-        t("    "),
-        i(2, "field1"),
-        t(": "),
-        i(3, "annotation1"),
-        t({ "", "" }),
-    }),
-
     -- errors
     s("no-t201", { t({ "# noqa: T201", "" }) }),
     s("ex-n801", { t({ "(Exception): ...  # noqa: N801", "" }) }),
 
     -- hypothesis
-    s("da-data-object", { t({ "data: DataObject" }) }),
     s("settings-filter-too-much", { t({ "@settings(suppress_health_check={HealthCheck.filter_too_much})", "" }) }),
     s(
         "settings-function-scoped-fixture",

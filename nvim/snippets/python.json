@@ -1,4 +1,24 @@
 {
+  "@dataclass(kw_only)": {
+    "body": "@dataclass(kw_only=True)\nclass ${1:ClassName}:\n    ${2:field}: ${3:annotation}\n\n",
+    "prefix": "dataclass-k"
+  },
+  "@dataclass(kw_only, slot)": {
+    "body": "@dataclass(kw_only=True, slots=True)\nclass ${1:ClassName}:\n    ${2:field}: ${3:annotation}\n\n",
+    "prefix": "dataclass-ks"
+  },
+  "@dataclass(order, unsafe_hash, kw_only)": {
+    "body": "@dataclass(order=True, unsafe_hash=True, kw_only=True)\nclass ${1:ClassName}:\n    ${2:field}: ${3:annotation}\n\n",
+    "prefix": "dataclass-ohk"
+  },
+  "@dataclass(order, unsafe_hash, kw_only, slots)": {
+    "body": "@dataclass(order=True, unsafe_hash=True, kw_only=True, slots=True)\nclass ${1:ClassName}:\n    ${2:field}: ${3:annotation}\n\n",
+    "prefix": "dataclass-ohks"
+  },
+  "@settings(filter_too_much)": {
+    "body": "@settings(suppress_health_check={HealthCheck.filter_too_much})\n",
+    "prefix": "settings-filter-too-much"
+  },
   "Import 'datetime'": {
     "body": "import datetime as dt\n",
     "prefix": "im-datetime"
@@ -7,17 +27,9 @@
     "body": "breakpoint()\n",
     "prefix": "bp"
   },
-  "dataclass(kw_only)": {
-    "body": "@dataclass(kw_only=True)\nclass ${1:ClassName}:\n    ${2:field}: ${3:annotation}\n\n",
-    "prefix": "dataclass-k"
-  },
-  "dataclass(order, unsafe_hash, kw_only)": {
-    "body": "@dataclass(order=True, unsafe_hash=True, kw_only=True)\nclass ${1:ClassName}:\n    ${2:field}: ${3:annotation}\n\n",
-    "prefix": "dataclass-ohk"
-  },
-  "dataclass(order, unsafe_hash, kw_only, slots)": {
-    "body": "@dataclass(order=True, unsafe_hash=True, kw_only=True, slots=True)\nclass ${1:ClassName}:\n    ${2:field}: ${3:annotation}\n\n",
-    "prefix": "dataclass-ohks"
+  "data: DataObject": {
+    "body": "data: DataObject",
+    "prefix": "data-object"
   },
   "from '__future__' import ...": {
     "body": "from __future__ import annotations\n",
