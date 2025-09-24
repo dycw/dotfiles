@@ -768,21 +768,14 @@ if command -v tmux >/dev/null 2>&1; then
 		tmux select-layout -t "$(tmux_current_window)" tiled
 	}
 	if [ -z "$TMUX" ]; then
-		# not inside tmux
-		if [ -z "${SSH_CONNECTION}" ]; then
-			# not over SSH
-			tmux new-session -c "${PWD}"
-		elif [ -n "$SSH_CONNECTION" ]; then
-			# is over SSH
-			__count="$(tmux ls 2>/dev/null | wc -l)"
-			if [ "${__count}" -eq 0 ]; then
-				tmux new
-			elif [ "${__count}" -eq 1 ]; then
-				tmux attach -t "$(tmux ls | cut -d: -f1)"
-			else
-				echo_date "Multiple 'tmux' sessions detected:"
-				tmux ls
-			fi
+		__tmux_count="$(tmux ls 2>/dev/null | wc -l)"
+		if [ "${__tmux_count}" -eq 0 ]; then
+			tmux new
+		elif [ "${__tmux_count}" -eq 1 ]; then
+			tmux attach -t "$(tmux ls | cut -d: -f1)"
+		else
+			echo_date "Multiple 'tmux' sessions detected:"
+			tmux ls
 		fi
 	fi
 fi
