@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # echo
-echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
+echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*" >&2; }
 
 # detect OS/Mac model
 unset OS_NAME MAC_MODEL IS_MAC_MINI_DW IS_MAC_MINI_RH IS_MACBOOK DISTRO IS_UBUNTU
@@ -307,10 +307,29 @@ apt_install() {
 if [ -n "${IS_UBUNTU}" ]; then
 	apt_install curl
 	apt_install git
+	apt_install libgtk-3-0 # for keymapp
 	apt_install libpq-dev
+	apt_install libusb-1.0-0  # for keymapp
+	apt_install libwebkit2gtk # for keymapp
 	apt_install nautilus-dropbox
 	apt_install openssh-server
 	apt_install zsh
+fi
+
+# ubuntu/keymapp
+if [ -n "${IS_UBUNTU}" ]; then
+	if getent group plugdev >/dev/null 2>&1; then
+		echo_date "'plugdev' already exists"
+	else
+		echo_date "Creating 'plugdev'..."
+		sudo groupadd plugdev
+	fi
+	if id -nG "${USER}" | grep -qw plugdev; then
+		echo "'${USER}' is already in 'plugdev'"
+	else
+		echo "Adding ${USER} to 'plugdev'..."
+		sudo usermod -aG plugdev "$USER"
+	fi
 fi
 
 # ubuntu/shell
