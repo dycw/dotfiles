@@ -337,6 +337,12 @@ if command -v fzf >/dev/null 2>&1; then
 	export FZF_ALT_C_COMMAND="${FZF_DEFAULT_COMMAND} -td"
 fi
 
+# ghostty
+ghostty_config() {
+	[ $# -ne 0 ] && echo_date "'ghostty_config' accepts no arguments; got $#" && return 1
+	${EDITOR} "${HOME}/dotfiles/ghostty/config"
+}
+
 # git
 if command -v git >/dev/null 2>&1; then
 	cdr() {
@@ -350,7 +356,7 @@ if [ -f "$__file" ]; then
 fi
 git_aliases() {
 	[ $# -ne 0 ] && echo_date "'git_aliases' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}"/dotfiles/git/aliases.sh
+	${EDITOR} "${HOME}/dotfiles/git/aliases.sh"
 }
 git_ignore() {
 	[ $# -ne 0 ] && echo_date "'git_ignore' accepts no arguments; got $#" && return 1
@@ -387,7 +393,7 @@ set editing-mode vi
 # ipython
 ipython_startup() {
 	[ $# -ne 0 ] && echo_date "'ipython_startup' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}"/dotfiles/ipython/startup.py
+	${EDITOR} "${HOME}/dotfiles/ipython/startup.py"
 }
 
 # justfile
@@ -405,7 +411,7 @@ fi
 # marimo
 marimo_toml() {
 	[ $# -ne 0 ] && echo_date "'marimo_toml' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}"/dotfiles/marimo/marimo.toml
+	${EDITOR} "${HOME}/dotfiles/marimo/marimo.toml"
 }
 
 # neovim
@@ -419,13 +425,13 @@ clean_neovim() {
 	rm -rf "${HOME}.local/state/nvim"
 	rm -rf "${XDG_CACHE_HOME:-"${HOME}/.cache"}/nvim"
 }
-lua_snippets() {
-	[ $# -ne 0 ] && echo_date "'lua_snippets' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}"/dotfiles/nvim/lua/snippets.lua
-}
 plugins_dial() {
 	[ $# -ne 0 ] && echo_date "'plugins_dial' accepts no arguments; got $#" && return 1
 	${EDITOR} "${HOME}"/dotfiles/nvim/lua/plugins/dial.lua
+}
+snippets_python() {
+	[ $# -ne 0 ] && echo_date "'snippets_python' accepts no arguments; got $#" && return 1
+	${EDITOR} "${HOME}/dotfiles/nvim/snippets/python.json"
 }
 if command -v nvim >/dev/null 2>&1; then
 	n() { nvim "$@"; }
@@ -594,7 +600,7 @@ settings_toml() {
 # shell
 shell_common() {
 	[ $# -ne 0 ] && echo_date "'shell_common' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}"/dotfiles/shell/common.sh
+	${EDITOR} "${HOME}/dotfiles/shell/common.sh"
 }
 
 # SSH
@@ -625,7 +631,7 @@ ssh_tunnel_home() {
 # starship
 starship_toml() {
 	[ $# -ne 0 ] && echo_date "'starship_toml' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}"/dotfiles/starship/starship.toml
+	${EDITOR} "${HOME}/dotfiles/starship/starship.toml"
 }
 
 # tailscale
@@ -781,7 +787,7 @@ if command -v tmux >/dev/null 2>&1; then
 fi
 tmux_conf_local() {
 	[ $# -ne 0 ] && echo_date "'tmux_conf_local' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}"/tmux/tmux.conf.local
+	${EDITOR} "${HOME}/dotfiles/tmux/tmux.conf.local"
 }
 
 # tsunami
@@ -986,5 +992,5 @@ venv_recreate() {
 # wezterm
 wezterm_lua() {
 	[ $# -ne 0 ] && echo_date "'wezterm_lua' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}"/dotfiles/wezterm/wezterm.lua
+	${EDITOR} "${HOME}/dotfiles/wezterm/wezterm.lua"
 }
