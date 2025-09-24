@@ -1,9 +1,9 @@
 # -- session creation ----------------------------------------------------------
-tmux_conf_new_session_retain_current_path=true
+tmux_conf_new_session_retain_current_path=false
 
 # -- windows & pane creation ---------------------------------------------------
-tmux_conf_new_window_retain_current_path=true
-tmux_conf_new_window_reconnect_ssh=true
+tmux_conf_new_window_retain_current_path=false
+tmux_conf_new_window_reconnect_ssh=false
 tmux_conf_new_pane_retain_current_path=true
 tmux_conf_new_pane_reconnect_ssh=true
 
