@@ -27,7 +27,9 @@
     ~/.config/euporie/config.json:
       path: euporie/config.json
       if: "[ `uname` = Linux ]"
-    ~/.config/ghostty/config: ghostty/config
+    ~/.config/ghostty/config:
+      path: ghostty/config
+      if: "[ `uname` = Linux ]"
     ~/.config/git/config: git/config
     ~/.config/git/ignore: git/ignore
     ~/.config/marimo/marimo.toml: marimo/marimo.toml
@@ -59,6 +61,9 @@
     ~/.zshrc: zsh/zshrc
     ~/Library/Application Support/euporie/config.json:
       path: euporie/config.json
+      if: "[ `uname` = Darwin ]"
+    ~/Library/Application Support/com.mitchellh.ghostty/config:
+      path: ghostty/config
       if: "[ `uname` = Darwin ]"
     ~/Library/LaunchAgents/com.local.docker.plist: docker/docker.plist
     ~/Library/LaunchAgents/com.local.iperf3.plist: iperf3/iperf3.plist
