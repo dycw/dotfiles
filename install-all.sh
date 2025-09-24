@@ -184,6 +184,7 @@ brew_install() {
 
 [ -n "${IS_MAC}" ] && brew_install 1password --cask
 brew_install aichat
+brew_install age
 [ -n "${IS_MAC_MINI}" ] && brew_install autoconf # for c
 [ -n "${IS_MAC_MINI}" ] && brew_install automake # for c
 [ -n "${IS_MAC_MINI}" ] && brew_install bacon
@@ -228,6 +229,7 @@ brew_install ruff
 brew_install rust-analyzer
 brew_install shellcheck
 brew_install shfmt
+brew_install sops
 [ -n "${IS_MAC_MINI}" ] && brew_install spotify --cask
 brew_install starship
 brew_install stylua
