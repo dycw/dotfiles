@@ -1,4 +1,8 @@
 {
+  "# noqa: T201": {
+    "body": "# noqa: T201\n",
+    "prefix": "noqa-t201"
+  },
   "@dataclass(kw_only)": {
     "body": "@dataclass(kw_only=True)\nclass ${1:ClassName}:\n    ${2:field}: ${3:annotation}\n\n",
     "prefix": "dataclass-k"
@@ -74,6 +78,10 @@
   "case never:": {
     "body": "case never:\n    assert_never(never)\n",
     "prefix": "case-never"
+  },
+  "class TestClass:": {
+    "body": "class Test${1:ClassName}:\n    def test_${2:method_name}(self, $3) -> None:\n        ${4:pass}\n\n",
+    "prefix": "class-test"
   },
   "data: DataObject": {
     "body": "data: DataObject",
@@ -311,8 +319,16 @@
     "body": "raise NotImplementedError\n",
     "prefix": "nie"
   },
+  "read_pickle (test)": {
+    "body": "from utilities.pathlib import get_repo_root\nfrom utilities.pickle import read_pickle\n\n${1:obj} = read_pickle(get_repo_root().joinpath(\"pickles\", \"pytest-tmp.gz\"))\n",
+    "prefix": "test-read-pickle"
+  },
   "with raises(...):": {
     "body": "with raises(${1:Exception}, match=r\"${2:match}\"):\n    ${3:pass}",
     "prefix": "with-raises"
+  },
+  "write_pickle (test)": {
+    "body": "from utilities.pathlib import get_repo_root\nfrom utilities.pickle import write_pickle\n\nwrite_pickle(${1:obj}, get_repo_root().joinpath(\"pickles\", \"pytest-tmp.gz\"), overwrite=True)\n",
+    "prefix": "test-write-pickle"
   }
 }

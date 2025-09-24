@@ -35,10 +35,4 @@ ls.add_snippets("python", {
             "",
         }),
     }),
-
-    -- typing
-    s("case-never", {
-        t({ "case never:", "" }),
-        t({ "    assert_never(never)", "" }),
-    }),
 })
