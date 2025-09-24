@@ -2,6 +2,49 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2120,SC2033
 
+# age
+if command -v age >/dev/null 2>&1; then
+	encrypt() {
+		[ $# -le 1 ] || [ $# -ge 4 ] && echo_date "'encrypt' accepts [2..3] arguments; got $#" && return 1
+		if [ -f "$1" ]; then
+			__encrypt_mode='file'
+		elif [ "${1#age}" != "$1" ]; then
+			__encrypt_mode='key'
+		else
+			echo_date "'$1' is neither a file nor a public key" && return 1
+		fi
+		! [ -f "$2" ] && echo_date "'$2' does not exist" && return 1
+		if [ $# -eq 3 ]; then
+			__encrypt_output="$3"
+		else
+			__encrypt_output="$2.enc"
+		fi
+		if [ "${__encrypt_mode}" = 'file' ]; then
+			age --encrypt --recipients-file="$1" --output="${__encrypt_output}" "$2"
+		elif [ "${__encrypt_mode}" = 'key' ]; then
+			age --encrypt --recipient="$1" --output="${__encrypt_output}" "$2"
+		else
+			echo_date "'encrypt' impossible case; got '${__encrypt_mode}'" && return 1
+		fi
+	}
+	decrypt() {
+		[ $# -le 1 ] || [ $# -ge 4 ] && echo_date "'decrypt' accepts [2..3] arguments; got $#" && return 1
+		! [ -f "$1" ] && echo_date "'$1' does not exist" && return 1
+		! [ -f "$2" ] && echo_date "'$2' does not exist" && return 1
+		if [ $# -eq 3 ]; then
+			__decrypt_output="$3"
+		elif [ "${2%.enc}" = "$2" ]; then
+			echo hi
+			__decrypt_output="$2.dec"
+		else
+			echo bye
+			__decrypt_output="${2%.enc}"
+			echo "${__decrypt_output}"
+		fi
+		age --decrypt --identity="$1" --output="${__decrypt_output}" "$2"
+	}
+fi
+
 # aichat
 if command -v aichat >/dev/null 2>&1; then
 	a() {
