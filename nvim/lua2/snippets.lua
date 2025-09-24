@@ -9,37 +9,7 @@ ls.add_snippets("python", {
     s("no-t201", { t({ "# noqa: T201", "" }) }),
     s("ex-n801", { t({ "(Exception): ...  # noqa: N801", "" }) }),
 
-    -- hypothesis
-    s("settings-filter-too-much", { t({ "@settings(suppress_health_check={HealthCheck.filter_too_much})", "" }) }),
-    s(
-        "settings-function-scoped-fixture",
-        { t({ "@settings(suppress_health_check={HealthCheck.function_scoped_fixture})", "" }) }
-    ),
-    s("settings-generate-only", { t({ "@settings(phases={Phase.generate})", "" }) }),
-    s("settings-max-examples", { t({ "@settings(max_examples=1)", "" }) }),
-
-    -- logging
-    s("logger-name", { t({ "from utilities.logging import to_logger", "", "_LOGGER = to_logger(__name__)", "" }) }),
-    s("logger-adapter", { t({ "logger: LoggerAdapter = field(init=False)", "" }) }),
-
-    -- optuna
-    s("op-base-pruner", { t({ "from optuna.pruners import BasePruner", "" }) }),
-    s("op-base-sampler", { t({ "from optuna.samplers import BaseSampler", "" }) }),
-    s("op-study", { t({ "from optuna import Study", "" }) }),
-    s("op-study-direction", { t({ "from optuna.study import StudyDirection", "" }) }),
-    s("op-trial", { t({ "from optuna import Trial", "" }) }),
-
-    -- os
-    s("os-environ", { t({ "from os import environ", "" }) }),
-
-    -- pathlib
-    s("pa-path", { t({ "from pathlib import Path", "" }) }),
-
     -- pytest
-    s("a0", { t({ "assert 0, '!!!'", "" }) }),
-    s("a1", { t({ "from rich.pretty import pretty_repr", "", "assert 0, pretty_repr(locals())", "" }) }),
-    s("mo", { t({ "@mark.only", "" }) }),
-    s("mmo", { t({ "marks=mark.only", "" }) }),
     s("mms", { t({ "marks=mark.skip", "" }) }),
     s("mp", {
         t({ '@mark.parametrize("' }),
