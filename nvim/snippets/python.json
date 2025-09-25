@@ -176,7 +176,7 @@
     "prefix": "im-itertools"
   },
   "from logging import ...": {
-    "body": "from logging import Formatter, Handler, StreamHandler, getLogger\n",
+    "body": "from logging import Formatter, Handler, StreamHandler, basicConfig, getLogger\n",
     "prefix": "im-logging"
   },
   "from math import ...": {
