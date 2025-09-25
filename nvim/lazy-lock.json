@@ -55,6 +55,10 @@
     "branch": "main",
     "commit": "b68bda044d68e4026c4e1ec6df3c5afd7eb8e341"
   },
+  "flit.nvim": {
+    "branch": "main",
+    "commit": "513e38abe61237c53a9e983e45595b1d2e7d5391"
+  },
   "friendly-snippets": {
     "branch": "main",
     "commit": "572f5660cf05f8cd8834e096d7b4c921ba18e175"
@@ -78,6 +82,10 @@
   "lazydev.nvim": {
     "branch": "main",
     "commit": "258d2a5ef4a3e3d6d9ba9da72c9725c53e9afcbd"
+  },
+  "leap.nvim": {
+    "branch": "main",
+    "commit": "07304103f6bd923004fdef9262d9a4d7925fb70a"
   },
   "lualine.nvim": {
     "branch": "master",
@@ -250,6 +258,10 @@
   "vim-numbertoggle": {
     "branch": "main",
     "commit": "075b7478777e694fbac330ee34a74590dad0fee1"
+  },
+  "vim-repeat": {
+    "branch": "master",
+    "commit": "65846025c15494983dafe5e3b46c8f88ab2e9635"
   },
   "vim-tmux-navigator": {
     "branch": "master",
