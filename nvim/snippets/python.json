@@ -232,7 +232,7 @@
     "prefix": "im-rich"
   },
   "from shutil import ...": {
-    "body": "from shutil import rmtree\n",
+    "body": "from shutil import copyfile, move, rmtree, which\n",
     "prefix": "im-shutil"
   },
   "from sqlalchemy import ...": {
