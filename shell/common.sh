@@ -685,7 +685,13 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 	}
 	if command -v tailscaled >/dev/null 2>&1; then
 		ts_up() {
-			[ $# -ne 0 ] && echo_date "'ts_up' accepts no arguments; got $#" && return 1
+			if [ $# -ne 0 ]; then
+				__ts_up_exit_node=''
+			elif [ $# -ne 1 ]; then
+				__ts_up_exit_node='qrt-nanode'
+			else
+				echo_date "'ts_up' accepts [0..1] arguments; got $#" && return 1
+			fi
 			__ts_up_file="${HOME}/tailscale-auth-key"
 			if ! [ -f "${__ts_up_file}" ]; then
 				echo_date "'${__ts_up_file}' does not exist" && return 1
@@ -701,8 +707,12 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 				--auth-key="file:${__ts_up_file}" \
 				--login-server="${TAILSCALE_LOGIN_SERVER}" \
 				--reset
-			echo_date 'Setting exit node...'
-			sudo tailscale set --exit-node='qrt-nanode'
+			if [ -n "${__ts_up_exit_node}" ]; then
+				echo_date 'Setting exit node...'
+			else
+				echo_date 'Un-setting exit node...'
+			fi
+			sudo tailscale set --exit-node="${__ts_up_exit_node}"
 		}
 		ts_down() {
 			[ $# -ne 0 ] && echo_date "'ts_down' accepts no arguments; got $#" && return 1
