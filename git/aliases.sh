@@ -544,8 +544,16 @@ if command -v git >/dev/null 2>&1; then
 	}
 	# log
 	gl() {
-		[ $# -ne 0 ] && echo_date "'gl' accepts no arguments; got $#" && return 1
-		git log --abbrev-commit --decorate=short --pretty=format:'%C(red)%h%C(reset) |%C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)'
+		__gl_format='format:%C(red)%h%C(reset) |%C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)'
+		if [ $# -eq 0 ]; then
+			git log --abbrev-commit --decorate=short --max-count=30 --pretty="${__gl_format}"
+		elif [ $# -eq 1 ] && [ "$1" = 'all ' ]; then
+			git log --abbrev-commit --decorate=short --pretty="${__gl_format}"
+		elif [ $# -eq 1 ] && [ "$1" != 'all ' ]; then
+			git log --abbrev-commit --decorate=short --max-count="$1" --pretty="${__gl_format}"
+		else
+			echo_date "'gl' accepts [0..1] arguments; got $#" && return 1
+		fi
 	}
 	# merge
 	gma() {
@@ -790,11 +798,17 @@ if command -v git >/dev/null 2>&1; then
 		while [ $# -gt 0 ]; do
 			# $1 = tag
 			# $2 = sha
-			git tag -a "$1" "$2" -m "$1" && git push --set-upstream origin --tags
+			git tag -a "$1" "$2" -m "$1" || return $?
+			git push --set-upstream origin --tags || return $?
 			shift 2
 		done
+		gl 20
 	}
-	gtd() { git tag --delete "$@" && git push --delete origin "$@"; }
+	gtd() {
+		git tag --delete "$@" || return $?
+		git push --delete origin "$@" || return $?
+		gl 20
+	}
 fi
 
 # gh/glab
