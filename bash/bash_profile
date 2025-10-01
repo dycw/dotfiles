@@ -12,3 +12,5 @@ __file="${HOME}/.bashrc"
 if [ -f "${__file}" ]; then
 	. "${__file}"
 fi
+
+. "$HOME/.local/bin/env"

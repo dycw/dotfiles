@@ -1,66 +1,251 @@
 #!/usr/bin/env python3
+from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
+from dataclasses import dataclass
+from logging import basicConfig, getLogger
 from pathlib import Path
-from logging import getLogger
-from logging import basicConfig
-from subprocess import check_call
 from shutil import which
-print("hi")
+from subprocess import check_call
 
-basicConfig(
-        format="{asctime} | {levelname:8} | {message}", datefmt="%Y-%m-%d %H:%M:%S", style="{", level="DEBUG"
-)
-_LOGGER=getLogger(__name__)
-_THIS_FILE=Path(__file__)
-_THIS_DIR=_THIS_FILE.parent
-# install zoom
+# constants
 
 
+_LOGGER = getLogger(__name__)
 
-def main()->None:
+
+# settings
+
+
+@dataclass(order=True, unsafe_hash=True, kw_only=True)
+class _Settings:
+    shfmt: bool
+    tmux: bool
+    verbose: bool
+
+    @classmethod
+    def parse(cls) -> "_Settings":
+        parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
+        parser.add_argument(
+            "-b", "--bottom", action="store_true", help="Install 'shfmt'."
+        )
+        parser.add_argument(
+            "-s", "--shfmt", action="store_true", help="Install 'shfmt'."
+        )
+        parser.add_argument("-t", "--tmux", action="store_true", help="Install 'tmux'.")
+        parser.add_argument(
+            "-v", "--verbose", action="store_true", help="Verbose mode."
+        )
+        parser.add_argument("-z", "--zoom", action="store_true", help="Install 'zoom'.")
+        return _Settings(**vars(parser.parse_args()))
+
+
+# script
+
+
+def main(settings: _Settings, /) -> None:
+    basicConfig(
+        format="{asctime} | {levelname:8} | {message}",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        style="{",
+        level="DEBUG" if settings.verbose else "INFO",
+    )
+    _setup_shells()
+    if settings.bottom:
+        _install_bottom()
+    _install_bottom()
+    _install_build_essential()
+    _install_curl()
     _install_git()
-    _install_zoom()
+    _install_neovim()
+    if settings.shfmt:
+        _install_tmux()
+    if settings.tmux:
+        _install_tmux()
+    if settings.zoom:
+        _install_zoom()
 
-def _install_git()->None:
-    if which('git'):
-        _LOGGER.debug("'git' already installed")
+    _install_uv()  # after curl
+
+    _install_bump_my_version()  # after uv
+    _install_pre_commit()  # after uv
+    _install_pyright()  # after uv
+    _install_ruff()  # after uv
+
+
+def _add_home_local_bin_to_path() -> None:
+    assdf
+
+
+def _install_bottom() -> None:
+    if which("btm"):
+        _LOGGER.info("'btm' is already installed")
+        return
+    _LOGGER.info("Installing 'bottom'...")
+    # curl + deb based, need to get latest version
+
+
+def _install_build_essential() -> None:
+    if which("cc"):
+        _LOGGER.info("'cc' (and presumably 'build-essential) installed")
+        return
+    _LOGGER.info("Installing 'build-essential'...")
+    _apt_install("build-essential")
+
+
+def _install_bump_my_version() -> None:
+    _uv_tool_install("bump-my-version")
+
+
+def _install_curl() -> None:
+    if which("curl"):
+        _LOGGER.debug("'curl' is already installed")
+        return
+    _LOGGER.info("Installing 'curl'...")
+    _apt_install("curl")
+
+
+def _install_git() -> None:
+    if which("git"):
+        _LOGGER.debug("'git' is already installed")
     else:
         _LOGGER.info("Installing 'git'...")
-        _apt_install('git')
-        if not which('git'):
-            raise RuntimeError("'zoom' still not installed")
-    for filename in ['config', 'ignore']:
-        _setup_symlink(f"~/.config/git/{filename}", _THIS_DIR.joinpath(f'git/{filename}'))
+        _apt_install("git")
+    for filename in ["config", "ignore"]:
+        _setup_symlink(
+            f"~/.config/git/{filename}", f"{_get_script_dir()}/git/{filename}"
+        )
 
 
-
-def _setup_symlink(path_from:Path|str,path_to:Path|str,/)->None:
-    path_from, path_to = [Path(p).expanduser() for p in [path_from ,path_to]]
-    if path_from.is_symlink and (path_from.resolve()==path_to.resolve()):
-        _LOGGER.debug("%r is already a symlink to %r", str(path_from),str(path_to))
+def _install_neovim() -> None:
+    if which("nvim"):
+        _LOGGER.debug("'neovim' is already installed")
         return
-    _LOGGER.info("Symlinking %r -> %r", str(path_from),str(path_to))
-    path_from.parent.mkdir(parents=True,exist_ok=True)
-    path_from.symlink_to(path_to)
+    _LOGGER.info("Installing 'neovim'...")
+    _apt_install("neovim")
 
 
-def _install_zoom()->None:
-    if which('zoom'):
-        _LOGGER.debug("'zoom' already installed")
+def _install_tmux() -> None:
+    if which("tmux"):
+        _LOGGER.debug("'tmux' is already installed")
+    else:
+        _LOGGER.info("Installing 'tmux'...")
+        _apt_install("tmux")
+
+
+def _install_pre_commit() -> None:
+    _uv_tool_install("pre-commit")
+
+
+def _install_pyright() -> None:
+    _uv_tool_install("pyright")
+
+
+def _install_ruff() -> None:
+    _uv_tool_install("ruff")
+
+
+def _install_uv() -> None:
+    if which("uv"):
+        _LOGGER.debug("'uv' is already installed")
+        return
+    _install_curl()
+    _LOGGER.info("Installing 'uv'...")
+    check_call("curl -LsSf https://astral.sh/uv/install.sh | sh", shell=True)
+    # _prepend_to_current_path("~/.local/bin")
+
+    _append_to_file("~/.bashrc", '''export PATH="${HOME}${PATH:+:${PATH}}"''')
+    check_call("source ~/.bashrc", shell=True)
+
+
+def _install_zoom() -> None:
+    if which("zoom"):
+        _LOGGER.debug("'zoom' is already installed")
         return
     _LOGGER.info("Installing 'zoom'...")
-    check_call('sudo apt -y install libxcb-xinerama0 libxcb-xtest0 libxcb-cursor0', shell=True)
-    check_call('sudo dpkg -i zoom_amd64.deb' , shell=True)
-    if not which('zoom'):
-        raise RuntimeError("'zoom' still not installed")
+    _apt_install(
+        "libxcb-xinerama0",
+        "libxcb-xtest0",
+        "libxcb-cursor0",
+    )
+    check_call("sudo dpkg -i zoom_amd64.deb", shell=True)
+
+
+def _setup_bash() -> None:
+    for filename in ["bashrc", "bash_profile"]:
+        _setup_symlink(f"~/.{filename}", f"{_get_script_dir()}/bash/{filename}")
+
+
+def _setup_shells() -> None:
+    _setup_bash()
+    ### _setup_zshrc()
+
 
 # utilities
 
-def _apt_install(package:str,/)->None:
+
+def _append_to_file(path: Path | str, line: str, /) -> None:
+    path = _to_path(path)
+    try:
+        lines = path.read_text().splitlines()
+    except FileNotFoundError:
+        _LOGGER.info("Writing %r to %r...", line, str(path))
+        with path.open(mode="w") as fh:
+            _ = fh.write(f"{line}\n")
+        return
+    if any(line_i == line for line_i in lines):
+        _LOGGER.debug("%r is already in %r", line, str(path))
+        return
+    _LOGGER.info("Appending %r to %r...", line, str(path))
+    with path.open(mode="a") as fh:
+        _ = fh.write(f"{line}\n")
+
+
+def _apt_install(*packages: str) -> None:
     _LOGGER.info("Updating 'apt'...")
-    check_call('sudo apt -y update', shell=True)
-    _LOGGER.info("Installing %r...", packagek)
-    check_call(f'sudo apt -y install {package}', shell=True)
+    check_call("sudo apt -y update", shell=True)
+    desc = ", ".join(map(repr, packages))
+    _LOGGER.info("Installing %s...", desc)
+    joined = " ".join(packages)
+    check_call(f"sudo apt -y install {joined}", shell=True)
+
+
+def _get_script_dir() -> Path:
+    return Path(__file__).parent
+
+
+def _setup_symlink(path_from: Path | str, path_to: Path | str, /) -> None:
+    path_from, path_to = map(_to_path, [path_from, path_to])
+    if path_from.is_symlink and (path_from.resolve() == path_to.resolve()):
+        _LOGGER.debug("%r -> %r already symlinked", str(path_from), str(path_to))
+        return
+    path_from.parent.mkdir(parents=True, exist_ok=True)
+    if path_from.exists():
+        _LOGGER.info("Removing %r...", str(path_from))
+        path_from.unlink()
+    _LOGGER.info("Symlinking %r -> %r", str(path_from), str(path_to))
+    path_from.symlink_to(path_to)
+
+
+def _to_path(path: Path | str, /) -> Path:
+    return Path(path).expanduser()
+
+
+def _update_submodules() -> None:
+    _LOGGER.info(
+        "Updating submodules...",
+    )
+    check_call("git submodule update", shell=True)
+
+
+def _uv_tool_install(tool: str, /) -> None:
+    if which(tool):
+        _LOGGER.debug("%r is already installed", tool)
+        return
+    _install_uv()
+    _LOGGER.info("Installing %r...", tool)
+    check_call(f"uv tool install {tool}", shell=True)
+
 
 # main
 
-main()
+
+main(_Settings.parse())
