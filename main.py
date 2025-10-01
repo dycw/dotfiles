@@ -5,6 +5,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
+from os import environ
 from pathlib import Path
 from shutil import copyfile, which
 from stat import S_IXUSR
@@ -31,7 +32,9 @@ class _Settings:
     build_essential: bool
     delta: bool
     direnv: bool
+    eza: bool
     fd_find: bool
+    fzf: bool
     jq: bool
     just: bool
     ripgrep: bool
@@ -63,9 +66,11 @@ class _Settings:
         parser.add_argument(
             "-di", "--direnv", action="store_true", help="Install 'direnv'."
         )
+        parser.add_argument("-e", "--eza", action="store_true", help="Install 'eza'.")
         parser.add_argument(
-            "-f", "--fd-find", action="store_true", help="Install 'fd-find'."
+            "-fd", "--fd-find", action="store_true", help="Install 'fd-find'."
         )
+        parser.add_argument("-fz", "--fzf", action="store_true", help="Install 'fzf'.")
         parser.add_argument(
             "-ju", "--just", action="store_true", help="Install 'just'."
         )
@@ -103,6 +108,7 @@ def main(settings: _Settings, /) -> None:
     )
     _setup_shells()
     _install_curl()
+    _install_fish()
     _install_git()
     _install_neovim()
     _install_starship()
@@ -118,8 +124,12 @@ def main(settings: _Settings, /) -> None:
         _install_delta()
     if settings.direnv:
         _install_direnv()
+    if settings.eza:
+        _install_eza()
     if settings.fd_find:
         _install_fd_find()
+    if settings.fzf:
+        _install_fzf()
     if settings.just:
         _install_just()
     if settings.jq:
@@ -213,12 +223,49 @@ def _install_direnv() -> None:
     _append_to_file("~/.direnv", '''eval "$(direnv hook bash)"''')
 
 
+def _install_eza() -> None:
+    if which("eza"):
+        _LOGGER.debug("'eza' is already installed")
+        return
+    _LOGGER.info("Installing 'eza'...")
+    _apt_install("eza")
+
+
 def _install_fd_find() -> None:
     if which("fdfind"):
         _LOGGER.debug("'fd-find' is already installed")
         return
     _LOGGER.info("Installing 'fd-find'...")
     _apt_install("fd-find")
+
+
+def _install_fish() -> None:
+    if which("fish"):
+        _LOGGER.debug("'fish' is already installed")
+    else:
+        _LOGGER.info("Installing 'fish'...")
+        check_call(
+            """echo 'deb http://download.opensuse.org/repositories/shells:/fish/Debian_13/ /' | sudo tee /etc/apt/sources.list.d/shells:fish.list""",
+            shell=True,
+        )
+        check_call(
+            """curl -fsSL https://download.opensuse.org/repositories/shells:fish/Debian_13/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish.gpg > /dev/null""",
+            shell=True,
+        )
+        _apt_install("fish")
+    if environ["SHELL"] == "fish":
+        _LOGGER.debug("'fish' is already the default shell")
+    else:
+        _LOGGER.info("Setting 'fish' to be the default shell")
+        check_call("""sudo chsh -s $(which fish)""", shell=True)
+
+
+def _install_fzf() -> None:
+    if which("fzf"):
+        _LOGGER.debug("'fzf' is already installed")
+        return
+    _LOGGER.info("Installing 'fzf'...")
+    _apt_install("fzf")
 
 
 def _install_git() -> None:
