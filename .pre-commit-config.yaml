@@ -37,6 +37,12 @@ repos:
         args: [--eof-newline]
   - repo: local
     hooks:
+      - id: fish-indent
+        name: fish-indent
+        entry: fish-indent
+        language: system
+        types_or: [fish]
+        #args: [--write, --log-level=silent]
       - id: prettier
         name: prettier
         entry: prettier

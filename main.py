@@ -159,7 +159,7 @@ def main(settings: _Settings, /) -> None:
 
 
 def _install_age() -> None:
-    if which("age"):
+    if _have_command("age"):
         _LOGGER.debug("'age' is already installed")
         return
     _LOGGER.info("Installing 'age'...")
@@ -167,7 +167,7 @@ def _install_age() -> None:
 
 
 def _install_bat() -> None:
-    if which("batcat"):
+    if _have_command("batcat"):
         _LOGGER.debug("'bat' is already installed")
         return
     _LOGGER.info("Installing 'bat'...")
@@ -175,7 +175,7 @@ def _install_bat() -> None:
 
 
 def _install_bottom() -> None:
-    if which("btm"):
+    if _have_command("btm"):
         _LOGGER.debug("'btm' is already installed")
         return
     _LOGGER.info("Installing 'bottom'...")
@@ -186,7 +186,7 @@ def _install_bottom() -> None:
 
 
 def _install_build_essential() -> None:
-    if which("cc"):
+    if _have_command("cc"):
         _LOGGER.debug(
             "'cc' is already installed (already presumable so is 'build-essential'"
         )
@@ -200,7 +200,7 @@ def _install_bump_my_version() -> None:
 
 
 def _install_curl() -> None:
-    if which("curl"):
+    if _have_command("curl"):
         _LOGGER.debug("'curl' is already installed")
         return
     _LOGGER.info("Installing 'curl'...")
@@ -208,7 +208,7 @@ def _install_curl() -> None:
 
 
 def _install_delta() -> None:
-    if which("delta"):
+    if _have_command("delta"):
         _LOGGER.debug("'git-delta' is already installed")
         return
     _LOGGER.info("Installing 'git-delta'...")
@@ -216,7 +216,7 @@ def _install_delta() -> None:
 
 
 def _install_direnv() -> None:
-    if which("direnv"):
+    if _have_command("direnv"):
         _LOGGER.debug("'direnv' is already installed")
     else:
         _LOGGER.info("Installing 'direnv'...")
@@ -225,7 +225,7 @@ def _install_direnv() -> None:
 
 
 def _install_eza() -> None:
-    if which("eza"):
+    if _have_command("eza"):
         _LOGGER.debug("'eza' is already installed")
         return
     _LOGGER.info("Installing 'eza'...")
@@ -233,7 +233,7 @@ def _install_eza() -> None:
 
 
 def _install_fd_find() -> None:
-    if which("fdfind"):
+    if _have_command("fdfind"):
         _LOGGER.debug("'fd-find' is already installed")
         return
     _LOGGER.info("Installing 'fd-find'...")
@@ -241,7 +241,7 @@ def _install_fd_find() -> None:
 
 
 def _install_fish() -> None:
-    if which("fish"):
+    if _have_command("fish"):
         _LOGGER.debug("'fish' is already installed")
     else:
         _LOGGER.info("Installing 'fish'...")
@@ -259,10 +259,13 @@ def _install_fish() -> None:
     else:
         _LOGGER.info("Setting 'fish' to be the default shell")
         check_call("""sudo chsh -s $(which fish)""", shell=True)
+    _setup_symlink(
+        "~/.config/fish/config.fish", f"{_get_script_dir()}/fish/config.fish"
+    )
 
 
 def _install_fzf() -> None:
-    if which("fzf"):
+    if _have_command("fzf"):
         _LOGGER.debug("'fzf' is already installed")
         return
     _LOGGER.info("Installing 'fzf'...")
@@ -270,7 +273,7 @@ def _install_fzf() -> None:
 
 
 def _install_git() -> None:
-    if which("git"):
+    if _have_command("git"):
         _LOGGER.debug("'git' is already installed")
     else:
         _LOGGER.info("Installing 'git'...")
@@ -282,7 +285,7 @@ def _install_git() -> None:
 
 
 def _install_just() -> None:
-    if which("just"):
+    if _have_command("just"):
         _LOGGER.debug("'just' is already installed")
         return
     _LOGGER.info("Installing 'just'...")
@@ -290,7 +293,7 @@ def _install_just() -> None:
 
 
 def _install_jq() -> None:
-    if which("jq"):
+    if _have_command("jq"):
         _LOGGER.debug("'jq' is already installed")
         return
     _LOGGER.info("Installing 'jq'...")
@@ -298,11 +301,12 @@ def _install_jq() -> None:
 
 
 def _install_neovim() -> None:
-    if which("nvim"):
+    if _have_command("nvim"):
         _LOGGER.debug("'neovim' is already installed")
-        return
-    _LOGGER.info("Installing 'neovim'...")
-    _apt_install("neovim")
+    else:
+        _LOGGER.info("Installing 'neovim'...")
+        _apt_install("neovim")
+    _setup_symlink("~/.config/nvim", f"{_get_script_dir()}/nvim")
 
 
 def _install_pre_commit() -> None:
@@ -318,7 +322,7 @@ def _install_ruff() -> None:
 
 
 def _install_ripgrep() -> None:
-    if which("rg"):
+    if _have_command("rg"):
         _LOGGER.debug("'ripgrep' is already installed")
         return
     _LOGGER.info("Installing 'ripgrep'...")
@@ -326,7 +330,7 @@ def _install_ripgrep() -> None:
 
 
 def _install_shellcheck() -> None:
-    if which("shellcheck"):
+    if _have_command("shellcheck"):
         _LOGGER.debug("'shellcheck' is already installed")
         return
     _LOGGER.info("Installing 'shellcheck'...")
@@ -334,7 +338,7 @@ def _install_shellcheck() -> None:
 
 
 def _install_shfmt() -> None:
-    if which("shfmt"):
+    if _have_command("shfmt"):
         _LOGGER.debug("'shfmt' is already installed")
         return
     _LOGGER.info("Installing 'shfmt'...")
@@ -342,7 +346,7 @@ def _install_shfmt() -> None:
 
 
 def _install_sops() -> None:
-    if which("sops"):
+    if _have_command("sops"):
         _LOGGER.debug("'sops' is already installed")
         return
     _LOGGER.info("Installing 'sops'...")
@@ -355,7 +359,7 @@ def _install_sops() -> None:
 
 
 def _install_starship() -> None:
-    if which("starship"):
+    if _have_command("starship"):
         _LOGGER.debug("'starship' is already installed")
     else:
         _LOGGER.info("Installing 'starship'...")
@@ -365,7 +369,7 @@ def _install_starship() -> None:
 
 
 def _install_tmux() -> None:
-    if which("tmux"):
+    if _have_command("tmux"):
         _LOGGER.debug("'tmux' is already installed")
     else:
         _LOGGER.info("Installing 'tmux'...")
@@ -381,7 +385,7 @@ def _install_tmux() -> None:
 
 
 def _install_uv() -> None:
-    if which("uv"):
+    if _have_command("uv"):
         _LOGGER.debug("'uv' is already installed")
         return
     _install_curl()
@@ -394,7 +398,7 @@ def _install_uv() -> None:
 
 
 def _install_yq() -> None:
-    if which("yq"):
+    if _have_command("yq"):
         _LOGGER.debug("'yq' is already installed")
         return
     _LOGGER.info("Installing 'yq'...")
@@ -402,7 +406,7 @@ def _install_yq() -> None:
 
 
 def _install_zoom() -> None:
-    if which("zoom"):
+    if _have_command("zoom"):
         _LOGGER.debug("'zoom' is already installed")
         return
     _LOGGER.info("Installing 'zoom'...")
@@ -483,6 +487,10 @@ def _get_script_dir() -> Path:
     return Path(__file__).parent
 
 
+def _have_command(cmd: str, /) -> bool:
+    return which(cmd) is not None
+
+
 def _set_executable(path: Path | str, /) -> None:
     path = _to_path(path)
     mode = path.stat().st_mode
@@ -523,7 +531,7 @@ def _update_submodules() -> None:
 
 
 def _uv_tool_install(tool: str, /) -> None:
-    if which(tool):
+    if _have_command(tool):
         _LOGGER.debug("%r is already installed", tool)
         return
     _install_uv()
