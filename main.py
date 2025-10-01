@@ -77,7 +77,7 @@ def main(settings: _Settings, /) -> None:
     _install_starship()
     if settings.bottom:
         _install_bottom()
-    if settings.build_essential():
+    if settings.build_essential:
         _install_build_essential()
     if settings.fd_find:
         _install_fd_find()
@@ -131,7 +131,7 @@ def _install_curl() -> None:
 
 
 def _install_fd_find() -> None:
-    if which("fd"):
+    if which("fdfind"):
         _LOGGER.debug("'fd-find' is already installed")
         return
     _LOGGER.info("Installing 'fd-find'...")
@@ -185,9 +185,10 @@ def _install_shfmt() -> None:
 def _install_starship() -> None:
     if which("starship"):
         _LOGGER.debug("'starship' is already installed")
-        return
-    _LOGGER.info("Installing 'starship'...")
-    _apt_install("starship")
+    else:
+        _LOGGER.info("Installing 'starship'...")
+        _apt_install("starship")
+    _setup_symlink("~/.config/starship", f"{_get_script_dir()}/starship/starship.toml")
 
 
 def _install_tmux() -> None:
