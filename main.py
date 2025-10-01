@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from logging import basicConfig, getLogger
 from os import environ
 from pathlib import Path
+from re import search
 from shutil import copyfile, which
 from stat import S_IXUSR
 from string import Template
@@ -253,7 +254,7 @@ def _install_fish() -> None:
             shell=True,
         )
         _apt_install("fish")
-    if environ["SHELL"] == "fish":
+    if search(r"/fish$", environ["SHELL"]):
         _LOGGER.debug("'fish' is already the default shell")
     else:
         _LOGGER.info("Setting 'fish' to be the default shell")
