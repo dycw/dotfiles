@@ -15,6 +15,7 @@ from subprocess import check_call, check_output
 from tempfile import TemporaryDirectory
 from urllib.parse import urlparse
 from urllib.request import urlopen
+from zipfile import ZipFile
 
 # constants
 
@@ -45,6 +46,7 @@ class _Settings:
     shellcheck: bool
     shfmt: bool
     sops: bool
+    stylua: bool
     tailscale: bool
     tmux: bool
     verbose: bool
@@ -101,6 +103,9 @@ class _Settings:
         )
         parser.add_argument(
             "-so", "--sops", action="store_true", help="Install 'sops'."
+        )
+        parser.add_argument(
+            "-st", "--stylua", action="store_true", help="Install 'stylua'."
         )
         parser.add_argument(
             "-ta", "--tailscale", action="store_true", help="Install 'tailscale'."
@@ -172,6 +177,8 @@ def main(settings: _Settings, /) -> None:
         _install_shfmt()
     if settings.sops:
         _install_sops()
+    if settings.stylua:
+        _install_stylua()
     if settings.tailscale:
         _install_tailscale()
     if settings.tmux:
@@ -412,7 +419,6 @@ def _install_sops() -> None:
         return
     _LOGGER.info("Installing 'sops'...")
     path_to = _get_local_bin().joinpath("sops")
-    path_to.parent.mkdir(parents=True, exist_ok=True)
     with _yield_github_latest_download(
         "getsops", "sops", "sops-${tag}.linux.amd64"
     ) as binary:
@@ -427,6 +433,24 @@ def _install_starship() -> None:
         _apt_install("starship")
     _setup_symlink("~/.config/starship", f"{_get_script_dir()}/starship/starship.toml")
     _append_to_file("~/.bashrc", 'eval "$(starship init bash)"')
+
+
+def _install_stylua() -> None:
+    if _have_command("stylua"):
+        _LOGGER.debug("'stylua' is already installed")
+        return
+    _LOGGER.info("Installing 'stylua'...")
+    path_to = _get_local_bin().joinpath("stylua")
+    with (
+        _yield_github_latest_download(
+            "johnnymorganz", "stylua", "stylua-linux-x86_64.zip"
+        ) as zf,
+        ZipFile(zf) as zfh,
+        TemporaryDirectory() as temp_dir,
+    ):
+        zfh.extractall(temp_dir)
+        (path_from,) = Path(temp_dir).iterdir()
+        _copyfile(path_from, path_to, executable=True)
 
 
 def _install_tailscale() -> None:
