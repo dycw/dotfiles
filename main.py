@@ -38,6 +38,8 @@ class _Settings:
     eza: bool
     fd_find: bool
     fzf: bool
+    gh: bool
+    glab: bool
     jq: bool
     just: bool
     luacheck: bool
@@ -82,6 +84,10 @@ class _Settings:
             "-fd", "--fd-find", action="store_true", help="Install 'fd-find'."
         )
         parser.add_argument("-fz", "--fzf", action="store_true", help="Install 'fzf'.")
+        parser.add_argument("-gh", "--gh", action="store_true", help="Install 'gh'.")
+        parser.add_argument(
+            "-gl", "--glab", action="store_true", help="Install 'glab'."
+        )
         parser.add_argument("-jq", "--jq", action="store_true", help="Install 'jq'.")
         parser.add_argument(
             "-ju", "--just", action="store_true", help="Install 'just'."
@@ -167,6 +173,10 @@ def main(settings: _Settings, /) -> None:
         _install_just()
     if settings.luarocks:
         _install_luarocks()
+    if settings.gh:
+        _install_gh()
+    if settings.glab:
+        _install_glab()
     if settings.jq:
         _install_jq()
     if settings.ripgrep:
@@ -333,6 +343,22 @@ def _install_git() -> None:
         _setup_symlink(
             f"~/.config/git/{filename}", f"{_get_script_dir()}/git/{filename}"
         )
+
+
+def _install_gh() -> None:
+    if _have_command("gh"):
+        _LOGGER.debug("'gh' is already installed")
+        return
+    _LOGGER.info("Installing 'gh'...")
+    _apt_install("gh")
+
+
+def _install_glab() -> None:
+    if _have_command("glab"):
+        _LOGGER.debug("'glab' is already installed")
+        return
+    _LOGGER.info("Installing 'glab'...")
+    _apt_install("glab")
 
 
 def _install_jq() -> None:
