@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
-# ruff: noqa: C901,S602,S607
+# ruff: noqa: C901,E501,S310,PLR0912,S602,S607
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
 from pathlib import Path
-from shutil import which
-from subprocess import check_call
+from shutil import copyfile, which
+from stat import S_IXUSR
+from string import Template
+from subprocess import check_call, check_output
+from tempfile import TemporaryDirectory
+from urllib.parse import urlparse
+from urllib.request import urlopen
 
 # constants
 
@@ -18,22 +25,28 @@ _LOGGER = getLogger(__name__)
 
 @dataclass(order=True, unsafe_hash=True, kw_only=True)
 class _Settings:
+    age: bool
     bat: bool
     bottom: bool
     build_essential: bool
+    delta: bool
     direnv: bool
     fd_find: bool
+    jq: bool
     just: bool
     ripgrep: bool
     shellcheck: bool
     shfmt: bool
+    sops: bool
     tmux: bool
     verbose: bool
+    yq: bool
     zoom: bool
 
     @classmethod
     def parse(cls) -> "_Settings":
         parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
+        parser.add_argument("-a", "--age", action="store_true", help="Install 'age'.")
         parser.add_argument("-ba", "--bat", action="store_true", help="Install 'bat'.")
         parser.add_argument(
             "-bt", "--bottom", action="store_true", help="Install 'bottom'."
@@ -45,22 +58,32 @@ class _Settings:
             help="Install 'build-essential'.",
         )
         parser.add_argument(
-            "-d", "--direnv", action="store_true", help="Install 'direnv'."
+            "-de", "--delta", action="store_true", help="Install 'delta'."
+        )
+        parser.add_argument(
+            "-di", "--direnv", action="store_true", help="Install 'direnv'."
         )
         parser.add_argument(
             "-f", "--fd-find", action="store_true", help="Install 'fd-find'."
         )
-        parser.add_argument("-j", "--just", action="store_true", help="Install 'just'.")
+        parser.add_argument(
+            "-ju", "--just", action="store_true", help="Install 'just'."
+        )
+        parser.add_argument("-jq", "--jq", action="store_true", help="Install 'jq'.")
         parser.add_argument(
             "-r", "--ripgrep", action="store_true", help="Install 'ripgrep'."
         )
         parser.add_argument(
-            "-shc", "--shellcheck", action="store_true", help="Install 'shellcheck'."
+            "-sc", "--shellcheck", action="store_true", help="Install 'shellcheck'."
         )
         parser.add_argument(
-            "-shf", "--shfmt", action="store_true", help="Install 'shfmt'."
+            "-sf", "--shfmt", action="store_true", help="Install 'shfmt'."
+        )
+        parser.add_argument(
+            "-so", "--sops", action="store_true", help="Install 'sops'."
         )
         parser.add_argument("-t", "--tmux", action="store_true", help="Install 'tmux'.")
+        parser.add_argument("-yq", "--yq", action="store_true", help="Install 'yq'.")
         parser.add_argument("-z", "--zoom", action="store_true", help="Install 'zoom'.")
         parser.add_argument(
             "-v", "--verbose", action="store_true", help="Verbose mode."
@@ -83,26 +106,36 @@ def main(settings: _Settings, /) -> None:
     _install_git()
     _install_neovim()
     _install_starship()
+    if settings.age:
+        _install_age()
     if settings.bat:
         _install_bat()
     if settings.bottom:
         _install_bottom()
     if settings.build_essential:
         _install_build_essential()
+    if settings.delta:
+        _install_delta()
     if settings.direnv:
         _install_direnv()
     if settings.fd_find:
         _install_fd_find()
     if settings.just:
         _install_just()
+    if settings.jq:
+        _install_jq()
     if settings.ripgrep:
         _install_ripgrep()
     if settings.shellcheck:
         _install_shellcheck()
     if settings.shfmt:
         _install_shfmt()
+    if settings.sops:
+        _install_sops()
     if settings.tmux:
         _install_tmux()
+    if settings.yq:
+        _install_yq()
     if settings.zoom:
         _install_zoom()
 
@@ -114,8 +147,16 @@ def main(settings: _Settings, /) -> None:
     _install_ruff()  # after uv
 
 
+def _install_age() -> None:
+    if which("age"):
+        _LOGGER.debug("'age' is already installed")
+        return
+    _LOGGER.info("Installing 'age'...")
+    _apt_install("age")
+
+
 def _install_bat() -> None:
-    if which("bat"):
+    if which("batcat"):
         _LOGGER.debug("'bat' is already installed")
         return
     _LOGGER.info("Installing 'bat'...")
@@ -127,7 +168,10 @@ def _install_bottom() -> None:
         _LOGGER.debug("'btm' is already installed")
         return
     _LOGGER.info("Installing 'bottom'...")
-    # curl + deb based, need to get latest version
+    with _yield_github_latest_download(
+        "ClementTsang", "bottom", "bottom_${tag}-1_amd64.deb"
+    ) as path:
+        _dpkg_install(path)
 
 
 def _install_build_essential() -> None:
@@ -197,12 +241,32 @@ def _install_just() -> None:
     _apt_install("just")
 
 
+def _install_jq() -> None:
+    if which("jq"):
+        _LOGGER.debug("'jq' is already installed")
+        return
+    _LOGGER.info("Installing 'jq'...")
+    _apt_install("jq")
+
+
 def _install_neovim() -> None:
     if which("nvim"):
         _LOGGER.debug("'neovim' is already installed")
         return
     _LOGGER.info("Installing 'neovim'...")
     _apt_install("neovim")
+
+
+def _install_pre_commit() -> None:
+    _uv_tool_install("pre-commit")
+
+
+def _install_pyright() -> None:
+    _uv_tool_install("pyright")
+
+
+def _install_ruff() -> None:
+    _uv_tool_install("ruff")
 
 
 def _install_ripgrep() -> None:
@@ -227,6 +291,19 @@ def _install_shfmt() -> None:
         return
     _LOGGER.info("Installing 'shfmt'...")
     _apt_install("shfmt")
+
+
+def _install_sops() -> None:
+    if which("sops"):
+        _LOGGER.debug("'sops' is already installed")
+        return
+    _LOGGER.info("Installing 'sops'...")
+    path_to = _get_local_bin().joinpath("sops")
+    path_to.parent.mkdir(parents=True, exist_ok=True)
+    with _yield_github_latest_download(
+        "getsops", "sops", "sops-${tag}.linux.amd64"
+    ) as binary:
+        _copyfile(binary, path_to, executable=True)
 
 
 def _install_starship() -> None:
@@ -255,18 +332,6 @@ def _install_tmux() -> None:
         )
 
 
-def _install_pre_commit() -> None:
-    _uv_tool_install("pre-commit")
-
-
-def _install_pyright() -> None:
-    _uv_tool_install("pyright")
-
-
-def _install_ruff() -> None:
-    _uv_tool_install("ruff")
-
-
 def _install_uv() -> None:
     if which("uv"):
         _LOGGER.debug("'uv' is already installed")
@@ -274,8 +339,18 @@ def _install_uv() -> None:
     _install_curl()
     _LOGGER.info("Installing 'uv'...")
     check_call("curl -LsSf https://astral.sh/uv/install.sh | sh", shell=True)
-    _append_to_file("~/.bashrc", '''export PATH="${HOME}${PATH:+:${PATH}}"''')
+    _append_to_file(
+        "~/.bashrc", '''export PATH="${HOME}/.local/bin${PATH:+:${PATH}}"'''
+    )
     check_call("source ~/.bashrc", shell=True)
+
+
+def _install_yq() -> None:
+    if which("yq"):
+        _LOGGER.debug("'yq' is already installed")
+        return
+    _LOGGER.info("Installing 'yq'...")
+    _apt_install("yq")
 
 
 def _install_zoom() -> None:
@@ -288,7 +363,7 @@ def _install_zoom() -> None:
         "libxcb-xtest0",
         "libxcb-cursor0",
     )
-    check_call("sudo dpkg -i zoom_amd64.deb", shell=True)
+    _dpkg_install("zoom_amd64.deb")
 
 
 def _setup_bash() -> None:
@@ -329,8 +404,45 @@ def _apt_install(*packages: str) -> None:
     check_call(f"sudo apt -y install {joined}", shell=True)
 
 
+def _copyfile(path_from: Path, path_to: Path, /, *, executable: bool = False) -> None:
+    _unlink(path_to)
+    _LOGGER.info("Copying %r -> %r...", str(path_from), str(path_to))
+    path_to.parent.mkdir(parents=True, exist_ok=True)
+    copyfile(path_from, path_to)
+    if executable:
+        _set_executable(path_to)
+
+
+def _dpkg_install(path: Path | str, /) -> None:
+    check_call(f"sudo dpkg -i {path}", shell=True)
+
+
+def _get_latest_tag(owner: str, repo: str, /) -> str:
+    _install_curl()
+    _install_jq()
+    return check_output(
+        f'curl -s https://api.github.com/repos/{owner}/{repo}/releases/latest | jq -r ".tag_name"',
+        shell=True,
+        text=True,
+    ).strip("\n")
+
+
+def _get_local_bin() -> Path:
+    return _to_path("~/.local/bin")
+
+
 def _get_script_dir() -> Path:
     return Path(__file__).parent
+
+
+def _set_executable(path: Path | str, /) -> None:
+    path = _to_path(path)
+    mode = path.stat().st_mode
+    if mode & S_IXUSR:
+        _LOGGER.debug("%r is already executable", str(path))
+        return
+    _LOGGER.info("Making %r executable...", str(path))
+    path.chmod(mode | S_IXUSR)
 
 
 def _setup_symlink(path_from: Path | str, path_to: Path | str, /) -> None:
@@ -339,15 +451,20 @@ def _setup_symlink(path_from: Path | str, path_to: Path | str, /) -> None:
         _LOGGER.debug("%r -> %r already symlinked", str(path_from), str(path_to))
         return
     path_from.parent.mkdir(parents=True, exist_ok=True)
-    if path_from.exists() or path_from.is_symlink():
-        _LOGGER.info("Removing %r...", str(path_from))
-        path_from.unlink()
+    _unlink(path_from)
     _LOGGER.info("Symlinking %r -> %r", str(path_from), str(path_to))
     path_from.symlink_to(path_to)
 
 
 def _to_path(path: Path | str, /) -> Path:
     return Path(path).expanduser()
+
+
+def _unlink(path: Path | str, /) -> None:
+    path = _to_path(path)
+    if path.exists() or path.is_symlink():
+        _LOGGER.info("Removing %r...", str(path))
+        path.unlink(missing_ok=True)
 
 
 def _update_submodules() -> None:
@@ -364,6 +481,30 @@ def _uv_tool_install(tool: str, /) -> None:
     _install_uv()
     _LOGGER.info("Installing %r...", tool)
     check_call(f"uv tool install {tool}", shell=True)
+
+
+@contextmanager
+def _yield_download(url: str, /) -> Iterator[Path]:
+    filename = Path(urlparse(url).path).name
+    with TemporaryDirectory() as temp_dir:
+        temp_file = Path(temp_dir, filename)
+        with urlopen(url) as response, temp_file.open(mode="wb") as fh:
+            fh.write(response.read())
+        yield temp_file
+
+
+@contextmanager
+def _yield_github_latest_download(
+    owner: str, repo: str, filename_template: str, /
+) -> Iterator[Path]:
+    tag = _get_latest_tag(owner, repo)
+    filename = Template(filename_template).substitute(tag=tag)
+    url = f"https://github.com/{owner}/{repo}/releases/download/{tag}/{filename}"
+    with TemporaryDirectory() as temp_dir:
+        temp_file = Path(temp_dir, filename)
+        with urlopen(url) as response, temp_file.open(mode="wb") as fh:
+            fh.write(response.read())
+        yield temp_file
 
 
 # main

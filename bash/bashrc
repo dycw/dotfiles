@@ -136,8 +136,3 @@ if ! shopt -oq posix; then
         . /etc/bash_completion
     fi
 fi
-
-. "$HOME/.local/bin/env"
-eval "$(uv generate-shell-completion bash)"
-export PATH="${HOME}${PATH:+:${PATH}}"
-eval "$(starship init bash)"
