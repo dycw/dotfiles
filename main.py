@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ruff: noqa: S602,S607
+# ruff: noqa: C901,S602,S607
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
@@ -18,9 +18,12 @@ _LOGGER = getLogger(__name__)
 
 @dataclass(order=True, unsafe_hash=True, kw_only=True)
 class _Settings:
+    bat: bool
     bottom: bool
     build_essential: bool
+    direnv: bool
     fd_find: bool
+    just: bool
     ripgrep: bool
     shellcheck: bool
     shfmt: bool
@@ -31,6 +34,7 @@ class _Settings:
     @classmethod
     def parse(cls) -> "_Settings":
         parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
+        parser.add_argument("-ba", "--bat", action="store_true", help="Install 'bat'.")
         parser.add_argument(
             "-bt", "--bottom", action="store_true", help="Install 'bottom'."
         )
@@ -41,8 +45,12 @@ class _Settings:
             help="Install 'build-essential'.",
         )
         parser.add_argument(
+            "-d", "--direnv", action="store_true", help="Install 'direnv'."
+        )
+        parser.add_argument(
             "-f", "--fd-find", action="store_true", help="Install 'fd-find'."
         )
+        parser.add_argument("-j", "--just", action="store_true", help="Install 'just'.")
         parser.add_argument(
             "-r", "--ripgrep", action="store_true", help="Install 'ripgrep'."
         )
@@ -75,12 +83,18 @@ def main(settings: _Settings, /) -> None:
     _install_git()
     _install_neovim()
     _install_starship()
+    if settings.bat:
+        _install_bat()
     if settings.bottom:
         _install_bottom()
     if settings.build_essential:
         _install_build_essential()
+    if settings.direnv:
+        _install_direnv()
     if settings.fd_find:
         _install_fd_find()
+    if settings.just:
+        _install_just()
     if settings.ripgrep:
         _install_ripgrep()
     if settings.shellcheck:
@@ -98,6 +112,14 @@ def main(settings: _Settings, /) -> None:
     _install_pre_commit()  # after uv
     _install_pyright()  # after uv
     _install_ruff()  # after uv
+
+
+def _install_bat() -> None:
+    if which("bat"):
+        _LOGGER.debug("'bat' is already installed")
+        return
+    _LOGGER.info("Installing 'bat'...")
+    _apt_install("bat")
 
 
 def _install_bottom() -> None:
@@ -130,6 +152,23 @@ def _install_curl() -> None:
     _apt_install("curl")
 
 
+def _install_delta() -> None:
+    if which("delta"):
+        _LOGGER.debug("'git-delta' is already installed")
+        return
+    _LOGGER.info("Installing 'git-delta'...")
+    _apt_install("git-delta")
+
+
+def _install_direnv() -> None:
+    if which("direnv"):
+        _LOGGER.debug("'direnv' is already installed")
+    else:
+        _LOGGER.info("Installing 'direnv'...")
+        _apt_install("direnv")
+    _append_to_file("~/.direnv", '''eval "$(direnv hook bash)"''')
+
+
 def _install_fd_find() -> None:
     if which("fdfind"):
         _LOGGER.debug("'fd-find' is already installed")
@@ -148,6 +187,14 @@ def _install_git() -> None:
         _setup_symlink(
             f"~/.config/git/{filename}", f"{_get_script_dir()}/git/{filename}"
         )
+
+
+def _install_just() -> None:
+    if which("just"):
+        _LOGGER.debug("'just' is already installed")
+        return
+    _LOGGER.info("Installing 'just'...")
+    _apt_install("just")
 
 
 def _install_neovim() -> None:
@@ -189,6 +236,7 @@ def _install_starship() -> None:
         _LOGGER.info("Installing 'starship'...")
         _apt_install("starship")
     _setup_symlink("~/.config/starship", f"{_get_script_dir()}/starship/starship.toml")
+    _append_to_file("~/.bashrc", '''eval "$(starship init bash)"''')
 
 
 def _install_tmux() -> None:
