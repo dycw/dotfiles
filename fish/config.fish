@@ -1,11 +1,33 @@
 # xdg
-set -Ux XDG_CONFIG_HOME $HOME/.config
-set -Ux XDG_CACHE_HOME $HOME/.cache
-set -Ux XDG_DATA_HOME $HOME/.local/share
-set -Ux XDG_STATE_HOME $HOME/.local/state
+set -Ux XDG_BIN_HOME (set -q XDG_BIN_HOME; and echo $XDG_BIN_HOME; or echo $HOME/.local/bin)
+set -Ux XDG_CACHE_HOME (set -q XDG_CACHE_HOME; and echo $XDG_CACHE_HOME; or echo $HOME/.cache)
+set -Ux XDG_CONFIG_DIRS (set -q XDG_CONFIG_DIRS; and echo $XDG_CONFIG_DIRS; or echo /etc/xdg)
+set -Ux XDG_CONFIG_HOME (set -q XDG_CONFIG_HOME; and echo $XDG_CONFIG_HOME; or echo $HOME/.config)
+set -Ux XDG_DATA_DIRS (set -q XDG_DATA_DIRS; and echo $XDG_DATA_DIRS; or echo /usr/local/share:/usr/share)
+set -Ux XDG_DATA_HOME (set -q XDG_DATA_HOME; and echo $XDG_DATA_HOME; or echo $HOME/.local/share)
+set -Ux XDG_RUNTIME_DIR (set -q XDG_RUNTIME_DIR; and echo $XDG_RUNTIME_DIR; or echo /run/user/(id -u))
+set -Ux XDG_STATE_HOME (set -q XDG_STATE_HOME; and echo $XDG_STATE_HOME; or echo $HOME/.local/state)
 
 if status is-interactive
     # Commands to run in interactive sessions can go here
+
+    # bat
+    if type -q batcat
+        function cat
+            batcat $argv
+        end
+        function catp
+            batcat --plain $argv
+        end
+    end
+
+    # cd
+    function cd-config
+        cd "$XDG_CONFIG_HOME"
+    end
+    function cd-df
+        cd "$HOME/dotfiles"
+    end
 
     # eza
     if type -q eza
@@ -27,7 +49,7 @@ if status is-interactive
     fish_vi_key_bindings
 
     function fish_config
-        edit ~/.config/fish/config.fish
+        edit "$XDG_CONFIG_HOME/fish/config.fish"
     end
 
     # fzf
@@ -36,6 +58,17 @@ if status is-interactive
     end
 
     # neovim
+    function cd-nvim-plugins
+        cd "$XDG_CONFIG_HOME/nvim/lua/plugins"
+    end
+    function clean-neovim
+        set dirs $XDG_STATE_HOME $XDG_DATA_HOME $XDG_STATE_HOME
+        for dir in $dirs
+            set nvim "$dir/nvim"
+            echo "Cleaning '$nvim'..."
+            rm -rf $nvim
+        end
+    end
     if type -q nvim
         set -gx EDITOR nvim
         set -gx VISUAL nvim

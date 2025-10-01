@@ -9,31 +9,19 @@
   },
   "conform.nvim": {
     "branch": "master",
-    "commit": "b4aab989db276993ea5dcb78872be494ce546521"
+    "commit": "c64cc754ace603e185ab30113aaef174187eacf8"
+  },
+  "guess-indent.nvim": {
+    "branch": "main",
+    "commit": "84a4987ff36798c2fc1169cbaff67960aed9776f"
   },
   "lazy.nvim": {
     "branch": "main",
     "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a"
   },
-  "mini.pairs": {
-    "branch": "main",
-    "commit": "3738ea30ff33e0cbf2983dc67319a5468d25b0a9"
-  },
-  "noice.nvim": {
-    "branch": "main",
-    "commit": "0427460c2d7f673ad60eb02b35f5e9926cf67c59"
-  },
   "nvim-early-retirement": {
     "branch": "main",
     "commit": "14aba23ce4168e6d6acbf78ab1d33739c3894f68"
-  },
-  "nvim-lint": {
-    "branch": "master",
-    "commit": "335a6044be16d7701001059cba9baa36fbeef422"
-  },
-  "nvim-lspconfig": {
-    "branch": "master",
-    "commit": "336b388c272555d2ae94627a50df4c2f89a5e257"
   },
   "nvim-rip-substitute": {
     "branch": "main",
@@ -41,7 +29,7 @@
   },
   "nvim-treesitter": {
     "branch": "master",
-    "commit": "5a70b1eb8cbdf6c7f0a59dfb7356ad198421b620"
+    "commit": "42fc28ba918343ebfd5565147a42a26580579482"
   },
   "plenary.nvim": {
     "branch": "master",
@@ -58,10 +46,6 @@
   "text-case.nvim": {
     "branch": "main",
     "commit": "e898cfd46fa6cde0e83abb624a16e67d2ffc6457"
-  },
-  "todo-comments.nvim": {
-    "branch": "main",
-    "commit": "304a8d204ee787d2544d8bc23cd38d2f929e7cc5"
   },
   "vim-caser": {
     "branch": "master",

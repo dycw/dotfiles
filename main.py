@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ruff: noqa: C901,E501,S310,PLR0912,S602,S607
+# ruff: noqa: C901,E501,S310,PLR0912,PLR0915,S602,S607
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -38,10 +38,13 @@ class _Settings:
     fzf: bool
     jq: bool
     just: bool
+    luacheck: bool
+    luarocks: bool
     ripgrep: bool
     shellcheck: bool
     shfmt: bool
     sops: bool
+    tailscale: bool
     tmux: bool
     verbose: bool
     yq: bool
@@ -72,10 +75,16 @@ class _Settings:
             "-fd", "--fd-find", action="store_true", help="Install 'fd-find'."
         )
         parser.add_argument("-fz", "--fzf", action="store_true", help="Install 'fzf'.")
+        parser.add_argument("-jq", "--jq", action="store_true", help="Install 'jq'.")
         parser.add_argument(
             "-ju", "--just", action="store_true", help="Install 'just'."
         )
-        parser.add_argument("-jq", "--jq", action="store_true", help="Install 'jq'.")
+        parser.add_argument(
+            "-lc", "--luacheck", action="store_true", help="Install 'luacheck'."
+        )
+        parser.add_argument(
+            "-lr", "--luarocks", action="store_true", help="Install 'luarocks'."
+        )
         parser.add_argument(
             "-r", "--ripgrep", action="store_true", help="Install 'ripgrep'."
         )
@@ -88,7 +97,12 @@ class _Settings:
         parser.add_argument(
             "-so", "--sops", action="store_true", help="Install 'sops'."
         )
-        parser.add_argument("-t", "--tmux", action="store_true", help="Install 'tmux'.")
+        parser.add_argument(
+            "-ta", "--tailscale", action="store_true", help="Install 'tailscale'."
+        )
+        parser.add_argument(
+            "-tm", "--tmux", action="store_true", help="Install 'tmux'."
+        )
         parser.add_argument("-yq", "--yq", action="store_true", help="Install 'yq'.")
         parser.add_argument("-z", "--zoom", action="store_true", help="Install 'zoom'.")
         parser.add_argument(
@@ -133,6 +147,10 @@ def main(settings: _Settings, /) -> None:
         _install_fzf()
     if settings.just:
         _install_just()
+    if settings.luacheck:
+        _install_luacheck()
+    if settings.luarocks:
+        _install_luarocks()
     if settings.jq:
         _install_jq()
     if settings.ripgrep:
@@ -143,6 +161,8 @@ def main(settings: _Settings, /) -> None:
         _install_shfmt()
     if settings.sops:
         _install_sops()
+    if settings.tailscale:
+        _install_tailscale()
     if settings.tmux:
         _install_tmux()
     if settings.yq:
@@ -284,6 +304,14 @@ def _install_git() -> None:
         )
 
 
+def _install_jq() -> None:
+    if _have_command("jq"):
+        _LOGGER.debug("'jq' is already installed")
+        return
+    _LOGGER.info("Installing 'jq'...")
+    _apt_install("jq")
+
+
 def _install_just() -> None:
     if _have_command("just"):
         _LOGGER.debug("'just' is already installed")
@@ -292,12 +320,20 @@ def _install_just() -> None:
     _apt_install("just")
 
 
-def _install_jq() -> None:
-    if _have_command("jq"):
-        _LOGGER.debug("'jq' is already installed")
+def _install_luacheck() -> None:
+    if _have_command("luacheck"):
+        _LOGGER.debug("'luacheck' is already installed")
         return
-    _LOGGER.info("Installing 'jq'...")
-    _apt_install("jq")
+    _LOGGER.info("Installing 'luacheck'...")
+    _apt_install("luacheck")
+
+
+def _install_luarocks() -> None:
+    if _have_command("luarocks"):
+        _LOGGER.debug("'luarocks' is already installed")
+        return
+    _LOGGER.info("Installing 'luarocks'...")
+    _apt_install("luarocks")
 
 
 def _install_neovim() -> None:
@@ -365,7 +401,16 @@ def _install_starship() -> None:
         _LOGGER.info("Installing 'starship'...")
         _apt_install("starship")
     _setup_symlink("~/.config/starship", f"{_get_script_dir()}/starship/starship.toml")
-    _append_to_file("~/.bashrc", '''eval "$(starship init bash)"''')
+    _append_to_file("~/.bashrc", 'eval "$(starship init bash)"')
+
+
+def _install_tailscale() -> None:
+    if _have_command("tailscale"):
+        _LOGGER.debug("'tailscale' is already installed")
+        return
+    _LOGGER.info("Installing 'tailscale'...")
+    _install_curl()
+    check_call("curl -fsSL https://tailscale.com/install.sh | sh", shell=True)
 
 
 def _install_tmux() -> None:
