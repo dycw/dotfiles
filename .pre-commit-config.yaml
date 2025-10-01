@@ -41,7 +41,7 @@ repos:
         name: fish-indent
         entry: fish-indent
         language: system
-        types_or: [fish]
+        files: \.fish$
         #args: [--write, --log-level=silent]
       - id: prettier
         name: prettier
