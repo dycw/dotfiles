@@ -19,6 +19,10 @@ _LOGGER = getLogger(__name__)
 @dataclass(order=True, unsafe_hash=True, kw_only=True)
 class _Settings:
     bottom: bool
+    build_essential: bool
+    fd_find: bool
+    ripgrep: bool
+    shellcheck: bool
     shfmt: bool
     tmux: bool
     verbose: bool
@@ -28,16 +32,31 @@ class _Settings:
     def parse(cls) -> "_Settings":
         parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument(
-            "-b", "--bottom", action="store_true", help="Install 'shfmt'."
+            "-bt", "--bottom", action="store_true", help="Install 'bottom'."
         )
         parser.add_argument(
-            "-s", "--shfmt", action="store_true", help="Install 'shfmt'."
+            "-bu",
+            "--build-essential",
+            action="store_true",
+            help="Install 'build-essential'.",
+        )
+        parser.add_argument(
+            "-f", "--fd-find", action="store_true", help="Install 'fd-find'."
+        )
+        parser.add_argument(
+            "-r", "--ripgrep", action="store_true", help="Install 'ripgrep'."
+        )
+        parser.add_argument(
+            "-shc", "--shellcheck", action="store_true", help="Install 'shellcheck'."
+        )
+        parser.add_argument(
+            "-shf", "--shfmt", action="store_true", help="Install 'shfmt'."
         )
         parser.add_argument("-t", "--tmux", action="store_true", help="Install 'tmux'.")
+        parser.add_argument("-z", "--zoom", action="store_true", help="Install 'zoom'.")
         parser.add_argument(
             "-v", "--verbose", action="store_true", help="Verbose mode."
         )
-        parser.add_argument("-z", "--zoom", action="store_true", help="Install 'zoom'.")
         return _Settings(**vars(parser.parse_args()))
 
 
@@ -52,15 +71,22 @@ def main(settings: _Settings, /) -> None:
         level="DEBUG" if settings.verbose else "INFO",
     )
     _setup_shells()
-    if settings.bottom:
-        _install_bottom()
-    _install_bottom()
-    _install_build_essential()
     _install_curl()
     _install_git()
     _install_neovim()
+    _install_starship()
+    if settings.bottom:
+        _install_bottom()
+    if settings.build_essential():
+        _install_build_essential()
+    if settings.fd_find:
+        _install_fd_find()
+    if settings.ripgrep:
+        _install_ripgrep()
+    if settings.shellcheck:
+        _install_shellcheck()
     if settings.shfmt:
-        _install_tmux()
+        _install_shfmt()
     if settings.tmux:
         _install_tmux()
     if settings.zoom:
@@ -104,6 +130,14 @@ def _install_curl() -> None:
     _apt_install("curl")
 
 
+def _install_fd_find() -> None:
+    if which("fd"):
+        _LOGGER.debug("'fd-find' is already installed")
+        return
+    _LOGGER.info("Installing 'fd-find'...")
+    _apt_install("fd-find")
+
+
 def _install_git() -> None:
     if which("git"):
         _LOGGER.debug("'git' is already installed")
@@ -122,6 +156,38 @@ def _install_neovim() -> None:
         return
     _LOGGER.info("Installing 'neovim'...")
     _apt_install("neovim")
+
+
+def _install_ripgrep() -> None:
+    if which("rg"):
+        _LOGGER.debug("'ripgrep' is already installed")
+        return
+    _LOGGER.info("Installing 'ripgrep'...")
+    _apt_install("ripgrep")
+
+
+def _install_shellcheck() -> None:
+    if which("shellcheck"):
+        _LOGGER.debug("'shellcheck' is already installed")
+        return
+    _LOGGER.info("Installing 'shellcheck'...")
+    _apt_install("shellcheck")
+
+
+def _install_shfmt() -> None:
+    if which("shfmt"):
+        _LOGGER.debug("'shfmt' is already installed")
+        return
+    _LOGGER.info("Installing 'shfmt'...")
+    _apt_install("shfmt")
+
+
+def _install_starship() -> None:
+    if which("starship"):
+        _LOGGER.debug("'starship' is already installed")
+        return
+    _LOGGER.info("Installing 'starship'...")
+    _apt_install("starship")
 
 
 def _install_tmux() -> None:
