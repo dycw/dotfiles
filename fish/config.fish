@@ -48,7 +48,7 @@ if status is-interactive
     # fish
     fish_vi_key_bindings
 
-    function fish_config
+    function fish-config
         $EDITOR "$XDG_CONFIG_HOME/fish/config.fish"
     end
 
@@ -83,6 +83,11 @@ if status is-interactive
         end
     end
 
+    # starship
+    if type -q starship
+        starship init fish | source
+    end
+
     # tailscale
     if type -q tailscale
         function ts-up
@@ -114,5 +119,10 @@ if status is-interactive
         function v
             vim $argv
         end
+    end
+
+    # zoxide
+    if type -q zoxide
+        zoxide init --cmd j fish | source
     end
 end

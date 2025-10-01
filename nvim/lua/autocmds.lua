@@ -3,15 +3,6 @@ local v = vim
 -- luacheck: pop
 local api = v.api
 
-api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-    callback = function()
-        v.cmd("set filetype=jsonc")
-    end,
-    desc = "JSONC support for VSCode files",
-    group = api.nvim_create_augroup("jsonc-vscode", { clear = true }),
-    pattern = "*/.vscode/*.json",
-})
-
 api.nvim_create_autocmd("TextYankPost", {
     callback = function()
         v.highlight.on_yank()

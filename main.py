@@ -49,6 +49,7 @@ class _Settings:
     verbose: bool
     yq: bool
     zoom: bool
+    zoxide: bool
 
     @classmethod
     def parse(cls) -> "_Settings":
@@ -104,7 +105,12 @@ class _Settings:
             "-tm", "--tmux", action="store_true", help="Install 'tmux'."
         )
         parser.add_argument("-yq", "--yq", action="store_true", help="Install 'yq'.")
-        parser.add_argument("-z", "--zoom", action="store_true", help="Install 'zoom'.")
+        parser.add_argument(
+            "-zm", "--zoom", action="store_true", help="Install 'zoom'."
+        )
+        parser.add_argument(
+            "-zx", "--zoxide", action="store_true", help="Install 'zoxide'."
+        )
         parser.add_argument(
             "-v", "--verbose", action="store_true", help="Verbose mode."
         )
@@ -168,6 +174,8 @@ def main(settings: _Settings, /) -> None:
         _install_yq()
     if settings.zoom:
         _install_zoom()
+    if settings.zoxide:
+        _install_zoxide()
 
     if settings.luacheck:  # after luarocks
         _install_luacheck()
@@ -464,6 +472,14 @@ def _install_zoom() -> None:
         "libxcb-cursor0",
     )
     _dpkg_install("zoom_amd64.deb")
+
+
+def _install_zoxide() -> None:
+    if _have_command("zoxide"):
+        _LOGGER.debug("'zoxide' is already installed")
+        return
+    _LOGGER.info("Installing 'zoxide'...")
+    _apt_install("zoxide")
 
 
 def _setup_bash() -> None:
