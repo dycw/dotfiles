@@ -33,6 +33,7 @@ class _Settings:
     build_essential: bool
     delta: bool
     direnv: bool
+    dust: bool
     eza: bool
     fd_find: bool
     fzf: bool
@@ -70,6 +71,9 @@ class _Settings:
         )
         parser.add_argument(
             "-di", "--direnv", action="store_true", help="Install 'direnv'."
+        )
+        parser.add_argument(
+            "-du", "--dust", action="store_true", help="Install 'dust'."
         )
         parser.add_argument("-e", "--eza", action="store_true", help="Install 'eza'.")
         parser.add_argument(
@@ -146,6 +150,8 @@ def main(settings: _Settings, /) -> None:
         _install_delta()
     if settings.direnv:
         _install_direnv()
+    if settings.dust:
+        _install_dust()
     if settings.eza:
         _install_eza()
     if settings.fd_find:
@@ -252,6 +258,14 @@ def _install_direnv() -> None:
         _LOGGER.info("Installing 'direnv'...")
         _apt_install("direnv")
     _append_to_file("~/.direnv", '''eval "$(direnv hook bash)"''')
+
+
+def _install_dust() -> None:
+    if _have_command("dust"):
+        _LOGGER.debug("'dust' is already installed")
+        return
+    _LOGGER.info("Installing 'dust'...")
+    _apt_install("du-dust")
 
 
 def _install_eza() -> None:
