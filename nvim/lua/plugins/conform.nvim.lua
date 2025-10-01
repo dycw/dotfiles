@@ -4,6 +4,7 @@ local v = vim
 
 return {
     "stevearc/conform.nvim",
+    cmd = { "ConformInfo" },
     event = "BufWritePre",
     lazy = false,
     opts = {

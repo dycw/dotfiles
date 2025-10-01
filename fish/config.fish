@@ -49,12 +49,17 @@ if status is-interactive
     fish_vi_key_bindings
 
     function fish_config
-        edit "$XDG_CONFIG_HOME/fish/config.fish"
+        $EDITOR "$XDG_CONFIG_HOME/fish/config.fish"
     end
 
     # fzf
     if type -q fzf
         fzf --fish | source
+    end
+
+    # local
+    if test -f "$HOME/local.fish"
+        source "$HOME/local.fish"
     end
 
     # neovim
@@ -75,6 +80,27 @@ if status is-interactive
 
         function n
             nvim $argv
+        end
+    end
+
+    # tailscale
+    if type -q tailscale
+        function ts-up
+            set auth_key "$XDG_CONFIG_HOME/tailscale/auth-key.txt"
+            if not test -f $auto_key
+                echo "'$auto_key' does not exist"
+                return 1
+            end
+            if not set -q TAILSCALE_LOGIN_SERVER
+                echo "'\$TAILSCALE_LOGIN_SERVER' is not set"
+                return 1
+            end
+            echo "Starting 'tailscaled' in the background..."
+            sudo tailscaled &
+            echo "Starting 'tailscale'..."
+            sudo tailscale up --accept-dns --accept-routes --auth-key="file:$auth_key" \
+                --login-server="$TAILSCALE_LOGIN_SERVER" --reset
+
         end
     end
 

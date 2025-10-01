@@ -1,7 +1,7 @@
 return {
-    "numtostr/comment.nvim",
+    "jghauser/mkdir.nvim",
     config = function()
-        require("Comment").setup()
+        require("mkdir")
     end,
     event = "VeryLazy",
 }

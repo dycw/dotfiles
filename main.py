@@ -127,6 +127,7 @@ def main(settings: _Settings, /) -> None:
     _install_git()
     _install_neovim()
     _install_starship()
+    _setup_sshd()
     if settings.age:
         _install_age()
     if settings.bat:
@@ -474,6 +475,25 @@ def _setup_shells() -> None:
     _setup_bash()
 
 
+def _setup_sshd() -> None:
+    path = _to_path("/etc/ssh/sshd_config")
+    for from_, to in [
+        (
+            "#PermitRootLogin prohibit-password",
+            "PermitRootLogin no",
+        ),
+        (
+            "#PubkeyAuthentication yes",
+            "PubkeyAuthentication yes",
+        ),
+        (
+            "#PasswordAuthentication yes",
+            "PasswordAuthentication no",
+        ),
+    ]:
+        _replace_line(path, from_, to)
+
+
 # utilities
 
 
@@ -540,6 +560,16 @@ def _have_command(cmd: str, /) -> bool:
 
 def _luarocks_install(cmd: str, /) -> bool:
     check_call(f"sudo luarocks install {cmd}", shell=True)
+
+
+def _replace_line(path: Path | str, from_: str, to: str, /) -> None:
+    path = _to_path(path)
+    lines = path.read_text().splitlines()
+    if all(line != from_ for line in lines):
+        _LOGGER.debug("%r not found in %r", from_, str(path))
+        return
+    _LOGGER.info("Replacing %r -> %r in %r", from_, to, str(path))
+    check_call(f"sudo sed -i 's|{from_}|{to}|' {path}", shell=True)
 
 
 def _set_executable(path: Path | str, /) -> None:
