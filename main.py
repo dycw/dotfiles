@@ -147,8 +147,6 @@ def main(settings: _Settings, /) -> None:
         _install_fzf()
     if settings.just:
         _install_just()
-    if settings.luacheck:
-        _install_luacheck()
     if settings.luarocks:
         _install_luarocks()
     if settings.jq:
@@ -169,6 +167,9 @@ def main(settings: _Settings, /) -> None:
         _install_yq()
     if settings.zoom:
         _install_zoom()
+
+    if settings.luacheck:  # after luarocks
+        _install_luacheck()
 
     _install_uv()  # after curl
 
@@ -324,8 +325,9 @@ def _install_luacheck() -> None:
     if _have_command("luacheck"):
         _LOGGER.debug("'luacheck' is already installed")
         return
+    _install_luarocks()
     _LOGGER.info("Installing 'luacheck'...")
-    _apt_install("luacheck")
+    _luarocks_install("luacheck")
 
 
 def _install_luarocks() -> None:
@@ -534,6 +536,10 @@ def _get_script_dir() -> Path:
 
 def _have_command(cmd: str, /) -> bool:
     return which(cmd) is not None
+
+
+def _luarocks_install(cmd: str, /) -> bool:
+    check_call(f"sudo luarocks install {cmd}", shell=True)
 
 
 def _set_executable(path: Path | str, /) -> None:
