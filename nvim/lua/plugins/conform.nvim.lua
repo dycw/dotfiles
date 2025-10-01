@@ -11,6 +11,7 @@ return {
         formatters_by_ft = {
             dart = { "dart_format" },
             elm = { "elm_format" },
+            fish = { "fish_indent" },
             go = { "gofumpt" },
             htmldjango = { "djlint", "rustywind" },
             lua = { "stylua" },

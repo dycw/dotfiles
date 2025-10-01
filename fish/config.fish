@@ -83,6 +83,19 @@ if status is-interactive
         end
     end
 
+    # pre-commit
+    if type -q pre-commit
+        function pcau
+            pre-commit autoupdate
+        end
+        function pci
+            pre-commit install
+        end
+        function pca
+            pre-commit run --all-files
+        end
+    end
+
     # starship
     if type -q starship
         starship init fish | source

@@ -23,6 +23,10 @@
     "branch": "master",
     "commit": "c64cc754ace603e185ab30113aaef174187eacf8"
   },
+  "dial.nvim": {
+    "branch": "master",
+    "commit": "54b503f906bc9e5ab85288414840a1b86d40769f"
+  },
   "flit.nvim": {
     "branch": "main",
     "commit": "513e38abe61237c53a9e983e45595b1d2e7d5391"
@@ -34,6 +38,10 @@
   "guess-indent.nvim": {
     "branch": "main",
     "commit": "84a4987ff36798c2fc1169cbaff67960aed9776f"
+  },
+  "inc-rename.nvim": {
+    "branch": "main",
+    "commit": "7c79416330364976955ec8059fe3832b72ee1271"
   },
   "lazy.nvim": {
     "branch": "main",
@@ -62,6 +70,10 @@
   "nvim-lastplace": {
     "branch": "main",
     "commit": "0bb6103c506315044872e0f84b1f736c4172bb20"
+  },
+  "nvim-lspconfig": {
+    "branch": "master",
+    "commit": "db8fef885009fdec0daeff3e5dda92e1f539611e"
   },
   "nvim-rip-substitute": {
     "branch": "main",
