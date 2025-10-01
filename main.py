@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: S602,S607
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
@@ -17,9 +18,11 @@ _LOGGER = getLogger(__name__)
 
 @dataclass(order=True, unsafe_hash=True, kw_only=True)
 class _Settings:
+    bottom: bool
     shfmt: bool
     tmux: bool
     verbose: bool
+    zoom: bool
 
     @classmethod
     def parse(cls) -> "_Settings":
@@ -71,13 +74,9 @@ def main(settings: _Settings, /) -> None:
     _install_ruff()  # after uv
 
 
-def _add_home_local_bin_to_path() -> None:
-    assdf
-
-
 def _install_bottom() -> None:
     if which("btm"):
-        _LOGGER.info("'btm' is already installed")
+        _LOGGER.debug("'btm' is already installed")
         return
     _LOGGER.info("Installing 'bottom'...")
     # curl + deb based, need to get latest version
@@ -85,7 +84,9 @@ def _install_bottom() -> None:
 
 def _install_build_essential() -> None:
     if which("cc"):
-        _LOGGER.info("'cc' (and presumably 'build-essential) installed")
+        _LOGGER.debug(
+            "'cc' is already installed (already presumable so is 'build-essential'"
+        )
         return
     _LOGGER.info("Installing 'build-essential'...")
     _apt_install("build-essential")
@@ -129,6 +130,14 @@ def _install_tmux() -> None:
     else:
         _LOGGER.info("Installing 'tmux'...")
         _apt_install("tmux")
+    _update_submodules()
+    for filename_from, filename_to in [
+        ("tmux.conf.local", "tmux.conf.local"),
+        ("tmux.conf", ".tmux/.tmux.conf"),
+    ]:
+        _setup_symlink(
+            f"~/.config/tmux/{filename_from}", f"{_get_script_dir()}/tmux/{filename_to}"
+        )
 
 
 def _install_pre_commit() -> None:
@@ -150,8 +159,6 @@ def _install_uv() -> None:
     _install_curl()
     _LOGGER.info("Installing 'uv'...")
     check_call("curl -LsSf https://astral.sh/uv/install.sh | sh", shell=True)
-    # _prepend_to_current_path("~/.local/bin")
-
     _append_to_file("~/.bashrc", '''export PATH="${HOME}${PATH:+:${PATH}}"''')
     check_call("source ~/.bashrc", shell=True)
 
@@ -176,7 +183,6 @@ def _setup_bash() -> None:
 
 def _setup_shells() -> None:
     _setup_bash()
-    ### _setup_zshrc()
 
 
 # utilities
@@ -218,7 +224,7 @@ def _setup_symlink(path_from: Path | str, path_to: Path | str, /) -> None:
         _LOGGER.debug("%r -> %r already symlinked", str(path_from), str(path_to))
         return
     path_from.parent.mkdir(parents=True, exist_ok=True)
-    if path_from.exists():
+    if path_from.exists() or path_from.is_symlink():
         _LOGGER.info("Removing %r...", str(path_from))
         path_from.unlink()
     _LOGGER.info("Symlinking %r -> %r", str(path_from), str(path_to))
