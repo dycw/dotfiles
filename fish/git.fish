@@ -361,126 +361,189 @@ if status --is-interactive; and type -q git
     end
 
     # combined - all
-    function gc
+    function gg
         __git_all $argv
     end
-    function gcf
+    function ggf
         __git_all $argv --force
     end
-    function gcn
+    function ggn
         __git_all $argv --no-verify
     end
-    function gcfn
+    function ggfn
         __git_all $argv --force --no-verify
     end
-    function gcw
+    function ggw
         __git_all $argv --web
     end
-    function gcfw
+    function ggfw
         __git_all $argv --force --web
     end
-    function gcnw
+    function ggnw
         __git_all $argv --no-verify --web
     end
-    function gcfnw
+    function ggfnw
         __git_all $argv --force --no-verify --web
     end
-    function gce
+    function gge
         __git_all $argv --exit
     end
-    function gcfe
+    function ggfe
         __git_all $argv --force --exit
     end
-    function gcne
+    function ggne
         __git_all $argv --no-verify --exit
     end
-    function gcfne
+    function ggfne
         __git_all $argv --force --no-verify --exit
     end
-    function gcm
+    function ggm
         __git_all $argv --merge
     end
-    function gcfm
+    function ggfm
         __git_all $argv --force --merge
     end
-    function gcnm
+    function ggnm
         __git_all $argv --no-verify --merge
     end
-    function gcfnm
+    function ggfnm
         __git_all $argv --force --no-verify --merge
     end
-    function gcx
+    function ggx
         __git_all $argv --merge --exit
     end
-    function gcfx
+    function ggfx
         __git_all $argv --force --merge --exit
     end
-    function gcnx
+    function ggnx
         __git_all $argv --no-verify --merge --exit
     end
-    function gcfnx
+    function ggfnx
         __git_all $argv --force --no-verify --merge --exit
     end
-    function gac
+    #
+    function gga
         __git_all $argv --add
     end
-    function gacf
+    function ggaf
         __git_all $argv --add --force
     end
-    function gacn
+    function ggan
         __git_all $argv --add --no-verify
     end
-    function gacfn
+    function ggafn
         __git_all $argv --add --force --no-verify
     end
-    function gacw
+    function ggaw
         __git_all $argv --add --web
     end
-    function gacfw
+    function ggafw
         __git_all $argv --add --force --web
     end
-    function gacnw
+    function gganw
         __git_all $argv --add --no-verify --web
     end
-    function gacfnw
+    function ggafnw
         __git_all $argv --add --force --no-verify --web
     end
-    function gace
+    function ggae
         __git_all $argv --add --exit
     end
-    function gacfe
+    function ggafe
         __git_all $argv --add --force --exit
     end
-    function gacne
+    function ggane
         __git_all $argv --add --no-verify --exit
     end
-    function gacfne
+    function ggafne
         __git_all $argv --add --force --no-verify --exit
     end
-    function gacm
+    function ggam
         __git_all $argv --add --merge
     end
-    function gacfm
+    function ggafm
         __git_all $argv --add --force --merge
     end
-    function gacnm
+    function gganm
         __git_all $argv --add --no-verify --merge
     end
-    function gacfnm
+    function ggafnm
         __git_all $argv --add --force --no-verify --merge
     end
-    function gacx
+    function ggax
         __git_all $argv --add --merge --exit
     end
-    function gacfx
+    function ggafx
         __git_all $argv --add --force --merge --exit
     end
-    function gacnx
+    function gganx
         __git_all $argv --add --no-verify --merge --exit
     end
-    function gacfnx
+    function ggafnx
         __git_all $argv --add --force --no-verify --merge --exit
     end
+    #
+    function ggc
+        __git_all $argv --title=$argv[1] $argv[2..]
+    end
+    function ggcf
+        __git_all $argv --title=$argv[1] --force $argv[2..]
+    end
+    function ggcn
+        __git_all $argv --title=$argv[1] --no-verify $argv[2..]
+    end
+    function ggcfn
+        __git_all $argv --title=$argv[1] --force --no-verify $argv[2..]
+    end
+    function ggcw
+        __git_all $argv --title=$argv[1] --web $argv[2..]
+    end
+    function ggcfw
+        __git_all $argv --title=$argv[1] --force --web $argv[2..]
+    end
+    function ggcnw
+        __git_all $argv --title=$argv[1] --no-verify --web $argv[2..]
+    end
+    function ggcfnw
+        __git_all $argv --title=$argv[1] --force --no-verify --web $argv[2..]
+    end
+    function ggce
+        __git_all $argv --title=$argv[1] --exit $argv[2..]
+    end
+    function ggcfe
+        __git_all $argv --title=$argv[1] --force --exit $argv[2..]
+    end
+    function ggcne
+        __git_all $argv --title=$argv[1] --no-verify --exit $argv[2..]
+    end
+    function ggcfne
+        __git_all $argv --title=$argv[1] --force --no-verify --exit $argv[2..]
+    end
+    function ggcm
+        __git_all $argv --title=$argv[1] --merge $argv[2..]
+    end
+    function ggcfm
+        __git_all $argv --title=$argv[1] --force --merge $argv[2..]
+    end
+    function ggcnm
+        __git_all $argv --title=$argv[1] --no-verify --merge $argv[2..]
+    end
+    function ggcfnm
+        __git_all $argv --title=$argv[1] --force --no-verify --merge $argv[2..]
+    end
+    function ggcx
+        __git_all $argv --title=$argv[1] --merge --exit $argv[2..]
+    end
+    function ggcfx
+        __git_all $argv --title=$argv[1] --force --merge --exit $argv[2..]
+    end
+    function ggcnx
+        __git_all $argv --title=$argv[1] --no-verify --merge --exit $argv[2..]
+    end
+    function ggcfnx
+        __git_all $argv --title=$argv[1] --force --no-verify --merge --exit $argv[2..]
+    end
+    #
     function __git_all
         argparse title= num= part add no-verify force web exit merge -- $argv; or return $status
 
