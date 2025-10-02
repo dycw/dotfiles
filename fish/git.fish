@@ -24,10 +24,40 @@ if status --is-interactive; and type -q git
     function gb
         git branch --all --list --sort=-committerdate --verbose $argv
     end
+    function gbd
+        if test (count $argv) -eq 0
+            __git_branch_fzf_local | while read branch
+                __git_branch_delete $branch
+            end
+        else
+            for branch in $argv
+                __git_branch_delete $branch
+            end
+        end
+    end
+    function gbdr
+        __git_fetch_and_purge; or echo $status
+        if test (count $argv) -eq 0
+            __git_branch_fzf_remote --multi | xargs -r -I{} git push --delete origin "{}"
+        else
+            git push --delete origin $argv
+        end
+    end
     function __git_branch_delete
         git branch --delete --force $argv
     end
-
+    function __git_branch_fzf_local
+        git branch --format=%(refname:short) | fzf --multi
+    end
+    function __git_branch_fzf_remote
+        argparse m/multi -- $argv; or return $status
+        set -l args
+        if test -n "$_flag_multi"
+            set args $args --multi
+        end
+        git branch --color=never --remotes | awk '!/->/' | fzf $args \
+            | sed -E 's|^[[:space:]]*origin/||'
+    end
     # checkout
     function gco
         __git_checkout $argv
