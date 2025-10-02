@@ -606,9 +606,43 @@ if status --is-interactive; and type -q git
             set args $args --body=$_flag_body
         end
         if __remote_is_github
-            __github_create_or_edit $args
+            __github_create $args
         else if __remote_is_gitlab
-            __gitlab_create_or_update $args
+            __gitlab_create $args
+        else
+            echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
+        end
+        ###
+        set -l args
+        if test (count $argv) -eq 0
+        else if test (count $argv) -eq 1
+            set args $args --title $argv[1]
+        else if test (count $argv) -eq 2
+            set args $args --title $argv[1] --num $argv[2]
+        else if test (count $argv) -eq 3
+            set args $args --title $argv[1] --num $argv[2] --part
+        else
+            echo "'gcb' expected [0..3] arguments; got $(count $argv)" >&2; and return 1
+        end
+        __git_checkout_open $args
+
+    end
+    function ghe
+        argparse title= body= -- $argv; or return $status
+        set -l args
+        if test -n "$_flag_title"
+            set args $args --title $_flag_title
+        end
+        if __remote_is_github
+            if test -n "$_flag_body"
+                set args $args --body $_flag_body
+            end
+            __github_edit $args
+        else if __remote_is_gitlab
+            if test -n "$_flag_body"
+                set args $args --description $_flag_description
+            end
+            __gitlab_update $args
         else
             echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
         end
@@ -651,32 +685,33 @@ if status --is-interactive; and type -q git
 end
 
 if status --is-interactive; and type -q gh
-    function __github_create_or_edit
+    function __github_create
         argparse title= body= -- $argv; or return $status
-        set -l action
-        set -l args
-        if __github_exists &>/dev/null
-            set action edit
-            if test -n "$_flag_title"
-                set args $args --title $_flag_title
-            end
-            if test -n "$_flag_body"
-                set args $args --body $_flag_body
-            end
+        set -l title
+        if test -n "$_flag_title"
+            set title $_flag_title
         else
-            set action create
-            if test -n "$_flag_title"
-                set args $args --title $_flag_title
-            else
-                set args $args --title (__auto_msg)
-            end
-            if test -n "$_flag_body"
-                set args $args --body $_flag_body
-            else
-                set args $args --body .
-            end
+            set title (__auto_msg)
         end
-        gh pr $action $args
+        set -l body
+        if test -n "$_flag_body"
+            set body $_flag_body
+        else
+            set body .
+        end
+        gh pr create --title $title --body $body
+    end
+
+    function __github_edit
+        argparse title= body= -- $argv; or return $status
+        set -l args
+        if test -n "$_flag_title"
+            set args $args --title $_flag_title
+        end
+        if test -n "$_flag_body"
+            set args $args --body $_flag_body
+        end
+        gh pr edit $args
     end
 
     function __github_merge
@@ -739,34 +774,32 @@ if status --is-interactive; and type -q gh; and type -q jq
 end
 
 if status --is-interactive; and type -q glab
-    function __gitlab_create_or_update
+    function __gitlab_create
         argparse title= description= -- $argv; or return $status
-        set -l action
         set -l args
-        if __gitlab_mr_exists
-            set action update
-            set args $args (__gitlab_mr_num)
-            if test -n "$_flag_title"
-                set args $args --title $_flag_title
-            end
-            if test -n "$_flag_body"
-                set args $args --description $_flag_description
-            end
+        if test -n "$_flag_title"
+            set title $_flag_title
         else
-            set action create
-            set args $args --push --remove-source-branch --squash-before-merge
-            if test -n "$_flag_title"
-                set args $args --title $_flag_title
-            else
-                set args $args --title (__auto_msg)
-            end
-            if test -n "$_flag_body"
-                set args $args --description $_flag_description
-            else
-                set args $args --description .
-            end
+            set title (__auto_msg)
         end
-        gh mr $action $args
+        if test -n "$_flag_description"
+            set description $_flag_description
+        else
+            set description .
+        end
+        gh mr create --push --remove-source-branch --squash-before-merge $args --title $title --description $description
+    end
+
+    function __gitlab_update
+        argparse title= description= -- $argv; or return $status
+        set -l args
+        if test -n "$_flag_title"
+            set args $args --title $_flag_title
+        end
+        if test -n "$_flag_body"
+            set args $args --description $_flag_description
+        end
+        gh mr update (__gitlab_mr_num) $args
     end
 
     function __gitlab_mr_exists
