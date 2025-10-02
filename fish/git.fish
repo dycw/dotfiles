@@ -209,8 +209,11 @@ if status --is-interactive; and type -q git
     function remote-name
         git remote get-url origin
     end
+    function repo-name
+        basename -s .git $(remote-name)
+    end
     function __remote_is
-        if (remote-name) | grep -q $argv[1]
+        if remote-name | grep -q $argv[1]
             return 0
         else
             return 1
@@ -289,28 +292,33 @@ if status --is-interactive; and type -q git
         else if test (count $argv) -eq 2; and __remote_is_gitlab
             __gitlab_create_or_update -t $argv[1] -d $argv[2]
         else
-            echo "Invalid call to 'ghc'"; and return 1
+            echo "Invalid call to 'ghc'" >&2; and return 1
         end
     end
     function ghm
         __github_or_gitlab_merge
     end
     function ghmd
-        __github_or_gitlab_merge -d
+        __github_or_gitlab_merge --delete
     end
     function ghme
-        __github_or_gitlab_merge -e
-    end
-    function ghmx
-        __github_or_gitlab_merge -d -e
+        __github_or_gitlab_merge --exit
     end
     function __github_or_gitlab_merge
+        argparse d/delete e/exit -- $argv; or return $status
+        set -l args
+        if test -n "$_flag_delete"
+            set args $args --delete
+        end
+        if test -n "$_flag_exit"
+            set args $args --exit
+        end
         if __remote_is_github
-            __github_merge $argv
+            __github_merge $args
         else if __remote_is_github
-            __gitlab_merge $argv
+            __gitlab_merge $args
         else
-            echo "Invalid remote; got '$(remote-name)'"; and return 1
+            echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
         end
     end
 
@@ -343,29 +351,48 @@ if status --is-interactive; and type -q gh
         gh pr $action $args
     end
 
-    function __github_exists
-        set -l branch (current-branch); or return $status
-        set -l num (gh pr list --head=$branch --json number --jq '. | length'); or return $status
-        if test "$num" -eq 1
-            return 0
-        else
-            return 1
-        end
-    end
-
     function __github_merge
         argparse d/delete e/exit -- $argv; or return $status
         if not __github_exists
-            echo "'__github_merge' could not find an open PR for '$(current-branch)'"; and return 1
+            echo "'__github_merge' could not find an open PR for '$(current-branch)'" >&2; and return 1
         end
         set -l start (date +%s)
         gh pr merge --auto --delete-branch --squash; or return $status
         while __github_merging
             set -l elapsed (math (date +%s) - $start)
-            echo "$(repo_name)/$(current-branch) is still merging... ($elapsed s)"
+            echo "$(repo-name)/$(current-branch) is still merging... ($elapsed s)"
             sleep 1
         end
-        __git_checkout $argv
+        set -l args
+        if test -n "$_flag_exit"
+            set args $args --delete --exit
+        else if test -n "$_flag_delete"
+            set args $args --delete
+        end
+        __git_checkout $args
+    end
+
+    function __github_view
+        if gh pr ready
+            gh pr view -w
+        else
+            echo "'__github_view' could not find an open PR for $(current-branch)" >&2; and return 1
+        end
+    end
+
+end
+
+if status --is-interactive; and type -q gh; and type -q jq
+    function __github_exists
+        set -l branch (current-branch); or return $status
+        set -l num (gh pr list --head=$branch --json number --jq '. | length'); or return $status
+        if test $num -eq 0
+            echo "'__github_exists' expected a PR for '$branch'; got none" >&2; and return 1
+        else if test $num -eq 1
+            return 0
+        else
+            echo "'__github_exists' expected a unique PR for '$branch'; got $num" >&2; and return 1
+        end
     end
 
     function __github_merging
@@ -378,14 +405,6 @@ if status --is-interactive; and type -q gh
             return 0
         else
             return 1
-        end
-    end
-
-    function __github_view
-        if gh pr ready
-            gh pr view -w
-        else
-            echo "'__github_view' could not find an open PR for $(current-branch)"; and return 1
         end
     end
 end
@@ -413,19 +432,19 @@ if status --is-interactive; and type -q glab
 
     function __gitlab_mr_exists
     end
+end
 
-    if type -q jq
-        function __gitlab_mr_json
-            set -l branch (__current_branch); or return $status
-            set -l json (glab mr list --output=json --source-branch=$branch); or return $status
-            set -l num (printf "%s" "$json" | jq length); or return $status
-            if test $num -eq 0
-                echo "'__gitlab_mr_json' expected an MR for '$branch'; got none"; and return 1
-            else if test $num -eq 1
-                printf "%s" "$json" | jq '.[0]' | jq
-            else
-                echo "'__gitlab_mr_json' expected a unique MR for '$branch'; got $num"; and return 1
-            end
+if status --is-interactive; and type -q glab; and type -q jq
+    function __gitlab_mr_json
+        set -l branch (__current_branch); or return $status
+        set -l json (glab mr list --output=json --source-branch=$branch); or return $status
+        set -l num (printf "%s" "$json" | jq length); or return $status
+        if test $num -eq 0
+            echo "'__gitlab_mr_json' expected an MR for '$branch'; got none" >&2; and return 1
+        else if test $num -eq 1
+            printf "%s" "$json" | jq '.[0]' | jq
+        else
+            echo "'__gitlab_mr_json' expected a unique MR for '$branch'; got $num" >&2; and return 1
         end
     end
 end
