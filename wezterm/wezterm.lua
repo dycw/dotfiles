@@ -24,6 +24,11 @@ config.window_padding = {
 }
 
 -- conditional
+
+if wezterm.hostname() == "DW-Swift" then
+    config.font_size = 10.5 -- smaller
+end
+
 if wezterm.hostname() == "RH-MacBook" then
     config.allow_win32_input_mode = false
     config.animation_fps = 1

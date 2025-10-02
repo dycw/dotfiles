@@ -1,13 +1,23 @@
+-- luacheck: push ignore
+local v = vim
+-- luacheck: pop
+
 return {
     "stevearc/conform.nvim",
+    cmd = { "ConformInfo" },
+    event = "BufWritePre",
+    lazy = false,
     opts = {
         formatters_by_ft = {
             dart = { "dart_format" },
             elm = { "elm_format" },
+            fish = { "fish_indent" },
             go = { "gofumpt" },
             htmldjango = { "djlint", "rustywind" },
+            lua = { "stylua" },
             python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
             rust = { "rustfmt" },
+            sh = { "shfmt" },
             sql = { "sql_formatter" },
             zig = { "zigfmt" },
             -- prettier
@@ -29,6 +39,13 @@ return {
             -- rest
             ["*"] = { "trim_whitespace", "trim_newlines" },
         },
+        format_on_save = function(bufnr)
+            local disable_filetypes = { c = true, cpp = true }
+            return {
+                timeout_ms = 1000,
+                lsp_fallback = not disable_filetypes[v.bo[bufnr].filetype],
+            }
+        end,
         formatters = {
             ruff_fix = {
                 prepend_args = {

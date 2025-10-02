@@ -12,7 +12,7 @@
   verbose = true
 
 [core]
-	excludesfile = ~/.config/git/ignore
+  excludesfile = ~/.config/git/ignore
   pager = delta
 
 [diff]
