@@ -482,9 +482,9 @@ def _install_pyright() -> None:
 
 def _install_python3_13_venv() -> None:
     # this is for neovim
-    if _have_command("ensurepip"):
+    if _have_command("python3.13"):
         _LOGGER.debug(
-            "'ensurepip' is already installed (and presumably so is 'python3.13-venv'"
+            "'python3.13' is already installed (and presumably so is 'python3.13-venv'"
         )
         return
     _LOGGER.info("Installing 'python3.13-venv'...")
@@ -615,19 +615,24 @@ def _install_uv() -> None:
 def _install_wezterm() -> None:
     if _have_command("wezterm"):
         _LOGGER.debug("'wezterm' is already installed")
-        return
-    _install_curl()
-    _LOGGER.info("Installing 'wezterm'...")
-    _ = check_call(
-        "curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg",
-        shell=True,
+    else:
+        _install_curl()
+        _LOGGER.info("Installing 'wezterm'...")
+        _ = check_call(
+            "curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg",
+            shell=True,
+        )
+        _ = check_call(
+            "echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list",
+            shell=True,
+        )
+        _ = check_call(
+            "sudo chmod 644 /usr/share/keyrings/wezterm-fury.gpg", shell=True
+        )
+        _apt_install("wezterm")
+    _setup_symlink(
+        "~/.config/wezterm/wezterm.lua", f"{_get_script_dir()}/wezterm/wezterm.lua"
     )
-    _ = check_call(
-        "echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list",
-        shell=True,
-    )
-    _ = check_call("sudo chmod 644 /usr/share/keyrings/wezterm-fury.gpg", shell=True)
-    _apt_install("wezterm")
 
 
 def _install_yq() -> None:
