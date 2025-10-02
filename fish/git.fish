@@ -168,15 +168,14 @@ if status --is-interactive; and type -q git
 
     # rebase
     function grb
-        argparse b/branch -- $argv; or return $status
         __git_fetch_and_purge; or return $status
-        set -l branch
-        if test -n $_flag_branch
-            set branch $_flag_branch
-        else
-            set branch origin/master
-        end
-        git rebase --strategy=recursive --strategy-option=theirs $branch
+        git rebase --strategy=recursive --strategy-option=theirs origin/master
+    end
+    function grba
+        git rebase --abort $argv
+    end
+    function grbc
+        git rebase --continue $argv
     end
 
     # reset
