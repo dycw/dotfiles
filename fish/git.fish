@@ -231,7 +231,7 @@ if status --is-interactive; and type -q git
         end
         git push $args; or return $status
         if test -n "$_flag_web"
-            gitweb
+            gitweb; or return $status
         end
         if test -n "$_flag_exit"
             exit
@@ -323,6 +323,20 @@ if status --is-interactive; and type -q git
             set commit_args $commit_args --no-verify
         end
         __git_commit_until $commit_args; or return $status
+        set -l push_args
+        if test -n "$_force"
+            set push_args $push_args --force
+        end
+        if test -n "$_flag_no_verify"
+            set push_args $push_args --no-verify
+        end
+        if test -n "$_web"
+            set push_args $push_args --web
+        end
+        if test -n "$_exit"
+            set push_args $push_args --exit
+        end
+        __git_push $push_args
     end
     function __git_create_and_push
         argparse t/title= b/body= n/num= -- $argv; or return $status
