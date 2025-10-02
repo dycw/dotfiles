@@ -92,9 +92,28 @@ if status is-interactive
         function gcp
             git cherry-pick $argv
         end
+        # branch
+        function delete-gone-branches
+            git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
+        end
         # clone
         function gcl
             git clone --recurse-submodules $argv
+        end
+        # diff
+        function gd
+            git diff $argv
+        end
+        function gdc
+            git diff --cached $argv
+        end
+        function gdm
+            git diff origin/master $argv
+        end
+        # fetch
+        function gf
+            git fetch --all --force
+            delete-gone-branches
         end
         # log
         function gl

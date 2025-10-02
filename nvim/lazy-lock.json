@@ -23,18 +23,6 @@
     "branch": "master",
     "commit": "3acbcad1211572342632a6c0151f839e7dead27f"
   },
-  "cmp-buffer": {
-    "branch": "main",
-    "commit": "b74fab3656eea9de20a9b8116afa3cfc4ec09657"
-  },
-  "cmp-nvim-lsp": {
-    "branch": "main",
-    "commit": "bd5a7d6db125d4654b50eeae9f5217f24bb22fd3"
-  },
-  "cmp-path": {
-    "branch": "main",
-    "commit": "c642487086dbd9a93160e1679a1327be111cbc25"
-  },
   "comment.nvim": {
     "branch": "master",
     "commit": "e30b7f2008e52442154b66f7c519bfd2f1e32acb"
@@ -58,6 +46,10 @@
   "gitsigns.nvim": {
     "branch": "main",
     "commit": "1ee5c1fd068c81f9dd06483e639c2aa4587dc197"
+  },
+  "grug-far.nvim": {
+    "branch": "main",
+    "commit": "48f9afb684de1c191af7bed96bc1db85ba33f6a4"
   },
   "guess-indent.nvim": {
     "branch": "main",
@@ -107,10 +99,6 @@
     "branch": "master",
     "commit": "23320e75953ac82e559c610bec5a90d9c6dfa743"
   },
-  "nvim-cmp": {
-    "branch": "main",
-    "commit": "b5311ab3ed9c846b585c0c15b7559be131ec4be9"
-  },
   "nvim-early-retirement": {
     "branch": "main",
     "commit": "14aba23ce4168e6d6acbf78ab1d33739c3894f68"
@@ -130,6 +118,10 @@
   "nvim-surround": {
     "branch": "main",
     "commit": "75de1782c781961e392efcca57601bf436f4d550"
+  },
+  "nvim-tree.lua": {
+    "branch": "master",
+    "commit": "87d096a39cb2d5d43e6771563575ff042a79f48b"
   },
   "nvim-treesitter": {
     "branch": "master",

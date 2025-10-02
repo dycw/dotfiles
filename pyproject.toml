@@ -14,8 +14,20 @@ current_version = "0.2.21"
 
 # pyright
 [tool.pyright]
+enableReachabilityAnalysis = false
 exclude = ["ipython/startup.py"]
 ignore = ["ipython/startup.py"]
+reportCallInDefaultInitializer = true
+reportImplicitOverride = true
+reportImplicitStringConcatenation = true
+reportImportCycles = true
+reportMissingSuperCall = true
+reportPropertyTypeMismatch = true
+reportUninitializedInstanceVariable = true
+reportUnnecessaryTypeIgnoreComment = true
+reportUnreachable = false
+reportUnusedCallResult = true
+typeCheckingMode = "strict"
 
 # ruff
 [tool.ruff]

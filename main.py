@@ -57,6 +57,7 @@ class _Settings:
     tailscale: bool
     tmux: bool
     verbose: bool
+    wezterm: bool
     yq: bool
     zoom: bool
     zoxide: bool
@@ -64,92 +65,109 @@ class _Settings:
     @classmethod
     def parse(cls) -> "_Settings":
         parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
-        parser.add_argument("-a", "--age", action="store_true", help="Install 'age'.")
-        parser.add_argument("-ba", "--bat", action="store_true", help="Install 'bat'.")
-        parser.add_argument(
+        _ = parser.add_argument(
+            "-a", "--age", action="store_true", help="Install 'age'."
+        )
+        _ = parser.add_argument(
+            "-ba", "--bat", action="store_true", help="Install 'bat'."
+        )
+        _ = parser.add_argument(
             "-bt", "--bottom", action="store_true", help="Install 'bottom'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-be",
             "--build-essential",
             action="store_true",
             help="Install 'build-essential'.",
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-bu",
             "--bump-my-version",
             action="store_true",
             help="Install 'bump-my-version'.",
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-de", "--delta", action="store_true", help="Install 'delta'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-di", "--direnv", action="store_true", help="Install 'direnv'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-du", "--dust", action="store_true", help="Install 'dust'."
         )
-        parser.add_argument("-e", "--eza", action="store_true", help="Install 'eza'.")
-        parser.add_argument(
+        _ = parser.add_argument(
+            "-e", "--eza", action="store_true", help="Install 'eza'."
+        )
+        _ = parser.add_argument(
             "-fd", "--fd-find", action="store_true", help="Install 'fd-find'."
         )
-        parser.add_argument("-fz", "--fzf", action="store_true", help="Install 'fzf'.")
-        parser.add_argument("-gh", "--gh", action="store_true", help="Install 'gh'.")
-        parser.add_argument(
+        _ = parser.add_argument(
+            "-fz", "--fzf", action="store_true", help="Install 'fzf'."
+        )
+        _ = parser.add_argument(
+            "-gh", "--gh", action="store_true", help="Install 'gh'."
+        )
+        _ = parser.add_argument(
             "-gl", "--glab", action="store_true", help="Install 'glab'."
         )
-        parser.add_argument("-jq", "--jq", action="store_true", help="Install 'jq'.")
-        parser.add_argument(
+        _ = parser.add_argument(
+            "-jq", "--jq", action="store_true", help="Install 'jq'."
+        )
+        _ = parser.add_argument(
             "-ju", "--just", action="store_true", help="Install 'just'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-lc", "--luacheck", action="store_true", help="Install 'luacheck'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-lr", "--luarocks", action="store_true", help="Install 'luarocks'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-pr", "--pre-commit", action="store_true", help="Install 'pre-commit'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-py", "--pyright", action="store_true", help="Install 'pyright'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-ri", "--ripgrep", action="store_true", help="Install 'ripgrep'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-ru", "--ruff", action="store_true", help="Install 'ruff'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-sc", "--shellcheck", action="store_true", help="Install 'shellcheck'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-sf", "--shfmt", action="store_true", help="Install 'shfmt'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-so", "--sops", action="store_true", help="Install 'sops'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-sp", "--spotify", action="store_true", help="Install 'spotify'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-st", "--stylua", action="store_true", help="Install 'stylua'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-ta", "--tailscale", action="store_true", help="Install 'tailscale'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-tm", "--tmux", action="store_true", help="Install 'tmux'."
         )
-        parser.add_argument("-yq", "--yq", action="store_true", help="Install 'yq'.")
-        parser.add_argument(
+        _ = parser.add_argument(
+            "-yq", "--yq", action="store_true", help="Install 'yq'."
+        )
+        _ = parser.add_argument(
+            "-w", "--wezterm", action="store_true", help="Install 'wezterm'."
+        )
+        _ = parser.add_argument(
             "-zm", "--zoom", action="store_true", help="Install 'zoom'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-zx", "--zoxide", action="store_true", help="Install 'zoxide'."
         )
-        parser.add_argument(
+        _ = parser.add_argument(
             "-v", "--verbose", action="store_true", help="Verbose mode."
         )
         return _Settings(**vars(parser.parse_args()))
@@ -228,6 +246,8 @@ def main(settings: _Settings, /) -> None:
         _install_spotify()  # after curl
     if settings.tailscale:
         _install_tailscale()  # after curl
+    if settings.wezterm:
+        _install_wezterm()  # after curl
 
     if settings.luacheck:
         _install_luacheck()  # after luarocks
@@ -341,11 +361,11 @@ def _install_fish() -> None:
         _LOGGER.debug("'fish' is already installed")
     else:
         _LOGGER.info("Installing 'fish'...")
-        check_call(
+        _ = check_call(
             """echo 'deb http://download.opensuse.org/repositories/shells:/fish/Debian_13/ /' | sudo tee /etc/apt/sources.list.d/shells:fish.list""",
             shell=True,
         )
-        check_call(
+        _ = check_call(
             """curl -fsSL https://download.opensuse.org/repositories/shells:fish/Debian_13/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish.gpg > /dev/null""",
             shell=True,
         )
@@ -354,7 +374,7 @@ def _install_fish() -> None:
         _LOGGER.debug("'fish' is already the default shell")
     else:
         _LOGGER.info("Setting 'fish' to be the default shell")
-        check_call("""sudo chsh -s $(which fish)""", shell=True)
+        _ = check_call("""sudo chsh -s $(which fish)""", shell=True)
     _setup_symlink(
         "~/.config/fish/config.fish", f"{_get_script_dir()}/fish/config.fish"
     )
@@ -439,7 +459,7 @@ def _install_neovim() -> None:
             "https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage"
         ) as appimage:
             _set_executable(appimage)
-            check_call(f"sudo mv {appimage} {path_to}")
+            _ = check_call(f"sudo mv {appimage} {path_to}")
     _setup_symlink("~/.config/nvim", f"{_get_script_dir()}/nvim")
 
 
@@ -520,11 +540,11 @@ def _install_spotify() -> None:
         return
     _install_curl()
     _LOGGER.info("Installing 'spotify'...")
-    check_call(
+    _ = check_call(
         "curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg",
         shell=True,
     )
-    check_call(
+    _ = check_call(
         'echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list',
         shell=True,
     )
@@ -564,7 +584,7 @@ def _install_tailscale() -> None:
         return
     _LOGGER.info("Installing 'tailscale'...")
     _install_curl()
-    check_call("curl -fsSL https://tailscale.com/install.sh | sh", shell=True)
+    _ = check_call("curl -fsSL https://tailscale.com/install.sh | sh", shell=True)
 
 
 def _install_tmux() -> None:
@@ -589,7 +609,25 @@ def _install_uv() -> None:
         return
     _install_curl()
     _LOGGER.info("Installing 'uv'...")
-    check_call("curl -LsSf https://astral.sh/uv/install.sh | sh", shell=True)
+    _ = check_call("curl -LsSf https://astral.sh/uv/install.sh | sh", shell=True)
+
+
+def _install_wezterm() -> None:
+    if _have_command("wezterm"):
+        _LOGGER.debug("'wezterm' is already installed")
+        return
+    _install_curl()
+    _LOGGER.info("Installing 'wezterm'...")
+    _ = check_call(
+        "curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg",
+        shell=True,
+    )
+    _ = check_call(
+        "$ echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list",
+        shell=True,
+    )
+    _ = check_call("sudo chmod 644 /usr/share/keyrings/wezterm-fury.gpg", shell=True)
+    _apt_install("wezterm")
 
 
 def _install_yq() -> None:
@@ -652,43 +690,31 @@ def _setup_sshd() -> None:
 # utilities
 
 
-def _append_to_file(path: Path | str, line: str, /) -> None:
-    path = _to_path(path)
-    try:
-        lines = path.read_text().splitlines()
-    except FileNotFoundError:
-        _LOGGER.info("Writing %r to %r...", line, str(path))
-        with path.open(mode="w") as fh:
-            _ = fh.write(f"{line}\n")
-        return
-    if any(line_i == line for line_i in lines):
-        _LOGGER.debug("%r is already in %r", line, str(path))
-        return
-    _LOGGER.info("Appending %r to %r...", line, str(path))
-    with path.open(mode="a") as fh:
-        _ = fh.write(f"{line}\n")
-
-
 def _apt_install(*packages: str) -> None:
     _LOGGER.info("Updating 'apt'...")
-    check_call("sudo apt -y update", shell=True)
+    _ = check_call("sudo apt -y update", shell=True)
     desc = ", ".join(map(repr, packages))
     _LOGGER.info("Installing %s...", desc)
     joined = " ".join(packages)
-    check_call(f"sudo apt -y install {joined}", shell=True)
+    _ = check_call(f"sudo apt -y install {joined}", shell=True)
 
 
 def _copyfile(path_from: Path, path_to: Path, /, *, executable: bool = False) -> None:
     _unlink(path_to)
     _LOGGER.info("Copying %r -> %r...", str(path_from), str(path_to))
     path_to.parent.mkdir(parents=True, exist_ok=True)
-    copyfile(path_from, path_to)
+    _ = copyfile(path_from, path_to)
     if executable:
         _set_executable(path_to)
 
 
+def _download(url: str, path: Path | str, /) -> None:
+    with urlopen(url) as response, Path(path).open(mode="wb") as fh:
+        _ = fh.write(response.read())
+
+
 def _dpkg_install(path: Path | str, /) -> None:
-    check_call(f"sudo dpkg -i {path}", shell=True)
+    _ = check_call(f"sudo dpkg -i {path}", shell=True)
 
 
 def _get_latest_tag(owner: str, repo: str, /) -> str:
@@ -713,8 +739,8 @@ def _have_command(cmd: str, /) -> bool:
     return which(cmd) is not None
 
 
-def _luarocks_install(cmd: str, /) -> bool:
-    check_call(f"sudo luarocks install {cmd}", shell=True)
+def _luarocks_install(cmd: str, /) -> None:
+    _ = check_call(f"sudo luarocks install {cmd}", shell=True)
 
 
 def _replace_line(path: Path | str, from_: str, to: str, /) -> None:
@@ -724,7 +750,7 @@ def _replace_line(path: Path | str, from_: str, to: str, /) -> None:
         _LOGGER.debug("%r not found in %r", from_, str(path))
         return
     _LOGGER.info("Replacing %r -> %r in %r", from_, to, str(path))
-    check_call(f"sudo sed -i 's|{from_}|{to}|' {path}", shell=True)
+    _ = check_call(f"sudo sed -i 's|{from_}|{to}|' {path}", shell=True)
 
 
 def _set_executable(path: Path | str, /) -> None:
@@ -739,7 +765,7 @@ def _set_executable(path: Path | str, /) -> None:
 
 def _setup_symlink(path_from: Path | str, path_to: Path | str, /) -> None:
     path_from, path_to = map(_to_path, [path_from, path_to])
-    if path_from.is_symlink and (path_from.resolve() == path_to.resolve()):
+    if path_from.is_symlink() and (path_from.resolve() == path_to.resolve()):
         _LOGGER.debug("%r -> %r already symlinked", str(path_from), str(path_to))
         return
     path_from.parent.mkdir(parents=True, exist_ok=True)
@@ -763,7 +789,7 @@ def _update_submodules() -> None:
     _LOGGER.info(
         "Updating submodules...",
     )
-    check_call("git submodule update", shell=True)
+    _ = check_call("git submodule update", shell=True)
 
 
 def _uv_tool_install(tool: str, /) -> None:
@@ -772,7 +798,7 @@ def _uv_tool_install(tool: str, /) -> None:
         return
     _install_uv()
     _LOGGER.info("Installing %r...", tool)
-    check_call(f"uv tool install {tool}", shell=True)
+    _ = check_call(f"uv tool install {tool}", shell=True)
 
 
 @contextmanager
@@ -780,8 +806,7 @@ def _yield_download(url: str, /) -> Iterator[Path]:
     filename = Path(urlparse(url).path).name
     with TemporaryDirectory() as temp_dir:
         temp_file = Path(temp_dir, filename)
-        with urlopen(url) as response, temp_file.open(mode="wb") as fh:
-            fh.write(response.read())
+        _download(url, temp_file)
         yield temp_file
 
 
@@ -792,10 +817,7 @@ def _yield_github_latest_download(
     tag = _get_latest_tag(owner, repo)
     filename = Template(filename_template).substitute(tag=tag)
     url = f"https://github.com/{owner}/{repo}/releases/download/{tag}/{filename}"
-    with TemporaryDirectory() as temp_dir:
-        temp_file = Path(temp_dir, filename)
-        with urlopen(url) as response, temp_file.open(mode="wb") as fh:
-            fh.write(response.read())
+    with _yield_download(url) as temp_file:
         yield temp_file
 
 
