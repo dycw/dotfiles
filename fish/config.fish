@@ -126,6 +126,16 @@ if status is-interactive
                 git rev-parse --show-toplevel
             end
         end
+        # stash
+        function gst
+            git stash $argv
+        end
+        function gstd
+            git stash drop $argv
+        end
+        function gstp
+            git stash pop $argv
+        end
         # status
         function gs
             git status $argv
