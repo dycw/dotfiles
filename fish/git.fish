@@ -299,9 +299,6 @@ if status --is-interactive; and type -q git
         __github_or_gitlab_merge -d
     end
     function ghme
-        __github_or_gitlab_merge -e
-    end
-    function ghmx
         __github_or_gitlab_merge -d -e
     end
     function __github_or_gitlab_merge
