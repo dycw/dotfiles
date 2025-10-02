@@ -597,13 +597,14 @@ if status --is-interactive; and type -q git
 
     # github/gitlab
     function ghc
-        argparse title= body= -- $argv; or return $status
         set -l args
-        if test -n "$_flag_title"
-            set args $args --title=$_flag_title
-        end
-        if test -n "$_flag_body"
-            set args $args --body=$_flag_body
+        if test (count $argv) -eq 0
+        else if test (count $argv) -eq 1
+            set args $args --title $argv[1]
+        else if test (count $argv) -eq 2
+            set args $args --title $argv[1] --num $argv[2]
+        else
+            echo "'ghc' expected [0..2] arguments; got $(count $argv)" >&2; and return 1
         end
         if __remote_is_github
             __github_create $args
@@ -612,20 +613,6 @@ if status --is-interactive; and type -q git
         else
             echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
         end
-        ###
-        set -l args
-        if test (count $argv) -eq 0
-        else if test (count $argv) -eq 1
-            set args $args --title $argv[1]
-        else if test (count $argv) -eq 2
-            set args $args --title $argv[1] --num $argv[2]
-        else if test (count $argv) -eq 3
-            set args $args --title $argv[1] --num $argv[2] --part
-        else
-            echo "'gcb' expected [0..3] arguments; got $(count $argv)" >&2; and return 1
-        end
-        __git_checkout_open $args
-
     end
     function ghe
         argparse title= body= -- $argv; or return $status
