@@ -374,6 +374,9 @@ if status --is-interactive; and type -q git
     function gs
         git status $argv
     end
+    function wgs
+        watch -d -n 0.5 -- git status $argv
+    end
 
     # all
     function gg
