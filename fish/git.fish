@@ -206,8 +206,11 @@ if status --is-interactive; and type -q git
     end
 
     # remote
+    function remote-name
+        git remote get-url origin
+    end
     function __remote_is
-        if git remote get-url origin | grep -q $argv[1]
+        if (remote-name) | grep -q $argv[1]
             return 0
         else
             return 1
@@ -287,6 +290,27 @@ if status --is-interactive; and type -q git
             __gitlab_create_or_update -t $argv[1] -d $argv[2]
         else
             echo "Invalid call to 'ghc'"; and return 1
+        end
+    end
+    function ghm
+        __github_or_gitlab_merge
+    end
+    function ghmd
+        __github_or_gitlab_merge -d
+    end
+    function ghme
+        __github_or_gitlab_merge -e
+    end
+    function ghmx
+        __github_or_gitlab_merge -d -e
+    end
+    function __github_or_gitlab_merge
+        if __remote_is_github
+            __github_merge $argv
+        else if __remote_is_github
+            __gitlab_merge $argv
+        else
+            echo "Invalid remote; got '$(remote-name)'"; and return 1
         end
     end
 
