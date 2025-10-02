@@ -310,6 +310,126 @@ if status --is-interactive; and type -q git
     end
 
     # combined
+    function gc
+        __git_all $argv
+    end
+    function gcf
+        __git_all $argv --force
+    end
+    function gcn
+        __git_all $argv --no-verify
+    end
+    function gcfn
+        __git_all $argv --force --no-verify
+    end
+    function gcw
+        __git_all $argv --web
+    end
+    function gcfw
+        __git_all $argv --force --web
+    end
+    function gcnw
+        __git_all $argv --no-verify --web
+    end
+    function gcfnw
+        __git_all $argv --force --no-verify --web
+    end
+    function gce
+        __git_all $argv --exit
+    end
+    function gcfe
+        __git_all $argv --force --exit
+    end
+    function gcne
+        __git_all $argv --no-verify --exit
+    end
+    function gcfne
+        __git_all $argv --force --no-verify --exit
+    end
+    function gcm
+        __git_all $argv --merge
+    end
+    function gcfm
+        __git_all $argv --force --merge
+    end
+    function gcnm
+        __git_all $argv --no-verify --merge
+    end
+    function gcfnm
+        __git_all $argv --force --no-verify --merge
+    end
+    function gcx
+        __git_all $argv --merge --exit
+    end
+    function gcfx
+        __git_all $argv --force --merge --exit
+    end
+    function gcnx
+        __git_all $argv --no-verify --merge --exit
+    end
+    function gcfnx
+        __git_all $argv --force --no-verify --merge --exit
+    end
+    function gac
+        __git_all $argv --add
+    end
+    function gacf
+        __git_all $argv --add --force
+    end
+    function gacn
+        __git_all $argv --add --no-verify
+    end
+    function gacfn
+        __git_all $argv --add --force --no-verify
+    end
+    function gacw
+        __git_all $argv --add --web
+    end
+    function gacfw
+        __git_all $argv --add --force --web
+    end
+    function gacnw
+        __git_all $argv --add --no-verify --web
+    end
+    function gacfnw
+        __git_all $argv --add --force --no-verify --web
+    end
+    function gace
+        __git_all $argv --add --exit
+    end
+    function gacfe
+        __git_all $argv --add --force --exit
+    end
+    function gacne
+        __git_all $argv --add --no-verify --exit
+    end
+    function gacfne
+        __git_all $argv --add --force --no-verify --exit
+    end
+    function gacm
+        __git_all $argv --add --merge
+    end
+    function gacfm
+        __git_all $argv --add --force --merge
+    end
+    function gacnm
+        __git_all $argv --add --no-verify --merge
+    end
+    function gacfnm
+        __git_all $argv --add --force --no-verify --merge
+    end
+    function gacx
+        __git_all $argv --add --merge --exit
+    end
+    function gacfx
+        __git_all $argv --add --force --merge --exit
+    end
+    function gacnx
+        __git_all $argv --add --no-verify --merge --exit
+    end
+    function gacfnx
+        __git_all $argv --add --force --no-verify --merge --exit
+    end
     function __git_all
         argparse a/add m/message= n/no-verify f/force w/web e/exit -- $argv; or return $status
         if test -n "$_flag_add"
