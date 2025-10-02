@@ -360,7 +360,7 @@ if status --is-interactive; and type -q git
         git status $argv
     end
 
-    # combined - all
+    # all
     function gg
         __git_all $argv
     end
