@@ -431,32 +431,32 @@ if status --is-interactive; and type -q git
         __git_all $argv --add --force --no-verify --merge --exit
     end
     function __git_all
-        argparse a/add m/message= n/no-verify f/force w/web e/exit -- $argv; or return $status
+        argparse a/add n/no-verify f/force w/web e/exit m/merge -- $argv; or return $status
         if test -n "$_flag_add"
             ga $argv; or return $status
         end
         set -l commit_args
-        if test -n "$_flag_message"
-            set commit_args $commit_args --message $_flag_message
-        end
         if test -n "$_flag_no_verify"
             set commit_args $commit_args --no-verify
         end
         __git_commit_until $commit_args; or return $status
         set -l push_args
-        if test -n "$_force"
+        if test -n "$_flag_force"
             set push_args $push_args --force
         end
         if test -n "$_flag_no_verify"
             set push_args $push_args --no-verify
         end
-        if test -n "$_web"
+        if test -n "$_flag_web"
             set push_args $push_args --web
         end
-        if test -n "$_exit"
+        if test -n "$_flag_exit"; and test -z "$_flag_merge"
             set push_args $push_args --exit
         end
-        __git_push $push_args
+        __git_push $push_args; or return $status
+        if test -n "$_flag_merge"
+            __github_or_gitlab_merge --delete --exit
+        end
     end
     function __git_create_and_push
         argparse t/title= b/body= n/num= -- $argv; or return $status
