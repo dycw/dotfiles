@@ -18,15 +18,12 @@ if status --is-interactive; and type -q git
     end
 
     # branch
-    function delete-gone-branches
-        git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
-    end
     function gb
         git branch --all --list --sort=-committerdate --verbose $argv
     end
     function gbd
         if test (count $argv) -eq 0
-            __git_branch_fzf_local | while read branch
+            __git_branch_fzf_local --multi | while read branch
                 __git_branch_delete $branch
             end
         else
@@ -47,7 +44,12 @@ if status --is-interactive; and type -q git
         git branch --delete --force $argv
     end
     function __git_branch_fzf_local
-        git branch --format=%(refname:short) | fzf --multi
+        argparse m/multi -- $argv; or return $status
+        set -l args
+        if test -n "$_flag_multi"
+            set args $args --multi
+        end
+        git branch --format=%(refname:short) | fzf $args
     end
     function __git_branch_fzf_remote
         argparse m/multi -- $argv; or return $status
@@ -58,9 +60,15 @@ if status --is-interactive; and type -q git
         git branch --color=never --remotes | awk '!/->/' | fzf $args \
             | sed -E 's|^[[:space:]]*origin/||'
     end
+    function __git_branch_purge_local
+        git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
+    end
     # checkout
     function gco
         __git_checkout $argv
+    end
+    function gcop
+        __git_checkout --patch $argv
     end
     function __git_checkout
         argparse d/delete e/exit -- $argv; or return $status
@@ -139,7 +147,7 @@ if status --is-interactive; and type -q git
     end
     function __git_fetch_and_purge
         git fetch --all --force
-        delete-gone-branches
+        __git_branch_purge_local
     end
 
     # log
