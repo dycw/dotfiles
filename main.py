@@ -32,6 +32,7 @@ class _Settings:
     bat: bool
     bottom: bool
     build_essential: bool
+    bump_my_version: bool
     delta: bool
     direnv: bool
     dust: bool
@@ -44,7 +45,10 @@ class _Settings:
     just: bool
     luacheck: bool
     luarocks: bool
+    pre_commit: bool
+    pyright: bool
     ripgrep: bool
+    ruff: bool
     shellcheck: bool
     shfmt: bool
     sops: bool
@@ -66,10 +70,16 @@ class _Settings:
             "-bt", "--bottom", action="store_true", help="Install 'bottom'."
         )
         parser.add_argument(
-            "-bu",
+            "-be",
             "--build-essential",
             action="store_true",
             help="Install 'build-essential'.",
+        )
+        parser.add_argument(
+            "-bu",
+            "--bump-my-version",
+            action="store_true",
+            help="Install 'bump-my-version'.",
         )
         parser.add_argument(
             "-de", "--delta", action="store_true", help="Install 'delta'."
@@ -100,7 +110,16 @@ class _Settings:
             "-lr", "--luarocks", action="store_true", help="Install 'luarocks'."
         )
         parser.add_argument(
-            "-r", "--ripgrep", action="store_true", help="Install 'ripgrep'."
+            "-pr", "--pre-commit", action="store_true", help="Install 'pre-commit'."
+        )
+        parser.add_argument(
+            "-py", "--pyright", action="store_true", help="Install 'pyright'."
+        )
+        parser.add_argument(
+            "-ri", "--ripgrep", action="store_true", help="Install 'ripgrep'."
+        )
+        parser.add_argument(
+            "-ru", "--ruff", action="store_true", help="Install 'ruff'."
         )
         parser.add_argument(
             "-sc", "--shellcheck", action="store_true", help="Install 'shellcheck'."
@@ -193,8 +212,6 @@ def main(settings: _Settings, /) -> None:
         _install_sops()
     if settings.stylua:
         _install_stylua()
-    if settings.tailscale:
-        _install_tailscale()
     if settings.tmux:
         _install_tmux()
     if settings.yq:
@@ -204,17 +221,23 @@ def main(settings: _Settings, /) -> None:
     if settings.zoxide:
         _install_zoxide()
 
-    if settings.luacheck:  # after luarocks
-        _install_luacheck()
-
     _install_uv()  # after curl
-    if settings.spotify:  # after curl
-        _install_spotify()
+    if settings.spotify:
+        _install_spotify()  # after curl
+    if settings.tailscale:
+        _install_tailscale()  # after curl
 
-    _install_bump_my_version()  # after uv
-    _install_pre_commit()  # after uv
-    _install_pyright()  # after uv
-    _install_ruff()  # after uv
+    if settings.luacheck:
+        _install_luacheck()  # after luarocks
+
+    if settings.bump_my_version:
+        _install_bump_my_version()  # after uv
+    if settings.pre_commit:
+        _install_pre_commit()  # after uv
+    if settings.pyright:
+        _install_pyright()  # after uv
+    if settings.ruff:
+        _install_ruff()  # after uv
 
 
 def _install_age() -> None:
