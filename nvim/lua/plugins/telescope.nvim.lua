@@ -78,7 +78,7 @@ return {
         keymap_set("n", "gr", builtin.lsp_references, "[r]eferences")
         keymap_set("n", "gt", builtin.lsp_type_definitions, "[t]ype definitions")
         keymap_set("n", "<Leader>ds", builtin.lsp_document_symbols, "document [s]ymbols")
-        keymap_set("n", "<Leader>wd", builtin.diagnostics, "workspace [d]iagnostics")
+        keymap_set("n", "<Leader>dd", builtin.diagnostics, "workspace [d]iagnostics")
         keymap_set("n", "<Leader>ws", builtin.lsp_dynamic_workspace_symbols, "workspace [s]ymbols")
 
         -- keys maps: text

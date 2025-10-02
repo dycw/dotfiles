@@ -113,7 +113,7 @@ if status --is-interactive; and type -q git
         if test -n "$_flag_no_verify"
             set args $args --no-verify
         end
-        for i in (seq 0 4)
+        for i in (seq 0 4) # @fish-lsp-disable
             ga $argv; or return $status
             if __git_commit $args
                 return 0
@@ -310,6 +310,20 @@ if status --is-interactive; and type -q git
     end
 
     # combined
+    function __git_all
+        argparse a/add m/message= n/no-verify f/force w/web e/exit -- $argv; or return $status
+        if test -n "$_flag_add"
+            ga $argv; or return $status
+        end
+        set -l commit_args
+        if test -n "$_flag_message"
+            set commit_args $commit_args --message $_flag_message
+        end
+        if test -n "$_flag_no_verify"
+            set commit_args $commit_args --no-verify
+        end
+        __git_commit_until $commit_args; or return $status
+    end
     function __git_create_and_push
         argparse t/title= b/body= n/num= -- $argv; or return $status
         __git_fetch_and_purge; or return $status
