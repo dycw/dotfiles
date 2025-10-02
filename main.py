@@ -435,9 +435,12 @@ def _install_gh() -> None:
 def _install_glab() -> None:
     if _have_command("glab"):
         _LOGGER.debug("'glab' is already installed")
-        return
-    _LOGGER.info("Installing 'glab'...")
-    _apt_install("glab")
+    else:
+        _LOGGER.info("Installing 'glab'...")
+        _apt_install("glab")
+    path_to = _to_path("~/work/infra/gitlab/cli.yml")
+    if path_to.exists():
+        _setup_symlink("~/.config/glab-cli/config.yml", path_to)
 
 
 def _install_jq() -> None:
@@ -486,7 +489,7 @@ def _install_neovim() -> None:
         _LOGGER.debug("'neovim' is already installed")
     else:
         _LOGGER.info("Installing 'neovim'...")
-        path_to = Path("/usr/local/bin/nvim")
+        path_to = _to_path("/usr/local/bin/nvim")
         with _yield_download(
             "https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage"
         ) as appimage:
@@ -606,7 +609,7 @@ def _install_stylua() -> None:
         TemporaryDirectory() as temp_dir,
     ):
         zfh.extractall(temp_dir)
-        (path_from,) = Path(temp_dir).iterdir()
+        (path_from,) = _to_path(temp_dir).iterdir()
         _copyfile(path_from, path_to, executable=True)
 
 
@@ -703,7 +706,7 @@ def _setup_bash() -> None:
 
 def _setup_fish() -> None:
     for filename_from in ["config.fish", "conf.d/git.fish"]:
-        filename_to = Path(filename_from).name
+        filename_to = _to_path(filename_from).name
         _setup_symlink(
             f"~/.config/fish/{filename_from}", f"{_get_script_dir()}/fish/{filename_to}"
         )
@@ -763,7 +766,7 @@ def _copyfile(path_from: Path, path_to: Path, /, *, executable: bool = False) ->
 
 
 def _download(url: str, path: Path | str, /) -> None:
-    with urlopen(url) as response, Path(path).open(mode="wb") as fh:
+    with urlopen(url) as response, _to_path(path).open(mode="wb") as fh:
         _ = fh.write(response.read())
 
 
@@ -786,7 +789,7 @@ def _get_local_bin() -> Path:
 
 
 def _get_script_dir() -> Path:
-    return Path(__file__).parent
+    return _to_path(__file__).parent
 
 
 def _have_command(cmd: str, /) -> bool:
@@ -857,9 +860,9 @@ def _uv_tool_install(tool: str, /) -> None:
 
 @contextmanager
 def _yield_download(url: str, /) -> Iterator[Path]:
-    filename = Path(urlparse(url).path).name
+    filename = _to_path(urlparse(url).path).name
     with TemporaryDirectory() as temp_dir:
-        temp_file = Path(temp_dir, filename)
+        temp_file = _to_path(temp_dir, filename)
         _download(url, temp_file)
         yield temp_file
 
