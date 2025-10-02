@@ -151,10 +151,10 @@ return {
             -- gopls = {},
             ["bash-language-server"] = {},
             ["fish-lsp"] = {},
+            ["lua-language-server"] = {},
             pyright = {},
             ruff = {},
             rust_analyzer = {},
-            shfmt = {},
             stylua = {},
 
             -- ... etc. See `:help lspconfig-all` for a list of all the
@@ -185,7 +185,20 @@ return {
         }
 
         -- Ensure the servers and tools above are installed
-        require("mason-tool-installer").setup({ ensure_installed = servers })
+        local ensure_installed = v.tbl_keys(servers or {})
+        v.list_extend(ensure_installed, {
+            "shfmt",
+            -- "bash-language-server",
+            -- "fish-lsp",
+            -- "pyright",
+            -- "ruff",
+            -- "rust_analyzer",
+            -- "shfmt",
+            -- "stylua",
+            -- "ruff-lsp",
+            -- "stylua",
+        })
+        require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
         require("mason-lspconfig").setup({
             ensure_installed = {}, -- explicitly set to an empty table
             -- (Kickstart populates installs via mason-tool-installer)
