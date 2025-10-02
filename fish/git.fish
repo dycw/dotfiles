@@ -24,10 +24,26 @@ if status --is-interactive; and type -q git
     function gb
         git branch --all --list --sort=-committerdate --verbose $argv
     end
+    function __git_branch_delete
+        git branch --delete --force $argv
+    end
 
     # checkout
     function gco
-        git checkout $argv
+        __git_checkout $argv
+    end
+    function __git_checkout
+        argparse d/delete e/exit -- $argv; or return $status
+        set -l target $argv[1]
+        set -l original (current-branch); or return $status
+        git checkout $target
+        __git_pull_force
+        if test -n "$_flag_delete"
+            __git_branch_delete $original
+        end
+        if test -n "$_flag_exit"
+            exit
+        end
     end
 
     # cherry-pick
@@ -97,6 +113,14 @@ if status --is-interactive; and type -q git
     # mv
     function gm
         git mv $argv
+    end
+
+    # pull
+    function gpl
+        __git_pull_force $argv
+    end
+    function __git_pull_force
+        git pull --force $argv
     end
 
     # push
@@ -291,7 +315,7 @@ if status --is-interactive; and type -q gh
     end
 
     function __github_merge
-        argparse a/action= -- $argv; or return $status
+        argparse d/delete e/exit -- $argv; or return $status
         if not __github_exists
             echo "'__github_merge' could not find an open PR for '$(current-branch)'"; and return 1
         end
@@ -302,6 +326,7 @@ if status --is-interactive; and type -q gh
             echo "$(repo_name)/$(current-branch) is still merging... ($elapsed s)"
             sleep 1
         end
+        __git_checkout $argv
     end
 
     function __github_merging
