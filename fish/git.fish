@@ -209,6 +209,9 @@ if status --is-interactive; and type -q git
     function remote-name
         git remote get-url origin
     end
+    function repo-name
+        basename -s .git $(remote-name)
+    end
     function __remote_is
         if remote-name | grep -q $argv[1]
             return 0
@@ -296,10 +299,10 @@ if status --is-interactive; and type -q git
         __github_or_gitlab_merge
     end
     function ghmd
-        __github_or_gitlab_merge -d
+        __github_or_gitlab_merge --delete
     end
     function ghme
-        __github_or_gitlab_merge -d -e
+        __github_or_gitlab_merge --exit
     end
     function __github_or_gitlab_merge
         argparse d/delete e/exit -- $argv; or return $status
@@ -357,7 +360,7 @@ if status --is-interactive; and type -q gh
         gh pr merge --auto --delete-branch --squash; or return $status
         while __github_merging
             set -l elapsed (math (date +%s) - $start)
-            echo "$(repo_name)/$(current-branch) is still merging... ($elapsed s)"
+            echo "$(repo-name)/$(current-branch) is still merging... ($elapsed s)"
             sleep 1
         end
         set -l args
