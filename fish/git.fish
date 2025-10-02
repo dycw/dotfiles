@@ -654,17 +654,27 @@ if status --is-interactive; and type -q gh
     function __github_create_or_edit
         argparse title= body= -- $argv; or return $status
         set -l action
+        set -l args
         if __github_exists &>/dev/null
             set action edit
+            if test -n "$_flag_title"
+                set args $args --title $_flag_title
+            end
+            if test -n "$_flag_body"
+                set args $args --body $_flag_body
+            end
         else
             set action create
-        end
-        set -l args
-        if test -n "$_flag_title"
-            set args $args --title=$_flag_title
-        end
-        if test -n "$_flag_body"
-            set args $args --body=$_flag_body
+            if test -n "$_flag_title"
+                set args $args --title $_flag_title
+            else
+                set args $args --title (__auto_msg)
+            end
+            if test -n "$_flag_body"
+                set args $args --body $_flag_body
+            else
+                set args $args --body .
+            end
         end
         gh pr $action $args
     end
@@ -705,13 +715,11 @@ if status --is-interactive; and type -q gh; and type -q jq
         set -l branch (current-branch); or return $status
         set -l num (gh pr list --head=$branch --json number --jq '. | length'); or return $status
         if test $num -eq 0
-            echo "'__github_exists' expected a PR for '$branch'
- got none" >&2; and return 1
+            echo "'__github_exists' expected a PR for '$branch'; got none" >&2; and return 1
         else if test $num -eq 1
             return 0
         else
-            echo "'__github_exists' expected a unique PR for '$branch'
- got $num" >&2; and return 1
+            echo "'__github_exists' expected a unique PR for '$branch'; got $num" >&2; and return 1
         end
     end
 
@@ -738,15 +746,25 @@ if status --is-interactive; and type -q glab
         if __gitlab_mr_exists
             set action update
             set args $args (__gitlab_mr_num)
+            if test -n "$_flag_title"
+                set args $args --title $_flag_title
+            end
+            if test -n "$_flag_body"
+                set args $args --description $_flag_description
+            end
         else
             set action create
             set args $args --push --remove-source-branch --squash-before-merge
-        end
-        if test -n "$_flag_title"
-            set args $args --title=$_flag_title
-        end
-        if test -n "$_flag_description"
-            set args $args --description=$_flag_description
+            if test -n "$_flag_title"
+                set args $args --title $_flag_title
+            else
+                set args $args --title (__auto_msg)
+            end
+            if test -n "$_flag_body"
+                set args $args --description $_flag_description
+            else
+                set args $args --description .
+            end
         end
         gh mr $action $args
     end
@@ -761,13 +779,11 @@ if status --is-interactive; and type -q glab; and type -q jq
         set -l json (glab mr list --output=json --source-branch=$branch); or return $status
         set -l num (printf "%s" "$json" | jq length); or return $status
         if test $num -eq 0
-            echo "'__gitlab_mr_json' expected an MR for '$branch'
- got none" >&2; and return 1
+            echo "'__gitlab_mr_json' expected an MR for '$branch'; got none" >&2; and return 1
         else if test $num -eq 1
             printf "%s" "$json" | jq '.[0]' | jq
         else
-            echo "'__gitlab_mr_json' expected a unique MR for '$branch'
- got $num" >&2; and return 1
+            echo "'__gitlab_mr_json' expected a unique MR for '$branch'; got $num" >&2; and return 1
         end
     end
 end
