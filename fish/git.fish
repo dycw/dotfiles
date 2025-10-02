@@ -302,10 +302,18 @@ if status --is-interactive; and type -q git
         __github_or_gitlab_merge -d -e
     end
     function __github_or_gitlab_merge
+        argparse d/delete e/exit -- $argv; or return $status
+        set -l args
+        if test -n "$_flag_delete"
+            set args $args --delete
+        end
+        if test -n "$_flag_exit"
+            set args $args --exit
+        end
         if __remote_is_github
-            __github_merge $argv
+            __github_merge $args
         else if __remote_is_github
-            __gitlab_merge $argv
+            __gitlab_merge $args
         else
             echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
         end
