@@ -623,7 +623,7 @@ def _install_wezterm() -> None:
         shell=True,
     )
     _ = check_call(
-        "$ echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list",
+        "echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list",
         shell=True,
     )
     _ = check_call("sudo chmod 644 /usr/share/keyrings/wezterm-fury.gpg", shell=True)
