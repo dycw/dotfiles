@@ -591,7 +591,7 @@ if status --is-interactive; and type -q gh
     function __github_create_or_edit
         argparse title= body= -- $argv; or return $status
         set -l action
-        if __github_exists
+        if __github_exists &>/dev/null
             set action edit
         else
             set action create
@@ -608,7 +608,7 @@ if status --is-interactive; and type -q gh
 
     function __github_merge
         argparse delete exit -- $argv; or return $status
-        if not __github_exists
+        if not __github_exists &>/dev/null
             echo "'__github_merge' could not find an open PR for '$(current-branch)'" >&2; and return 1
         end
         set -l start (date +%s)
@@ -654,7 +654,8 @@ if status --is-interactive; and type -q gh; and type -q jq
 
     function __github_merging
         set -l branch (current-branch); or return $status
-        if test (gh pr view --json state | jq -r .state) != OPEN
+        set -l state (gh pr view --json state | jq -r .state)
+        if test -z "$state" -o "$state" != OPEN
             return 1
         end
         set -l repo (gh repo view --json nameWithOwner -q .nameWithOwner)
