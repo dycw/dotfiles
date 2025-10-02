@@ -623,17 +623,17 @@ if status --is-interactive; and type -q git
         argparse title= num= part add no-verify force web exit merge -- $argv; or return $status
 
         if test -n "$_flag_title"
-            set -l checkout_push_args
+            set -l checkout_args
             if test -n "$_flag_title"
-                set checkout_push_args $checkout_push_args --title $_flag_title
+                set checkout_args $checkout_args --title $_flag_title
             end
             if test -n "$_flag_num"
-                set checkout_push_args $checkout_push_args --num $_flag_num
+                set checkout_args $checkout_args --num $_flag_num
             end
             if test -n "$_flag_part"
-                set checkout_push_args $checkout_push_args --part
+                set checkout_args $checkout_args --part
             end
-            __git_checkout_open $__checkout_push_args; or return $status
+            __git_checkout_open $checkout_args; or return $status
         end
 
         if test -n "$_flag_add"
@@ -690,7 +690,10 @@ if status --is-interactive; and type -q git
         end
     end
     function ghe
-        argparse title= body= -- $argv; or return $status
+        if test (count $argv) -lt 1
+            echo "'ghe' expected [1..) arguments -t/--title or -b/--body; got $(count $argv)" >&2; and return 1
+        end
+        argparse t/title= b/body= -- $argv; or return $status
         set -l args
         if test -n "$_flag_title"
             set args $args --title $_flag_title
