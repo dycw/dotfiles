@@ -9,8 +9,6 @@ set -Ux XDG_RUNTIME_DIR (set -q XDG_RUNTIME_DIR; and echo $XDG_RUNTIME_DIR; or e
 set -Ux XDG_STATE_HOME (set -q XDG_STATE_HOME; and echo $XDG_STATE_HOME; or echo $HOME/.local/state)
 
 if status is-interactive
-    # Commands to run in interactive sessions can go here
-
     # bat
     if type -q batcat
         function cat
@@ -32,22 +30,22 @@ if status is-interactive
         cd ../../..
     end
     function cd-config
-        cd "$XDG_CONFIG_HOME"
+        cd $XDG_CONFIG_HOME
     end
     function cd-db
-        cd "$HOME/Dropbox"
+        cd $HOME/Dropbox
     end
     function cd-dbt
-        cd "$HOME/Dropbox/Temporary"
+        cd $HOME/Dropbox/Temporary
     end
     function cd-df
-        cd "$HOME/dotfiles"
+        cd $HOME/dotfiles
     end
     function cd-dl
-        cd "$HOME/Downloads"
+        cd $HOME/Downloads
     end
     function cdw
-        cd "$HOME/work"
+        cd $HOME/work
     end
 
     # direnv
@@ -75,10 +73,12 @@ if status is-interactive
     fish_vi_key_bindings
 
     function fish-config
-        $EDITOR "$XDG_CONFIG_HOME/fish/config.fish"
+        $EDITOR $XDG_CONFIG_HOME/fish/config.fish
     end
     function fish-reload
-        source "$XDG_CONFIG_HOME/fish/config.fish"
+        for file in $XDG_CONFIG_HOME/fish/**/*.fish
+            source $file
+        end
     end
 
     # fzf
@@ -86,84 +86,9 @@ if status is-interactive
         fzf --fish | source
     end
 
-    # git
-    if type -q git
-        # cherry-pick
-        function gcp
-            git cherry-pick $argv
-        end
-        # branch
-        function delete-gone-branches
-            git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
-        end
-        # clone
-        function gcl
-            git clone --recurse-submodules $argv
-        end
-        # diff
-        function gd
-            git diff $argv
-        end
-        function gdc
-            git diff --cached $argv
-        end
-        function gdm
-            git diff origin/master $argv
-        end
-        # fetch
-        function gf
-            git fetch --all --force
-            delete-gone-branches
-        end
-        # log
-        function gl
-            set -l args --abbrev-commit --decorate=short --pretty='format:%C(red)%h%C(reset) |%C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)'
-            set -l n
-            if test (count $argv) -eq 0
-                set n 20
-            else if string match -qr '^[0-9]+$' -- $argv[1]; and test $argv[1] -gt 0
-                set n $argv[1]
-            end
-            if set -q n
-                set args $args --max-count=$n
-            end
-            git log $args
-        end
-        # mv
-        function gm
-            git mv $argv
-        end
-        # rev-parse
-        function cdr
-            set -l root (git-repo-root)
-            if test -n "$root"
-                cd $root
-            end
-        end
-        function git-repo-root
-            if git rev-parse --show-toplevel >/dev/null 2>&1
-                git rev-parse --show-toplevel
-            end
-        end
-        # stash
-        function gst
-            git stash $argv
-        end
-        function gstd
-            git stash drop $argv
-        end
-        function gstp
-            git stash pop $argv
-        end
-        # status
-        function gs
-            git status $argv
-        end
-    end
-
     # local
-    if test -f "$HOME/local.fish"
-        source "$HOME/local.fish"
+    if test -f $HOME/local.fish
+        source $HOME/local.fish
     end
 
     # macchanger
@@ -172,12 +97,12 @@ if status is-interactive
 
     # neovim
     function cd-nvim-plugins
-        cd "$XDG_CONFIG_HOME/nvim/lua/plugins"
+        cd $XDG_CONFIG_HOME/nvim/lua/plugins
     end
     function clean-neovim
-        set dirs $XDG_STATE_HOME $XDG_DATA_HOME $XDG_STATE_HOME
+        set -l dirs $XDG_STATE_HOME $XDG_DATA_HOME $XDG_STATE_HOME
         for dir in $dirs
-            set nvim "$dir/nvim"
+            set nvim $dir/nvim
             echo "Cleaning '$nvim'..."
             rm -rf $nvim
         end
@@ -212,7 +137,7 @@ if status is-interactive
     # tailscale
     if type -q tailscale
         function ts-up
-            set auth_key "$XDG_CONFIG_HOME/tailscale/auth-key.txt"
+            set -l auth_key $XDG_CONFIG_HOME/tailscale/auth-key.txt
             if not test -f $auto_key
                 echo "'$auto_key' does not exist"
                 return 1

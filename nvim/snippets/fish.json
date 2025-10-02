@@ -1,6 +1,6 @@
 {
-  "func": {
+  "function": {
     "body": "function ${1:name}\n${2:body}\nend\n",
-    "prefix": "function"
+    "prefix": "func"
   }
 }

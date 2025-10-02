@@ -683,8 +683,17 @@ def _setup_bash() -> None:
         _setup_symlink(f"~/.{filename}", f"{_get_script_dir()}/bash/{filename}")
 
 
+def _setup_fish() -> None:
+    for filename_from in ["config.fish", "conf.d/git.fish"]:
+        filename_to = Path(filename_from).name
+        _setup_symlink(
+            f"~/.config/fish/{filename_from}", f"{_get_script_dir()}/fish/{filename_to}"
+        )
+
+
 def _setup_shells() -> None:
     _setup_bash()
+    _setup_fish()
 
 
 def _setup_sshd() -> None:
