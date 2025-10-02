@@ -45,6 +45,7 @@ class _Settings:
     just: bool
     luacheck: bool
     luarocks: bool
+    macchanger: bool
     pre_commit: bool
     pyright: bool
     ripgrep: bool
@@ -121,6 +122,9 @@ class _Settings:
         )
         _ = parser.add_argument(
             "-lr", "--luarocks", action="store_true", help="Install 'luarocks'."
+        )
+        _ = parser.add_argument(
+            "-m", "--macchanger", action="store_true", help="Install 'macchanger'."
         )
         _ = parser.add_argument(
             "-pr", "--pre-commit", action="store_true", help="Install 'pre-commit'."
@@ -212,16 +216,18 @@ def main(settings: _Settings, /) -> None:
         _install_fd_find()
     if settings.fzf:
         _install_fzf()
-    if settings.just:
-        _install_just()
-    if settings.luarocks:
-        _install_luarocks()
     if settings.gh:
         _install_gh()
     if settings.glab:
         _install_glab()
+    if settings.just:
+        _install_just()
     if settings.jq:
         _install_jq()
+    if settings.luarocks:
+        _install_luarocks()
+    if settings.macchanger:
+        _install_macchanger()
     if settings.ripgrep:
         _install_ripgrep()
     if settings.shellcheck:
@@ -447,6 +453,14 @@ def _install_luarocks() -> None:
         return
     _LOGGER.info("Installing 'luarocks'...")
     _apt_install("luarocks")
+
+
+def _install_macchanger() -> None:
+    if _have_command("macchanger"):
+        _LOGGER.debug("'macchanger' is already installed")
+        return
+    _LOGGER.info("Installing 'macchanger'...")
+    _apt_install("macchanger")
 
 
 def _install_neovim() -> None:

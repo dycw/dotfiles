@@ -166,6 +166,10 @@ if status is-interactive
         source "$HOME/local.fish"
     end
 
+    # macchanger
+    if type -q macchanger
+    end
+
     # neovim
     function cd-nvim-plugins
         cd "$XDG_CONFIG_HOME/nvim/lua/plugins"
