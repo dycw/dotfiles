@@ -572,51 +572,51 @@ if status --is-interactive; and type -q git
     end
     function ggcm
         if test (count $argv) -lt 1
-            echo "'ggcm' expected [1..) arguments TITLE; got $(count $argv)" >&2
+            echo "'ggcm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
         end
-        __git_all --title=$argv[1] --merge $argv[2..]; and return 1
+        __git_all --title=$argv[1] --merge $argv[2..]
     end
     function ggcfm
         if test (count $argv) -lt 1
-            echo "'ggcfm' expected [1..) arguments TITLE; got $(count $argv)" >&2
+            echo "'ggcfm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
         end
-        __git_all --title=$argv[1] --force --merge $argv[2..]; and return 1
+        __git_all --title=$argv[1] --force --merge $argv[2..]
     end
     function ggcnm
         if test (count $argv) -lt 1
-            echo "'ggcnm' expected [1..) arguments TITLE; got $(count $argv)" >&2
+            echo "'ggcnm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
         end
-        __git_all --title=$argv[1] --no-verify --merge $argv[2..]; and return 1
+        __git_all --title=$argv[1] --no-verify --merge $argv[2..]
     end
     function ggcfnm
         if test (count $argv) -lt 1
-            echo "'ggcfnm' expected [1..) arguments TITLE; got $(count $argv)" >&2
+            echo "'ggcfnm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
         end
-        __git_all --title=$argv[1] --force --no-verify --merge $argv[2..]; and return 1
+        __git_all --title=$argv[1] --force --no-verify --merge $argv[2..]
     end
     function ggcx
         if test (count $argv) -lt 1
-            echo "'ggcx' expected [1..) arguments TITLE; got $(count $argv)" >&2
+            echo "'ggcx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
         end
-        __git_all --title=$argv[1] --merge --exit $argv[2..]; and return 1
+        __git_all --title=$argv[1] --merge --exit $argv[2..]
     end
     function ggcfx
         if test (count $argv) -lt 1
-            echo "'ggcfx' expected [1..) arguments TITLE; got $(count $argv)" >&2
+            echo "'ggcfx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
         end
-        __git_all --title=$argv[1] --force --merge --exit $argv[2..]; and return 1
+        __git_all --title=$argv[1] --force --merge --exit $argv[2..]
     end
     function ggcnx
         if test (count $argv) -lt 1
-            echo "'ggcnx' expected [1..) arguments TITLE; got $(count $argv)" >&2
+            echo "'ggcnx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
         end
-        __git_all --title=$argv[1] --no-verify --merge --exit $argv[2..]; and return 1
+        __git_all --title=$argv[1] --no-verify --merge --exit $argv[2..]
     end
     function ggcfnx
         if test (count $argv) -lt 1
-            echo "'ggcfnx' expected [1..) arguments TITLE; got $(count $argv)" >&2
+            echo "'ggcfnx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
         end
-        __git_all --title=$argv[1] --force --no-verify --merge --exit $argv[2..]; and return 1
+        __git_all --title=$argv[1] --force --no-verify --merge --exit $argv[2..]
     end
     #
     function __git_all

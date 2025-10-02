@@ -199,6 +199,8 @@ def main(settings: _Settings, /) -> None:
     _install_npm()
     _install_python3_13_venv()
     _install_starship()
+    _setup_pdb()
+    _setup_psql()
     _setup_sshd()
     if settings.age:
         _install_age()
@@ -299,7 +301,9 @@ def _install_bottom() -> None:
             "ClementTsang", "bottom", "bottom_${tag}-1_amd64.deb"
         ) as path:
             _dpkg_install(path)
-        return
+    _setup_symlink(
+        "~/.config/bottom/bottom.toml", f"{_get_script_dir()}/bottom/bottom.toml"
+    )
 
 
 def _install_build_essential() -> None:
@@ -530,7 +534,7 @@ def _install_ripgrep() -> None:
         _LOGGER.info("Installing 'ripgrep'...")
         _apt_install("ripgrep")
     _setup_symlink(
-        "~/.config/bottom/bottom.toml", f"{_get_script_dir()}/bottom/bottom.toml"
+        "~/.config/ripgrep/ripgreprc", f"{_get_script_dir()}/ripgrep/ripgreprc"
     )
 
 
@@ -703,6 +707,14 @@ def _setup_fish() -> None:
         _setup_symlink(
             f"~/.config/fish/{filename_from}", f"{_get_script_dir()}/fish/{filename_to}"
         )
+
+
+def _setup_pdb() -> None:
+    _setup_symlink("~/.pdbrc", f"{_get_script_dir()}/pdb/pdbrc")
+
+
+def _setup_psql() -> None:
+    _setup_symlink("~/.psqlrc", f"{_get_script_dir()}/psql/psqlrc")
 
 
 def _setup_shells() -> None:
