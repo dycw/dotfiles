@@ -352,7 +352,13 @@ if status --is-interactive; and type -q gh
             echo "$(repo_name)/$(current-branch) is still merging... ($elapsed s)"
             sleep 1
         end
-        __git_checkout $argv
+        set -l args
+        if test -n "$_flag_exit"
+            set args $args --delete --exit
+        else if test -n "$_flag_delete"
+            set args $args --delete
+        end
+        __git_checkout $args
     end
 
     function __github_view
