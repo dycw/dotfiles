@@ -181,6 +181,21 @@ if status --is-interactive; and type -q git
         git rebase --continue $argv
     end
 
+    # remote
+    function __remote_is
+        if git remote get-url origin | grep -q $argv[1]
+            return 0
+        else
+            return 1
+        end
+    end
+    function __remote_is_github
+        __remote_is github
+    end
+    function __remote_is_gitlab
+        __remote_is gitlab
+    end
+
     # reset
     function grmb
         __git_fetch_and_purge; or return $status
@@ -224,8 +239,7 @@ if status --is-interactive; and type -q git
         argparse t/title= b/body= n/num= -- $argv; or return $status
         __git_fetch_and_purge; or return $status
         set -l branch
-        set -l title
-        set -l body
+        set -l args
         if test -z "$_flag_title"; and test -z "$_flag_body"; and test -z "$_flag_num"
             set branch dev
             set title (__auto_msg)
@@ -233,6 +247,7 @@ if status --is-interactive; and type -q git
         end
         git checkout -b $branch origin/master; or return $status
         git commit --allow-empty --message="$(__auto_msg)" --no-verify; or return $status
+        __gh_create $args
 
     end
 
@@ -240,5 +255,99 @@ if status --is-interactive; and type -q git
     function __auto_msg
         echo (date "+%Y-%m-%d %H:%M:%S (%a)") " >" (hostname) " >" $USER
     end
+    function __clean_branch_name
+        echo $argv[1] | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' \
+            | sed -E 's/^-+|-+$//g' | cut -c1-80
+    end
+end
 
+if status --is-interactive; and type -q gh
+    function __github_create_or_edit
+        argparse t/title= b/body= -- $argv; or return $status
+        set -l action
+        if __github_pr_exists
+            set action edit
+        else
+            set action create
+        end
+        set -l args
+        if test -n "$_flag_title"
+            set args $args --title=$_flag_title
+        end
+        if test -n "$_flag_body"
+            set args $args --body=$_flag_body
+        end
+        gh pr $action $args
+    end
+
+    function __github_is_merging
+        set -l branch (current-branch); or return $status
+        if test (gh pr view --json state | jq -r '.state') != OPEN
+            return 1
+        end
+        set -l repo (gh repo view --json nameWithOwner -q .nameWithOwner)
+        if gh api repos/$repo/branches/$branch ^/dev/null
+            return 0
+        else
+            return 1
+        end
+    end
+
+    function __github_pr_exists
+        set -l branch (current-branch); or return $status
+        set -l num (gh pr list --head=$branch --json number --jq '. | length'); or return $status
+        if test "$num" -eq 1
+            return 0
+        else
+            return 1
+        end
+    end
+
+    function __github_pr_view
+        if gh pr ready
+            gh pr view -w
+        else
+            echo "'ghv' could not find an open PR for $(current-branch)"; and return 1
+        end
+    end
+end
+
+if status --is-interactive; and type -q glab
+    function __gitlab_create_or_edit
+        argparse t/title= d/description= -- $argv; or return $status
+        set -l action
+        set -l args
+        if __gitlab_mr_exists
+            set action update
+            set args $args (__gitlab_mr_num)
+        else
+            set action create
+            set args $args --push --remove-source-branch --squash-before-merge
+        end
+        if test -n "$_flag_title"
+            set args $args --title=$_flag_title
+        end
+        if test -n "$_flag_description"
+            set args $args --description=$_flag_description
+        end
+        gh mr $action $args
+    end
+
+    function __gitlab_mr_exists
+    end
+
+    if type -q jq
+        function __gitlab_mr_json
+            set -l branch (__current_branch); or return $status
+            set -l json (glab mr list --output=json --source-branch=$branch); or return $status
+            set -l num (printf "%s" "$json" | jq length); or return $status
+            if test $num -eq 0
+                echo "'__gitlab_mr_json' expected an MR for '$branch'; got none"; and return 1
+            else if test $num -eq 1
+                printf "%s" "$json" | jq '.[0]' | jq
+            else
+                echo "'__gitlab_mr_json' expected a unique MR for '$branch'; got $num"; and return 1
+            end
+        end
+    end
 end
