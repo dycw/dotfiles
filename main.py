@@ -170,6 +170,8 @@ def main(settings: _Settings, /) -> None:
     _install_fish()
     _install_git()
     _install_neovim()
+    _install_npm()
+    _install_python3_13_venv()
     _install_starship()
     _setup_sshd()
     if settings.age:
@@ -271,7 +273,7 @@ def _install_bottom() -> None:
 def _install_build_essential() -> None:
     if _have_command("cc"):
         _LOGGER.debug(
-            "'cc' is already installed (already presumable so is 'build-essential'"
+            "'cc' is already installed (and presumably so is 'build-essential'"
         )
         return
     _LOGGER.info("Installing 'build-essential'...")
@@ -441,12 +443,32 @@ def _install_neovim() -> None:
     _setup_symlink("~/.config/nvim", f"{_get_script_dir()}/nvim")
 
 
+def _install_npm() -> None:
+    # this is for neovim
+    if _have_command("npm"):
+        _LOGGER.debug("'npm' is already installed")
+        return
+    _LOGGER.info("Installing 'npm'...")
+    _apt_install("nodejs", "npm")
+
+
 def _install_pre_commit() -> None:
     _uv_tool_install("pre-commit")
 
 
 def _install_pyright() -> None:
     _uv_tool_install("pyright")
+
+
+def _install_python3_13_venv() -> None:
+    # this is for neovim
+    if _have_command("ensurepip"):
+        _LOGGER.debug(
+            "'ensurepip' is already installed (and presumably so is 'python3.13-venv'"
+        )
+        return
+    _LOGGER.info("Installing 'python3.13-venv'...")
+    _apt_install("python3.13-venv")
 
 
 def _install_ruff() -> None:

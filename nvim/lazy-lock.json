@@ -1,4 +1,8 @@
 {
+  "LuaSnip": {
+    "branch": "master",
+    "commit": "458560534a73f7f8d7a11a146c801db00b081df0"
+  },
   "adjacent.nvim": {
     "branch": "main",
     "commit": "a555ab92d61aa6fbbfa1bfaef4633b663563f04e"
@@ -10,6 +14,10 @@
   "better-escape.nvim": {
     "branch": "master",
     "commit": "19a38aab94961016430905ebec30d272a01e9742"
+  },
+  "blink.cmp": {
+    "branch": "main",
+    "commit": "327fff91fe6af358e990be7be1ec8b78037d2138"
   },
   "close-buffers.nvim": {
     "branch": "master",
@@ -33,11 +41,15 @@
   },
   "conform.nvim": {
     "branch": "master",
-    "commit": "c64cc754ace603e185ab30113aaef174187eacf8"
+    "commit": "9d6f881a4047a51c7709223dcf24e967633c6523"
   },
   "dial.nvim": {
     "branch": "master",
-    "commit": "54b503f906bc9e5ab85288414840a1b86d40769f"
+    "commit": "f0404ec1f83a03f2c3457e60087c6331d1cbb83f"
+  },
+  "fidget.nvim": {
+    "branch": "main",
+    "commit": "3f5475949679953af6d78654db29b944fa826e6a"
   },
   "flit.nvim": {
     "branch": "main",
@@ -55,6 +67,10 @@
     "branch": "main",
     "commit": "7c79416330364976955ec8059fe3832b72ee1271"
   },
+  "indent-blankline.nvim": {
+    "branch": "master",
+    "commit": "005b56001b2cb30bfa61b7986bc50657816ba4ba"
+  },
   "iswap.nvim": {
     "branch": "master",
     "commit": "e02cc91f2a8feb5c5a595767d208c54b6e3258ec"
@@ -70,6 +86,18 @@
   "leap.nvim": {
     "branch": "main",
     "commit": "07304103f6bd923004fdef9262d9a4d7925fb70a"
+  },
+  "mason-lspconfig.nvim": {
+    "branch": "main",
+    "commit": "155eac5d8609a2f110041f8ac3491664cc126354"
+  },
+  "mason-tool-installer.nvim": {
+    "branch": "main",
+    "commit": "517ef5994ef9d6b738322664d5fdd948f0fdeb46"
+  },
+  "mason.nvim": {
+    "branch": "main",
+    "commit": "ad7146aa61dcaeb54fa900144d768f040090bff0"
   },
   "mkdir.nvim": {
     "branch": "main",
@@ -114,6 +142,10 @@
   "plenary.nvim": {
     "branch": "master",
     "commit": "b9fd5226c2f76c951fc8ed5923d85e4de065e509"
+  },
+  "rainbow-delimiters.nvim": {
+    "branch": "master",
+    "commit": "3277ad5f96eb03c9d618c88e24f683e4364e578c"
   },
   "sort.nvim": {
     "branch": "main",

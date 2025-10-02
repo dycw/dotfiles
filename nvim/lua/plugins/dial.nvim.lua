@@ -4,17 +4,34 @@ local v = vim
 
 return {
     "monaqa/dial.nvim",
-    tag = "v0.4.0",
     config = function()
         local keymap_set = require("utilities").keymap_set
 
         local map = require("dial.map")
-        keymap_set("n", "<C-a>", map.inc_normal(), "Increment")
-        keymap_set("n", "<C-x>", map.dec_normal(), "Decrement")
-        keymap_set("v", "<C-a>", map.inc_visual(), "Increment")
-        keymap_set("v", "<C-x>", map.dec_visual(), "Decrement")
-        keymap_set("v", "g<C-a>", map.inc_gvisual(), "Increment")
-        keymap_set("v", "g<C-x>", map.dec_gvisual(), "Decrement")
+        keymap_set("n", "<C-a>", function()
+            require("dial.map").manipulate("increment", "normal")
+        end, "Increment (normal)")
+        keymap_set("n", "<C-x>", function()
+            require("dial.map").manipulate("decrement", "normal")
+        end, "Increment (normal)")
+        keymap_set("n", "g<C-a>", function()
+            require("dial.map").manipulate("increment", "gnormal")
+        end, "Increment (gnormal)")
+        keymap_set("n", "g<C-x>", function()
+            require("dial.map").manipulate("decrement", "gnormal")
+        end, "Increment (gnormal)")
+        keymap_set("x", "<C-a>", function()
+            require("dial.map").manipulate("increment", "visual")
+        end, "Increment (visual)")
+        keymap_set("x", "<C-x>", function()
+            require("dial.map").manipulate("decrement", "visual")
+        end, "Increment (visual)")
+        keymap_set("x", "g<C-a>", function()
+            require("dial.map").manipulate("increment", "gvisual")
+        end, "Increment (gvisual)")
+        keymap_set("x", "g<C-x>", function()
+            require("dial.map").manipulate("decrement", "gvisual")
+        end, "Increment (gvisual)")
 
         local function titlecase(s)
             return s:sub(1, 1):upper() .. s:sub(2):lower()
