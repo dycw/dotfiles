@@ -7,11 +7,14 @@ if status --is-interactive; and type -q git
     function ga
         set -l args
         if test (count $argv) -eq 0
-            set args $args .
+            set args .
         else
-            set args $args $argv
+            set args $argv
         end
         git add $args
+    end
+    function gap
+        git add --all --patch $argv
     end
 
     # branch
@@ -44,7 +47,7 @@ if status --is-interactive; and type -q git
         end
         argparse m/message= n/no-verify -- $argv; or return $status
         set -l message
-        if test -n $_flag_message
+        if test -n "$_flag_message"
             set message $_flag_message
         else
             set message (__auto_msg)
@@ -106,7 +109,7 @@ if status --is-interactive; and type -q git
     function gpn
         __git_push -n
     end
-    function gpf
+    function gpfn
         __git_push -f -n
     end
     function gpw
@@ -118,7 +121,7 @@ if status --is-interactive; and type -q git
     function gpnw
         __git_push -n -a=web
     end
-    function gpfw
+    function gpfnw
         __git_push -f -n -a=web
     end
     function gpe
@@ -130,7 +133,7 @@ if status --is-interactive; and type -q git
     function gpne
         __git_push -n -a=exit
     end
-    function gpfe
+    function gpfne
         __git_push -f -n -a=exit
     end
     function gpx
@@ -142,17 +145,17 @@ if status --is-interactive; and type -q git
     function gpnx
         __git_push -n -a=web+exit
     end
-    function gpfx
+    function gpfnx
         __git_push -f -n -a=web+exit
     end
     function __git_push
         argparse f/force n/no-verify a/action= -- $argv; or return $status
         set -l args
-        if test -n $_flag_force
+        if test -n "$_flag_force"
             set args $args --force
         end
         set args $args --set-upstream origin (current-branch)
-        if test -n $_flag_no_verify
+        if test -n "$_flag_no_verify"
             set args $args --no-verify
         end
         git push $args; or return $status
@@ -220,11 +223,22 @@ if status --is-interactive; and type -q git
     function __git_create_and_push
         argparse t/title= b/body= n/num= -- $argv; or return $status
         __git_fetch_and_purge; or return $status
+        set -l branch
+        set -l title
+        set -l body
+        if test -z "$_flag_title"; and test -z "$_flag_body"; and test -z "$_flag_num"
+            set branch dev
+            set title (__auto_msg)
+            set body .
+        end
+        git checkout -b $branch origin/master; or return $status
+        git commit --allow-empty --message="$(__auto_msg)" --no-verify; or return $status
+
     end
 
     # utilities
     function __auto_msg
-        echo (date "+%Y-%m-%d %H:%M:%S (%a)") ">" (hostname) ">" $USER
+        echo (date "+%Y-%m-%d %H:%M:%S (%a)") " >" (hostname) " >" $USER
     end
 
 end

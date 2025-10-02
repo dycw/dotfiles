@@ -149,6 +149,7 @@ return {
         local servers = {
             -- clangd = {},
             -- gopls = {},
+            ["bash-language-server"] = {},
             ["fish-lsp"] = {},
             pyright = {},
             ruff = {},
