@@ -210,7 +210,7 @@ if status --is-interactive; and type -q git
         git remote get-url origin
     end
     function __remote_is
-        if (remote-name) | grep -q $argv[1]
+        if remote-name | grep -q $argv[1]
             return 0
         else
             return 1
