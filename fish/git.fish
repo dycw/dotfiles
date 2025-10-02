@@ -74,7 +74,7 @@ if status --is-interactive; and type -q git
         else if test (count $argv) -eq 3
             set args $args --title $argv[1] --num $argv[2] --part
         else
-            echo "'gcb' expected [0..3] arguments; got $(count $argv)" >&2; and return 1
+            echo "'gcb' expected [0..3] arguments TITLE NUM PART; got $(count $argv)" >&2; and return 1
         end
         __git_checkout_open $args
     end
@@ -110,15 +110,18 @@ if status --is-interactive; and type -q git
         end
         git checkout -b $branch origin/master; or return $status
         git commit --allow-empty --message="$(__auto_msg)" --no-verify; or return $status
-        __git_push --no-verify
+        __git_push --no-verify; or return $status
         ghc $args
     end
     function __git_checkout_close
+        if test (count $argv) -lt 1
+            echo "'__git_checkout_close' expected [1..) arguments TARGET; got $(count $argv)" >&2; and return 1
+        end
         argparse delete exit -- $argv; or return $status
         set -l target $argv[1]
         set -l original (current-branch); or return $status
-        git checkout $target
-        __git_pull_force
+        git checkout $target; or return $status
+        __git_pull_force; or return $status
         if test -n "$_flag_delete"
             __git_branch_delete $original
         end
@@ -309,6 +312,9 @@ if status --is-interactive; and type -q git
         basename -s .git $(remote-name)
     end
     function __remote_is
+        if test (count $argv) -lt 1
+            echo "'__remote_is' expected [1..) arguments REMOTE; got $(count $argv)" >&2; and return 1
+        end
         if remote-name | grep -q $argv[1]
             return 0
         else
@@ -323,6 +329,15 @@ if status --is-interactive; and type -q git
     end
 
     # reset
+    function gr
+        git reset $argv
+    end
+    function grhom
+        git reset --hard origin/master $argv
+    end
+    function grp
+        git reset --patch $argv
+    end
     function grmb
         __git_fetch_and_purge; or return $status
         git reset --soft $(git merge-base origin/master HEAD)
@@ -484,64 +499,124 @@ if status --is-interactive; and type -q git
     end
     #
     function ggc
-        __git_all $argv --title=$argv[1] $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggc' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        end
+        __git_all --title=$argv[1] $argv[2..]
     end
     function ggcf
-        __git_all $argv --title=$argv[1] --force $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcf' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        end
+        __git_all --title=$argv[1] --force $argv[2..]
     end
     function ggcn
-        __git_all $argv --title=$argv[1] --no-verify $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcn' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        end
+        __git_all --title=$argv[1] --no-verify $argv[2..]
     end
     function ggcfn
-        __git_all $argv --title=$argv[1] --force --no-verify $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcfn' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        end
+        __git_all --title=$argv[1] --force --no-verify $argv[2..]
     end
     function ggcw
-        __git_all $argv --title=$argv[1] --web $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        end
+        __git_all --title=$argv[1] --web $argv[2..]
     end
     function ggcfw
-        __git_all $argv --title=$argv[1] --force --web $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcfw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        end
+        __git_all --title=$argv[1] --force --web $argv[2..]
     end
     function ggcnw
-        __git_all $argv --title=$argv[1] --no-verify --web $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcnw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        end
+        __git_all --title=$argv[1] --no-verify --web $argv[2..]
     end
     function ggcfnw
-        __git_all $argv --title=$argv[1] --force --no-verify --web $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcfnw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        end
+        __git_all --title=$argv[1] --force --no-verify --web $argv[2..]
     end
     function ggce
-        __git_all $argv --title=$argv[1] --exit $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggce' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        end
+        __git_all --title=$argv[1] --exit $argv[2..]
     end
     function ggcfe
-        __git_all $argv --title=$argv[1] --force --exit $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcfe' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        end
+        __git_all --title=$argv[1] --force --exit $argv[2..]
     end
     function ggcne
-        __git_all $argv --title=$argv[1] --no-verify --exit $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcne' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        end
+        __git_all --title=$argv[1] --no-verify --exit $argv[2..]
     end
     function ggcfne
-        __git_all $argv --title=$argv[1] --force --no-verify --exit $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcfne' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        end
+        __git_all --title=$argv[1] --force --no-verify --exit $argv[2..]
     end
     function ggcm
-        __git_all $argv --title=$argv[1] --merge $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcm' expected [1..) arguments TITLE; got $(count $argv)" >&2
+        end
+        __git_all --title=$argv[1] --merge $argv[2..]; and return 1
     end
     function ggcfm
-        __git_all $argv --title=$argv[1] --force --merge $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcfm' expected [1..) arguments TITLE; got $(count $argv)" >&2
+        end
+        __git_all --title=$argv[1] --force --merge $argv[2..]; and return 1
     end
     function ggcnm
-        __git_all $argv --title=$argv[1] --no-verify --merge $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcnm' expected [1..) arguments TITLE; got $(count $argv)" >&2
+        end
+        __git_all --title=$argv[1] --no-verify --merge $argv[2..]; and return 1
     end
     function ggcfnm
-        __git_all $argv --title=$argv[1] --force --no-verify --merge $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcfnm' expected [1..) arguments TITLE; got $(count $argv)" >&2
+        end
+        __git_all --title=$argv[1] --force --no-verify --merge $argv[2..]; and return 1
     end
     function ggcx
-        __git_all $argv --title=$argv[1] --merge --exit $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcx' expected [1..) arguments TITLE; got $(count $argv)" >&2
+        end
+        __git_all --title=$argv[1] --merge --exit $argv[2..]; and return 1
     end
     function ggcfx
-        __git_all $argv --title=$argv[1] --force --merge --exit $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcfx' expected [1..) arguments TITLE; got $(count $argv)" >&2
+        end
+        __git_all --title=$argv[1] --force --merge --exit $argv[2..]; and return 1
     end
     function ggcnx
-        __git_all $argv --title=$argv[1] --no-verify --merge --exit $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcnx' expected [1..) arguments TITLE; got $(count $argv)" >&2
+        end
+        __git_all --title=$argv[1] --no-verify --merge --exit $argv[2..]; and return 1
     end
     function ggcfnx
-        __git_all $argv --title=$argv[1] --force --no-verify --merge --exit $argv[2..]
+        if test (count $argv) -lt 1
+            echo "'ggcfnx' expected [1..) arguments TITLE; got $(count $argv)" >&2
+        end
+        __git_all --title=$argv[1] --force --no-verify --merge --exit $argv[2..]; and return 1
     end
     #
     function __git_all
@@ -604,7 +679,7 @@ if status --is-interactive; and type -q git
         else if test (count $argv) -eq 2
             set args $args --title $argv[1] --num $argv[2]
         else
-            echo "'ghc' expected [0..2] arguments; got $(count $argv)" >&2; and return 1
+            echo "'ghc' expected [0..2] arguments TITLE NUM; got $(count $argv)" >&2; and return 1
         end
         if __remote_is_github
             __github_create $args
@@ -666,6 +741,9 @@ if status --is-interactive; and type -q git
         echo (date "+%Y-%m-%d %H:%M:%S (%a)") " >" (hostname) " >" $USER
     end
     function __clean_branch_name
+        if test (count $argv) -lt 1
+            echo "'__clean_branch_name' expected [1..) arguments BRANCH; got $(count $argv)" >&2; and return 1
+        end
         echo $argv[1] | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' \
             | sed -E 's/^-+ | -+$//g' | cut -c1-80
     end
@@ -719,7 +797,7 @@ if status --is-interactive; and type -q gh
         else if test -n "$_flag_delete"
             set args $args --delete
         end
-        __git_checkout_close $args
+        __git_checkout_close master $args
     end
 
     function __github_view
