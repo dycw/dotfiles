@@ -275,6 +275,21 @@ if status --is-interactive; and type -q git
 
     end
 
+    # github/gitlab
+    function ghc
+        if test (count $argv) -eq 1; and __remote_is_github
+            __github_create_or_edit -t $argv[1] -b .
+        else if test (count $argv) -eq 2; and __remote_is_github
+            __github_create_or_edit -t $argv[1] -b $argv[2]
+        else if test (count $argv) -eq 1; and __remote_is_gitlab
+            __gitlab_create_or_update -t $argv[1] -d .
+        else if test (count $argv) -eq 2; and __remote_is_gitlab
+            __gitlab_create_or_update -t $argv[1] -d $argv[2]
+        else
+            echo "Invalid call to 'ghc'"; and return 1
+        end
+    end
+
     # utilities
     function __auto_msg
         echo (date "+%Y-%m-%d %H:%M:%S (%a)") " >" (hostname) " >" $USER
@@ -352,7 +367,7 @@ if status --is-interactive; and type -q gh
 end
 
 if status --is-interactive; and type -q glab
-    function __gitlab_create_or_edit
+    function __gitlab_create_or_update
         argparse t/title= d/description= -- $argv; or return $status
         set -l action
         set -l args
