@@ -18,15 +18,12 @@ if status --is-interactive; and type -q git
     end
 
     # branch
-    function delete-gone-branches
-        git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
-    end
     function gb
         git branch --all --list --sort=-committerdate --verbose $argv
     end
     function gbd
         if test (count $argv) -eq 0
-            __git_branch_fzf_local | while read branch
+            __git_branch_fzf_local --multi | while read branch
                 __git_branch_delete $branch
             end
         else
@@ -47,7 +44,12 @@ if status --is-interactive; and type -q git
         git branch --delete --force $argv
     end
     function __git_branch_fzf_local
-        git branch --format=%(refname:short) | fzf --multi
+        argparse m/multi -- $argv; or return $status
+        set -l args
+        if test -n "$_flag_multi"
+            set args $args --multi
+        end
+        git branch --format=%(refname:short) | fzf $args
     end
     function __git_branch_fzf_remote
         argparse m/multi -- $argv; or return $status
@@ -58,9 +60,15 @@ if status --is-interactive; and type -q git
         git branch --color=never --remotes | awk '!/->/' | fzf $args \
             | sed -E 's|^[[:space:]]*origin/||'
     end
+    function __git_branch_purge_local
+        git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
+    end
     # checkout
     function gco
         __git_checkout $argv
+    end
+    function gcop
+        __git_checkout --patch $argv
     end
     function __git_checkout
         argparse d/delete e/exit -- $argv; or return $status
@@ -139,7 +147,7 @@ if status --is-interactive; and type -q git
     end
     function __git_fetch_and_purge
         git fetch --all --force
-        delete-gone-branches
+        __git_branch_purge_local
     end
 
     # log
@@ -459,33 +467,50 @@ if status --is-interactive; and type -q git
         end
     end
     function __git_create_and_push
-        argparse t/title= b/body= n/num= -- $argv; or return $status
+        argparse t/title= n/num= p/part -- $argv; or return $status
         __git_fetch_and_purge; or return $status
         set -l branch
         set -l args
-        if test -z "$_flag_title"; and test -z "$_flag_body"; and test -z "$_flag_num"
+        set -l desc
+        if test -n "$_flag_part"
+            set desc 'Part of'
+        else
+            set desc Closes
+        end
+        if test -z "$_flag_title"; and test -z "$_flag_num"
             set branch dev
-            set title (__auto_msg)
-            set body .
+            set arg $args --title (__auto_msg)
+        else if test -n "$_flag_title"; and test -z "$_flag_num"
+            set branch (__clean_branch_name $_flag_title)
+            set arg $args --title $_flag_title
+        else if test -z "$_flag_title"; and test -n "$_flag_num"
+            set branch $_flag_num
+            set arg $args --title (__auto_msg) --body "$desc $_flag_num"
+        else
+            set branch "$_flag_num-$(__clean_branch_name $_flag_title)"
+            set arg $args --title $_flag_title --body "$desc $_flag_num"
         end
         git checkout -b $branch origin/master; or return $status
         git commit --allow-empty --message="$(__auto_msg)" --no-verify; or return $status
-        __gh_create $args
-
+        __github_or_gitlab_create_or_edit $args
     end
 
     # github/gitlab
     function ghc
-        if test (count $argv) -eq 1; and __remote_is_github
-            __github_create_or_edit -t $argv[1] -b .
-        else if test (count $argv) -eq 2; and __remote_is_github
-            __github_create_or_edit -t $argv[1] -b $argv[2]
-        else if test (count $argv) -eq 1; and __remote_is_gitlab
-            __gitlab_create_or_update -t $argv[1] -d .
-        else if test (count $argv) -eq 2; and __remote_is_gitlab
-            __gitlab_create_or_update -t $argv[1] -d $argv[2]
+        argparse t/title= b/body= -- $argv; or return $status
+        set -l args
+        if test -n "$_flag_title"
+            set args $args --title=$_flag_title
+        end
+        if test -n "$_flag_body"
+            set args $args --body=$_flag_body
+        end
+        if __remote_is_github
+            __github_create_or_edit $args
+        else if __remote_is_gitlab
+            __gitlab_create_or_update $args
         else
-            echo "Invalid call to 'ghc'" >&2; and return 1
+            echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
         end
     end
     function ghm
@@ -519,9 +544,9 @@ if status --is-interactive; and type -q git
     function __auto_msg
         echo (date "+%Y-%m-%d %H:%M:%S (%a)") " >" (hostname) " >" $USER
     end
-    function __clean_branch_name
+    function __clean_branch_nam $_flae
         echo $argv[1] | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' \
-            | sed -E 's/^-+|-+$//g' | cut -c1-80
+            | sed -E 's/^-+ | -+$//g' | cut -c1-80
     end
 end
 
@@ -580,11 +605,13 @@ if status --is-interactive; and type -q gh; and type -q jq
         set -l branch (current-branch); or return $status
         set -l num (gh pr list --head=$branch --json number --jq '. | length'); or return $status
         if test $num -eq 0
-            echo "'__github_exists' expected a PR for '$branch'; got none" >&2; and return 1
+            echo "'__github_exists' expected a PR for '$branch'
+ got none" >&2; and return 1
         else if test $num -eq 1
             return 0
         else
-            echo "'__github_exists' expected a unique PR for '$branch'; got $num" >&2; and return 1
+            echo "'__github_exists' expected a unique PR for '$branch'
+ got $num" >&2; and return 1
         end
     end
 
@@ -633,11 +660,13 @@ if status --is-interactive; and type -q glab; and type -q jq
         set -l json (glab mr list --output=json --source-branch=$branch); or return $status
         set -l num (printf "%s" "$json" | jq length); or return $status
         if test $num -eq 0
-            echo "'__gitlab_mr_json' expected an MR for '$branch'; got none" >&2; and return 1
+            echo "'__gitlab_mr_json' expected an MR for '$branch'
+ got none" >&2; and return 1
         else if test $num -eq 1
             printf "%s" "$json" | jq '.[0]' | jq
         else
-            echo "'__gitlab_mr_json' expected a unique MR for '$branch'; got $num" >&2; and return 1
+            echo "'__gitlab_mr_json' expected a unique MR for '$branch'
+ got $num" >&2; and return 1
         end
     end
 end
