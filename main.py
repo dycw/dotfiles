@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ruff: noqa: C901,E501,S310,PLR0912,PLR0915,S602,S607
+# ruff: noqa: C901,E501,S310,PLR0912,PLR0915,S602,S603,S607
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -230,12 +230,13 @@ def _install_bat() -> None:
 def _install_bottom() -> None:
     if _have_command("btm"):
         _LOGGER.debug("'btm' is already installed")
+    else:
+        _LOGGER.info("Installing 'bottom'...")
+        with _yield_github_latest_download(
+            "ClementTsang", "bottom", "bottom_${tag}-1_amd64.deb"
+        ) as path:
+            _dpkg_install(path)
         return
-    _LOGGER.info("Installing 'bottom'...")
-    with _yield_github_latest_download(
-        "ClementTsang", "bottom", "bottom_${tag}-1_amd64.deb"
-    ) as path:
-        _dpkg_install(path)
 
 
 def _install_build_essential() -> None:
@@ -274,7 +275,10 @@ def _install_direnv() -> None:
     else:
         _LOGGER.info("Installing 'direnv'...")
         _apt_install("direnv")
-    _append_to_file("~/.direnv", '''eval "$(direnv hook bash)"''')
+    for filename in ["direnv.toml", "direnvrc"]:
+        _setup_symlink(
+            f"~/.config/direnv/{filename}", f"{_get_script_dir()}/direnv/{filename}"
+        )
 
 
 def _install_dust() -> None:
@@ -399,7 +403,12 @@ def _install_neovim() -> None:
         _LOGGER.debug("'neovim' is already installed")
     else:
         _LOGGER.info("Installing 'neovim'...")
-        _apt_install("neovim")
+        path_to = Path("/usr/local/bin/nvim")
+        with _yield_download(
+            "https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage"
+        ) as appimage:
+            _set_executable(appimage)
+            check_call(f"sudo mv {appimage} {path_to}")
     _setup_symlink("~/.config/nvim", f"{_get_script_dir()}/nvim")
 
 
@@ -418,9 +427,12 @@ def _install_ruff() -> None:
 def _install_ripgrep() -> None:
     if _have_command("rg"):
         _LOGGER.debug("'ripgrep' is already installed")
-        return
-    _LOGGER.info("Installing 'ripgrep'...")
-    _apt_install("ripgrep")
+    else:
+        _LOGGER.info("Installing 'ripgrep'...")
+        _apt_install("ripgrep")
+    _setup_symlink(
+        "~/.config/bottom/bottom.toml", f"{_get_script_dir()}/bottom/bottom.toml"
+    )
 
 
 def _install_shellcheck() -> None:
@@ -458,7 +470,6 @@ def _install_starship() -> None:
         _LOGGER.info("Installing 'starship'...")
         _apt_install("starship")
     _setup_symlink("~/.config/starship", f"{_get_script_dir()}/starship/starship.toml")
-    _append_to_file("~/.bashrc", 'eval "$(starship init bash)"')
 
 
 def _install_stylua() -> None:
@@ -511,10 +522,6 @@ def _install_uv() -> None:
     _install_curl()
     _LOGGER.info("Installing 'uv'...")
     check_call("curl -LsSf https://astral.sh/uv/install.sh | sh", shell=True)
-    _append_to_file(
-        "~/.bashrc", '''export PATH="${HOME}/.local/bin${PATH:+:${PATH}}"'''
-    )
-    check_call("source ~/.bashrc", shell=True)
 
 
 def _install_yq() -> None:

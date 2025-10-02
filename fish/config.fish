@@ -22,11 +22,37 @@ if status is-interactive
     end
 
     # cd
+    function ..
+        cd ..
+    end
+    function ...
+        cd ../..
+    end
+    function ....
+        cd ../../..
+    end
     function cd-config
         cd "$XDG_CONFIG_HOME"
     end
+    function cd-db
+        cd "$HOME/Dropbox"
+    end
+    function cd-dbt
+        cd "$HOME/Dropbox/Temporary"
+    end
     function cd-df
         cd "$HOME/dotfiles"
+    end
+    function cd-dl
+        cd "$HOME/Downloads"
+    end
+    function cdw
+        cd "$HOME/work"
+    end
+
+    # direnv
+    if type -q direnv
+        direnv hook fish | source
     end
 
     # eza
@@ -51,10 +77,59 @@ if status is-interactive
     function fish-config
         $EDITOR "$XDG_CONFIG_HOME/fish/config.fish"
     end
+    function fish-reload
+        source "$XDG_CONFIG_HOME/fish/config.fish"
+    end
 
     # fzf
     if type -q fzf
         fzf --fish | source
+    end
+
+    # git
+    if type -q git
+        # cherry-pick
+        function gcp
+            git cherry-pick $argv
+        end
+        # clone
+        function gcl
+            git clone --recurse-submodules $argv
+        end
+        # log
+        function gl
+            set -l args --abbrev-commit --decorate=short --pretty='format:%C(red)%h%C(reset) |%C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)'
+            set -l n
+            if test (count $argv) -eq 0
+                set n 20
+            else if string match -qr '^[0-9]+$' -- $argv[1]; and test $argv[1] -gt 0
+                set n $argv[1]
+            end
+            if set -q n
+                set args $args --max-count=$n
+            end
+            git log $args
+        end
+        # mv
+        function gm
+            git mv $argv
+        end
+        # rev-parse
+        function cdr
+            set -l root (git-repo-root)
+            if test -n "$root"
+                cd $root
+            end
+        end
+        function git-repo-root
+            if git rev-parse --show-toplevel >/dev/null 2>&1
+                git rev-parse --show-toplevel
+            end
+        end
+        # status
+        function gs
+            git status $argv
+        end
     end
 
     # local
@@ -118,7 +193,12 @@ if status is-interactive
             echo "Starting 'tailscale'..."
             sudo tailscale up --accept-dns --accept-routes --auth-key="file:$auth_key" \
                 --login-server="$TAILSCALE_LOGIN_SERVER" --reset
-
+        end
+        function ts-exit-node
+            sudo tailscale set --exit-node=qrt-nanode
+        end
+        function ts-no-exit-node
+            sudo tailscale set --exit-node=
         end
     end
 
