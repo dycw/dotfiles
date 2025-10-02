@@ -4,7 +4,7 @@ local config = wezterm.config_builder()
 
 -- always
 config.audible_bell = "Disabled"
-config.font_size = 10.0
+config.font_size = 12.0
 config.hide_tab_bar_if_only_one_tab = true
 config.initial_cols = 200
 config.initial_rows = 100
@@ -24,6 +24,11 @@ config.window_padding = {
 }
 
 -- conditional
+
+if wezterm.hostname() == "DW-Swift" then
+    config.font_size = 10.5 -- smaller
+end
+
 if wezterm.hostname() == "RH-MacBook" then
     config.allow_win32_input_mode = false
     config.animation_fps = 1
