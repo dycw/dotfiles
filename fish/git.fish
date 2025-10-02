@@ -418,19 +418,19 @@ if status --is-interactive; and type -q glab
 
     function __gitlab_mr_exists
     end
+end
 
-    if type -q jq
-        function __gitlab_mr_json
-            set -l branch (__current_branch); or return $status
-            set -l json (glab mr list --output=json --source-branch=$branch); or return $status
-            set -l num (printf "%s" "$json" | jq length); or return $status
-            if test $num -eq 0
-                echo "'__gitlab_mr_json' expected an MR for '$branch'; got none" >&2; and return 1
-            else if test $num -eq 1
-                printf "%s" "$json" | jq '.[0]' | jq
-            else
-                echo "'__gitlab_mr_json' expected a unique MR for '$branch'; got $num" >&2; and return 1
-            end
+if status --is-interactive; and type -q glab; and type -q jq
+    function __gitlab_mr_json
+        set -l branch (__current_branch); or return $status
+        set -l json (glab mr list --output=json --source-branch=$branch); or return $status
+        set -l num (printf "%s" "$json" | jq length); or return $status
+        if test $num -eq 0
+            echo "'__gitlab_mr_json' expected an MR for '$branch'; got none" >&2; and return 1
+        else if test $num -eq 1
+            printf "%s" "$json" | jq '.[0]' | jq
+        else
+            echo "'__gitlab_mr_json' expected a unique MR for '$branch'; got $num" >&2; and return 1
         end
     end
 end
