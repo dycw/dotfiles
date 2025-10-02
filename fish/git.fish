@@ -44,34 +44,77 @@ if status --is-interactive; and type -q git
         git branch --delete --force $argv
     end
     function __git_branch_fzf_local
-        argparse m/multi -- $argv; or return $status
+        argparse multi -- $argv; or return $status
         set -l args
         if test -n "$_flag_multi"
             set args $args --multi
         end
-        git branch --format=%(refname:short) | fzf $args
+        git branch --format='%(refname:short)' | fzf $args
     end
     function __git_branch_fzf_remote
-        argparse m/multi -- $argv; or return $status
+        argparse multi -- $argv; or return $status
         set -l args
         if test -n "$_flag_multi"
             set args $args --multi
         end
-        git branch --color=never --remotes | awk '!/->/' | fzf $args \
-            | sed -E 's|^[[:space:]]*origin/||'
+        git branch --color=never --remotes | awk '!/- >/' | fzf $args \
+            | sed -E 's | ^[[:space:]]*origin/ || '
     end
     function __git_branch_purge_local
         git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
     end
     # checkout
+    function gcb
+        set -l args
+        if test (count $argv) -eq 0
+        else if test (count $argv) -eq 1
+            set args $args --title $argv[1]
+        else if test (count $argv) -eq 2
+            set args $args --title $argv[1] --num $argv[2]
+        else if test (count $argv) -eq 3
+            set args $args --title $argv[1] --num $argv[2] --part
+        else
+            echo "'gcb' expected [0..3] arguments; got $(count $argv)" >&2; and return 1
+        end
+        __git_checkout_open $args
+    end
     function gco
-        __git_checkout $argv
+        __git_checkout_close $argv
     end
     function gcop
-        __git_checkout --patch $argv
+        __git_checkout_close --patch $argv
     end
-    function __git_checkout
-        argparse d/delete e/exit -- $argv; or return $status
+    function __git_checkout_open
+        argparse title= num= part -- $argv; or return $status
+        __git_fetch_and_purge; or return $status
+        set -l branch
+        set -l args
+        set -l desc
+        if test -n "$_flag_part"
+            set desc 'Part of'
+        else
+            set desc Closes
+        end
+        if test -z "$_flag_title"; and test -z "$_flag_num"
+            set branch dev
+            set arg $args --title (__auto_msg)
+        else if test -n "$_flag_title"; and test -z "$_flag_num"
+            set branch (__clean_branch_name $_flag_title)
+            set arg $args --title $_flag_title
+        else if test -z "$_flag_title"; and test -n "$_flag_num"
+            set branch $_flag_num
+            set arg $args --title (__auto_msg) --body "$desc $_flag_num"
+        else
+            set branch "$_flag_num-$(__clean_branch_name $_flag_title)"
+            set arg $args --title $_flag_title --body "$desc $_flag_num"
+        end
+        git checkout -b $branch origin/master; or return $status
+        git commit --allow-empty --message="$(__auto_msg)" --no-verify; or return $status
+        __git_push --no-verify
+        ghc $args
+    end
+    function __git_checkout_close
+        argparse delete exit -- $argv; or return $status
         set -l target $argv[1]
         set -l original (current-branch); or return $status
         git checkout $target
@@ -99,7 +142,7 @@ if status --is-interactive; and type -q git
         if git diff --quiet; and git diff --cached --quiet
             return 0
         end
-        argparse m/message= n/no-verify -- $argv; or return $status
+        argparse message= no-verify -- $argv; or return $status
         set -l message
         if test -n "$_flag_message"
             set message $_flag_message
@@ -113,7 +156,7 @@ if status --is-interactive; and type -q git
         git commit --message="'$message'" $args; or return $status
     end
     function __git_commit_until
-        argparse m/message= n/no-verify -- $argv; or return $status
+        argparse message= no-verify -- $argv; or return $status
         set -l args
         if test -n "$_flag_message"
             set args $args --message $_flag_message
@@ -228,7 +271,7 @@ if status --is-interactive; and type -q git
         __git_push --force --no-verify --web --exit
     end
     function __git_push
-        argparse f/force n/no-verify w/web e/exit -- $argv; or return $status
+        argparse force no-verify web exit -- $argv; or return $status
         set -l args
         if test -n "$_flag_force"
             set args $args --force
@@ -317,7 +360,7 @@ if status --is-interactive; and type -q git
         git status $argv
     end
 
-    # combined
+    # combined - all
     function gc
         __git_all $argv
     end
@@ -439,15 +482,32 @@ if status --is-interactive; and type -q git
         __git_all $argv --add --force --no-verify --merge --exit
     end
     function __git_all
-        argparse a/add n/no-verify f/force w/web e/exit m/merge -- $argv; or return $status
+        argparse title= num= part add no-verify force web exit merge -- $argv; or return $status
+
+        if test -n "$_flag_title"
+            set -l checkout_push_args
+            if test -n "$_flag_title"
+                set checkout_push_args $checkout_push_args --title $_flag_title
+            end
+            if test -n "$_flag_num"
+                set checkout_push_args $checkout_push_args --num $_flag_num
+            end
+            if test -n "$_flag_part"
+                set checkout_push_args $checkout_push_args --part
+            end
+            __git_checkout_open $__checkout_push_args; or return $status
+        end
+
         if test -n "$_flag_add"
             ga $argv; or return $status
         end
+
         set -l commit_args
         if test -n "$_flag_no_verify"
             set commit_args $commit_args --no-verify
         end
         __git_commit_until $commit_args; or return $status
+
         set -l push_args
         if test -n "$_flag_force"
             set push_args $push_args --force
@@ -462,42 +522,19 @@ if status --is-interactive; and type -q git
             set push_args $push_args --exit
         end
         __git_push $push_args; or return $status
+
         if test -n "$_flag_merge"
-            __github_or_gitlab_merge --delete --exit
+            set -l merge_args
+            if test -n "$_flag_exit"
+                set merge_args $merge_args --exit
+            end
+            __github_or_gitlab_merge --delete $merge_args
         end
-    end
-    function __git_create_and_push
-        argparse t/title= n/num= p/part -- $argv; or return $status
-        __git_fetch_and_purge; or return $status
-        set -l branch
-        set -l args
-        set -l desc
-        if test -n "$_flag_part"
-            set desc 'Part of'
-        else
-            set desc Closes
-        end
-        if test -z "$_flag_title"; and test -z "$_flag_num"
-            set branch dev
-            set arg $args --title (__auto_msg)
-        else if test -n "$_flag_title"; and test -z "$_flag_num"
-            set branch (__clean_branch_name $_flag_title)
-            set arg $args --title $_flag_title
-        else if test -z "$_flag_title"; and test -n "$_flag_num"
-            set branch $_flag_num
-            set arg $args --title (__auto_msg) --body "$desc $_flag_num"
-        else
-            set branch "$_flag_num-$(__clean_branch_name $_flag_title)"
-            set arg $args --title $_flag_title --body "$desc $_flag_num"
-        end
-        git checkout -b $branch origin/master; or return $status
-        git commit --allow-empty --message="$(__auto_msg)" --no-verify; or return $status
-        __github_or_gitlab_create_or_edit $args
     end
 
     # github/gitlab
     function ghc
-        argparse t/title= b/body= -- $argv; or return $status
+        argparse title= body= -- $argv; or return $status
         set -l args
         if test -n "$_flag_title"
             set args $args --title=$_flag_title
@@ -523,7 +560,7 @@ if status --is-interactive; and type -q git
         __github_or_gitlab_merge --exit
     end
     function __github_or_gitlab_merge
-        argparse d/delete e/exit -- $argv; or return $status
+        argparse delete exit -- $argv; or return $status
         set -l args
         if test -n "$_flag_delete"
             set args $args --delete
@@ -544,7 +581,7 @@ if status --is-interactive; and type -q git
     function __auto_msg
         echo (date "+%Y-%m-%d %H:%M:%S (%a)") " >" (hostname) " >" $USER
     end
-    function __clean_branch_nam $_flae
+    function __clean_branch_name
         echo $argv[1] | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' \
             | sed -E 's/^-+ | -+$//g' | cut -c1-80
     end
@@ -552,7 +589,7 @@ end
 
 if status --is-interactive; and type -q gh
     function __github_create_or_edit
-        argparse t/title= b/body= -- $argv; or return $status
+        argparse title= body= -- $argv; or return $status
         set -l action
         if __github_exists
             set action edit
@@ -570,7 +607,7 @@ if status --is-interactive; and type -q gh
     end
 
     function __github_merge
-        argparse d/delete e/exit -- $argv; or return $status
+        argparse delete exit -- $argv; or return $status
         if not __github_exists
             echo "'__github_merge' could not find an open PR for '$(current-branch)'" >&2; and return 1
         end
@@ -587,7 +624,7 @@ if status --is-interactive; and type -q gh
         else if test -n "$_flag_delete"
             set args $args --delete
         end
-        __git_checkout $args
+        __git_checkout_close $args
     end
 
     function __github_view
@@ -631,7 +668,7 @@ end
 
 if status --is-interactive; and type -q glab
     function __gitlab_create_or_update
-        argparse t/title= d/description= -- $argv; or return $status
+        argparse title= description= -- $argv; or return $status
         set -l action
         set -l args
         if __gitlab_mr_exists
