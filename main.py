@@ -48,6 +48,7 @@ class _Settings:
     shellcheck: bool
     shfmt: bool
     sops: bool
+    spotify: bool
     stylua: bool
     tailscale: bool
     tmux: bool
@@ -109,6 +110,9 @@ class _Settings:
         )
         parser.add_argument(
             "-so", "--sops", action="store_true", help="Install 'sops'."
+        )
+        parser.add_argument(
+            "-sp", "--spotify", action="store_true", help="Install 'spotify'."
         )
         parser.add_argument(
             "-st", "--stylua", action="store_true", help="Install 'stylua'."
@@ -204,6 +208,8 @@ def main(settings: _Settings, /) -> None:
         _install_luacheck()
 
     _install_uv()  # after curl
+    if settings.spotify:  # after curl
+        _install_spotify()
 
     _install_bump_my_version()  # after uv
     _install_pre_commit()  # after uv
@@ -461,6 +467,23 @@ def _install_sops() -> None:
         "getsops", "sops", "sops-${tag}.linux.amd64"
     ) as binary:
         _copyfile(binary, path_to, executable=True)
+
+
+def _install_spotify() -> None:
+    if _have_command("spotify"):
+        _LOGGER.debug("'spotify' is already installed")
+        return
+    _install_curl()
+    _LOGGER.info("Installing 'spotify'...")
+    check_call(
+        "curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg",
+        shell=True,
+    )
+    check_call(
+        'echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list',
+        shell=True,
+    )
+    _apt_install("spotify-client")
 
 
 def _install_starship() -> None:
