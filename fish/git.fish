@@ -24,17 +24,18 @@ if status --is-interactive; and type -q git
             return 0
         end
         argparse m/message= n/no-verify -- $argv
+        or return
         set -l message
-        if test -n $argv_message
-            set message $argv_message
+        if test -n $_flag_message
+            set message $_flag_message
         else
             set message (__auto_msg)
         end
         set -l args
-        if test $argv_no_verify
+        if test $_flag_no_verify
             set args $args --no-verify
         end
-        git commit --message="$message" $args
+        git commit --message="'$message'" $args
     end
     # diff
     function gd
