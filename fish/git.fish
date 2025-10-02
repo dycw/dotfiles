@@ -71,7 +71,7 @@ if status --is-interactive; and type -q git
     end
     # push
     function __git_push
-        argparse f/force n/no-verify a/action -- $argv; or return
+        argparse f/force n/no-verify a/action= -- $argv; or return
         set -l args
         if test -n $_flag_force
             set args $args --force
@@ -80,7 +80,7 @@ if status --is-interactive; and type -q git
         if test -n $_flag_no_verify
             set args $args --no-verify
         end
-        git push $args
+        git push $args; or return $status
         switch $_flag_action
             case web
                 gitweb
