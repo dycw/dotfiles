@@ -104,6 +104,23 @@ if status --is-interactive; and type -q git
         end
         git commit --message="'$message'" $args; or return $status
     end
+    function __git_commit_until
+        argparse m/message= n/no-verify -- $argv; or return $status
+        set -l args
+        if test -n "$_flag_message"
+            set args $args --message $_flag_message
+        end
+        if test -n "$_flag_no_verify"
+            set args $args --no-verify
+        end
+        for i in (seq 0 4)
+            ga $argv; or return $status
+            if __git_commit $args
+                return 0
+            end
+        end
+        return 1
+    end
 
     # diff
     function gd
