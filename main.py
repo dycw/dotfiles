@@ -33,6 +33,7 @@ class _Settings:
     bottom: bool
     build_essential: bool
     bump_my_version: bool
+    caffeine: bool
     delta: bool
     direnv: bool
     dust: bool
@@ -86,6 +87,9 @@ class _Settings:
             "--bump-my-version",
             action="store_true",
             help="Install 'bump-my-version'.",
+        )
+        _ = parser.add_argument(
+            "-c", "--caffeine", action="store_true", help="Install 'caffeine'."
         )
         _ = parser.add_argument(
             "-de", "--delta", action="store_true", help="Install 'delta'."
@@ -204,6 +208,8 @@ def main(settings: _Settings, /) -> None:
         _install_bottom()
     if settings.build_essential:
         _install_build_essential()
+    if settings.caffeine:
+        _install_caffeine()
     if settings.delta:
         _install_delta()
     if settings.direnv:
@@ -318,11 +324,19 @@ def _install_curl() -> None:
     _apt_install("curl")
 
 
+def _install_caffeine() -> None:
+    if _have_command("caffeine"):
+        _LOGGER.debug("'caffeine' is already installed")
+        return
+    _LOGGER.info("Installing 'caffeine'...")
+    _apt_install("caffeine")
+
+
 def _install_delta() -> None:
     if _have_command("delta"):
-        _LOGGER.debug("'git-delta' is already installed")
+        _LOGGER.debug("'delta' is already installed")
         return
-    _LOGGER.info("Installing 'git-delta'...")
+    _LOGGER.info("Installing 'delta'...")
     _apt_install("git-delta")
 
 
