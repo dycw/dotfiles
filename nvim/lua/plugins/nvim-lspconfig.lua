@@ -188,15 +188,6 @@ return {
         local ensure_installed = v.tbl_keys(servers or {})
         v.list_extend(ensure_installed, {
             "shfmt",
-            -- "bash-language-server",
-            -- "fish-lsp",
-            -- "pyright",
-            -- "ruff",
-            -- "rust_analyzer",
-            -- "shfmt",
-            -- "stylua",
-            -- "ruff-lsp",
-            -- "stylua",
         })
         require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
         require("mason-lspconfig").setup({
