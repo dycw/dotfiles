@@ -1,6 +1,17 @@
 if status --is-interactive; and type -q git
     function fish-git
-        $EDITOR "$XDG_CONFIG_HOME/fish/conf.d/git.fish"
+        $EDITOR $XDG_CONFIG_HOME/fish/conf.d/git.fish
+    end
+
+    # add
+    function ga
+        set -l args
+        if test (count $argv) -eq 0
+            set args $args .
+        else
+            set args $args $argv
+        end
+        git add $args
     end
 
     # branch
@@ -10,14 +21,22 @@ if status --is-interactive; and type -q git
     function gb
         git branch --all --list --sort=-committerdate --verbose $argv
     end
+
+    # checkout
+    function gco
+        git checkout $argv
+    end
+
     # cherry-pick
     function gcp
         git cherry-pick $argv
     end
+
     # clone
     function gcl
         git clone --recurse-submodules $argv
     end
+
     # commit
     function __git_commit
         if git diff --quiet; and git diff --cached --quiet
@@ -36,6 +55,7 @@ if status --is-interactive; and type -q git
         end
         git commit --message="'$message'" $args; or return $status
     end
+
     # diff
     function gd
         git diff $argv
@@ -46,11 +66,16 @@ if status --is-interactive; and type -q git
     function gdm
         git diff origin/master $argv
     end
+
     # fetch
     function gf
+        __git_fetch_and_purge
+    end
+    function __git_fetch_and_purge
         git fetch --all --force
         delete-gone-branches
     end
+
     # log
     function gl
         set -l args --abbrev-commit --decorate=short --pretty='format:%C(red)%h%C(reset) | %C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)'
@@ -65,13 +90,63 @@ if status --is-interactive; and type -q git
         end
         git log $args
     end
+
     # mv
     function gm
         git mv $argv
     end
+
     # push
+    function gp
+        __git_push
+    end
+    function gpf
+        __git_push -f
+    end
+    function gpn
+        __git_push -n
+    end
+    function gpf
+        __git_push -f -n
+    end
+    function gpw
+        __git_push -a=web
+    end
+    function gpfw
+        __git_push -f -a=web
+    end
+    function gpnw
+        __git_push -n -a=web
+    end
+    function gpfw
+        __git_push -f -n -a=web
+    end
+    function gpe
+        __git_push -a=exit
+    end
+    function gpfe
+        __git_push -f -a=exit
+    end
+    function gpne
+        __git_push -n -a=exit
+    end
+    function gpfe
+        __git_push -f -n -a=exit
+    end
+    function gpx
+        __git_push -a=web+exit
+    end
+    function gpfx
+        __git_push -f -a=web+exit
+    end
+    function gpnx
+        __git_push -n -a=web+exit
+    end
+    function gpfx
+        __git_push -f -n -a=web+exit
+    end
     function __git_push
-        argparse f/force n/no-verify a/action= -- $argv; or return
+        argparse f/force n/no-verify a/action= -- $argv; or return $status
         set -l args
         if test -n $_flag_force
             set args $args --force
@@ -86,10 +161,30 @@ if status --is-interactive; and type -q git
                 gitweb
             case exit
                 exit
-            case 'web+exit'
+            case web+exit
                 gitweb; and exit
         end
     end
+
+    # rebase
+    function grb
+        argparse b/branch -- $argv; or return $status
+        __git_fetch_and_purge; or return $status
+        set -l branch
+        if test -n $_flag_branch
+            set branch $_flag_branch
+        else
+            set branch origin/master
+        end
+        git rebase --strategy=recursive --strategy-option=theirs $branch
+    end
+
+    # reset
+    function grmb
+        __git_fetch_and_purge; or return $status
+        git reset --soft $(git merge-base origin/master HEAD)
+    end
+
     # rev-parse
     function cdr
         cd (repo-root)
@@ -100,10 +195,12 @@ if status --is-interactive; and type -q git
     function repo-root
         git rev-parse --show-toplevel
     end
+
     # rm
     function grm
         git rm $argv
     end
+
     # stash
     function gst
         git stash $argv
@@ -114,15 +211,20 @@ if status --is-interactive; and type -q git
     function gstp
         git stash pop $argv
     end
+
     # status
     function gs
         git status $argv
     end
 
-    # all
+    # combined
+    function __git_create_and_push
+        argparse t/title= b/body= n/num= -- $argv; or return $status
+        __git_fetch_and_purge; or return $status
+    end
 
     # utilities
-    function __auto-msg
+    function __auto_msg
         echo (date "+%Y-%m-%d %H:%M:%S (%a)") ">" (hostname) ">" $USER
     end
 

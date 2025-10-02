@@ -24,9 +24,12 @@ config.window_padding = {
 }
 
 -- conditional
-
 if wezterm.hostname() == "DW-Swift" then
     config.font_size = 10.5 -- smaller
+end
+
+if wezterm.hostname() == "DW-Swift" then
+    config.font_size = 11.0 -- smaller
 end
 
 if wezterm.hostname() == "RH-MacBook" then
