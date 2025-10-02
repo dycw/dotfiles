@@ -23,8 +23,7 @@ if status --is-interactive; and type -q git
         if git diff --quiet; and git diff --cached --quiet
             return 0
         end
-        argparse m/message= n/no-verify -- $argv
-        or return
+        argparse m/message= n/no-verify -- $argv; or return $status
         set -l message
         if test -n $_flag_message
             set message $_flag_message
@@ -35,7 +34,15 @@ if status --is-interactive; and type -q git
         if test $_flag_no_verify
             set args $args --no-verify
         end
-        git commit --message="'$message'" $args
+        git commit --message="'$message'" $args; or return $status
+        switch $_flag_action
+            case web
+                gitweb
+            case exit
+                exit
+            case 'web+exit'
+                gitweb; and exit
+        end
     end
     # diff
     function gd
@@ -70,17 +77,28 @@ if status --is-interactive; and type -q git
     function gm
         git mv $argv
     end
+    # push
+    function __git_push
+        argparse f/force n/no-verify a/action -- $argv; or return
+        set -l args
+        if test -n $_flag_force
+            set args $args --force
+        end
+        set args $args --set-upstream origin (current-branch)
+        if test -n $_flag_no_verify
+            set args $args --no-verify
+        end
+        git push $args
+    end
     # rev-parse
     function cdr
-        set -l root (git-repo-root)
-        if test -n "$root"
-            cd $root
-        end
+        cd (repo-root)
     end
-    function git-repo-root
-        if git rev-parse --show-toplevel >/dev/null 2>&1
-            git rev-parse --show-toplevel
-        end
+    function current-branch
+        git rev-parse --abbrev-ref HEAD
+    end
+    function repo-root
+        git rev-parse --show-toplevel
     end
     # rm
     function grm
