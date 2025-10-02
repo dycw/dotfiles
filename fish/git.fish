@@ -35,14 +35,6 @@ if status --is-interactive; and type -q git
             set args $args --no-verify
         end
         git commit --message="'$message'" $args; or return $status
-        switch $_flag_action
-            case web
-                gitweb
-            case exit
-                exit
-            case 'web+exit'
-                gitweb; and exit
-        end
     end
     # diff
     function gd
@@ -89,6 +81,14 @@ if status --is-interactive; and type -q git
             set args $args --no-verify
         end
         git push $args
+        switch $_flag_action
+            case web
+                gitweb
+            case exit
+                exit
+            case 'web+exit'
+                gitweb; and exit
+        end
     end
     # rev-parse
     function cdr
