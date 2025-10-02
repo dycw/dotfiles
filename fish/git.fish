@@ -265,7 +265,7 @@ if status --is-interactive; and type -q gh
     function __github_create_or_edit
         argparse t/title= b/body= -- $argv; or return $status
         set -l action
-        if __github_pr_exists
+        if __github_exists
             set action edit
         else
             set action create
@@ -280,20 +280,7 @@ if status --is-interactive; and type -q gh
         gh pr $action $args
     end
 
-    function __github_is_merging
-        set -l branch (current-branch); or return $status
-        if test (gh pr view --json state | jq -r '.state') != OPEN
-            return 1
-        end
-        set -l repo (gh repo view --json nameWithOwner -q .nameWithOwner)
-        if gh api repos/$repo/branches/$branch ^/dev/null
-            return 0
-        else
-            return 1
-        end
-    end
-
-    function __github_pr_exists
+    function __github_exists
         set -l branch (current-branch); or return $status
         set -l num (gh pr list --head=$branch --json number --jq '. | length'); or return $status
         if test "$num" -eq 1
@@ -303,11 +290,38 @@ if status --is-interactive; and type -q gh
         end
     end
 
-    function __github_pr_view
+    function __github_merge
+        argparse a/action= -- $argv; or return $status
+        if not __github_exists
+            echo "'__github_merge' could not find an open PR for '$(current-branch)'"; and return 1
+        end
+        set -l start (date +%s)
+        gh pr merge --auto --delete-branch --squash; or return $status
+        while __github_merging
+            set -l elapsed (math (date +%s) - $start)
+            echo "$(repo_name)/$(current-branch) is still merging... ($elapsed s)"
+            sleep 1
+        end
+    end
+
+    function __github_merging
+        set -l branch (current-branch); or return $status
+        if test (gh pr view --json state | jq -r .state) != OPEN
+            return 1
+        end
+        set -l repo (gh repo view --json nameWithOwner -q .nameWithOwner)
+        if gh api repos/$repo/branches/$branch >/dev/null
+            return 0
+        else
+            return 1
+        end
+    end
+
+    function __github_view
         if gh pr ready
             gh pr view -w
         else
-            echo "'ghv' could not find an open PR for $(current-branch)"; and return 1
+            echo "'__github_view' could not find an open PR for $(current-branch)"; and return 1
         end
     end
 end
