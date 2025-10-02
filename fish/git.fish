@@ -175,52 +175,52 @@ if status --is-interactive; and type -q git
         __git_push
     end
     function gpf
-        __git_push -f
+        __git_push --force
     end
     function gpn
-        __git_push -n
+        __git_push --no-verify
     end
     function gpfn
-        __git_push -f -n
+        __git_push --force --no-verify
     end
     function gpw
-        __git_push -a=web
+        __git_push --web
     end
     function gpfw
-        __git_push -f -a=web
+        __git_push --force --web
     end
     function gpnw
-        __git_push -n -a=web
+        __git_push --no-verify --web
     end
     function gpfnw
-        __git_push -f -n -a=web
+        __git_push --force --no-verify --web
     end
     function gpe
-        __git_push -a=exit
+        __git_push --exit
     end
     function gpfe
-        __git_push -f -a=exit
+        __git_push --force --exit
     end
     function gpne
-        __git_push -n -a=exit
+        __git_push --no-verify --exit
     end
     function gpfne
-        __git_push -f -n -a=exit
+        __git_push --force --no-verify --exit
     end
     function gpx
-        __git_push -a=web+exit
+        __git_push --web --exit
     end
     function gpfx
-        __git_push -f -a=web+exit
+        __git_push --force --web --exit
     end
     function gpnx
-        __git_push -n -a=web+exit
+        __git_push --no-verify --web --exit
     end
     function gpfnx
-        __git_push -f -n -a=web+exit
+        __git_push --force --no-verify --web --exit
     end
     function __git_push
-        argparse f/force n/no-verify a/action= -- $argv; or return $status
+        argparse f/force n/no-verify w/web e/exit -- $argv; or return $status
         set -l args
         if test -n "$_flag_force"
             set args $args --force
@@ -230,13 +230,11 @@ if status --is-interactive; and type -q git
             set args $args --no-verify
         end
         git push $args; or return $status
-        switch $_flag_action
-            case web
-                gitweb
-            case exit
-                exit
-            case web+exit
-                gitweb; and exit
+        if test -n "$_flag_web"
+            gitweb
+        end
+        if test -n "$_flag_exit"
+            exit
         end
     end
 
