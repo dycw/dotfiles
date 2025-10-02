@@ -1,8 +1,4 @@
 {
-  "LuaSnip": {
-    "branch": "master",
-    "commit": "458560534a73f7f8d7a11a146c801db00b081df0"
-  },
   "adjacent.nvim": {
     "branch": "main",
     "commit": "a555ab92d61aa6fbbfa1bfaef4633b663563f04e"
@@ -42,6 +38,10 @@
   "flit.nvim": {
     "branch": "main",
     "commit": "513e38abe61237c53a9e983e45595b1d2e7d5391"
+  },
+  "friendly-snippets": {
+    "branch": "main",
+    "commit": "572f5660cf05f8cd8834e096d7b4c921ba18e175"
   },
   "gitsigns.nvim": {
     "branch": "main",
