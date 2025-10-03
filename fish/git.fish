@@ -137,7 +137,26 @@ if status --is-interactive; and type -q git
 
     # clone
     function gcl
-        git clone --recurse-submodules $argv
+        if test (count $argv) -eq 0
+            echo "'gcl' expected [1..) arguments REPO DIR; got $(count $argv)" >&2; and return 1
+        end
+        set -l repo $argv[1]
+        set -l dir
+        if test (count $argv) -eq 1
+            set dir (basename (string replace -r '\.git$' '' -- $repo))
+        else
+            set dir $argv[2]
+        end
+        git clone --recurse-submodules $repo $dir; or return $status
+        set -l current (pwd)
+        cd $dir
+        if type -q pre-commit
+            pre-commit install; or return $status
+        end
+        if type -q direnv
+            direnv allow .; or return $status
+        end
+        cd $current
     end
 
     # commit

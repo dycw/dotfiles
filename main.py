@@ -831,8 +831,8 @@ def _setup_symlink(path_from: Path | str, path_to: Path | str, /) -> None:
     path_from.symlink_to(path_to)
 
 
-def _to_path(path: Path | str, /) -> Path:
-    return Path(path).expanduser()
+def _to_path(*parts: Path | str) -> Path:
+    return Path(*parts).expanduser()
 
 
 def _unlink(path: Path | str, /) -> None:
