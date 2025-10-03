@@ -27,7 +27,7 @@ return {
             callback = function(event)
                 local map = function(keys, func, desc, mode)
                     mode = mode or "n"
-                    v.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+                    v.keymap.set(mode, keys, func, { buffer = event.buf, desc = desc })
                 end
                 map("zj", function()
                     v.diagnostic.jump({ count = 1, float = true })
@@ -37,7 +37,7 @@ return {
                 end, "previous diagnostic")
                 map("L", function()
                     v.diagnostic.open_float(nil, { scope = "line" })
-                end, "diagnostic [f]loat")
+                end, "diagnostic [l]ine")
                 map("<Leader>ca", v.lsp.buf.code_action, "code [a]ction", { "n", "x" })
                 map("gD", v.lsp.buf.declaration, "[d]eclaration")
                 map("<Leader>rn", v.lsp.buf.rename, "re[n]ame")
