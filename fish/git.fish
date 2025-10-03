@@ -202,7 +202,7 @@ if status --is-interactive; and type -q git
         if test -n "$_flag_no_verify"
             set args $args --no-verify
         end
-        for i in (seq 0 4) # @fish-lsp-disable
+        for i in (seq 0 2) # @fish-lsp-disable
             ga $argv; or return $status
             if __git_commit $args
                 return 0
