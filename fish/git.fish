@@ -247,17 +247,23 @@ if status --is-interactive; and type -q git
 
     # log
     function gl
-        set -l args --abbrev-commit --decorate=short --pretty='format:%C(red)%h%C(reset) | %C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)'
-        set -l n
+        set -l args
         if test (count $argv) -eq 0
-            set n 20
+            set args $args -n 20
         else if string match -qr '^[0-9]+$' -- $argv[1]; and test $argv[1] -gt 0
-            set n $argv[1]
+            set args $args -n $argv[1]
         end
-        if set -q n
-            set args $args --max-count=$n
+        __git_log $args
+    end
+    function __git_log
+        argparse n= -- $argv; or return $status
+        set -l args
+        if test -n $_flag_n
+            set args $args --max-count=$_flag_n
         end
-        git log $args
+        git log --abbrev-commit --decorate=short \
+            --pretty='format:%C(red)%h%C(reset) | %C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)' \
+            $args
     end
 
     # mv
@@ -405,7 +411,13 @@ if status --is-interactive; and type -q git
 
     # rm
     function grm
-        git rm $argv
+        __git_rm $argv
+    end
+    function grmc
+        __git_rm $argv --cached
+    end
+    function __git_rm
+        git rm -rf $argv
     end
 
     # stash
@@ -425,6 +437,36 @@ if status --is-interactive; and type -q git
     end
     function wgs
         watch -d -n 1 -- 'printf "########## status ##########\n\n"; git status --short; printf "\n########## diff ##########\n\n"; git diff --stat'
+    end
+
+    # submodule
+    function gsu
+        git submodule foreach --recursive 'git checkout master && git pull --ff-only'
+    end
+
+    # tag
+    function gta
+        if test (math (count $argv) % 2) -ne 0
+            echo "'gta' accepts an even number of arguments; got (count $argv)" >&2; and return 1
+        end
+
+        while test (count $argv) -gt 0
+            set -l tag $argv[1]
+            set -l sha $argv[2]
+
+            git tag -a "$tag" "$sha" -m "$tag"; or return $status
+            git push --set-upstream origin --tags; or return $status
+
+            set argv $argv[3..-1]
+        end
+
+        gl 20
+    end
+
+    function gtd
+        git tag --delete $argv; or return $status
+        git push --delete origin $argv; or return $status
+        gl 20
     end
 
     # all
@@ -491,121 +533,121 @@ if status --is-interactive; and type -q git
     #
     function ggc
         if test (count $argv) -lt 1
-            echo "'ggc' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggc' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] $argv[2..]
     end
     function ggcf
         if test (count $argv) -lt 1
-            echo "'ggcf' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcf' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --force $argv[2..]
     end
     function ggcn
         if test (count $argv) -lt 1
-            echo "'ggcn' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcn' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --no-verify $argv[2..]
     end
     function ggcfn
         if test (count $argv) -lt 1
-            echo "'ggcfn' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcfn' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --force --no-verify $argv[2..]
     end
     function ggcw
         if test (count $argv) -lt 1
-            echo "'ggcw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcw' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --web $argv[2..]
     end
     function ggcfw
         if test (count $argv) -lt 1
-            echo "'ggcfw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcfw' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --force --web $argv[2..]
     end
     function ggcnw
         if test (count $argv) -lt 1
-            echo "'ggcnw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcnw' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --no-verify --web $argv[2..]
     end
     function ggcfnw
         if test (count $argv) -lt 1
-            echo "'ggcfnw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcfnw' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --force --no-verify --web $argv[2..]
     end
     function ggce
         if test (count $argv) -lt 1
-            echo "'ggce' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggce' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --exit $argv[2..]
     end
     function ggcfe
         if test (count $argv) -lt 1
-            echo "'ggcfe' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcfe' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --force --exit $argv[2..]
     end
     function ggcne
         if test (count $argv) -lt 1
-            echo "'ggcne' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcne' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --no-verify --exit $argv[2..]
     end
     function ggcfne
         if test (count $argv) -lt 1
-            echo "'ggcfne' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcfne' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --force --no-verify --exit $argv[2..]
     end
     function ggcm
         if test (count $argv) -lt 1
-            echo "'ggcm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcm' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --merge $argv[2..]
     end
     function ggcfm
         if test (count $argv) -lt 1
-            echo "'ggcfm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcfm' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --force --merge $argv[2..]
     end
     function ggcnm
         if test (count $argv) -lt 1
-            echo "'ggcnm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcnm' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --no-verify --merge $argv[2..]
     end
     function ggcfnm
         if test (count $argv) -lt 1
-            echo "'ggcfnm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcfnm' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --force --no-verify --merge $argv[2..]
     end
     function ggcx
         if test (count $argv) -lt 1
-            echo "'ggcx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcx' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --merge --exit $argv[2..]
     end
     function ggcfx
         if test (count $argv) -lt 1
-            echo "'ggcfx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcfx' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --force --merge --exit $argv[2..]
     end
     function ggcnx
         if test (count $argv) -lt 1
-            echo "'ggcnx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcnx' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --no-verify --merge --exit $argv[2..]
     end
     function ggcfnx
         if test (count $argv) -lt 1
-            echo "'ggcfnx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+            echo "'ggcfnx' expected [1..) arguments TITLE got $(count $argv)" >&2; and return 1
         end
         __git_all --title=$argv[1] --force --no-verify --merge --exit $argv[2..]
     end
@@ -671,7 +713,8 @@ if status --is-interactive; and type -q git
         else if test (count $argv) -eq 2
             set args $args --title $argv[1] --num $argv[2]
         else
-            echo "'ghc' expected [0..2] arguments TITLE NUM; got $(count $argv)" >&2; and return 1
+            echo "'ghc' expected [0..2] arguments TITLE NUM
+got $(count $argv)" >&2; and return 1
         end
         __github_or_gitlab_create $args
     end
@@ -693,13 +736,15 @@ if status --is-interactive; and type -q git
             end
             __gitlab_create $args
         else
-            echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
+            echo "Invalid remote
+got '$(remote-name)'" >&2; and return 1
         end
     end
 
     function ghe
         if test (count $argv) -lt 1
-            echo "'ghe' expected [1..) arguments -t/--title or -b/--body; got $(count $argv)" >&2; and return 1
+            echo "'ghe' expected ) arguments -t/--title or -b/--body
+got $(count $argv)" >&2; and return 1
         end
         argparse t/title= b/body= -- $argv; or return $status
         set -l args
@@ -717,7 +762,8 @@ if status --is-interactive; and type -q git
             end
             __gitlab_update $args
         else
-            echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
+            echo "Invalid remote
+got '$(remote-name)'" >&2; and return 1
         end
     end
     function ghm
@@ -737,7 +783,8 @@ if status --is-interactive; and type -q git
         else if __remote_is_github
             __gitlab_merge $args
         else
-            echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
+            echo "Invalid remote
+got '$(remote-name)'" >&2; and return 1
         end
     end
 
@@ -747,7 +794,8 @@ if status --is-interactive; and type -q git
     end
     function __clean_branch_name
         if test (count $argv) -lt 1
-            echo "'__clean_branch_name' expected [1..) arguments BRANCH; got $(count $argv)" >&2; and return 1
+            echo "'__clean_branch_name' expected ) arguments BRANCH
+got $(count $argv)" >&2; and return 1
         end
         echo $argv[1] | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' \
             | sed -E 's/^-+|-+$//g' | cut -c1-80
@@ -817,11 +865,13 @@ if status --is-interactive; and type -q gh; and type -q jq
         set -l branch (current-branch); or return $status
         set -l num (gh pr list --head=$branch --json number --jq '. | length'); or return $status
         if test $num -eq 0
-            echo "'__github_exists' expected a PR for '$branch'; got none" >&2; and return 1
+            echo "'__github_exists' expected a PR for '$branch'
+got none" >&2; and return 1
         else if test $num -eq 1
             return 0
         else
-            echo "'__github_exists' expected a unique PR for '$branch'; got $num" >&2; and return 1
+            echo "'__github_exists' expected a unique PR for '$branch'
+got $num" >&2; and return 1
         end
     end
 
@@ -879,11 +929,13 @@ if status --is-interactive; and type -q glab; and type -q jq
         set -l json (glab mr list --output=json --source-branch=$branch); or return $status
         set -l num (printf "%s" "$json" | jq length); or return $status
         if test $num -eq 0
-            echo "'__gitlab_mr_json' expected an MR for '$branch'; got none" >&2; and return 1
+            echo "'__gitlab_mr_json' expected an MR for '$branch'
+got none" >&2; and return 1
         else if test $num -eq 1
             printf "%s" "$json" | jq '.[0]' | jq
         else
-            echo "'__gitlab_mr_json' expected a unique MR for '$branch'; got $num" >&2; and return 1
+            echo "'__gitlab_mr_json' expected a unique MR for '$branch'
+got $num" >&2; and return 1
         end
     end
 end
