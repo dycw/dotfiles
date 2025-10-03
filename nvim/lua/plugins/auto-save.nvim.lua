@@ -5,8 +5,13 @@ local api = v.api
 
 return {
     "okuuva/auto-save.nvim", -- forked from pocco81/auto-save.nvim
-    cmd = "ASToggle",
     config = function()
+        require("auto-save").setup({
+            debounce_delay = 10,
+        })
+        require("utilities").keymap_set("n", "<leader>as", function()
+            require("auto-save").toggle()
+        end, "auto [s]ave")
         local group = api.nvim_create_augroup("autosave", {})
         api.nvim_create_autocmd("User", {
             pattern = "AutoSaveEnable",
@@ -15,7 +20,6 @@ return {
                 v.notify("AutoSave enabled", v.log.levels.INFO)
             end,
         })
-
         api.nvim_create_autocmd("User", {
             pattern = "AutoSaveDisable",
             group = group,
@@ -24,18 +28,5 @@ return {
             end,
         })
     end,
-    event = { "InsertLeave", "TextChanged" },
-    keys = {
-        {
-            "<Leader>as",
-            function()
-                require("auto-save").toggle()
-            end,
-            desc = "auto [s]ave",
-        },
-    },
-    opts = {
-        debounce_delay = 10,
-    },
-    version = "^1.0.0",
+    -- N.B.: do not try to put any other keys in this dict, it won't work
 }
