@@ -1,3 +1,5 @@
+#!/usr/bin/env fish
+
 if status --is-interactive; and type -q git
     function fish-git
         $EDITOR $XDG_CONFIG_HOME/fish/conf.d/git.fish
