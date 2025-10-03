@@ -783,15 +783,6 @@ if command -v git >/dev/null 2>&1; then
 		[ $# -ne 0 ] && echo_date "'__tree_is_clean' accepts no arguments; got $#" && return 1
 		[ -z "$(git status --porcelain)" ]
 	}
-	# stash
-	gst() { git stash "$@"; }
-	gstd() { git stash drop "$@"; }
-	gstp() { git stash pop "$@"; }
-	# submodules
-	gsu() {
-		[ $# -ne 0 ] && echo_date "'gsub_update' accepts no arguments; got $#" && return 1
-		git submodule foreach --recursive 'git checkout master && git pull --ff-only'
-	}
 	# tag
 	gta() {
 		[ $(($# % 2)) -ne 0 ] && echo_date "'gta' accepts an even number of arguments; got $#" && return 1
