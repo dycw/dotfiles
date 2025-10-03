@@ -56,6 +56,7 @@ class _Settings:
     sops: bool
     spotify: bool
     stylua: bool
+    syncthing: bool
     tailscale: bool
     tmux: bool
     verbose: bool
@@ -158,6 +159,9 @@ class _Settings:
             "-st", "--stylua", action="store_true", help="Install 'stylua'."
         )
         _ = parser.add_argument(
+            "-sy", "--syncthing", action="store_true", help="Install 'syncthing'."
+        )
+        _ = parser.add_argument(
             "-ta", "--tailscale", action="store_true", help="Install 'tailscale'."
         )
         _ = parser.add_argument(
@@ -246,6 +250,8 @@ def main(settings: _Settings, /) -> None:
         _install_sops()
     if settings.stylua:
         _install_stylua()
+    if settings.syncthing:
+        _install_syncthing()
     if settings.tmux:
         _install_tmux()
     if settings.yq:
@@ -611,6 +617,14 @@ def _install_stylua() -> None:
         zfh.extractall(temp_dir)
         (path_from,) = _to_path(temp_dir).iterdir()
         _copyfile(path_from, path_to, executable=True)
+
+
+def _install_syncthing() -> None:
+    if _have_command("syncthing"):
+        _LOGGER.debug("'syncthing' is already installed")
+        return
+    _LOGGER.info("Installing 'syncthing'...")
+    _apt_install("syncthing")
 
 
 def _install_tailscale() -> None:
