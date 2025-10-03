@@ -483,7 +483,16 @@ if status --is-interactive; and type -q git
         git status $argv
     end
     function wgs
-        watch -d -- 'printf "########## status ##########\n\n"; git status --short; printf "\n########## diff ##########\n\n"; git diff --stat'
+        watch -n3 -- '
+            printf "########## status ##########\n\n"
+            git status --short
+            printf "\n"
+            printf "########## diff   ##########\n\n"
+            git diff --stat
+            printf "\n"
+            printf "########## github ##########\n"
+            gh pr status
+        '
     end
 
     # submodule
