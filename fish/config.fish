@@ -93,6 +93,15 @@ if status is-interactive
         fzf --fish | source
     end
 
+    # homebrew
+    set -l brew_path
+    if test -d /opt/homebrew/bin
+        fish_add_path /opt/homebrew/bin
+        if type -q brew
+            brew shellenv | source
+        end
+    end
+
     # local
     if test -f $HOME/local.fish
         source $HOME/local.fish
@@ -136,6 +145,14 @@ if status is-interactive
         end
         function pca
             pre-commit run --all-files
+        end
+    end
+
+    # ripgrep
+    if type -q rg
+        set -l ripgreprc $XDG_CONFIG_HOME/ripgrep/ripgreprc
+        if test -f $ripgreprc
+            export RIPGREP_CONFIG_PATH=$ripgreprc
         end
     end
 
