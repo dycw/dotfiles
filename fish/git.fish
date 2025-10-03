@@ -390,8 +390,14 @@ if status --is-interactive; and type -q git
     function grbc
         git rebase --continue $argv
     end
+    function grbs
+        git rebase --skip $argv
+    end
 
     # remote
+    function gre
+        git remote -v
+    end
     function remote-name
         git remote get-url origin
     end
@@ -425,7 +431,7 @@ if status --is-interactive; and type -q git
     function grp
         git reset --patch $argv
     end
-    function grmb
+    function gsq
         __git_fetch_and_purge; or return $status
         git reset --soft $(git merge-base origin/master HEAD)
     end
