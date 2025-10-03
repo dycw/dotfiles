@@ -21,19 +21,19 @@ if status is-interactive
     function ....
         cd ../../..
     end
-    function cd-config
+    function cdconfig
         cd $XDG_CONFIG_HOME
     end
-    function cd-db
+    function cddb
         cd $HOME/Dropbox
     end
-    function cd-dbt
+    function cddbt
         cd $HOME/Dropbox/Temporary
     end
-    function cd-df
+    function cddf
         cd $HOME/dotfiles
     end
-    function cd-dl
+    function cddl
         cd $HOME/Downloads
     end
     function cdh
@@ -43,11 +43,6 @@ if status is-interactive
     end
     function cdw
         cd $HOME/work
-    end
-
-    # direnv
-    if type -q direnv
-        direnv hook fish | source
     end
 
     # eza
@@ -78,21 +73,12 @@ if status is-interactive
         end
     end
 
-    # fzf
-    if type -q fzf
-        fzf --fish | source
-    end
-
     # local
     if test -f $HOME/local.fish
         source $HOME/local.fish
     end
     if test -f $HOME/work/infra/shell/fish.fish
         source $HOME/work/infra/shell/fish.fish
-    end
-
-    # macchanger
-    if type -q macchanger
     end
 
     # neovim
@@ -108,9 +94,6 @@ if status is-interactive
         end
     end
     if type -q nvim
-        set -gx EDITOR nvim
-        set -gx VISUAL nvim
-
         function n
             nvim $argv
         end
@@ -129,17 +112,17 @@ if status is-interactive
         end
     end
 
+    # python
+    function fish-config
+        $EDITOR $XDG_CONFIG_HOME/fish/config.fish
+    end
+
     # ssh
     function ssh-mac
         ssh derekwan@dw-mac
     end
     function ssh-swift
         ssh derek@dw-swift
-    end
-
-    # starship
-    if type -q starship
-        starship init fish | source
     end
 
     # tailscale
@@ -188,18 +171,8 @@ if status is-interactive
 
     # vim
     if type -q vim
-        if not type -q nvim
-            set -gx EDITOR vim
-            set -gx VISUAL vim
-        end
-
         function v
             vim $argv
         end
-    end
-
-    # zoxide
-    if type -q zoxide
-        zoxide init --cmd j fish | source
     end
 end
