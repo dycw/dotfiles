@@ -249,20 +249,6 @@ if (command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1) && command
 	}
 fi
 
-# gh + watch
-if command -v gh >/dev/null 2>&1 && command -v watch >/dev/null 2>&1; then
-	ghs() {
-		[ $# -ne 0 ] && echo_date "'ghs' accepts no arguments; got $#" && return 1
-		if __is_github; then
-			watch -d -n 1.0 'gh pr status'
-		elif __is_gitlab; then
-			echo_date "'ghs' must be for GitHub" && return 1
-		else
-			echo_date "'ghs' impossible case" && return 1
-		fi
-	}
-fi
-
 # glab
 if command -v glab >/dev/null 2>&1; then
 	__glab_mr_json() {
