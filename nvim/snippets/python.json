@@ -88,7 +88,7 @@
     "prefix": "data-object"
   },
   "from ... import ... (tests)": {
-    "body": "from hypothesis import HealthCheck, Phase, given, reproduce_failure, settings\nfrom pytest import RaisesGroup, approx, fixture, mark, param, raises, skip\nfrom pytest_benchmark.fixture import BenchmarkFixture\nfrom pytest_lazy_fixtures import lf\nfrom pytest_regressions.dataframe_regression import DataFrameRegressionFixture\nfrom utilities.contextvars import set_global_breakpoint",
+    "body": "from typing import TYPE_CHECKING\nfrom hypothesis import HealthCheck, Phase, given, reproduce_failure, settings\nfrom pytest import RaisesGroup, approx, fixture, mark, param, raises, skip\nfrom utilities.contextvars import set_global_breakpoint\n\nif TYPE_CHECKING:\n    from pytest_benchmark.fixture import BenchmarkFixture\n    from pytest_lazy_fixtures import lf\n    from pytest_regressions.dataframe_regression import DataFrameRegressionFixture\n",
     "prefix": "im-tests"
   },
   "from __future__ import ...": {
