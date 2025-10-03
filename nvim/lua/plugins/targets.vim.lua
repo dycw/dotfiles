@@ -1,9 +1,4 @@
 return {
-    "chrisgrieser/nvim-various-textobjs",
+    "wellle/targets.vim",
     event = "VeryLazy",
-    opts = {
-        keymaps = {
-            useDefaults = true,
-        },
-    },
 }
