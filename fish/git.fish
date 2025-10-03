@@ -483,21 +483,18 @@ if status --is-interactive; and type -q git
         git status $argv
     end
     function wg
-        watch -n3 -- '
-            printf "❯❯❯❯ status\n\n"
+        watch --interval 2 --no-title --no-wrap -- '
+            echo "==== status ==================================================================="
             git status --short
-            printf "\n"
             if ! git diff --quiet; then
-                printf "❯❯❯❯ diff\n\n"
+                printf "\n==== diff =====================================================================\n"
                 git diff --stat
-                printf "\n"
             fi
             if ! git diff origin/master --quiet; then
-                printf "❯❯❯❯ diff o/m\n\n"
+                printf "\n==== diff origin/master =======================================================\n"
                 git diff origin/master --stat
-                printf "\n"
             fi
-            printf "❯❯❯❯ github\n"
+            printf "\n==== github ==================================================================="
             gh pr status
         '
     end
