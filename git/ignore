@@ -2,4 +2,5 @@
 **/.env
 **/.mode.sw*
 **/.ruff_cache/
+**/.swp
 **/node_modules/
