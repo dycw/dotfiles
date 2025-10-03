@@ -1,18 +1,16 @@
+local esc = "<Esc>"
+local j_or_k = { j = esc, k = esc }
+local jk_or_kj = { j = { k = esc }, k = { j = esc } }
+
 return {
     "max397574/better-escape.nvim",
-    config = function()
-        local esc = "<Esc>"
-        local same = { j = esc, k = esc }
-        local diff = { j = { k = esc }, k = { j = esc } }
-        require("better_escape").setup({
-            mappings = {
-                i = { j = same, k = same },
-                c = diff,
-                t = diff,
-                v = diff,
-                s = diff,
-            },
-        })
-    end,
-    event = "VeryLazy",
+    opts = {
+        mappings = {
+            i = { j = j_or_k, k = j_or_k },
+            c = jk_or_kj,
+            t = jk_or_kj,
+            v = jk_or_kj,
+            s = jk_or_kj,
+        },
+    },
 }
