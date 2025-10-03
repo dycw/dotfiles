@@ -484,13 +484,16 @@ if status --is-interactive; and type -q git
     end
     function wgs
         watch -n3 -- '
-            printf "########## status ##########\n\n"
+            printf "########## status   ##########\n\n"
             git status --short
             printf "\n"
-            printf "########## diff   ##########\n\n"
+            printf "########## diff     ##########\n\n"
             git diff --stat
             printf "\n"
-            printf "########## github ##########\n"
+            printf "########## diff o/m ##########\n\n"
+            git diff --stat
+            printf "\n"
+            printf "########## github   ##########\n"
             gh pr status
         '
     end
