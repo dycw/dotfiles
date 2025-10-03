@@ -135,9 +135,9 @@
     "branch": "master",
     "commit": "42fc28ba918343ebfd5565147a42a26580579482"
   },
-  "nvim-various-textobjs": {
-    "branch": "main",
-    "commit": "237763835b65bdc64f0e19a31c040321813e4333"
+  "nvim-treesitter-textobjects": {
+    "branch": "master",
+    "commit": "71385f191ec06ffc60e80e6b0c9a9d5daed4824c"
   },
   "nvim-web-devicons": {
     "branch": "master",
@@ -158,6 +158,10 @@
   "sort.nvim": {
     "branch": "main",
     "commit": "bb92140e1b96d62339bd5ab5b6df1eecca0d5da6"
+  },
+  "targets.vim": {
+    "branch": "master",
+    "commit": "6325416da8f89992b005db3e4517aaef0242602e"
   },
   "telescope-file-browser.nvim": {
     "branch": "master",
