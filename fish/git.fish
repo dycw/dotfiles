@@ -483,16 +483,16 @@ if status --is-interactive; and type -q git
         git status $argv
     end
     function wg
-        watch --interval 2 --no-title --no-wrap -- '
+        watch --color --interval 2 --no-title --no-wrap -- '
             echo "==== status ==================================================================="
-            git status --short
+            git -c color.ui=always status --short
             if ! git diff --quiet; then
                 printf "\n==== diff =====================================================================\n"
-                git diff --stat
+                git -c color.ui=always diff --stat
             fi
             if ! git diff origin/master --quiet; then
                 printf "\n==== diff origin/master =======================================================\n"
-                git diff origin/master --stat
+                git -c color.ui=always diff origin/master --stat
             fi
             printf "\n==== github ==================================================================="
             gh pr status
