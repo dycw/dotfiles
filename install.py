@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-# ruff: noqa: C901,E501,S310,PLR0912,PLR0915,S602,S603,S607
+# ruff: noqa: C901, E501, S310, PLR0912, PLR0915, S602
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
-from os import environ
+from os import environ, geteuid
 from pathlib import Path
 from re import search
 from shutil import copyfile, which
@@ -36,6 +36,7 @@ class _Settings:
     caffeine: bool
     delta: bool
     direnv: bool
+    docker: bool
     dust: bool
     eza: bool
     fd_find: bool
@@ -99,6 +100,9 @@ class _Settings:
         )
         _ = parser.add_argument(
             "-di", "--direnv", action="store_true", help="Install 'direnv'."
+        )
+        _ = parser.add_argument(
+            "-do", "--docker", action="store_true", help="Install 'docker'."
         )
         _ = parser.add_argument(
             "-du", "--dust", action="store_true", help="Install 'dust'."
@@ -278,6 +282,8 @@ def main(settings: _Settings, /) -> None:
         _install_zoxide()
 
     _install_uv()  # after curl
+    if settings.docker:
+        _install_docker()  # after curl
     if settings.spotify:
         _install_spotify()  # after curl
     if settings.tailscale:
@@ -378,6 +384,37 @@ def _install_direnv() -> None:
         )
 
 
+def _install_docker() -> None:
+    if _have_command("docker"):
+        _LOGGER.debug("'docker' is already installed")
+        return
+    _LOGGER.info("Installing 'docker'...")
+    packages = [
+        "docker.io",
+        "docker-doc",
+        "docker-compose",
+        "podman-docker",
+        "containerd",
+        "runc",
+    ]
+    _run_commands(*(f"sudo apt-get remove {p}" for p in packages))
+    _apt_install("ca-certificates", "curl")
+    _run_commands(
+        "sudo install -m 0755 -d /etc/apt/keyrings",
+        "sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc",
+        "sudo chmod a+r /etc/apt/keyrings/docker.asc",
+        'echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null',
+    )
+    _apt_install(
+        "docker-ce",
+        "docker-ce-cli",
+        "containerd.io",
+        "docker-buildx-plugin",
+        "docker-compose-plugin",
+    )
+    _run_commands("sudo usermod -aG docker $USER")
+
+
 def _install_dust() -> None:
     if _have_command("dust"):
         _LOGGER.debug("'dust' is already installed")
@@ -407,20 +444,16 @@ def _install_fish() -> None:
         _LOGGER.debug("'fish' is already installed")
     else:
         _LOGGER.info("Installing 'fish'...")
-        _ = check_call(
+        _run_commands(
             """echo 'deb http://download.opensuse.org/repositories/shells:/fish/Debian_13/ /' | sudo tee /etc/apt/sources.list.d/shells:fish.list""",
-            shell=True,
-        )
-        _ = check_call(
             """curl -fsSL https://download.opensuse.org/repositories/shells:fish/Debian_13/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish.gpg > /dev/null""",
-            shell=True,
         )
         _apt_install("fish")
     if search(r"/fish$", environ["SHELL"]):
         _LOGGER.debug("'fish' is already the default shell")
     else:
         _LOGGER.info("Setting 'fish' to be the default shell")
-        _ = check_call("""sudo chsh -s $(which fish)""", shell=True)
+        _ = _run_commands("sudo chsh -s $(which fish)")
     _setup_symlink(
         "~/.config/fish/config.fish", f"{_get_script_dir()}/fish/config.fish"
     )
@@ -516,7 +549,7 @@ def _install_neovim() -> None:
             "https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage"
         ) as appimage:
             _set_executable(appimage)
-            _ = check_call(f"sudo mv {appimage} {path_to}")
+            _run_commands(f"sudo mv {appimage} {path_to}")
     _setup_symlink("~/.config/nvim", f"{_get_script_dir()}/nvim")
 
 
@@ -608,13 +641,9 @@ def _install_spotify() -> None:
         return
     _install_curl()
     _LOGGER.info("Installing 'spotify'...")
-    _ = check_call(
+    _run_commands(
         "curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg",
-        shell=True,
-    )
-    _ = check_call(
         'echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list',
-        shell=True,
     )
     _apt_install("spotify-client")
 
@@ -660,7 +689,7 @@ def _install_tailscale() -> None:
         return
     _LOGGER.info("Installing 'tailscale'...")
     _install_curl()
-    _ = check_call("curl -fsSL https://tailscale.com/install.sh | sh", shell=True)
+    _run_commands("curl -fsSL https://tailscale.com/install.sh | sh")
 
 
 def _install_tmux() -> None:
@@ -685,7 +714,7 @@ def _install_uv() -> None:
         return
     _install_curl()
     _LOGGER.info("Installing 'uv'...")
-    _ = check_call("curl -LsSf https://astral.sh/uv/install.sh | sh", shell=True)
+    _run_commands("curl -LsSf https://astral.sh/uv/install.sh | sh")
 
 
 def _install_wezterm() -> None:
@@ -694,16 +723,10 @@ def _install_wezterm() -> None:
     else:
         _install_curl()
         _LOGGER.info("Installing 'wezterm'...")
-        _ = check_call(
+        _run_commands(
             "curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg",
-            shell=True,
-        )
-        _ = check_call(
             "echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list",
-            shell=True,
-        )
-        _ = check_call(
-            "sudo chmod 644 /usr/share/keyrings/wezterm-fury.gpg", shell=True
+            "sudo chmod 644 /usr/share/keyrings/wezterm-fury.gpg",
         )
         _apt_install("wezterm")
     _setup_symlink(
@@ -724,11 +747,7 @@ def _install_zoom() -> None:
         _LOGGER.debug("'zoom' is already installed")
         return
     _LOGGER.info("Installing 'zoom'...")
-    _apt_install(
-        "libxcb-xinerama0",
-        "libxcb-xtest0",
-        "libxcb-cursor0",
-    )
+    _apt_install("libxcb-xinerama0", "libxcb-xtest0", "libxcb-cursor0")
     _dpkg_install("zoom_amd64.deb")
 
 
@@ -790,18 +809,9 @@ def _setup_ssh_keys_core(path_from: Path | str, /) -> None:
 def _setup_sshd() -> None:
     path = _to_path("/etc/ssh/sshd_config")
     for from_, to in [
-        (
-            "#PermitRootLogin prohibit-password",
-            "PermitRootLogin no",
-        ),
-        (
-            "#PubkeyAuthentication yes",
-            "PubkeyAuthentication yes",
-        ),
-        (
-            "#PasswordAuthentication yes",
-            "PasswordAuthentication no",
-        ),
+        ("#PermitRootLogin prohibit-password", "PermitRootLogin no"),
+        ("#PubkeyAuthentication yes", "PubkeyAuthentication yes"),
+        ("#PasswordAuthentication yes", "PasswordAuthentication no"),
     ]:
         _replace_line(path, from_, to)
 
@@ -811,11 +821,11 @@ def _setup_sshd() -> None:
 
 def _apt_install(*packages: str) -> None:
     _LOGGER.info("Updating 'apt'...")
-    _ = check_call("sudo apt -y update", shell=True)
+    _run_commands("sudo apt -y update")
     desc = ", ".join(map(repr, packages))
     _LOGGER.info("Installing %s...", desc)
     joined = " ".join(packages)
-    _ = check_call(f"sudo apt -y install {joined}", shell=True)
+    _run_commands(f"sudo apt -y install {joined}")
 
 
 def _copyfile(path_from: Path, path_to: Path, /, *, executable: bool = False) -> None:
@@ -833,7 +843,7 @@ def _download(url: str, path: Path | str, /) -> None:
 
 
 def _dpkg_install(path: Path | str, /) -> None:
-    _ = check_call(f"sudo dpkg -i {path}", shell=True)
+    _run_commands(f"sudo dpkg -i {path}")
 
 
 def _get_latest_tag(owner: str, repo: str, /) -> str:
@@ -858,8 +868,12 @@ def _have_command(cmd: str, /) -> bool:
     return which(cmd) is not None
 
 
-def _luarocks_install(cmd: str, /) -> None:
-    _ = check_call(f"sudo luarocks install {cmd}", shell=True)
+def _is_root() -> bool:
+    return geteuid() == 0
+
+
+def _luarocks_install(package: str, /) -> None:
+    _run_commands(f"sudo luarocks install {package}")
 
 
 def _replace_line(path: Path | str, from_: str, to: str, /) -> None:
@@ -869,7 +883,14 @@ def _replace_line(path: Path | str, from_: str, to: str, /) -> None:
         _LOGGER.debug("%r not found in %r", from_, str(path))
         return
     _LOGGER.info("Replacing %r -> %r in %r", from_, to, str(path))
-    _ = check_call(f"sudo sed -i 's|{from_}|{to}|' {path}", shell=True)
+    _run_commands(f"sudo sed -i 's|{from_}|{to}|' {path}")
+
+
+def _run_commands(*cmds: str) -> None:
+    is_root = _is_root()
+    for cmd in cmds:
+        cmd_use = cmd.replace("sudo", "") if is_root else cmd
+        _ = check_call(cmd_use, shell=True)
 
 
 def _set_executable(path: Path | str, /) -> None:
@@ -905,10 +926,8 @@ def _unlink(path: Path | str, /) -> None:
 
 
 def _update_submodules() -> None:
-    _LOGGER.info(
-        "Updating submodules...",
-    )
-    _ = check_call("git submodule update", shell=True)
+    _LOGGER.info("Updating submodules...")
+    _run_commands("git submodule update")
 
 
 def _uv_tool_install(tool: str, /) -> None:
@@ -917,7 +936,7 @@ def _uv_tool_install(tool: str, /) -> None:
         return
     _install_uv()
     _LOGGER.info("Installing %r...", tool)
-    _ = check_call(f"uv tool install {tool}", shell=True)
+    _run_commands(f"uv tool install {tool}")
 
 
 @contextmanager

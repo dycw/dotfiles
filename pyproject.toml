@@ -10,7 +10,7 @@ version = "0.0.0"
 # bump-my-version
 [tool.bumpversion]
 allow_dirty = true
-current_version = "0.3.39"
+current_version = "0.3.40"
 
 # pyright
 [tool.pyright]
@@ -35,7 +35,13 @@ extend-exclude = ["dotbot"]
 target-version = "py311"
 unsafe-fixes = true
 
+[tool.ruff.format]
+preview = true
+skip-magic-trailing-comma = true
+
 [tool.ruff.lint]
+explicit-preview-rules = true
+fixable = ["ALL"]
 ignore = [
   "ANN401",  # dynamically-typed-expression
   "D",  # pydocstyle
