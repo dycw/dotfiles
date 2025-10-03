@@ -19,7 +19,10 @@
   colorMoved = default
 
 [delta]
+  hyperlinks = true
+  line-numbers = true
   navigate = true
+  side-by-side = true
 
 [fetch]
   prune = true

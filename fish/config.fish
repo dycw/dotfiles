@@ -90,6 +90,9 @@ if status is-interactive
     if test -f $HOME/local.fish
         source $HOME/local.fish
     end
+    if test -f $HOME/local.fish
+        source $HOME/local.fish
+    end
 
     # macchanger
     if type -q macchanger
@@ -127,6 +130,14 @@ if status is-interactive
         function pca
             pre-commit run --all-files
         end
+    end
+
+    # ssh
+    function ssh-mac
+        ssh derekwan@dw-mac
+    end
+    function ssh-swift
+        ssh derek@dw-swift
     end
 
     # starship
