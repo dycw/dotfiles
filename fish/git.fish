@@ -144,8 +144,8 @@ if status --is-interactive; and type -q git
     end
 
     function __git_checkout_close
-        if test (count $argv) -lt 1
-            echo "'__git_checkout_close' expected [1..) arguments TARGET; got $(count $argv)" >&2; and return 1
+        if test (count $argv) -ne 1
+            echo "'__git_checkout_close' expected 1 argument TARGET; got $(count $argv)" >&2; and return 1
         end
         argparse delete exit -- $argv; or return $status
         set -l target $argv[1]
@@ -168,7 +168,7 @@ if status --is-interactive; and type -q git
     # clone
     function gcl
         if test (count $argv) -eq 0
-            echo "'gcl' expected [1..) arguments REPO DIR; got $(count $argv)" >&2; and return 1
+            echo "'gcl' expected [1..2] arguments REPO DIR; got $(count $argv)" >&2; and return 1
         end
         set -l repo $argv[1]
         set -l dir
@@ -368,7 +368,7 @@ if status --is-interactive; and type -q git
     end
     function __remote_is
         if test (count $argv) -lt 1
-            echo "'__remote_is' expected [1..) arguments REMOTE; got $(count $argv)" >&2; and return 1
+            echo "'__remote_is' expected 1 argument REMOTE; got $(count $argv)" >&2; and return 1
         end
         if remote-name | grep -q $argv[1]
             return 0
@@ -449,24 +449,22 @@ if status --is-interactive; and type -q git
         if test (math (count $argv) % 2) -ne 0
             echo "'gta' accepts an even number of arguments; got (count $argv)" >&2; and return 1
         end
-
+        set -l tag
+        set -l sha
         while test (count $argv) -gt 0
-            set -l tag $argv[1]
-            set -l sha $argv[2]
-
+            set tag $argv[1]
+            set sha $argv[2]
             git tag -a "$tag" "$sha" -m "$tag"; or return $status
             git push --set-upstream origin --tags; or return $status
-
             set argv $argv[3..-1]
         end
-
-        gl 20
+        __git_log -n 20
     end
 
     function gtd
         git tag --delete $argv; or return $status
         git push --delete origin $argv; or return $status
-        gl 20
+        __git_log -n 20
     end
 
     # all
@@ -713,7 +711,7 @@ if status --is-interactive; and type -q git
         else if test (count $argv) -eq 2
             set args $args --title $argv[1] --num $argv[2]
         else
-            echo "'ghc' expected [0..2] arguments TITLE NUM got $(count $argv)" >&2; and return 1
+            echo "'ghc' expected [0..2] arguments TITLE NUM; got $(count $argv)" >&2; and return 1
         end
         __github_or_gitlab_create $args
     end
@@ -781,8 +779,7 @@ got '$(remote-name)'" >&2; and return 1
         else if __remote_is_github
             __gitlab_merge $args
         else
-            echo "Invalid remote
-got '$(remote-name)'" >&2; and return 1
+            echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
         end
     end
 
@@ -792,8 +789,7 @@ got '$(remote-name)'" >&2; and return 1
     end
     function __clean_branch_name
         if test (count $argv) -lt 1
-            echo "'__clean_branch_name' expected ) arguments BRANCH
-got $(count $argv)" >&2; and return 1
+            echo "'__clean_branch_name' expected 1 argument BRANCH; got $(count $argv)" >&2; and return 1
         end
         echo $argv[1] | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' \
             | sed -E 's/^-+|-+$//g' | cut -c1-80
