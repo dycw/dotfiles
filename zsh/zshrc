@@ -1,53 +1,10 @@
 #!/usr/bin/env sh
 # shellcheck source=/dev/null
 
-# shell - paths (first)
-__file="${HOME}/dotfiles/shell/common.sh"
-if [ -f "$__file" ]; then
-	. "$__file"
-fi
-
-# fzf
-__file="${HOME}/.config/fzf/fzf.zsh"
-if [ -f "$__file" ]; then
-	. "$__file"
-fi
-
-# zim
-export ZIM_HOME="${HOME}/.zim"
-if [[ ! -e "${ZIM_HOME}/zimfw.zsh" ]]; then
-	# Download zimfw plugin manager if missing.
-	curl -fsSL --create-dirs -o "${ZIM_HOME}/zimfw.zsh" \
-		https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
-fi
-if [[ ! "${ZIM_HOME}/init.zsh" -nt "${ZDOTDIR:-${HOME}}/.zimrc" ]]; then
-	# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
-	source "${ZIM_HOME}/zimfw.zsh" init -q
-fi
-__file="${ZIM_HOME}/init.zsh"
-if [ -f "$__file" ]; then
-	. "$__file"
-fi
-unalias l
-unalias ll
-
-# shell - paths (end)
-
 # direnv
 if command -v direnv >/dev/null 2>&1; then
 	eval "$(direnv hook zsh)"
 fi
-
-# docker
-__dir="${HOME}/.docker/completions"
-mkdir -p "${__dir}"
-if [ -d "${__dir}" ];  then
-  FPATH="${__dir}:$FPATH"
-  autoload -Uz compinit
-fi
-
-# echo
-echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 
 # fzf
 if command -v fzf >/dev/null 2>&1; then
@@ -57,14 +14,6 @@ fi
 # starship
 if command -v starship >/dev/null 2>&1; then
 	eval "$(starship init zsh)"
-fi
-
-# qrt
-__dir="${XDG_CONFIG_HOME:-${HOME}/.config}"/qrt/zsh
-if [ -d "${__dir}" ]; then
-    find -L "${__dir}" -type f -name '*.zsh' | while IFS= read -r __file; do
-        . "${__file}"
-    done
 fi
 
 # uv
@@ -78,17 +27,3 @@ if command -v zoxide >/dev/null 2>&1; then
 	eval "$(zoxide init zsh --cmd cd --hook prompt)"
 	eval "$(zoxide init zsh --cmd j --hook prompt)"
 fi
-
-# zsh
-zshrc() {
-    if [ $# -ne 0 ]; then
-        echo_date "'zshrc' accepts no arguments; got $#" && return 1
-    fi
-    ${EDITOR} "${HOME}/.zshrc"
-}
-zshrc_reload() {
-    if [ $# -ne 0 ]; then
-        echo_date "'zshrc_reload' accepts no arguments; got $#" && return 1
-    fi
-    . "${HOME}/.zshrc"
-}

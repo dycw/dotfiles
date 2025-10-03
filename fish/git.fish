@@ -993,3 +993,9 @@ got $num" >&2; and return 1
         end
     end
 end
+
+if status --is-interactive; and type -q gw; and type -q jq
+    function gw
+        gitweb
+    end
+end

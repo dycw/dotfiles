@@ -12,4 +12,5 @@ return {
             require("iswap").iswap_with()
         end, { desc = "iswap [w]ith" })
     end,
+    enabled = v.loop.os_uname().sysname ~= "Darwin",
 }
