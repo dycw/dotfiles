@@ -15,6 +15,10 @@
     "branch": "main",
     "commit": "327fff91fe6af358e990be7be1ec8b78037d2138"
   },
+  "bufferline.nvim": {
+    "branch": "main",
+    "commit": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3"
+  },
   "close-buffers.nvim": {
     "branch": "master",
     "commit": "3acbcad1211572342632a6c0151f839e7dead27f"
@@ -93,7 +97,7 @@
   },
   "mini.snippets": {
     "branch": "main",
-    "commit": "e8610e97a6c50f7dd521bd76d7b90a996a96cd09"
+    "commit": "7610dc3aaf7fb09b9cc428273a8ba15ef8aef495"
   },
   "mkdir.nvim": {
     "branch": "main",

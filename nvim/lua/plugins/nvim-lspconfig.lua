@@ -35,7 +35,7 @@ return {
                 map("zk", function()
                     v.diagnostic.jump({ count = -1, float = true })
                 end, "previous diagnostic")
-                map("L", function()
+                map("<Leader>dl", function()
                     v.diagnostic.open_float(nil, { scope = "line" })
                 end, "diagnostic [l]ine")
                 map("<Leader>ca", v.lsp.buf.code_action, "code [a]ction", { "n", "x" })

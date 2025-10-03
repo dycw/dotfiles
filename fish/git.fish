@@ -216,7 +216,7 @@ if status --is-interactive; and type -q git
             pre-commit install; or return $status
         end
         if type -q direnv
-            direnv allow .; or return $status
+            direnv allow .
         end
         cd $current
     end
@@ -482,15 +482,19 @@ if status --is-interactive; and type -q git
     function gs
         git status $argv
     end
-    function wgs
-        watch -n3 -- '
-            printf "########## status ##########\n\n"
-            git status --short
-            printf "\n"
-            printf "########## diff   ##########\n\n"
-            git diff --stat
-            printf "\n"
-            printf "########## github ##########\n"
+    function wg
+        watch --color --interval 2 --no-title --no-wrap -- '
+            echo "==== status ==================================================================="
+            git -c color.ui=always status --short
+            if ! git diff --quiet; then
+                printf "\n==== diff =====================================================================\n"
+                git -c color.ui=always diff --stat
+            fi
+            if ! git diff origin/master --quiet; then
+                printf "\n==== diff origin/master =======================================================\n"
+                git -c color.ui=always diff origin/master --stat
+            fi
+            printf "\n==== github ==================================================================="
             gh pr status
         '
     end

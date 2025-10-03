@@ -1,7 +1,3 @@
--- luacheck: push ignore
-local v = vim
--- luacheck: pop
-
 return {
     "ggandor/leap.nvim",
     config = function()
