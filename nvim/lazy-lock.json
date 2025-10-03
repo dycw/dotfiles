@@ -67,10 +67,6 @@
     "branch": "master",
     "commit": "005b56001b2cb30bfa61b7986bc50657816ba4ba"
   },
-  "iswap.nvim": {
-    "branch": "master",
-    "commit": "e02cc91f2a8feb5c5a595767d208c54b6e3258ec"
-  },
   "lazy.nvim": {
     "branch": "main",
     "commit": "59334064f8604ca073791c25dcc5c9698865406e"

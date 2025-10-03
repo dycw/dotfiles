@@ -1,43 +1,16 @@
 #!/usr/bin/env bash
 # shellcheck source=/dev/null
 
-# shell - paths (first)
-__file="${HOME}/dotfiles/shell/common.sh"
-if [ -f "$__file" ]; then
-    . "$__file"
-fi
-
-# echo
-echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
-
-# fzf
-__file="${HOME}/.config/fzf/fzf.bash"
-if [ -f "$__file" ]; then
-    . "$__file"
-fi
-
-# shell - paths (end)
-
-# bash
-bashrc() {
-    if [ $# -ne 0 ]; then
-        echo_date "'bashrc' accepts no arguments; got $#" && return 1
-    fi
-    ${EDITOR} "${HOME}/.bashrc"
-}
-bashrc_reload() {
-    if [ $# -ne 0 ]; then
-        echo_date "'bashrc_reload' accepts no arguments; got $#" && return 1
-    fi
-    . "${HOME}/.bashrc"
-}
-
 # direnv
 if command -v direnv >/dev/null 2>&1; then
     eval "$(direnv hook bash)"
 fi
 
 # fzf
+__file="${HOME}/.config/fzf/fzf.bash"
+if [ -f "$__file" ]; then
+    . "$__file"
+fi
 if command -v fzf >/dev/null 2>&1; then
     eval "$(fzf --bash)"
 fi
@@ -136,4 +109,3 @@ if ! shopt -oq posix; then
         . /etc/bash_completion
     fi
 fi
-eval "$(starship init bash)"
