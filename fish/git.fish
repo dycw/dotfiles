@@ -216,7 +216,7 @@ if status --is-interactive; and type -q git
             pre-commit install; or return $status
         end
         if type -q direnv
-            direnv allow .; or return $status
+            direnv allow .
         end
         cd $current
     end
