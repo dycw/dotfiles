@@ -308,7 +308,8 @@ if status --is-interactive; and type -q git
         __git_pull_force $argv
     end
     function __git_pull_force
-        git pull --force $argv
+        __git_branch_purge_local; or return $status
+        git pull --force --prune --tags $argv
     end
 
     # push
