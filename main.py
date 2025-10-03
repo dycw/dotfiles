@@ -566,13 +566,16 @@ def _install_shfmt() -> None:
 def _install_sops() -> None:
     if _have_command("sops"):
         _LOGGER.debug("'sops' is already installed")
-        return
-    _LOGGER.info("Installing 'sops'...")
-    path_to = _get_local_bin().joinpath("sops")
-    with _yield_github_latest_download(
-        "getsops", "sops", "sops-${tag}.linux.amd64"
-    ) as binary:
-        _copyfile(binary, path_to, executable=True)
+    else:
+        _LOGGER.info("Installing 'sops'...")
+        path_to = _get_local_bin().joinpath("sops")
+        with _yield_github_latest_download(
+            "getsops", "sops", "sops-${tag}.linux.amd64"
+        ) as binary:
+            _copyfile(binary, path_to, executable=True)
+    path_to = _to_path("~/qrt_dropbox/secrets/age/age-secret-key.txt")
+    if path_to.exists():
+        _setup_symlink("~/.config/sops/age/keys.txt", path_to)
 
 
 def _install_spotify() -> None:
