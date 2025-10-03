@@ -83,6 +83,9 @@ if status --is-interactive; and type -q git
     function gco
         __git_checkout_close $argv
     end
+    function gcom
+        __git_checkout_close master
+    end
     function gcop
         __git_checkout_close --patch $argv
     end
