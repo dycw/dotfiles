@@ -573,7 +573,7 @@ def _install_sops() -> None:
             "getsops", "sops", "sops-${tag}.linux.amd64"
         ) as binary:
             _copyfile(binary, path_to, executable=True)
-    path_to = _to_path("~/qrt_dropbox/secrets/age/age-secret-key.txt")
+    path_to = _to_path("~/secrets/age/age-secret-key.txt")
     if path_to.exists():
         _setup_symlink("~/.config/sops/age/keys.txt", path_to)
 
