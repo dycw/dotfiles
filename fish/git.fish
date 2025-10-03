@@ -52,6 +52,12 @@ if status --is-interactive; and type -q git
             git push --delete origin $argv
         end
     end
+    function gbm
+        if test (count $argv) -lt 1
+            echo "'gbm' expected 1 argument BRANCH; got $(count $argv)" >&2; and return 1
+        end
+        git branch -m $argv
+    end
     function __git_branch_delete
         git branch --delete --force $argv
     end
@@ -75,6 +81,7 @@ if status --is-interactive; and type -q git
     function __git_branch_purge_local
         git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
     end
+
     # checkout
     function gcb
         set -l args
@@ -104,11 +111,14 @@ if status --is-interactive; and type -q git
     function gco
         __git_checkout_close $argv
     end
-    function gcom
+    function gcm
         __git_checkout_close master
     end
-    function gcop
-        __git_checkout_close --patch $argv
+    function gcmd
+        __git_checkout_close master --delete
+    end
+    function gcmx
+        __git_checkout_close master --delete --exit
     end
     function __git_checkout_open
         argparse title= num= part -- $argv; or return $status
@@ -144,7 +154,7 @@ if status --is-interactive; and type -q git
     end
 
     function __git_checkout_close
-        if test (count $argv) -ne 1
+        if test (count $argv) -lt 1
             echo "'__git_checkout_close' expected 1 argument TARGET; got $(count $argv)" >&2; and return 1
         end
         argparse delete exit -- $argv; or return $status
