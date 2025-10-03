@@ -482,18 +482,22 @@ if status --is-interactive; and type -q git
     function gs
         git status $argv
     end
-    function wgs
+    function wg
         watch -n3 -- '
-            printf "########## status   ##########\n\n"
+            printf "❯❯❯❯ status\n\n"
             git status --short
             printf "\n"
-            printf "########## diff     ##########\n\n"
-            git diff --stat
-            printf "\n"
-            printf "########## diff o/m ##########\n\n"
-            git diff --stat
-            printf "\n"
-            printf "########## github   ##########\n"
+            if ! git diff --quiet; then
+                printf "❯❯❯❯ diff\n\n"
+                git diff --stat
+                printf "\n"
+            fi
+            if ! git diff origin/master --quiet; then
+                printf "❯❯❯❯ diff o/m\n\n"
+                git diff origin/master --stat
+                printf "\n"
+            fi
+            printf "❯❯❯❯ github\n"
             gh pr status
         '
     end
