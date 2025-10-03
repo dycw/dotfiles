@@ -658,7 +658,7 @@ if status --is-interactive; and type -q git
             if test -n "$_flag_exit"
                 set merge_args $merge_args --exit
             end
-            __github_or_gitlab_merge --delete $merge_args
+            __github_or_gitlab_merge $merge_args
         end
     end
 
@@ -750,7 +750,7 @@ if status --is-interactive; and type -q git
             echo "'__clean_branch_name' expected [1..) arguments BRANCH; got $(count $argv)" >&2; and return 1
         end
         echo $argv[1] | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' \
-            | sed -E 's/^-+ | -+$//g' | cut -c1-80
+            | sed -E 's/^-+|-+$//g' | cut -c1-80
     end
 end
 if status --is-interactive; and type -q gh
