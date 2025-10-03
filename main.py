@@ -736,8 +736,11 @@ def _setup_bash() -> None:
 
 
 def _setup_fish() -> None:
-    for filename_from in ["config.fish", "conf.d/git.fish"]:
-        filename_to = _to_path(filename_from).name
+    for filename_from, filename_to in [
+        ("config.fish", "config.fish"),
+        ("conf.d/0-env.fish", "env.fish"),
+        ("conf.d/git.fish", "git.fish"),
+    ]:
         _setup_symlink(
             f"~/.config/fish/{filename_from}", f"{_get_script_dir()}/fish/{filename_to}"
         )
