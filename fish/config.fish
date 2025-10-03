@@ -1,3 +1,5 @@
+#!/usr/bin/env fish
+
 # xdg
 set -Ux XDG_BIN_HOME (set -q XDG_BIN_HOME; and echo $XDG_BIN_HOME; or echo $HOME/.local/bin)
 set -Ux XDG_CACHE_HOME (set -q XDG_CACHE_HOME; and echo $XDG_CACHE_HOME; or echo $HOME/.cache)
@@ -90,8 +92,8 @@ if status is-interactive
     if test -f $HOME/local.fish
         source $HOME/local.fish
     end
-    if test -f $HOME/local.fish
-        source $HOME/local.fish
+    if test -f $HOME/work/infra/shell/fish.fish
+        source $HOME/work/infra/shell/fish.fish
     end
 
     # macchanger
