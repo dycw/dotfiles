@@ -502,7 +502,12 @@ if status --is-interactive; and type -q git
 
     # submodule
     function gsu
-        git submodule foreach --recursive 'git checkout master && git pull --ff-only'
+        git submodule update --init --recursive; or return $status
+        git submodule foreach --recursive '
+            git checkout -- . &&
+            git checkout master &&
+            git pull --ff-only
+        '
     end
 
     # tag
@@ -995,7 +1000,7 @@ got $num" >&2; and return 1
     end
 end
 
-if status --is-interactive; and type -q gw; and type -q jq
+if status --is-interactive; and type -q gitweb
     function gw
         gitweb
     end
