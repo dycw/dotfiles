@@ -114,31 +114,35 @@ if status --is-interactive; and type -q git
         argparse title= num= part -- $argv; or return $status
         __git_fetch_and_purge; or return $status
         set -l branch
-        set -l args
-        set -l desc
-        if test -n "$_flag_part"
-            set desc 'Part of'
-        else
-            set desc Closes
-        end
         if test -z "$_flag_title"; and test -z "$_flag_num"
             set branch dev
-            set arg $args --title (__auto_msg)
         else if test -n "$_flag_title"; and test -z "$_flag_num"
             set branch (__clean_branch_name $_flag_title)
-            set arg $args --title $_flag_title
         else if test -z "$_flag_title"; and test -n "$_flag_num"
             set branch $_flag_num
-            set arg $args --title (__auto_msg) --body "$desc $_flag_num"
         else
             set branch "$_flag_num-$(__clean_branch_name $_flag_title)"
-            set arg $args --title $_flag_title --body "$desc $_flag_num"
         end
         git checkout -b $branch origin/master; or return $status
         git commit --allow-empty --message="$(__auto_msg)" --no-verify; or return $status
         __git_push --no-verify; or return $status
-        ghc $args
+        set -l title
+        if test -n "$_flag_title"
+            set title (__auto_msg)
+        else
+            set title $_flag_title
+        end
+        set -l args
+        if test -n "$_flag_num"
+            if test -n "$_flag_part"
+                set args $args "Part of $_flag_num"
+            else
+                set args $args "Closes $_flag_num"
+            end
+        end
+        __github_or_gitlab_create --title $title $args
     end
+
     function __git_checkout_close
         if test (count $argv) -lt 1
             echo "'__git_checkout_close' expected [1..) arguments TARGET; got $(count $argv)" >&2; and return 1
@@ -669,14 +673,30 @@ if status --is-interactive; and type -q git
         else
             echo "'ghc' expected [0..2] arguments TITLE NUM; got $(count $argv)" >&2; and return 1
         end
+        __github_or_gitlab_create $args
+    end
+
+    function __github_or_gitlab_create
+        argparse title= body= -- $argv; or return $status
+        set -l args
+        if test -n "$_flag_title"
+            set args $args --title $_flag_title
+        end
         if __remote_is_github
+            if test -n "$_flag_body"
+                set args $args --body $_flag_body
+            end
             __github_create $args
         else if __remote_is_gitlab
+            if test -n "$_flag_body"
+                set args $args --description $_flag_description
+            end
             __gitlab_create $args
         else
             echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
         end
     end
+
     function ghe
         if test (count $argv) -lt 1
             echo "'ghe' expected [1..) arguments -t/--title or -b/--body; got $(count $argv)" >&2; and return 1
@@ -739,7 +759,6 @@ if status --is-interactive; and type -q git
             | sed -E 's/^-+ | -+$//g' | cut -c1-80
     end
 end
-
 if status --is-interactive; and type -q gh
     function __github_create
         argparse title= body= -- $argv; or return $status
