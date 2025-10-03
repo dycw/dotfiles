@@ -389,27 +389,30 @@ def _install_docker() -> None:
         _LOGGER.debug("'docker' is already installed")
         return
     _LOGGER.info("Installing 'docker'...")
-    for package in [
+    packages = [
         "docker.io",
         "docker-doc",
         "docker-compose",
         "podman-docker",
         "containerd",
         "runc",
-    ]:
-        _run_commands(f"sudo apt-get remove {package}")
-    for cmd in [
-        "apt-get update",
-        "apt-get -y install ca-certificates curl",
+    ]
+    _run_commands(*(f"sudo apt-get remove {p}" for p in packages))
+    _apt_install("ca-certificates", "curl")
+    _run_commands(
         "install -m 0755 -d /etc/apt/keyrings",
         "curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc",
         "chmod a+r /etc/apt/keyrings/docker.asc",
-        """echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null""",
-        "apt-get update",
-        "apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin",
-        "usermod -aG docker $USER",
-    ]:
-        _run_commands(cmd)
+        'echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null',
+    )
+    _apt_install(
+        "docker-ce",
+        "docker-ce-cli",
+        "containerd.io",
+        "docker-buildx-plugin",
+        "docker-compose-plugin",
+    )
+    _run_commands("usermod -aG docker $USER")
 
 
 def _install_dust() -> None:
@@ -744,11 +747,7 @@ def _install_zoom() -> None:
         _LOGGER.debug("'zoom' is already installed")
         return
     _LOGGER.info("Installing 'zoom'...")
-    _apt_install(
-        "libxcb-xinerama0",
-        "libxcb-xtest0",
-        "libxcb-cursor0",
-    )
+    _apt_install("libxcb-xinerama0", "libxcb-xtest0", "libxcb-cursor0")
     _dpkg_install("zoom_amd64.deb")
 
 
@@ -810,18 +809,9 @@ def _setup_ssh_keys_core(path_from: Path | str, /) -> None:
 def _setup_sshd() -> None:
     path = _to_path("/etc/ssh/sshd_config")
     for from_, to in [
-        (
-            "#PermitRootLogin prohibit-password",
-            "PermitRootLogin no",
-        ),
-        (
-            "#PubkeyAuthentication yes",
-            "PubkeyAuthentication yes",
-        ),
-        (
-            "#PasswordAuthentication yes",
-            "PasswordAuthentication no",
-        ),
+        ("#PermitRootLogin prohibit-password", "PermitRootLogin no"),
+        ("#PubkeyAuthentication yes", "PubkeyAuthentication yes"),
+        ("#PasswordAuthentication yes", "PasswordAuthentication no"),
     ]:
         _replace_line(path, from_, to)
 
@@ -893,12 +883,10 @@ def _replace_line(path: Path | str, from_: str, to: str, /) -> None:
         _LOGGER.debug("%r not found in %r", from_, str(path))
         return
     _LOGGER.info("Replacing %r -> %r in %r", from_, to, str(path))
-    _run_commands(f"sudo sed -i 's|{from_}|{to}|' {path}", shell=True)
+    _run_commands(f"sudo sed -i 's|{from_}|{to}|' {path}")
 
 
-def _run_commands(
-    *cmds: str,
-) -> None:
+def _run_commands(*cmds: str) -> None:
     is_root = _is_root()
     for cmd in cmds:
         cmd_use = cmd.replace("sudo", "") if is_root else cmd
@@ -938,10 +926,8 @@ def _unlink(path: Path | str, /) -> None:
 
 
 def _update_submodules() -> None:
-    _LOGGER.info(
-        "Updating submodules...",
-    )
-    _run_commands("git submodule update", shell=True)
+    _LOGGER.info("Updating submodules...")
+    _run_commands("git submodule update")
 
 
 def _uv_tool_install(tool: str, /) -> None:
@@ -950,7 +936,7 @@ def _uv_tool_install(tool: str, /) -> None:
         return
     _install_uv()
     _LOGGER.info("Installing %r...", tool)
-    _run_commands(f"uv tool install {tool}", shell=True)
+    _run_commands(f"uv tool install {tool}")
 
 
 @contextmanager
