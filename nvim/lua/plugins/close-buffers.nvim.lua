@@ -16,5 +16,4 @@ return {
             desc = "buffer [o]thers",
         },
     },
-    event = "VeryLazy",
 }
