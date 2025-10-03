@@ -45,9 +45,9 @@ unbind-key ]
 bind-key v copy-mode
 bind-key p paste-buffer
 
-# fish
-set -g default-command /usr/bin/fish
-set -g default-shell /usr/bin/fish
+# default command/shell
+set -g default-command "${SHELL}"
+set -g default-shell "${SHELL}"
 
 # history
 bind-key H command-prompt -p 'save history to filename:' -I '~/tmux-history.txt' 'capture-pane -S -32768 ; save-buffer %1 ; delete-buffer'
