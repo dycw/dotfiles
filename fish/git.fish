@@ -723,18 +723,12 @@ if status --is-interactive; and type -q git
     function ghm
         __github_or_gitlab_merge
     end
-    function ghmd
-        __github_or_gitlab_merge --delete
-    end
-    function ghme
+    function ghx
         __github_or_gitlab_merge --exit
     end
     function __github_or_gitlab_merge
-        argparse delete exit -- $argv; or return $status
+        argparse exit -- $argv; or return $status
         set -l args
-        if test -n "$_flag_delete"
-            set args $args --delete
-        end
         if test -n "$_flag_exit"
             set args $args --exit
         end
@@ -790,7 +784,7 @@ if status --is-interactive; and type -q gh
     end
 
     function __github_merge
-        argparse delete exit -- $argv; or return $status
+        argparse exit -- $argv; or return $status
         if not __github_exists &>/dev/null
             echo "'__github_merge' could not find an open PR for '$(current-branch)'" >&2; and return 1
         end
@@ -803,11 +797,9 @@ if status --is-interactive; and type -q gh
         end
         set -l args
         if test -n "$_flag_exit"
-            set args $args --delete --exit
-        else if test -n "$_flag_delete"
-            set args $args --delete
+            set args $args --exit
         end
-        __git_checkout_close master $args
+        __git_checkout_close master --delete $args
     end
 
     function __github_view
