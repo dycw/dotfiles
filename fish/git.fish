@@ -128,9 +128,9 @@ if status --is-interactive; and type -q git
         __git_push --no-verify; or return $status
         set -l title
         if test -n "$_flag_title"
-            set title (__auto_msg)
-        else
             set title $_flag_title
+        else
+            set title (__auto_msg)
         end
         set -l args
         if test -n "$_flag_num"
