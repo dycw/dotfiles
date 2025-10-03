@@ -56,6 +56,7 @@ class _Settings:
     shfmt: bool
     sops: bool
     spotify: bool
+    ssh_keys: str | None
     stylua: bool
     syncthing: bool
     tailscale: bool
@@ -160,6 +161,13 @@ class _Settings:
             "-sp", "--spotify", action="store_true", help="Install 'spotify'."
         )
         _ = parser.add_argument(
+            "-ss",
+            "--ssh-keys",
+            default=None,
+            type=str,
+            help="Install 'ssh-keys' from a file or URL.",
+        )
+        _ = parser.add_argument(
             "-st", "--stylua", action="store_true", help="Install 'stylua'."
         )
         _ = parser.add_argument(
@@ -254,6 +262,8 @@ def main(settings: _Settings, /) -> None:
         _install_shfmt()
     if settings.sops:
         _install_sops()
+    if settings.ssh_keys is not None:
+        _setup_ssh_keys(settings.ssh_keys)
     if settings.stylua:
         _install_stylua()
     if settings.syncthing:
@@ -757,6 +767,24 @@ def _setup_psql() -> None:
 def _setup_shells() -> None:
     _setup_bash()
     _setup_fish()
+
+
+def _setup_ssh_keys(ssh_keys: Path | str, /) -> None:
+    if isinstance(ssh_keys, Path) or _to_path(ssh_keys).is_file():
+        _setup_ssh_keys_core(ssh_keys)
+        return
+    with _yield_download(ssh_keys) as temp_file:
+        _setup_ssh_keys_core(temp_file)
+
+
+def _setup_ssh_keys_core(path_from: Path | str, /) -> None:
+    keys = [
+        stripped
+        for line in _to_path(path_from).read_text().splitlines()
+        if (stripped := line.strip()) != ""
+    ]
+    joined = "\n".join(keys)
+    _ = _to_path("~/.ssh/authorized_keys").write_text(joined)
 
 
 def _setup_sshd() -> None:
