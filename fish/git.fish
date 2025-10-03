@@ -52,6 +52,12 @@ if status --is-interactive; and type -q git
             git push --delete origin $argv
         end
     end
+    function gbm
+        if test (count $argv) -lt 1
+            echo "'gbm' expected [1..) arguments BRANCH; got $(count $argv)" >&2; and return 1
+        end
+        git branch -m $argv
+    end
     function __git_branch_delete
         git branch --delete --force $argv
     end
@@ -75,6 +81,7 @@ if status --is-interactive; and type -q git
     function __git_branch_purge_local
         git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
     end
+
     # checkout
     function gcb
         set -l args
@@ -102,13 +109,38 @@ if status --is-interactive; and type -q git
         git checkout -b $branch -t origin/$branch
     end
     function gco
-        __git_checkout_close $argv
+        set -l branch
+        if test (count $argv) -eq 0
+            set branch (__git_branch_fzf_local)
+        else
+            set branch $argv[1]
+        end
+        git checkout $branch
     end
-    function gcom
+    function gcf
+        if test (count $argv) -eq 0
+            git checkout -- .
+        else
+            if __is_valid_ref $argv[1]
+                __git_fetch_and_purge; or return $status
+                git checkout $argv[1] -- $argv[2..-1]
+            else
+                git checkout -- $argv
+            end
+        end
+    end
+    function gcfm
+        __git_fetch_and_purge; or return $status
+        git checkout origin/master -- $argv
+    end
+    function gm
         __git_checkout_close master
     end
-    function gcop
-        __git_checkout_close --patch $argv
+    function gmd
+        __git_checkout_close master --delete
+    end
+    function gmx
+        __git_checkout_close master --delete --exit
     end
     function __git_checkout_open
         argparse title= num= part -- $argv; or return $status
@@ -168,7 +200,7 @@ if status --is-interactive; and type -q git
     # clone
     function gcl
         if test (count $argv) -eq 0
-            echo "'gcl' expected [1..) arguments REPO DIR; got $(count $argv)" >&2; and return 1
+            echo "'gcl' expected [1..2] arguments REPO DIR; got $(count $argv)" >&2; and return 1
         end
         set -l repo $argv[1]
         set -l dir
@@ -247,21 +279,27 @@ if status --is-interactive; and type -q git
 
     # log
     function gl
-        set -l args --abbrev-commit --decorate=short --pretty='format:%C(red)%h%C(reset) | %C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)'
-        set -l n
+        set -l args
         if test (count $argv) -eq 0
-            set n 20
+            set args $args -n 20
         else if string match -qr '^[0-9]+$' -- $argv[1]; and test $argv[1] -gt 0
-            set n $argv[1]
+            set args $args -n $argv[1]
         end
-        if set -q n
-            set args $args --max-count=$n
+        __git_log $args
+    end
+    function __git_log
+        argparse n= -- $argv; or return $status
+        set -l args
+        if test -n $_flag_n
+            set args $args --max-count=$_flag_n
         end
-        git log $args
+        git log --abbrev-commit --decorate=short \
+            --pretty='format:%C(red)%h%C(reset) | %C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)' \
+            $args
     end
 
     # mv
-    function gm
+    function gmv
         git mv $argv
     end
 
@@ -352,8 +390,14 @@ if status --is-interactive; and type -q git
     function grbc
         git rebase --continue $argv
     end
+    function grbs
+        git rebase --skip $argv
+    end
 
     # remote
+    function gre
+        git remote -v
+    end
     function remote-name
         git remote get-url origin
     end
@@ -387,7 +431,7 @@ if status --is-interactive; and type -q git
     function grp
         git reset --patch $argv
     end
-    function grmb
+    function gsq
         __git_fetch_and_purge; or return $status
         git reset --soft $(git merge-base origin/master HEAD)
     end
@@ -405,7 +449,22 @@ if status --is-interactive; and type -q git
 
     # rm
     function grm
-        git rm $argv
+        __git_rm $argv
+    end
+    function grmc
+        __git_rm $argv --cached
+    end
+    function __git_rm
+        git rm -rf $argv
+    end
+
+    # show-ref
+    function __is_valid_ref
+        if test (count $argv) -lt 1
+            echo "'__is_valid_ref' expected [1..) arguments REF; got $(count $argv)" >&2; and return 1
+        end
+        set -l ref $argv[1]
+        git show-ref --verify --quiet refs/heads/$ref; or git show-ref --verify --quiet refs/remotes/$ref; or git show-ref --verify --quiet refs/tags/$ref; or git rev-parse --verify --quiet $ref >/dev/null
     end
 
     # stash
@@ -424,7 +483,35 @@ if status --is-interactive; and type -q git
         git status $argv
     end
     function wgs
-        watch -d -n 1 -- 'printf "########## status ##########\n\n"; git status --short; printf "\n########## diff ##########\n\n"; git diff --stat'
+        watch -d -- 'printf "########## status ##########\n\n"; git status --short; printf "\n########## diff ##########\n\n"; git diff --stat'
+    end
+
+    # submodule
+    function gsu
+        git submodule foreach --recursive 'git checkout master && git pull --ff-only'
+    end
+
+    # tag
+    function gta
+        if test (math (count $argv) % 2) -ne 0
+            echo "'gta' accepts an even number of arguments; got (count $argv)" >&2; and return 1
+        end
+        set -l tag
+        set -l sha
+        while test (count $argv) -gt 0
+            set tag $argv[1]
+            set sha $argv[2]
+            git tag -a "$tag" "$sha" -m "$tag"; or return $status
+            git push --set-upstream origin --tags; or return $status
+            set argv $argv[3..-1]
+        end
+        __git_log -n 20
+    end
+
+    function gtd
+        git tag --delete $argv; or return $status
+        git push --delete origin $argv; or return $status
+        __git_log -n 20
     end
 
     # all
@@ -693,13 +780,14 @@ if status --is-interactive; and type -q git
             end
             __gitlab_create $args
         else
-            echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
+            echo "Invalid remote
+got '$(remote-name)'" >&2; and return 1
         end
     end
 
     function ghe
         if test (count $argv) -lt 1
-            echo "'ghe' expected [1..) arguments -t/--title or -b/--body; got $(count $argv)" >&2; and return 1
+            echo "'ghe' expected [0..) arguments -t/--title or -b/--body; got $(count $argv)" >&2; and return 1
         end
         argparse t/title= b/body= -- $argv; or return $status
         set -l args
@@ -717,7 +805,8 @@ if status --is-interactive; and type -q git
             end
             __gitlab_update $args
         else
-            echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
+            echo "Invalid remote
+got '$(remote-name)'" >&2; and return 1
         end
     end
     function ghm
@@ -817,11 +906,13 @@ if status --is-interactive; and type -q gh; and type -q jq
         set -l branch (current-branch); or return $status
         set -l num (gh pr list --head=$branch --json number --jq '. | length'); or return $status
         if test $num -eq 0
-            echo "'__github_exists' expected a PR for '$branch'; got none" >&2; and return 1
+            echo "'__github_exists' expected a PR for '$branch'
+got none" >&2; and return 1
         else if test $num -eq 1
             return 0
         else
-            echo "'__github_exists' expected a unique PR for '$branch'; got $num" >&2; and return 1
+            echo "'__github_exists' expected a unique PR for '$branch'
+got $num" >&2; and return 1
         end
     end
 
@@ -879,11 +970,13 @@ if status --is-interactive; and type -q glab; and type -q jq
         set -l json (glab mr list --output=json --source-branch=$branch); or return $status
         set -l num (printf "%s" "$json" | jq length); or return $status
         if test $num -eq 0
-            echo "'__gitlab_mr_json' expected an MR for '$branch'; got none" >&2; and return 1
+            echo "'__gitlab_mr_json' expected an MR for '$branch'
+got none" >&2; and return 1
         else if test $num -eq 1
             printf "%s" "$json" | jq '.[0]' | jq
         else
-            echo "'__gitlab_mr_json' expected a unique MR for '$branch'; got $num" >&2; and return 1
+            echo "'__gitlab_mr_json' expected a unique MR for '$branch'
+got $num" >&2; and return 1
         end
     end
 end
