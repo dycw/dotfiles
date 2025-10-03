@@ -7,11 +7,12 @@ if status --is-interactive
         end
     end
 
+    # pytest
+    export PY_COLORS=1
+
     # ripgrep
-    if type -q rg
-        if test -f $XDG_CONFIG_HOME/ripgrep/ripgreprc
-            export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgrep/ripgreprc
-        end
+    if test -f $XDG_CONFIG_HOME/ripgrep/ripgreprc
+        export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgrep/ripgreprc
     end
 
     # XDG
