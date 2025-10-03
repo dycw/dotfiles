@@ -54,7 +54,7 @@ if status --is-interactive; and type -q git
     end
     function gbm
         if test (count $argv) -lt 1
-            echo "'gbm' expected 1 argument BRANCH; got $(count $argv)" >&2; and return 1
+            echo "'gbm' expected [1..) arguments BRANCH; got $(count $argv)" >&2; and return 1
         end
         git branch -m $argv
     end
@@ -109,15 +109,21 @@ if status --is-interactive; and type -q git
         git checkout -b $branch -t origin/$branch
     end
     function gco
-        __git_checkout_close $argv
+        set -l branch
+        if test (count $argv) -eq 0
+            set branch (__git_branch_fzf_local)
+        else
+            set branch $argv[1]
+        end
+        git checkout $branch
     end
-    function gcm
+    function gm
         __git_checkout_close master
     end
-    function gcmd
+    function gmd
         __git_checkout_close master --delete
     end
-    function gcmx
+    function gmx
         __git_checkout_close master --delete --exit
     end
     function __git_checkout_open
@@ -155,7 +161,7 @@ if status --is-interactive; and type -q git
 
     function __git_checkout_close
         if test (count $argv) -lt 1
-            echo "'__git_checkout_close' expected 1 argument TARGET; got $(count $argv)" >&2; and return 1
+            echo "'__git_checkout_close' expected [1..) arguments TARGET; got $(count $argv)" >&2; and return 1
         end
         argparse delete exit -- $argv; or return $status
         set -l target $argv[1]
@@ -277,7 +283,7 @@ if status --is-interactive; and type -q git
     end
 
     # mv
-    function gm
+    function gmv
         git mv $argv
     end
 
@@ -378,7 +384,7 @@ if status --is-interactive; and type -q git
     end
     function __remote_is
         if test (count $argv) -lt 1
-            echo "'__remote_is' expected 1 argument REMOTE; got $(count $argv)" >&2; and return 1
+            echo "'__remote_is' expected [1..) arguments REMOTE; got $(count $argv)" >&2; and return 1
         end
         if remote-name | grep -q $argv[1]
             return 0
@@ -428,6 +434,15 @@ if status --is-interactive; and type -q git
     end
     function __git_rm
         git rm -rf $argv
+    end
+
+    # show-ref
+    function __is_valid_ref
+        if test (count $argv) -lt 1
+            echo "'__is_valid_ref' expected [1..) arguments REF; got $(count $argv)" >&2; and return 1
+        end
+        set -l ref $argv[1]
+        git show-ref --verify --quiet refs/heads/$ref; or git show-ref --verify --quiet refs/remotes/$ref; or git show-ref --verify --quiet refs/tags/$ref; or git rev-parse --verify --quiet $ref >/dev/null
     end
 
     # stash
@@ -799,7 +814,7 @@ got '$(remote-name)'" >&2; and return 1
     end
     function __clean_branch_name
         if test (count $argv) -lt 1
-            echo "'__clean_branch_name' expected 1 argument BRANCH; got $(count $argv)" >&2; and return 1
+            echo "'__clean_branch_name' expected [1..) arguments BRANCH; got $(count $argv)" >&2; and return 1
         end
         echo $argv[1] | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' \
             | sed -E 's/^-+|-+$//g' | cut -c1-80

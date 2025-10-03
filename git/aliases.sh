@@ -6,32 +6,6 @@ echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 
 # git
 if command -v git >/dev/null 2>&1; then
-	gm() {
-		[ $# -ne 0 ] && echo_date "'gm' accepts no arguments; got $#" && return 1
-		__git_checkout_master 'none'
-	}
-	gmd() {
-		[ $# -ne 0 ] && echo_date "'gmd' accepts no arguments; got $#" && return 1
-		__git_checkout_master 'delete'
-	}
-	gmx() {
-		[ $# -ne 0 ] && echo_date "'gmx' accepts no arguments; got $#" && return 1
-		__git_checkout_master 'delete+exit'
-	}
-	gco() {
-		if [ $# -eq 0 ]; then
-			__gco_target="$(__select_local_branch)" || return $?
-		elif [ $# -eq 1 ]; then
-			__gco_target="$1"
-		else
-			echo_date "'gco' accepts [0..1] arguments; got $#" && return 1
-		fi
-		__gco_current="$(__current_branch)" || return $?
-		if [ "${__gco_current}" != "${__gco_target}" ]; then
-			git checkout "${__gco_target}" || return $?
-		fi
-		gpl
-	}
 	gcof() {
 		if [ $# -eq 0 ]; then
 			git checkout -- .
@@ -403,14 +377,6 @@ if command -v git >/dev/null 2>&1; then
 	__repo_root() {
 		[ $# -ne 0 ] && echo_date "'__repo_root' accepts no arguments; got $#" && return 1
 		git rev-parse --show-toplevel
-	}
-	# show-ref
-	__is_valid_ref() {
-		[ $# -ne 1 ] && echo_date "'__is_valid_ref' accepts 1 argument; got $#" && return 1
-		git show-ref --verify --quiet "refs/heads/$1" ||
-			git show-ref --verify --quiet "refs/remotes/$1" ||
-			git show-ref --verify --quiet "refs/tags/$1" ||
-			git rev-parse --verify --quiet "$1" >/dev/null
 	}
 	# status
 	__tree_is_clean() {
