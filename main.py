@@ -51,6 +51,7 @@ class _Settings:
     pyright: bool
     ripgrep: bool
     ruff: bool
+    rsync: bool
     shellcheck: bool
     shfmt: bool
     sops: bool
@@ -142,6 +143,9 @@ class _Settings:
         )
         _ = parser.add_argument(
             "-ru", "--ruff", action="store_true", help="Install 'ruff'."
+        )
+        _ = parser.add_argument(
+            "-rs", "--rsync", action="store_true", help="Install 'rsync'."
         )
         _ = parser.add_argument(
             "-sc", "--shellcheck", action="store_true", help="Install 'shellcheck'."
@@ -242,6 +246,8 @@ def main(settings: _Settings, /) -> None:
         _install_macchanger()
     if settings.ripgrep:
         _install_ripgrep()
+    if settings.rsync:
+        _install_rsync()
     if settings.shellcheck:
         _install_shellcheck()
     if settings.shfmt:
@@ -532,10 +538,6 @@ def _install_python3_13_venv() -> None:
     _apt_install("python3.13-venv")
 
 
-def _install_ruff() -> None:
-    _uv_tool_install("ruff")
-
-
 def _install_ripgrep() -> None:
     if _have_command("rg"):
         _LOGGER.debug("'ripgrep' is already installed")
@@ -545,6 +547,18 @@ def _install_ripgrep() -> None:
     _setup_symlink(
         "~/.config/ripgrep/ripgreprc", f"{_get_script_dir()}/ripgrep/ripgreprc"
     )
+
+
+def _install_ruff() -> None:
+    _uv_tool_install("ruff")
+
+
+def _install_rsync() -> None:
+    if _have_command("rsync"):
+        _LOGGER.debug("'rsync' is already installed")
+        return
+    _LOGGER.info("Installing 'rsync'...")
+    _apt_install("rsync")
 
 
 def _install_shellcheck() -> None:
