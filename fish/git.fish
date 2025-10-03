@@ -375,7 +375,7 @@ if status --is-interactive; and type -q git
         git status $argv
     end
     function wgs
-        watch -d -n 0.5 -- git status $argv
+        watch -d -n 1 -- 'printf "########## status ##########\n\n"; git status --short; printf "\n########## diff ##########\n\n"; git diff --stat'
     end
 
     # all
