@@ -117,6 +117,22 @@ if status --is-interactive; and type -q git
         end
         git checkout $branch
     end
+    function gcf
+        if test (count $argv) -eq 0
+            git checkout -- .
+        else
+            if __is_valid_ref $argv[1]
+                __git_fetch_and_purge; or return $status
+                git checkout $argv[1] -- $argv[2..-1]
+            else
+                git checkout -- $argv
+            end
+        end
+    end
+    function gcfm
+        __git_fetch_and_purge; or return $status
+        git checkout origin/master -- $argv
+    end
     function gm
         __git_checkout_close master
     end
