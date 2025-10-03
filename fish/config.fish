@@ -178,6 +178,24 @@ if status is-interactive
         end
     end
 
+    # uv
+    if type -q uv
+        function ipy
+            set -l args
+            for arg in $argv
+                set args $args --with $arg
+            end
+            uv run --with ipython $args ipython
+        end
+        function jl
+            set -l args
+            for arg in $argv
+                set args $args --with $arg
+            end
+            uv run --with jupyterlab --with juputetlab-vim $args jupyter lab
+        end
+    end
+
     # vim
     if type -q vim
         if not type -q nvim
