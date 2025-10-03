@@ -46,6 +46,11 @@ if status is-interactive
     function cd-dl
         cd $HOME/Downloads
     end
+    function cdh
+        set -l current (pwd)
+        cd /; or return $status
+        cd $current
+    end
     function cdw
         cd $HOME/work
     end
