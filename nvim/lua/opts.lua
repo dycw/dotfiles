@@ -1,6 +1,7 @@
 -- luacheck: push ignore
-local opt = vim.opt
+local v = vim
 -- luacheck: pop
+local opt = v.opt
 
 -- Make a backup before overwriting a file?
 opt.backup = false
@@ -9,7 +10,7 @@ opt.backup = false
 opt.breakindent = true
 
 -- Sync clipboard between OS and Neovim
-vim.schedule(function()
+v.schedule(function()
     opt.clipboard = "unnamedplus"
 end)
 
@@ -38,7 +39,6 @@ opt.expandtab = true
 opt.fileencoding = "utf-8"
 
 -- The expression used for when `'foldmethod'`  is "expr"
--- Lunarvim: set to "nvim_treesitter#foldexpr()" for treesitter based folding
 opt.foldexpr = ""
 
 -- The kind of folding used for the current window
@@ -69,7 +69,7 @@ opt.laststatus = 3
 opt.list = true
 
 -- Strings to use in `'list'`  mode and for the |:list| command
-opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+opt.listchars = { tab = "▏ ", trail = "·", nbsp = "␣" }
 
 -- Disables mouse support
 opt.mouse = ""
