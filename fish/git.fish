@@ -60,7 +60,7 @@ if status --is-interactive; and type -q git
             set args $args --multi
         end
         git branch --color=never --remotes | awk '!/- >/' | fzf $args \
-            | sed -E 's | ^[[:space:]]*origin/ || '
+            | sed -E 's|^[[:space:]]*origin/||'
     end
     function __git_branch_purge_local
         git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D
@@ -79,6 +79,17 @@ if status --is-interactive; and type -q git
             echo "'gcb' expected [0..3] arguments TITLE NUM PART; got $(count $argv)" >&2; and return 1
         end
         __git_checkout_open $args
+    end
+    function gcbr
+        set -l branch
+        if test (count $argv) -eq 0
+            set branch (__git_branch_fzf_remote)
+        else if test (count $argv) -eq 1
+            set branch $argv[1]
+        else
+            echo "'gcbt' expected [0..1] arguments BRANCH; got "(count $argv) >&2; and return 1
+        end
+        git checkout -b $branch -t origin/$branch
     end
     function gco
         __git_checkout_close $argv
@@ -903,7 +914,7 @@ end
 
 if status --is-interactive; and type -q glab; and type -q jq
     function __gitlab_mr_json
-        set -l branch (__current_branch); or return $status
+        set -l branch (current-branch); or return $status
         set -l json (glab mr list --output=json --source-branch=$branch); or return $status
         set -l num (printf "%s" "$json" | jq length); or return $status
         if test $num -eq 0
