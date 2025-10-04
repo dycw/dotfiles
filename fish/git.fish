@@ -287,7 +287,8 @@ if type -q git
         __git_fetch_and_purge
     end
     function __git_fetch_and_purge
-        git fetch --all --force --prune --prune-tags --recurse-submodules=yes --tags __git_branch_purge_local
+        git fetch --all --force --prune --prune-tags --recurse-submodules=yes --tags; or return $status
+        __git_branch_purge_local
     end
 
     # log
