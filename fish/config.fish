@@ -87,7 +87,7 @@ function ghostty-config
 end
 
 # ipython
-function ipython_startup
+function ipython-startup
     $EDITOR $HOME/dotfiles/ipython/startup.py
 end
 
@@ -120,7 +120,7 @@ if type -q nvim
 end
 
 # pre-commit
-function pre_commit_config
+function pre-commit-config
     __edit_ancestor .pre-commit-config.yaml
 end
 if type -q pre-commit
@@ -214,11 +214,11 @@ if type -q tailscale; and type -q tailscaled
 end
 
 # tmux
-function tmux_conf
+function tmux-conf
     $EDITOR $HOME/dotfiles/tmux/tmux.conf.local
 end
 if type -q tmux
-    function tmux_reload
+    function tmux-reload
         tmux source-file $XDG_CONFIG_HOME/tmux/tmux.conf
     end
 end
