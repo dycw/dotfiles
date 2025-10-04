@@ -868,7 +868,7 @@ got '$(remote-name)'" >&2; and return 1
 
     # utilities
     function __auto_msg
-        echo (date "+%Y-%m-%d %H:%M:%S (%a)") " >" (hostname) " >" $USER
+        echo (date "+%Y-%m-%d %H:%M:%S (%a)") " > " (hostname) " > " $USER
     end
     function __clean_branch_name
         if test (count $argv) -lt 1
