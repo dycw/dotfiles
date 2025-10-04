@@ -239,6 +239,13 @@ if status is-interactive
             end
             uv run --with jupyterlab --with juputetlab-vim $args jupyter lab
         end
+        function uvl
+            if test (count $argv) -eq 0
+                uv pip list
+            else
+                uv pip list | grep -i $argv[1]
+            end
+        end
         function uvo
             uv pip list --outdated
         end
