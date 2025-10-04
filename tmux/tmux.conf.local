@@ -1,19 +1,19 @@
-# -- session creation ----------------------------------------------------------
+# -- session creation ---------------------------------------------------------
 tmux_conf_new_session_retain_current_path=false
 
-# -- windows & pane creation ---------------------------------------------------
+# -- windows & pane creation --------------------------------------------------
 tmux_conf_new_window_retain_current_path=false
 tmux_conf_new_window_reconnect_ssh=false
 tmux_conf_new_pane_retain_current_path=true
 tmux_conf_new_pane_reconnect_ssh=true
 
-# -- display -------------------------------------------------------------------
+# -- display ------------------------------------------------------------------
 tmux_conf_24b_colour=true
 
-# -- clipboard -----------------------------------------------------------------
+# -- clipboard ----------------------------------------------------------------
 tmux_conf_copy_to_os_clipboard=true
 
-# -- user customizations -------------------------------------------------------
+# -- user customizations ------------------------------------------------------
 # history size
 set -g history-limit 10000
 
@@ -38,7 +38,11 @@ set -g repeat-time 200
 set -g status-keys vi
 set -g mode-keys vi
 
-# -- own customizations --------------------------------------------------------
+# -- tpm ----------------------------------------------------------------------
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+
+# -- own customizations -------------------------------------------------------
 # copy mode
 unbind-key [
 unbind-key ]
