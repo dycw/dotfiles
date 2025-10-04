@@ -214,6 +214,7 @@ brew_install just
 brew_install luacheck
 [ -n "${IS_MAC_MINI}" ] && brew_install maturin
 brew_install nvim neovim
+# brew_install node > brew link --overwrite node
 [ -n "${IS_MAC_MINI}" ] && brew_install pgadmin4 --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install pgcli
 [ -n "${IS_MAC_MINI}" ] && brew_install postgres postgresql@17

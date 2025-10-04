@@ -9,18 +9,13 @@ if test -d /opt/homebrew/bin
         brew shellenv | source
 
         # node
-        if test -d /opt/homebrew/opt/node/bin
-            fish_add_path /opt/homebrew/opt/node/bin
-        end
-
-        # node
-        if test -d /opt/homebrew/opt/node/bin
-            fish_add_path /opt/homebrew/opt/node/bin
+        if test -d (brew --prefix node)/bin
+            fish_add_path (brew --prefix node)/bin
         end
 
         # postgresql@17
-        if test -d /opt/homebrew/opt/postgresql@17/bin
-            fish_add_path /opt/homebrew/opt/postgresql@17/bin
+        if test -d (brew --prefix postgresql@17)/bin
+            fish_add_path (brew --prefix postgresql@17)/bin
         end
     end
 
