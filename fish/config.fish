@@ -100,9 +100,6 @@ end
 if test -f $HOME/local.fish
     source $HOME/local.fish
 end
-if test -f $HOME/work/infra/shell/fish.fish
-    source $HOME/work/infra/shell/fish.fish
-end
 
 # neovim
 function cd-nvim-plugins

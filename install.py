@@ -211,7 +211,6 @@ def main(settings: _Settings, /) -> None:
         style="{",
         level="DEBUG" if settings.verbose else "INFO",
     )
-    _setup_shells()
     _install_curl()
     _install_fish()
     _install_git()
@@ -219,9 +218,11 @@ def main(settings: _Settings, /) -> None:
     _install_npm()
     _install_python3_13_venv()
     _install_starship()
+    _setup_bash()
     _setup_pdb()
     _setup_psql()
     _setup_sshd()
+    _setup_zsh()
     if settings.age:
         _install_age()
     if settings.bat:
@@ -455,9 +456,15 @@ def _install_fish() -> None:
     else:
         _LOGGER.info("Setting 'fish' to be the default shell")
         _ = _run_commands("sudo chsh -s $(which fish)")
-    _setup_symlink(
-        "~/.config/fish/config.fish", f"{_get_script_dir()}/fish/config.fish"
-    )
+    for filename_from, filename_to in [
+        ("config.fish", "config.fish"),
+        ("conf.d/0-env.fish", "env.fish"),
+        ("conf.d/git.fish", "git.fish"),
+        ("conf.d/work.fish", "work.fish"),
+    ]:
+        _setup_symlink(
+            f"~/.config/fish/{filename_from}", f"{_get_script_dir()}/fish/{filename_to}"
+        )
 
 
 def _install_fzf() -> None:
@@ -763,8 +770,7 @@ def _install_zoxide() -> None:
 
 
 def _setup_bash() -> None:
-    for filename in ["bashrc", "bash_profile"]:
-        _setup_symlink(f"~/.{filename}", f"{_get_script_dir()}/bash/{filename}")
+    _setup_symlink("~/.bashrc", f"{_get_script_dir()}/bash/bashrc")
 
 
 def _setup_fish() -> None:
@@ -786,9 +792,8 @@ def _setup_psql() -> None:
     _setup_symlink("~/.psqlrc", f"{_get_script_dir()}/psql/psqlrc")
 
 
-def _setup_shells() -> None:
-    _setup_bash()
-    _setup_fish()
+def _setup_zsh() -> None:
+    _setup_symlink("~/.zshrc", f"{_get_script_dir()}/zsh/zshrc")
 
 
 def _setup_ssh_keys(ssh_keys: Path | str, /) -> None:
