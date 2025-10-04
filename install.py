@@ -455,7 +455,7 @@ def _install_macchanger() -> None:
     _apt_install("macchanger")
 
 
-def _install_neovim(*, path_config: Path | str | None = None) -> None:
+def _install_neovim(*, config: Path | str | None = None) -> None:
     if _have_command("nvim"):
         _LOGGER.debug("'neovim' is already installed")
     else:
@@ -466,10 +466,10 @@ def _install_neovim(*, path_config: Path | str | None = None) -> None:
         ) as appimage:
             _set_executable(appimage)
             _run_commands(f"sudo mv {appimage} {path_to}")
-    if path_config is not None:
-        path_config = _to_path(path_config)
-        if path_config.exists():
-            _setup_symlink("~/.config/nvim", path_config)
+    if config is not None:
+        config = _to_path(config)
+        if config.exists():
+            _setup_symlink("~/.config/nvim", config)
 
 
 def _install_npm() -> None:
@@ -540,7 +540,7 @@ def _install_shfmt() -> None:
     _apt_install("shfmt")
 
 
-def _install_sops(*, path_age: Path | str | None = None) -> None:
+def _install_sops(*, age: Path | str | None = None) -> None:
     if _have_command("sops"):
         _LOGGER.debug("'sops' is already installed")
     else:
@@ -550,10 +550,10 @@ def _install_sops(*, path_age: Path | str | None = None) -> None:
             "getsops", "sops", "sops-${tag}.linux.amd64"
         ) as binary:
             _copyfile(binary, path_to, executable=True)
-    if path_age is not None:
-        path_age = _to_path(path_age)
-        if path_age.exists():
-            _setup_symlink("~/.config/sops/age/keys.txt", path_age)
+    if age is not None:
+        age = _to_path(age)
+        if age.exists():
+            _setup_symlink("~/.config/sops/age/keys.txt", age)
 
 
 def _install_spotify() -> None:
@@ -569,16 +569,14 @@ def _install_spotify() -> None:
     _apt_install("spotify-client")
 
 
-def _install_starship(*, config: bool = False) -> None:
+def _install_starship(*, config: Path | str | None = None) -> None:
     if _have_command("starship"):
         _LOGGER.debug("'starship' is already installed")
     else:
         _LOGGER.info("Installing 'starship'...")
         _apt_install("starship")
-    if config:
-        _setup_symlink(
-            "~/.config/starship.toml", f"{_get_script_dir()}/starship/starship.toml"
-        )
+    if config is not None:
+        _setup_symlink("~/.config/starship.toml", config)
 
 
 def _install_stylua() -> None:
@@ -886,10 +884,10 @@ def main(settings: _Settings, /) -> None:
     _install_curl()
     _install_fish()
     _install_git(config=True)
-    _install_neovim(path_config=f"{_get_script_dir()}/nvim")
+    _install_neovim(config=f"{_get_script_dir()}/nvim")
     _install_npm()
     _install_python3_13_venv()
-    _install_starship(config=True)
+    _install_starship(config=f"{_get_script_dir()}/starship/starship.toml")
     _setup_bash()
     _setup_pdb()
     _setup_psql()
@@ -938,7 +936,7 @@ def main(settings: _Settings, /) -> None:
     if settings.shfmt:
         _install_shfmt()
     if settings.sops:
-        _install_sops(path_age="~/secrets/age/age-secret-key.txt")
+        _install_sops(age="~/secrets/age/age-secret-key.txt")
     if settings.ssh_keys is not None:
         _setup_ssh_keys(settings.ssh_keys)
     if settings.stylua:
