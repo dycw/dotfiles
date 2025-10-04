@@ -1,7 +1,32 @@
+-- luacheck: push ignore
+local v = vim
+-- luacheck: pop
+
 local keymap_set = require("utilities").keymap_set
 
 -- command
 keymap_set("n", ";", ":", "Command")
+
+-- copy/paste mode
+keymap_set({ "n", "v" }, "<F2>", function()
+    if v.wo.number then
+        v.opt.number = false
+        v.opt.relativenumber = false
+        v.opt.signcolumn = "no"
+        v.opt.paste = true
+        pcall(function()
+            require("ibl").update({ enabled = false })
+        end)
+    else
+        v.opt.number = true
+        v.opt.relativenumber = true
+        v.opt.signcolumn = "yes"
+        v.opt.paste = false
+        pcall(function()
+            require("ibl").update({ enabled = true })
+        end)
+    end
+end, "Copy/paste mode")
 
 -- global marks
 local prefixes = "m'"
@@ -23,9 +48,6 @@ keymap_set("i", "<C-l>", "<Right>", "Move right")
 
 -- paste in insert mode
 keymap_set("i", "<C-v>", "<C-o>p", "Paste")
-
--- paste mode
-keymap_set({ "n", "v" }, "<F2>", "<Cmd>set invpaste paste?<CR>", "Toggle paste mode")
 
 -- quickfix
 keymap_set("n", "]", "<Cmd>cnext<CR>", "Quickfix next")
