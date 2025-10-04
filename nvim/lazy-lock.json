@@ -29,7 +29,7 @@
   },
   "conform.nvim": {
     "branch": "master",
-    "commit": "9d6f881a4047a51c7709223dcf24e967633c6523"
+    "commit": "9d859cbfbde7a1bd1770e7c97aef30ec5a237a71"
   },
   "dial.nvim": {
     "branch": "master",
@@ -67,6 +67,10 @@
     "branch": "master",
     "commit": "005b56001b2cb30bfa61b7986bc50657816ba4ba"
   },
+  "iswap.nvim": {
+    "branch": "master",
+    "commit": "e02cc91f2a8feb5c5a595767d208c54b6e3258ec"
+  },
   "lazy.nvim": {
     "branch": "main",
     "commit": "59334064f8604ca073791c25dcc5c9698865406e"
@@ -78,6 +82,10 @@
   "leap.nvim": {
     "branch": "main",
     "commit": "07304103f6bd923004fdef9262d9a4d7925fb70a"
+  },
+  "lualine.nvim": {
+    "branch": "master",
+    "commit": "b8c23159c0161f4b89196f74ee3a6d02cdc3a955"
   },
   "mason-lspconfig.nvim": {
     "branch": "main",
@@ -117,7 +125,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "b8c3630ce37dfbe51910b68785a71620b072c41a"
+    "commit": "e688b486fe9291f151eae7e5c0b5a5c4ef980847"
   },
   "nvim-rip-substitute": {
     "branch": "main",

@@ -451,6 +451,14 @@ if type -q git
         git reset --soft $(git merge-base origin/$(default-branch) HEAD)
     end
 
+    # restore
+    function gre
+        git restore $argv
+    end
+    function gun
+        git restore --staged $argv
+    end
+
     # rev-parse
     function cdr
         cd (repo-root)
