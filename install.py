@@ -215,9 +215,10 @@ def _install_age() -> None:
 def _install_bat() -> None:
     if _have_command("batcat"):
         _LOGGER.debug("'bat' is already installed")
-        return
-    _LOGGER.info("Installing 'bat'...")
-    _apt_install("bat")
+    else:
+        _LOGGER.info("Installing 'bat'...")
+        _apt_install("bat")
+    _setup_symlink("~/.local/bin/bat", "/usr/bin/batcat")
 
 
 def _install_bottom(*, config: bool = False) -> None:
