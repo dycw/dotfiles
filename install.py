@@ -220,7 +220,7 @@ def _install_bat() -> None:
     _apt_install("bat")
 
 
-def _install_bottom() -> None:
+def _install_bottom(*, config: bool = False) -> None:
     if _have_command("btm"):
         _LOGGER.debug("'btm' is already installed")
     else:
@@ -229,9 +229,10 @@ def _install_bottom() -> None:
             "ClementTsang", "bottom", "bottom_${tag}-1_amd64.deb"
         ) as path:
             _dpkg_install(path)
-    _setup_symlink(
-        "~/.config/bottom/bottom.toml", f"{_get_script_dir()}/bottom/bottom.toml"
-    )
+    if config:
+        _setup_symlink(
+            "~/.config/bottom/bottom.toml", f"{_get_script_dir()}/bottom/bottom.toml"
+        )
 
 
 def _install_build_essential() -> None:
@@ -272,16 +273,17 @@ def _install_delta() -> None:
     _apt_install("git-delta")
 
 
-def _install_direnv() -> None:
+def _install_direnv(*, config: bool = False) -> None:
     if _have_command("direnv"):
         _LOGGER.debug("'direnv' is already installed")
     else:
         _LOGGER.info("Installing 'direnv'...")
         _apt_install("direnv")
-    for filename in ["direnv.toml", "direnvrc"]:
-        _setup_symlink(
-            f"~/.config/direnv/{filename}", f"{_get_script_dir()}/direnv/{filename}"
-        )
+    if config:
+        for filename in ["direnv.toml", "direnvrc"]:
+            _setup_symlink(
+                f"~/.config/direnv/{filename}", f"{_get_script_dir()}/direnv/{filename}"
+            )
 
 
 def _install_docker() -> None:
@@ -331,13 +333,14 @@ def _install_eza() -> None:
     _apt_install("eza")
 
 
-def _install_fd_find() -> None:
+def _install_fd_find(*, config: bool = False) -> None:
     if _have_command("fdfind"):
         _LOGGER.debug("'fd-find' is already installed")
     else:
         _LOGGER.info("Installing 'fd-find'...")
         _apt_install("fd-find")
-    _setup_symlink("~/.config/fd/ignore", f"{_get_script_dir()}/fd/ignore")
+    if config:
+        _setup_symlink("~/.config/fd/ignore", f"{_get_script_dir()}/fd/ignore")
 
 
 def _install_fish() -> None:
@@ -366,26 +369,30 @@ def _install_fish() -> None:
         )
 
 
-def _install_fzf() -> None:
+def _install_fzf(*, fzf_fish: bool = False) -> None:
     if _have_command("fzf"):
         _LOGGER.debug("'fzf' is already installed")
     else:
         _LOGGER.info("Installing 'fzf'...")
         _apt_install("fzf")
-    for path in _get_script_dir().joinpath("fzf", "fzf.fish", "functions").iterdir():
-        _copyfile(path, f"~/.config/fish/functions/{path.name}")
+    if fzf_fish:
+        for path in (
+            _get_script_dir().joinpath("fzf", "fzf.fish", "functions").iterdir()
+        ):
+            _copyfile(path, f"~/.config/fish/functions/{path.name}")
 
 
-def _install_git() -> None:
+def _install_git(*, config: bool = False) -> None:
     if _have_command("git"):
         _LOGGER.debug("'git' is already installed")
     else:
         _LOGGER.info("Installing 'git'...")
         _apt_install("git")
-    for filename in ["config", "ignore"]:
-        _setup_symlink(
-            f"~/.config/git/{filename}", f"{_get_script_dir()}/git/{filename}"
-        )
+    if config:
+        for filename in ["config", "ignore"]:
+            _setup_symlink(
+                f"~/.config/git/{filename}", f"{_get_script_dir()}/git/{filename}"
+            )
 
 
 def _install_gh() -> None:
@@ -448,7 +455,7 @@ def _install_macchanger() -> None:
     _apt_install("macchanger")
 
 
-def _install_neovim() -> None:
+def _install_neovim(*, config: bool = False) -> None:
     if _have_command("nvim"):
         _LOGGER.debug("'neovim' is already installed")
     else:
@@ -459,7 +466,8 @@ def _install_neovim() -> None:
         ) as appimage:
             _set_executable(appimage)
             _run_commands(f"sudo mv {appimage} {path_to}")
-    _setup_symlink("~/.config/nvim", f"{_get_script_dir()}/nvim")
+    if config:
+        _setup_symlink("~/.config/nvim", f"{_get_script_dir()}/nvim")
 
 
 def _install_npm() -> None:
@@ -490,15 +498,16 @@ def _install_python3_13_venv() -> None:
     _apt_install("python3.13-venv")
 
 
-def _install_ripgrep() -> None:
+def _install_ripgrep(*, config: bool = False) -> None:
     if _have_command("rg"):
         _LOGGER.debug("'ripgrep' is already installed")
     else:
         _LOGGER.info("Installing 'ripgrep'...")
         _apt_install("ripgrep")
-    _setup_symlink(
-        "~/.config/ripgrep/ripgreprc", f"{_get_script_dir()}/ripgrep/ripgreprc"
-    )
+    if config:
+        _setup_symlink(
+            "~/.config/ripgrep/ripgreprc", f"{_get_script_dir()}/ripgrep/ripgreprc"
+        )
 
 
 def _install_ruff() -> None:
@@ -529,7 +538,7 @@ def _install_shfmt() -> None:
     _apt_install("shfmt")
 
 
-def _install_sops() -> None:
+def _install_sops(*, path_age: Path | str | None = None) -> None:
     if _have_command("sops"):
         _LOGGER.debug("'sops' is already installed")
     else:
@@ -539,9 +548,10 @@ def _install_sops() -> None:
             "getsops", "sops", "sops-${tag}.linux.amd64"
         ) as binary:
             _copyfile(binary, path_to, executable=True)
-    path_to = _to_path("~/secrets/age/age-secret-key.txt")
-    if path_to.exists():
-        _setup_symlink("~/.config/sops/age/keys.txt", path_to)
+    if path_age is not None:
+        path_age = _to_path(path_age)
+        if path_age.exists():
+            _setup_symlink("~/.config/sops/age/keys.txt", path_age)
 
 
 def _install_spotify() -> None:
@@ -557,13 +567,16 @@ def _install_spotify() -> None:
     _apt_install("spotify-client")
 
 
-def _install_starship() -> None:
+def _install_starship(*, config: bool = False) -> None:
     if _have_command("starship"):
         _LOGGER.debug("'starship' is already installed")
     else:
         _LOGGER.info("Installing 'starship'...")
         _apt_install("starship")
-    _setup_symlink("~/.config/starship", f"{_get_script_dir()}/starship/starship.toml")
+    if config:
+        _setup_symlink(
+            "~/.config/starship.toml", f"{_get_script_dir()}/starship/starship.toml"
+        )
 
 
 def _install_stylua() -> None:
@@ -670,17 +683,6 @@ def _install_zoxide() -> None:
 
 def _setup_bash() -> None:
     _setup_symlink("~/.bashrc", f"{_get_script_dir()}/bash/bashrc")
-
-
-def _setup_fish() -> None:
-    for filename_from, filename_to in [
-        ("config.fish", "config.fish"),
-        ("conf.d/0-env.fish", "env.fish"),
-        ("conf.d/git.fish", "git.fish"),
-    ]:
-        _setup_symlink(
-            f"~/.config/fish/{filename_from}", f"{_get_script_dir()}/fish/{filename_to}"
-        )
 
 
 def _setup_pdb() -> None:
@@ -881,11 +883,11 @@ def main(settings: _Settings, /) -> None:
     )
     _install_curl()
     _install_fish()
-    _install_git()
-    _install_neovim()
+    _install_git(config=True)
+    _install_neovim(config=True)
     _install_npm()
     _install_python3_13_venv()
-    _install_starship()
+    _install_starship(config=True)
     _setup_bash()
     _setup_pdb()
     _setup_psql()
@@ -896,7 +898,7 @@ def main(settings: _Settings, /) -> None:
     if settings.bat:
         _install_bat()
     if settings.bottom:
-        _install_bottom()
+        _install_bottom(config=True)
     if settings.build_essential:
         _install_build_essential()
     if settings.caffeine:
@@ -904,15 +906,15 @@ def main(settings: _Settings, /) -> None:
     if settings.delta:
         _install_delta()
     if settings.direnv:
-        _install_direnv()
+        _install_direnv(config=True)
     if settings.dust:
         _install_dust()
     if settings.eza:
         _install_eza()
     if settings.fd_find:
-        _install_fd_find()
+        _install_fd_find(config=True)
     if settings.fzf:
-        _install_fzf()
+        _install_fzf(fzf_fish=True)
     if settings.gh:
         _install_gh()
     if settings.glab:
@@ -926,7 +928,7 @@ def main(settings: _Settings, /) -> None:
     if settings.macchanger:
         _install_macchanger()
     if settings.ripgrep:
-        _install_ripgrep()
+        _install_ripgrep(config=True)
     if settings.rsync:
         _install_rsync()
     if settings.shellcheck:
@@ -934,7 +936,7 @@ def main(settings: _Settings, /) -> None:
     if settings.shfmt:
         _install_shfmt()
     if settings.sops:
-        _install_sops()
+        _install_sops(path_age="~/secrets/age/age-secret-key.txt")
     if settings.ssh_keys is not None:
         _setup_ssh_keys(settings.ssh_keys)
     if settings.stylua:
