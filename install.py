@@ -538,7 +538,7 @@ def _install_shfmt() -> None:
     _apt_install("shfmt")
 
 
-def _install_sops() -> None:
+def _install_sops(*, path_age: Path | str | None = None) -> None:
     if _have_command("sops"):
         _LOGGER.debug("'sops' is already installed")
     else:
@@ -548,9 +548,10 @@ def _install_sops() -> None:
             "getsops", "sops", "sops-${tag}.linux.amd64"
         ) as binary:
             _copyfile(binary, path_to, executable=True)
-    path_to = _to_path("~/secrets/age/age-secret-key.txt")
-    if path_to.exists():
-        _setup_symlink("~/.config/sops/age/keys.txt", path_to)
+    if path_age is not None:
+        path_age = _to_path(path_age)
+        if path_age.exists():
+            _setup_symlink("~/.config/sops/age/keys.txt", path_age)
 
 
 def _install_spotify() -> None:
@@ -566,13 +567,16 @@ def _install_spotify() -> None:
     _apt_install("spotify-client")
 
 
-def _install_starship() -> None:
+def _install_starship(*, config: bool = False) -> None:
     if _have_command("starship"):
         _LOGGER.debug("'starship' is already installed")
     else:
         _LOGGER.info("Installing 'starship'...")
         _apt_install("starship")
-    _setup_symlink("~/.config/starship", f"{_get_script_dir()}/starship/starship.toml")
+    if config:
+        _setup_symlink(
+            "~/.config/starship.toml", f"{_get_script_dir()}/starship/starship.toml"
+        )
 
 
 def _install_stylua() -> None:
@@ -679,17 +683,6 @@ def _install_zoxide() -> None:
 
 def _setup_bash() -> None:
     _setup_symlink("~/.bashrc", f"{_get_script_dir()}/bash/bashrc")
-
-
-def _setup_fish() -> None:
-    for filename_from, filename_to in [
-        ("config.fish", "config.fish"),
-        ("conf.d/0-env.fish", "env.fish"),
-        ("conf.d/git.fish", "git.fish"),
-    ]:
-        _setup_symlink(
-            f"~/.config/fish/{filename_from}", f"{_get_script_dir()}/fish/{filename_to}"
-        )
 
 
 def _setup_pdb() -> None:
@@ -894,7 +887,7 @@ def main(settings: _Settings, /) -> None:
     _install_neovim(config=True)
     _install_npm()
     _install_python3_13_venv()
-    _install_starship()
+    _install_starship(config=True)
     _setup_bash()
     _setup_pdb()
     _setup_psql()
@@ -943,7 +936,7 @@ def main(settings: _Settings, /) -> None:
     if settings.shfmt:
         _install_shfmt()
     if settings.sops:
-        _install_sops()
+        _install_sops(path_age="~/secrets/age/age-secret-key.txt")
     if settings.ssh_keys is not None:
         _setup_ssh_keys(settings.ssh_keys)
     if settings.stylua:
