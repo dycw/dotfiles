@@ -146,6 +146,41 @@ function pyrightconfig
     __edit_ancestor pyrightconfig.json
 end
 
+# pytest
+function pyt
+    __pytest $argv
+end
+function pytf
+    __pytest -f $argv
+end
+function pytfk
+    if test (count $argv) -lt 1
+        echo "'pytfk' expected [1..) arguments EXPRESSION; got "(count $argv) >&2; and return 1
+    end
+    __pytest -fk $argv
+end
+function pytfxk
+    if test (count $argv) -lt 1
+        echo "'pytfxk' expected [1..) arguments EXPRESSION; got "(count $argv) >&2; and return 1
+    end
+    __pytest -fk $argv
+end
+function pytk
+    if test (count $argv) -lt 1
+        echo "'pytk' expected [1..) arguments FILENAME; got "(count $argv) >&2; and return 1
+    end
+    __pytest -k $argv
+end
+function pytx
+    __pytest -x $argv
+end
+function pytfx
+    __pytest -fx $argv
+end
+function __pytest
+    pytest --color=yes $argv
+end
+
 # python
 function pyproject
     __edit_ancestor pyproject.toml
@@ -274,8 +309,7 @@ end
 # private
 function __edit_ancestor
     if test (count $argv) -lt 1
-        echo "'edit_ancestor' expected ) arguments FILENAME
-    got "(count $argv) >&2; and return 1
+        echo "'edit_ancestor' expected [1..) arguments FILENAME; got "(count $argv) >&2; and return 1
     end
     set file $argv[1]
     set dir (pwd)
