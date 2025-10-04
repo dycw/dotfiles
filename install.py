@@ -510,16 +510,16 @@ def _install_ripgrep(*, config: bool = False) -> None:
         )
 
 
-def _install_ruff() -> None:
-    _uv_tool_install("ruff")
-
-
 def _install_rsync() -> None:
     if _have_command("rsync"):
         _LOGGER.debug("'rsync' is already installed")
         return
     _LOGGER.info("Installing 'rsync'...")
     _apt_install("rsync")
+
+
+def _install_ruff() -> None:
+    _uv_tool_install("ruff")
 
 
 def _install_shellcheck() -> None:
