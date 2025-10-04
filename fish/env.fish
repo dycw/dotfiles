@@ -45,18 +45,9 @@ else
 end
 
 # fzf
-if type -q fzf
-    fzf --fish | source
-
-    if type -q _fzf_search_directory
-        export FZF_CTRL_T_COMMAND='_fzf_search_directory'
-    end
-    # if type -q fd
-    #     # https://github.com/junegunn/fzf#respecting-gitignore
-    #     export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
-    #     export FZF_CTRL_OPTS="--preview 'bat -n --color=always {}'"
-    #     export FZF_ALT_C_COMMAND='fd --type d --strip-cwd-prefix --hidden --follow --exclude .git --exclude .venv'
-    # end
+if type -q fzf_configure_bindings
+    fzf_configure_bindings --directory=\ct --git_log= --git_status= \
+        --history=\cH --processes=\cp --variables=\ce
 end
 
 # gitlab
