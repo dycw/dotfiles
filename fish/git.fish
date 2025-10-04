@@ -2,7 +2,10 @@
 
 if status --is-interactive; and type -q git
     function fish-git
-        $EDITOR $XDG_CONFIG_HOME/fish/conf.d/git.fish
+        $EDITOR $HOME/dotfiles/fish/git.fish
+    end
+    function git-ignore
+        $EDITOR $(repo-root)/pyproject.toml
     end
 
     # add
