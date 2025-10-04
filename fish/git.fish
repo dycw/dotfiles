@@ -1,6 +1,10 @@
 #!/usr/bin/env fish
 
-if status --is-interactive; and type -q git
+if ! status is-interactive
+    exit
+end
+
+if type -q git
     function fish-git
         $EDITOR $HOME/dotfiles/fish/git.fish
     end
@@ -864,7 +868,8 @@ got '$(remote-name)'" >&2; and return 1
             | sed -E 's/^-+|-+$//g' | cut -c1-80
     end
 end
-if status --is-interactive; and type -q gh
+
+if type -q gh
     function __github_create
         argparse title= body= -- $argv; or return $status
         set -l title
@@ -923,7 +928,7 @@ if status --is-interactive; and type -q gh
 
 end
 
-if status --is-interactive; and type -q gh; and type -q jq
+if type -q gh; and type -q jq
     function __github_exists
         set -l branch (current-branch); or return $status
         set -l num (gh pr list --head=$branch --json number --jq '. | length'); or return $status
@@ -953,7 +958,7 @@ got $num" >&2; and return 1
     end
 end
 
-if status --is-interactive; and type -q glab
+if type -q glab
     function __gitlab_create
         argparse title= description= -- $argv; or return $status
         set -l args
@@ -986,7 +991,7 @@ if status --is-interactive; and type -q glab
     end
 end
 
-if status --is-interactive; and type -q glab; and type -q jq
+if type -q glab; and type -q jq
     function __gitlab_mr_json
         set -l branch (current-branch); or return $status
         set -l json (glab mr list --output=json --source-branch=$branch); or return $status
@@ -1003,7 +1008,7 @@ got $num" >&2; and return 1
     end
 end
 
-if status --is-interactive; and type -q gitweb
+if type -q gitweb
     function gw
         gitweb
     end

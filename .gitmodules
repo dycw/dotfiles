@@ -1,3 +1,6 @@
+[submodule "fzf/fzf.fish"]
+	path = fzf/fzf.fish
+	url = https://github.com/patrickf1/fzf.fish.git
 [submodule "tmux/.tmux"]
 	path = tmux/.tmux
 	url = https://github.com/gpakosz/.tmux.git
