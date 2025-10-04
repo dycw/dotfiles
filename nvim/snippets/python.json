@@ -260,7 +260,7 @@
     "prefix": "im-string"
   },
   "from subprocess import ...": {
-    "body": "from subprocess import check_call, check_output, run\n",
+    "body": "from subprocess import CalledProcessError, check_call, check_output, run\n",
     "prefix": "im-subprocess"
   },
   "from sys import ...": {
