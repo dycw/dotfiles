@@ -53,7 +53,7 @@ function eg
     if test (count $argv) -lt 1
         echo "'eg' expected [1..) arguments PATTERN; got "(count $argv) >&2; and return 1
     end
-    env | grep -i $argv
+    env | sort | grep -i $argv
 end
 
 # eza
