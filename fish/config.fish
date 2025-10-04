@@ -113,6 +113,9 @@ function clean-neovim
         rm -rf $nvim
     end
 end
+function snippets-python
+    $EDITOR $HOME/dotfiles/nvim/snippets/python.json
+end
 if type -q nvim
     function n
         nvim $argv
