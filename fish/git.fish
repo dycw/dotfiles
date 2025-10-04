@@ -746,11 +746,7 @@ if type -q git
             __git_checkout_open $checkout_args; or return $status
         end
 
-        set -l add_args
-        if test -n "$_flag_force"
-            set add_args $add_args --force
-        end
-        __git_add $argv $add_args; or return $status
+        __git_add $argv; or return $status # don't use force
 
         set -l commit_args
         if test -n "$_flag_no_verify"
