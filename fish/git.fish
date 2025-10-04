@@ -138,16 +138,16 @@ if type -q git
     end
     function gcfm
         __git_fetch_and_purge; or return $status
-        git checkout origin/master -- $argv
+        git checkout origin/$(default-branch) -- $argv
     end
     function gm
-        __git_checkout_close master
+        __git_checkout_close $(default-branch)
     end
     function gmd
-        __git_checkout_close master --delete
+        __git_checkout_close $(default-branch) --delete
     end
     function gmx
-        __git_checkout_close master --delete --exit
+        __git_checkout_close $(default-branch) --delete --exit
     end
     function __git_checkout_open
         argparse title= num= part -- $argv; or return $status
@@ -162,7 +162,7 @@ if type -q git
         else
             set branch "$_flag_num-$(__clean_branch_name $_flag_title)"
         end
-        git checkout -b $branch origin/master; or return $status
+        git checkout -b $branch origin/$(default-branch); or return $status
         git commit --allow-empty --message="$(__auto_msg)" --no-verify; or return $status
         __git_push --no-verify; or return $status
         set -l title
@@ -279,7 +279,7 @@ if type -q git
         git diff --cached $argv
     end
     function gdm
-        git diff origin/master $argv
+        git diff origin/$(default-branch) $argv
     end
 
     # fetch
@@ -397,7 +397,7 @@ if type -q git
     # rebase
     function grb
         __git_fetch_and_purge; or return $status
-        git rebase --strategy=recursive --strategy-option=theirs origin/master
+        git rebase --strategy=recursive --strategy-option=theirs origin/$(default-branch)
     end
     function grba
         git rebase --abort $argv
@@ -441,14 +441,14 @@ if type -q git
         git reset $argv
     end
     function grhom
-        git reset --hard origin/master $argv
+        git reset --hard origin/$(default-branch) $argv
     end
     function grp
         git reset --patch $argv
     end
     function gsq
         __git_fetch_and_purge; or return $status
-        git reset --soft $(git merge-base origin/master HEAD)
+        git reset --soft $(git merge-base origin/$(default-branch) HEAD)
     end
 
     # rev-parse
@@ -505,9 +505,11 @@ if type -q git
                 printf "\n==== diff =====================================================================\n"
                 git -c color.ui=always diff --stat
             fi
-            if ! git diff origin/master --quiet; then
-                printf "\n==== diff origin/master =======================================================\n"
-                git -c color.ui=always diff origin/master --stat
+            branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed "s#.*/##")
+            branch=$(printf "%-6s" "$branch")
+            if ! git diff origin/$branch --quiet; then
+                printf "\n==== diff origin/$branch =======================================================\n"
+                git -c color.ui=always diff origin/$branch --stat
             fi
             printf "\n==== github ==================================================================="
             gh pr status
@@ -519,9 +521,14 @@ if type -q git
         git submodule update --init --recursive; or return $status
         git submodule foreach --recursive '
             git checkout -- . &&
-            git checkout master &&
+            git checkout $(git symbolic-ref refs/remotes/origin/HEAD | sed "s#.*/##") &&
             git pull --ff-only
         '
+    end
+
+    # symbolic ref
+    function default-branch
+        git symbolic-ref refs/remotes/origin/HEAD | sed 's#.*/##'
     end
 
     # tag
@@ -918,7 +925,7 @@ if type -q gh
         if test -n "$_flag_exit"
             set args $args --exit
         end
-        __git_checkout_close master --delete $args
+        __git_checkout_close $(default-branch) --delete $args
     end
 
     function __github_view
