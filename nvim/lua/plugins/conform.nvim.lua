@@ -4,9 +4,9 @@ local v = vim
 
 return {
     "stevearc/conform.nvim",
+    -- https://github.com/stevearc/conform.nvim/blob/master/doc/recipes.md#lazy-loading-with-lazynvim
     cmd = { "ConformInfo" },
-    event = "BufWritePre",
-    lazy = false,
+    event = { "BufWritePre" },
     opts = {
         formatters_by_ft = {
             dart = { "dart_format" },
