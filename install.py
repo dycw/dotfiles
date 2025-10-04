@@ -463,9 +463,11 @@ def _install_fish() -> None:
 def _install_fzf() -> None:
     if _have_command("fzf"):
         _LOGGER.debug("'fzf' is already installed")
-        return
-    _LOGGER.info("Installing 'fzf'...")
-    _apt_install("fzf")
+    else:
+        _LOGGER.info("Installing 'fzf'...")
+        _apt_install("fzf")
+    for path in _get_script_dir().joinpath("fzf", "fzf.fish", "functions").iterdir():
+        _copyfile(path, f"~/.config/fish/functions/{path.name}")
 
 
 def _install_git() -> None:
@@ -829,7 +831,10 @@ def _apt_install(*packages: str) -> None:
     _run_commands(f"sudo apt -y install {joined}")
 
 
-def _copyfile(path_from: Path, path_to: Path, /, *, executable: bool = False) -> None:
+def _copyfile(
+    path_from: Path | str, path_to: Path | str, /, *, executable: bool = False
+) -> None:
+    path_from, path_to = map(_to_path, [path_from, path_to])
     _unlink(path_to)
     _LOGGER.info("Copying %r -> %r...", str(path_from), str(path_to))
     path_to.parent.mkdir(parents=True, exist_ok=True)
