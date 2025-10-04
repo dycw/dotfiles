@@ -434,9 +434,10 @@ def _install_eza() -> None:
 def _install_fd_find() -> None:
     if _have_command("fdfind"):
         _LOGGER.debug("'fd-find' is already installed")
-        return
-    _LOGGER.info("Installing 'fd-find'...")
-    _apt_install("fd-find")
+    else:
+        _LOGGER.info("Installing 'fd-find'...")
+        _apt_install("fd-find")
+    _setup_symlink("~/.config/fd/ignore", f"{_get_script_dir()}/fd/ignore")
 
 
 def _install_fish() -> None:

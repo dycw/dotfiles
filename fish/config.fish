@@ -239,6 +239,9 @@ if status is-interactive
             end
             uv run --with jupyterlab --with juputetlab-vim $args jupyter lab
         end
+        function uvo
+            uv pip list --outdated
+        end
     end
 
     # vim
