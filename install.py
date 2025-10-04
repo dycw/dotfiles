@@ -455,7 +455,7 @@ def _install_macchanger() -> None:
     _apt_install("macchanger")
 
 
-def _install_neovim(*, config: bool = False) -> None:
+def _install_neovim(*, path_config: Path | str | None = None) -> None:
     if _have_command("nvim"):
         _LOGGER.debug("'neovim' is already installed")
     else:
@@ -466,8 +466,10 @@ def _install_neovim(*, config: bool = False) -> None:
         ) as appimage:
             _set_executable(appimage)
             _run_commands(f"sudo mv {appimage} {path_to}")
-    if config:
-        _setup_symlink("~/.config/nvim", f"{_get_script_dir()}/nvim")
+    if path_config is not None:
+        path_config = _to_path(path_config)
+        if path_config.exists():
+            _setup_symlink("~/.config/nvim", path_config)
 
 
 def _install_npm() -> None:
@@ -884,7 +886,7 @@ def main(settings: _Settings, /) -> None:
     _install_curl()
     _install_fish()
     _install_git(config=True)
-    _install_neovim(config=True)
+    _install_neovim(path_config=f"{_get_script_dir()}/nvim")
     _install_npm()
     _install_python3_13_venv()
     _install_starship(config=True)
