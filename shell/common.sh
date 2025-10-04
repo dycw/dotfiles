@@ -684,18 +684,6 @@ fi
 
 # uv
 if command -v uv >/dev/null 2>&1; then
-	uva() { uv add --active --managed-python "$@"; }
-	uvad() { uv add --dev --active --managed-python "$@"; }
-	uvpi() { uv pip install --managed-python "$@"; }
-	uvpl() {
-		if [ $# -eq 0 ]; then
-			uv pip list
-		elif [ $# -eq 1 ]; then
-			(uv pip list | grep "$1")
-		else
-			echo_date "'uvpl' accepts [0..1] arguments; got $#" && return 1
-		fi
-	}
 	uvpld() {
 		[ $# -ne 0 ] && echo_date "'uvpld' accepts no arguments; got $#" && return 1
 		__uvpld '.project.dependencies[]'
@@ -717,7 +705,6 @@ if command -v uv >/dev/null 2>&1; then
 		uv tool run pyclean "${__uvpyc_dir}"
 		clean_dirs "${__uvpyc_dir}"
 	}
-	uvr() { uv remove --active --managed-python "$@"; }
 	uvs() {
 		[ $# -ne 0 ] && echo_date "'uvs' accepts no arguments; got $#" && return 1
 		uv sync --upgrade
