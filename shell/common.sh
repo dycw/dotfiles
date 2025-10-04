@@ -102,8 +102,6 @@ fi
 
 # bat
 if command -v bat >/dev/null 2>&1; then
-	cat() { bat "$@"; }
-	catp() { bat --style=plain "$@"; }
 	tf() {
 		[ $# -ne 1 ] && echo_date "'tf' accepts 1 argument; got $#" && return 1
 		__tf_base "$1" --language=log
@@ -268,44 +266,6 @@ fi
 # echo
 echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 
-# eza
-if command -v eza >/dev/null 2>&1; then
-	__eza_base() { eza --all --classify=always --group-directories-first "$@"; }
-	__eza_long() { __eza_base --git --group --header --long --time-style=long-iso "$@"; }
-
-	l() { __eza_long --git-ignore "$@"; }
-	la() { __eza_long "$@"; }
-	__eza_short() { __eza_base --across "$@"; }
-	# shellcheck disable=SC2032
-	ls() { __eza_short --git-ignore "$@"; }
-	lsa() { __eza_short "$@"; }
-
-	if command -v watch >/dev/null 2>&1; then
-		__watch_eza_base() {
-			watch --color --differences --interval=0.5 -- \
-				eza --all --classify=always --color=always --git --group \
-				--group-directories-first --header --long --reverse \
-				--sort=modified --time-style=long-iso "$@"
-		}
-		wl() { __watch_eza_base --git-ignore "$@"; }
-		wla() { __watch_eza_base "$@"; }
-	fi
-fi
-
-# fd
-if command -v fd >/dev/null 2>&1; then
-	fdd() { __fd_base 'directory' "$@"; }
-	fde() { __fd_base 'empty' "$@"; }
-	fdf() { __fd_base 'file' "$@"; }
-	fds() { __fd_base 'symlink' "$@"; }
-	__fd_base() {
-		[ $# -eq 0 ] && echo_date "'__fd_base' accepts [1..) arguments; got $#" && return 1
-		__fd_base_type=$1
-		shift
-		fd --hidden --type="${__fd_base_type}" "$@"
-	}
-fi
-
 # find
 clean_dirs() {
 	if [ $# -eq 0 ]; then
@@ -318,177 +278,14 @@ clean_dirs() {
 	find "${__clean_dirs_dir}" -type d -delete
 }
 
-# fzf
-if command -v fzf >/dev/null 2>&1; then
-	export FZF_DEFAULT_COMMAND='fd -HL --exclude .git'
-	export FZF_DEFAULT_OPTS="
-    --height=80%
-    --info=inline
-    --layout=reverse
-    --preview '([[ -f {} ]] && (bat -n --color=always {} || cat {})) || ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
-    "
-	export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND} -tf -td"
-	export FZF_CTRL_T_OPTS="
-    --bind 'ctrl-a:select-all'
-    --bind 'ctrl-d:deselect-all'
-    --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
-    --bind 'ctrl-/:change-preview-window(down|hidden|)'
-    --header 'Ctrl-{a,d,y,/}'
-    --multi
-    --preview-window right:60%:wrap
-    "
-	export FZF_CTRL_R_OPTS="
-    --preview-window up:3:wrap
-    "
-	export FZF_ALT_C_COMMAND="${FZF_DEFAULT_COMMAND} -td"
-fi
-
-# hypothesis
-hypothesis_ci() {
-	[ $# -ne 0 ] && echo_date "'hypothesis_ci' accepts no arguments; got $#" && return 1
-	export HYPOTHESIS_PROFILE='ci'
-}
-hypothesis_debug() {
-	[ $# -ne 0 ] && echo_date "'hypothesis_debug' accepts no arguments; got $#" && return 1
-	export HYPOTHESIS_PROFILE='debug'
-}
-hypothesis_default() {
-	[ $# -ne 0 ] && echo_date "'hypothesis_default' accepts no arguments; got $#" && return 1
-	export HYPOTHESIS_PROFILE='default'
-}
-hypothesis_dev() {
-	[ $# -ne 0 ] && echo_date "'hypothesis_dev' accepts no arguments; got $#" && return 1
-	export HYPOTHESIS_PROFILE='dev'
-	hypothesis_no_shrink
-}
-hypothesis_no_shrink() {
-	[ $# -ne 0 ] && echo_date "'hypothesis_no_shrink' accepts no arguments; got $#" && return 1
-	export HYPOTHESIS_NO_SHRINK='1'
-}
-
 # local
 __file="${HOME}/common.local.sh"
 if [ -f "$__file" ]; then
 	. "$__file"
 fi
 
-# marimo
-marimo_toml() {
-	[ $# -ne 0 ] && echo_date "'marimo_toml' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}/dotfiles/marimo/marimo.toml"
-}
-
-# neovim
-cd_plugins() {
-	[ $# -ne 0 ] && echo_date "'cd_plugins' accepts no arguments; got $#" && return 1
-	cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}/nvim/lua/plugins" || return $?
-}
-clean_neovim() {
-	[ $# -ne 0 ] && echo_date "'clean_neovim' accepts no arguments; got $#" && return 1
-	rm -rf "${HOME}/.local/share/nvim/lazy"
-	rm -rf "${HOME}.local/state/nvim"
-	rm -rf "${XDG_CACHE_HOME:-"${HOME}/.cache"}/nvim"
-}
-plugins_dial() {
-	[ $# -ne 0 ] && echo_date "'plugins_dial' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}"/dotfiles/nvim/lua/plugins/dial.lua
-}
-snippets_python() {
-	[ $# -ne 0 ] && echo_date "'snippets_python' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}/dotfiles/nvim/snippets/python.json"
-}
-if command -v nvim >/dev/null 2>&1; then
-	n() { nvim "$@"; }
-fi
-
-# path
-echo_path() {
-	[ $# -ne 0 ] && echo_date "'echo_path' accepts no arguments; got $#" && return 1
-	echo_date "\$PATH:"
-	echo "${PATH}" | tr ':' '\n' | nl
-}
-
-# ps + pgrep
-pgrepf() {
-	[ $# -ne 1 ] && echo_date "'pgrepf' accepts 1 argument; got $#" && return 1
-	__pgrepf_pids=$(pgrep -f "$1" | tr '\n' ' ')
-	if [ -z "${__pgrepf_pids}" ]; then
-		echo_date "No process matched: $1" && return 1
-	fi
-	# shellcheck disable=SC2046
-	ps -fp "${__pgrepf_pids}"
-}
-if command -v fzf >/dev/null 2>&1; then
-	pgrep_kill() {
-		[ $# -ne 1 ] && echo_date "'pgrep_kill' accepts 1 argument; got $#" && return 1
-		__pgrep_kill_pids=$(pgrep -f "$1" | tr '\n' ' ')
-		if [ -z "${__pgrep_kill_pids}" ]; then
-			echo_date "No process matched '$1'" && return 0
-		fi
-		__pgrep_kill_results=$(ps -fp "${__pgrep_kill_pids}")
-		__pgrep_kill_selected=$(
-			printf '%s\n' "${__pgrep_kill_results}" |
-				awk 'NR>1' |
-				fzf --multi \
-					--header-lines=0 \
-					--prompt="Kill which $1 process? " \
-					--preview="printf '%s\n' \"${__pgrep_kill_results}\" | head -1; echo {}; " \
-					--preview-window=up:3:wrap
-		)
-		if [ -z "${__pgrep_kill_selected}" ]; then
-			echo_date "No process selected" && return 0
-		fi
-		# shellcheck disable=SC2046
-		set -- $(printf '%s\n' "${__pgrep_kill_selected}" | awk '{print $2}')
-		echo_date "Killing PIDs: $*"
-		kill -9 "$@"
-	}
-fi
-if command -v watch >/dev/null 2>&1; then
-	wpgrepf() {
-		[ $# -ne 1 ] && echo_date "'wpgrepf' accepts 1 argument; got $#" && return 1
-		watch --color --differences --interval=0.5 -- \
-			"pids=\$(pgrep -f \"$1\"); if [ -n \"\${pids}\" ]; then ps -fp \${pids}; else echo \"No process matched: $1\"; fi"
-	}
-fi
-
-# pyright
-pyr() { pyright "$@"; }
-pyrw() { pyright -w "$@"; }
-
 # pyright + pytest
 pyrt() { pyright "$@" && pytest "$@"; }
-
-# pytest
-__file="${HOME}/dotfiles/pytest/aliases.sh"
-if [ -f "${__file}" ]; then
-	. "${__file}"
-fi
-
-# reboot/shutdown
-reboot_now() {
-	[ $# -ne 0 ] && echo_date "'reboot_now' accepts no arguments; got $#" && return 1
-	__run_shutdown 'Reboot' 'r'
-}
-shutdown_now() {
-	[ $# -ne 0 ] && echo_date "'shutdown_now' accepts no arguments; got $#" && return 1
-	__run_shutdown 'Shut down' 'h'
-}
-__run_shutdown() {
-	[ $# -ne 2 ] && echo_date "'__run_shutdown' accepts no arguments; got $#" && return 1
-	# $1 = desc
-	# $2 = flag
-	printf "%s now? [Y/n] " "$1"
-	read -r __run_shutdown_response
-	__run_shutdown_shutdown=$(printf "%s" "${__run_shutdown_response}" | tr '[:upper:]' '[:lower:]')
-	if [ -z "${__run_shutdown_shutdown}" ] ||
-		[ "${__run_shutdown_shutdown}" = "y" ] ||
-		[ "${__run_shutdown_shutdown}" = "yes" ]; then
-		sudo shutdown -"$1" now
-	else
-		echo_date "%s cancelled" "$2"
-	fi
-}
 
 # tailscale
 if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1; then

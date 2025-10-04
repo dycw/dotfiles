@@ -130,7 +130,7 @@ if type -q git
         else
             if __is_valid_ref $argv[1]
                 __git_fetch_and_purge; or return $status
-                git checkout $argv[1] -- $argv[2..-1]
+                git checkout $argv[1] -- $argv[2..]
             else
                 git checkout -- $argv
             end

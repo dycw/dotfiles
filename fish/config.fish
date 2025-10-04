@@ -5,12 +5,12 @@ if ! status is-interactive
 end
 
 # bat
-if type -q batcat
+if type -q bat
     function cat
-        batcat $argv
+        bat $argv
     end
     function catp
-        batcat --plain $argv
+        bat --style=plain $argv
     end
 end
 
@@ -62,7 +62,30 @@ if type -q eza
         la --git-ignore $argv
     end
     function la
-        eza --all --classify=always --git --group --group-directories-first --header --long --time-style=long-iso $argv
+        eza --all --classify=always --git --group --group-directories-first \
+            --header --long --time-style=long-iso $argv
+    end
+    function wl
+        watch --color --differences --interval=0.5 -- \
+            eza --all --classify=always --color=always --git --group \
+            --group-directories-first --header --long --reverse \
+            --sort=modified --time-style=long-iso $argv
+    end
+end
+
+# fd
+if type -q fd
+    function fdd
+        __fd_base directory $argv
+    end
+    function fdf
+        __fd_base file $argv
+    end
+    function __fd_base
+        if test (count $argv) -lt 1
+            echo "'__fd_base' expected [1..) arguments TYPE; got "(count $argv) >&2; and return 1
+        end
+        fd --hidden --type=$argv[1] $argv[2..]
     end
 end
 
@@ -84,6 +107,17 @@ end
 # ghostty
 function ghostty-config
     $EDITOR $HOME/dotfiles/ghostty/config
+end
+
+# hypothesis
+function hypothesis-ci
+    export HYPOTHESIS_PROFILE=ci
+end
+function hypothesis-default
+    export HYPOTHESIS_PROFILE=default
+end
+function hypothesis-dev
+    export HYPOTHESIS_PROFILE=dev
 end
 
 # ipython
@@ -112,6 +146,9 @@ function clean-neovim
         echo "Cleaning '$nvim'..."
         rm -rf $nvim
     end
+end
+function plugins-dial
+    $EDITOR $HOME/dotfiles/nvim/lua/plugins/dial.nvim.lua
 end
 function snippets-python
     $EDITOR $HOME/dotfiles/nvim/snippets/python.json
