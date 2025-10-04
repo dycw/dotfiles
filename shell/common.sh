@@ -85,43 +85,6 @@ if command -v aichat >/dev/null 2>&1; then
 	}
 fi
 
-# ancestor
-ancestor() {
-	[ $# -ne 2 ] && echo_date "'ancestor' accepts 2 arguments; got $#" && return 1
-	# $1 = type
-	# $2 = name
-	__ancestor_dir="$(pwd)"
-	while [ "${__ancestor_dir}" != "/" ]; do
-		__ancestor_file="${__ancestor_dir}"/"$2"
-		case "$1" in
-		file)
-			if [ -f "${__ancestor_file}" ]; then
-				echo "${__ancestor_dir}" && return 0
-			fi
-			;;
-		directory)
-			if [ -d "${__ancestor_file}" ]; then
-				echo "${__ancestor_dir}" && return 0
-			fi
-			;;
-		*) echo_date "'ancestor' accepts 'file' or 'directory' for the first argument; got '$1'" && return 1 ;;
-		esac
-		__ancestor_dir="$(dirname "${__ancestor_dir}")"
-	done
-	echo_date "'ancestor' did not find an ancestor containing a $1 named '$2'" && return 1
-}
-
-ancestor_edit() {
-	[ $# -ne 1 ] && echo_date "'ancestor_edit' accepts 1 arguments; got $#" && return 1
-	# $1 = name
-	__ancestor_edit_file=$(ancestor file "$1" 2>/dev/null)
-	__ancestor_edit_code=$?
-	if [ "${__ancestor_edit_code}" -ne 0 ]; then
-		echo_date "'ancestor_edit' did not find an ancestor containing a file named '$1'" && return 1
-	fi
-	"${EDITOR}" "${__ancestor_edit_file}"/"$1"
-}
-
 # bacon
 if command -v bacon >/dev/null 2>&1; then
 	bt() {
@@ -380,32 +343,6 @@ if command -v fzf >/dev/null 2>&1; then
 	export FZF_ALT_C_COMMAND="${FZF_DEFAULT_COMMAND} -td"
 fi
 
-# ghostty
-ghostty_config() {
-	[ $# -ne 0 ] && echo_date "'ghostty_config' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}/dotfiles/ghostty/config"
-}
-
-# git
-if command -v git >/dev/null 2>&1; then
-	cdr() {
-		[ $# -ne 0 ] && echo_date "'cdr' accepts no arguments; got $#" && return 1
-		cd "$(git rev-parse --show-toplevel)" || return $?
-	}
-fi
-__file="${HOME}/dotfiles/git/aliases.sh"
-if [ -f "$__file" ]; then
-	. "$__file"
-fi
-git_aliases() {
-	[ $# -ne 0 ] && echo_date "'git_aliases' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}/dotfiles/git/aliases.sh"
-}
-git_ignore() {
-	[ $# -ne 0 ] && echo_date "'git_ignore' accepts no arguments; got $#" && return 1
-	ancestor_edit '.gitignore'
-}
-
 # hypothesis
 hypothesis_ci() {
 	[ $# -ne 0 ] && echo_date "'hypothesis_ci' accepts no arguments; got $#" && return 1
@@ -427,22 +364,6 @@ hypothesis_dev() {
 hypothesis_no_shrink() {
 	[ $# -ne 0 ] && echo_date "'hypothesis_no_shrink' accepts no arguments; got $#" && return 1
 	export HYPOTHESIS_NO_SHRINK='1'
-}
-
-# input
-set bell-style none
-set editing-mode vi
-
-# ipython
-ipython_startup() {
-	[ $# -ne 0 ] && echo_date "'ipython_startup' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}/dotfiles/ipython/startup.py"
-}
-
-# justfile
-justfile() {
-	[ $# -ne 0 ] && echo_date "'justfile' accepts no arguments; got $#" && return 1
-	ancestor_edit 'justfile'
 }
 
 # local
@@ -485,34 +406,6 @@ echo_path() {
 	[ $# -ne 0 ] && echo_date "'echo_path' accepts no arguments; got $#" && return 1
 	echo_date "\$PATH:"
 	echo "${PATH}" | tr ':' '\n' | nl
-}
-
-# pre-commit
-if command -v pre-commit >/dev/null 2>&1; then
-	pca() {
-		[ $# -ne 0 ] && echo_date "'pca' accepts no arguments; got $#" && return 1
-		pre-commit run --all-files
-	}
-	pcau() {
-		[ $# -ne 0 ] && echo_date "'pcau' accepts no arguments; got $#" && return 1
-		pre-commit autoupdate
-	}
-	pcav() {
-		[ $# -ne 0 ] && echo_date "'pcav' accepts no arguments; got $#" && return 1
-		pre-commit run --all-files --verbose
-	}
-	pci() {
-		[ $# -ne 0 ] && echo_date "'pci' accepts no arguments; got $#" && return 1
-		pre-commit install
-	}
-	pcui() {
-		[ $# -ne 0 ] && echo_date "'pcui' accepts no arguments; got $#" && return 1
-		pre-commit uninstall
-	}
-fi
-pre_commit_config() {
-	[ $# -ne 0 ] && echo_date "'pre_commit_config' accepts no arguments; got $#" && return 1
-	ancestor_edit '.pre-commit-config.yaml'
 }
 
 # ps + pgrep
@@ -572,15 +465,6 @@ if [ -f "${__file}" ]; then
 	. "${__file}"
 fi
 
-# python
-pyproject() {
-	[ $# -ne 0 ] && echo_date "'pyproject' accepts no arguments; got $#" && return 1
-	ancestor_edit 'pyproject.toml'
-}
-
-# q
-start_q() { QHOME="${HOME}"/q rlwrap -r "$HOME/q/m64/q" "$@"; }
-
 # reboot/shutdown
 reboot_now() {
 	[ $# -ne 0 ] && echo_date "'reboot_now' accepts no arguments; got $#" && return 1
@@ -606,114 +490,9 @@ __run_shutdown() {
 	fi
 }
 
-# rg
-if command -v rg >/dev/null 2>&1; then
-	env_rg() {
-		[ $# -ne 1 ] && echo_date "'env_rg' accepts 1 argument; got $#" && return 1
-		env | rg "$1"
-	}
-	if command -v watch >/dev/null 2>&1; then
-		wrg() { watch --color --differences --interval=2 -- rg "$@"; }
-	fi
-
-fi
-
-# rm
-rmr() { rm -r "$@"; }
-rmf() { rm -f "$@"; }
-rmrf() { rm -rf "$@"; }
-
-# ruff
-if command -v ruff >/dev/null 2>&1; then
-	rcw() { ruff check -w "$@"; }
-fi
-
-# rust
-cargo_toml() {
-	[ $# -ne 0 ] && echo_date "'cargo_toml' accepts no arguments; got $#" && return 1
-	ancestor_edit 'Cargo.toml'
-}
-
-# settings
-settings_toml() {
-	[ $# -ne 0 ] && echo_date "'settings_toml' accepts no arguments; got $#" && return 1
-	ancestor_edit 'settings.toml'
-}
-
-# shell
-shell_common() {
-	[ $# -ne 0 ] && echo_date "'shell_common' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}/dotfiles/shell/common.sh"
-}
-
-# SSH
-ssh_home() {
-	if [ $# -ne 0 ]; then
-		echo_date "'ssh_home' accepts no arguments; got $#" && return 1
-	elif [ -z "${SSH_HOME_USER}" ]; then
-		echo_date "'\$SSH_HOME_USER' does not exist" && return 1
-	elif [ -z "${SSH_HOME_HOST}" ]; then
-		echo_date "'\$SSH_HOME_HOST' does not exist" && return 1
-	fi
-	ssh "${SSH_HOME_USER}@${SSH_HOME_HOST}"
-}
-ssh_tunnel_home() {
-	if [ $# -ne 0 ]; then
-		echo_date "'ssh_tunnel_home' accepts no arguments; got $#" && return 1
-	elif [ -z "${SSH_HOME_USER}" ]; then
-		echo_date "'\$SSH_HOME_USER' does not exist" && return 1
-	elif [ -z "${SSH_HOME_HOST}" ]; then
-		echo_date "'\$SSH_HOME_HOST' does not exist" && return 1
-	elif [ -z "${SSH_TUNNEL_HOME_PORT}" ]; then
-		echo_date "'\$SSH_TUNNEL_HOME_PORT' does not exist" && return 1
-	fi
-	ssh -N -L "${SSH_TUNNEL_HOME_PORT}:localhost:${SSH_TUNNEL_HOME_PORT}" \
-		"${SSH_HOME_USER}@${SSH_HOME_HOST}"
-}
-
-# starship
-starship_toml() {
-	[ $# -ne 0 ] && echo_date "'starship_toml' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}/dotfiles/starship/starship.toml"
-}
-
 # tailscale
 if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1; then
-	ts_status() {
-		[ $# -ne 0 ] && echo_date "'ts_status' accepts no arguments; got $#" && return 1
-		tailscale status
-	}
 	if command -v tailscaled >/dev/null 2>&1; then
-		ts_up() {
-			if [ $# -ne 0 ]; then
-				__ts_up_exit_node=''
-			elif [ $# -ne 1 ]; then
-				__ts_up_exit_node='qrt-nanode'
-			else
-				echo_date "'ts_up' accepts [0..1] arguments; got $#" && return 1
-			fi
-			__ts_up_file="${HOME}/tailscale-auth-key"
-			if ! [ -f "${__ts_up_file}" ]; then
-				echo_date "'${__ts_up_file}' does not exist" && return 1
-			elif [ -z "${TAILSCALE_LOGIN_SERVER}" ]; then
-				echo_date "'\$TAILSCALE_LOGIN_SERVER' does not exist" && return 1
-			fi
-			echo_date "Starting 'tailscaled' in the background..."
-			sudo tailscaled &
-			echo_date "Starting 'tailscale'..."
-			sudo tailscale up \
-				--accept-dns \
-				--accept-routes \
-				--auth-key="file:${__ts_up_file}" \
-				--login-server="${TAILSCALE_LOGIN_SERVER}" \
-				--reset
-			if [ -n "${__ts_up_exit_node}" ]; then
-				echo_date 'Setting exit node...'
-			else
-				echo_date 'Un-setting exit node...'
-			fi
-			sudo tailscale set --exit-node="${__ts_up_exit_node}"
-		}
 		ts_down() {
 			[ $# -ne 0 ] && echo_date "'ts_down' accepts no arguments; got $#" && return 1
 			echo_date "Stopping 'tailscale'..."
@@ -726,22 +505,6 @@ if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1
 			sudo pkill tailscaled
 		}
 	fi
-	if command -v watch >/dev/null 2>&1; then
-		wts_status() {
-			[ $# -ne 0 ] && echo_date "'wts_status' accepts no arguments; got $#" && return 1
-			watch --color --differences --interval=0.5 -- tailscale status
-		}
-	fi
-fi
-
-# touch
-if command -v touch >/dev/null 2>&1; then
-	touch() {
-		for __touch_file in "$@"; do
-			mkdir -p "$(dirname "${__touch_file}")"
-			command touch "${__touch_file}"
-		done
-	}
 fi
 
 # tmux
@@ -793,39 +556,7 @@ if command -v tmux >/dev/null 2>&1; then
 		[ $# -ne 0 ] && echo_date "'tmux_ls' accepts no arguments; got $#" && return 1
 		tmux ls
 	}
-	tmux_reload() {
-		[ $# -ne 0 ] && echo_date "'tmux_reload' accepts no arguments; got $#" && return 1
-		tmux source-file "${XDG_CONFIG_HOME:-"${HOME}/.config"}/tmux/tmux.conf"
-	}
 	# layouts
-	tmux_even_horizontal() {
-		[ $# -ne 0 ] && echo_date "'tmux_even_horizontal' accepts no arguments; got $#" && return 1
-		tmux select-layout -t "$(tmux_current_window)" even-horizontal
-	}
-	tmux_even_vertical() {
-		[ $# -ne 0 ] && echo_date "'tmux_even_vertical' accepts no arguments; got $#" && return 1
-		tmux select-layout -t "$(tmux_current_window)" even-vertical
-	}
-	tmux_main_horizontal() {
-		[ $# -ne 0 ] && echo_date "'tmux_main_horizontal' accepts no arguments; got $#" && return 1
-		tmux select-layout -t "$(tmux_current_window)" main-horizontal
-	}
-	tmux_main_horizontal_mirrored() {
-		[ $# -ne 0 ] && echo_date "'tmux_main_horizontal_mirrored' accepts no arguments; got $#" && return 1
-		tmux select-layout -t "$(tmux_current_window)" main-horizontal-mirrored
-	}
-	tmux_main_vertical() {
-		[ $# -ne 0 ] && echo_date "'tmux_main_vertical' accepts no arguments; got $#" && return 1
-		tmux select-layout -t "$(tmux_current_window)" main-vertical
-	}
-	tmux_main_vertical_mirrored() {
-		[ $# -ne 0 ] && echo_date "'tmux_main_vertical_mirrored' accepts no arguments; got $#" && return 1
-		tmux select-layout -t "$(tmux_current_window)" main-vertical-mirrored
-	}
-	tmux_tiled() {
-		[ $# -ne 0 ] && echo_date "'tmux_tiled' accepts no arguments; got $#" && return 1
-		tmux select-layout -t "$(tmux_current_window)" tiled
-	}
 	if [ -z "$TMUX" ]; then
 		__tmux_count="$(tmux ls 2>/dev/null | wc -l)"
 		if [ "${__tmux_count}" -eq 0 ]; then
@@ -838,10 +569,6 @@ if command -v tmux >/dev/null 2>&1; then
 		fi
 	fi
 fi
-tmux_conf_local() {
-	[ $# -ne 0 ] && echo_date "'tmux_conf_local' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}/dotfiles/tmux/tmux.conf.local"
-}
 
 # tsunami
 if command -v tsunami >/dev/null 2>&1; then
@@ -957,18 +684,6 @@ fi
 
 # uv
 if command -v uv >/dev/null 2>&1; then
-	ipy() {
-		[ $# -ne 0 ] && echo_date "'ipy' accepts no arguments; got $#" && return 1
-		uv run --with=ipython ipython
-	}
-	jl() {
-		[ $# -ne 0 ] && echo_date "'jl' accepts no arguments; got $#" && return 1
-		uv run --with=jupyterlab --with=jupyterlab-vim jupyter lab
-	}
-	mar() {
-		[ $# -ne 0 ] && echo_date "'mar' accepts no arguments; got $#" && return 1
-		uv run --with='marimo[recommended]' marimo new
-	}
 	uva() { uv add --active --managed-python "$@"; }
 	uvad() { uv add --dev --active --managed-python "$@"; }
 	uvpi() { uv pip install --managed-python "$@"; }
@@ -1040,10 +755,4 @@ venv_recreate() {
 		rm -rf "${__venv_recreate_dir}"
 	fi
 	cdh
-}
-
-# wezterm
-wezterm_lua() {
-	[ $# -ne 0 ] && echo_date "'wezterm_lua' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}/dotfiles/wezterm/wezterm.lua"
 }

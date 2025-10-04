@@ -45,18 +45,20 @@ if status is-interactive
         cd $HOME/work
     end
 
+    # env
+    function eg
+        if test (count $argv) -lt 1
+            echo "'eg' expected [1..) arguments PATTERN; got "(count $argv) >&2; and return 1
+        end
+        env | grep -i $argv
+    end
+
     # eza
     if type -q eza
         function l
-            __eza --git-ignore $argv
+            la --git-ignore $argv
         end
         function la
-            __eza $argv
-        end
-        function ll
-            __eza $argv
-        end
-        function __eza
             eza --all --classify=always --git --group --group-directories-first --header --long --time-style=long-iso $argv
         end
     end
@@ -65,12 +67,30 @@ if status is-interactive
     fish_vi_key_bindings
 
     function fish-config
-        $EDITOR $XDG_CONFIG_HOME/fish/config.fish
+        $EDITOR $HOME/dotfiles/fish/config.fish
+    end
+    function fish-env
+        $EDITOR $HOME/dotfiles/fish/env.fish
     end
     function fish-reload
         for file in $XDG_CONFIG_HOME/fish/**/*.fish
             source $file
         end
+    end
+
+    # ghostty
+    function ghostty-config
+        $EDITOR $HOME/dotfiles/ghostty/config
+    end
+
+    # ipython
+    function ipython_startup
+        $EDITOR $HOME/dotfiles/ipython/startup.py
+    end
+
+    # just
+    function justfile
+        __edit_ancestor justfile
     end
 
     # local
@@ -100,21 +120,47 @@ if status is-interactive
     end
 
     # pre-commit
+    function pre_commit_config
+        __edit_ancestor .pre-commit-config.yaml
+    end
     if type -q pre-commit
+        function pca
+            pre-commit run --all-files
+        end
         function pcau
             pre-commit autoupdate
         end
         function pci
             pre-commit install
         end
-        function pca
-            pre-commit run --all-files
+        function pcui
+            pre-commit uninstall
         end
     end
 
+    # pyright
+    function pyr
+        pyright $argv
+    end
+
     # python
-    function fish-config
-        $EDITOR $XDG_CONFIG_HOME/fish/config.fish
+    function pyproject
+        __edit_ancestor pyproject.toml
+    end
+
+    # rm
+    function rm
+        command rm -rf $argv
+    end
+
+    # ruff
+    if type -q rw
+        ruff check -w $argv
+    end
+
+    # rust
+    function cargo-toml
+        __edit_ancestor cargo.toml
     end
 
     # ssh
@@ -125,19 +171,27 @@ if status is-interactive
         ssh derek@dw-swift
     end
 
+    # ssl
+    function ssl-mac
+        ssh -N -L 8888:localhost:8888 derekwan@dw-mac
+    end
+
+    # starship
+    function starship-toml
+        $EDITOR $HOME/dotfiles/starship/starship.toml
+    end
+
     # tailscale
-    if type -q tailscale
+    if type -q tailscale; and type -q tailscaled
         function ts-up
             set -l auth_key $XDG_CONFIG_HOME/tailscale/auth-key.txt
             if not test -f $auto_key
-                echo "'$auto_key' does not exist"
-                return 1
+                echo "'$auto_key' does not exist" >&2; and return 1
             end
             if not set -q TAILSCALE_LOGIN_SERVER
-                echo "'\$TAILSCALE_LOGIN_SERVER' is not set"
-                return 1
+                echo "'\$TAILSCALE_LOGIN_SERVER' is not set" >&2; and return 1
             end
-            echo "Starting 'tailscaled' in the background..."
+            echo "Starting tailscaled in the background..."
             sudo tailscaled &
             echo "Starting 'tailscale'..."
             sudo tailscale up --accept-dns --accept-routes --auth-key="file:$auth_key" \
@@ -148,6 +202,24 @@ if status is-interactive
         end
         function ts-no-exit-node
             sudo tailscale set --exit-node=
+        end
+    end
+
+    # tmux
+    function tmux_conf
+        $EDITOR $HOME/dotfiles/tmux/tmux.conf.local
+    end
+    if type -q tmux
+        function tmux_reload
+            tmux source-file $XDG_CONFIG_HOME/tmux/tmux.conf
+        end
+    end
+
+    # touch
+    function touch
+        for file in $argv
+            mkdir -p (dirname $file); or exit $status
+            command touch $file; or exit $status
         end
     end
 
@@ -174,5 +246,30 @@ if status is-interactive
         function v
             vim $argv
         end
+    end
+
+    # wezterm
+    function wezterm-lua
+        $EDITOR $HOME/dotfiles/wezterm/wezterm.lua
+    end
+end
+
+# private
+if status is-interactive
+    function __edit_ancestor
+        if test (count $argv) -lt 1
+            echo "'edit_ancestor' expected ) arguments FILENAME
+    got "(count $argv) >&2; and return 1
+        end
+        set file $argv[1]
+        set dir (pwd)
+        while test $dir != /
+            if test -f $dir/$file
+                $EDITOR $dir/$file
+                return 0
+            end
+            set dir (dirname $dir)
+        end
+        echo "'editancestor' did not find a file named '$file' in any parent directory" >&2; and return 1
     end
 end
