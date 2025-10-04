@@ -689,11 +689,6 @@ if command -v uv >/dev/null 2>&1; then
 		__uvpld '.project.dependencies[]'
 		__uvpld '.["dependency-groups"].dev[]'
 	}
-	uvplo() {
-		[ $# -ne 0 ] && echo_date "'uvplo' accepts no arguments; got $#" && return 1
-		uv pip list --outdated
-	}
-	uvpu() { uv pip uninstall "$@"; }
 	uvpyc() {
 		if [ $# -eq 0 ]; then
 			__uvpyc_dir="$(pwd)"
@@ -704,10 +699,6 @@ if command -v uv >/dev/null 2>&1; then
 		fi
 		uv tool run pyclean "${__uvpyc_dir}"
 		clean_dirs "${__uvpyc_dir}"
-	}
-	uvs() {
-		[ $# -ne 0 ] && echo_date "'uvs' accepts no arguments; got $#" && return 1
-		uv sync --upgrade
 	}
 	__uvpld() {
 		[ $# -ne 1 ] && echo_date "'__uvpld' accepts 1 argument; got $#" && return 1
@@ -724,22 +715,4 @@ if command -v uv >/dev/null 2>&1; then
 				fi
 			done
 	}
-	if command -v watch >/dev/null 2>&1; then
-		wuvpi() { watch --color --differences --interval=0.5 -- uv pip install "$@"; }
-	fi
 fi
-
-# venv
-venv_recreate() {
-	[ $# -ne 0 ] && echo_date "'venv_recreate' accepts no arguments; got $#" && return 1
-	__venv_recreate_file=$(ancestor file .envrc 2>/dev/null)
-	__venv_recreate_code=$?
-	if [ "${__venv_recreate_code}" -ne 0 ]; then
-		echo_date "'venv_recreate' did not find an ancestor containg a file named '.envrc'" && return 1
-	fi
-	__venv_recreate_dir="${__venv_recreate_file}"/.venv
-	if [ -d "${__venv_recreate_dir}" ]; then
-		rm -rf "${__venv_recreate_dir}"
-	fi
-	cdh
-}
