@@ -249,20 +249,20 @@ def _install_bump_my_version() -> None:
     _uv_tool_install("bump-my-version")
 
 
-def _install_curl() -> None:
-    if _have_command("curl"):
-        _LOGGER.debug("'curl' is already installed")
-        return
-    _LOGGER.info("Installing 'curl'...")
-    _apt_install("curl")
-
-
 def _install_caffeine() -> None:
     if _have_command("caffeine"):
         _LOGGER.debug("'caffeine' is already installed")
         return
     _LOGGER.info("Installing 'caffeine'...")
     _apt_install("caffeine")
+
+
+def _install_curl() -> None:
+    if _have_command("curl"):
+        _LOGGER.debug("'curl' is already installed")
+        return
+    _LOGGER.info("Installing 'curl'...")
+    _apt_install("curl")
 
 
 def _install_delta() -> None:
