@@ -206,17 +206,24 @@ if type -q git
 
     # clone
     function gcl
-        if test (count $argv) -eq 0
-            echo "'gcl' expected [1..2] arguments REPO DIR; got $(count $argv)" >&2; and return 1
+        if test (count $argv) -lt 1
+            echo "'gcl' expected [1..2) arguments REPO DIR; got $(count $argv)" >&2; and return 1
         end
-        set -l repo $argv[1]
+        set -l args
+        if test (count $argv) -ge 2
+            set args $args --dir $argv[2]
+        end
+        __git_clone --repo $argv[1] $args
+    end
+    function __git_clone
+        argparse repo= dir= -- $argv; or return $status
         set -l dir
-        if test (count $argv) -eq 1
-            set dir (basename (string replace -r '\.git$' '' -- $repo))
+        if test -n "$_flag_dir"
+            set dir $_flag_dir
         else
-            set dir $argv[2]
+            set dir (basename (string replace -r '\.git$' '' -- $_flag_repo))
         end
-        git clone --recurse-submodules $repo $dir; or return $status
+        git clone --recurse-submodules $_flag_repo $dir; or return $status
         set -l current (pwd)
         cd $dir
         if type -q pre-commit
