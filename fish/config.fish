@@ -142,6 +142,9 @@ end
 function pyr
     pyright $argv
 end
+function pyrightconfig
+    __edit_ancestor pyrightconfig.json
+end
 
 # python
 function pyproject
@@ -154,8 +157,13 @@ function rm
 end
 
 # ruff
-if type -q rw
-    ruff check -w $argv
+function ruff-toml
+    __edit_ancestor ruff.toml
+end
+if type -q ruff
+    function rw
+        ruff check -w $argv
+    end
 end
 
 # rust

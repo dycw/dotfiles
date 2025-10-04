@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ruff: noqa: C901, E501, S310, PLR0912, PLR0915, S602
+# ruff: noqa: E501, S310, S602
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -201,108 +201,7 @@ class _Settings:
         return _Settings(**vars(parser.parse_args()))
 
 
-# script
-
-
-def main(settings: _Settings, /) -> None:
-    basicConfig(
-        format="{asctime} | {levelname:8} | {message}",
-        datefmt="%Y-%m-%d %H:%M:%S",
-        style="{",
-        level="DEBUG" if settings.verbose else "INFO",
-    )
-    _install_curl()
-    _install_fish()
-    _install_git()
-    _install_neovim()
-    _install_npm()
-    _install_python3_13_venv()
-    _install_starship()
-    _setup_bash()
-    _setup_pdb()
-    _setup_psql()
-    _setup_sshd()
-    _setup_zsh()
-    if settings.age:
-        _install_age()
-    if settings.bat:
-        _install_bat()
-    if settings.bottom:
-        _install_bottom()
-    if settings.build_essential:
-        _install_build_essential()
-    if settings.caffeine:
-        _install_caffeine()
-    if settings.delta:
-        _install_delta()
-    if settings.direnv:
-        _install_direnv()
-    if settings.dust:
-        _install_dust()
-    if settings.eza:
-        _install_eza()
-    if settings.fd_find:
-        _install_fd_find()
-    if settings.fzf:
-        _install_fzf()
-    if settings.gh:
-        _install_gh()
-    if settings.glab:
-        _install_glab()
-    if settings.just:
-        _install_just()
-    if settings.jq:
-        _install_jq()
-    if settings.luarocks:
-        _install_luarocks()
-    if settings.macchanger:
-        _install_macchanger()
-    if settings.ripgrep:
-        _install_ripgrep()
-    if settings.rsync:
-        _install_rsync()
-    if settings.shellcheck:
-        _install_shellcheck()
-    if settings.shfmt:
-        _install_shfmt()
-    if settings.sops:
-        _install_sops()
-    if settings.ssh_keys is not None:
-        _setup_ssh_keys(settings.ssh_keys)
-    if settings.stylua:
-        _install_stylua()
-    if settings.syncthing:
-        _install_syncthing()
-    if settings.tmux:
-        _install_tmux()
-    if settings.yq:
-        _install_yq()
-    if settings.zoom:
-        _install_zoom()
-    if settings.zoxide:
-        _install_zoxide()
-
-    _install_uv()  # after curl
-    if settings.docker:
-        _install_docker()  # after curl
-    if settings.spotify:
-        _install_spotify()  # after curl
-    if settings.tailscale:
-        _install_tailscale()  # after curl
-    if settings.wezterm:
-        _install_wezterm()  # after curl
-
-    if settings.luacheck:
-        _install_luacheck()  # after luarocks
-
-    if settings.bump_my_version:
-        _install_bump_my_version()  # after uv
-    if settings.pre_commit:
-        _install_pre_commit()  # after uv
-    if settings.pyright:
-        _install_pyright()  # after uv
-    if settings.ruff:
-        _install_ruff()  # after uv
+# library
 
 
 def _install_age() -> None:
@@ -971,6 +870,107 @@ def _yield_github_latest_download(
 
 
 # main
+
+
+def main(settings: _Settings, /) -> None:
+    basicConfig(
+        format="{asctime} | {levelname:8} | {message}",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        style="{",
+        level="DEBUG" if settings.verbose else "INFO",
+    )
+    _install_curl()
+    _install_fish()
+    _install_git()
+    _install_neovim()
+    _install_npm()
+    _install_python3_13_venv()
+    _install_starship()
+    _setup_bash()
+    _setup_pdb()
+    _setup_psql()
+    _setup_sshd()
+    _setup_zsh()
+    if settings.age:
+        _install_age()
+    if settings.bat:
+        _install_bat()
+    if settings.bottom:
+        _install_bottom()
+    if settings.build_essential:
+        _install_build_essential()
+    if settings.caffeine:
+        _install_caffeine()
+    if settings.delta:
+        _install_delta()
+    if settings.direnv:
+        _install_direnv()
+    if settings.dust:
+        _install_dust()
+    if settings.eza:
+        _install_eza()
+    if settings.fd_find:
+        _install_fd_find()
+    if settings.fzf:
+        _install_fzf()
+    if settings.gh:
+        _install_gh()
+    if settings.glab:
+        _install_glab()
+    if settings.just:
+        _install_just()
+    if settings.jq:
+        _install_jq()
+    if settings.luarocks:
+        _install_luarocks()
+    if settings.macchanger:
+        _install_macchanger()
+    if settings.ripgrep:
+        _install_ripgrep()
+    if settings.rsync:
+        _install_rsync()
+    if settings.shellcheck:
+        _install_shellcheck()
+    if settings.shfmt:
+        _install_shfmt()
+    if settings.sops:
+        _install_sops()
+    if settings.ssh_keys is not None:
+        _setup_ssh_keys(settings.ssh_keys)
+    if settings.stylua:
+        _install_stylua()
+    if settings.syncthing:
+        _install_syncthing()
+    if settings.tmux:
+        _install_tmux()
+    if settings.yq:
+        _install_yq()
+    if settings.zoom:
+        _install_zoom()
+    if settings.zoxide:
+        _install_zoxide()
+
+    _install_uv()  # after curl
+    if settings.docker:
+        _install_docker()  # after curl
+    if settings.spotify:
+        _install_spotify()  # after curl
+    if settings.tailscale:
+        _install_tailscale()  # after curl
+    if settings.wezterm:
+        _install_wezterm()  # after curl
+
+    if settings.luacheck:
+        _install_luacheck()  # after luarocks
+
+    if settings.bump_my_version:
+        _install_bump_my_version()  # after uv
+    if settings.pre_commit:
+        _install_pre_commit()  # after uv
+    if settings.pyright:
+        _install_pyright()  # after uv
+    if settings.ruff:
+        _install_ruff()  # after uv
 
 
 main(_Settings.parse())
