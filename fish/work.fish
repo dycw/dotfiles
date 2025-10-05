@@ -4,6 +4,14 @@ if ! status is-interactive
     exit
 end
 
+# cd
+if test (hostname) = DW-Mac
+    function cdg
+        cd $HOME/work-gitlab
+    end
+end
+
+# work
 if test -f $HOME/work/infra/shell/fish.fish
     source $HOME/work/infra/shell/fish.fish
 end
