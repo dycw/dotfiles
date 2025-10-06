@@ -834,6 +834,9 @@ def _copyfile(
     path_from: Path | str, path_to: Path | str, /, *, executable: bool = False
 ) -> None:
     path_from, path_to = map(_to_path, [path_from, path_to])
+    if path_to.exists() and (path_to.read_text() == path_from.read_text()):
+        _LOGGER.debug("Already copied %r -> %r", str(path_from), str(path_to))
+        return
     _unlink(path_to)
     _LOGGER.info("Copying %r -> %r...", str(path_from), str(path_to))
     path_to.parent.mkdir(parents=True, exist_ok=True)
