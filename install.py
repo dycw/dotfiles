@@ -835,7 +835,7 @@ def _copyfile(
 ) -> None:
     path_from, path_to = map(_to_path, [path_from, path_to])
     if path_to.exists() and (path_to.read_text() == path_from.read_text()):
-        _LOGGER.debug("Already copied %r -> %r", str(path_from), str(path_to))
+        _LOGGER.debug("%r -> %r already copied", str(path_from), str(path_to))
         return
     _unlink(path_to)
     _LOGGER.info("Copying %r -> %r...", str(path_from), str(path_to))
@@ -981,13 +981,24 @@ def main(settings: _Settings, /) -> None:
     )
     match _Hardware.identify():
         case _Hardware.mac_mini:
+            _setup_mac(settings)
             _setup_mac_mini(settings)
         case _Hardware.macbook:
+            _setup_mac(settings)
             raise NotImplementedError
         case _Hardware.debian:
             _setup_debian(settings)
         case never:
             assert_never(never)
+
+
+def _setup_mac(settings: _Settings, /) -> None:
+    _install_brew()
+    _install_uv()
+
+    _install_fish()  # after brew
+    if settings.fzf:
+        _install_fzf(fzf_fish=True)  # after brew
 
 
 def _setup_mac_mini(settings: _Settings, /) -> None:
