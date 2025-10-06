@@ -207,9 +207,21 @@ function pytfxk
 end
 function pytk
     if test (count $argv) -lt 1
-        echo "'pytk' expected [1..) arguments FILENAME; got "(count $argv) >&2; and return 1
+        echo "'pytk' expected [1..) arguments EXPRESSION; got "(count $argv) >&2; and return 1
     end
     __pytest -k $argv
+end
+function pytp
+    __pytest --pdb $argv
+end
+function pytpx
+    __pytest --pdb -x $argv
+end
+function pytpxk
+    if test (count $argv) -lt 1
+        echo "'pytpxk' expected [1..) arguments EXPRESSION; got "(count $argv) >&2; and return 1
+    end
+    __pytest --pdb -x -k $argv
 end
 function pytx
     __pytest -x $argv
