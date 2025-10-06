@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
-# ruff: noqa: E501, S310, S602
+import re
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
+from enum import Enum, auto
 from logging import basicConfig, getLogger
 from os import environ, geteuid
 from pathlib import Path
+from platform import system
 from re import search
 from shutil import copyfile, which
 from stat import S_IXUSR
 from string import Template
 from subprocess import check_call, check_output
 from tempfile import TemporaryDirectory
+from typing import assert_never
 from urllib.parse import urlparse
 from urllib.request import urlopen
 from zipfile import ZipFile
@@ -21,6 +24,39 @@ from zipfile import ZipFile
 
 
 _LOGGER = getLogger(__name__)
+
+
+# environments
+
+
+class _Env(Enum):
+    mac_mini = auto()
+    macbook = auto()
+    debian = auto()
+
+    @classmethod
+    def identify(cls) -> "_Env":
+        match system():
+            case "Darwin":
+                text = _get_output("system_profiler SPHardwareDataType")
+                pattern = re.compile(r"^\s+Model Name: ([\w\s]+?)$")
+                (match_obj,) = [
+                    match
+                    for line in text.splitlines()
+                    if (match := pattern.search(line)) is not None
+                ]
+                match match_obj.group(1):
+                    case "Mac mini":
+                        return _Env.mac_mini
+                    case model_name:
+                        msg = f"Invalid model name: {model_name!r}"
+                        raise NotImplementedError(msg)
+
+            case "Linux":
+                raise NotImplementedError
+            case _system:
+                msg = f"Invalid system {_system!r}"
+                raise ValueError(msg)
 
 
 # settings
@@ -240,6 +276,16 @@ def _install_bottom(*, config: bool = False) -> None:
         )
 
 
+def _install_brew() -> None:
+    if _have_command("brew"):
+        _LOGGER.debug("'brew' is already installed")
+        return
+    _LOGGER.info("Installing 'brew'...")
+    _run_commands(
+        'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+    )
+
+
 def _install_build_essential() -> None:
     if _have_command("cc"):
         _LOGGER.debug(
@@ -355,8 +401,8 @@ def _install_fish() -> None:
     else:
         _LOGGER.info("Installing 'fish'...")
         _run_commands(
-            """echo 'deb http://download.opensuse.org/repositories/shells:/fish/Debian_13/ /' | sudo tee /etc/apt/sources.list.d/shells:fish.list""",
-            """curl -fsSL https://download.opensuse.org/repositories/shells:fish/Debian_13/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish.gpg > /dev/null""",
+            "echo 'deb http://download.opensuse.org/repositories/shells:/fish/Debian_13/ /' | sudo tee /etc/apt/sources.list.d/shells:fish.list",
+            "curl -fsSL https://download.opensuse.org/repositories/shells:fish/Debian_13/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish.gpg > /dev/null",
         )
         _apt_install("fish")
     if search(r"/fish$", environ["SHELL"]):
@@ -779,15 +825,17 @@ def _dpkg_install(path: Path | str, /) -> None:
 def _get_latest_tag(owner: str, repo: str, /) -> str:
     _install_curl()
     _install_jq()
-    return check_output(
-        f'curl -s https://api.github.com/repos/{owner}/{repo}/releases/latest | jq -r ".tag_name"',
-        shell=True,
-        text=True,
-    ).strip("\n")
+    return _get_output(
+        f'curl -s https://api.github.com/repos/{owner}/{repo}/releases/latest | jq -r ".tag_name"'
+    )
 
 
 def _get_local_bin() -> Path:
     return _to_path("~/.local/bin")
+
+
+def _get_output(cmd: str, /) -> str:
+    return check_output(cmd, shell=True, text=True).strip("\n")
 
 
 def _get_script_dir() -> Path:
@@ -899,6 +947,24 @@ def main(settings: _Settings, /) -> None:
         style="{",
         level="DEBUG" if settings.verbose else "INFO",
     )
+    match _Env.identify():
+        case _Env.mac_mini:
+            _setup_mac_mini(settings)
+        case _Env.macbook:
+            raise NotImplementedError
+        case _Env.debian:
+            _setup_debian(settings)
+        case never:
+            assert_never(never)
+
+
+def _setup_mac_mini(settings: _Settings, /) -> None:
+    _install_brew()
+
+    _install_fish()  # after brew
+
+
+def _setup_debian(settings: _Settings, /) -> None:
     _install_curl()
     _install_fish()
     _install_git(config=True)
