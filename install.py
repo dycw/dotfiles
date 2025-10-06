@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import re
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -27,34 +26,6 @@ _LOGGER = getLogger(__name__)
 
 
 # environments
-
-
-class _Hardware(Enum):
-    mac_mini = auto()
-    macbook = auto()
-    debian = auto()
-
-    @classmethod
-    def identify(cls) -> "_Hardware":
-        match _System.identify():
-            case _System.mac:
-                text = _get_output("system_profiler SPHardwareDataType")
-                pattern = re.compile(r"^\s+Model Name: ([\w\s]+?)$")
-                (match_obj,) = [
-                    match
-                    for line in text.splitlines()
-                    if (match := pattern.search(line)) is not None
-                ]
-                match match_obj.group(1):
-                    case "Mac mini":
-                        return _Hardware.mac_mini
-                    case model_name:
-                        msg = f"Invalid model name: {model_name!r}"
-                        raise NotImplementedError(msg)
-            case _System.linux:
-                raise NotImplementedError
-            case never:
-                assert_never(never)
 
 
 class _System(Enum):
@@ -448,9 +419,7 @@ def _install_fzf(*, fzf_fish: bool = False) -> None:
             case never:
                 assert_never(never)
     if fzf_fish:
-        for path in (
-            _get_script_dir().joinpath("fzf", "fzf.fish", "functions").iterdir()
-        ):
+        for path in _to_path(f"{_get_local_bin()}/fzf/fzf.fish/functions").iterdir():
             _copyfile(path, f"~/.config/fish/functions/{path.name}")
 
 
@@ -619,7 +588,7 @@ def _install_sops(*, age: Path | str | None = None) -> None:
         _LOGGER.debug("'sops' is already installed")
     else:
         _LOGGER.info("Installing 'sops'...")
-        path_to = _get_local_bin().joinpath("sops")
+        path_to = f"{_get_local_bin()}/sops"
         with _yield_github_latest_download(
             "getsops", "sops", "sops-${tag}.linux.amd64"
         ) as binary:
@@ -658,7 +627,7 @@ def _install_stylua() -> None:
         _LOGGER.debug("'stylua' is already installed")
         return
     _LOGGER.info("Installing 'stylua'...")
-    path_to = _get_local_bin().joinpath("stylua")
+    path_to = f"{_get_local_bin()}/stylua"
     with (
         _yield_github_latest_download(
             "johnnymorganz", "stylua", "stylua-linux-x86_64.zip"
@@ -743,7 +712,7 @@ def _install_yq() -> None:
         _LOGGER.debug("'yq' is already installed")
         return
     _LOGGER.info("Installing 'yq'...")
-    path_to = _get_local_bin().joinpath("yq")
+    path_to = f"{_get_local_bin()}/yq"
     with _yield_github_latest_download("mikefarah", "yq", "yq_linux_amd64") as binary:
         _copyfile(binary, path_to, executable=True)
 
@@ -979,14 +948,10 @@ def main(settings: _Settings, /) -> None:
         style="{",
         level="DEBUG" if settings.verbose else "INFO",
     )
-    match _Hardware.identify():
-        case _Hardware.mac_mini:
+    match _System.identify():
+        case _System.mac:
             _setup_mac(settings)
-            _setup_mac_mini(settings)
-        case _Hardware.macbook:
-            _setup_mac(settings)
-            raise NotImplementedError
-        case _Hardware.debian:
+        case _System.linux:
             _setup_debian(settings)
         case never:
             assert_never(never)
@@ -1008,10 +973,6 @@ def _setup_mac(settings: _Settings, /) -> None:
         _install_pyright()  # after uv
     if settings.ruff:
         _install_ruff()  # after uv
-
-
-def _setup_mac_mini(settings: _Settings, /) -> None:
-    pass
 
 
 def _setup_debian(settings: _Settings, /) -> None:
