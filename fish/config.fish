@@ -14,6 +14,30 @@ if type -q bat
     end
 end
 
+# bottom
+function bottom-toml
+    $EDITOR $HOME/dotfiles/bottom/bottom.toml
+end
+
+# bump-my-version
+if type -q bump-my-version
+    function bump-patch
+        bump-my-version bump patch
+    end
+    function bump-minor
+        bump-my-version bump minor
+    end
+    function bump-major
+        bump-my-version bump major
+    end
+    function bump-set
+        if test (count $argv) -lt 1
+            echo "'bump-set' expected [1..) arguments VERSION; got "(count $argv) >&2; and return 1
+        end
+        bump-my-version replace --new-version $argv[1]
+    end
+end
+
 # cd
 function ..
     cd ..
@@ -46,6 +70,11 @@ function cdh
 end
 function cdw
     cd $HOME/work
+end
+
+# cp
+function cp
+    command cp -r $argv
 end
 
 # env
