@@ -63,6 +63,7 @@ class _Settings:
     tailscale: bool
     tmux: bool
     verbose: bool
+    vim: bool
     wezterm: bool
     yq: bool
     zoom: bool
@@ -182,6 +183,9 @@ class _Settings:
         )
         _ = parser.add_argument(
             "-tm", "--tmux", action="store_true", help="Install 'tmux'."
+        )
+        _ = parser.add_argument(
+            "-v", "--vim", action="store_true", help="Install 'vim'."
         )
         _ = parser.add_argument(
             "-yq", "--yq", action="store_true", help="Install 'yq'."
@@ -640,6 +644,14 @@ def _install_uv() -> None:
     _run_commands("curl -LsSf https://astral.sh/uv/install.sh | sh")
 
 
+def _install_vim() -> None:
+    if _have_command("vim"):
+        _LOGGER.debug("'vim' is already installed")
+        return
+    _LOGGER.info("Installing 'vim'...")
+    _apt_install("vim")
+
+
 def _install_wezterm() -> None:
     if _have_command("wezterm"):
         _LOGGER.debug("'wezterm' is already installed")
@@ -946,6 +958,8 @@ def main(settings: _Settings, /) -> None:
         _install_syncthing()
     if settings.tmux:
         _install_tmux()
+    if settings.vim:
+        _install_vim()
     if settings.yq:
         _install_yq()
     if settings.zoom:
