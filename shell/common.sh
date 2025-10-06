@@ -117,79 +117,6 @@ if command -v bat >/dev/null 2>&1; then
 	}
 fi
 
-# bottom
-if command -v btm >/dev/null 2>&1; then
-	htop() { btm "$@"; }
-fi
-bottom_toml() {
-	[ $# -ne 0 ] && echo_date "'bottom_toml' accepts no arguments; got $#" && return 1
-	${EDITOR} "${HOME}"/dotfiles/bottom/bottom.toml
-}
-
-# bump-my-version
-if command -v bump-my-version >/dev/null 2>&1; then
-	bump_patch() {
-		[ $# -ne 0 ] && echo_date "'bump_patch' accepts no arguments; got $#" && return 1
-		bump-my-version bump patch
-	}
-	bump_minor() {
-		[ $# -ne 0 ] && echo_date "'bump_minor' accepts no arguments; got $#" && return 1
-		bump-my-version bump minor
-	}
-	bump_major() {
-		[ $# -ne 0 ] && echo_date "'bump_major' accepts no arguments; got $#" && return 1
-		bump-my-version bump major
-	}
-	bump_set() {
-		[ $# -ne 1 ] && echo_date "'bump_set' accepts 1 argument; got $#" && return 1
-		bump-my-version replace --new-version "$1"
-	}
-fi
-
-# cd
-alias ~='cd "${HOME}"'
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-cd_cache() {
-	[ $# -ne 0 ] && echo_date "'cd_cache' accepts no arguments; got $#" && return 1
-	cd "${XDG_CACHE_HOME:-"${HOME}/.cache"}" || return $?
-}
-cd_config() {
-	[ $# -ne 0 ] && echo_date "'cd_config' accepts no arguments; got $#" && return 1
-	cd "${XDG_CONFIG_HOME:-"${HOME}/.config"}" || return $?
-}
-cddb() {
-	[ $# -ne 0 ] && echo_date "'cddb' accepts no arguments; got $#" && return 1
-	cd "${HOME}/Dropbox" || return $?
-}
-cddbt() {
-	[ $# -ne 0 ] && echo_date "'cddbt' accepts no arguments; got $#" && return 1
-	cd "${HOME}/Dropbox/Temporary" || return $?
-}
-cddf() {
-	[ $# -ne 0 ] && echo_date "'cddf' accepts no arguments; got $#" && return 1
-	cd "${HOME}/dotfiles" || return $?
-}
-cddl() {
-	[ $# -ne 0 ] && echo_date "'cddl' accepts no arguments; got $#" && return 1
-	cd "${HOME}/Downloads" || return $?
-}
-cdh() {
-	[ $# -ne 0 ] && echo_date "'cdh' accepts no arguments; got $#" && return 1
-	__cdh_dir="$(pwd)"
-	cd / || return $?
-	cd "${__cdh_dir}" || return $?
-}
-cdw() {
-	[ $# -ne 0 ] && echo_date "'cdw' accepts no arguments; got $#" && return 1
-	cd "${HOME}/work" || return $?
-}
-cdwg() {
-	[ $# -ne 0 ] && echo_date "'cdwg' accepts no arguments; got $#" && return 1
-	cd "${HOME}/work-gitlab" || return $?
-}
-
 # chmod
 chmod_files() {
 	[ $# -ne 1 ] && echo_date "'chmod_files' accepts 1 argument; got $#" && return 1
@@ -214,12 +141,6 @@ open_cov() {
 	open .coverage/html/index.html
 }
 
-# cp
-cpr() {
-	[ $# -le 2 ] && echo_date "'cpr' accepts [2..) arguments; got $#" && return 1
-	cp -r "$@"
-}
-
 # curl
 if command -v curl >/dev/null 2>&1; then
 	curl_sh() {
@@ -229,16 +150,6 @@ if command -v curl >/dev/null 2>&1; then
 		curl -fsSL "${__curl_sh_url}" | sh -s -- "$@"
 	}
 fi
-
-# debug
-set_debug() {
-	[ $# -ne 0 ] && echo_date "'set_debug' accepts no arguments; got $#" && return 1
-	export DEBUG='1'
-}
-clear_debug() {
-	[ $# -ne 0 ] && echo_date "'clear_debug' accepts no arguments; got $#" && return 1
-	unset DEBUG
-}
 
 # dns
 refresh_dns() {
