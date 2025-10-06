@@ -1000,13 +1000,18 @@ def _setup_mac(settings: _Settings, /) -> None:
     if settings.fzf:
         _install_fzf(fzf_fish=True)  # after brew
 
+    if settings.bump_my_version:
+        _install_bump_my_version()  # after uv
+    if settings.pre_commit:
+        _install_pre_commit()  # after uv
+    if settings.pyright:
+        _install_pyright()  # after uv
+    if settings.ruff:
+        _install_ruff()  # after uv
+
 
 def _setup_mac_mini(settings: _Settings, /) -> None:
-    _install_brew()
-
-    _install_fish()  # after brew
-    if settings.fzf:
-        _install_fzf(fzf_fish=True)  # after brew
+    pass
 
 
 def _setup_debian(settings: _Settings, /) -> None:

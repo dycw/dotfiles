@@ -48,6 +48,11 @@ end
 # gitlab
 export GITLAB_HOME=$HOME/gitlab-docker
 
+# local binaries
+if test -d $HOME/.local/bin
+    fish_add_path $HOME/.local/bin
+end
+
 # pytest
 export PY_COLORS=1
 

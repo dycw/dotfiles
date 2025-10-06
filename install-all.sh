@@ -191,7 +191,6 @@ brew_install asciinema
 [ -n "${IS_MAC_MINI}" ] && brew_install bacon
 brew_install bat
 brew_install btm bottom
-brew_install bump-my-version
 [ -n "${IS_MAC_MINI}" ] && brew_install cargo-binstall
 [ -n "${IS_MAC_MINI}" ] && brew_install cargo-nextest
 [ -n "${IS_MAC_MINI}" ] && brew_install db-browser-for-sqlite --cask
@@ -201,7 +200,6 @@ brew_install direnv
 brew_install dust
 brew_install eza
 brew_install fd
-brew_install fzf
 brew_install gh
 [ -n "${IS_MAC}" ] && brew_install ghostty --cask
 brew_install glab
@@ -219,7 +217,6 @@ brew_install nvim neovim
 [ -n "${IS_MAC_MINI}" ] && brew_install pgcli
 [ -n "${IS_MAC_MINI}" ] && brew_install postgres postgresql@17
 [ -n "${IS_MAC_MINI}" ] && brew_install postico --cask
-brew_install pre-commit
 brew_install prettier
 [ -n "${IS_MAC}" ] && brew_install protonvpn --cask
 [ -n "${IS_MAC_MINI_DW}" ] && brew_install restic
