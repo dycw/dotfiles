@@ -29,15 +29,15 @@ _LOGGER = getLogger(__name__)
 # environments
 
 
-class _Env(Enum):
+class _Hardware(Enum):
     mac_mini = auto()
     macbook = auto()
     debian = auto()
 
     @classmethod
-    def identify(cls) -> "_Env":
-        match system():
-            case "Darwin":
+    def identify(cls) -> "_Hardware":
+        match _System.identify():
+            case _System.mac:
                 text = _get_output("system_profiler SPHardwareDataType")
                 pattern = re.compile(r"^\s+Model Name: ([\w\s]+?)$")
                 (match_obj,) = [
@@ -47,16 +47,30 @@ class _Env(Enum):
                 ]
                 match match_obj.group(1):
                     case "Mac mini":
-                        return _Env.mac_mini
+                        return _Hardware.mac_mini
                     case model_name:
                         msg = f"Invalid model name: {model_name!r}"
                         raise NotImplementedError(msg)
-
-            case "Linux":
+            case _System.linux:
                 raise NotImplementedError
+            case never:
+                assert_never(never)
+
+
+class _System(Enum):
+    mac = auto()
+    linux = auto()
+
+    @classmethod
+    def identify(cls) -> "_System":
+        match system():
+            case "Darwin":
+                return _System.mac
+            case "Linux":
+                return _System.linux
             case _system:
-                msg = f"Invalid system {_system!r}"
-                raise ValueError(msg)
+                msg = f"Invalid system: {_system!r}"
+                raise TypeError(msg)
 
 
 # settings
@@ -426,7 +440,13 @@ def _install_fzf(*, fzf_fish: bool = False) -> None:
         _LOGGER.debug("'fzf' is already installed")
     else:
         _LOGGER.info("Installing 'fzf'...")
-        _apt_install("fzf")
+        match _System.identify():
+            case _System.mac:
+                _brew_install("fzf")
+            case _System.linux:
+                _apt_install("fzf")
+            case never:
+                assert_never(never)
     if fzf_fish:
         for path in (
             _get_script_dir().joinpath("fzf", "fzf.fish", "functions").iterdir()
@@ -801,6 +821,15 @@ def _apt_install(*packages: str) -> None:
     _run_commands(f"sudo apt -y install {joined}")
 
 
+def _brew_install(*packages: str) -> None:
+    _LOGGER.info("Updating 'brew'...")
+    _run_commands("brew update")
+    desc = ", ".join(map(repr, packages))
+    _LOGGER.info("Installing %s...", desc)
+    joined = " ".join(packages)
+    _run_commands(f"brew install install {joined}")
+
+
 def _copyfile(
     path_from: Path | str, path_to: Path | str, /, *, executable: bool = False
 ) -> None:
@@ -947,12 +976,12 @@ def main(settings: _Settings, /) -> None:
         style="{",
         level="DEBUG" if settings.verbose else "INFO",
     )
-    match _Env.identify():
-        case _Env.mac_mini:
+    match _Hardware.identify():
+        case _Hardware.mac_mini:
             _setup_mac_mini(settings)
-        case _Env.macbook:
+        case _Hardware.macbook:
             raise NotImplementedError
-        case _Env.debian:
+        case _Hardware.debian:
             _setup_debian(settings)
         case never:
             assert_never(never)
@@ -962,6 +991,8 @@ def _setup_mac_mini(settings: _Settings, /) -> None:
     _install_brew()
 
     _install_fish()  # after brew
+    if settings.fzf:
+        _install_fzf(fzf_fish=True)  # after brew
 
 
 def _setup_debian(settings: _Settings, /) -> None:
