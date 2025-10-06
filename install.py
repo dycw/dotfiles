@@ -185,7 +185,7 @@ class _Settings:
             "-tm", "--tmux", action="store_true", help="Install 'tmux'."
         )
         _ = parser.add_argument(
-            "-v", "--vim", action="store_true", help="Install 'vim'."
+            "-vi", "--vim", action="store_true", help="Install 'vim'."
         )
         _ = parser.add_argument(
             "-yq", "--yq", action="store_true", help="Install 'yq'."
@@ -200,7 +200,7 @@ class _Settings:
             "-zx", "--zoxide", action="store_true", help="Install 'zoxide'."
         )
         _ = parser.add_argument(
-            "-v", "--verbose", action="store_true", help="Verbose mode."
+            "-ve", "--verbose", action="store_true", help="Verbose mode."
         )
         return _Settings(**vars(parser.parse_args()))
 
@@ -470,7 +470,9 @@ def _install_neovim(*, config: Path | str | None = None) -> None:
             "https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage"
         ) as appimage:
             _set_executable(appimage)
-            _run_commands(f"sudo mv {appimage} {path_to}")
+            _run_commands(
+                f"sudo mkdir -p {path_to.parent}", f"sudo mv {appimage} {path_to}"
+            )
     if config is not None:
         config = _to_path(config)
         if config.exists():
@@ -674,7 +676,9 @@ def _install_yq() -> None:
         _LOGGER.debug("'yq' is already installed")
         return
     _LOGGER.info("Installing 'yq'...")
-    _apt_install("yq")
+    path_to = _get_local_bin().joinpath("yq")
+    with _yield_github_latest_download("mikefarah", "yq", "yq_linux_amd64") as binary:
+        _copyfile(binary, path_to, executable=True)
 
 
 def _install_zoom() -> None:
