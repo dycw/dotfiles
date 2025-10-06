@@ -428,7 +428,14 @@ def _install_git(*, config: bool = False) -> None:
         _LOGGER.debug("'git' is already installed")
     else:
         _LOGGER.info("Installing 'git'...")
-        _apt_install("git")
+        match _System.identify():
+            case _System.mac:
+                msg = "Mac should already have 'git' installed"
+                raise RuntimeError(msg)
+            case _System.linux:
+                _apt_install("git")
+            case never:
+                assert_never(never)
     if config:
         for filename in ["config", "ignore"]:
             _setup_symlink(
@@ -959,6 +966,7 @@ def main(settings: _Settings, /) -> None:
 
 def _setup_mac(settings: _Settings, /) -> None:
     _install_brew()
+    _install_git(config=True)
     _install_uv()
 
     _install_fish()  # after brew
