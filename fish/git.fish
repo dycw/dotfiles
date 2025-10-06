@@ -425,7 +425,7 @@ function __git_push
     end
     git push $args; or return $status
     if test -n "$_flag_web"
-        gitweb; or return $status
+        __github_or_gitlab_view; or return $status
     end
     if test -n "$_flag_exit"
         exit
@@ -707,7 +707,17 @@ function __github_merging
     end
 end
 
-#### github ###################################################################
+function __github_view
+    if gh pr ready >/dev/null 2>&1
+        gh pr view -w
+    else if type -q gitweb
+        gitweb
+    else
+        echo "'__github_view' could not find an open PR for $(current-branch), nor could it find 'gitweb'" >&2; and return 1
+    end
+end
+
+#### gitlab ###################################################################
 
 function __gitlab_create
     argparse title= description= -- $argv; or return $status
@@ -752,6 +762,120 @@ got none" >&2; and return 1
     else
         echo "'__gitlab_mr_json' expected a unique MR for '$branch'
 got $num" >&2; and return 1
+    end
+end
+
+function __gitlab_view
+    if type -q gitweb
+        gitweb
+    else
+        echo "'__gitlab_view' could not find 'gitweb'" >&2; and return 1
+    end
+end
+
+#### github + gitlab ##########################################################
+
+# create
+
+function ghc
+    set -l args
+    if test (count $argv) -eq 0
+    else if test (count $argv) -eq 1
+        set args $args --title $argv[1]
+    else if test (count $argv) -eq 2
+        set args $args --title $argv[1] --num $argv[2]
+    else
+        echo "'ghc' expected [0..2] arguments TITLE NUM; got $(count $argv)" >&2; and return 1
+    end
+    __github_or_gitlab_create $args
+end
+
+function __github_or_gitlab_create
+    argparse title= body= -- $argv; or return $status
+    set -l args
+    if test -n "$_flag_title"
+        set args $args --title $_flag_title
+    end
+    if __remote_is_github
+        if test -n "$_flag_body"
+            set args $args --body $_flag_body
+        end
+        __github_create $args
+    else if __remote_is_gitlab
+        if test -n "$_flag_body"
+            set args $args --description $_flag_description
+        end
+        __gitlab_create $args
+    else
+        echo "Invalid remote
+got '$(remote-name)'" >&2; and return 1
+    end
+end
+
+# edit
+
+function ghe
+    if test (count $argv) -lt 1
+        echo "'ghe' expected [0..) arguments -t/--title or -b/--body; got $(count $argv)" >&2; and return 1
+    end
+    argparse t/title= b/body= -- $argv; or return $status
+    set -l args
+    if test -n "$_flag_title"
+        set args $args --title $_flag_title
+    end
+    if __remote_is_github
+        if test -n "$_flag_body"
+            set args $args --body $_flag_body
+        end
+        __github_edit $args
+    else if __remote_is_gitlab
+        if test -n "$_flag_body"
+            set args $args --description $_flag_description
+        end
+        __gitlab_update $args
+    else
+        echo "Invalid remote
+got '$(remote-name)'" >&2; and return 1
+    end
+end
+
+# merge
+
+function ghm
+    __github_or_gitlab_merge
+end
+function ghx
+    __github_or_gitlab_merge --exit
+end
+
+function __github_or_gitlab_merge
+    argparse exit -- $argv; or return $status
+    set -l args
+    if test -n "$_flag_exit"
+        set args $args --exit
+    end
+    if __remote_is_github
+        __github_merge $args
+    else if __remote_is_gitlab
+        __gitlab_merge $args
+    else
+        echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
+    end
+end
+
+# view
+
+function gw
+    __github_or_gitlab_view
+end
+
+function __github_or_gitlab_view
+    if __remote_is_github
+        __github_view
+    else if __remote_is_gitlab
+        __gitlab_view
+    else
+        echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
     end
 end
 
@@ -985,118 +1109,6 @@ function __git_all
             set merge_args $merge_args --exit
         end
         __github_or_gitlab_merge $merge_args
-    end
-end
-
-#### github + gitlab ##########################################################
-
-# create
-
-function ghc
-    set -l args
-    if test (count $argv) -eq 0
-    else if test (count $argv) -eq 1
-        set args $args --title $argv[1]
-    else if test (count $argv) -eq 2
-        set args $args --title $argv[1] --num $argv[2]
-    else
-        echo "'ghc' expected [0..2] arguments TITLE NUM; got $(count $argv)" >&2; and return 1
-    end
-    __github_or_gitlab_create $args
-end
-
-function __github_or_gitlab_create
-    argparse title= body= -- $argv; or return $status
-    set -l args
-    if test -n "$_flag_title"
-        set args $args --title $_flag_title
-    end
-    if __remote_is_github
-        if test -n "$_flag_body"
-            set args $args --body $_flag_body
-        end
-        __github_create $args
-    else if __remote_is_gitlab
-        if test -n "$_flag_body"
-            set args $args --description $_flag_description
-        end
-        __gitlab_create $args
-    else
-        echo "Invalid remote
-got '$(remote-name)'" >&2; and return 1
-    end
-end
-
-# edit
-
-function ghe
-    if test (count $argv) -lt 1
-        echo "'ghe' expected [0..) arguments -t/--title or -b/--body; got $(count $argv)" >&2; and return 1
-    end
-    argparse t/title= b/body= -- $argv; or return $status
-    set -l args
-    if test -n "$_flag_title"
-        set args $args --title $_flag_title
-    end
-    if __remote_is_github
-        if test -n "$_flag_body"
-            set args $args --body $_flag_body
-        end
-        __github_edit $args
-    else if __remote_is_gitlab
-        if test -n "$_flag_body"
-            set args $args --description $_flag_description
-        end
-        __gitlab_update $args
-    else
-        echo "Invalid remote
-got '$(remote-name)'" >&2; and return 1
-    end
-end
-
-# merge
-
-function ghm
-    __github_or_gitlab_merge
-end
-function ghx
-    __github_or_gitlab_merge --exit
-end
-
-function __github_or_gitlab_merge
-    argparse exit -- $argv; or return $status
-    set -l args
-    if test -n "$_flag_exit"
-        set args $args --exit
-    end
-    if __remote_is_github
-        __github_merge $args
-    else if __remote_is_gitlab
-        __gitlab_merge $args
-    else
-        echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
-    end
-end
-
-# view
-
-function gw
-    if __remote_is_github
-        if gh pr ready >/dev/null 2>&1
-            gh pr view -w
-        else if type -q gitweb
-            gitweb
-        else
-            echo "'gw' could not find an open PR for $(current-branch), nor could it find 'gitweb'" >&2; and return 1
-        end
-    else if __remote_is_gitlab
-        if type -q gitweb
-            gitweb
-        else
-            echo "'gw' could not find 'gitweb'" >&2; and return 1
-        end
-    else
-        echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
     end
 end
 
