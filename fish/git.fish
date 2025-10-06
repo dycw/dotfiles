@@ -280,6 +280,7 @@ function __git_commit
     end
     git commit --message="'$message'" $args; or return $status
 end
+
 function __git_commit_until
     argparse message= no-verify -- $argv; or return $status
     set -l args
@@ -299,6 +300,7 @@ function __git_commit_until
 end
 
 # diff
+
 function gd
     git diff $argv
 end
@@ -310,15 +312,18 @@ function gdm
 end
 
 # fetch
+
 function gf
     __git_fetch_and_purge
 end
+
 function __git_fetch_and_purge
     git fetch --all --force --prune --prune-tags --recurse-submodules=yes --tags; or return $status
     __git_branch_purge_local
 end
 
 # log
+
 function gl
     set -l args
     if test (count $argv) -eq 0
@@ -328,6 +333,7 @@ function gl
     end
     __git_log $args
 end
+
 function __git_log
     argparse n= -- $argv; or return $status
     set -l args
@@ -340,20 +346,24 @@ function __git_log
 end
 
 # mv
+
 function gmv
     git mv $argv
 end
 
 # pull
+
 function gpl
     __git_pull_force $argv
 end
+
 function __git_pull_force
     __git_branch_purge_local; or return $status
     git pull --all --ff-only --force --prune --tags $argv
 end
 
 # push
+
 function gp
     __git_push
 end
@@ -402,6 +412,7 @@ end
 function gpfnx
     __git_push --force --no-verify --web --exit
 end
+
 function __git_push
     argparse force no-verify web exit -- $argv; or return $status
     set -l args
@@ -422,10 +433,12 @@ function __git_push
 end
 
 # rebase
+
 function grb
     __git_fetch_and_purge; or return $status
     git rebase --strategy=recursive --strategy-option=theirs origin/$(default-branch)
 end
+
 function grba
     git rebase --abort $argv
 end
@@ -437,15 +450,19 @@ function grbs
 end
 
 # remote
+
 function gre
     git remote -v
 end
+
 function remote-name
     git remote get-url origin
 end
+
 function repo-name
     basename -s .git $(remote-name)
 end
+
 function __remote_is
     if test (count $argv) -lt 1
         echo "'__remote_is' expected [1..) arguments REMOTE; got $(count $argv)" >&2; and return 1
@@ -456,6 +473,7 @@ function __remote_is
         return 1
     end
 end
+
 function __remote_is_github
     __remote_is github
 end
@@ -464,51 +482,63 @@ function __remote_is_gitlab
 end
 
 # reset
+
 function gr
     git reset $argv
 end
+
 function grhom
     git reset --hard origin/$(default-branch) $argv
 end
+
 function grp
     git reset --patch $argv
 end
+
 function gsq
     __git_fetch_and_purge; or return $status
     git reset --soft $(git merge-base origin/$(default-branch) HEAD)
 end
 
 # restore
+
 function gre
     git restore $argv
 end
+
 function gun
     git restore --staged $argv
 end
 
 # rev-parse
+
 function cdr
     cd (repo-root)
 end
+
 function current-branch
     git rev-parse --abbrev-ref HEAD
 end
+
 function repo-root
     git rev-parse --show-toplevel
 end
 
 # rm
+
 function grm
     __git_rm $argv
 end
 function grmc
     __git_rm $argv --cached
 end
+
 function __git_rm
     git rm -rf $argv
 end
 
 # show-ref
+
 function __is_valid_ref
     if test (count $argv) -lt 1
         echo "'__is_valid_ref' expected [1..) arguments REF; got $(count $argv)" >&2; and return 1
@@ -518,20 +548,25 @@ function __is_valid_ref
 end
 
 # stash
+
 function gst
     git stash $argv
 end
+
 function gstd
     git stash drop $argv
 end
+
 function gstp
     git stash pop $argv
 end
 
 # status
+
 function gs
     git status $argv
 end
+
 function wg
     watch --color --interval 2 --no-title --no-wrap -- '
         echo "==== status ==================================================================="
@@ -554,6 +589,7 @@ function wg
 end
 
 # submodule
+
 function gsu
     git submodule update --init --recursive; or return $status
     git submodule foreach --recursive '
@@ -564,11 +600,13 @@ function gsu
 end
 
 # symbolic ref
+
 function default-branch
     git symbolic-ref refs/remotes/origin/HEAD | sed 's#.*/##'
 end
 
 # tag
+
 function gta
     if test (math (count $argv) % 2) -ne 0
         echo "'gta' accepts an even number of arguments; got (count $argv)" >&2; and return 1
@@ -900,6 +938,7 @@ function ggcfnx
     end
     __git_all --title=$argv[1] --force --no-verify --merge --exit $argv[2..]
 end
+
 function __git_all
     argparse title= num= part force no-verify web exit merge -- $argv; or return $status
 
@@ -952,6 +991,7 @@ end
 #### github + gitlab ##########################################################
 
 # create
+
 function ghc
     set -l args
     if test (count $argv) -eq 0
@@ -988,6 +1028,7 @@ got '$(remote-name)'" >&2; and return 1
 end
 
 # edit
+
 function ghe
     if test (count $argv) -lt 1
         echo "'ghe' expected [0..) arguments -t/--title or -b/--body; got $(count $argv)" >&2; and return 1
@@ -1014,12 +1055,14 @@ got '$(remote-name)'" >&2; and return 1
 end
 
 # merge
+
 function ghm
     __github_or_gitlab_merge
 end
 function ghx
     __github_or_gitlab_merge --exit
 end
+
 function __github_or_gitlab_merge
     argparse exit -- $argv; or return $status
     set -l args
@@ -1028,7 +1071,7 @@ function __github_or_gitlab_merge
     end
     if __remote_is_github
         __github_merge $args
-    else if __remote_is_github
+    else if __remote_is_gitlab
         __gitlab_merge $args
     else
         echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
@@ -1036,15 +1079,24 @@ function __github_or_gitlab_merge
 end
 
 # view
-function __github_view
 
-    function gw
-        gitweb
-    end
-    if gh pr ready
-        gh pr view -w
+function gw
+    if __remote_is_github
+        if gh pr ready >/dev/null 2>&1
+            gh pr view -w
+        else if type -q gitweb
+            gitweb
+        else
+            echo "'gw' could not find an open PR for $(current-branch), nor could it find 'gitweb'" >&2; and return 1
+        end
+    else if __remote_is_gitlab
+        if type -q gitweb
+            gitweb
+        else
+            echo "'gw' could not find 'gitweb'" >&2; and return 1
+        end
     else
-        echo "'gw' could not find an open PR for $(current-branch)" >&2; and return 1
+        echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
     end
 end
 
