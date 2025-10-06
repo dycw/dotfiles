@@ -278,17 +278,18 @@ def _install_delta() -> None:
     _apt_install("git-delta")
 
 
-def _install_direnv(*, config: bool = False) -> None:
+def _install_direnv(
+    *, direnv_toml: Path | str | None = None, direnvrc: Path | str | None = None
+) -> None:
     if _have_command("direnv"):
         _LOGGER.debug("'direnv' is already installed")
     else:
         _LOGGER.info("Installing 'direnv'...")
         _apt_install("direnv")
-    if config:
-        for filename in ["direnv.toml", "direnvrc"]:
-            _setup_symlink(
-                f"~/.config/direnv/{filename}", f"{_get_script_dir()}/direnv/{filename}"
-            )
+    for path_to in [direnv_toml, direnvrc]:
+        if path_to is not None:
+            name = _to_path(path_to).name
+            _setup_symlink(f"~/.config/direnv/{name}", path_to)
 
 
 def _install_docker() -> None:
@@ -923,7 +924,10 @@ def main(settings: _Settings, /) -> None:
     if settings.delta:
         _install_delta()
     if settings.direnv:
-        _install_direnv(config=True)
+        _install_direnv(
+            direnv_toml=f"{_get_script_dir()}/direnv/direnv.toml",
+            direnvrc=f"{_get_script_dir()}/direnv/direnvrc",
+        )
     if settings.dust:
         _install_dust()
     if settings.eza:
