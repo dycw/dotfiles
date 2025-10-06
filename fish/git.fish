@@ -519,8 +519,10 @@ if type -q git
                 printf "\n==== diff origin/$branch =======================================================\n"
                 git -c color.ui=always diff origin/$branch --stat
             fi
-            printf "\n==== github ==================================================================="
-            gh pr status
+            if (git remote get-url origin 2>/dev/null | grep -q github) && (command -v gh >/dev/null 2>&1); then
+                printf "\n==== github ==================================================================="
+                gh pr status
+            fi
         '
     end
 
