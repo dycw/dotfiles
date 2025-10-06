@@ -10,7 +10,7 @@ version = "0.0.0"
 # bump-my-version
 [tool.bumpversion]
 allow_dirty = true
-current_version = "0.3.83"
+current_version = "0.3.84"
 
 # pyright
 [tool.pyright]
@@ -44,16 +44,16 @@ explicit-preview-rules = true
 fixable = ["ALL"]
 ignore = [
   "ANN401",  # dynamically-typed-expression
-  "D",  # pydocstyle
   "C901",  # complex-structure
-  "W191",  # tab-indentation
+  "COM812",  # missing-trailing-comma
+  "COM819",  # prohibited-trailing-comma
+  "D",  # pydocstyle
   "D206",  # indent-with-spaces
   "D300",  # triple-single-quotes
   "E111",  # indentation-with-invalid-multiple
   "E114",  # indentation-with-invalid-multiple-comment
   "E117",  # over-indented
-  "COM812",  # missing-trailing-comma
-  "COM819",  # prohibited-trailing-comma
+  "E501",  # line-too-long
   "ISC001",  # single-line-implicit-string-concatenation
   "ISC002",  # multi-line-implicit-string-concatenation
   "PLR0912",  # too-many-branches
@@ -63,6 +63,9 @@ ignore = [
   "Q001",  # bad-quotes-multiline-string
   "Q002",  # bad-quotes-docstring
   "Q003",  # avoidable-escaped-quote
+  'S310',  # suspicious-url-open-usage
+  "S602",  # subprocess-popen-with-shell-equals-true
+  "W191",  # tab-indentation
 ]
 select = ["ALL"]
 
@@ -71,3 +74,6 @@ select = ["ALL"]
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
+
+[tool.ruff.lint.isort]
+split-on-trailing-comma = false

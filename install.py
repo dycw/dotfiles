@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
-# ruff: noqa: E501, S310, S602
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
+from enum import Enum, auto
 from logging import basicConfig, getLogger
 from os import environ, geteuid
 from pathlib import Path
+from platform import system
 from re import search
 from shutil import copyfile, which
 from stat import S_IXUSR
 from string import Template
 from subprocess import check_call, check_output
 from tempfile import TemporaryDirectory
+from typing import assert_never
 from urllib.parse import urlparse
 from urllib.request import urlopen
 from zipfile import ZipFile
@@ -21,6 +23,25 @@ from zipfile import ZipFile
 
 
 _LOGGER = getLogger(__name__)
+
+
+# environments
+
+
+class _System(Enum):
+    mac = auto()
+    linux = auto()
+
+    @classmethod
+    def identify(cls) -> "_System":
+        match system():
+            case "Darwin":
+                return _System.mac
+            case "Linux":
+                return _System.linux
+            case _system:
+                msg = f"Invalid system: {_system!r}"
+                raise TypeError(msg)
 
 
 # settings
@@ -240,6 +261,16 @@ def _install_bottom(*, config: bool = False) -> None:
         )
 
 
+def _install_brew() -> None:
+    if _have_command("brew"):
+        _LOGGER.debug("'brew' is already installed")
+        return
+    _LOGGER.info("Installing 'brew'...")
+    _run_commands(
+        'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+    )
+
+
 def _install_build_essential() -> None:
     if _have_command("cc"):
         _LOGGER.debug(
@@ -355,8 +386,8 @@ def _install_fish() -> None:
     else:
         _LOGGER.info("Installing 'fish'...")
         _run_commands(
-            """echo 'deb http://download.opensuse.org/repositories/shells:/fish/Debian_13/ /' | sudo tee /etc/apt/sources.list.d/shells:fish.list""",
-            """curl -fsSL https://download.opensuse.org/repositories/shells:fish/Debian_13/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish.gpg > /dev/null""",
+            "echo 'deb http://download.opensuse.org/repositories/shells:/fish/Debian_13/ /' | sudo tee /etc/apt/sources.list.d/shells:fish.list",
+            "curl -fsSL https://download.opensuse.org/repositories/shells:fish/Debian_13/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish.gpg > /dev/null",
         )
         _apt_install("fish")
     if search(r"/fish$", environ["SHELL"]):
@@ -380,11 +411,15 @@ def _install_fzf(*, fzf_fish: bool = False) -> None:
         _LOGGER.debug("'fzf' is already installed")
     else:
         _LOGGER.info("Installing 'fzf'...")
-        _apt_install("fzf")
+        match _System.identify():
+            case _System.mac:
+                _brew_install("fzf")
+            case _System.linux:
+                _apt_install("fzf")
+            case never:
+                assert_never(never)
     if fzf_fish:
-        for path in (
-            _get_script_dir().joinpath("fzf", "fzf.fish", "functions").iterdir()
-        ):
+        for path in _to_path(f"{_get_local_bin()}/fzf/fzf.fish/functions").iterdir():
             _copyfile(path, f"~/.config/fish/functions/{path.name}")
 
 
@@ -393,7 +428,14 @@ def _install_git(*, config: bool = False) -> None:
         _LOGGER.debug("'git' is already installed")
     else:
         _LOGGER.info("Installing 'git'...")
-        _apt_install("git")
+        match _System.identify():
+            case _System.mac:
+                msg = "Mac should already have 'git' installed"
+                raise RuntimeError(msg)
+            case _System.linux:
+                _apt_install("git")
+            case never:
+                assert_never(never)
     if config:
         for filename in ["config", "ignore"]:
             _setup_symlink(
@@ -553,7 +595,7 @@ def _install_sops(*, age: Path | str | None = None) -> None:
         _LOGGER.debug("'sops' is already installed")
     else:
         _LOGGER.info("Installing 'sops'...")
-        path_to = _get_local_bin().joinpath("sops")
+        path_to = f"{_get_local_bin()}/sops"
         with _yield_github_latest_download(
             "getsops", "sops", "sops-${tag}.linux.amd64"
         ) as binary:
@@ -592,7 +634,7 @@ def _install_stylua() -> None:
         _LOGGER.debug("'stylua' is already installed")
         return
     _LOGGER.info("Installing 'stylua'...")
-    path_to = _get_local_bin().joinpath("stylua")
+    path_to = f"{_get_local_bin()}/stylua"
     with (
         _yield_github_latest_download(
             "johnnymorganz", "stylua", "stylua-linux-x86_64.zip"
@@ -677,7 +719,7 @@ def _install_yq() -> None:
         _LOGGER.debug("'yq' is already installed")
         return
     _LOGGER.info("Installing 'yq'...")
-    path_to = _get_local_bin().joinpath("yq")
+    path_to = f"{_get_local_bin()}/yq"
     with _yield_github_latest_download("mikefarah", "yq", "yq_linux_amd64") as binary:
         _copyfile(binary, path_to, executable=True)
 
@@ -755,10 +797,22 @@ def _apt_install(*packages: str) -> None:
     _run_commands(f"sudo apt -y install {joined}")
 
 
+def _brew_install(*packages: str) -> None:
+    _LOGGER.info("Updating 'brew'...")
+    _run_commands("brew update")
+    desc = ", ".join(map(repr, packages))
+    _LOGGER.info("Installing %s...", desc)
+    joined = " ".join(packages)
+    _run_commands(f"brew install install {joined}")
+
+
 def _copyfile(
     path_from: Path | str, path_to: Path | str, /, *, executable: bool = False
 ) -> None:
     path_from, path_to = map(_to_path, [path_from, path_to])
+    if path_to.exists() and (path_to.read_text() == path_from.read_text()):
+        _LOGGER.debug("%r -> %r already copied", str(path_from), str(path_to))
+        return
     _unlink(path_to)
     _LOGGER.info("Copying %r -> %r...", str(path_from), str(path_to))
     path_to.parent.mkdir(parents=True, exist_ok=True)
@@ -779,15 +833,17 @@ def _dpkg_install(path: Path | str, /) -> None:
 def _get_latest_tag(owner: str, repo: str, /) -> str:
     _install_curl()
     _install_jq()
-    return check_output(
-        f'curl -s https://api.github.com/repos/{owner}/{repo}/releases/latest | jq -r ".tag_name"',
-        shell=True,
-        text=True,
-    ).strip("\n")
+    return _get_output(
+        f'curl -s https://api.github.com/repos/{owner}/{repo}/releases/latest | jq -r ".tag_name"'
+    )
 
 
 def _get_local_bin() -> Path:
     return _to_path("~/.local/bin")
+
+
+def _get_output(cmd: str, /) -> str:
+    return check_output(cmd, shell=True, text=True).strip("\n")
 
 
 def _get_script_dir() -> Path:
@@ -899,6 +955,35 @@ def main(settings: _Settings, /) -> None:
         style="{",
         level="DEBUG" if settings.verbose else "INFO",
     )
+    match _System.identify():
+        case _System.mac:
+            _setup_mac(settings)
+        case _System.linux:
+            _setup_debian(settings)
+        case never:
+            assert_never(never)
+
+
+def _setup_mac(settings: _Settings, /) -> None:
+    _install_brew()
+    _install_git(config=True)
+    _install_uv()
+
+    _install_fish()  # after brew
+    if settings.fzf:
+        _install_fzf(fzf_fish=True)  # after brew
+
+    if settings.bump_my_version:
+        _install_bump_my_version()  # after uv
+    if settings.pre_commit:
+        _install_pre_commit()  # after uv
+    if settings.pyright:
+        _install_pyright()  # after uv
+    if settings.ruff:
+        _install_ruff()  # after uv
+
+
+def _setup_debian(settings: _Settings, /) -> None:
     _install_curl()
     _install_fish()
     _install_git(config=True)
