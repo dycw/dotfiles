@@ -7,7 +7,6 @@ from contextlib import contextmanager, suppress
 from logging import getLogger
 from os import environ, getenv, geteuid
 from pathlib import Path
-from shutil import which
 from stat import S_IXUSR
 from string import Template
 from subprocess import check_call, check_output
@@ -229,6 +228,11 @@ def uv_tool_install(tool: str, /) -> None:
     run_commands(f"uv tool install {tool}")
 
 
+def which(cmd: str, /) -> Path | None:
+    result = shutil.which(cmd)
+    return None if result is None else full_path(result)
+
+
 @contextmanager
 def yield_download(url: str, /) -> Iterator[Path]:
     filename = full_path(urlparse(url).path).name
@@ -273,6 +277,7 @@ __all__ = [
     "unlink",
     "update_submodules",
     "uv_tool_install",
+    "which",
     "yield_download",
     "yield_github_latest_download",
 ]

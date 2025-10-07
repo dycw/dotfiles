@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from logging import getLogger
 from os import environ
+from pathlib import Path
 from re import search
+from shutil import which
 from typing import TYPE_CHECKING, assert_never
 
 from install.constants import HOME, KNOWN_HOSTS, LOCAL_BIN, XDG_CONFIG_HOME
@@ -75,7 +77,7 @@ def install_bat() -> None:
             else:
                 _LOGGER.info("Installing 'bat'...")
                 apt_install("bat")
-            symlink(LOCAL_BIN / "bat", "/usr/bin/batcat")
+            symlink(LOCAL_BIN / "bat", which("batcat"))
         case never:
             assert_never(never)
 
@@ -370,6 +372,15 @@ def install_glab(*, config_yml: PathLike | None = None) -> None:
     symlink_if_given(XDG_CONFIG_HOME / "glab-ci/config.yml", config_yml)
 
 
+def install_gsed() -> None:
+    if have_command("gsed"):
+        _LOGGER.debug("'gsed' is already installed")
+        return
+    _LOGGER.info("Installing 'gsed'...")
+    brew_install("gnu-sed")
+    symlink_if_given(LOCAL_BIN / "sed", which("gsed"))
+
+
 def install_sops(*, age_secret_key: PathLike | None = None) -> None:
     if have_command("sops"):
         _LOGGER.debug("'sops' is already installed")
@@ -431,6 +442,7 @@ __all__ = [
     "install_git",
     "install_gitweb",
     "install_glab",
+    "install_gsed",
     "install_sops",
     "install_uv",
     "setup_pdb",

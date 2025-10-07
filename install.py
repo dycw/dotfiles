@@ -298,8 +298,6 @@ def _setup_sshd() -> None:
 
 
 def _setup_mac(settings: _Settings, /) -> None:
-    install_uv()
-
     if settings.bump_my_version:
         install_bump_my_version()  # after uv
     if settings.pre_commit:
@@ -316,33 +314,6 @@ def _setup_debian(settings: _Settings, /) -> None:
     install_python3_13_venv()
     install_starship(config=f"{_get_script_dir()}/starship/starship.toml")
     _setup_sshd()
-    if settings.age:
-        install_age()
-    if settings.bat:
-        install_bat()
-    if settings.bottom:
-        install_bottom(config=True)
-    if settings.build_essential:
-        install_build_essential()
-    if settings.caffeine:
-        install_caffeine()
-    if settings.direnv:
-        install_direnv(
-            direnv_toml=f"{_get_script_dir()}/direnv/direnv.toml",
-            direnvrc=f"{_get_script_dir()}/direnv/direnvrc",
-        )
-    if settings.dust:
-        install_dust()
-    if settings.eza:
-        install_eza()
-    if settings.fd_find:
-        install_fd_find(config=True)
-    if settings.fzf:
-        install_fzf(fzf_fish=True)
-    if settings.gh:
-        install_gh()
-    if settings.glab:
-        install_glab()
     if settings.just:
         install_just()
     if settings.jq:
@@ -359,8 +330,6 @@ def _setup_debian(settings: _Settings, /) -> None:
         install_shellcheck()
     if settings.shfmt:
         install_shfmt()
-    if settings.sops:
-        install_sops(age="~/secrets/age/age-secret-key.txt")
     if settings.ssh_keys is not None:
         _setup_ssh_keys(settings.ssh_keys)
     if settings.stylua:

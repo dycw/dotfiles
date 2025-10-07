@@ -19,6 +19,7 @@ from install.lib import (
     install_fzf,
     install_gh,
     install_git,
+    install_glab,
     install_sops,
     install_uv,
 )
@@ -61,6 +62,7 @@ def setup_mac(
     )
     install_fzf(fzf_fish=fzf_fish)  # after brew
     install_gh()  # after brew
+    install_glab()  # after brew
     install_sops()  # after brew
     install_uv()  # after brew
     # keyboard international
