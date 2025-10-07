@@ -17,6 +17,7 @@ from install.lib import (
     install_fd,
     install_fish,
     install_fzf,
+    install_gh,
     install_git,
     install_sops,
     install_uv,
@@ -54,6 +55,7 @@ def setup_linux(
     install_eza()
     install_fd(ignore=fd_ignore)
     install_fzf(fzf_fish=fzf_fish)
+    install_gh()
     install_git(config=git_config, ignore=git_ignore)
     install_docker()  # after curl
     install_fish(  # after curl

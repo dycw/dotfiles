@@ -13,25 +13,6 @@ _LOGGER = getLogger(__name__)
 # library
 
 
-def install_gh() -> None:
-    if have_command("gh"):
-        _LOGGER.debug("'gh' is already installed")
-        return
-    _LOGGER.info("Installing 'gh'...")
-    apt_install("gh")
-
-
-def install_glab() -> None:
-    if have_command("glab"):
-        _LOGGER.debug("'glab' is already installed")
-    else:
-        _LOGGER.info("Installing 'glab'...")
-        apt_install("glab")
-    path_to = full_path("~/work/infra/gitlab/cli.yml")
-    if path_to.exists():
-        symlink("~/.config/glab-cli/config.yml", path_to)
-
-
 def install_jq() -> None:
     if have_command("jq"):
         _LOGGER.debug("'jq' is already installed")

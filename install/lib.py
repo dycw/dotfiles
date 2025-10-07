@@ -234,7 +234,7 @@ def install_eza() -> None:
             assert_never(never)
 
 
-def install_fd_find(*, ignore: PathLike | None = None) -> None:
+def install_fd(*, ignore: PathLike | None = None) -> None:
     if have_command("fdfind"):
         _LOGGER.debug("'fd-find' is already installed")
     else:
@@ -304,6 +304,20 @@ def install_fzf(*, fzf_fish: PathLike | None = None) -> None:
             copyfile(path, XDG_CONFIG_HOME / f"fish/functions/{path.name}")
 
 
+def install_gh() -> None:
+    if have_command("gh"):
+        _LOGGER.debug("'gh' is already installed")
+        return
+    _LOGGER.info("Installing 'gh'...")
+    match System.identify():
+        case System.mac:
+            brew_install("gh")
+        case System.linux:
+            apt_install("gh")
+        case never:
+            assert_never(never)
+
+
 def install_git(
     *, config: PathLike | None = None, ignore: PathLike | None = None
 ) -> None:
@@ -321,6 +335,39 @@ def install_git(
                 assert_never(never)
     git = XDG_CONFIG_HOME / "git"
     symlink_many_if_given((git / "config", config), (git / "ignore", ignore))
+
+
+def install_gitweb() -> None:
+    if have_command("gitweb"):
+        _LOGGER.debug("'gitweb' is already installed")
+        return
+    _LOGGER.info("Installing 'gitweb'...")
+    match System.identify():
+        case System.mac:
+            brew_install("yoannfleurydev/gitweb/gitweb")
+        case System.linux:
+            path_to = LOCAL_BIN / "gitweb"
+            with yield_github_latest_download(
+                "yoannfleurydev", "gitweb", "gitweb-linux"
+            ) as binary:
+                copyfile(binary, path_to, executable=True)
+        case never:
+            assert_never(never)
+
+
+def install_glab(*, config_yml: PathLike | None = None) -> None:
+    if have_command("glab"):
+        _LOGGER.debug("'glab' is already installed")
+    else:
+        _LOGGER.info("Installing 'glab'...")
+        match System.identify():
+            case System.mac:
+                brew_install("glab")
+            case System.linux:
+                apt_install("glab")
+            case never:
+                assert_never(never)
+    symlink_if_given(XDG_CONFIG_HOME / "glab-ci/config.yml", config_yml)
 
 
 def install_sops(*, age_secret_key: PathLike | None = None) -> None:
@@ -377,10 +424,13 @@ __all__ = [
     "install_docker",
     "install_dust",
     "install_eza",
-    "install_fd_find",
+    "install_fd",
     "install_fish",
     "install_fzf",
+    "install_gh",
     "install_git",
+    "install_gitweb",
+    "install_glab",
     "install_sops",
     "install_uv",
     "setup_pdb",
