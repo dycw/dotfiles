@@ -4,7 +4,7 @@ from logging import getLogger
 from typing import TYPE_CHECKING
 
 from install.groups.common import setup_common
-from install.lib import install_fish, install_fzf, install_git
+from install.lib import install_curl, install_fish, install_fzf, install_git
 
 if TYPE_CHECKING:
     from install.types import PathLike
@@ -24,9 +24,12 @@ def setup_linux(
 ) -> None:
     _LOGGER.info("Setting up Linux...")
     setup_common()
-    install_fish(config=fish_config, env=fish_env, git=fish_git, work=fish_work)
+    install_curl()
     install_fzf(fzf_fish=fzf_fish)
     install_git(config=git_config, ignore=git_ignore)
+    install_fish(  # after curl
+        config=fish_config, env=fish_env, git=fish_git, work=fish_work
+    )
 
 
 __all__ = ["setup_linux"]

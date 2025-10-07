@@ -244,14 +244,6 @@ def install_caffeine() -> None:
     apt_install("caffeine")
 
 
-def install_curl() -> None:
-    if have_command("curl"):
-        _LOGGER.debug("'curl' is already installed")
-        return
-    _LOGGER.info("Installing 'curl'...")
-    apt_install("curl")
-
-
 def install_delta() -> None:
     if have_command("delta"):
         _LOGGER.debug("'delta' is already installed")
@@ -705,8 +697,6 @@ def _setup_mac(settings: _Settings, /) -> None:
 
 def _setup_debian(settings: _Settings, /) -> None:
     install_curl()
-    install_fish()
-    install_git(config=True)
     install_neovim(config=f"{_get_script_dir()}/nvim")
     install_npm()
     install_python3_13_venv()
