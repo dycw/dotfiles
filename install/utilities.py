@@ -145,6 +145,16 @@ def symlink(path_from: PathLike, path_to: PathLike, /) -> None:
     path_from.symlink_to(path_to)
 
 
+def symlink_if_given(path_from: PathLike, path_to: PathLike | None, /) -> None:
+    if path_to is not None:
+        symlink(path_from, path_to)
+
+
+def symlink_many_if_given(*paths: tuple[PathLike, PathLike | None]) -> None:
+    for path_from, path_to in paths:
+        symlink_if_given(path_from, path_to)
+
+
 @contextmanager
 def temp_environ(env: Mapping[str, str | None] | None = None, /) -> Iterator[None]:
     if env is None:
@@ -255,6 +265,8 @@ __all__ = [
     "run_commands",
     "set_executable",
     "symlink",
+    "symlink_if_given",
+    "symlink_many_if_given",
     "temp_environ",
     "touch",
     "unlink",

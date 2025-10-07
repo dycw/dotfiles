@@ -2,9 +2,7 @@
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from dataclasses import dataclass
 from logging import getLogger
-from os import environ
 from pathlib import Path
-from re import search
 from tempfile import TemporaryDirectory
 from typing import assert_never
 from zipfile import ZipFile
@@ -200,7 +198,7 @@ class _Settings:
 # library
 
 
-def _install_age() -> None:
+def install_age() -> None:
     if _have_command("age"):
         _LOGGER.debug("'age' is already installed")
         return
@@ -208,7 +206,7 @@ def _install_age() -> None:
     _apt_install("age")
 
 
-def _install_bat() -> None:
+def install_bat() -> None:
     if _have_command("batcat"):
         _LOGGER.debug("'bat' is already installed")
     else:
@@ -217,7 +215,7 @@ def _install_bat() -> None:
     symlink("~/.local/bin/bat", "/usr/bin/batcat")
 
 
-def _install_bottom(*, config: bool = False) -> None:
+def install_bottom(*, config: bool = False) -> None:
     if _have_command("btm"):
         _LOGGER.debug("'btm' is already installed")
     else:
@@ -232,7 +230,7 @@ def _install_bottom(*, config: bool = False) -> None:
         )
 
 
-def _install_brew() -> None:
+def install_brew() -> None:
     if _have_command("brew"):
         _LOGGER.debug("'brew' is already installed")
         return
@@ -242,7 +240,7 @@ def _install_brew() -> None:
     )
 
 
-def _install_build_essential() -> None:
+def install_build_essential() -> None:
     if _have_command("cc"):
         _LOGGER.debug(
             "'cc' is already installed (and presumably so is 'build-essential'"
@@ -252,11 +250,11 @@ def _install_build_essential() -> None:
     _apt_install("build-essential")
 
 
-def _install_bump_my_version() -> None:
+def install_bump_my_version() -> None:
     _uv_tool_install("bump-my-version")
 
 
-def _install_caffeine() -> None:
+def install_caffeine() -> None:
     if _have_command("caffeine"):
         _LOGGER.debug("'caffeine' is already installed")
         return
@@ -264,7 +262,7 @@ def _install_caffeine() -> None:
     _apt_install("caffeine")
 
 
-def _install_curl() -> None:
+def install_curl() -> None:
     if _have_command("curl"):
         _LOGGER.debug("'curl' is already installed")
         return
@@ -272,7 +270,7 @@ def _install_curl() -> None:
     _apt_install("curl")
 
 
-def _install_delta() -> None:
+def install_delta() -> None:
     if _have_command("delta"):
         _LOGGER.debug("'delta' is already installed")
         return
@@ -280,7 +278,7 @@ def _install_delta() -> None:
     _apt_install("git-delta")
 
 
-def _install_direnv(
+def install_direnv(
     *, direnv_toml: Path | str | None = None, direnvrc: Path | str | None = None
 ) -> None:
     if _have_command("direnv"):
@@ -294,7 +292,7 @@ def _install_direnv(
             symlink(f"~/.config/direnv/{name}", path_to)
 
 
-def _install_docker() -> None:
+def install_docker() -> None:
     if _have_command("docker"):
         _LOGGER.debug("'docker' is already installed")
         return
@@ -325,7 +323,7 @@ def _install_docker() -> None:
     _run_commands("sudo usermod -aG docker $USER")
 
 
-def _install_dust() -> None:
+def install_dust() -> None:
     if _have_command("dust"):
         _LOGGER.debug("'dust' is already installed")
         return
@@ -333,7 +331,7 @@ def _install_dust() -> None:
     _apt_install("du-dust")
 
 
-def _install_eza() -> None:
+def install_eza() -> None:
     if _have_command("eza"):
         _LOGGER.debug("'eza' is already installed")
         return
@@ -341,7 +339,7 @@ def _install_eza() -> None:
     _apt_install("eza")
 
 
-def _install_fd_find(*, config: bool = False) -> None:
+def install_fd_find(*, config: bool = False) -> None:
     if _have_command("fdfind"):
         _LOGGER.debug("'fd-find' is already installed")
     else:
@@ -351,33 +349,7 @@ def _install_fd_find(*, config: bool = False) -> None:
         symlink("~/.config/fd/ignore", f"{_get_script_dir()}/fd/ignore")
 
 
-def _install_fish() -> None:
-    if _have_command("fish"):
-        _LOGGER.debug("'fish' is already installed")
-    else:
-        _LOGGER.info("Installing 'fish'...")
-        _run_commands(
-            "echo 'deb http://download.opensuse.org/repositories/shells:/fish/Debian_13/ /' | sudo tee /etc/apt/sources.list.d/shells:fish.list",
-            "curl -fsSL https://download.opensuse.org/repositories/shells:fish/Debian_13/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish.gpg > /dev/null",
-        )
-        _apt_install("fish")
-    if search(r"/fish$", environ["SHELL"]):
-        _LOGGER.debug("'fish' is already the default shell")
-    else:
-        _LOGGER.info("Setting 'fish' to be the default shell")
-        _ = _run_commands("sudo chsh -s $(which fish)")
-    for filename_from, filename_to in [
-        ("config.fish", "config.fish"),
-        ("conf.d/0-env.fish", "env.fish"),
-        ("conf.d/git.fish", "git.fish"),
-        ("conf.d/work.fish", "work.fish"),
-    ]:
-        symlink(
-            f"~/.config/fish/{filename_from}", f"{_get_script_dir()}/fish/{filename_to}"
-        )
-
-
-def _install_fzf(*, fzf_fish: bool = False) -> None:
+def install_fzf(*, fzf_fish: bool = False) -> None:
     if _have_command("fzf"):
         _LOGGER.debug("'fzf' is already installed")
     else:
@@ -394,7 +366,7 @@ def _install_fzf(*, fzf_fish: bool = False) -> None:
             _copyfile(path, f"~/.config/fish/functions/{path.name}")
 
 
-def _install_gh() -> None:
+def install_gh() -> None:
     if _have_command("gh"):
         _LOGGER.debug("'gh' is already installed")
         return
@@ -402,7 +374,7 @@ def _install_gh() -> None:
     _apt_install("gh")
 
 
-def _install_glab() -> None:
+def install_glab() -> None:
     if _have_command("glab"):
         _LOGGER.debug("'glab' is already installed")
     else:
@@ -413,7 +385,7 @@ def _install_glab() -> None:
         symlink("~/.config/glab-cli/config.yml", path_to)
 
 
-def _install_jq() -> None:
+def install_jq() -> None:
     if _have_command("jq"):
         _LOGGER.debug("'jq' is already installed")
         return
@@ -421,7 +393,7 @@ def _install_jq() -> None:
     _apt_install("jq")
 
 
-def _install_just() -> None:
+def install_just() -> None:
     if _have_command("just"):
         _LOGGER.debug("'just' is already installed")
         return
@@ -429,16 +401,16 @@ def _install_just() -> None:
     _apt_install("just")
 
 
-def _install_luacheck() -> None:
+def install_luacheck() -> None:
     if _have_command("luacheck"):
         _LOGGER.debug("'luacheck' is already installed")
         return
-    _install_luarocks()
+    install_luarocks()
     _LOGGER.info("Installing 'luacheck'...")
     _luarocks_install("luacheck")
 
 
-def _install_luarocks() -> None:
+def install_luarocks() -> None:
     if _have_command("luarocks"):
         _LOGGER.debug("'luarocks' is already installed")
         return
@@ -446,7 +418,7 @@ def _install_luarocks() -> None:
     _apt_install("luarocks")
 
 
-def _install_macchanger() -> None:
+def install_macchanger() -> None:
     if _have_command("macchanger"):
         _LOGGER.debug("'macchanger' is already installed")
         return
@@ -454,7 +426,7 @@ def _install_macchanger() -> None:
     _apt_install("macchanger")
 
 
-def _install_neovim(*, config: Path | str | None = None) -> None:
+def install_neovim(*, config: Path | str | None = None) -> None:
     if _have_command("nvim"):
         _LOGGER.debug("'neovim' is already installed")
     else:
@@ -473,7 +445,7 @@ def _install_neovim(*, config: Path | str | None = None) -> None:
             symlink("~/.config/nvim", config)
 
 
-def _install_npm() -> None:
+def install_npm() -> None:
     # this is for neovim
     if _have_command("npm"):
         _LOGGER.debug("'npm' is already installed")
@@ -482,15 +454,15 @@ def _install_npm() -> None:
     _apt_install("nodejs", "npm")
 
 
-def _install_pre_commit() -> None:
+def install_pre_commit() -> None:
     _uv_tool_install("pre-commit")
 
 
-def _install_pyright() -> None:
+def install_pyright() -> None:
     _uv_tool_install("pyright")
 
 
-def _install_python3_13_venv() -> None:
+def install_python3_13_venv() -> None:
     # this is for neovim
     if _have_command("python3.13"):
         _LOGGER.debug(
@@ -501,7 +473,7 @@ def _install_python3_13_venv() -> None:
     _apt_install("python3.13-venv")
 
 
-def _install_ripgrep(*, config: bool = False) -> None:
+def install_ripgrep(*, config: bool = False) -> None:
     if _have_command("rg"):
         _LOGGER.debug("'ripgrep' is already installed")
     else:
@@ -511,7 +483,7 @@ def _install_ripgrep(*, config: bool = False) -> None:
         symlink("~/.config/ripgrep/ripgreprc", f"{_get_script_dir()}/ripgrep/ripgreprc")
 
 
-def _install_rsync() -> None:
+def install_rsync() -> None:
     if _have_command("rsync"):
         _LOGGER.debug("'rsync' is already installed")
         return
@@ -519,11 +491,11 @@ def _install_rsync() -> None:
     _apt_install("rsync")
 
 
-def _install_ruff() -> None:
+def install_ruff() -> None:
     _uv_tool_install("ruff")
 
 
-def _install_shellcheck() -> None:
+def install_shellcheck() -> None:
     if _have_command("shellcheck"):
         _LOGGER.debug("'shellcheck' is already installed")
         return
@@ -531,7 +503,7 @@ def _install_shellcheck() -> None:
     _apt_install("shellcheck")
 
 
-def _install_shfmt() -> None:
+def install_shfmt() -> None:
     if _have_command("shfmt"):
         _LOGGER.debug("'shfmt' is already installed")
         return
@@ -539,7 +511,7 @@ def _install_shfmt() -> None:
     _apt_install("shfmt")
 
 
-def _install_sops(*, age: Path | str | None = None) -> None:
+def install_sops(*, age: Path | str | None = None) -> None:
     if _have_command("sops"):
         _LOGGER.debug("'sops' is already installed")
     else:
@@ -557,11 +529,11 @@ def _install_sops(*, age: Path | str | None = None) -> None:
             _LOGGER.warning("Unable to find age secret key %r", str(age))
 
 
-def _install_spotify() -> None:
+def install_spotify() -> None:
     if _have_command("spotify"):
         _LOGGER.debug("'spotify' is already installed")
         return
-    _install_curl()
+    install_curl()
     _LOGGER.info("Installing 'spotify'...")
     _run_commands(
         "curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg",
@@ -570,7 +542,7 @@ def _install_spotify() -> None:
     _apt_install("spotify-client")
 
 
-def _install_starship(*, config: Path | str | None = None) -> None:
+def install_starship(*, config: Path | str | None = None) -> None:
     if _have_command("starship"):
         _LOGGER.debug("'starship' is already installed")
     else:
@@ -580,7 +552,7 @@ def _install_starship(*, config: Path | str | None = None) -> None:
         symlink("~/.config/starship.toml", config)
 
 
-def _install_stylua() -> None:
+def install_stylua() -> None:
     if _have_command("stylua"):
         _LOGGER.debug("'stylua' is already installed")
         return
@@ -598,7 +570,7 @@ def _install_stylua() -> None:
         _copyfile(path_from, path_to, executable=True)
 
 
-def _install_syncthing() -> None:
+def install_syncthing() -> None:
     if _have_command("syncthing"):
         _LOGGER.debug("'syncthing' is already installed")
         return
@@ -606,16 +578,16 @@ def _install_syncthing() -> None:
     _apt_install("syncthing")
 
 
-def _install_tailscale() -> None:
+def install_tailscale() -> None:
     if _have_command("tailscale"):
         _LOGGER.debug("'tailscale' is already installed")
         return
     _LOGGER.info("Installing 'tailscale'...")
-    _install_curl()
+    install_curl()
     _run_commands("curl -fsSL https://tailscale.com/install.sh | sh")
 
 
-def _install_tmux() -> None:
+def install_tmux() -> None:
     if _have_command("tmux"):
         _LOGGER.debug("'tmux' is already installed")
     else:
@@ -631,16 +603,16 @@ def _install_tmux() -> None:
         )
 
 
-def _install_uv() -> None:
+def install_uv() -> None:
     if _have_command("uv"):
         _LOGGER.debug("'uv' is already installed")
         return
-    _install_curl()
+    install_curl()
     _LOGGER.info("Installing 'uv'...")
     _run_commands("curl -LsSf https://astral.sh/uv/install.sh | sh")
 
 
-def _install_vim() -> None:
+def install_vim() -> None:
     if _have_command("vim"):
         _LOGGER.debug("'vim' is already installed")
         return
@@ -648,11 +620,11 @@ def _install_vim() -> None:
     _apt_install("vim")
 
 
-def _install_wezterm() -> None:
+def install_wezterm() -> None:
     if _have_command("wezterm"):
         _LOGGER.debug("'wezterm' is already installed")
     else:
-        _install_curl()
+        install_curl()
         _LOGGER.info("Installing 'wezterm'...")
         _run_commands(
             "curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg",
@@ -663,7 +635,7 @@ def _install_wezterm() -> None:
     symlink("~/.config/wezterm/wezterm.lua", f"{_get_script_dir()}/wezterm/wezterm.lua")
 
 
-def _install_yq() -> None:
+def install_yq() -> None:
     if _have_command("yq"):
         _LOGGER.debug("'yq' is already installed")
         return
@@ -673,7 +645,7 @@ def _install_yq() -> None:
         _copyfile(binary, path_to, executable=True)
 
 
-def _install_zoom() -> None:
+def install_zoom() -> None:
     if _have_command("zoom"):
         _LOGGER.debug("'zoom' is already installed")
         return
@@ -682,7 +654,7 @@ def _install_zoom() -> None:
     _dpkg_install("zoom_amd64.deb")
 
 
-def _install_zoxide() -> None:
+def install_zoxide() -> None:
     if _have_command("zoxide"):
         _LOGGER.debug("'zoxide' is already installed")
         return
@@ -741,120 +713,120 @@ def _setup_sshd() -> None:
 
 
 def _setup_mac(settings: _Settings, /) -> None:
-    _install_uv()
+    install_uv()
 
-    _install_fish()  # after brew
+    install_fish()  # after brew
     if settings.fzf:
-        _install_fzf(fzf_fish=True)  # after brew
+        install_fzf(fzf_fish=True)  # after brew
 
     if settings.bump_my_version:
-        _install_bump_my_version()  # after uv
+        install_bump_my_version()  # after uv
     if settings.pre_commit:
-        _install_pre_commit()  # after uv
+        install_pre_commit()  # after uv
     if settings.pyright:
-        _install_pyright()  # after uv
+        install_pyright()  # after uv
     if settings.ruff:
-        _install_ruff()  # after uv
+        install_ruff()  # after uv
 
 
 def _setup_debian(settings: _Settings, /) -> None:
-    _install_curl()
-    _install_fish()
-    _install_git(config=True)
-    _install_neovim(config=f"{_get_script_dir()}/nvim")
-    _install_npm()
-    _install_python3_13_venv()
-    _install_starship(config=f"{_get_script_dir()}/starship/starship.toml")
+    install_curl()
+    install_fish()
+    install_git(config=True)
+    install_neovim(config=f"{_get_script_dir()}/nvim")
+    install_npm()
+    install_python3_13_venv()
+    install_starship(config=f"{_get_script_dir()}/starship/starship.toml")
     _setup_bash()
     _setup_pdb()
     _setup_psql()
     _setup_sshd()
     _setup_zsh()
     if settings.age:
-        _install_age()
+        install_age()
     if settings.bat:
-        _install_bat()
+        install_bat()
     if settings.bottom:
-        _install_bottom(config=True)
+        install_bottom(config=True)
     if settings.build_essential:
-        _install_build_essential()
+        install_build_essential()
     if settings.caffeine:
-        _install_caffeine()
+        install_caffeine()
     if settings.delta:
-        _install_delta()
+        install_delta()
     if settings.direnv:
-        _install_direnv(
+        install_direnv(
             direnv_toml=f"{_get_script_dir()}/direnv/direnv.toml",
             direnvrc=f"{_get_script_dir()}/direnv/direnvrc",
         )
     if settings.dust:
-        _install_dust()
+        install_dust()
     if settings.eza:
-        _install_eza()
+        install_eza()
     if settings.fd_find:
-        _install_fd_find(config=True)
+        install_fd_find(config=True)
     if settings.fzf:
-        _install_fzf(fzf_fish=True)
+        install_fzf(fzf_fish=True)
     if settings.gh:
-        _install_gh()
+        install_gh()
     if settings.glab:
-        _install_glab()
+        install_glab()
     if settings.just:
-        _install_just()
+        install_just()
     if settings.jq:
-        _install_jq()
+        install_jq()
     if settings.luarocks:
-        _install_luarocks()
+        install_luarocks()
     if settings.macchanger:
-        _install_macchanger()
+        install_macchanger()
     if settings.ripgrep:
-        _install_ripgrep(config=True)
+        install_ripgrep(config=True)
     if settings.rsync:
-        _install_rsync()
+        install_rsync()
     if settings.shellcheck:
-        _install_shellcheck()
+        install_shellcheck()
     if settings.shfmt:
-        _install_shfmt()
+        install_shfmt()
     if settings.sops:
-        _install_sops(age="~/secrets/age/age-secret-key.txt")
+        install_sops(age="~/secrets/age/age-secret-key.txt")
     if settings.ssh_keys is not None:
         _setup_ssh_keys(settings.ssh_keys)
     if settings.stylua:
-        _install_stylua()
+        install_stylua()
     if settings.syncthing:
-        _install_syncthing()
+        install_syncthing()
     if settings.tmux:
-        _install_tmux()
+        install_tmux()
     if settings.vim:
-        _install_vim()
+        install_vim()
     if settings.yq:
-        _install_yq()
+        install_yq()
     if settings.zoom:
-        _install_zoom()
+        install_zoom()
     if settings.zoxide:
-        _install_zoxide()
+        install_zoxide()
 
-    _install_uv()  # after curl
+    install_uv()  # after curl
     if settings.docker:
-        _install_docker()  # after curl
+        install_docker()  # after curl
     if settings.spotify:
-        _install_spotify()  # after curl
+        install_spotify()  # after curl
     if settings.tailscale:
-        _install_tailscale()  # after curl
+        install_tailscale()  # after curl
     if settings.wezterm:
-        _install_wezterm()  # after curl
+        install_wezterm()  # after curl
 
     if settings.luacheck:
-        _install_luacheck()  # after luarocks
+        install_luacheck()  # after luarocks
 
     if settings.bump_my_version:
-        _install_bump_my_version()  # after uv
+        install_bump_my_version()  # after uv
     if settings.pre_commit:
-        _install_pre_commit()  # after uv
+        install_pre_commit()  # after uv
     if settings.pyright:
-        _install_pyright()  # after uv
+        install_pyright()  # after uv
     if settings.ruff:
-        _install_ruff()  # after uv
+        install_ruff()  # after uv
 
 
 main(_Settings.parse())

@@ -1,12 +1,21 @@
 from __future__ import annotations
 
 from logging import getLogger
+from os import environ
 from re import search
 from typing import TYPE_CHECKING, assert_never
 
-from install.constants import KNOWN_HOSTS
+from install.constants import KNOWN_HOSTS, XDG_CONFIG_HOME
 from install.enums import System
-from install.utilities import apt_install, have_command, run_commands, symlink, touch
+from install.utilities import (
+    apt_install,
+    brew_install,
+    full_path,
+    have_command,
+    run_commands,
+    symlink_many_if_given,
+    touch,
+)
 
 if TYPE_CHECKING:
     from install.types import PathLike
@@ -56,6 +65,43 @@ def install_curl() -> None:
             assert_never(never)
 
 
+def install_fish(
+    *,
+    config: PathLike | None = None,
+    env: PathLike | None = None,
+    git: PathLike | None = None,
+    work: PathLike | None = None,
+) -> None:
+    if have_command("fish"):
+        _LOGGER.debug("'fish' is already installed")
+    else:
+        _LOGGER.info("Installing 'fish'...")
+        match System.identify():
+            case System.mac:
+                brew_install("fish")
+            case System.linux:
+                run_commands(
+                    "echo 'deb http://download.opensuse.org/repositories/shells:/fish/Debian_13/ /' | sudo tee /etc/apt/sources.list.d/shells:fish.list",
+                    "curl -fsSL https://download.opensuse.org/repositories/shells:fish/Debian_13/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish.gpg > /dev/null",
+                )
+                apt_install("fish")
+            case never:
+                assert_never(never)
+    if search(r"/fish$", environ["SHELL"]):
+        _LOGGER.debug("'fish' is already the default shell")
+    else:
+        _LOGGER.info("Setting 'fish' as the default shell...")
+        _ = run_commands("chsh -s $(which fish)")
+    fish = XDG_CONFIG_HOME / "fish"
+    conf_d = fish / "conf.d"
+    symlink_many_if_given(
+        (fish / "config.fish", config),
+        (conf_d / "0-env.fish", env),
+        (conf_d / "git.fish", git),
+        (conf_d / "work.fish", work),
+    )
+
+
 def install_git(
     *, config: PathLike | None = None, ignore: PathLike | None = None
 ) -> None:
@@ -71,9 +117,8 @@ def install_git(
                 apt_install("git")
             case never:
                 assert_never(never)
-    for filename, path_to in [("config", config), ("ignore", ignore)]:
-        if path_to is not None:
-            symlink(f"~/.config/git/{filename}", path_to)
+    git = full_path("~/.config/git")
+    symlink_many_if_given((git / "config", config), (git / "ignore", ignore))
 
 
-__all__ = ["install_brew", "install_curl", "install_git"]
+__all__ = ["install_brew", "install_curl", "install_fish", "install_git"]

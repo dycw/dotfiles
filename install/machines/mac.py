@@ -16,6 +16,7 @@ def setup_mac(
 ) -> None:
     _LOGGER.info("Setting up Mac...")
     setup_common(git_config=git_config, git_ignore=git_ignore)
+    install_fish()  # after brew
     # keyboard international
     # mouse up/down
 
