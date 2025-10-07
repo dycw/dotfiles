@@ -10,6 +10,8 @@ from install.enums import System
 from install.utilities import (
     apt_install,
     brew_install,
+    check_for_commands,
+    copyfile,
     full_path,
     have_command,
     run_commands,
@@ -80,6 +82,7 @@ def install_fish(
             case System.mac:
                 brew_install("fish")
             case System.linux:
+                check_for_commands("curl")
                 run_commands(
                     "echo 'deb http://download.opensuse.org/repositories/shells:/fish/Debian_13/ /' | sudo tee /etc/apt/sources.list.d/shells:fish.list",
                     "curl -fsSL https://download.opensuse.org/repositories/shells:fish/Debian_13/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish.gpg > /dev/null",
@@ -102,6 +105,23 @@ def install_fish(
     )
 
 
+def install_fzf(*, fzf_fish: PathLike | None = None) -> None:
+    if have_command("fzf"):
+        _LOGGER.debug("'fzf' is already installed")
+    else:
+        _LOGGER.info("Installing 'fzf'...")
+        match System.identify():
+            case System.mac:
+                brew_install("fzf")
+            case System.linux:
+                apt_install("fzf")
+            case never:
+                assert_never(never)
+    if fzf_fish is not None:
+        for path in (full_path(fzf_fish) / "functions").iterdir():
+            copyfile(path, XDG_CONFIG_HOME / f"functions/{path.name}")
+
+
 def install_git(
     *, config: PathLike | None = None, ignore: PathLike | None = None
 ) -> None:
@@ -121,4 +141,4 @@ def install_git(
     symlink_many_if_given((git / "config", config), (git / "ignore", ignore))
 
 
-__all__ = ["install_brew", "install_curl", "install_fish", "install_git"]
+__all__ = ["install_brew", "install_curl", "install_fish", "install_fzf", "install_git"]
