@@ -1,22 +1,12 @@
 #!/usr/bin/env python3
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
-from collections.abc import Iterator
-from contextlib import contextmanager
 from dataclasses import dataclass
-from enum import Enum, auto
-from logging import basicConfig, getLogger
-from os import environ, geteuid
+from logging import getLogger
+from os import environ
 from pathlib import Path
-from platform import system
 from re import search
-from shutil import copyfile, which
-from stat import S_IXUSR
-from string import Template
-from subprocess import check_call, check_output
 from tempfile import TemporaryDirectory
 from typing import assert_never
-from urllib.parse import urlparse
-from urllib.request import urlopen
 from zipfile import ZipFile
 
 # constants
@@ -26,25 +16,6 @@ _LOGGER = getLogger(__name__)
 
 
 # environments
-
-
-class _System(Enum):
-    mac = auto()
-    linux = auto()
-
-    @classmethod
-    def identify(cls) -> "_System":
-        match system():
-            case "Darwin":
-                return _System.mac
-            case "Linux":
-                return _System.linux
-            case _system:
-                msg = f"Invalid system: {_system!r}"
-                raise TypeError(msg)
-
-
-# settings
 
 
 @dataclass(order=True, unsafe_hash=True, kw_only=True)
@@ -243,7 +214,7 @@ def _install_bat() -> None:
     else:
         _LOGGER.info("Installing 'bat'...")
         _apt_install("bat")
-    _setup_symlink("~/.local/bin/bat", "/usr/bin/batcat")
+    symlink("~/.local/bin/bat", "/usr/bin/batcat")
 
 
 def _install_bottom(*, config: bool = False) -> None:
@@ -256,7 +227,7 @@ def _install_bottom(*, config: bool = False) -> None:
         ) as path:
             _dpkg_install(path)
     if config:
-        _setup_symlink(
+        symlink(
             "~/.config/bottom/bottom.toml", f"{_get_script_dir()}/bottom/bottom.toml"
         )
 
@@ -319,8 +290,8 @@ def _install_direnv(
         _apt_install("direnv")
     for path_to in [direnv_toml, direnvrc]:
         if path_to is not None:
-            name = _to_path(path_to).name
-            _setup_symlink(f"~/.config/direnv/{name}", path_to)
+            name = to_path(path_to).name
+            symlink(f"~/.config/direnv/{name}", path_to)
 
 
 def _install_docker() -> None:
@@ -377,7 +348,7 @@ def _install_fd_find(*, config: bool = False) -> None:
         _LOGGER.info("Installing 'fd-find'...")
         _apt_install("fd-find")
     if config:
-        _setup_symlink("~/.config/fd/ignore", f"{_get_script_dir()}/fd/ignore")
+        symlink("~/.config/fd/ignore", f"{_get_script_dir()}/fd/ignore")
 
 
 def _install_fish() -> None:
@@ -401,7 +372,7 @@ def _install_fish() -> None:
         ("conf.d/git.fish", "git.fish"),
         ("conf.d/work.fish", "work.fish"),
     ]:
-        _setup_symlink(
+        symlink(
             f"~/.config/fish/{filename_from}", f"{_get_script_dir()}/fish/{filename_to}"
         )
 
@@ -419,28 +390,8 @@ def _install_fzf(*, fzf_fish: bool = False) -> None:
             case never:
                 assert_never(never)
     if fzf_fish:
-        for path in _to_path(f"{_get_local_bin()}/fzf/fzf.fish/functions").iterdir():
+        for path in to_path(f"{_get_local_bin()}/fzf/fzf.fish/functions").iterdir():
             _copyfile(path, f"~/.config/fish/functions/{path.name}")
-
-
-def _install_git(*, config: bool = False) -> None:
-    if _have_command("git"):
-        _LOGGER.debug("'git' is already installed")
-    else:
-        _LOGGER.info("Installing 'git'...")
-        match _System.identify():
-            case _System.mac:
-                msg = "Mac should already have 'git' installed"
-                raise RuntimeError(msg)
-            case _System.linux:
-                _apt_install("git")
-            case never:
-                assert_never(never)
-    if config:
-        for filename in ["config", "ignore"]:
-            _setup_symlink(
-                f"~/.config/git/{filename}", f"{_get_script_dir()}/git/{filename}"
-            )
 
 
 def _install_gh() -> None:
@@ -457,9 +408,9 @@ def _install_glab() -> None:
     else:
         _LOGGER.info("Installing 'glab'...")
         _apt_install("glab")
-    path_to = _to_path("~/work/infra/gitlab/cli.yml")
+    path_to = to_path("~/work/infra/gitlab/cli.yml")
     if path_to.exists():
-        _setup_symlink("~/.config/glab-cli/config.yml", path_to)
+        symlink("~/.config/glab-cli/config.yml", path_to)
 
 
 def _install_jq() -> None:
@@ -508,7 +459,7 @@ def _install_neovim(*, config: Path | str | None = None) -> None:
         _LOGGER.debug("'neovim' is already installed")
     else:
         _LOGGER.info("Installing 'neovim'...")
-        path_to = _to_path("/usr/local/bin/nvim")
+        path_to = to_path("/usr/local/bin/nvim")
         with _yield_download(
             "https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage"
         ) as appimage:
@@ -517,9 +468,9 @@ def _install_neovim(*, config: Path | str | None = None) -> None:
                 f"sudo mkdir -p {path_to.parent}", f"sudo mv {appimage} {path_to}"
             )
     if config is not None:
-        config = _to_path(config)
+        config = to_path(config)
         if config.exists():
-            _setup_symlink("~/.config/nvim", config)
+            symlink("~/.config/nvim", config)
 
 
 def _install_npm() -> None:
@@ -557,9 +508,7 @@ def _install_ripgrep(*, config: bool = False) -> None:
         _LOGGER.info("Installing 'ripgrep'...")
         _apt_install("ripgrep")
     if config:
-        _setup_symlink(
-            "~/.config/ripgrep/ripgreprc", f"{_get_script_dir()}/ripgrep/ripgreprc"
-        )
+        symlink("~/.config/ripgrep/ripgreprc", f"{_get_script_dir()}/ripgrep/ripgreprc")
 
 
 def _install_rsync() -> None:
@@ -601,9 +550,9 @@ def _install_sops(*, age: Path | str | None = None) -> None:
         ) as binary:
             _copyfile(binary, path_to, executable=True)
     if age is not None:
-        age = _to_path(age)
+        age = to_path(age)
         if age.exists():
-            _setup_symlink("~/.config/sops/age/keys.txt", age)
+            symlink("~/.config/sops/age/keys.txt", age)
         else:
             _LOGGER.warning("Unable to find age secret key %r", str(age))
 
@@ -628,7 +577,7 @@ def _install_starship(*, config: Path | str | None = None) -> None:
         _LOGGER.info("Installing 'starship'...")
         _apt_install("starship")
     if config is not None:
-        _setup_symlink("~/.config/starship.toml", config)
+        symlink("~/.config/starship.toml", config)
 
 
 def _install_stylua() -> None:
@@ -645,7 +594,7 @@ def _install_stylua() -> None:
         TemporaryDirectory() as temp_dir,
     ):
         zfh.extractall(temp_dir)
-        (path_from,) = _to_path(temp_dir).iterdir()
+        (path_from,) = to_path(temp_dir).iterdir()
         _copyfile(path_from, path_to, executable=True)
 
 
@@ -677,7 +626,7 @@ def _install_tmux() -> None:
         ("tmux.conf.local", "tmux.conf.local"),
         ("tmux.conf", ".tmux/.tmux.conf"),
     ]:
-        _setup_symlink(
+        symlink(
             f"~/.config/tmux/{filename_from}", f"{_get_script_dir()}/tmux/{filename_to}"
         )
 
@@ -711,9 +660,7 @@ def _install_wezterm() -> None:
             "sudo chmod 644 /usr/share/keyrings/wezterm-fury.gpg",
         )
         _apt_install("wezterm")
-    _setup_symlink(
-        "~/.config/wezterm/wezterm.lua", f"{_get_script_dir()}/wezterm/wezterm.lua"
-    )
+    symlink("~/.config/wezterm/wezterm.lua", f"{_get_script_dir()}/wezterm/wezterm.lua")
 
 
 def _install_yq() -> None:
@@ -744,23 +691,23 @@ def _install_zoxide() -> None:
 
 
 def _setup_bash() -> None:
-    _setup_symlink("~/.bashrc", f"{_get_script_dir()}/bash/bashrc")
+    symlink("~/.bashrc", f"{_get_script_dir()}/bash/bashrc")
 
 
 def _setup_pdb() -> None:
-    _setup_symlink("~/.pdbrc", f"{_get_script_dir()}/pdb/pdbrc")
+    symlink("~/.pdbrc", f"{_get_script_dir()}/pdb/pdbrc")
 
 
 def _setup_psql() -> None:
-    _setup_symlink("~/.psqlrc", f"{_get_script_dir()}/psql/psqlrc")
+    symlink("~/.psqlrc", f"{_get_script_dir()}/psql/psqlrc")
 
 
 def _setup_zsh() -> None:
-    _setup_symlink("~/.zshrc", f"{_get_script_dir()}/zsh/zshrc")
+    symlink("~/.zshrc", f"{_get_script_dir()}/zsh/zshrc")
 
 
 def _setup_ssh_keys(ssh_keys: Path | str, /) -> None:
-    if isinstance(ssh_keys, Path) or _to_path(ssh_keys).is_file():
+    if isinstance(ssh_keys, Path) or to_path(ssh_keys).is_file():
         _setup_ssh_keys_core(ssh_keys)
         return
     with _yield_download(ssh_keys) as temp_file:
@@ -770,15 +717,15 @@ def _setup_ssh_keys(ssh_keys: Path | str, /) -> None:
 def _setup_ssh_keys_core(path_from: Path | str, /) -> None:
     keys = [
         stripped
-        for line in _to_path(path_from).read_text().splitlines()
+        for line in to_path(path_from).read_text().splitlines()
         if (stripped := line.strip()) != ""
     ]
     joined = "\n".join(keys)
-    _ = _to_path("~/.ssh/authorized_keys").write_text(joined)
+    _ = to_path("~/.ssh/authorized_keys").write_text(joined)
 
 
 def _setup_sshd() -> None:
-    path = _to_path("/etc/ssh/sshd_config")
+    path = to_path("/etc/ssh/sshd_config")
     for from_, to in [
         ("#PermitRootLogin prohibit-password", "PermitRootLogin no"),
         ("#PubkeyAuthentication yes", "PubkeyAuthentication yes"),
@@ -790,185 +737,10 @@ def _setup_sshd() -> None:
 # utilities
 
 
-def _apt_install(*packages: str) -> None:
-    _LOGGER.info("Updating 'apt'...")
-    _run_commands("sudo apt -y update")
-    desc = ", ".join(map(repr, packages))
-    _LOGGER.info("Installing %s...", desc)
-    joined = " ".join(packages)
-    _run_commands(f"sudo apt -y install {joined}")
-
-
-def _brew_install(*packages: str) -> None:
-    _LOGGER.info("Updating 'brew'...")
-    _run_commands("brew update")
-    desc = ", ".join(map(repr, packages))
-    _LOGGER.info("Installing %s...", desc)
-    joined = " ".join(packages)
-    _run_commands(f"brew install install {joined}")
-
-
-def _copyfile(
-    path_from: Path | str, path_to: Path | str, /, *, executable: bool = False
-) -> None:
-    path_from, path_to = map(_to_path, [path_from, path_to])
-    if path_to.exists() and (path_to.read_text() == path_from.read_text()):
-        _LOGGER.debug("%r -> %r already copied", str(path_from), str(path_to))
-        return
-    _unlink(path_to)
-    _LOGGER.info("Copying %r -> %r...", str(path_from), str(path_to))
-    path_to.parent.mkdir(parents=True, exist_ok=True)
-    _ = copyfile(path_from, path_to)
-    if executable:
-        _set_executable(path_to)
-
-
-def _download(url: str, path: Path | str, /) -> None:
-    with urlopen(url) as response, _to_path(path).open(mode="wb") as fh:
-        _ = fh.write(response.read())
-
-
-def _dpkg_install(path: Path | str, /) -> None:
-    _run_commands(f"sudo dpkg -i {path}")
-
-
-def _get_latest_tag(owner: str, repo: str, /) -> str:
-    _install_curl()
-    _install_jq()
-    return _get_output(
-        f'curl -s https://api.github.com/repos/{owner}/{repo}/releases/latest | jq -r ".tag_name"'
-    )
-
-
-def _get_local_bin() -> Path:
-    return _to_path("~/.local/bin")
-
-
-def _get_output(cmd: str, /) -> str:
-    return check_output(cmd, shell=True, text=True).strip("\n")
-
-
-def _get_script_dir() -> Path:
-    return _to_path(__file__).parent
-
-
-def _have_command(cmd: str, /) -> bool:
-    return which(cmd) is not None
-
-
-def _is_root() -> bool:
-    return geteuid() == 0
-
-
-def _luarocks_install(package: str, /) -> None:
-    _run_commands(f"sudo luarocks install {package}")
-
-
-def _replace_line(path: Path | str, from_: str, to: str, /) -> None:
-    path = _to_path(path)
-    lines = path.read_text().splitlines()
-    if all(line != from_ for line in lines):
-        _LOGGER.debug("%r not found in %r", from_, str(path))
-        return
-    _LOGGER.info("Replacing %r -> %r in %r", from_, to, str(path))
-    _run_commands(f"sudo sed -i 's|{from_}|{to}|' {path}")
-
-
-def _run_commands(*cmds: str) -> None:
-    is_root = _is_root()
-    for cmd in cmds:
-        cmd_use = cmd.replace("sudo", "") if is_root else cmd
-        _ = check_call(cmd_use, shell=True)
-
-
-def _set_executable(path: Path | str, /) -> None:
-    path = _to_path(path)
-    mode = path.stat().st_mode
-    if mode & S_IXUSR:
-        _LOGGER.debug("%r is already executable", str(path))
-        return
-    _LOGGER.info("Making %r executable...", str(path))
-    path.chmod(mode | S_IXUSR)
-
-
-def _setup_symlink(path_from: Path | str, path_to: Path | str, /) -> None:
-    path_from, path_to = map(_to_path, [path_from, path_to])
-    if path_from.is_symlink() and (path_from.resolve() == path_to.resolve()):
-        _LOGGER.debug("%r -> %r already symlinked", str(path_from), str(path_to))
-        return
-    path_from.parent.mkdir(parents=True, exist_ok=True)
-    _unlink(path_from)
-    _LOGGER.info("Symlinking %r -> %r", str(path_from), str(path_to))
-    path_from.symlink_to(path_to)
-
-
-def _to_path(*parts: Path | str) -> Path:
-    return Path(*parts).expanduser()
-
-
-def _unlink(path: Path | str, /) -> None:
-    path = _to_path(path)
-    if path.exists() or path.is_symlink():
-        _LOGGER.info("Removing %r...", str(path))
-        path.unlink(missing_ok=True)
-
-
-def _update_submodules() -> None:
-    _LOGGER.info("Updating submodules...")
-    _run_commands("git submodule update")
-
-
-def _uv_tool_install(tool: str, /) -> None:
-    if _have_command(tool):
-        _LOGGER.debug("%r is already installed", tool)
-        return
-    _install_uv()
-    _LOGGER.info("Installing %r...", tool)
-    _run_commands(f"uv tool install {tool}")
-
-
-@contextmanager
-def _yield_download(url: str, /) -> Iterator[Path]:
-    filename = _to_path(urlparse(url).path).name
-    with TemporaryDirectory() as temp_dir:
-        temp_file = _to_path(temp_dir, filename)
-        _download(url, temp_file)
-        yield temp_file
-
-
-@contextmanager
-def _yield_github_latest_download(
-    owner: str, repo: str, filename_template: str, /
-) -> Iterator[Path]:
-    tag = _get_latest_tag(owner, repo)
-    filename = Template(filename_template).substitute(tag=tag)
-    url = f"https://github.com/{owner}/{repo}/releases/download/{tag}/{filename}"
-    with _yield_download(url) as temp_file:
-        yield temp_file
-
-
 # main
 
 
-def main(settings: _Settings, /) -> None:
-    basicConfig(
-        format="{asctime} | {levelname:8} | {message}",
-        datefmt="%Y-%m-%d %H:%M:%S",
-        style="{",
-        level="DEBUG" if settings.verbose else "INFO",
-    )
-    match _System.identify():
-        case _System.mac:
-            _setup_mac(settings)
-        case _System.linux:
-            _setup_debian(settings)
-        case never:
-            assert_never(never)
-
-
 def _setup_mac(settings: _Settings, /) -> None:
-    _install_brew()
-    _install_git(config=True)
     _install_uv()
 
     _install_fish()  # after brew

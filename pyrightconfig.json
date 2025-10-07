@@ -1,0 +1,15 @@
+{
+  "enableReachabilityAnalysis": false,
+  "exclude": [
+    ".venv",
+    "infra/installers/mirror.py",
+    "submodules"
+  ],
+  "include": [
+    "infra"
+  ],
+  "pythonVersion": "3.13",
+  "reportPrivateUsage": false,
+  "reportUnnecessaryComparison": false,
+  "typeCheckingMode": "strict"
+}
