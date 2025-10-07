@@ -22,6 +22,7 @@ def add_to_known_hosts() -> None:
     try:
         contents = KNOWN_HOSTS.read_text()
     except FileNotFoundError:
+        KNOWN_HOSTS.touch()
         run()
         return
     if any(search(r"github\.com", line) for line in contents.splitlines()):
