@@ -7,6 +7,7 @@ from install.groups.common import setup_common
 from install.lib import (
     install_age,
     install_bat,
+    install_bottom,
     install_brew,
     install_curl,
     install_fish,
@@ -22,6 +23,7 @@ _LOGGER = getLogger(__name__)
 
 def setup_mac(
     *,
+    bottom_toml: PathLike | None = None,
     fish_config: PathLike | None = None,
     fish_env: PathLike | None = None,
     fish_git: PathLike | None = None,
@@ -38,6 +40,7 @@ def setup_mac(
     install_git(config=git_config, ignore=git_ignore)
     install_age()  # after brew
     install_bat()  # after brew
+    install_bottom(bottom_toml=bottom_toml)  # after brew
     install_curl()  # after brew
     install_fish(  # after brew
         config=fish_config, env=fish_env, git=fish_git, work=fish_work

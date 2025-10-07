@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from install.groups.common import setup_common
 from install.lib import (
     install_age,
+    install_bottom,
     install_curl,
     install_fish,
     install_fzf,
@@ -20,6 +21,7 @@ _LOGGER = getLogger(__name__)
 
 def setup_linux(
     *,
+    bottom_toml: PathLike | None = None,
     fish_config: PathLike | None = None,
     fish_env: PathLike | None = None,
     fish_git: PathLike | None = None,
@@ -33,6 +35,7 @@ def setup_linux(
     _LOGGER.info("Setting up Linux...")
     setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
     install_age()
+    install_bottom(bottom_toml=bottom_toml)
     install_curl()
     install_fzf(fzf_fish=fzf_fish)
     install_git(config=git_config, ignore=git_ignore)

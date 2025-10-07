@@ -12,11 +12,14 @@ from install.utilities import (
     brew_install,
     check_for_commands,
     copyfile,
+    dpkg_install,
     full_path,
     have_command,
     run_commands,
+    symlink_if_given,
     symlink_many_if_given,
     touch,
+    yield_github_latest_download,
 )
 
 if TYPE_CHECKING:
@@ -73,6 +76,24 @@ def install_bat() -> None:
             symlink(LOCAL_BIN / "bat", "/usr/bin/batcat")
         case never:
             assert_never(never)
+
+
+def install_bottom(*, bottom_toml: PathLike | None = None) -> None:
+    if have_command("btm"):
+        _LOGGER.debug("'bottom' is already installed")
+    else:
+        _LOGGER.info("Installing 'bottom'...")
+        match System.identify():
+            case System.mac:
+                brew_install("bottom")
+            case System.linux:
+                with yield_github_latest_download(
+                    "ClementTsang", "bottom", "bottom_${tag}-1_amd64.deb"
+                ) as path:
+                    dpkg_install(path)
+            case never:
+                assert_never(never)
+    symlink_if_given(XDG_CONFIG_HOME / "bottom/bottom.toml", bottom_toml)
 
 
 def install_brew() -> None:

@@ -188,8 +188,6 @@ brew_install asciinema
 [ -n "${IS_MAC_MINI}" ] && brew_install autoconf # for c
 [ -n "${IS_MAC_MINI}" ] && brew_install automake # for c
 [ -n "${IS_MAC_MINI}" ] && brew_install bacon
-brew_install bat
-brew_install btm bottom
 [ -n "${IS_MAC_MINI}" ] && brew_install cargo-binstall
 [ -n "${IS_MAC_MINI}" ] && brew_install cargo-nextest
 [ -n "${IS_MAC_MINI}" ] && brew_install db-browser-for-sqlite --cask

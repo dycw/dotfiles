@@ -14,21 +14,6 @@ _LOGGER = getLogger(__name__)
 # library
 
 
-def install_bottom(*, config: bool = False) -> None:
-    if have_command("btm"):
-        _LOGGER.debug("'btm' is already installed")
-    else:
-        _LOGGER.info("Installing 'bottom'...")
-        with _yield_github_latest_download(
-            "ClementTsang", "bottom", "bottom_${tag}-1_amd64.deb"
-        ) as path:
-            _dpkg_install(path)
-    if config:
-        symlink(
-            "~/.config/bottom/bottom.toml", f"{_get_script_dir()}/bottom/bottom.toml"
-        )
-
-
 def install_build_essential() -> None:
     if have_command("cc"):
         _LOGGER.debug(

@@ -8,6 +8,8 @@ XDG_CONFIG_HOME = HOME / "~/.config"
 
 INSTALL = Path(__file__).parent
 REPO_ROOT = INSTALL.parent
+BOTTOM = REPO_ROOT / "bottom"
+BOTTOM_TOML = BOTTOM / "bottom.toml"
 FISH = REPO_ROOT / "fish"
 FISH_CONFIG = FISH / "config.fish"
 FISH_ENV = FISH / "env.fish"
@@ -25,6 +27,8 @@ PSQLRC = PSQL / "psqlrc"
 
 
 __all__ = [
+    "BOTTOM",
+    "BOTTOM_TOML",
     "FISH",
     "FISH_CONFIG",
     "FISH_ENV",
