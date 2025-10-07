@@ -85,7 +85,7 @@ function cp
         set mkdir_target $target
     end
     command mkdir -p $mkdir_target
-    command cp -r $argv
+    command cp -frv $argv
 end
 
 # direnv
@@ -183,6 +183,22 @@ end
 # mkdir
 function mkdir
     command mkdir -p $argv
+end
+
+# cp
+function mv
+    if test (count $argv) -lt 2
+        echo "'mv' expected [2..) arguments SOURCE ... TARGET; got "(count $argv) >&2; and return 1
+    end
+    set -l target $argv[-1]
+    set -l mkdir_target
+    if test (count $argv) -eq 2; and not string match -q '*/' -- $target
+        set mkdir_target $(dirname $target)
+    else
+        set mkdir_target $target
+    end
+    command mkdir -p $mkdir_target
+    command mv -fv $argv
 end
 
 # neovim
