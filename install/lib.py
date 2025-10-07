@@ -5,7 +5,7 @@ from os import environ
 from re import search
 from typing import TYPE_CHECKING, assert_never
 
-from install.constants import KNOWN_HOSTS, LOCAL_BIN, XDG_CONFIG_HOME
+from install.constants import HOME, KNOWN_HOSTS, LOCAL_BIN, XDG_CONFIG_HOME
 from install.enums import System
 from install.utilities import (
     apt_install,
@@ -205,6 +205,14 @@ def install_uv() -> None:
     run_commands("curl -LsSf https://astral.sh/uv/install.sh | sh")
 
 
+def setup_pdb(*, pdbrc: PathLike | None = None) -> None:
+    symlink_if_given(HOME / ".pdbrc", pdbrc)
+
+
+def setup_psqlrc(*, pdbrc: PathLike | None = None) -> None:
+    symlink_if_given(HOME / ".psqlrc", psqlrc)
+
+
 __all__ = [
     "install_age",
     "install_bat",
@@ -214,4 +222,6 @@ __all__ = [
     "install_fzf",
     "install_git",
     "install_uv",
+    "setup_pdb",
+    "setup_psqlrc",
 ]
