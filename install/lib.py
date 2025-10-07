@@ -155,18 +155,35 @@ def install_delta() -> None:
             assert_never(never)
 
 
-def install_dust() -> None:
-    if have_command("dust"):
-        _LOGGER.debug("'dust' is already installed")
+def install_docker() -> None:
+    if have_command("docker"):
+        _LOGGER.debug("'docker' is already installed")
         return
-    _LOGGER.info("Installing 'delta'...")
-    match System.identify():
-        case System.mac:
-            brew_install("dust")
-        case System.linux:
-            apt_install("du-dust")
-        case never:
-            assert_never(never)
+    _LOGGER.info("Installing 'docker'...")
+    packages = [
+        "docker.io",
+        "docker-doc",
+        "docker-compose",
+        "podman-docker",
+        "containerd",
+        "runc",
+    ]
+    run_commands(*(f"sudo apt-get remove {p}" for p in packages))
+    apt_install("ca-certificates", "curl")
+    run_commands(
+        "sudo install -m 0755 -d /etc/apt/keyrings",
+        "sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc",
+        "sudo chmod a+r /etc/apt/keyrings/docker.asc",
+        'echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null',
+    )
+    apt_install(
+        "docker-ce",
+        "docker-ce-cli",
+        "containerd.io",
+        "docker-buildx-plugin",
+        "docker-compose-plugin",
+    )
+    run_commands("sudo usermod -aG docker $USER")
 
 
 def install_direnv(
@@ -189,12 +206,25 @@ def install_direnv(
     )
 
 
+def install_dust() -> None:
+    if have_command("dust"):
+        _LOGGER.debug("'dust' is already installed")
+        return
+    _LOGGER.info("Installing 'delta'...")
+    match System.identify():
+        case System.mac:
+            brew_install("dust")
+        case System.linux:
+            apt_install("du-dust")
+        case never:
+            assert_never(never)
+
+
 def install_eza() -> None:
     if have_command("eza"):
         _LOGGER.debug("'eza' is already installed")
         return
     _LOGGER.info("Installing 'eza'...")
-    _LOGGER.info("Installing 'direnv'...")
     match System.identify():
         case System.mac:
             brew_install("eza")
@@ -202,6 +232,21 @@ def install_eza() -> None:
             apt_install("eza")
         case never:
             assert_never(never)
+
+
+def install_fd_find(*, ignore: PathLike | None = None) -> None:
+    if have_command("fdfind"):
+        _LOGGER.debug("'fd-find' is already installed")
+    else:
+        _LOGGER.info("Installing 'fd-find'...")
+        match System.identify():
+            case System.mac:
+                brew_install("fd")
+            case System.linux:
+                apt_install("fd-find")
+            case never:
+                assert_never(never)
+    symlink_if_given(XDG_CONFIG_HOME / "fd/ignore", ignore)
 
 
 def install_fish(
@@ -329,8 +374,10 @@ __all__ = [
     "install_curl",
     "install_delta",
     "install_direnv",
+    "install_docker",
     "install_dust",
     "install_eza",
+    "install_fd_find",
     "install_fish",
     "install_fzf",
     "install_git",

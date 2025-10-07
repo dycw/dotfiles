@@ -11,6 +11,7 @@ from install.lib import (
     install_build_essential,
     install_bump_my_version,
     install_curl,
+    install_docker,
     install_dust,
     install_eza,
     install_fish,
@@ -51,6 +52,7 @@ def setup_linux(
     install_eza()
     install_fzf(fzf_fish=fzf_fish)
     install_git(config=git_config, ignore=git_ignore)
+    install_docker()  # after curl
     install_fish(  # after curl
         config=fish_config, env=fish_env, git=fish_git, work=fish_work
     )
