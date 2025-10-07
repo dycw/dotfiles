@@ -54,7 +54,7 @@ def check_for_commands(*cmds: str) -> None:
 def copyfile(
     path_from: Path | str, path_to: Path | str, /, *, executable: bool = False
 ) -> None:
-    path_from, path_to = map(to_path, [path_from, path_to])
+    path_from, path_to = map(full_path, [path_from, path_to])
     if path_to.exists() and (path_to.read_bytes() == path_from.read_bytes()):
         _LOGGER.debug("%r -> %r already copied", str(path_from), str(path_to))
         return
@@ -67,13 +67,17 @@ def copyfile(
 
 
 def download(url: str, path: Path | str, /) -> None:
-    with urlopen(url) as response, to_path(path).open(mode="wb") as fh:
+    with urlopen(url) as response, full_path(path).open(mode="wb") as fh:
         _ = fh.write(response.read())
 
 
 def dpkg_install(path: Path | str, /) -> None:
     check_for_commands("dpkg")
     run_commands(f"sudo dpkg -i {path}")
+
+
+def full_path(*parts: Path | str) -> Path:
+    return Path(*parts).expanduser()
 
 
 def get_output(cmd: str, /) -> str:
@@ -101,7 +105,7 @@ def luarocks_install(package: str, /) -> None:
 
 
 def replace_line(path: Path | str, from_: str, to: str, /) -> None:
-    path = to_path(path)
+    path = full_path(path)
     lines = path.read_text().splitlines()
     if all(line != from_ for line in lines):
         _LOGGER.debug("%r not found in %r", from_, str(path))
@@ -119,7 +123,7 @@ def run_commands(*cmds: str, env: Mapping[str, str | None] | None = None) -> Non
 
 
 def set_executable(path: Path | str, /) -> None:
-    path = to_path(path)
+    path = full_path(path)
     mode = path.stat().st_mode
     if mode & S_IXUSR:
         _LOGGER.debug("%r is already executable", str(path))
@@ -129,7 +133,7 @@ def set_executable(path: Path | str, /) -> None:
 
 
 def symlink(path_from: Path | str, path_to: Path | str, /) -> None:
-    path_from, path_to = map(to_path, [path_from, path_to])
+    path_from, path_to = map(full_path, [path_from, path_to])
     if path_from.is_symlink() and (path_from.resolve() == path_to.resolve()):
         _LOGGER.debug("%r -> %r already symlinked", str(path_from), str(path_to))
         return
@@ -162,20 +166,6 @@ def temp_environ(env: Mapping[str, str | None] | None = None, /) -> Iterator[Non
         apply(prev)
 
 
-def to_path(*parts: Path | str) -> Path:
-    return Path(*parts).expanduser()
-
-
-def unlink(path: Path | str, /) -> None:
-    if (path := to_path(path)).exists():
-        _LOGGER.info("Removing %r...", str(path))
-        path.unlink(missing_ok=True)
-
-
-def _get_local_bin() -> Path:
-    return to_path("~/.local/bin")
-
-
 class TemporaryDirectory:
     def __init__(self) -> None:
         super().__init__()
@@ -194,6 +184,12 @@ class TemporaryDirectory:
         self._temp_dir.__exit__(exc, val, tb)
 
 
+def unlink(path: Path | str, /) -> None:
+    if (path := full_path(path)).exists():
+        _LOGGER.info("Removing %r...", str(path))
+        path.unlink(missing_ok=True)
+
+
 def update_submodules() -> None:
     _LOGGER.info("Updating submodules...")
     run_commands("git submodule update")
@@ -209,9 +205,9 @@ def uv_tool_install(tool: str, /) -> None:
 
 @contextmanager
 def yield_download(url: str, /) -> Iterator[Path]:
-    filename = to_path(urlparse(url).path).name
+    filename = full_path(urlparse(url).path).name
     with TemporaryDirectory() as temp_dir:
-        temp_file = to_path(temp_dir, filename)
+        temp_file = full_path(temp_dir, filename)
         download(url, temp_file)
         yield temp_file
 
@@ -220,7 +216,7 @@ def yield_download(url: str, /) -> Iterator[Path]:
 def yield_github_latest_download(
     owner: str, repo: str, filename_template: str, /
 ) -> Iterator[Path]:
-    tag = _get_latest_tag(owner, repo)
+    tag = get_latest_tag(owner, repo)
     filename = Template(filename_template).substitute(tag=tag)
     url = f"https://github.com/{owner}/{repo}/releases/download/{tag}/{filename}"
     with yield_download(url) as temp_file:
@@ -235,6 +231,8 @@ __all__ = [
     "copyfile",
     "download",
     "dpkg_install",
+    "full_path",
+    "get_latest_tag",
     "get_output",
     "have_command",
     "is_root",
@@ -243,7 +241,6 @@ __all__ = [
     "set_executable",
     "symlink",
     "temp_environ",
-    "to_path",
     "unlink",
     "update_submodules",
     "uv_tool_install",
