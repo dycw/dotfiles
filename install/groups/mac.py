@@ -28,6 +28,8 @@ from install.lib import (
     install_luacheck,
     install_macchanger,
     install_neovim,
+    install_pre_commit,
+    install_pyright,
     install_ruff,
     install_sops,
     install_uv,
@@ -83,6 +85,8 @@ def setup_mac(
     install_luacheck()  # after brew
     install_macchanger()  # after brew
     install_neovim(nvim_dir=nvim_dir)  # after brew
+    install_pre_commit()  # after brew
+    install_pyright()  # after brew
     install_ruff()  # after brew
     install_shfmt()  # after brew
     install_sops(age_secret_key=age_secret_key)  # after brew

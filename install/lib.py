@@ -536,6 +536,34 @@ def install_neovim(*, nvim_dir: PathLike | None = None) -> None:
     symlink_if_given(XDG_CONFIG_HOME / "nvim", nvim_dir)
 
 
+def install_pre_commit() -> None:
+    if have_command("pre-commit"):
+        _LOGGER.debug("'pre-commit' is already installed")
+        return
+    _LOGGER.info("Installing 'pre-commit'...")
+    match System.identify():
+        case System.mac:
+            brew_install("pre-commit")
+        case System.linux:
+            uv_tool_install("pre-commit")
+        case never:
+            assert_never(never)
+
+
+def install_pyright() -> None:
+    if have_command("pyright"):
+        _LOGGER.debug("'pyright' is already installed")
+        return
+    _LOGGER.info("Installing 'pyright'...")
+    match System.identify():
+        case System.mac:
+            brew_install("pyright")
+        case System.linux:
+            uv_tool_install("pyright")
+        case never:
+            assert_never(never)
+
+
 def install_ruff() -> None:
     if have_command("ruff"):
         _LOGGER.debug("'ruff' is already installed")
@@ -649,6 +677,8 @@ __all__ = [
     "install_luarocks",
     "install_macchanger",
     "install_neovim",
+    "install_pre_commit",
+    "install_pyright",
     "install_ruff",
     "install_shfmt",
     "install_sops",

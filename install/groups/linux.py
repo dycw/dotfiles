@@ -28,6 +28,8 @@ from install.lib import (
     install_luarocks,
     install_macchanger,
     install_neovim,
+    install_pre_commit,
+    install_pyright,
     install_ruff,
     install_shfmt,
     install_sops,
@@ -88,6 +90,8 @@ def setup_linux(
     install_uv()  # after curl
     install_luacheck()  # after lurocks
     install_bump_my_version()  # after uv
+    install_pre_commit()  # after uv
+    install_pyright()  # after uv
     install_ruff()  # after uv
 
 

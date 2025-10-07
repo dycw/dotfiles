@@ -22,14 +22,6 @@ def install_npm() -> None:
     apt_install("nodejs", "npm")
 
 
-def install_pre_commit() -> None:
-    _uv_tool_install("pre-commit")
-
-
-def install_pyright() -> None:
-    _uv_tool_install("pyright")
-
-
 def install_python3_13_venv() -> None:
     # this is for neovim
     if have_command("python3.13"):
