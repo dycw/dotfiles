@@ -55,19 +55,26 @@ def check_for_commands(*cmds: str) -> None:
         raise RuntimeError(msg)
 
 
-def copyfile(
-    path_from: PathLike, path_to: PathLike, /, *, executable: bool = False
-) -> None:
+def chmod(path: PathLike, /) -> None:
+    path = full_path(path)
+    mode = path.stat().st_mode
+    if mode & S_IXUSR:
+        _LOGGER.debug("%r is already executable", str(path))
+        return
+    _LOGGER.info("Setting %r to be executable...", str(path))
+    run_commands(f"sudo chmod u+x {path}")
+
+
+def cp(path_from: PathLike, path_to: PathLike, /, *, executable: bool = False) -> None:
     path_from, path_to = map(full_path, [path_from, path_to])
     if path_to.exists() and (path_to.read_bytes() == path_from.read_bytes()):
         _LOGGER.debug("%r -> %r already copied", str(path_from), str(path_to))
         return
-    unlink(path_to)
+    rm(path_to)
     _LOGGER.info("Copying %r -> %r...", str(path_from), str(path_to))
-    path_to.parent.mkdir(parents=True, exist_ok=True)
-    _ = shutil.copyfile(path_from, path_to)
+    run_commands(f"sudo mkdir -p {path_to.parent}", f"sudo cp {path_from} {path_to}")
     if executable:
-        set_executable(path_to)
+        chmod(path_to)
 
 
 def download(url: str, path: PathLike, /) -> None:
@@ -118,6 +125,15 @@ def replace_line(path: PathLike, from_: str, to: str, /) -> None:
     run_commands(f"sudo sed -i 's|{from_}|{to}|' {path}")
 
 
+def rm(path: PathLike, /) -> None:
+    path = full_path(path)
+    if not path.exists():
+        _LOGGER.debug("%r is already removed...", str(path))
+        return
+    _LOGGER.info("Removing %r...", str(path))
+    run_commands(f"sudo rm {path}")
+
+
 def run_commands(*cmds: str, env: Mapping[str, str | None] | None = None) -> None:
     root = is_root()
     with temp_environ(env):
@@ -126,24 +142,14 @@ def run_commands(*cmds: str, env: Mapping[str, str | None] | None = None) -> Non
             _ = check_call(cmd_use, shell=True)
 
 
-def set_executable(path: PathLike, /) -> None:
-    path = full_path(path)
-    mode = path.stat().st_mode
-    if mode & S_IXUSR:
-        _LOGGER.debug("%r is already executable", str(path))
-        return
-    _LOGGER.info("Setting %r to be executable...", str(path))
-    run_commands(f"sudo chmod u+x {path}")
-
-
 def symlink(path_from: PathLike, path_to: PathLike, /) -> None:
     path_from, path_to = map(full_path, [path_from, path_to])
     if path_from.is_symlink() and (path_from.resolve() == path_to.resolve()):
         _LOGGER.debug("%r -> %r already symlinked", str(path_from), str(path_to))
         return
     path_from.parent.mkdir(parents=True, exist_ok=True)
-    unlink(path_from)
-    unlink(path_to)
+    rm(path_from)
+    rm(path_to)
     _LOGGER.info("Symlinking %r -> %r", str(path_from), str(path_to))
     path_from.symlink_to(path_to)
 
@@ -205,17 +211,7 @@ def touch(path: PathLike, /) -> None:
         _LOGGER.debug("%r already exists")
         return
     _LOGGER.debug("Touching %r...", str(path))
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.touch()
-
-
-def unlink(path: PathLike, /) -> None:
-    path = full_path(path)
-    if not path.exists():
-        _LOGGER.debug("%r is already removed...", str(path))
-        return
-    _LOGGER.info("Removing %r...", str(path))
-    path.unlink(missing_ok=True)
+    run_commands(f"sudo mkdir -p {path}", f"sudo touch {path}")
 
 
 def update_submodules() -> None:
@@ -261,7 +257,8 @@ __all__ = [
     "apt_install",
     "brew_install",
     "check_for_commands",
-    "copyfile",
+    "chmod",
+    "cp",
     "download",
     "dpkg_install",
     "full_path",
@@ -270,14 +267,13 @@ __all__ = [
     "have_command",
     "is_root",
     "luarocks_install",
+    "rm",
     "run_commands",
-    "set_executable",
     "symlink",
     "symlink_if_given",
     "symlink_many_if_given",
     "temp_environ",
     "touch",
-    "unlink",
     "update_submodules",
     "uv_tool_install",
     "which",

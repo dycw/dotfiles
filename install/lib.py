@@ -6,15 +6,14 @@ from re import search
 from shutil import which
 from typing import TYPE_CHECKING, assert_never
 
-from typing_extensions import runtime
-
 from install.constants import HOME, KNOWN_HOSTS, LOCAL_BIN, XDG_CONFIG_HOME
 from install.enums import System
 from install.utilities import (
     apt_install,
     brew_install,
     check_for_commands,
-    copyfile,
+    chmod,
+    cp,
     dpkg_install,
     full_path,
     have_command,
@@ -25,6 +24,7 @@ from install.utilities import (
     symlink_many_if_given,
     touch,
     uv_tool_install,
+    yield_download,
     yield_github_latest_download,
 )
 
@@ -327,7 +327,7 @@ def install_fzf(*, fzf_fish: PathLike | None = None) -> None:
                 assert_never(never)
     if fzf_fish is not None:
         for path in (full_path(fzf_fish) / "functions").iterdir():
-            copyfile(path, XDG_CONFIG_HOME / f"fish/functions/{path.name}")
+            cp(path, XDG_CONFIG_HOME / f"fish/functions/{path.name}")
 
 
 def install_gh() -> None:
@@ -405,7 +405,7 @@ def install_gitweb() -> None:
             with yield_github_latest_download(
                 "yoannfleurydev", "gitweb", "gitweb-linux"
             ) as binary:
-                copyfile(binary, path_to, executable=True)
+                cp(binary, path_to, executable=True)
         case never:
             assert_never(never)
 
@@ -518,6 +518,29 @@ def install_macchanger() -> None:
             assert_never(never)
 
 
+def install_neovim(*, nvim_dir: PathLike | None = None) -> None:
+    if have_command("nvim"):
+        _LOGGER.debug("'neovim' is already installed")
+    else:
+        _LOGGER.info("Installing 'neovim'...")
+        match System.identify():
+            case System.mac:
+                brew_install("luarocks")
+            case System.linux:
+                apt_install("luarocks")
+            case never:
+                assert_never(never)
+        path_to = full_path("/usr/local/bin/nvim")
+        with yield_download(
+            "https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage"
+        ) as appimage:
+            chmod(appimage)
+            run_commands(
+                f"sudo mkdir -p {path_to.parent}", f"sudo mv {appimage} {path_to}"
+            )
+    symlink_if_given(XDG_CONFIG_HOME / "nvim", nvim_dir)
+
+
 def install_shfmt() -> None:
     if have_command("shfmt"):
         _LOGGER.debug("'shfmt' is already installed")
@@ -545,7 +568,7 @@ def install_sops(*, age_secret_key: PathLike | None = None) -> None:
                 with yield_github_latest_download(
                     "getsops", "sops", "sops-${tag}.linux.amd64"
                 ) as binary:
-                    copyfile(binary, path_to, executable=True)
+                    cp(binary, path_to, executable=True)
             case never:
                 assert_never(never)
     symlink_if_given(XDG_CONFIG_HOME / "sops/age/keys.txt", age_secret_key)
@@ -616,6 +639,7 @@ __all__ = [
     "install_luacheck",
     "install_luarocks",
     "install_macchanger",
+    "install_neovim",
     "install_shfmt",
     "install_sops",
     "install_uv",

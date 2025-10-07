@@ -13,25 +13,6 @@ _LOGGER = getLogger(__name__)
 # library
 
 
-def install_neovim(*, config: Path | str | None = None) -> None:
-    if have_command("nvim"):
-        _LOGGER.debug("'neovim' is already installed")
-    else:
-        _LOGGER.info("Installing 'neovim'...")
-        path_to = full_path("/usr/local/bin/nvim")
-        with _yield_download(
-            "https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage"
-        ) as appimage:
-            _set_executable(appimage)
-            run_commands(
-                f"sudo mkdir -p {path_to.parent}", f"sudo mv {appimage} {path_to}"
-            )
-    if config is not None:
-        config = full_path(config)
-        if config.exists():
-            symlink("~/.config/nvim", config)
-
-
 def install_npm() -> None:
     # this is for neovim
     if have_command("npm"):
