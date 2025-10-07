@@ -193,12 +193,7 @@ brew_install asciinema
 [ -n "${IS_MAC_MINI}" ] && brew_install db-browser-for-sqlite --cask
 [ -n "${IS_MAC}" ] && brew_install dropbox --cask
 [ -n "${IS_MAC}" ] && brew_install ghostty --cask
-[ -n "${IS_MAC}" ] && brew_install gsed gnu-sed
-[ -n "${IS_MAC_MINI}" ] && brew_install iperf3
-brew_install jq
-brew_install just
 [ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
-brew_install luacheck
 [ -n "${IS_MAC_MINI}" ] && brew_install maturin
 brew_install nvim neovim
 # brew_install node > brew link --overwrite node

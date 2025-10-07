@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from logging import getLogger
 from os import environ
-from pathlib import Path
 from re import search
 from shutil import which
 from typing import TYPE_CHECKING, assert_never
@@ -381,6 +380,62 @@ def install_gsed() -> None:
     symlink_if_given(LOCAL_BIN / "sed", which("gsed"))
 
 
+def install_iperf3() -> None:
+    if have_command("iperf3"):
+        _LOGGER.debug("'iperf3' is already installed")
+        return
+    _LOGGER.info("Installing 'iperf3'...")
+    match System.identify():
+        case System.mac:
+            brew_install("iperf3")
+        case System.linux:
+            apt_install("iperf3")
+        case never:
+            assert_never(never)
+
+
+def install_jq() -> None:
+    if have_command("jq"):
+        _LOGGER.debug("'jq' is already installed")
+        return
+    _LOGGER.info("Installing 'jq'...")
+    match System.identify():
+        case System.mac:
+            brew_install("jq")
+        case System.linux:
+            apt_install("jq")
+        case never:
+            assert_never(never)
+
+
+def install_just() -> None:
+    if have_command("just"):
+        _LOGGER.debug("'just' is already installed")
+        return
+    _LOGGER.info("Installing 'just'...")
+    match System.identify():
+        case System.mac:
+            brew_install("just")
+        case System.linux:
+            apt_install("just")
+        case never:
+            assert_never(never)
+
+
+def install_luacheck() -> None:
+    if have_command("luacheck"):
+        _LOGGER.debug("'luacheck' is already installed")
+        return
+    _LOGGER.info("Installing 'luacheck'...")
+    match System.identify():
+        case System.mac:
+            brew_install("luacheck")
+        case System.linux:
+            apt_install("luacheck")
+        case never:
+            assert_never(never)
+
+
 def install_sops(*, age_secret_key: PathLike | None = None) -> None:
     if have_command("sops"):
         _LOGGER.debug("'sops' is already installed")
@@ -443,6 +498,10 @@ __all__ = [
     "install_gitweb",
     "install_glab",
     "install_gsed",
+    "install_iperf3",
+    "install_jq",
+    "install_just",
+    "install_luacheck",
     "install_sops",
     "install_uv",
     "setup_pdb",

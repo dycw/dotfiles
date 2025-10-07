@@ -20,6 +20,10 @@ from install.lib import (
     install_gh,
     install_git,
     install_glab,
+    install_iperf3,
+    install_jq,
+    install_just,
+    install_luacheck,
     install_sops,
     install_uv,
 )
@@ -63,6 +67,10 @@ def setup_mac(
     install_fzf(fzf_fish=fzf_fish)  # after brew
     install_gh()  # after brew
     install_glab()  # after brew
+    install_iperf3()  # after brew
+    install_jq()  # after brew
+    install_just()  # after brew
+    install_luacheck()  # after brew
     install_sops()  # after brew
     install_uv()  # after brew
     # keyboard international

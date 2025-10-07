@@ -13,31 +13,6 @@ _LOGGER = getLogger(__name__)
 # library
 
 
-def install_jq() -> None:
-    if have_command("jq"):
-        _LOGGER.debug("'jq' is already installed")
-        return
-    _LOGGER.info("Installing 'jq'...")
-    apt_install("jq")
-
-
-def install_just() -> None:
-    if have_command("just"):
-        _LOGGER.debug("'just' is already installed")
-        return
-    _LOGGER.info("Installing 'just'...")
-    apt_install("just")
-
-
-def install_luacheck() -> None:
-    if have_command("luacheck"):
-        _LOGGER.debug("'luacheck' is already installed")
-        return
-    install_luarocks()
-    _LOGGER.info("Installing 'luacheck'...")
-    _luarocks_install("luacheck")
-
-
 def install_luarocks() -> None:
     if have_command("luarocks"):
         _LOGGER.debug("'luarocks' is already installed")
