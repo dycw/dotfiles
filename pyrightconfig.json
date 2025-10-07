@@ -1,12 +1,11 @@
 {
   "enableReachabilityAnalysis": false,
   "exclude": [
-    ".venv",
-    "infra/installers/mirror.py",
+    "**/.venv",
     "submodules"
   ],
   "include": [
-    "infra"
+    "install"
   ],
   "pythonVersion": "3.13",
   "reportPrivateUsage": false,

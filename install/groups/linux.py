@@ -21,9 +21,10 @@ def setup_linux(
     fzf_fish: PathLike | None = None,
     git_config: PathLike | None = None,
     git_ignore: PathLike | None = None,
+    pdbrc: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up Linux...")
-    setup_common()
+    setup_common(pdbrc=pdbrc)
     install_curl()
     install_fzf(fzf_fish=fzf_fish)
     install_git(config=git_config, ignore=git_ignore)

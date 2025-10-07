@@ -279,9 +279,9 @@ def install_docker() -> None:
         "containerd",
         "runc",
     ]
-    _run_commands(*(f"sudo apt-get remove {p}" for p in packages))
+    run_commands(*(f"sudo apt-get remove {p}" for p in packages))
     apt_install("ca-certificates", "curl")
-    _run_commands(
+    run_commands(
         "sudo install -m 0755 -d /etc/apt/keyrings",
         "sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc",
         "sudo chmod a+r /etc/apt/keyrings/docker.asc",
@@ -294,7 +294,7 @@ def install_docker() -> None:
         "docker-buildx-plugin",
         "docker-compose-plugin",
     )
-    _run_commands("sudo usermod -aG docker $USER")
+    run_commands("sudo usermod -aG docker $USER")
 
 
 def install_dust() -> None:
@@ -410,7 +410,7 @@ def install_neovim(*, config: Path | str | None = None) -> None:
             "https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage"
         ) as appimage:
             _set_executable(appimage)
-            _run_commands(
+            run_commands(
                 f"sudo mkdir -p {path_to.parent}", f"sudo mv {appimage} {path_to}"
             )
     if config is not None:
@@ -509,7 +509,7 @@ def install_spotify() -> None:
         return
     install_curl()
     _LOGGER.info("Installing 'spotify'...")
-    _run_commands(
+    run_commands(
         "curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg",
         'echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list',
     )
@@ -558,7 +558,7 @@ def install_tailscale() -> None:
         return
     _LOGGER.info("Installing 'tailscale'...")
     install_curl()
-    _run_commands("curl -fsSL https://tailscale.com/install.sh | sh")
+    run_commands("curl -fsSL https://tailscale.com/install.sh | sh")
 
 
 def install_tmux() -> None:
@@ -577,15 +577,6 @@ def install_tmux() -> None:
         )
 
 
-def install_uv() -> None:
-    if have_command("uv"):
-        _LOGGER.debug("'uv' is already installed")
-        return
-    install_curl()
-    _LOGGER.info("Installing 'uv'...")
-    _run_commands("curl -LsSf https://astral.sh/uv/install.sh | sh")
-
-
 def install_vim() -> None:
     if have_command("vim"):
         _LOGGER.debug("'vim' is already installed")
@@ -600,7 +591,7 @@ def install_wezterm() -> None:
     else:
         install_curl()
         _LOGGER.info("Installing 'wezterm'...")
-        _run_commands(
+        run_commands(
             "curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg",
             "echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list",
             "sudo chmod 644 /usr/share/keyrings/wezterm-fury.gpg",
@@ -634,10 +625,6 @@ def install_zoxide() -> None:
         return
     _LOGGER.info("Installing 'zoxide'...")
     apt_install("zoxide")
-
-
-def _setup_bash() -> None:
-    symlink("~/.bashrc", f"{_get_script_dir()}/bash/bashrc")
 
 
 def _setup_pdb() -> None:

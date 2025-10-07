@@ -1,8 +1,9 @@
 from pathlib import Path
 
-KNOWN_HOSTS = Path("~/.ssh/known_hosts").expanduser()
-LOCAL_BIN = Path("~/.local/bin").expanduser()
-XDG_CONFIG_HOME = Path("~/.config").expanduser()
+HOME = Path("~").expanduser()
+KNOWN_HOSTS = HOME / ".ssh/known_hosts"
+LOCAL_BIN = HOME / ".local/bin"
+XDG_CONFIG_HOME = HOME / "~/.config"
 
 
 INSTALL = Path(__file__).parent
@@ -30,6 +31,7 @@ __all__ = [
     "GIT",
     "GIT_CONFIG",
     "GIT_IGNORE",
+    "HOME",
     "INSTALL",
     "KNOWN_HOSTS",
     "LOCAL_BIN",

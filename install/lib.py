@@ -155,6 +155,15 @@ def install_git(
     symlink_many_if_given((git / "config", config), (git / "ignore", ignore))
 
 
+def install_uv() -> None:
+    if have_command("uv"):
+        _LOGGER.debug("'uv' is already installed")
+        return
+    check_for_commands("curl")
+    _LOGGER.info("Installing 'uv'...")
+    run_commands("curl -LsSf https://astral.sh/uv/install.sh | sh")
+
+
 __all__ = [
     "install_age",
     "install_brew",
@@ -162,4 +171,5 @@ __all__ = [
     "install_fish",
     "install_fzf",
     "install_git",
+    "install_uv",
 ]

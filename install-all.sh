@@ -184,7 +184,6 @@ brew_install() {
 
 [ -n "${IS_MAC}" ] && brew_install 1password --cask
 brew_install aichat
-brew_install age
 brew_install asciinema
 [ -n "${IS_MAC_MINI}" ] && brew_install autoconf # for c
 [ -n "${IS_MAC_MINI}" ] && brew_install automake # for c
@@ -237,7 +236,6 @@ brew_install tailscale
 brew_install tmux
 brew_install topgrade
 [ -n "${IS_MAC_MINI}" ] && brew_install transmission --cask
-brew_install uv
 [ -n "${IS_MAC_MINI}" ] && brew_install visual-studio-code --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install vlc --cask
 [ -n "${IS_MAC}" ] && brew_install watch
