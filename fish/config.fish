@@ -274,7 +274,12 @@ end
 
 # rm
 function rm
-    command rm -rf $argv
+    command rm -frv $argv
+end
+function unlink
+    for arg in $argv
+        command unlink $arg
+    end
 end
 
 # ruff
