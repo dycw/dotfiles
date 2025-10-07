@@ -43,7 +43,17 @@ def install_brew() -> None:
 
 
 def install_curl() -> None:
-    pass
+    if have_command("curl"):
+        _LOGGER.debug("'curl' is already installed")
+        return
+    match System.identify():
+        case System.mac:
+            msg = "Mac should already have 'curl' installed"
+            raise RuntimeError(msg)
+        case System.linux:
+            apt_install("git")
+        case never:
+            assert_never(never)
 
 
 def install_git(
