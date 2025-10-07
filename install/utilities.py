@@ -186,10 +186,23 @@ class TemporaryDirectory:
         self._temp_dir.__exit__(exc, val, tb)
 
 
+def touch(path: PathLike, /) -> None:
+    path = full_path(path)
+    if path.exists():
+        _LOGGER.debug("%r already exists")
+        return
+    _LOGGER.debug("Touching %r...", str(path))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.touch()
+
+
 def unlink(path: PathLike, /) -> None:
-    if (path := full_path(path)).exists():
-        _LOGGER.info("Removing %r...", str(path))
-        path.unlink(missing_ok=True)
+    path = full_path(path)
+    if not path.exists():
+        _LOGGER.debug("%r is already removed...", str(path))
+        return
+    _LOGGER.info("Removing %r...", str(path))
+    path.unlink(missing_ok=True)
 
 
 def update_submodules() -> None:
@@ -243,6 +256,7 @@ __all__ = [
     "set_executable",
     "symlink",
     "temp_environ",
+    "touch",
     "unlink",
     "update_submodules",
     "uv_tool_install",

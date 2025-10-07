@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, assert_never
 
 from install.constants import KNOWN_HOSTS
 from install.enums import System
-from install.utilities import apt_install, have_command, run_commands, symlink
+from install.utilities import apt_install, have_command, run_commands, symlink, touch
 
 if TYPE_CHECKING:
     from install.types import PathLike
@@ -22,7 +22,7 @@ def add_to_known_hosts() -> None:
     try:
         contents = KNOWN_HOSTS.read_text()
     except FileNotFoundError:
-        KNOWN_HOSTS.touch()
+        touch(KNOWN_HOSTS)
         run()
         return
     if any(search(r"github\.com", line) for line in contents.splitlines()):
