@@ -230,16 +230,6 @@ def install_bottom(*, config: bool = False) -> None:
         )
 
 
-def install_brew() -> None:
-    if have_command("brew"):
-        _LOGGER.debug("'brew' is already installed")
-        return
-    _LOGGER.info("Installing 'brew'...")
-    _run_commands(
-        'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-    )
-
-
 def install_build_essential() -> None:
     if have_command("cc"):
         _LOGGER.debug(
@@ -710,10 +700,6 @@ def _setup_sshd() -> None:
 
 def _setup_mac(settings: _Settings, /) -> None:
     install_uv()
-
-    install_fish()  # after brew
-    if settings.fzf:
-        install_fzf(fzf_fish=True)  # after brew
 
     if settings.bump_my_version:
         install_bump_my_version()  # after uv

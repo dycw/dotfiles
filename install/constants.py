@@ -5,4 +5,34 @@ LOCAL_BIN = Path("~/.local/bin").expanduser()
 XDG_CONFIG_HOME = Path("~/.config").expanduser()
 
 
-__all__ = ["KNOWN_HOSTS", "LOCAL_BIN", "XDG_CONFIG_HOME"]
+INSTALL = Path(__file__).parent
+REPO_ROOT = INSTALL.parent
+FISH = REPO_ROOT / "fish"
+FISH_CONFIG = FISH / "config.fish"
+FISH_ENV = FISH / "env.fish"
+FISH_GIT = FISH / "git.fish"
+FISH_WORK = FISH / "work.fish"
+FZF = REPO_ROOT / "fzf"
+FZF_FISH = FZF / "fzf.fish"
+GIT = REPO_ROOT / "git"
+GIT_CONFIG = GIT / "config"
+GIT_IGNORE = GIT / "ignore"
+
+
+__all__ = [
+    "FISH",
+    "FISH_CONFIG",
+    "FISH_ENV",
+    "FISH_GIT",
+    "FISH_WORK",
+    "FZF",
+    "FZF_FISH",
+    "GIT",
+    "GIT_CONFIG",
+    "GIT_IGNORE",
+    "INSTALL",
+    "KNOWN_HOSTS",
+    "LOCAL_BIN",
+    "REPO_ROOT",
+    "XDG_CONFIG_HOME",
+]

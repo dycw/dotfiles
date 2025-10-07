@@ -5,6 +5,15 @@ from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
 
+from install.constants import (
+    FISH_CONFIG,
+    FISH_ENV,
+    FISH_GIT,
+    FISH_WORK,
+    FZF_FISH,
+    GIT_CONFIG,
+    GIT_IGNORE,
+)
 from install.machines.mac import setup_mac
 
 _LOGGER = getLogger(__name__)
@@ -25,7 +34,15 @@ class _Settings:
 
 def _main() -> None:
     _LOGGER.info("Setting up Macbook...")
-    setup_mac()
+    setup_mac(
+        fish_config=FISH_CONFIG,
+        fish_env=FISH_ENV,
+        fish_git=FISH_GIT,
+        fish_work=FISH_WORK,
+        fzf_fish=FZF_FISH,
+        git_config=GIT_CONFIG,
+        git_ignore=GIT_IGNORE,
+    )
 
 
 if __name__ == "__main__":

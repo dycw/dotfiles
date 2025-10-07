@@ -119,7 +119,7 @@ def install_fzf(*, fzf_fish: PathLike | None = None) -> None:
                 assert_never(never)
     if fzf_fish is not None:
         for path in (full_path(fzf_fish) / "functions").iterdir():
-            copyfile(path, XDG_CONFIG_HOME / f"functions/{path.name}")
+            copyfile(path, XDG_CONFIG_HOME / f"fish/functions/{path.name}")
 
 
 def install_git(
@@ -137,7 +137,7 @@ def install_git(
                 apt_install("git")
             case never:
                 assert_never(never)
-    git = full_path("~/.config/git")
+    git = XDG_CONFIG_HOME / "git"
     symlink_many_if_given((git / "config", config), (git / "ignore", ignore))
 
 
