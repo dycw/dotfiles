@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from logging import getLogger
-from os import environ, symlink
+from os import environ
 from re import search
 from typing import TYPE_CHECKING, assert_never
 
@@ -16,6 +16,7 @@ from install.utilities import (
     full_path,
     have_command,
     run_commands,
+    symlink,
     symlink_if_given,
     symlink_many_if_given,
     touch,
