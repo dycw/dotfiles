@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from logging import getLogger
-from os import environ
+from os import environ, symlink
 from re import search
 from typing import TYPE_CHECKING, assert_never
 
-from install.constants import KNOWN_HOSTS, XDG_CONFIG_HOME
+from install.constants import KNOWN_HOSTS, LOCAL_BIN, XDG_CONFIG_HOME
 from install.enums import System
 from install.utilities import (
     apt_install,
@@ -52,6 +52,25 @@ def install_age() -> None:
             brew_install("age")
         case System.linux:
             apt_install("age")
+        case never:
+            assert_never(never)
+
+
+def install_bat() -> None:
+    match System.identify():
+        case System.mac:
+            if have_command("bat"):
+                _LOGGER.debug("'bat' is already installed")
+                return
+            _LOGGER.info("Installing 'bat'...")
+            brew_install("bat")
+        case System.linux:
+            if have_command("batcat"):
+                _LOGGER.debug("'bat' is already installed")
+            else:
+                _LOGGER.info("Installing 'bat'...")
+                apt_install("bat")
+            symlink(LOCAL_BIN / "bat", "/usr/bin/batcat")
         case never:
             assert_never(never)
 
@@ -166,6 +185,7 @@ def install_uv() -> None:
 
 __all__ = [
     "install_age",
+    "install_bat",
     "install_brew",
     "install_curl",
     "install_fish",

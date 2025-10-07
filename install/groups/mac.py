@@ -5,6 +5,8 @@ from typing import TYPE_CHECKING
 
 from install.groups.common import setup_common
 from install.lib import (
+    install_age,
+    install_bat,
     install_brew,
     install_curl,
     install_fish,
@@ -34,6 +36,8 @@ def setup_mac(
     setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
     install_brew()
     install_git(config=git_config, ignore=git_ignore)
+    install_age()  # after brew
+    install_bat()  # after brew
     install_curl()  # after brew
     install_fish(  # after brew
         config=fish_config, env=fish_env, git=fish_git, work=fish_work

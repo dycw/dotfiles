@@ -13,6 +13,8 @@ from install.constants import (
     FZF_FISH,
     GIT_CONFIG,
     GIT_IGNORE,
+    PDBRC,
+    PSQLRC,
 )
 from install.groups.linux import setup_linux
 
@@ -42,6 +44,8 @@ def _setup_swift() -> None:
         fzf_fish=FZF_FISH,
         git_config=GIT_CONFIG,
         git_ignore=GIT_IGNORE,
+        pdbrc=PDBRC,
+        psqlrc=PSQLRC,
     )
 
 

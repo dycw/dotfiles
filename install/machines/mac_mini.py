@@ -13,9 +13,10 @@ from install.constants import (
     FZF_FISH,
     GIT_CONFIG,
     GIT_IGNORE,
+    PDBRC,
+    PSQLRC,
 )
 from install.groups.mac import setup_mac
-from install.lib import install_age
 
 _LOGGER = getLogger(__name__)
 
@@ -43,8 +44,9 @@ def _setup_mac_mini() -> None:
         fzf_fish=FZF_FISH,
         git_config=GIT_CONFIG,
         git_ignore=GIT_IGNORE,
+        pdbrc=PDBRC,
+        psqlrc=PSQLRC,
     )
-    install_age()  # after brew
 
 
 if __name__ == "__main__":

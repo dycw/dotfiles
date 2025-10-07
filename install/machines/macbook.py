@@ -13,6 +13,8 @@ from install.constants import (
     FZF_FISH,
     GIT_CONFIG,
     GIT_IGNORE,
+    PDBRC,
+    PSQLRC,
 )
 from install.groups.mac import setup_mac
 
@@ -32,8 +34,8 @@ class _Settings:
         return _Settings(**vars(parser.parse_args()))
 
 
-def _setup_macbook() -> None:
-    _LOGGER.info("Setting up Macbook...")
+def _setup_mac_book() -> None:
+    _LOGGER.info("Setting up MacBook...")
     setup_mac(
         fish_config=FISH_CONFIG,
         fish_env=FISH_ENV,
@@ -42,6 +44,8 @@ def _setup_macbook() -> None:
         fzf_fish=FZF_FISH,
         git_config=GIT_CONFIG,
         git_ignore=GIT_IGNORE,
+        pdbrc=PDBRC,
+        psqlrc=PSQLRC,
     )
 
 
@@ -53,4 +57,4 @@ if __name__ == "__main__":
         style="{",
         level="DEBUG" if settings.verbose else "INFO",
     )
-    _setup_macbook()
+    _setup_mac_book()
