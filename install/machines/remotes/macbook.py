@@ -6,6 +6,8 @@ from pathlib import Path
 from subprocess import DEVNULL, check_call
 from tempfile import TemporaryDirectory
 
+#### this script can only contain std-lib imports #############################
+
 _LOGGER = getLogger(__name__)
 
 
@@ -50,7 +52,9 @@ def main(*, remote: bool = False) -> None:
                 "python3 -m install.machines.macbook", shell=True, cwd=dotfiles
             )
     else:
-        _LOGGER.info("Setting up Macbook...")
+        from install.machines.macbook import setup_macbook
+
+        setup_macbook()
 
 
 if __name__ == "__main__":
