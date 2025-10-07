@@ -77,6 +77,11 @@ function cp
     command cp -r $argv
 end
 
+# direnv
+function dea
+    direnv allow .
+end
+
 # env
 function eg
     if test (count $argv) -lt 1
