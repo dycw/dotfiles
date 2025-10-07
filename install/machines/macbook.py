@@ -8,6 +8,9 @@ def main() -> None:
     _LOGGER.info("Setting up Macbook...")
 
 
+print("this is outside")
+
+
 if __name__ == "__main__":
     basicConfig(
         format="{asctime} | {message}",
@@ -16,3 +19,6 @@ if __name__ == "__main__":
         level="INFO",
     )
     main()
+
+
+print("this is outside / after")
