@@ -20,6 +20,7 @@ from install.utilities import (
     symlink_if_given,
     symlink_many_if_given,
     touch,
+    uv_tool_install,
     yield_github_latest_download,
 )
 
@@ -97,6 +98,30 @@ def install_bottom(*, bottom_toml: PathLike | None = None) -> None:
     symlink_if_given(XDG_CONFIG_HOME / "bottom/bottom.toml", bottom_toml)
 
 
+def install_build_essential() -> None:
+    if have_command("cc"):
+        _LOGGER.debug(
+            "'cc' is already installed (and presumably so is 'build-essential'"
+        )
+        return
+    _LOGGER.info("Installing 'build-essential'...")
+    apt_install("build-essential")
+
+
+def install_bump_my_version() -> None:
+    if have_command("bump-my-version"):
+        _LOGGER.debug("'bump-my-version' is already installed")
+        return
+    _LOGGER.info("Installing 'bump-my-version'...")
+    match System.identify():
+        case System.mac:
+            brew_install("bump-my-version")
+        case System.linux:
+            uv_tool_install("bump-my-version")
+        case never:
+            assert_never(never)
+
+
 def install_brew() -> None:
     if have_command("brew"):
         _LOGGER.debug("'brew' is already installed")
@@ -112,14 +137,8 @@ def install_curl() -> None:
     if have_command("curl"):
         _LOGGER.debug("'curl' is already installed")
         return
-    match System.identify():
-        case System.mac:
-            msg = "Mac should already have 'curl' installed"
-            raise RuntimeError(msg)
-        case System.linux:
-            apt_install("git")
-        case never:
-            assert_never(never)
+    _LOGGER.info("Installing 'curl'...")
+    apt_install("git")
 
 
 def install_delta() -> None:
@@ -257,6 +276,8 @@ __all__ = [
     "install_age",
     "install_bat",
     "install_brew",
+    "install_build_essential",
+    "install_bump_my_version",
     "install_curl",
     "install_delta",
     "install_direnv",

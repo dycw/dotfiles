@@ -3,14 +3,15 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from install import install_delta, install_direnv
 from install.groups.common import setup_common
 from install.lib import (
     install_age,
     install_bat,
     install_bottom,
     install_brew,
-    install_curl,
+    install_bump_my_version,
+    install_delta,
+    install_direnv,
     install_fish,
     install_fzf,
     install_git,
@@ -43,7 +44,7 @@ def setup_mac(
     install_age()  # after brew
     install_bat()  # after brew
     install_bottom(bottom_toml=bottom_toml)  # after brew
-    install_curl()  # after brew
+    install_bump_my_version()  # after brew
     install_delta()  # after brew
     install_direnv()  # after brew
     install_fish(  # after brew

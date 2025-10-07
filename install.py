@@ -14,48 +14,12 @@ _LOGGER = getLogger(__name__)
 # library
 
 
-def install_build_essential() -> None:
-    if have_command("cc"):
-        _LOGGER.debug(
-            "'cc' is already installed (and presumably so is 'build-essential'"
-        )
-        return
-    _LOGGER.info("Installing 'build-essential'...")
-    apt_install("build-essential")
-
-
-def install_bump_my_version() -> None:
-    _uv_tool_install("bump-my-version")
-
-
 def install_caffeine() -> None:
     if have_command("caffeine"):
         _LOGGER.debug("'caffeine' is already installed")
         return
     _LOGGER.info("Installing 'caffeine'...")
     apt_install("caffeine")
-
-
-def install_delta() -> None:
-    if have_command("delta"):
-        _LOGGER.debug("'delta' is already installed")
-        return
-    _LOGGER.info("Installing 'delta'...")
-    apt_install("git-delta")
-
-
-def install_direnv(
-    *, direnv_toml: Path | str | None = None, direnvrc: Path | str | None = None
-) -> None:
-    if have_command("direnv"):
-        _LOGGER.debug("'direnv' is already installed")
-    else:
-        _LOGGER.info("Installing 'direnv'...")
-        apt_install("direnv")
-    for path_to in [direnv_toml, direnvrc]:
-        if path_to is not None:
-            name = full_path(path_to).name
-            symlink(f"~/.config/direnv/{name}", path_to)
 
 
 def install_docker() -> None:

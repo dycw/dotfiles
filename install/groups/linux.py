@@ -8,6 +8,8 @@ from install.groups.common import setup_common
 from install.lib import (
     install_age,
     install_bottom,
+    install_build_essential,
+    install_bump_my_version,
     install_curl,
     install_fish,
     install_fzf,
@@ -38,6 +40,7 @@ def setup_linux(
     setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
     install_age()
     install_bottom(bottom_toml=bottom_toml)
+    install_build_essential()
     install_curl()
     install_delta()
     install_direnv()
@@ -47,6 +50,7 @@ def setup_linux(
         config=fish_config, env=fish_env, git=fish_git, work=fish_work
     )
     install_uv()  # after curl
+    install_bump_my_version()  # after uv
 
 
 __all__ = ["setup_linux"]
