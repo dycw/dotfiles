@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING, assert_never
 
 from install.constants import KNOWN_HOSTS
 from install.enums import System
-from install.utilities import apt_install, have_command, run_commands
+from install.utilities import apt_install, have_command, run_commands, symlink
 
 if TYPE_CHECKING:
-    from pathlib import Path
+    from install.types import PathLike
 
 _LOGGER = getLogger(__name__)
 
@@ -46,7 +46,7 @@ def install_curl() -> None:
 
 
 def install_git(
-    *, config: Path | str | None = None, ignore: Path | str | None = None
+    *, config: PathLike | None = None, ignore: PathLike | None = None
 ) -> None:
     if have_command("git"):
         _LOGGER.debug("'git' is already installed")
@@ -60,9 +60,9 @@ def install_git(
                 apt_install("git")
             case never:
                 assert_never(never)
-    if config is not None:
-        for filename in ["config", "ignore"]:
-            symlink(f"~/.config/git/{filename}", f"{_get_script_dir()}/git/{filename}")
+    for filename, path_to in [("config", config), ("ignore", ignore)]:
+        if path_to is not None:
+            symlink(f"~/.config/git/{filename}", path_to)
 
 
-__all__ = ["install_brew", "install_curl"]
+__all__ = ["install_brew", "install_curl", "install_git"]

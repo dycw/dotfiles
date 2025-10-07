@@ -19,6 +19,8 @@ if TYPE_CHECKING:
     from collections.abc import Iterator, Mapping
     from types import TracebackType
 
+    from install.types import PathLike
+
 _LOGGER = getLogger(__name__)
 
 
@@ -52,7 +54,7 @@ def check_for_commands(*cmds: str) -> None:
 
 
 def copyfile(
-    path_from: Path | str, path_to: Path | str, /, *, executable: bool = False
+    path_from: PathLike, path_to: PathLike, /, *, executable: bool = False
 ) -> None:
     path_from, path_to = map(full_path, [path_from, path_to])
     if path_to.exists() and (path_to.read_bytes() == path_from.read_bytes()):
@@ -66,22 +68,18 @@ def copyfile(
         set_executable(path_to)
 
 
-def download(url: str, path: Path | str, /) -> None:
+def download(url: str, path: PathLike, /) -> None:
     with urlopen(url) as response, full_path(path).open(mode="wb") as fh:
         _ = fh.write(response.read())
 
 
-def dpkg_install(path: Path | str, /) -> None:
+def dpkg_install(path: PathLike, /) -> None:
     check_for_commands("dpkg")
     run_commands(f"sudo dpkg -i {path}")
 
 
-def full_path(*parts: Path | str) -> Path:
+def full_path(*parts: PathLike) -> Path:
     return Path(*parts).expanduser()
-
-
-def get_output(cmd: str, /) -> str:
-    return check_output(cmd, shell=True, text=True).strip("\n")
 
 
 def get_latest_tag(owner: str, repo: str, /) -> str:
@@ -89,6 +87,10 @@ def get_latest_tag(owner: str, repo: str, /) -> str:
     return get_output(
         f'curl -s https://api.github.com/repos/{owner}/{repo}/releases/latest | jq -r ".tag_name"'
     )
+
+
+def get_output(cmd: str, /) -> str:
+    return check_output(cmd, shell=True, text=True).strip("\n")
 
 
 def have_command(cmd: str, /) -> bool:
@@ -104,7 +106,7 @@ def luarocks_install(package: str, /) -> None:
     run_commands(f"sudo luarocks install {package}")
 
 
-def replace_line(path: Path | str, from_: str, to: str, /) -> None:
+def replace_line(path: PathLike, from_: str, to: str, /) -> None:
     path = full_path(path)
     lines = path.read_text().splitlines()
     if all(line != from_ for line in lines):
@@ -122,7 +124,7 @@ def run_commands(*cmds: str, env: Mapping[str, str | None] | None = None) -> Non
             _ = check_call(cmd_use, shell=True)
 
 
-def set_executable(path: Path | str, /) -> None:
+def set_executable(path: PathLike, /) -> None:
     path = full_path(path)
     mode = path.stat().st_mode
     if mode & S_IXUSR:
@@ -132,7 +134,7 @@ def set_executable(path: Path | str, /) -> None:
     run_commands(f"sudo chmod u+x {path}")
 
 
-def symlink(path_from: Path | str, path_to: Path | str, /) -> None:
+def symlink(path_from: PathLike, path_to: PathLike, /) -> None:
     path_from, path_to = map(full_path, [path_from, path_to])
     if path_from.is_symlink() and (path_from.resolve() == path_to.resolve()):
         _LOGGER.debug("%r -> %r already symlinked", str(path_from), str(path_to))
@@ -184,7 +186,7 @@ class TemporaryDirectory:
         self._temp_dir.__exit__(exc, val, tb)
 
 
-def unlink(path: Path | str, /) -> None:
+def unlink(path: PathLike, /) -> None:
     if (path := full_path(path)).exists():
         _LOGGER.info("Removing %r...", str(path))
         path.unlink(missing_ok=True)
