@@ -74,6 +74,17 @@ end
 
 # cp
 function cp
+    if test (count $argv) -lt 2
+        echo "'cp' expected [2..) arguments SOURCE ... TARGET; got "(count $argv) >&2; and return 1
+    end
+    set -l target $argv[-1]
+    set -l mkdir_target
+    if test (count $argv) -eq 2; and not string match -q '*/' -- $target
+        set mkdir_target $(dirname $target)
+    else
+        set mkdir_target $target
+    end
+    command mkdir -p $mkdir_target
     command cp -r $argv
 end
 
