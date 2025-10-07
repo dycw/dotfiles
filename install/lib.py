@@ -122,6 +122,40 @@ def install_curl() -> None:
             assert_never(never)
 
 
+def install_delta() -> None:
+    if have_command("delta"):
+        _LOGGER.debug("'delta' is already installed")
+        return
+    _LOGGER.info("Installing 'delta'...")
+    match System.identify():
+        case System.mac:
+            brew_install("git-delta")
+        case System.linux:
+            apt_install("git-delta")
+        case never:
+            assert_never(never)
+
+
+def install_direnv(
+    *, direnv_toml: PathLike | None = None, direnvrc: PathLike | None = None
+) -> None:
+    if have_command("direnv"):
+        _LOGGER.debug("'direnv' is already installed")
+    else:
+        _LOGGER.info("Installing 'direnv'...")
+        match System.identify():
+            case System.mac:
+                brew_install("direnv")
+            case System.linux:
+                apt_install("direnv")
+            case never:
+                assert_never(never)
+    direnv = XDG_CONFIG_HOME / "direnv"
+    symlink_many_if_given(
+        (direnv / "direnv.toml", direnv_toml), (direnv / "direnvrc", direnvrc)
+    )
+
+
 def install_fish(
     *,
     config: PathLike | None = None,
@@ -200,9 +234,15 @@ def install_uv() -> None:
     if have_command("uv"):
         _LOGGER.debug("'uv' is already installed")
         return
-    check_for_commands("curl")
     _LOGGER.info("Installing 'uv'...")
-    run_commands("curl -LsSf https://astral.sh/uv/install.sh | sh")
+    match System.identify():
+        case System.mac:
+            brew_install("uv")
+        case System.linux:
+            check_for_commands("curl")
+            run_commands("curl -LsSf https://astral.sh/uv/install.sh | sh")
+        case never:
+            assert_never(never)
 
 
 def setup_pdb(*, pdbrc: PathLike | None = None) -> None:
@@ -218,6 +258,8 @@ __all__ = [
     "install_bat",
     "install_brew",
     "install_curl",
+    "install_delta",
+    "install_direnv",
     "install_fish",
     "install_fzf",
     "install_git",

@@ -3,6 +3,7 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
+from install import install_delta, install_direnv
 from install.groups.common import setup_common
 from install.lib import (
     install_age,
@@ -11,6 +12,7 @@ from install.lib import (
     install_fish,
     install_fzf,
     install_git,
+    install_uv,
 )
 
 if TYPE_CHECKING:
@@ -37,11 +39,14 @@ def setup_linux(
     install_age()
     install_bottom(bottom_toml=bottom_toml)
     install_curl()
+    install_delta()
+    install_direnv()
     install_fzf(fzf_fish=fzf_fish)
     install_git(config=git_config, ignore=git_ignore)
     install_fish(  # after curl
         config=fish_config, env=fish_env, git=fish_git, work=fish_work
     )
+    install_uv()  # after curl
 
 
 __all__ = ["setup_linux"]

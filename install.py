@@ -467,14 +467,10 @@ def _setup_mac(settings: _Settings, /) -> None:
 
 
 def _setup_debian(settings: _Settings, /) -> None:
-    install_curl()
     install_neovim(config=f"{_get_script_dir()}/nvim")
     install_npm()
     install_python3_13_venv()
     install_starship(config=f"{_get_script_dir()}/starship/starship.toml")
-    _setup_bash()
-    _setup_pdb()
-    _setup_psql()
     _setup_sshd()
     if settings.age:
         install_age()
@@ -486,8 +482,6 @@ def _setup_debian(settings: _Settings, /) -> None:
         install_build_essential()
     if settings.caffeine:
         install_caffeine()
-    if settings.delta:
-        install_delta()
     if settings.direnv:
         install_direnv(
             direnv_toml=f"{_get_script_dir()}/direnv/direnv.toml",

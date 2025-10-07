@@ -191,8 +191,6 @@ brew_install asciinema
 [ -n "${IS_MAC_MINI}" ] && brew_install cargo-binstall
 [ -n "${IS_MAC_MINI}" ] && brew_install cargo-nextest
 [ -n "${IS_MAC_MINI}" ] && brew_install db-browser-for-sqlite --cask
-brew_install delta git-delta
-brew_install direnv
 [ -n "${IS_MAC}" ] && brew_install dropbox --cask
 brew_install dust
 brew_install eza
