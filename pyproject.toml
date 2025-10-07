@@ -31,8 +31,7 @@ typeCheckingMode = "strict"
 
 # ruff
 [tool.ruff]
-extend-exclude = ["dotbot"]
-target-version = "py311"
+target-version = "py313"
 unsafe-fixes = true
 
 [tool.ruff.format]
