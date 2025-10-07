@@ -10,6 +10,7 @@ if test (hostname) = DW-Mac
         cd $HOME/work-gitlab
     end
 end
+
 # git
 if type -q git
     function gclw
@@ -26,12 +27,21 @@ if type -q git
 end
 
 # mount
-function mount-drives
+function mount-shared-drive
     if test (count $argv) -eq 0
-        echo "'mount-drives' expected [1..) arguments SUBNET; got $(count $argv)" >&2; and return 1
+        echo "'mount-shared-drive' expected [1..) arguments SUBNET; got $(count $argv)" >&2; and return 1
     end
-    set -l subnet $argv[1]
     set -l dir /mnt/qrt-$subnet
+    switch (uname)
+        case Darwin
+            set dir /Volumes/qrt-$subnet
+        case Linux
+            set dir /mnt/qrt-$subnet
+        case *
+            echo "Invalid OS; got '$(uname)'" >&2; and return 1
+    end
+    sudo mkdir -p $dir
+    set -l subnet $argv[1]
     set -l pool_name
     set -l dataset_name
     switch $subnet
@@ -41,13 +51,18 @@ function mount-drives
         case test
             set pool_name pool-test
             set dataset_name dataset-test
-        case '*'
-            # default case
+        case *
             echo "Invalid subnet; got '$subnet'" >&2; and return 1
     end
-    sudo apt -y install nfs-common
-    sudo mkdir -p $dir
-    sudo mount -t nfs truenas.$subnet:/mnt/$pool_name/$dataset_name $dir
+    switch (uname)
+        case Darwin
+            sudo mount -t nfs -o vers=4,resvport truenas.$subnet:/mnt/$pool_name/$dataset_name $dir
+        case Linux
+            sudo apt -y install nfs-common
+            sudo mount -t nfs truenas.$subnet:/mnt/$pool_name/$dataset_name $dir
+        case *
+            echo "Invalid OS; got '$(uname)'" >&2; and return 1
+    end
 end
 
 # work
