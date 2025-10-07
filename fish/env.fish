@@ -50,7 +50,9 @@ export GITLAB_HOME=$HOME/gitlab-docker
 
 # local binaries
 if test -d $HOME/.local/bin
-    fish_add_path $HOME/.local/bin
+    echo "before: $PATH"
+    fish_add_path "$HOME/.local/bin"
+    echo "after:  $PATH"
 end
 
 # pytest
