@@ -14,6 +14,7 @@ from install.lib import (
     install_direnv,
     install_dust,
     install_eza,
+    install_fd,
     install_fish,
     install_fzf,
     install_git,
@@ -30,6 +31,7 @@ _LOGGER = getLogger(__name__)
 def setup_mac(
     *,
     bottom_toml: PathLike | None = None,
+    fd_ignore: PathLike | None = None,
     fish_config: PathLike | None = None,
     fish_env: PathLike | None = None,
     fish_git: PathLike | None = None,
@@ -52,6 +54,7 @@ def setup_mac(
     install_direnv()  # after brew
     install_dust()  # after brew
     install_eza()  # after brew
+    install_fd(ignore=fd_ignore)
     install_fish(  # after brew
         config=fish_config, env=fish_env, git=fish_git, work=fish_work
     )

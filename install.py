@@ -2,7 +2,6 @@
 from logging import getLogger
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import assert_never
 from zipfile import ZipFile
 
 # constants

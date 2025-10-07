@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from logging import basicConfig, getLogger
 
 from install.constants import (
+    FD_IGNORE,
     FISH_CONFIG,
     FISH_ENV,
     FISH_GIT,
@@ -37,6 +38,7 @@ class _Settings:
 def _setup_mac_mini() -> None:
     _LOGGER.info("Setting up Mac-Mini...")
     setup_mac(
+        fd_ignore=FD_IGNORE,
         fish_config=FISH_CONFIG,
         fish_env=FISH_ENV,
         fish_git=FISH_GIT,

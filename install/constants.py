@@ -10,6 +10,8 @@ INSTALL = Path(__file__).parent
 REPO_ROOT = INSTALL.parent
 BOTTOM = REPO_ROOT / "bottom"
 BOTTOM_TOML = BOTTOM / "bottom.toml"
+FD = REPO_ROOT / "fd"
+FD_IGNORE = FD / "ignore"
 FISH = REPO_ROOT / "fish"
 FISH_CONFIG = FISH / "config.fish"
 FISH_ENV = FISH / "env.fish"
@@ -29,6 +31,8 @@ PSQLRC = PSQL / "psqlrc"
 __all__ = [
     "BOTTOM",
     "BOTTOM_TOML",
+    "FD",
+    "FD_IGNORE",
     "FISH",
     "FISH_CONFIG",
     "FISH_ENV",

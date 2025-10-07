@@ -14,6 +14,7 @@ from install.lib import (
     install_docker,
     install_dust,
     install_eza,
+    install_fd,
     install_fish,
     install_fzf,
     install_git,
@@ -30,6 +31,7 @@ _LOGGER = getLogger(__name__)
 def setup_linux(
     *,
     bottom_toml: PathLike | None = None,
+    fd_ignore: PathLike | None = None,
     fish_config: PathLike | None = None,
     fish_env: PathLike | None = None,
     fish_git: PathLike | None = None,
@@ -50,6 +52,7 @@ def setup_linux(
     install_direnv()
     install_dust()
     install_eza()
+    install_fd(ignore=fd_ignore)
     install_fzf(fzf_fish=fzf_fish)
     install_git(config=git_config, ignore=git_ignore)
     install_docker()  # after curl
