@@ -198,14 +198,6 @@ class _Settings:
 # library
 
 
-def install_age() -> None:
-    if have_command("age"):
-        _LOGGER.debug("'age' is already installed")
-        return
-    _LOGGER.info("Installing 'age'...")
-    apt_install("age")
-
-
 def install_bat() -> None:
     if have_command("batcat"):
         _LOGGER.debug("'bat' is already installed")

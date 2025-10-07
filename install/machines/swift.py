@@ -14,7 +14,7 @@ from install.constants import (
     GIT_CONFIG,
     GIT_IGNORE,
 )
-from install.groups.mac import setup_mac
+from install.groups.linux import setup_linux
 
 _LOGGER = getLogger(__name__)
 
@@ -32,9 +32,9 @@ class _Settings:
         return _Settings(**vars(parser.parse_args()))
 
 
-def _setup_macbook() -> None:
-    _LOGGER.info("Setting up Macbook...")
-    setup_mac(
+def _setup_swift() -> None:
+    _LOGGER.info("Setting up Swift...")
+    setup_linux(
         fish_config=FISH_CONFIG,
         fish_env=FISH_ENV,
         fish_git=FISH_GIT,
@@ -53,4 +53,4 @@ if __name__ == "__main__":
         style="{",
         level="DEBUG" if settings.verbose else "INFO",
     )
-    _setup_macbook()
+    _setup_swift()

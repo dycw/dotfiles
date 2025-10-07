@@ -42,6 +42,20 @@ def add_to_known_hosts() -> None:
     run()
 
 
+def install_age() -> None:
+    if have_command("age"):
+        _LOGGER.debug("'age' is already installed")
+        return
+    _LOGGER.info("Installing 'age'...")
+    match System.identify():
+        case System.mac:
+            brew_install("age")
+        case System.linux:
+            apt_install("age")
+        case never:
+            assert_never(never)
+
+
 def install_brew() -> None:
     if have_command("brew"):
         _LOGGER.debug("'brew' is already installed")
@@ -141,4 +155,11 @@ def install_git(
     symlink_many_if_given((git / "config", config), (git / "ignore", ignore))
 
 
-__all__ = ["install_brew", "install_curl", "install_fish", "install_fzf", "install_git"]
+__all__ = [
+    "install_age",
+    "install_brew",
+    "install_curl",
+    "install_fish",
+    "install_fzf",
+    "install_git",
+]

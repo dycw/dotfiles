@@ -15,6 +15,7 @@ from install.constants import (
     GIT_IGNORE,
 )
 from install.groups.mac import setup_mac
+from install.lib import install_age
 
 _LOGGER = getLogger(__name__)
 
@@ -32,8 +33,8 @@ class _Settings:
         return _Settings(**vars(parser.parse_args()))
 
 
-def _setup_macbook() -> None:
-    _LOGGER.info("Setting up Macbook...")
+def _setup_mac_mini() -> None:
+    _LOGGER.info("Setting up Mac-Mini...")
     setup_mac(
         fish_config=FISH_CONFIG,
         fish_env=FISH_ENV,
@@ -43,6 +44,7 @@ def _setup_macbook() -> None:
         git_config=GIT_CONFIG,
         git_ignore=GIT_IGNORE,
     )
+    install_age()  # after brew
 
 
 if __name__ == "__main__":
@@ -53,4 +55,4 @@ if __name__ == "__main__":
         style="{",
         level="DEBUG" if settings.verbose else "INFO",
     )
-    _setup_macbook()
+    _setup_mac_mini()

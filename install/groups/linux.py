@@ -3,8 +3,8 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
+from install.groups.common import setup_common
 from install.lib import install_fish, install_fzf, install_git
-from install.machines.common import setup_common
 
 if TYPE_CHECKING:
     from install.types import PathLike
