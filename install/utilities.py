@@ -33,14 +33,17 @@ def apt_install(*packages: str) -> None:
     run_commands(f"sudo apt -y install {joined}")
 
 
-def brew_install(*packages: str) -> None:
+def brew_install(*packages: str, cask: bool = False) -> None:
     check_for_commands("brew")
     _LOGGER.info("Updating 'brew'...")
     run_commands("brew update")
     desc = ", ".join(map(repr, packages))
     _LOGGER.info("Installing %s...", desc)
+    cmd = "brew install"
+    if cask:
+        cmd = f"{cmd} --cask"
     joined = " ".join(packages)
-    run_commands(f"brew install install {joined}")
+    run_commands(f"{cmd} {joined}")
 
 
 def check_for_commands(*cmds: str) -> None:

@@ -3,6 +3,7 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
+from install import install_shfmt
 from install.groups.common import setup_common
 from install.lib import (
     install_age,
@@ -18,14 +19,17 @@ from install.lib import (
     install_fish,
     install_fzf,
     install_gh,
+    install_ghostty,
     install_git,
     install_glab,
     install_iperf3,
     install_jq,
     install_just,
     install_luacheck,
+    install_macchanger,
     install_sops,
     install_uv,
+    install_vim,
 )
 
 if TYPE_CHECKING:
@@ -36,6 +40,7 @@ _LOGGER = getLogger(__name__)
 
 def setup_mac(
     *,
+    age_secret_key: PathLike | None = None,
     bottom_toml: PathLike | None = None,
     fd_ignore: PathLike | None = None,
     fish_config: PathLike | None = None,
@@ -58,6 +63,7 @@ def setup_mac(
     install_bump_my_version()  # after brew
     install_delta()  # after brew
     install_direnv()  # after brew
+    # !unsure    install_dropbox()  # after brew
     install_dust()  # after brew
     install_eza()  # after brew
     install_fd(ignore=fd_ignore)
@@ -66,13 +72,17 @@ def setup_mac(
     )
     install_fzf(fzf_fish=fzf_fish)  # after brew
     install_gh()  # after brew
+    install_ghostty()  # after brew
     install_glab()  # after brew
     install_iperf3()  # after brew
     install_jq()  # after brew
     install_just()  # after brew
     install_luacheck()  # after brew
-    install_sops()  # after brew
+    install_macchanger()  # after brew
+    install_shfmt()  # after brew
+    install_sops(age_secret_key=age_secret_key)  # after brew
     install_uv()  # after brew
+    install_vim()  # after brew
     # keyboard international
     # mouse up/down
 

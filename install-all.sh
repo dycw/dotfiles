@@ -191,8 +191,6 @@ brew_install asciinema
 [ -n "${IS_MAC_MINI}" ] && brew_install cargo-binstall
 [ -n "${IS_MAC_MINI}" ] && brew_install cargo-nextest
 [ -n "${IS_MAC_MINI}" ] && brew_install db-browser-for-sqlite --cask
-[ -n "${IS_MAC}" ] && brew_install dropbox --cask
-[ -n "${IS_MAC}" ] && brew_install ghostty --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install maturin
 brew_install nvim neovim
@@ -295,7 +293,6 @@ if [ -n "${IS_UBUNTU}" ]; then
 	apt_install libpq-dev
 	apt_install libusb-1.0-0  # for keymapp
 	apt_install libwebkit2gtk # for keymapp
-	apt_install nautilus-dropbox
 	apt_install openssh-server
 	apt_install zsh
 fi

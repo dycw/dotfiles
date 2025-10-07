@@ -6,6 +6,8 @@ from re import search
 from shutil import which
 from typing import TYPE_CHECKING, assert_never
 
+from typing_extensions import runtime
+
 from install.constants import HOME, KNOWN_HOSTS, LOCAL_BIN, XDG_CONFIG_HOME
 from install.enums import System
 from install.utilities import (
@@ -16,6 +18,7 @@ from install.utilities import (
     dpkg_install,
     full_path,
     have_command,
+    luarocks_install,
     run_commands,
     symlink,
     symlink_if_given,
@@ -156,37 +159,6 @@ def install_delta() -> None:
             assert_never(never)
 
 
-def install_docker() -> None:
-    if have_command("docker"):
-        _LOGGER.debug("'docker' is already installed")
-        return
-    _LOGGER.info("Installing 'docker'...")
-    packages = [
-        "docker.io",
-        "docker-doc",
-        "docker-compose",
-        "podman-docker",
-        "containerd",
-        "runc",
-    ]
-    run_commands(*(f"sudo apt-get remove {p}" for p in packages))
-    apt_install("ca-certificates", "curl")
-    run_commands(
-        "sudo install -m 0755 -d /etc/apt/keyrings",
-        "sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc",
-        "sudo chmod a+r /etc/apt/keyrings/docker.asc",
-        'echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null',
-    )
-    apt_install(
-        "docker-ce",
-        "docker-ce-cli",
-        "containerd.io",
-        "docker-buildx-plugin",
-        "docker-compose-plugin",
-    )
-    run_commands("sudo usermod -aG docker $USER")
-
-
 def install_direnv(
     *, direnv_toml: PathLike | None = None, direnvrc: PathLike | None = None
 ) -> None:
@@ -205,6 +177,59 @@ def install_direnv(
     symlink_many_if_given(
         (direnv / "direnv.toml", direnv_toml), (direnv / "direnvrc", direnvrc)
     )
+
+
+def install_docker() -> None:
+    if have_command("docker"):
+        _LOGGER.debug("'docker' is already installed")
+    else:
+        _LOGGER.info("Installing 'docker'...")
+        match System.identify():
+            case System.mac:
+                brew_install("docker")
+            case System.linux:
+                check_for_commands("curl")
+                packages = [
+                    "docker.io",
+                    "docker-doc",
+                    "docker-compose",
+                    "podman-docker",
+                    "containerd",
+                    "runc",
+                ]
+                run_commands(*(f"sudo apt-get remove {p}" for p in packages))
+                apt_install("ca-certificates", "curl")
+                run_commands(
+                    "sudo install -m 0755 -d /etc/apt/keyrings",
+                    "sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc",
+                    "sudo chmod a+r /etc/apt/keyrings/docker.asc",
+                    'echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null',
+                )
+                apt_install(
+                    "docker-ce",
+                    "docker-ce-cli",
+                    "containerd.io",
+                    "docker-buildx-plugin",
+                    "docker-compose-plugin",
+                )
+            case never:
+                assert_never(never)
+    run_commands("sudo usermod -aG docker $USER")
+
+
+def install_dropbox() -> None:
+    raise NotImplementedError
+    if have_command("dropbox"):
+        _LOGGER.debug("'dropbox' is already installed")
+        return
+    _LOGGER.info("Installing 'dropbox'...")
+    match System.identify():
+        case System.mac:
+            brew_install("dropbox", cask=True)
+        case System.linux:
+            apt_install("nautilus-dropbox")
+        case never:
+            assert_never(never)
 
 
 def install_dust() -> None:
@@ -315,6 +340,35 @@ def install_gh() -> None:
             brew_install("gh")
         case System.linux:
             apt_install("gh")
+        case never:
+            assert_never(never)
+
+
+def install_ghostty() -> None:
+    if have_command("ghostty"):
+        _LOGGER.debug("'ghostty' is already installed")
+        return
+    _LOGGER.info("Installing 'ghostty'...")
+    match System.identify():
+        case System.mac:
+            brew_install("ghostty", cask=True)
+        case System.linux:
+            check_for_commands("curl")
+            run_commands(
+                'curl -sS https://debian.griffo.io/EA0F721D231FDD3A0A17B9AC7808B4DD62C41256.asc | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/debian.griffo.io.gpg echo "deb https://debian.griffo.io/apt $(lsb_release -sc 2>/dev/null) main" | sudo tee /etc/apt/sources.list.d/debian.griffo.io.list'
+            )
+            apt_install(
+                "zig",
+                "ghostty",
+                "lazygit",
+                "yazi",
+                "eza",
+                "uv",
+                "fzf",
+                "zoxide",
+                "bun",
+                "tigerbeetle",
+            )
         case never:
             assert_never(never)
 
@@ -431,7 +485,49 @@ def install_luacheck() -> None:
         case System.mac:
             brew_install("luacheck")
         case System.linux:
-            apt_install("luacheck")
+            luarocks_install("luacheck")
+        case never:
+            assert_never(never)
+
+
+def install_luarocks() -> None:
+    if have_command("luarocks"):
+        _LOGGER.debug("'luarocks' is already installed")
+        return
+    _LOGGER.info("Installing 'luarocks'...")
+    match System.identify():
+        case System.mac:
+            brew_install("luarocks")
+        case System.linux:
+            apt_install("luarocks")
+        case never:
+            assert_never(never)
+
+
+def install_macchanger() -> None:
+    if have_command("macchanger"):
+        _LOGGER.debug("'macchanger' is already installed")
+        return
+    _LOGGER.info("Installing 'macchanger'...")
+    match System.identify():
+        case System.mac:
+            brew_install("macchanger")
+        case System.linux:
+            apt_install("macchanger")
+        case never:
+            assert_never(never)
+
+
+def install_shfmt() -> None:
+    if have_command("shfmt"):
+        _LOGGER.debug("'shfmt' is already installed")
+        return
+    _LOGGER.info("Installing 'shfmt'...")
+    match System.identify():
+        case System.mac:
+            brew_install("shfmt")
+        case System.linux:
+            apt_install("shfmt")
         case never:
             assert_never(never)
 
@@ -470,6 +566,20 @@ def install_uv() -> None:
             assert_never(never)
 
 
+def install_vim() -> None:
+    if have_command("vim"):
+        _LOGGER.debug("'vim' is already installed")
+        return
+    _LOGGER.info("Installing 'vim'...")
+    match System.identify():
+        case System.mac:
+            brew_install("vim")
+        case System.linux:
+            apt_install("vim")
+        case never:
+            assert_never(never)
+
+
 def setup_pdb(*, pdbrc: PathLike | None = None) -> None:
     symlink_if_given(HOME / ".pdbrc", pdbrc)
 
@@ -488,12 +598,14 @@ __all__ = [
     "install_delta",
     "install_direnv",
     "install_docker",
+    "install_dropbox",
     "install_dust",
     "install_eza",
     "install_fd",
     "install_fish",
     "install_fzf",
     "install_gh",
+    "install_ghostty",
     "install_git",
     "install_gitweb",
     "install_glab",
@@ -502,8 +614,12 @@ __all__ = [
     "install_jq",
     "install_just",
     "install_luacheck",
+    "install_luarocks",
+    "install_macchanger",
+    "install_shfmt",
     "install_sops",
     "install_uv",
+    "install_vim",
     "setup_pdb",
     "setup_psql",
 ]

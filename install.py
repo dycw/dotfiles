@@ -13,22 +13,6 @@ _LOGGER = getLogger(__name__)
 # library
 
 
-def install_luarocks() -> None:
-    if have_command("luarocks"):
-        _LOGGER.debug("'luarocks' is already installed")
-        return
-    _LOGGER.info("Installing 'luarocks'...")
-    apt_install("luarocks")
-
-
-def install_macchanger() -> None:
-    if have_command("macchanger"):
-        _LOGGER.debug("'macchanger' is already installed")
-        return
-    _LOGGER.info("Installing 'macchanger'...")
-    apt_install("macchanger")
-
-
 def install_neovim(*, config: Path | str | None = None) -> None:
     if have_command("nvim"):
         _LOGGER.debug("'neovim' is already installed")
@@ -289,12 +273,6 @@ def _setup_debian(settings: _Settings, /) -> None:
     install_python3_13_venv()
     install_starship(config=f"{_get_script_dir()}/starship/starship.toml")
     _setup_sshd()
-    if settings.just:
-        install_just()
-    if settings.jq:
-        install_jq()
-    if settings.luarocks:
-        install_luarocks()
     if settings.macchanger:
         install_macchanger()
     if settings.ripgrep:
@@ -322,18 +300,12 @@ def _setup_debian(settings: _Settings, /) -> None:
     if settings.zoxide:
         install_zoxide()
 
-    install_uv()  # after curl
-    if settings.docker:
-        install_docker()  # after curl
     if settings.spotify:
         install_spotify()  # after curl
     if settings.tailscale:
         install_tailscale()  # after curl
     if settings.wezterm:
         install_wezterm()  # after curl
-
-    if settings.luacheck:
-        install_luacheck()  # after luarocks
 
     if settings.bump_my_version:
         install_bump_my_version()  # after uv
@@ -343,6 +315,3 @@ def _setup_debian(settings: _Settings, /) -> None:
         install_pyright()  # after uv
     if settings.ruff:
         install_ruff()  # after uv
-
-
-main(_Settings.parse())
