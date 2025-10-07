@@ -17,6 +17,7 @@ def setup_mac(
     _LOGGER.info("Setting up Mac...")
     setup_common(git_config=git_config, git_ignore=git_ignore)
     # keyboard international
+    # mouse up/down
 
 
 __all__ = ["setup_mac"]
