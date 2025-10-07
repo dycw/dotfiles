@@ -19,6 +19,7 @@ def _main() -> None:
         _ = check_call(
             f"git clone {url} {dotfiles}", stdout=DEVNULL, stderr=DEVNULL, shell=True
         )
+        _LOGGER.info("Changing branch...")
         _ = check_call(  # TEMPORARY!
             "git checkout re-organize",
             stdout=DEVNULL,
@@ -26,7 +27,9 @@ def _main() -> None:
             shell=True,
             cwd=dotfiles,
         )
-        _ = check_call("python3 -m install.machines.macbook", shell=True, cwd=dotfiles)
+        cmd = "python3 -m install.machines.macbook"
+        _LOGGER.info("Running %r...", cmd)
+        _ = check_call(cmd, shell=True, cwd=dotfiles)
 
 
 if __name__ == "__main__":
