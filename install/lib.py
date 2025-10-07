@@ -12,7 +12,6 @@ from install.utilities import (
     apt_install,
     brew_install,
     check_for_commands,
-    chmod,
     cp,
     dpkg_install,
     full_path,
@@ -525,20 +524,30 @@ def install_neovim(*, nvim_dir: PathLike | None = None) -> None:
         _LOGGER.info("Installing 'neovim'...")
         match System.identify():
             case System.mac:
-                brew_install("luarocks")
+                brew_install("neovim")
             case System.linux:
-                apt_install("luarocks")
+                path_to = full_path("/usr/local/bin/nvim")
+                with yield_download(
+                    "https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage"
+                ) as appimage:
+                    cp(appimage, path_to, executable=True)
             case never:
                 assert_never(never)
-        path_to = full_path("/usr/local/bin/nvim")
-        with yield_download(
-            "https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage"
-        ) as appimage:
-            chmod(appimage)
-            run_commands(
-                f"sudo mkdir -p {path_to.parent}", f"sudo mv {appimage} {path_to}"
-            )
     symlink_if_given(XDG_CONFIG_HOME / "nvim", nvim_dir)
+
+
+def install_ruff() -> None:
+    if have_command("ruff"):
+        _LOGGER.debug("'ruff' is already installed")
+        return
+    _LOGGER.info("Installing 'ruff'...")
+    match System.identify():
+        case System.mac:
+            brew_install("ruff")
+        case System.linux:
+            uv_tool_install("ruff")
+        case never:
+            assert_never(never)
 
 
 def install_shfmt() -> None:
@@ -640,6 +649,7 @@ __all__ = [
     "install_luarocks",
     "install_macchanger",
     "install_neovim",
+    "install_ruff",
     "install_shfmt",
     "install_sops",
     "install_uv",

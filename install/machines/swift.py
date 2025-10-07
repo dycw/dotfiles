@@ -13,6 +13,7 @@ from install.constants import (
     FZF_FISH,
     GIT_CONFIG,
     GIT_IGNORE,
+    NVIM,
     PDBRC,
     PSQLRC,
 )
@@ -44,6 +45,7 @@ def _setup_swift() -> None:
         fzf_fish=FZF_FISH,
         git_config=GIT_CONFIG,
         git_ignore=GIT_IGNORE,
+        nvim_dir=NVIM,
         pdbrc=PDBRC,
         psqlrc=PSQLRC,
     )

@@ -27,6 +27,8 @@ from install.lib import (
     install_just,
     install_luacheck,
     install_macchanger,
+    install_neovim,
+    install_ruff,
     install_sops,
     install_uv,
     install_vim,
@@ -50,6 +52,7 @@ def setup_mac(
     fzf_fish: PathLike | None = None,
     git_config: PathLike | None = None,
     git_ignore: PathLike | None = None,
+    nvim_dir: PathLike | None = None,
     pdbrc: PathLike | None = None,
     psqlrc: PathLike | None = None,
 ) -> None:
@@ -79,6 +82,8 @@ def setup_mac(
     install_just()  # after brew
     install_luacheck()  # after brew
     install_macchanger()  # after brew
+    install_neovim(nvim_dir=nvim_dir)  # after brew
+    install_ruff()  # after brew
     install_shfmt()  # after brew
     install_sops(age_secret_key=age_secret_key)  # after brew
     install_uv()  # after brew

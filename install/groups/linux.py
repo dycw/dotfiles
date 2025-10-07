@@ -27,6 +27,8 @@ from install.lib import (
     install_luacheck,
     install_luarocks,
     install_macchanger,
+    install_neovim,
+    install_ruff,
     install_shfmt,
     install_sops,
     install_uv,
@@ -51,6 +53,7 @@ def setup_linux(
     fzf_fish: PathLike | None = None,
     git_config: PathLike | None = None,
     git_ignore: PathLike | None = None,
+    nvim_dir: PathLike | None = None,
     pdbrc: PathLike | None = None,
     psqlrc: PathLike | None = None,
 ) -> None:
@@ -74,6 +77,7 @@ def setup_linux(
     install_just()
     install_luarocks()
     install_macchanger()
+    install_neovim(nvim_dir=nvim_dir)  # after brew
     install_shfmt()
     install_sops(age_secret_key=age_secret_key)
     install_vim()
@@ -82,8 +86,9 @@ def setup_linux(
         config=fish_config, env=fish_env, git=fish_git, work=fish_work
     )
     install_uv()  # after curl
-    install_bump_my_version()  # after uv
     install_luacheck()  # after lurocks
+    install_bump_my_version()  # after uv
+    install_ruff()  # after uv
 
 
 __all__ = ["setup_linux"]

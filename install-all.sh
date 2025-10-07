@@ -206,7 +206,6 @@ brew_install prettier
 brew_install rename
 brew_install rg ripgrep
 [ -n "${IS_MAC}" ] && brew_install rlwrap
-brew_install ruff
 brew_install rust-analyzer
 brew_install shellcheck
 brew_install shfmt

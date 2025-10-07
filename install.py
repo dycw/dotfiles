@@ -244,8 +244,6 @@ def _setup_mac(settings: _Settings, /) -> None:
         install_pre_commit()  # after uv
     if settings.pyright:
         install_pyright()  # after uv
-    if settings.ruff:
-        install_ruff()  # after uv
 
 
 def _setup_debian(settings: _Settings, /) -> None:
@@ -254,8 +252,6 @@ def _setup_debian(settings: _Settings, /) -> None:
     install_python3_13_venv()
     install_starship(config=f"{_get_script_dir()}/starship/starship.toml")
     _setup_sshd()
-    if settings.macchanger:
-        install_macchanger()
     if settings.ripgrep:
         install_ripgrep(config=True)
     if settings.rsync:

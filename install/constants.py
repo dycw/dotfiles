@@ -22,6 +22,7 @@ FZF_FISH = FZF / "fzf.fish"
 GIT = REPO_ROOT / "git"
 GIT_CONFIG = GIT / "config"
 GIT_IGNORE = GIT / "ignore"
+NVIM = REPO_ROOT / "nvim"
 PDB = REPO_ROOT / "pdb"
 PDBRC = PDB / "pdbrc"
 PSQL = REPO_ROOT / "psql"
@@ -47,6 +48,7 @@ __all__ = [
     "INSTALL",
     "KNOWN_HOSTS",
     "LOCAL_BIN",
+    "NVIM",
     "PDB",
     "PDBRC",
     "PSQL",

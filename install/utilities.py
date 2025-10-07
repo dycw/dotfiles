@@ -94,7 +94,7 @@ def full_path(*parts: PathLike) -> Path:
 def get_latest_tag(owner: str, repo: str, /) -> str:
     check_for_commands("curl", "jq")
     return get_output(
-        f'curl -s https://api.github.com/repos/{owner}/{repo}/releases/latest | jq -r ".tag_name"'
+        f"curl -s https://api.github.com/repos/{owner}/{repo}/releases/latest | jq -r '.tag_name'"
     )
 
 
