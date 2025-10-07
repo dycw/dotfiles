@@ -62,8 +62,9 @@ ignore = [
   "Q001",  # bad-quotes-multiline-string
   "Q002",  # bad-quotes-docstring
   "Q003",  # avoidable-escaped-quote
-  'S310',  # suspicious-url-open-usage
+  "S310",  # suspicious-url-open-usage
   "S602",  # subprocess-popen-with-shell-equals-true
+  "S607",  # start-process-with-partial-path
   "W191",  # tab-indentation
 ]
 select = ["ALL"]
