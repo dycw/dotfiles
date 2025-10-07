@@ -169,6 +169,11 @@ if test -f $HOME/local.fish
     source $HOME/local.fish
 end
 
+# mkdir
+function mkdir
+    command mkdir -p $argv
+end
+
 # neovim
 function cd-nvim-plugins
     cd $XDG_CONFIG_HOME/nvim/lua/plugins
