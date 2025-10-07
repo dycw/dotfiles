@@ -627,10 +627,6 @@ def install_zoxide() -> None:
     apt_install("zoxide")
 
 
-def _setup_pdb() -> None:
-    symlink("~/.pdbrc", f"{_get_script_dir()}/pdb/pdbrc")
-
-
 def _setup_psql() -> None:
     symlink("~/.psqlrc", f"{_get_script_dir()}/psql/psqlrc")
 

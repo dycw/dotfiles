@@ -18,6 +18,10 @@ FZF_FISH = FZF / "fzf.fish"
 GIT = REPO_ROOT / "git"
 GIT_CONFIG = GIT / "config"
 GIT_IGNORE = GIT / "ignore"
+PDB = REPO_ROOT / "pdb"
+PDBRC = PDB / "pdbrc"
+PSQL = REPO_ROOT / "psql"
+PSQLRC = PSQL / "psqlrc"
 
 
 __all__ = [
@@ -35,6 +39,10 @@ __all__ = [
     "INSTALL",
     "KNOWN_HOSTS",
     "LOCAL_BIN",
+    "PDB",
+    "PDBRC",
+    "PSQL",
+    "PSQLRC",
     "REPO_ROOT",
     "XDG_CONFIG_HOME",
 ]

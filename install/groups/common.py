@@ -13,10 +13,13 @@ if TYPE_CHECKING:
 _LOGGER = getLogger(__name__)
 
 
-def setup_common(*, pdbrc: PathLike | None = None) -> None:
+def setup_common(
+    *, pdbrc: PathLike | None = None, psqlrc: PathLike | None = None
+) -> None:
     _LOGGER.info("Setting up common...")
     add_to_known_hosts()
     symlink_if_given(HOME / ".pdbrc", pdbrc)
+    symlink_if_given(HOME / ".psqlrc", psqlrc)
 
 
 __all__ = ["setup_common"]
