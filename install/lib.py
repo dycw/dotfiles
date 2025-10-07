@@ -155,6 +155,20 @@ def install_delta() -> None:
             assert_never(never)
 
 
+def install_dust() -> None:
+    if have_command("dust"):
+        _LOGGER.debug("'dust' is already installed")
+        return
+    _LOGGER.info("Installing 'delta'...")
+    match System.identify():
+        case System.mac:
+            brew_install("dust")
+        case System.linux:
+            apt_install("du-dust")
+        case never:
+            assert_never(never)
+
+
 def install_direnv(
     *, direnv_toml: PathLike | None = None, direnvrc: PathLike | None = None
 ) -> None:
@@ -173,6 +187,21 @@ def install_direnv(
     symlink_many_if_given(
         (direnv / "direnv.toml", direnv_toml), (direnv / "direnvrc", direnvrc)
     )
+
+
+def install_eza() -> None:
+    if have_command("eza"):
+        _LOGGER.debug("'eza' is already installed")
+        return
+    _LOGGER.info("Installing 'eza'...")
+    _LOGGER.info("Installing 'direnv'...")
+    match System.identify():
+        case System.mac:
+            brew_install("eza")
+        case System.linux:
+            apt_install("eza")
+        case never:
+            assert_never(never)
 
 
 def install_fish(
@@ -281,6 +310,7 @@ __all__ = [
     "install_curl",
     "install_delta",
     "install_direnv",
+    "install_dust",
     "install_fish",
     "install_fzf",
     "install_git",

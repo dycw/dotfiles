@@ -12,6 +12,8 @@ from install.lib import (
     install_bump_my_version,
     install_delta,
     install_direnv,
+    install_dust,
+    install_eza,
     install_fish,
     install_fzf,
     install_git,
@@ -47,6 +49,8 @@ def setup_mac(
     install_bump_my_version()  # after brew
     install_delta()  # after brew
     install_direnv()  # after brew
+    install_dust()  # after brew
+    install_eza()  # after brew
     install_fish(  # after brew
         config=fish_config, env=fish_env, git=fish_git, work=fish_work
     )

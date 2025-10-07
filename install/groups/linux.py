@@ -11,6 +11,8 @@ from install.lib import (
     install_build_essential,
     install_bump_my_version,
     install_curl,
+    install_dust,
+    install_eza,
     install_fish,
     install_fzf,
     install_git,
@@ -44,6 +46,8 @@ def setup_linux(
     install_curl()
     install_delta()
     install_direnv()
+    install_dust()
+    install_eza()
     install_fzf(fzf_fish=fzf_fish)
     install_git(config=git_config, ignore=git_ignore)
     install_fish(  # after curl

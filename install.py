@@ -53,22 +53,6 @@ def install_docker() -> None:
     run_commands("sudo usermod -aG docker $USER")
 
 
-def install_dust() -> None:
-    if have_command("dust"):
-        _LOGGER.debug("'dust' is already installed")
-        return
-    _LOGGER.info("Installing 'dust'...")
-    apt_install("du-dust")
-
-
-def install_eza() -> None:
-    if have_command("eza"):
-        _LOGGER.debug("'eza' is already installed")
-        return
-    _LOGGER.info("Installing 'eza'...")
-    apt_install("eza")
-
-
 def install_fd_find(*, config: bool = False) -> None:
     if have_command("fdfind"):
         _LOGGER.debug("'fd-find' is already installed")
