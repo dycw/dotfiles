@@ -604,6 +604,8 @@ def _install_sops(*, age: Path | str | None = None) -> None:
         age = _to_path(age)
         if age.exists():
             _setup_symlink("~/.config/sops/age/keys.txt", age)
+        else:
+            _LOGGER.warning("Unable to find age secret key %r", str(age))
 
 
 def _install_spotify() -> None:
