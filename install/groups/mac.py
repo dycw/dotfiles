@@ -17,6 +17,7 @@ from install.lib import (
     install_fish,
     install_fzf,
     install_git,
+    install_sops,
     install_uv,
 )
 
@@ -55,6 +56,7 @@ def setup_mac(
         config=fish_config, env=fish_env, git=fish_git, work=fish_work
     )
     install_fzf(fzf_fish=fzf_fish)  # after brew
+    install_sops()  # after brew
     install_uv()  # after brew
     # keyboard international
     # mouse up/down

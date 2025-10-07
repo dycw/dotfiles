@@ -16,6 +16,7 @@ from install.lib import (
     install_fish,
     install_fzf,
     install_git,
+    install_sops,
     install_uv,
 )
 
@@ -53,6 +54,7 @@ def setup_linux(
     install_fish(  # after curl
         config=fish_config, env=fish_env, git=fish_git, work=fish_work
     )
+    install_sops()
     install_uv()  # after curl
     install_bump_my_version()  # after uv
 

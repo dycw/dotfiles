@@ -225,24 +225,6 @@ def install_shfmt() -> None:
     apt_install("shfmt")
 
 
-def install_sops(*, age: Path | str | None = None) -> None:
-    if have_command("sops"):
-        _LOGGER.debug("'sops' is already installed")
-    else:
-        _LOGGER.info("Installing 'sops'...")
-        path_to = f"{_get_local_bin()}/sops"
-        with _yield_github_latest_download(
-            "getsops", "sops", "sops-${tag}.linux.amd64"
-        ) as binary:
-            _copyfile(binary, path_to, executable=True)
-    if age is not None:
-        age = full_path(age)
-        if age.exists():
-            symlink("~/.config/sops/age/keys.txt", age)
-        else:
-            _LOGGER.warning("Unable to find age secret key %r", str(age))
-
-
 def install_spotify() -> None:
     if have_command("spotify"):
         _LOGGER.debug("'spotify' is already installed")

@@ -278,6 +278,25 @@ def install_git(
     symlink_many_if_given((git / "config", config), (git / "ignore", ignore))
 
 
+def install_sops(*, age_secret_key: PathLike | None = None) -> None:
+    if have_command("sops"):
+        _LOGGER.debug("'sops' is already installed")
+    else:
+        _LOGGER.info("Installing 'sops'...")
+        match System.identify():
+            case System.mac:
+                brew_install("sops")
+            case System.linux:
+                path_to = LOCAL_BIN / "sops"
+                with yield_github_latest_download(
+                    "getsops", "sops", "sops-${tag}.linux.amd64"
+                ) as binary:
+                    copyfile(binary, path_to, executable=True)
+            case never:
+                assert_never(never)
+    symlink_if_given(XDG_CONFIG_HOME / "sops/age/keys.txt", age_secret_key)
+
+
 def install_uv() -> None:
     if have_command("uv"):
         _LOGGER.debug("'uv' is already installed")
@@ -311,9 +330,11 @@ __all__ = [
     "install_delta",
     "install_direnv",
     "install_dust",
+    "install_eza",
     "install_fish",
     "install_fzf",
     "install_git",
+    "install_sops",
     "install_uv",
     "setup_pdb",
     "setup_psql",
