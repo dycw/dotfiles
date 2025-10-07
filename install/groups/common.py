@@ -3,9 +3,7 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from install.constants import HOME
-from install.lib import add_to_known_hosts
-from install.utilities import symlink_if_given
+from install.lib import add_to_known_hosts, setup_pdb, setup_psql
 
 if TYPE_CHECKING:
     from install.types import PathLike
@@ -18,8 +16,8 @@ def setup_common(
 ) -> None:
     _LOGGER.info("Setting up common...")
     add_to_known_hosts()
-    symlink_if_given(HOME / ".pdbrc", pdbrc)
-    symlink_if_given(HOME / ".psqlrc", psqlrc)
+    setup_pdb(pdbrc=pdbrc)
+    setup_psql(psqlrc=psqlrc)
 
 
 __all__ = ["setup_common"]

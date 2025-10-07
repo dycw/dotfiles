@@ -209,7 +209,7 @@ def setup_pdb(*, pdbrc: PathLike | None = None) -> None:
     symlink_if_given(HOME / ".pdbrc", pdbrc)
 
 
-def setup_psqlrc(*, pdbrc: PathLike | None = None) -> None:
+def setup_psql(*, psqlrc: PathLike | None = None) -> None:
     symlink_if_given(HOME / ".psqlrc", psqlrc)
 
 
@@ -223,5 +223,5 @@ __all__ = [
     "install_git",
     "install_uv",
     "setup_pdb",
-    "setup_psqlrc",
+    "setup_psql",
 ]
