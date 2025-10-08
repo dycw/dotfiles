@@ -297,6 +297,12 @@ function pyrightconfig
     __edit_ancestor pyrightconfig.json
 end
 
+# pyright + pytest
+function pyrt
+    pyright; or return $status
+    pytest -nauto
+end
+
 # pytest
 function pyt
     __pytest $argv
@@ -439,11 +445,29 @@ if type -q tailscale; and type -q tailscaled
         sudo tailscale set --exit-node=
     end
 end
+
 # tmux
 function tmux-conf
     $EDITOR $HOME/dotfiles/tmux/tmux.conf.local
 end
 if type -q tmux
+    function tmux-attach
+        set -l target
+        if test (count $argv) -eq 0
+            set -l count (tmux ls ^/dev/null | wc -l)
+            if test "$count" -eq 0
+                tmux new
+                return
+            else if test "$count" -eq 1
+                set target (tmux ls | cut -d: -f1)
+            else
+                echo "'tmux-attach' expected [1..) arguments SESSION; got "(count $argv) >&2; and return 1
+            end
+        else
+            set target $argv[1]
+        end
+        tmux attach -t $target
+    end
     function tmux-reload
         tmux source-file $XDG_CONFIG_HOME/tmux/tmux.conf
     end
