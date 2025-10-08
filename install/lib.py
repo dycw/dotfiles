@@ -340,7 +340,7 @@ def install_ggrep() -> None:
         _LOGGER.debug("'ggrep' is already installed")
     else:
         _LOGGER.info("Installing 'ggrep'...")
-        brew_install("ggrep")
+        brew_install("grep")
     symlink_if_given(LOCAL_BIN / "grep", which("ggrep"))
 
 
