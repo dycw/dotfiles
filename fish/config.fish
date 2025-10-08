@@ -358,6 +358,9 @@ end
 
 # tailscale
 if type -q tailscale; and type -q tailscaled
+    function ts
+        tailscale status
+    end
     function ts-up
         if not set -q TAILSCALE_AUTH_KEY
             echo "Env var 'TAILSCALE_AUTH_KEY' does not exist" >&2; and return 1
