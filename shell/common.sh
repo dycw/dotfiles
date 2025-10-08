@@ -137,47 +137,6 @@ clean_dirs() {
 	find "${__clean_dirs_dir}" -type d -delete
 }
 
-# pyright + pytest
-pyrt() { pyright "$@" && pytest "$@"; }
-
-# tmux
-if command -v tmux >/dev/null 2>&1; then
-	tmkw() {
-		[ $# -ne 0 ] && echo_date "'tmkw' accepts no arguments; got $#" && return 1
-		tmux kill-window
-	}
-	tmux_attach() {
-		if [ $# -eq 0 ]; then
-			__tmux_attach_count="$(tmux ls 2>/dev/null | wc -l)"
-			if [ "${__tmux_attach_count}" -eq 0 ]; then
-				tmux new
-				return
-			elif [ "${__tmux_attach_count}" -eq 1 ]; then
-				__tmux_attach_session="$(tmux ls | cut -d: -f1)"
-			else
-				echo_date "ERROR: %d sessions found" "${__tmux_attach_count}"
-			fi
-		elif [ $# -eq 1 ]; then
-			__tmux_attach_session="$1"
-		else
-			echo_date "'tmux_attach' accepts [0..1] arguments; got $#" && return 1
-		fi
-		tmux attach -t "${__tmux_attach_session}"
-	}
-	# layouts
-	if [ -z "$TMUX" ]; then
-		__tmux_count="$(tmux ls 2>/dev/null | wc -l)"
-		if [ "${__tmux_count}" -eq 0 ]; then
-			tmux new
-		elif [ "${__tmux_count}" -eq 1 ]; then
-			tmux attach -t "$(tmux ls | cut -d: -f1)"
-		else
-			echo_date "Multiple 'tmux' sessions detected:"
-			tmux ls
-		fi
-	fi
-fi
-
 # tsunami
 if command -v tsunami >/dev/null 2>&1; then
 	tsunami_get() {
