@@ -24,7 +24,7 @@ from install.constants import (
     WEZTERM_LUA,
 )
 from install.groups.mac import setup_mac
-from install.lib import install_spotify, install_zoom
+from install.lib import install_dropbox, install_spotify, install_zoom
 
 _LOGGER = getLogger(__name__)
 
@@ -62,6 +62,7 @@ def _setup_mac_mini() -> None:
         tmux_conf_local=TMUX_CONF_LOCAL,
         wezterm_lua=WEZTERM_LUA,
     )
+    install_dropbox()
     install_spotify()
     install_zoom()
 

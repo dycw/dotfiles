@@ -227,18 +227,11 @@ def install_docker() -> None:
 
 
 def install_dropbox() -> None:
-    raise NotImplementedError
     if have_command("dropbox"):
         _LOGGER.debug("'dropbox' is already installed")
         return
     _LOGGER.info("Installing 'dropbox'...")
-    match System.identify():
-        case System.mac:
-            brew_install("dropbox", cask=True)
-        case System.linux:
-            apt_install("nautilus-dropbox")
-        case never:
-            assert_never(never)
+    brew_install("dropbox", cask=True)
 
 
 def install_dust() -> None:
