@@ -43,6 +43,7 @@ from install.lib import (
     install_vim,
     install_yq,
     install_zoxide,
+    setup_sshd,
 )
 
 if TYPE_CHECKING:
@@ -71,6 +72,7 @@ def setup_linux(
 ) -> None:
     _LOGGER.info("Setting up Linux...")
     setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
+    setup_sshd()
     install_age()
     install_bottom(bottom_toml=bottom_toml)
     install_build_essential()

@@ -271,7 +271,7 @@ def install_eza() -> None:
 
 
 def install_fd(*, ignore: PathLike | None = None) -> None:
-    if have_command("fdfind"):
+    if have_command("fd"):
         _LOGGER.debug("'fd-find' is already installed")
     else:
         _LOGGER.info("Installing 'fd-find'...")
@@ -521,7 +521,7 @@ def install_macchanger() -> None:
     _LOGGER.info("Installing 'macchanger'...")
     match System.identify():
         case System.mac:
-            brew_install("macchanger")
+            brew_install("acrogenesis/macchanger/macchanger")
         case System.linux:
             apt_install("macchanger")
         case never:

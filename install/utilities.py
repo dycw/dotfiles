@@ -154,7 +154,6 @@ def symlink(path_from: PathLike, path_to: PathLike, /) -> None:
         return
     path_from.parent.mkdir(parents=True, exist_ok=True)
     rm(path_from)
-    rm(path_to)
     _LOGGER.info("Symlinking %r -> %r", str(path_from), str(path_to))
     path_from.symlink_to(path_to)
 

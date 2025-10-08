@@ -18,7 +18,6 @@ def setup_common(
     add_to_known_hosts()
     setup_pdb(pdbrc=pdbrc)
     setup_psql(psqlrc=psqlrc)
-    setup_sshd()
 
 
 __all__ = ["setup_common"]

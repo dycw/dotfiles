@@ -21,6 +21,7 @@ from install.lib import (
     install_ghostty,
     install_git,
     install_glab,
+    install_gsed,
     install_iperf3,
     install_jq,
     install_just,
@@ -42,6 +43,7 @@ from install.lib import (
     install_watch,
     install_yq,
     install_zoxide,
+    setup_sshd,
 )
 
 if TYPE_CHECKING:
@@ -89,6 +91,7 @@ def setup_mac(
     install_gh()  # after brew
     install_ghostty()  # after brew
     install_glab()  # after brew
+    install_gsed()  # after brew
     install_iperf3()  # after brew
     install_jq()  # after brew
     install_just()  # after brew
@@ -110,6 +113,7 @@ def setup_mac(
     install_watch()  # after brew
     install_yq()  # after brew
     install_zoxide()  # after brew
+    setup_sshd()  # after gsed
     # keyboard international
     # mouse up/down
 

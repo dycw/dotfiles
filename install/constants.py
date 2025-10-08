@@ -5,7 +5,7 @@ SSHD_CONFIG = ETC / "ssh/sshd_config"
 
 
 HOME = Path("~").expanduser()
-XDG_CONFIG_HOME = HOME / "~/.config"
+XDG_CONFIG_HOME = HOME / ".config"
 LOCAL_BIN = HOME / ".local/bin"
 SSH = HOME / ".ssh"
 AUTHORIZED_KEYS = SSH / "authorized_keys"
