@@ -46,6 +46,11 @@ def brew_install(*packages: str, cask: bool = False) -> None:
     run_commands(f"{cmd} {joined}")
 
 
+def brew_installed(package: str, /) -> bool:
+    output = get_output("brew list -1")
+    return any(p == package for p in output.splitlines())
+
+
 def check_for_commands(*cmds: str) -> None:
     missing = [c for c in cmds if not have_command(c)]
     if len(missing) >= 1:
@@ -259,6 +264,7 @@ def yield_github_latest_download(
 __all__ = [
     "TemporaryDirectory",
     "apt_install",
+    "brew_install",
     "brew_install",
     "check_for_commands",
     "chmod",

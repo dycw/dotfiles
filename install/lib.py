@@ -14,6 +14,7 @@ from install.utilities import (
     TemporaryDirectory,
     apt_install,
     brew_install,
+    brew_installed,
     check_for_commands,
     cp,
     dpkg_install,
@@ -335,6 +336,15 @@ def install_fzf(*, fzf_fish: PathLike | None = None) -> None:
             cp(path, XDG_CONFIG_HOME / f"fish/functions/{path.name}")
 
 
+def install_ggrep() -> None:
+    if have_command("ggrep"):
+        _LOGGER.debug("'ggrep' is already installed")
+    else:
+        _LOGGER.info("Installing 'ggrep'...")
+        brew_install("grep")
+    symlink_if_given(LOCAL_BIN / "grep", which("ggrep"))
+
+
 def install_gh() -> None:
     if have_command("gh"):
         _LOGGER.debug("'gh' is already installed")
@@ -433,9 +443,9 @@ def install_glab(*, config_yml: PathLike | None = None) -> None:
 def install_gsed() -> None:
     if have_command("gsed"):
         _LOGGER.debug("'gsed' is already installed")
-        return
-    _LOGGER.info("Installing 'gsed'...")
-    brew_install("gnu-sed")
+    else:
+        _LOGGER.info("Installing 'gsed'...")
+        brew_install("gnu-sed")
     symlink_if_given(LOCAL_BIN / "sed", which("gsed"))
 
 
@@ -669,14 +679,17 @@ def install_sops(*, age_secret_key: PathLike | None = None) -> None:
 
 
 def install_spotify() -> None:
-    if have_command("spotify"):
-        _LOGGER.debug("'spotify' is already installed")
-        return
-    _LOGGER.info("Installing 'spotify'...")
     match System.identify():
         case System.mac:
+            if brew_installed("spotify"):
+                _LOGGER.debug("'spotify' is already installed")
+                return
+            _LOGGER.info("Installing 'spotify'...")
             brew_install("spotify", cask=True)
         case System.linux:
+            if have_command("spotify-client"):
+                _LOGGER.debug("'spotify' is already installed")
+                return
             check_for_commands("curl")
             run_commands(
                 "curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg",
@@ -877,14 +890,17 @@ def install_zoxide() -> None:
 
 
 def install_zoom(*, deb_file: PathLike | None = None) -> None:
-    if have_command("zoom"):
-        _LOGGER.debug("'zoom' is already installed")
-        return
-    _LOGGER.info("Installing 'zoom'...")
     match System.identify():
         case System.mac:
+            if brew_installed("zoom"):
+                _LOGGER.debug("'zoom' is already installed")
+                return
+            _LOGGER.info("Installing 'zoom'...")
             brew_install("zoom", cask=True)
         case System.linux:
+            if have_command("zoom"):
+                _LOGGER.debug("'zoom' is already installed")
+                return
             apt_install("libxcb-xinerama0", "libxcb-xtest0", "libxcb-cursor0")
             if deb_file is None:
                 msg = "deb_file"
@@ -944,6 +960,7 @@ __all__ = [
     "install_fd",
     "install_fish",
     "install_fzf",
+    "install_ggrep",
     "install_gh",
     "install_ghostty",
     "install_git",
