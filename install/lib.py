@@ -14,6 +14,7 @@ from install.utilities import (
     TemporaryDirectory,
     apt_install,
     brew_install,
+    brew_installed,
     check_for_commands,
     cp,
     dpkg_install,
@@ -678,14 +679,17 @@ def install_sops(*, age_secret_key: PathLike | None = None) -> None:
 
 
 def install_spotify() -> None:
-    if have_command("spotify"):
-        _LOGGER.debug("'spotify' is already installed")
-        return
-    _LOGGER.info("Installing 'spotify'...")
     match System.identify():
         case System.mac:
+            if brew_installed("spotify"):
+                _LOGGER.debug("'spotify' is already installed")
+                return
+            _LOGGER.info("Installing 'spotify'...")
             brew_install("spotify", cask=True)
         case System.linux:
+            if have_command("spotify-client"):
+                _LOGGER.debug("'spotify' is already installed")
+                return
             check_for_commands("curl")
             run_commands(
                 "curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg",
@@ -886,14 +890,17 @@ def install_zoxide() -> None:
 
 
 def install_zoom(*, deb_file: PathLike | None = None) -> None:
-    if have_command("zoom"):
-        _LOGGER.debug("'zoom' is already installed")
-        return
-    _LOGGER.info("Installing 'zoom'...")
     match System.identify():
         case System.mac:
+            if brew_installed("zoom"):
+                _LOGGER.debug("'zoom' is already installed")
+                return
+            _LOGGER.info("Installing 'zoom'...")
             brew_install("zoom", cask=True)
         case System.linux:
+            if have_command("zoom"):
+                _LOGGER.debug("'zoom' is already installed")
+                return
             apt_install("libxcb-xinerama0", "libxcb-xtest0", "libxcb-cursor0")
             if deb_file is None:
                 msg = "deb_file"
