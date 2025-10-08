@@ -100,7 +100,14 @@ def contains_line(path: PathLike, text: str, /, *, flags: int = 0) -> bool:
     return any(search(text, line_i, flags=flags) for line_i in contents.splitlines())
 
 
-def cp(path_from: PathLike, path_to: PathLike, /, *, executable: bool = False) -> None:
+def cp(
+    path_from: PathLike,
+    path_to: PathLike,
+    /,
+    *,
+    executable: bool = False,
+    ownership: bool = False,
+) -> None:
     path_from, path_to = map(full_path, [path_from, path_to])
     if path_to.exists() and (path_to.read_bytes() == path_from.read_bytes()):
         _LOGGER.debug("%r -> %r is already copied", str(path_from), str(path_to))
@@ -110,6 +117,8 @@ def cp(path_from: PathLike, path_to: PathLike, /, *, executable: bool = False) -
     run_commands(f"sudo mkdir -p {path_to.parent}", f"sudo cp {path_from} {path_to}")
     if executable:
         chmod(path_to)
+    if ownership:
+        chown(path_to)
 
 
 def download(url: str, path: PathLike, /) -> None:
