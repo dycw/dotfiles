@@ -57,9 +57,7 @@ end
 export PY_COLORS=1
 
 # ripgrep
-if test -f $XDG_CONFIG_HOME/ripgrep/ripgreprc
-    export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgrep/ripgreprc
-end
+export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgrep/ripgreprc
 
 # rust
 if test -d $HOME/.cargo/bin

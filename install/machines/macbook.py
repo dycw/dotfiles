@@ -16,6 +16,7 @@ from install.constants import (
     NVIM,
     PDBRC,
     PSQLRC,
+    RIPGREPRC,
 )
 from install.groups.mac import setup_mac
 
@@ -48,6 +49,7 @@ def _setup_mac_book() -> None:
         nvim_dir=NVIM,
         pdbrc=PDBRC,
         psqlrc=PSQLRC,
+        ripgreprc=RIPGREPRC,
     )
 
 

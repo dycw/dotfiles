@@ -30,6 +30,7 @@ from install.lib import (
     install_neovim,
     install_pre_commit,
     install_pyright,
+    install_ripgrep,
     install_ruff,
     install_shfmt,
     install_sops,
@@ -58,6 +59,7 @@ def setup_linux(
     nvim_dir: PathLike | None = None,
     pdbrc: PathLike | None = None,
     psqlrc: PathLike | None = None,
+    ripgreprc: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up Linux...")
     setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
@@ -79,7 +81,8 @@ def setup_linux(
     install_just()
     install_luarocks()
     install_macchanger()
-    install_neovim(nvim_dir=nvim_dir)  # after brew
+    install_neovim(nvim_dir=nvim_dir)
+    install_ripgrep(ripgreprc=ripgreprc)
     install_shfmt()
     install_sops(age_secret_key=age_secret_key)
     install_vim()

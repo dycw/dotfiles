@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pathlib
 from logging import getLogger
 from os import environ
 from re import search
@@ -564,6 +565,20 @@ def install_pyright() -> None:
             assert_never(never)
 
 
+def install_ripgrep(*, ripgreprc: PathLike | None = None) -> None:
+    if have_command("rg"):
+        _LOGGER.debug("'ripgrep' is already installed")
+    else:
+        _LOGGER.info("Installing 'ripgrep'...")
+        apt_install("ripgrep")
+    try:
+        path_from = environ["RIPGREP_CONFIG_PATH"]
+    except KeyError:
+        pass
+    else:
+        symlink_if_given(path_from, ripgreprc)
+
+
 def install_ruff() -> None:
     if have_command("ruff"):
         _LOGGER.debug("'ruff' is already installed")
@@ -679,6 +694,7 @@ __all__ = [
     "install_neovim",
     "install_pre_commit",
     "install_pyright",
+    "install_ripgrep",
     "install_ruff",
     "install_shfmt",
     "install_sops",

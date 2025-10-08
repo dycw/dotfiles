@@ -203,7 +203,6 @@ brew_install prettier
 [ -n "${IS_MAC_MINI_DW}" ] && brew_install restic
 [ -n "${IS_MAC_MINI}" ] && brew_install redis-stack --cask
 brew_install rename
-brew_install rg ripgrep
 [ -n "${IS_MAC}" ] && brew_install rlwrap
 brew_install rust-analyzer
 brew_install shellcheck

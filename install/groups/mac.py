@@ -30,6 +30,7 @@ from install.lib import (
     install_neovim,
     install_pre_commit,
     install_pyright,
+    install_ripgrep,
     install_ruff,
     install_sops,
     install_uv,
@@ -57,6 +58,7 @@ def setup_mac(
     nvim_dir: PathLike | None = None,
     pdbrc: PathLike | None = None,
     psqlrc: PathLike | None = None,
+    ripgreprc: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up Mac...")
     setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
@@ -87,6 +89,7 @@ def setup_mac(
     install_neovim(nvim_dir=nvim_dir)  # after brew
     install_pre_commit()  # after brew
     install_pyright()  # after brew
+    install_ripgrep(ripgreprc=ripgreprc)  # after brew
     install_ruff()  # after brew
     install_shfmt()  # after brew
     install_sops(age_secret_key=age_secret_key)  # after brew

@@ -44,6 +44,15 @@ function mount-shared-drive
     set -l subnet $argv[1]
     set -l pool_name
     set -l dataset_name
+    switch (uname)
+        case Darwin
+            set dir /Volumes/qrt-$subnet
+        case Linux
+            set dir /mnt/qrt-$subnet
+        case *
+            echo "Invalid OS; got '$(uname)'" >&2; and return 1
+    end
+    sudo mkdir -p $dir
     switch $subnet
         case main
             set pool_name mypool

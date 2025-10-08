@@ -16,6 +16,7 @@ from install.constants import (
     NVIM,
     PDBRC,
     PSQLRC,
+    RIPGREPRC,
 )
 from install.groups.linux import setup_linux
 
@@ -48,6 +49,7 @@ def _setup_swift() -> None:
         nvim_dir=NVIM,
         pdbrc=PDBRC,
         psqlrc=PSQLRC,
+        ripgreprc=RIPGREPRC,
     )
 
 

@@ -33,16 +33,6 @@ def install_python3_13_venv() -> None:
     apt_install("python3.13-venv")
 
 
-def install_ripgrep(*, config: bool = False) -> None:
-    if have_command("rg"):
-        _LOGGER.debug("'ripgrep' is already installed")
-    else:
-        _LOGGER.info("Installing 'ripgrep'...")
-        apt_install("ripgrep")
-    if config:
-        symlink("~/.config/ripgrep/ripgreprc", f"{_get_script_dir()}/ripgrep/ripgreprc")
-
-
 def install_rsync() -> None:
     if have_command("rsync"):
         _LOGGER.debug("'rsync' is already installed")

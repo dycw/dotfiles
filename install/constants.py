@@ -27,6 +27,8 @@ PDB = REPO_ROOT / "pdb"
 PDBRC = PDB / "pdbrc"
 PSQL = REPO_ROOT / "psql"
 PSQLRC = PSQL / "psqlrc"
+RIPGREP = REPO_ROOT / "ripgrep"
+RIPGREPRC = RIPGREP / "ripgreprc"
 
 
 __all__ = [
@@ -54,5 +56,7 @@ __all__ = [
     "PSQL",
     "PSQLRC",
     "REPO_ROOT",
+    "RIPGREP",
+    "RIPGREPRC",
     "XDG_CONFIG_HOME",
 ]
