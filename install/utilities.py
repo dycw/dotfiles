@@ -7,6 +7,7 @@ from contextlib import contextmanager, suppress
 from logging import getLogger
 from os import environ, getenv, geteuid
 from pathlib import Path
+from re import search
 from stat import S_IXUSR
 from string import Template
 from subprocess import check_call, check_output
@@ -76,6 +77,14 @@ def chmod(path: PathLike, /) -> None:
     run_commands(f"sudo chmod u+x {path}")
 
 
+def contains_line(path: PathLike, text: str, /, *, flags: int = 0) -> bool:
+    try:
+        contents = full_path(path).read_text()
+    except FileNotFoundError:
+        return False
+    return any(search(text, line_i, flags=flags) for line_i in contents.splitlines())
+
+
 def cp(path_from: PathLike, path_to: PathLike, /, *, executable: bool = False) -> None:
     path_from, path_to = map(full_path, [path_from, path_to])
     if path_to.exists() and (path_to.read_bytes() == path_from.read_bytes()):
@@ -127,12 +136,10 @@ def luarocks_install(package: str, /) -> None:
 
 
 def replace_line(path: PathLike, from_: str, to: str, /) -> None:
-    path = full_path(path)
-    lines = path.read_text().splitlines()
-    if all(line != from_ for line in lines):
+    if not contains_line(path, from_):
         _LOGGER.debug("%r not found in %r", from_, str(path))
         return
-    _LOGGER.info("Replacing %r -> %r in %r", from_, to, str(path))
+    _LOGGER.info("Replacing %r -> %r in %r...", from_, to, str(path))
     run_commands(f"sudo sed -i 's|{from_}|{to}|' {path}")
 
 
