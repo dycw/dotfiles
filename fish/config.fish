@@ -330,6 +330,15 @@ function cargo-toml
 end
 
 # ssh
+function authorized-keys
+    $EDITOR $HOME/.ssh/authorized_keys
+end
+function known-hosts
+    $EDITOR $HOME/.ssh/known_hosts
+end
+function ssh-config
+    $EDITOR $HOME/.ssh/config
+end
 function ssh-mac
     ssh derekwan@dw-mac
 end
