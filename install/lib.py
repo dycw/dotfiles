@@ -5,10 +5,12 @@ from os import environ
 from re import search
 from shutil import which
 from typing import TYPE_CHECKING, assert_never
+from zipfile import ZipFile
 
 from install.constants import HOME, KNOWN_HOSTS, LOCAL_BIN, XDG_CONFIG_HOME
 from install.enums import System
 from install.utilities import (
+    TemporaryDirectory,
     apt_install,
     brew_install,
     check_for_commands,
@@ -642,6 +644,44 @@ def install_starship(*, starship_toml: PathLike | None = None) -> None:
     symlink_if_given(XDG_CONFIG_HOME / "starship.toml", starship_toml)
 
 
+def install_stylua() -> None:
+    if have_command("stylua"):
+        _LOGGER.debug("'stylua' is already installed")
+        return
+    _LOGGER.info("Installing 'stylua'...")
+    match System.identify():
+        case System.mac:
+            brew_install("stylua")
+        case System.linux:
+            path_to = LOCAL_BIN / "stylua"
+            with (
+                yield_github_latest_download(
+                    "johnnymorganz", "stylua", "stylua-linux-x86_64.zip"
+                ) as zf,
+                ZipFile(zf) as zfh,
+                TemporaryDirectory() as temp_dir,
+            ):
+                zfh.extractall(temp_dir)
+                (path_from,) = temp_dir.iterdir()
+                cp(path_from, path_to, executable=True)
+        case never:
+            assert_never(never)
+
+
+def install_syncthing() -> None:
+    if have_command("syncthing"):
+        _LOGGER.debug("'syncthing' is already installed")
+        return
+    _LOGGER.info("Installing 'syncthing'...")
+    match System.identify():
+        case System.mac:
+            brew_install("syncthing")
+        case System.linux:
+            apt_install("syncthing")
+        case never:
+            assert_never(never)
+
+
 def install_uv() -> None:
     if have_command("uv"):
         _LOGGER.debug("'uv' is already installed")
@@ -724,6 +764,8 @@ __all__ = [
     "install_shfmt",
     "install_sops",
     "install_starship",
+    "install_stylua",
+    "install_syncthing",
     "install_uv",
     "install_vim",
     "install_watch",

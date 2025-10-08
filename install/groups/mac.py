@@ -34,6 +34,8 @@ from install.lib import (
     install_ruff,
     install_sops,
     install_starship,
+    install_stylua,
+    install_syncthing,
     install_uv,
     install_vim,
     install_watch,
@@ -97,6 +99,8 @@ def setup_mac(
     install_shfmt()  # after brew
     install_sops(age_secret_key=age_secret_key)  # after brew
     install_starship(starship_toml=starship_toml)  # after brew
+    install_stylua()  # after brew
+    install_syncthing()  # after brew
     install_uv()  # after brew
     install_vim()  # after brew
     install_watch()  # after brew

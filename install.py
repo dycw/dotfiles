@@ -54,32 +54,6 @@ def install_spotify() -> None:
     apt_install("spotify-client")
 
 
-def install_stylua() -> None:
-    if have_command("stylua"):
-        _LOGGER.debug("'stylua' is already installed")
-        return
-    _LOGGER.info("Installing 'stylua'...")
-    path_to = f"{_get_local_bin()}/stylua"
-    with (
-        _yield_github_latest_download(
-            "johnnymorganz", "stylua", "stylua-linux-x86_64.zip"
-        ) as zf,
-        ZipFile(zf) as zfh,
-        TemporaryDirectory() as temp_dir,
-    ):
-        zfh.extractall(temp_dir)
-        (path_from,) = full_path(temp_dir).iterdir()
-        _copyfile(path_from, path_to, executable=True)
-
-
-def install_syncthing() -> None:
-    if have_command("syncthing"):
-        _LOGGER.debug("'syncthing' is already installed")
-        return
-    _LOGGER.info("Installing 'syncthing'...")
-    apt_install("syncthing")
-
-
 def install_tailscale() -> None:
     if have_command("tailscale"):
         _LOGGER.debug("'tailscale' is already installed")
