@@ -38,6 +38,7 @@ from install.lib import (
     install_starship,
     install_stylua,
     install_syncthing,
+    install_tmux,
     install_uv,
     install_vim,
     install_watch,
@@ -69,6 +70,8 @@ def setup_mac(
     psqlrc: PathLike | None = None,
     ripgreprc: PathLike | None = None,
     starship_toml: PathLike | None = None,
+    tmux_conf_oh_my_tmux: PathLike | None = None,
+    tmux_conf_local: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up Mac...")
     setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
@@ -108,6 +111,9 @@ def setup_mac(
     install_starship(starship_toml=starship_toml)  # after brew
     install_stylua()  # after brew
     install_syncthing()  # after brew
+    install_tmux(  # after brew
+        tmux_conf_oh_my_tmux=tmux_conf_oh_my_tmux, tmux_conf_local=tmux_conf_local
+    )
     install_uv()  # after brew
     install_vim()  # after brew
     install_watch()  # after brew

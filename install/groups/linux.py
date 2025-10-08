@@ -39,6 +39,7 @@ from install.lib import (
     install_starship,
     install_stylua,
     install_syncthing,
+    install_tmux,
     install_uv,
     install_vim,
     install_yq,
@@ -69,6 +70,8 @@ def setup_linux(
     psqlrc: PathLike | None = None,
     ripgreprc: PathLike | None = None,
     starship_toml: PathLike | None = None,
+    tmux_conf_oh_my_tmux: PathLike | None = None,
+    tmux_conf_local: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up Linux...")
     setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
@@ -100,6 +103,9 @@ def setup_linux(
     install_starship(starship_toml=starship_toml)
     install_stylua()
     install_syncthing()
+    install_tmux(
+        tmux_conf_oh_my_tmux=tmux_conf_oh_my_tmux, tmux_conf_local=tmux_conf_local
+    )
     install_vim()
     install_yq()
     install_zoxide()

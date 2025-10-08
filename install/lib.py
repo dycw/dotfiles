@@ -8,14 +8,7 @@ from shutil import which
 from typing import TYPE_CHECKING, assert_never
 from zipfile import ZipFile
 
-from install.constants import (
-    AUTHORIZED_KEYS,
-    HOME,
-    KNOWN_HOSTS,
-    LOCAL_BIN,
-    SSHD_CONFIG,
-    XDG_CONFIG_HOME,
-)
+from install.constants import HOME, LOCAL_BIN, SSH, SSHD_CONFIG, XDG_CONFIG_HOME
 from install.enums import System
 from install.utilities import (
     TemporaryDirectory,
@@ -45,14 +38,16 @@ _LOGGER = getLogger(__name__)
 
 
 def add_to_known_hosts() -> None:
+    path = SSH / "known_hosts"
+
     def run() -> None:
         _LOGGER.info("Adding 'github.com' to known hosts...")
-        run_commands(f"ssh-keyscan github.com >> {KNOWN_HOSTS}")
+        run_commands(f"ssh-keyscan github.com >> {path}")
 
     try:
-        contents = KNOWN_HOSTS.read_text()
+        contents = path.read_text()
     except FileNotFoundError:
-        touch(KNOWN_HOSTS)
+        touch(path)
         run()
         return
     if any(search(r"github\.com", line) for line in contents.splitlines()):
@@ -705,6 +700,29 @@ def install_syncthing() -> None:
             assert_never(never)
 
 
+def install_tmux(
+    *,
+    tmux_conf_oh_my_tmux: PathLike | None = None,
+    tmux_conf_local: PathLike | None = None,
+) -> None:
+    if have_command("tmux"):
+        _LOGGER.debug("'tmux' is already installed")
+    else:
+        _LOGGER.info("Installing 'tmux'...")
+        match System.identify():
+            case System.mac:
+                brew_install("tmux")
+            case System.linux:
+                apt_install("tmux")
+            case never:
+                assert_never(never)
+    tmux = XDG_CONFIG_HOME / "tmux"
+    symlink_many_if_given(
+        (tmux / "tmux.conf", tmux_conf_oh_my_tmux),
+        (tmux / "tmux.conf.local", tmux_conf_local),
+    )
+
+
 def install_uv() -> None:
     if have_command("uv"):
         _LOGGER.debug("'uv' is already installed")
@@ -790,7 +808,7 @@ def setup_ssh_keys(ssh_keys: PathLike, /) -> None:
             if (stripped := line.strip()) != ""
         ]
         joined = "\n".join(keys)
-        _ = AUTHORIZED_KEYS.write_text(joined)
+        _ = (SSH / "authorized_keys").write_text(joined)
 
     if isinstance(ssh_keys, Path) or full_path(ssh_keys).is_file():
         run(ssh_keys)
@@ -848,6 +866,7 @@ __all__ = [
     "install_starship",
     "install_stylua",
     "install_syncthing",
+    "install_tmux",
     "install_uv",
     "install_vim",
     "install_watch",

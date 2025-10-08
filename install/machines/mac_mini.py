@@ -19,6 +19,8 @@ from install.constants import (
     PSQLRC,
     RIPGREPRC,
     STARSHIP_TOML,
+    TMUX_CONF_LOCAL,
+    TMUX_CONF_OH_MY_TMUX,
 )
 from install.groups.mac import setup_mac
 
@@ -54,6 +56,8 @@ def _setup_mac_mini() -> None:
         psqlrc=PSQLRC,
         ripgreprc=RIPGREPRC,
         starship_toml=STARSHIP_TOML,
+        tmux_conf_oh_my_tmux=TMUX_CONF_OH_MY_TMUX,
+        tmux_conf_local=TMUX_CONF_LOCAL,
     )
 
 

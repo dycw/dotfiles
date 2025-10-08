@@ -52,22 +52,6 @@ def install_tailscale() -> None:
     run_commands("curl -fsSL https://tailscale.com/install.sh | sh")
 
 
-def install_tmux() -> None:
-    if have_command("tmux"):
-        _LOGGER.debug("'tmux' is already installed")
-    else:
-        _LOGGER.info("Installing 'tmux'...")
-        apt_install("tmux")
-    _update_submodules()
-    for filename_from, filename_to in [
-        ("tmux.conf.local", "tmux.conf.local"),
-        ("tmux.conf", ".tmux/.tmux.conf"),
-    ]:
-        symlink(
-            f"~/.config/tmux/{filename_from}", f"{_get_script_dir()}/tmux/{filename_to}"
-        )
-
-
 def install_vim() -> None:
     if have_command("vim"):
         _LOGGER.debug("'vim' is already installed")
@@ -100,55 +84,14 @@ def install_zoom() -> None:
     _dpkg_install("zoom_amd64.deb")
 
 
-def _setup_sshd() -> None:
-    path = full_path("/etc/ssh/sshd_config")
-    for from_, to in [
-        ("#PermitRootLogin prohibit-password", "PermitRootLogin no"),
-        ("#PubkeyAuthentication yes", "PubkeyAuthentication yes"),
-        ("#PasswordAuthentication yes", "PasswordAuthentication no"),
-    ]:
-        _replace_line(path, from_, to)
-
-
-# utilities
-
-
 # main
 
 
-def _setup_mac(settings: _Settings, /) -> None:
-    if settings.bump_my_version:
-        install_bump_my_version()  # after uv
-    if settings.pre_commit:
-        install_pre_commit()  # after uv
-    if settings.pyright:
-        install_pyright()  # after uv
-
-
 def _setup_debian(settings: _Settings, /) -> None:
-    install_neovim(config=f"{_get_script_dir()}/nvim")
     install_npm()
     install_python3_13_venv()
-    install_starship(starship_toml=f"{_get_script_dir()}/starship/starship.toml")
-    _setup_sshd()
-    if settings.ripgrep:
-        install_ripgrep(config=True)
-    if settings.rsync:
-        install_rsync()
-    if settings.shellcheck:
-        install_shellcheck()
-    if settings.shfmt:
-        install_shfmt()
-    if settings.ssh_keys is not None:
-        _setup_ssh_keys(settings.ssh_keys)
-    if settings.stylua:
-        install_stylua()
-    if settings.syncthing:
-        install_syncthing()
     if settings.tmux:
         install_tmux()
-    if settings.vim:
-        install_vim()
     if settings.yq:
         install_yq()
     if settings.zoom:
