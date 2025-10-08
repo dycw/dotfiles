@@ -117,55 +117,6 @@ if command -v bat >/dev/null 2>&1; then
 	}
 fi
 
-# chmod
-chmod_files() {
-	[ $# -ne 1 ] && echo_date "'chmod_files' accepts 1 argument; got $#" && return 1
-	find . -type f -exec chmod "$1" {} \;
-}
-chmod_dirs() {
-	[ $# -ne 1 ] && echo_date "'chmod_dirs' accepts 1 argument; got $#" && return 1
-	find . -type d -exec chmod "$1" {} \;
-}
-chown_files() {
-	[ $# -ne 1 ] && echo_date "'chown_files' accepts 1 argument; got $#" && return 1
-	find . -type f -exec chown "$1" {} \;
-}
-chown_dirs() {
-	[ $# -ne 1 ] && echo_date "'chown_dirs' accepts 1 argument; got $#" && return 1
-	find . -type d -exec chown "$1" {} \;
-}
-
-# coverage
-open_cov() {
-	[ $# -ne 0 ] && echo_date "'open_cov' accepts 1 argument; got $#" && return 1
-	open .coverage/html/index.html
-}
-
-# curl
-if command -v curl >/dev/null 2>&1; then
-	curl_sh() {
-		[ $# -eq 0 ] && echo_date "'curl_sh' accepts [1..) arguments; got $#" && return 1
-		__curl_sh_url="$1"
-		shift
-		curl -fsSL "${__curl_sh_url}" | sh -s -- "$@"
-	}
-fi
-
-# dns
-refresh_dns() {
-	[ $# -ne 0 ] && echo_date "'refresh_dns' accepts no arguments; got $#" && return 1
-	sudo dscacheutil -flushcache
-	sudo killall -HUP mDNSResponder
-}
-
-# direnv
-if command -v direnv >/dev/null 2>&1; then
-	dea() {
-		[ $# -ne 0 ] && echo_date "'dea' accepts no arguments; got $#" && return 1
-		direnv allow
-	}
-fi
-
 # docker
 if command -v docker >/dev/null 2>&1; then
 	dps() {
@@ -173,9 +124,6 @@ if command -v docker >/dev/null 2>&1; then
 		docker ps
 	}
 fi
-
-# echo
-echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 
 # find
 clean_dirs() {

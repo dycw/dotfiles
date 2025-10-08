@@ -72,6 +72,34 @@ function cdw
     cd $HOME/work
 end
 
+# chmod
+function chmod-files
+    if test (count $argv) -lt 1
+        echo "'chmod-files' expected [1..) arguments MODE; got "(count $argv) >&2; and return 1
+    end
+    find . -type f -print0 | xargs -0 chmod $argv[1]
+end
+function chmod-dirs
+    if test (count $argv) -lt 1
+        echo "'chmod-dirs' expected [1..) arguments MODE; got "(count $argv) >&2; and return 1
+    end
+    find . -type d -print0 | xargs -0 chmod $argv[1]
+end
+
+# chown
+function chown-files
+    if test (count $argv) -lt 1
+        echo "'chown-files' expected [1..) arguments ownE; got "(count $argv) >&2; and return 1
+    end
+    find . -type f -exec chown $argv[1] {} \;
+end
+function chown-dirs
+    if test (count $argv) -lt 1
+        echo "'chown-dirs' expected [1..) arguments ownE; got "(count $argv) >&2; and return 1
+    end
+    find . -type d -exec chown $argv[1] {} \;
+end
+
 # cp
 function cp
     if test (count $argv) -lt 2
@@ -88,9 +116,23 @@ function cp
     command cp -frv $argv
 end
 
+# curl
+function curl-sh
+    if test (count $argv) -lt 1
+        echo "'curl-sh' expected [1..) arguments URL; got "(count $argv) >&2; and return 1
+    end
+    curl -fsSL $argv[1] | sh -s -- $argv[2..]
+end
+
 # direnv
 function dea
     direnv allow .
+end
+
+# dns
+function dns-refresh
+    sudo dscacheutil -flushcache; or return $status
+    sudo killall -HUP mDNSResponder
 end
 
 # env
@@ -166,6 +208,9 @@ function hypothesis-dev
 end
 
 # ipython
+function coverage
+    open .coverage/html/index.html
+end
 function ipython-startup
     $EDITOR $HOME/dotfiles/ipython/startup.py
 end
@@ -185,7 +230,7 @@ function mkdir
     command mkdir -p $argv
 end
 
-# cp
+# mv
 function mv
     if test (count $argv) -lt 2
         echo "'mv' expected [2..) arguments SOURCE ... TARGET; got "(count $argv) >&2; and return 1
