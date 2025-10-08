@@ -25,12 +25,17 @@ _LOGGER = getLogger(__name__)
 
 def apt_install(*packages: str) -> None:
     check_for_commands("apt")
-    _LOGGER.info("Updating 'apt'...")
-    run_commands("sudo apt -y update")
+    apt_update()
     desc = ", ".join(map(repr, packages))
     _LOGGER.info("Installing %s...", desc)
     joined = " ".join(packages)
     run_commands(f"sudo apt -y install {joined}")
+
+
+def apt_update() -> None:
+    check_for_commands("apt")
+    _LOGGER.info("Updating 'apt'...")
+    run_commands("sudo apt -y update")
 
 
 def brew_install(*packages: str, cask: bool = False) -> None:
@@ -47,6 +52,7 @@ def brew_install(*packages: str, cask: bool = False) -> None:
 
 
 def brew_installed(package: str, /) -> bool:
+    check_for_commands("brew")
     output = get_output("brew list -1")
     return any(p == package for p in output.splitlines())
 
@@ -264,6 +270,7 @@ def yield_github_latest_download(
 __all__ = [
     "TemporaryDirectory",
     "apt_install",
+    "apt_update",
     "brew_install",
     "brew_install",
     "check_for_commands",
