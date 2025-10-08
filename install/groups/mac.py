@@ -33,6 +33,7 @@ from install.lib import (
     install_ripgrep,
     install_ruff,
     install_sops,
+    install_starship,
     install_uv,
     install_vim,
 )
@@ -59,6 +60,7 @@ def setup_mac(
     pdbrc: PathLike | None = None,
     psqlrc: PathLike | None = None,
     ripgreprc: PathLike | None = None,
+    starship_toml: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up Mac...")
     setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
@@ -93,6 +95,7 @@ def setup_mac(
     install_ruff()  # after brew
     install_shfmt()  # after brew
     install_sops(age_secret_key=age_secret_key)  # after brew
+    install_starship(starship_toml=starship_toml)  # after brew
     install_uv()  # after brew
     install_vim()  # after brew
     # keyboard international

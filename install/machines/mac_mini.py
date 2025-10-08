@@ -18,6 +18,7 @@ from install.constants import (
     PDBRC,
     PSQLRC,
     RIPGREPRC,
+    STARSHIP_TOML,
 )
 from install.groups.mac import setup_mac
 
@@ -52,6 +53,7 @@ def _setup_mac_mini() -> None:
         pdbrc=PDBRC,
         psqlrc=PSQLRC,
         ripgreprc=RIPGREPRC,
+        starship_toml=STARSHIP_TOML,
     )
 
 

@@ -29,6 +29,8 @@ PSQL = REPO_ROOT / "psql"
 PSQLRC = PSQL / "psqlrc"
 RIPGREP = REPO_ROOT / "ripgrep"
 RIPGREPRC = RIPGREP / "ripgreprc"
+STARSHIP = REPO_ROOT / "starship"
+STARSHIP_TOML = STARSHIP / "starship.toml"
 
 
 __all__ = [
@@ -58,5 +60,7 @@ __all__ = [
     "REPO_ROOT",
     "RIPGREP",
     "RIPGREPRC",
+    "STARSHIP",
+    "STARSHIP_TOML",
     "XDG_CONFIG_HOME",
 ]

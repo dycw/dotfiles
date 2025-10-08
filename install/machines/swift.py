@@ -17,6 +17,7 @@ from install.constants import (
     PDBRC,
     PSQLRC,
     RIPGREPRC,
+    STARSHIP_TOML,
 )
 from install.groups.linux import setup_linux
 
@@ -50,6 +51,7 @@ def _setup_swift() -> None:
         pdbrc=PDBRC,
         psqlrc=PSQLRC,
         ripgreprc=RIPGREPRC,
+        starship_toml=STARSHIP_TOML,
     )
 
 

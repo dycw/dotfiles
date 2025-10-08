@@ -33,32 +33,12 @@ def install_python3_13_venv() -> None:
     apt_install("python3.13-venv")
 
 
-def install_rsync() -> None:
-    if have_command("rsync"):
-        _LOGGER.debug("'rsync' is already installed")
-        return
-    _LOGGER.info("Installing 'rsync'...")
-    apt_install("rsync")
-
-
-def install_ruff() -> None:
-    _uv_tool_install("ruff")
-
-
 def install_shellcheck() -> None:
     if have_command("shellcheck"):
         _LOGGER.debug("'shellcheck' is already installed")
         return
     _LOGGER.info("Installing 'shellcheck'...")
     apt_install("shellcheck")
-
-
-def install_shfmt() -> None:
-    if have_command("shfmt"):
-        _LOGGER.debug("'shfmt' is already installed")
-        return
-    _LOGGER.info("Installing 'shfmt'...")
-    apt_install("shfmt")
 
 
 def install_spotify() -> None:
@@ -72,16 +52,6 @@ def install_spotify() -> None:
         'echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list',
     )
     apt_install("spotify-client")
-
-
-def install_starship(*, config: Path | str | None = None) -> None:
-    if have_command("starship"):
-        _LOGGER.debug("'starship' is already installed")
-    else:
-        _LOGGER.info("Installing 'starship'...")
-        apt_install("starship")
-    if config is not None:
-        symlink("~/.config/starship.toml", config)
 
 
 def install_stylua() -> None:
@@ -232,7 +202,7 @@ def _setup_debian(settings: _Settings, /) -> None:
     install_neovim(config=f"{_get_script_dir()}/nvim")
     install_npm()
     install_python3_13_venv()
-    install_starship(config=f"{_get_script_dir()}/starship/starship.toml")
+    install_starship(starship_toml=f"{_get_script_dir()}/starship/starship.toml")
     _setup_sshd()
     if settings.ripgrep:
         install_ripgrep(config=True)

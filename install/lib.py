@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pathlib
 from logging import getLogger
 from os import environ
 from re import search
@@ -579,6 +578,14 @@ def install_ripgrep(*, ripgreprc: PathLike | None = None) -> None:
         symlink_if_given(path_from, ripgreprc)
 
 
+def install_rsync() -> None:
+    if have_command("rsync"):
+        _LOGGER.debug("'rsync' is already installed")
+        return
+    _LOGGER.info("Installing 'rsync'...")
+    apt_install("rsync")
+
+
 def install_ruff() -> None:
     if have_command("ruff"):
         _LOGGER.debug("'ruff' is already installed")
@@ -624,6 +631,15 @@ def install_sops(*, age_secret_key: PathLike | None = None) -> None:
             case never:
                 assert_never(never)
     symlink_if_given(XDG_CONFIG_HOME / "sops/age/keys.txt", age_secret_key)
+
+
+def install_starship(*, starship_toml: PathLike | None = None) -> None:
+    if have_command("starship"):
+        _LOGGER.debug("'starship' is already installed")
+    else:
+        _LOGGER.info("Installing 'starship'...")
+        apt_install("starship")
+    symlink_if_given(XDG_CONFIG_HOME / "starship.toml", starship_toml)
 
 
 def install_uv() -> None:
@@ -695,9 +711,11 @@ __all__ = [
     "install_pre_commit",
     "install_pyright",
     "install_ripgrep",
+    "install_rsync",
     "install_ruff",
     "install_shfmt",
     "install_sops",
+    "install_starship",
     "install_uv",
     "install_vim",
     "setup_pdb",
