@@ -21,6 +21,7 @@ from install.lib import (
     install_gh,
     install_ghostty,
     install_git,
+    install_gitweb,
     install_glab,
     install_gsed,
     install_iperf3,
@@ -99,6 +100,7 @@ def setup_mac(
     install_ggrep()  # after brew
     install_gh()  # after brew
     install_ghostty()  # after brew
+    install_gitweb()  # after brew
     install_glab()  # after brew
     install_gsed()  # after brew
     install_iperf3()  # after brew
