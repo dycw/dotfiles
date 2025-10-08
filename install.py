@@ -19,17 +19,6 @@ def install_npm() -> None:
     apt_install("nodejs", "npm")
 
 
-def install_python3_13_venv() -> None:
-    # this is for neovim
-    if have_command("python3.13"):
-        _LOGGER.debug(
-            "'python3.13' is already installed (and presumably so is 'python3.13-venv'"
-        )
-        return
-    _LOGGER.info("Installing 'python3.13-venv'...")
-    apt_install("python3.13-venv")
-
-
 # main
 
 

@@ -570,6 +570,17 @@ def install_pyright() -> None:
             assert_never(never)
 
 
+def install_python313_venv() -> None:
+    # this is for neovim
+    if have_command("python3.13"):
+        _LOGGER.debug(
+            "'python3.13' is already installed (and presumably so is 'python3.13-venv'"
+        )
+        return
+    _LOGGER.info("Installing 'python3.13-venv'...")
+    apt_install("python3.13-venv")
+
+
 def install_ripgrep(*, ripgreprc: PathLike | None = None) -> None:
     if have_command("rg"):
         _LOGGER.debug("'ripgrep' is already installed")
@@ -944,6 +955,7 @@ __all__ = [
     "install_neovim",
     "install_pre_commit",
     "install_pyright",
+    "install_python313_venv",
     "install_ripgrep",
     "install_rsync",
     "install_ruff",
