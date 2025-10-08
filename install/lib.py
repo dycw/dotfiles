@@ -227,7 +227,7 @@ def install_docker() -> None:
 
 
 def install_dropbox() -> None:
-    if have_command("dropbox"):
+    if brew_installed("dropbox"):
         _LOGGER.debug("'dropbox' is already installed")
         return
     _LOGGER.info("Installing 'dropbox'...")
@@ -559,6 +559,29 @@ def install_neovim(*, nvim_dir: PathLike | None = None) -> None:
     symlink_if_given(XDG_CONFIG_HOME / "nvim", nvim_dir)
 
 
+def install_neovim_dependencies() -> None:
+    if have_command("npm"):
+        _LOGGER.debug("'npm' is already installed")
+    else:
+        _LOGGER.info("Installing 'npm'...")
+        apt_install("nodejs", "npm")
+    if have_command("python3.13"):
+        _LOGGER.debug(
+            "'python3.13' is already installed (and presumably so is 'python3.13-venv')"
+        )
+    else:
+        _LOGGER.info("Installing 'python3.13-venv'...")
+        apt_install("python3.13-venv")
+
+
+def install_postico() -> None:
+    if brew_installed("postico"):
+        _LOGGER.debug("'postico' is already installed")
+        return
+    _LOGGER.info("Installing 'postico'...")
+    brew_install("postico", cask=True)
+
+
 def install_pre_commit() -> None:
     if have_command("pre-commit"):
         _LOGGER.debug("'pre-commit' is already installed")
@@ -571,6 +594,14 @@ def install_pre_commit() -> None:
             uv_tool_install("pre-commit")
         case never:
             assert_never(never)
+
+
+def install_protonvpn() -> None:
+    if brew_installed("protonvpn"):
+        _LOGGER.debug("'protonvpn' is already installed")
+        return
+    _LOGGER.info("Installing 'protonvpn'...")
+    brew_install("protonvpn", cask=True)
 
 
 def install_pyright() -> None:
@@ -587,19 +618,18 @@ def install_pyright() -> None:
             assert_never(never)
 
 
-def install_neovim_dependencies() -> None:
-    if have_command("npm"):
-        _LOGGER.debug("'npm' is already installed")
-    else:
-        _LOGGER.info("Installing 'npm'...")
-        apt_install("nodejs", "npm")
-    if have_command("python3.13"):
-        _LOGGER.debug(
-            "'python3.13' is already installed (and presumably so is 'python3.13-venv')"
-        )
-    else:
-        _LOGGER.info("Installing 'python3.13-venv'...")
-        apt_install("python3.13-venv")
+def install_restic() -> None:
+    if brew_installed("restic"):
+        _LOGGER.debug("'restic' is already installed")
+        return
+    _LOGGER.info("Installing 'restic'...")
+    match System.identify():
+        case System.mac:
+            brew_install("restic")
+        case System.linux:
+            uv_tool_install("restic")
+        case never:
+            assert_never(never)
 
 
 def install_ripgrep(*, ripgreprc: PathLike | None = None) -> None:
@@ -783,6 +813,20 @@ def install_tailscale(*, auth_key: PathLike | None = None) -> None:
                 symlink_if_given(path_from, temp_dir)
 
 
+def install_topgrade() -> None:
+    if have_command("topgrade"):
+        _LOGGER.debug("'topgrade' is already installed")
+        return
+    _LOGGER.info("Installing 'tailscale'...")
+    match System.identify():
+        case System.mac:
+            brew_install("topgrade")
+        case System.linux:
+            raise NotImplementedError
+        case never:
+            assert_never(never)
+
+
 def install_tmux(
     *,
     tmux_conf_oh_my_tmux: PathLike | None = None,
@@ -862,6 +906,14 @@ def install_wezterm(*, wezterm_lua: PathLike | None = None) -> None:
             case never:
                 assert_never(never)
     symlink_if_given(XDG_CONFIG_HOME / "wezterm/wezterm.lua", wezterm_lua)
+
+
+def install_whatsapp() -> None:
+    if brew_installed("whatsapp"):
+        _LOGGER.debug("'whatsapp' is already installed")
+        return
+    _LOGGER.info("Installing 'whatsapp'...")
+    brew_install("whatsapp", cask=True)
 
 
 def install_yq() -> None:
@@ -982,8 +1034,11 @@ __all__ = [
     "install_macchanger",
     "install_neovim",
     "install_neovim_dependencies",
+    "install_postico",
     "install_pre_commit",
+    "install_protonvpn",
     "install_pyright",
+    "install_restic",
     "install_ripgrep",
     "install_rsync",
     "install_ruff",
@@ -996,10 +1051,12 @@ __all__ = [
     "install_syncthing",
     "install_tailscale",
     "install_tmux",
+    "install_topgrade",
     "install_uv",
     "install_vim",
     "install_watch",
     "install_wezterm",
+    "install_whatsapp",
     "install_yq",
     "install_zoom",
     "install_zoxide",

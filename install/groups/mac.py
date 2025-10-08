@@ -32,6 +32,7 @@ from install.lib import (
     install_neovim,
     install_pre_commit,
     install_pyright,
+    install_restic,
     install_ripgrep,
     install_ruff,
     install_shellcheck,
@@ -42,6 +43,7 @@ from install.lib import (
     install_syncthing,
     install_tailscale,
     install_tmux,
+    install_topgrade,
     install_uv,
     install_vim,
     install_watch,
@@ -111,6 +113,7 @@ def setup_mac(
     install_neovim(nvim_dir=nvim_dir)  # after brew
     install_pre_commit()  # after brew
     install_pyright()  # after brew
+    install_restic()  # after brew
     install_ripgrep(ripgreprc=ripgreprc)  # after brew
     install_ruff()  # after brew
     install_shellcheck()  # after brew
@@ -120,6 +123,7 @@ def setup_mac(
     install_stylua()  # after brew
     install_syncthing()  # after brew
     install_tailscale(auth_key=tailscale_auth_key)  # after brew
+    install_topgrade()  # after brew
     install_tmux(  # after brew
         tmux_conf_oh_my_tmux=tmux_conf_oh_my_tmux, tmux_conf_local=tmux_conf_local
     )

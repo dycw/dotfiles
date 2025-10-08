@@ -24,7 +24,14 @@ from install.constants import (
     WEZTERM_LUA,
 )
 from install.groups.mac import setup_mac
-from install.lib import install_dropbox, install_spotify, install_zoom
+from install.lib import (
+    install_dropbox,
+    install_postico,
+    install_protonvpn,
+    install_spotify,
+    install_whatsapp,
+    install_zoom,
+)
 
 _LOGGER = getLogger(__name__)
 
@@ -63,7 +70,10 @@ def _setup_mac_mini() -> None:
         wezterm_lua=WEZTERM_LUA,
     )
     install_dropbox()
+    install_postico()
+    install_protonvpn()
     install_spotify()
+    install_whatsapp()
     install_zoom()
 
 
