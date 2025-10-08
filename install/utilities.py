@@ -79,7 +79,7 @@ def chmod(path: PathLike, /) -> None:
     run_commands(f"sudo chmod u+x {path}")
 
 
-def chown(path: Path, /) -> None:
+def chown(path: PathLike, /) -> None:
     path = full_path(path)
     stat = path.stat()
     uid, gid = getuid(), getgid()
