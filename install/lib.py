@@ -13,6 +13,8 @@ from install.constants import (
     HOME,
     KNOWN_HOSTS,
     LOCAL_BIN,
+    SSH,
+    SSHD_CONFIG,
     XDG_CONFIG_HOME,
 )
 from install.enums import System
@@ -26,6 +28,8 @@ from install.utilities import (
     full_path,
     have_command,
     luarocks_install,
+    replace_line,
+    replace_lines,
     run_commands,
     symlink,
     symlink_if_given,
@@ -798,13 +802,12 @@ def setup_ssh_keys(ssh_keys: PathLike, /) -> None:
 
 
 def setup_sshd() -> None:
-    path = full_path("/etc/ssh/sshd_config")
-    for from_, to in [
+    replace_lines(
+        SSHD_CONFIG,
         ("#PermitRootLogin prohibit-password", "PermitRootLogin no"),
         ("#PubkeyAuthentication yes", "PubkeyAuthentication yes"),
         ("#PasswordAuthentication yes", "PasswordAuthentication no"),
-    ]:
-        _replace_line(path, from_, to)
+    )
 
 
 __all__ = [

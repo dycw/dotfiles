@@ -125,6 +125,11 @@ def replace_line(path: PathLike, from_: str, to: str, /) -> None:
     run_commands(f"sudo sed -i 's|{from_}|{to}|' {path}")
 
 
+def replace_lines(path: PathLike, /, *lines: tuple[str, str]) -> None:
+    for from_, to in lines:
+        replace_line(path, from_, to)
+
+
 def rm(path: PathLike, /) -> None:
     path = full_path(path)
     if not path.exists():
@@ -267,6 +272,7 @@ __all__ = [
     "have_command",
     "is_root",
     "luarocks_install",
+    "replace_lines",
     "rm",
     "run_commands",
     "symlink",
