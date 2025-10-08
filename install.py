@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 from logging import getLogger
-from pathlib import Path
-from tempfile import TemporaryDirectory
-from zipfile import ZipFile
 
 # constants
 

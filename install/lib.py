@@ -797,6 +797,16 @@ def setup_ssh_keys(ssh_keys: PathLike, /) -> None:
         run(temp_file)
 
 
+def setup_sshd() -> None:
+    path = full_path("/etc/ssh/sshd_config")
+    for from_, to in [
+        ("#PermitRootLogin prohibit-password", "PermitRootLogin no"),
+        ("#PubkeyAuthentication yes", "PubkeyAuthentication yes"),
+        ("#PasswordAuthentication yes", "PasswordAuthentication no"),
+    ]:
+        _replace_line(path, from_, to)
+
+
 __all__ = [
     "install_age",
     "install_bat",

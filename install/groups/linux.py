@@ -42,7 +42,6 @@ from install.lib import (
     install_uv,
     install_vim,
     install_yq,
-    install_zoom,
     install_zoxide,
 )
 

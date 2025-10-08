@@ -1,54 +1,47 @@
 from pathlib import Path
 
+ETC = Path("/etc")
+SSHD_CONFIG = ETC / "ssh/sshd_config"
+
+
 HOME = Path("~").expanduser()
-
-SSH = HOME / ".ssh"
-LOCAL_BIN = HOME / ".local/bin"
 XDG_CONFIG_HOME = HOME / "~/.config"
-
+LOCAL_BIN = HOME / ".local/bin"
+SSH = HOME / ".ssh"
 AUTHORIZED_KEYS = SSH / "authorized_keys"
 KNOWN_HOSTS = SSH / "known_hosts"
 
 
 INSTALL = Path(__file__).parent
 REPO_ROOT = INSTALL.parent
-BOTTOM = REPO_ROOT / "bottom"
-BOTTOM_TOML = BOTTOM / "bottom.toml"
-FD = REPO_ROOT / "fd"
-FD_IGNORE = FD / "ignore"
+BOTTOM_TOML = REPO_ROOT / "bottom/bottom.toml"
+FD_IGNORE = REPO_ROOT / "fd/ignore"
 FISH = REPO_ROOT / "fish"
 FISH_CONFIG = FISH / "config.fish"
 FISH_ENV = FISH / "env.fish"
 FISH_GIT = FISH / "git.fish"
 FISH_WORK = FISH / "work.fish"
-FZF = REPO_ROOT / "fzf"
-FZF_FISH = FZF / "fzf.fish"
+FZF_FISH = REPO_ROOT / "fzf/fzf.fish"
 GIT = REPO_ROOT / "git"
 GIT_CONFIG = GIT / "config"
 GIT_IGNORE = GIT / "ignore"
 NVIM = REPO_ROOT / "nvim"
-PDB = REPO_ROOT / "pdb"
-PDBRC = PDB / "pdbrc"
-PSQL = REPO_ROOT / "psql"
-PSQLRC = PSQL / "psqlrc"
-RIPGREP = REPO_ROOT / "ripgrep"
-RIPGREPRC = RIPGREP / "ripgreprc"
-STARSHIP = REPO_ROOT / "starship"
-STARSHIP_TOML = STARSHIP / "starship.toml"
+PDBRC = REPO_ROOT / "pdb/pdbrc"
+PSQLRC = REPO_ROOT / "psql/psqlrc"
+RIPGREPRC = REPO_ROOT / "ripgrep/ripgreprc"
+STARSHIP_TOML = REPO_ROOT / "starship/starship.toml"
 
 
 __all__ = [
     "AUTHORIZED_KEYS",
-    "BOTTOM",
     "BOTTOM_TOML",
-    "FD",
+    "ETC",
     "FD_IGNORE",
     "FISH",
     "FISH_CONFIG",
     "FISH_ENV",
     "FISH_GIT",
     "FISH_WORK",
-    "FZF",
     "FZF_FISH",
     "GIT",
     "GIT_CONFIG",
@@ -58,15 +51,12 @@ __all__ = [
     "KNOWN_HOSTS",
     "LOCAL_BIN",
     "NVIM",
-    "PDB",
     "PDBRC",
-    "PSQL",
     "PSQLRC",
     "REPO_ROOT",
-    "RIPGREP",
     "RIPGREPRC",
     "SSH",
-    "STARSHIP",
+    "SSHD_CONFIG",
     "STARSHIP_TOML",
     "XDG_CONFIG_HOME",
 ]
