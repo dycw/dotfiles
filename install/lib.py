@@ -808,6 +808,27 @@ def install_watch() -> None:
     brew_install("watch")
 
 
+def install_wezterm(*, wezterm_lua: PathLike | None = None) -> None:
+    if have_command("wezterm"):
+        _LOGGER.debug("'wezterm' is already installed")
+    else:
+        _LOGGER.info("Installing 'wezterm'...")
+        check_for_commands("curl")
+        match System.identify():
+            case System.mac:
+                brew_install("wezterm", cask=True)
+            case System.linux:
+                run_commands(
+                    "curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg",
+                    "echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list",
+                    "sudo chmod 644 /usr/share/keyrings/wezterm-fury.gpg",
+                )
+                apt_install("wezterm")
+            case never:
+                assert_never(never)
+    symlink_if_given(XDG_CONFIG_HOME / "wezterm/wezterm.lua", wezterm_lua)
+
+
 def install_yq() -> None:
     if have_command("yq"):
         _LOGGER.debug("'yq' is already installed")
@@ -920,6 +941,7 @@ __all__ = [
     "install_uv",
     "install_vim",
     "install_watch",
+    "install_wezterm",
     "install_yq",
     "install_zoxide",
     "setup_pdb",

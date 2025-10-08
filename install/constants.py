@@ -31,6 +31,7 @@ STARSHIP_TOML = REPO_ROOT / "starship/starship.toml"
 _tmux = REPO_ROOT / "tmux"
 TMUX_CONF_OH_MY_TMUX = _tmux / ".tmux/.tmux.conf"
 TMUX_CONF_LOCAL = _tmux / "tmux.conf.local"
+WEZTERM_LUA = XDG_CONFIG_HOME / "wezterm/wezterm.lua"
 
 
 __all__ = [
@@ -57,5 +58,6 @@ __all__ = [
     "STARSHIP_TOML",
     "TMUX_CONF_LOCAL",
     "TMUX_CONF_OH_MY_TMUX",
+    "WEZTERM_LUA",
     "XDG_CONFIG_HOME",
 ]

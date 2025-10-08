@@ -21,6 +21,7 @@ from install.constants import (
     STARSHIP_TOML,
     TMUX_CONF_LOCAL,
     TMUX_CONF_OH_MY_TMUX,
+    WEZTERM_LUA,
 )
 from install.groups.mac import setup_mac
 from install.lib import install_spotify
@@ -59,6 +60,7 @@ def _setup_mac_mini() -> None:
         starship_toml=STARSHIP_TOML,
         tmux_conf_oh_my_tmux=TMUX_CONF_OH_MY_TMUX,
         tmux_conf_local=TMUX_CONF_LOCAL,
+        wezterm_lua=WEZTERM_LUA,
     )
     install_spotify()
 

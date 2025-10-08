@@ -43,6 +43,7 @@ from install.lib import (
     install_uv,
     install_vim,
     install_watch,
+    install_wezterm,
     install_yq,
     install_zoxide,
     setup_sshd,
@@ -74,6 +75,7 @@ def setup_mac(
     tailscale_auth_key: PathLike | None = None,
     tmux_conf_oh_my_tmux: PathLike | None = None,
     tmux_conf_local: PathLike | None = None,
+    wezterm_lua: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up Mac...")
     setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
@@ -120,6 +122,7 @@ def setup_mac(
     install_uv()  # after brew
     install_vim()  # after brew
     install_watch()  # after brew
+    install_wezterm(wezterm_lua=wezterm_lua)
     install_yq()  # after brew
     install_zoxide()  # after brew
     setup_sshd()  # after gsed

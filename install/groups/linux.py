@@ -43,6 +43,7 @@ from install.lib import (
     install_tmux,
     install_uv,
     install_vim,
+    install_wezterm,
     install_yq,
     install_zoxide,
     setup_sshd,
@@ -74,6 +75,7 @@ def setup_linux(
     tailscale_auth_key: PathLike | None = None,
     tmux_conf_oh_my_tmux: PathLike | None = None,
     tmux_conf_local: PathLike | None = None,
+    wezterm_lua: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up Linux...")
     setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
@@ -117,6 +119,7 @@ def setup_linux(
     )
     install_tailscale(auth_key=tailscale_auth_key)  # after curl
     install_uv()  # after curl
+    install_wezterm(wezterm_lua=wezterm_lua)  # after curl
     install_luacheck()  # after lurocks
     install_bump_my_version()  # after uv
     install_pre_commit()  # after uv
