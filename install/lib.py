@@ -13,7 +13,6 @@ from install.constants import (
     HOME,
     KNOWN_HOSTS,
     LOCAL_BIN,
-    SSH,
     SSHD_CONFIG,
     XDG_CONFIG_HOME,
 )
@@ -28,7 +27,6 @@ from install.utilities import (
     full_path,
     have_command,
     luarocks_install,
-    replace_line,
     replace_lines,
     run_commands,
     symlink,
