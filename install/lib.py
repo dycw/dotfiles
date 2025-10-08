@@ -646,6 +646,14 @@ def install_ripgrep(*, ripgreprc: PathLike | None = None) -> None:
         symlink_if_given(path_from, ripgreprc)
 
 
+def install_rlwrap() -> None:
+    if have_command("rlwrap"):
+        _LOGGER.debug("'rlwrap' is already installed")
+        return
+    _LOGGER.info("Installing 'rlwrap'...")
+    brew_install("rlwrap")
+
+
 def install_rsync() -> None:
     if have_command("rsync"):
         _LOGGER.debug("'rsync' is already installed")
@@ -827,6 +835,14 @@ def install_topgrade() -> None:
             assert_never(never)
 
 
+def install_transmission() -> None:
+    if brew_installed("transmission"):
+        _LOGGER.debug("'transmission' is already installed")
+        return
+    _LOGGER.info("Installing 'transmission'...")
+    brew_install("transmission", cask=True)
+
+
 def install_tmux(
     *,
     tmux_conf_oh_my_tmux: PathLike | None = None,
@@ -879,12 +895,42 @@ def install_vim() -> None:
             assert_never(never)
 
 
+def install_vlc() -> None:
+    if have_command("vlc"):
+        _LOGGER.debug("'vlc' is already installed")
+        return
+    _LOGGER.info("Installing 'vlc'...")
+    brew_install("vlc", cask=True)
+
+
+def install_vs_code() -> None:
+    if have_command("code"):
+        _LOGGER.debug("'VS code' is already installed")
+        return
+    _LOGGER.info("Installing 'VS code'...")
+    brew_install("visual-studio-code", cask=True)
+
+
 def install_watch() -> None:
     if have_command("watch"):
         _LOGGER.debug("'watch' is already installed")
         return
     _LOGGER.info("Installing 'watch'...")
     brew_install("watch")
+
+
+def install_watchexec() -> None:
+    if have_command("watchexec"):
+        _LOGGER.debug("'watchexec' is already installed")
+        return
+    _LOGGER.info("Installing 'watchexec'...")
+    match System.identify():
+        case System.mac:
+            brew_install("watchexec")
+        case System.linux:
+            apt_install("watchexec-cli")
+        case never:
+            assert_never(never)
 
 
 def install_wezterm(*, wezterm_lua: PathLike | None = None) -> None:
@@ -1040,6 +1086,7 @@ __all__ = [
     "install_pyright",
     "install_restic",
     "install_ripgrep",
+    "install_rlwrap",
     "install_rsync",
     "install_ruff",
     "install_shellcheck",
@@ -1052,9 +1099,13 @@ __all__ = [
     "install_tailscale",
     "install_tmux",
     "install_topgrade",
+    "install_transmission",
     "install_uv",
     "install_vim",
+    "install_vlc",
+    "install_vs_code",
     "install_watch",
+    "install_watchexec",
     "install_wezterm",
     "install_whatsapp",
     "install_yq",

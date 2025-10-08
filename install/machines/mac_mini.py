@@ -29,6 +29,9 @@ from install.lib import (
     install_postico,
     install_protonvpn,
     install_spotify,
+    install_transmission,
+    install_vlc,
+    install_vs_code,
     install_whatsapp,
     install_zoom,
 )
@@ -73,6 +76,9 @@ def _setup_mac_mini() -> None:
     install_postico()
     install_protonvpn()
     install_spotify()
+    install_transmission()
+    install_vlc()
+    install_vs_code()
     install_whatsapp()
     install_zoom()
 
