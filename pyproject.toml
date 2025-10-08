@@ -1,5 +1,10 @@
 #
 
+[dependency-groups]
+dev = [
+  "rich>=14.1.0",
+]
+
 # project
 [project]
 dependencies = []
@@ -10,7 +15,7 @@ version = "0.0.0"
 # bump-my-version
 [tool.bumpversion]
 allow_dirty = true
-current_version = "0.3.113"
+current_version = "0.3.114"
 
 # pyright
 [tool.pyright]
