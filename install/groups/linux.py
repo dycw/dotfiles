@@ -20,6 +20,7 @@ from install.lib import (
     install_fzf,
     install_gh,
     install_git,
+    install_gitweb,
     install_iperf3,
     install_jq,
     install_just,
@@ -81,7 +82,6 @@ def setup_linux(
     setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
     setup_sshd()
     install_age()
-    install_bottom(bottom_toml=bottom_toml)
     install_build_essential()
     install_curl()
     install_delta()
@@ -103,15 +103,12 @@ def setup_linux(
     install_rsync()
     install_shellcheck()
     install_shfmt()
-    install_sops(age_secret_key=age_secret_key)
     install_starship(starship_toml=starship_toml)
-    install_stylua()
     install_syncthing()
     install_tmux(
         tmux_conf_oh_my_tmux=tmux_conf_oh_my_tmux, tmux_conf_local=tmux_conf_local
     )
     install_vim()
-    install_yq()
     install_zoxide()
     install_docker()  # after curl
     install_fish(  # after curl
@@ -120,6 +117,11 @@ def setup_linux(
     install_tailscale(auth_key=tailscale_auth_key)  # after curl
     install_uv()  # after curl
     install_wezterm(wezterm_lua=wezterm_lua)  # after curl
+    install_bottom(bottom_toml=bottom_toml)  # after curl, jq
+    install_gitweb()  # after curl, jq
+    install_sops(age_secret_key=age_secret_key)  # after curl, jq
+    install_stylua()  # after curl, jq
+    install_yq()  # after curl, jq
     install_luacheck()  # after lurocks
     install_bump_my_version()  # after uv
     install_pre_commit()  # after uv
