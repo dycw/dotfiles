@@ -88,7 +88,7 @@ def contains_line(path: PathLike, text: str, /, *, flags: int = 0) -> bool:
 def cp(path_from: PathLike, path_to: PathLike, /, *, executable: bool = False) -> None:
     path_from, path_to = map(full_path, [path_from, path_to])
     if path_to.exists() and (path_to.read_bytes() == path_from.read_bytes()):
-        _LOGGER.debug("%r -> %r already copied", str(path_from), str(path_to))
+        _LOGGER.debug("%r -> %r is already copied", str(path_from), str(path_to))
         return
     rm(path_to)
     _LOGGER.info("Copying %r -> %r...", str(path_from), str(path_to))
@@ -168,7 +168,7 @@ def run_commands(*cmds: str, env: Mapping[str, str | None] | None = None) -> Non
 def symlink(path_from: PathLike, path_to: PathLike, /) -> None:
     path_from, path_to = map(full_path, [path_from, path_to])
     if path_from.is_symlink() and (path_from.resolve() == path_to.resolve()):
-        _LOGGER.debug("%r -> %r already symlinked", str(path_from), str(path_to))
+        _LOGGER.debug("%r -> %r is already symlinked", str(path_from), str(path_to))
         return
     path_from.parent.mkdir(parents=True, exist_ok=True)
     rm(path_from)
