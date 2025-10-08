@@ -212,27 +212,10 @@ brew_install topgrade
 [ -n "${IS_MAC_MINI}" ] && brew_install transmission --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install visual-studio-code --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install vlc --cask
-[ -n "${IS_MAC}" ] && brew_install watch
 brew_install watchexec
 [ -n "${IS_MAC_MINI}" ] && brew_install whatsapp --cask
 [ -n "${IS_UBUNTU}" ] && brew_install xclip
 [ -n "${IS_UBUNTU}" ] && brew_install xsel
-brew_install yq
-[ -n "${IS_MAC}" ] && brew_install zoom --cask
-brew_install zoxide
-# brew/fzf
-__fzf_zsh="${XDG_CONFIG_HOME:-${HOME}/.config}/fzf/fzf.zsh"
-if [ -f "${__fzf_zsh}" ]; then
-	echo_date "'fzf' is already setup"
-else
-	echo_date "Setting up 'fzf'..."
-	if ! command -v brew >/dev/null 2>&1; then
-		"$(brew --prefix)/opt/fzf/install" --xdg --key-bindings --completion --no-update-rc --no-fish
-	else
-		echo_date "ERROR: 'brew' is not installed"
-		return 1
-	fi
-fi
 
 # brew/services
 brew_services() {
@@ -285,7 +268,6 @@ if [ -n "${IS_UBUNTU}" ]; then
 	apt_install libusb-1.0-0  # for keymapp
 	apt_install libwebkit2gtk # for keymapp
 	apt_install openssh-server
-	apt_install zsh
 fi
 
 # ubuntu/keymapp
@@ -302,40 +284,6 @@ if [ -n "${IS_UBUNTU}" ]; then
 		echo "Adding ${USER} to 'plugdev'..."
 		sudo usermod -aG plugdev "$USER"
 	fi
-fi
-
-# ubuntu/shell
-if [ -n "${IS_UBUNTU}" ]; then
-	if [ "$(basename "${SHELL}")" = 'zsh' ]; then
-		echo_date "'zsh' is already the default shell"
-	else
-		zsh_path="$(command -v zsh 2>/dev/null)"
-		if [ -x "${zsh_path}" ]; then
-			echo_date "Changing default shell to 'zsh'..."
-			sudo chsh -s "${zsh_path}" "$(whoami)"
-		else
-			echo_date "ERROR: 'zsh' not found or not executable"
-			return 1
-		fi
-	fi
-fi
-
-# ubuntu/snap
-snap_install() {
-	__app="$1"
-	if command -v "${__app}" >/dev/null 2>&1; then
-		echo_date "'${__app}' is already installed"
-		return 0
-	else
-		echo_date "Installing '${__app}'..."
-		sudo snap install -y "${__app}"
-	fi
-}
-if [ -n "${IS_UBUNTU}" ]; then
-	snap_install chatgpt-desktop
-	snap_install pdfarranger
-	snap_install spotify
-	snap_install whatsapp-linux-app
 fi
 
 # ubuntu/systemctl

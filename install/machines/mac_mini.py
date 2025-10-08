@@ -24,7 +24,7 @@ from install.constants import (
     WEZTERM_LUA,
 )
 from install.groups.mac import setup_mac
-from install.lib import install_spotify
+from install.lib import install_spotify, install_zoom
 
 _LOGGER = getLogger(__name__)
 
@@ -63,6 +63,7 @@ def _setup_mac_mini() -> None:
         wezterm_lua=WEZTERM_LUA,
     )
     install_spotify()
+    install_zoom()
 
 
 if __name__ == "__main__":

@@ -30,22 +30,9 @@ def install_python3_13_venv() -> None:
     apt_install("python3.13-venv")
 
 
-def install_zoom() -> None:
-    if have_command("zoom"):
-        _LOGGER.debug("'zoom' is already installed")
-        return
-    _LOGGER.info("Installing 'zoom'...")
-    apt_install("libxcb-xinerama0", "libxcb-xtest0", "libxcb-cursor0")
-    _dpkg_install("zoom_amd64.deb")
-
-
 # main
 
 
 def _setup_debian(settings: _Settings, /) -> None:
     install_npm()
     install_python3_13_venv()
-    if settings.zoom:
-        install_zoom()
-    if settings.wezterm:
-        install_wezterm()  # after curl

@@ -861,6 +861,24 @@ def install_zoxide() -> None:
             assert_never(never)
 
 
+def install_zoom(*, deb_file: PathLike | None = None) -> None:
+    if have_command("zoom"):
+        _LOGGER.debug("'zoom' is already installed")
+        return
+    _LOGGER.info("Installing 'zoom'...")
+    match System.identify():
+        case System.mac:
+            brew_install("zoom", cask=True)
+        case System.linux:
+            apt_install("libxcb-xinerama0", "libxcb-xtest0", "libxcb-cursor0")
+            if deb_file is None:
+                msg = "deb_file"
+                raise FileNotFoundError(msg)
+            dpkg_install(deb_file)
+        case never:
+            assert_never(never)
+
+
 def setup_pdb(*, pdbrc: PathLike | None = None) -> None:
     symlink_if_given(HOME / ".pdbrc", pdbrc)
 
@@ -943,6 +961,7 @@ __all__ = [
     "install_watch",
     "install_wezterm",
     "install_yq",
+    "install_zoom",
     "install_zoxide",
     "setup_pdb",
     "setup_psql",

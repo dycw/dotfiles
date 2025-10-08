@@ -23,6 +23,7 @@ from install.constants import (
     WEZTERM_LUA,
 )
 from install.groups.mac import setup_mac
+from install.lib import install_zoom
 
 _LOGGER = getLogger(__name__)
 
@@ -59,6 +60,7 @@ def _setup_mac_book() -> None:
         tmux_conf_local=TMUX_CONF_LOCAL,
         wezterm_lua=WEZTERM_LUA,
     )
+    install_zoom()
 
 
 if __name__ == "__main__":
