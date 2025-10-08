@@ -4,9 +4,11 @@ import shutil
 import tempfile
 from collections.abc import Iterator
 from contextlib import contextmanager, suppress
+from grp import getgrgid
 from logging import getLogger
-from os import environ, getenv, geteuid
+from os import environ, getenv, geteuid, getgid, getuid
 from pathlib import Path
+from pwd import getpwuid
 from re import search
 from stat import S_IXUSR
 from string import Template
@@ -77,6 +79,19 @@ def chmod(path: PathLike, /) -> None:
     run_commands(f"sudo chmod u+x {path}")
 
 
+def chown(path: Path, /) -> None:
+    path = full_path(path)
+    stat = path.stat()
+    uid, gid = getuid(), getgid()
+    user = getpwuid(uid).pw_name
+    group = getgrgid(gid).gr_name
+    if (stat.st_uid == uid) and (stat.st_gid == gid):
+        _LOGGER.debug("%r is already owned by '%s:%s'", str(path), user, group)
+        return
+    _LOGGER.info("Setting ownership of %r to '%s:%s'...", str(path), user, group)
+    run_commands(f"chown {uid}:{gid} {path}")
+
+
 def contains_line(path: PathLike, text: str, /, *, flags: int = 0) -> bool:
     try:
         contents = full_path(path).read_text()
@@ -113,6 +128,7 @@ def full_path(*parts: PathLike) -> Path:
 
 def get_latest_tag(owner: str, repo: str, /) -> str:
     check_for_commands("curl", "jq")
+    _LOGGER.info("Getting latest tag '%s/%s'...", owner, repo)
     return get_output(
         f"curl -s https://api.github.com/repos/{owner}/{repo}/releases/latest | jq -r '.tag_name'"
     )
@@ -256,6 +272,7 @@ def which(cmd: str, /) -> Path | None:
 
 @contextmanager
 def yield_download(url: str, /) -> Iterator[Path]:
+    _LOGGER.info("Yielding download of %r...", url)
     filename = full_path(urlparse(url).path).name
     with TemporaryDirectory() as temp_dir:
         temp_file = temp_dir / filename
@@ -279,9 +296,9 @@ __all__ = [
     "apt_install",
     "apt_update",
     "brew_install",
-    "brew_install",
     "check_for_commands",
     "chmod",
+    "chown",
     "cp",
     "download",
     "dpkg_install",
