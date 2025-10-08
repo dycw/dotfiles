@@ -57,9 +57,7 @@ end
 export PY_COLORS=1
 
 # ripgrep
-if test -f $XDG_CONFIG_HOME/ripgrep/ripgreprc
-    export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgrep/ripgreprc
-end
+export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgrep/ripgreprc
 
 # rust
 if test -d $HOME/.cargo/bin
@@ -70,6 +68,9 @@ end
 if type -q starship
     starship init fish | source
 end
+
+# tailscale
+export TAILSCALE_AUTH_KEY=$XDG_CONFIG_HOME/tailscale/auth-key.txt
 
 # XDG
 set -gx XDG_BIN_HOME (set -q XDG_BIN_HOME; and echo $XDG_BIN_HOME; or echo $HOME/.local/bin)

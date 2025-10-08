@@ -184,34 +184,15 @@ brew_install() {
 
 [ -n "${IS_MAC}" ] && brew_install 1password --cask
 brew_install aichat
-brew_install age
 brew_install asciinema
 [ -n "${IS_MAC_MINI}" ] && brew_install autoconf # for c
 [ -n "${IS_MAC_MINI}" ] && brew_install automake # for c
 [ -n "${IS_MAC_MINI}" ] && brew_install bacon
-brew_install bat
-brew_install btm bottom
 [ -n "${IS_MAC_MINI}" ] && brew_install cargo-binstall
 [ -n "${IS_MAC_MINI}" ] && brew_install cargo-nextest
 [ -n "${IS_MAC_MINI}" ] && brew_install db-browser-for-sqlite --cask
-brew_install delta git-delta
-brew_install direnv
-[ -n "${IS_MAC}" ] && brew_install dropbox --cask
-brew_install dust
-brew_install eza
-brew_install fd
-brew_install gh
-[ -n "${IS_MAC}" ] && brew_install ghostty --cask
-brew_install glab
-[ -n "${IS_MAC}" ] && brew_install gitweb yoannfleurydev/gitweb/gitweb
-[ -n "${IS_MAC}" ] && brew_install gsed gnu-sed
-[ -n "${IS_MAC_MINI}" ] && brew_install iperf3
-brew_install jq
-brew_install just
 [ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
-brew_install luacheck
 [ -n "${IS_MAC_MINI}" ] && brew_install maturin
-brew_install nvim neovim
 # brew_install node > brew link --overwrite node
 [ -n "${IS_MAC_MINI}" ] && brew_install pgadmin4 --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install pgcli
@@ -222,45 +203,19 @@ brew_install prettier
 [ -n "${IS_MAC_MINI_DW}" ] && brew_install restic
 [ -n "${IS_MAC_MINI}" ] && brew_install redis-stack --cask
 brew_install rename
-brew_install rg ripgrep
 [ -n "${IS_MAC}" ] && brew_install rlwrap
-brew_install ruff
 brew_install rust-analyzer
-brew_install shellcheck
-brew_install shfmt
-brew_install sops
-[ -n "${IS_MAC_MINI}" ] && brew_install spotify --cask
-brew_install starship
-brew_install stylua
 [ -n "${IS_MAC_MINI_DW}" ] && brew_install syncthing
 brew_install tailscale
 brew_install tmux
 brew_install topgrade
 [ -n "${IS_MAC_MINI}" ] && brew_install transmission --cask
-brew_install uv
 [ -n "${IS_MAC_MINI}" ] && brew_install visual-studio-code --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install vlc --cask
-[ -n "${IS_MAC}" ] && brew_install watch
 brew_install watchexec
 [ -n "${IS_MAC_MINI}" ] && brew_install whatsapp --cask
 [ -n "${IS_UBUNTU}" ] && brew_install xclip
 [ -n "${IS_UBUNTU}" ] && brew_install xsel
-brew_install yq
-[ -n "${IS_MAC}" ] && brew_install zoom --cask
-brew_install zoxide
-# brew/fzf
-__fzf_zsh="${XDG_CONFIG_HOME:-${HOME}/.config}/fzf/fzf.zsh"
-if [ -f "${__fzf_zsh}" ]; then
-	echo_date "'fzf' is already setup"
-else
-	echo_date "Setting up 'fzf'..."
-	if ! command -v brew >/dev/null 2>&1; then
-		"$(brew --prefix)/opt/fzf/install" --xdg --key-bindings --completion --no-update-rc --no-fish
-	else
-		echo_date "ERROR: 'brew' is not installed"
-		return 1
-	fi
-fi
 
 # brew/services
 brew_services() {
@@ -312,9 +267,7 @@ if [ -n "${IS_UBUNTU}" ]; then
 	apt_install libpq-dev
 	apt_install libusb-1.0-0  # for keymapp
 	apt_install libwebkit2gtk # for keymapp
-	apt_install nautilus-dropbox
 	apt_install openssh-server
-	apt_install zsh
 fi
 
 # ubuntu/keymapp
@@ -331,40 +284,6 @@ if [ -n "${IS_UBUNTU}" ]; then
 		echo "Adding ${USER} to 'plugdev'..."
 		sudo usermod -aG plugdev "$USER"
 	fi
-fi
-
-# ubuntu/shell
-if [ -n "${IS_UBUNTU}" ]; then
-	if [ "$(basename "${SHELL}")" = 'zsh' ]; then
-		echo_date "'zsh' is already the default shell"
-	else
-		zsh_path="$(command -v zsh 2>/dev/null)"
-		if [ -x "${zsh_path}" ]; then
-			echo_date "Changing default shell to 'zsh'..."
-			sudo chsh -s "${zsh_path}" "$(whoami)"
-		else
-			echo_date "ERROR: 'zsh' not found or not executable"
-			return 1
-		fi
-	fi
-fi
-
-# ubuntu/snap
-snap_install() {
-	__app="$1"
-	if command -v "${__app}" >/dev/null 2>&1; then
-		echo_date "'${__app}' is already installed"
-		return 0
-	else
-		echo_date "Installing '${__app}'..."
-		sudo snap install -y "${__app}"
-	fi
-}
-if [ -n "${IS_UBUNTU}" ]; then
-	snap_install chatgpt-desktop
-	snap_install pdfarranger
-	snap_install spotify
-	snap_install whatsapp-linux-app
 fi
 
 # ubuntu/systemctl

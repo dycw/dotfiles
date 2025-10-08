@@ -10,7 +10,7 @@ version = "0.0.0"
 # bump-my-version
 [tool.bumpversion]
 allow_dirty = true
-current_version = "0.3.92"
+current_version = "0.3.93"
 
 # pyright
 [tool.pyright]
@@ -31,8 +31,7 @@ typeCheckingMode = "strict"
 
 # ruff
 [tool.ruff]
-extend-exclude = ["dotbot"]
-target-version = "py311"
+target-version = "py313"
 unsafe-fixes = true
 
 [tool.ruff.format]
@@ -56,6 +55,7 @@ ignore = [
   "E501",  # line-too-long
   "ISC001",  # single-line-implicit-string-concatenation
   "ISC002",  # multi-line-implicit-string-concatenation
+  "PLC0415",  # import-outside-top-level
   "PLR0912",  # too-many-branches
   "PLR0913",  # too-many-arguments
   "PLR0915",  # too-many-statements
@@ -63,8 +63,9 @@ ignore = [
   "Q001",  # bad-quotes-multiline-string
   "Q002",  # bad-quotes-docstring
   "Q003",  # avoidable-escaped-quote
-  'S310',  # suspicious-url-open-usage
+  "S310",  # suspicious-url-open-usage
   "S602",  # subprocess-popen-with-shell-equals-true
+  "S607",  # start-process-with-partial-path
   "W191",  # tab-indentation
 ]
 select = ["ALL"]

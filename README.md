@@ -1,3 +1,9 @@
 # `dotfiles`
 
-My dotfiles, powered by [`dotbot`](https://github.com/anishathalye/dotbot).
+## Setup machines:
+
+# MacBook
+
+```
+curl -fsSL https://raw.githubusercontent.com/dycw/dotfiles/refs/heads/re-organize/install/remotes/macbook.py | python3
+```

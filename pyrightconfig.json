@@ -1,0 +1,14 @@
+{
+  "enableReachabilityAnalysis": false,
+  "exclude": [
+    "**/.venv",
+    "submodules"
+  ],
+  "include": [
+    "install"
+  ],
+  "pythonVersion": "3.13",
+  "reportPrivateUsage": false,
+  "reportUnnecessaryComparison": false,
+  "typeCheckingMode": "strict"
+}

@@ -1,6 +1,7 @@
+**/*.swp
 **/.DS_Store
 **/.env
 **/.mode.sw*
 **/.ruff_cache/
-**/.swp
+**/__pycache__/
 **/node_modules/

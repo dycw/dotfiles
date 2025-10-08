@@ -350,9 +350,11 @@ end
 # tailscale
 if type -q tailscale; and type -q tailscaled
     function ts-up
-        set -l auth_key $XDG_CONFIG_HOME/tailscale/auth-key.txt
-        if not test -f $auto_key
-            echo "'$auto_key' does not exist" >&2; and return 1
+        if not set -q TAILSCALE_AUTH_KEY
+            echo "Env var 'TAILSCALE_AUTH_KEY' does not exist" >&2; and return 1
+        end
+        if not test -f $TAILSCALE_AUTH_KEY
+            echo "File '$TAILSCALE_AUTH_KEY' does not exist" >&2; and return 1
         end
         if not set -q TAILSCALE_LOGIN_SERVER
             echo "'\$TAILSCALE_LOGIN_SERVER' is not set" >&2; and return 1
@@ -360,7 +362,7 @@ if type -q tailscale; and type -q tailscaled
         echo "Starting tailscaled in the background..."
         sudo tailscaled &
         echo "Starting 'tailscale'..."
-        sudo tailscale up --accept-dns --accept-routes --auth-key="file:$auth_key" \
+        sudo tailscale up --accept-dns --accept-routes --auth-key="file:$TAILSCALE_AUTH_KEY" \
             --login-server="$TAILSCALE_LOGIN_SERVER" --reset
     end
     function ts-exit-node

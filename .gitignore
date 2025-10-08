@@ -12,5 +12,10 @@ node_modules/
 **/*secret*
 **/*token*
 
+# venv
+.venv/
+
 # vim
+.mode.sw*
 **/*.swp
+**/__pycache__/
