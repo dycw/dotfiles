@@ -28,9 +28,9 @@ from install.lib import (
     install_luarocks,
     install_macchanger,
     install_neovim,
+    install_neovim_dependencies,
     install_pre_commit,
     install_pyright,
-    install_python313_venv,
     install_ripgrep,
     install_rsync,
     install_ruff,
@@ -100,7 +100,7 @@ def setup_linux(
     install_luarocks()
     install_macchanger()
     install_neovim(nvim_dir=nvim_dir)
-    install_python313_venv()
+    install_neovim_dependencies()
     install_ripgrep(ripgreprc=ripgreprc)
     install_rsync()
     install_shellcheck()
