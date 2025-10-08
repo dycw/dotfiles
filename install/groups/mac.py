@@ -36,6 +36,7 @@ from install.lib import (
     install_starship,
     install_uv,
     install_vim,
+    install_watch,
 )
 
 if TYPE_CHECKING:

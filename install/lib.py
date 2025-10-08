@@ -671,6 +671,14 @@ def install_vim() -> None:
             assert_never(never)
 
 
+def install_watch() -> None:
+    if have_command("watch"):
+        _LOGGER.debug("'watch' is already installed")
+        return
+    _LOGGER.info("Installing 'watch'...")
+    brew_install("watch")
+
+
 def setup_pdb(*, pdbrc: PathLike | None = None) -> None:
     symlink_if_given(HOME / ".pdbrc", pdbrc)
 

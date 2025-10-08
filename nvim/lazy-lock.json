@@ -203,6 +203,10 @@
     "branch": "master",
     "commit": "9ea940c0d537e55de0de4c0298c04b976960fb12"
   },
+  "vim-matchup": {
+    "branch": "master",
+    "commit": "ca538c3bb02836510526ff7d07cf7e4c8e9a3b90"
+  },
   "vim-numbertoggle": {
     "branch": "main",
     "commit": "075b7478777e694fbac330ee34a74590dad0fee1"
