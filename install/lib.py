@@ -274,6 +274,11 @@ def install_fd(*, ignore: PathLike | None = None) -> None:
                 apt_install("fd-find")
             case never:
                 assert_never(never)
+    if System.identify() is System.linux:
+        if (path_to := which("fdfind")) is None:
+            msg = "'fdfind' should be installed"
+            raise RuntimeError(msg)
+        symlink(LOCAL_BIN / "fd", path_to)
     symlink_if_given(XDG_CONFIG_HOME / "fd/ignore", ignore)
 
 
@@ -689,7 +694,7 @@ def install_spotify() -> None:
             _LOGGER.info("Installing 'spotify'...")
             brew_install("spotify", cask=True)
         case System.linux:
-            if have_command("spotify-client"):
+            if have_command("spotify"):
                 _LOGGER.debug("'spotify' is already installed")
                 return
             check_for_commands("curl")
