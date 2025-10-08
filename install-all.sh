@@ -134,54 +134,6 @@ else
 fi
 
 # brew/install
-brew_install() {
-	unset __app __cask __iname __tap
-	while [ "$1" ]; do
-		case "$1" in
-		--cask)
-			__cask=1
-			shift
-			;;
-		--tap)
-			__tap="$2"
-			shift 2
-			;;
-		*)
-			if [ -z "${__app}" ]; then
-				__app="$1"
-			elif [ -z "${__iname}" ]; then
-				__iname="$1"
-			fi
-			shift
-			;;
-		esac
-	done
-	if [ -z "${__app}" ]; then
-		echo_date "ERROR: 'app' not defined"
-		return 1
-	elif [ -z "${__iname}" ]; then
-		__iname="${__app}"
-	fi
-	if ! command -v brew >/dev/null 2>&1; then
-		echo_date "ERROR: 'brew' is not installed"
-		return 1
-	elif { [ -n "${__cask}" ] && brew list --cask "${__app}" >/dev/null 2>&1; } ||
-		{ [ -n "${__cask}" ] && find /Applications -maxdepth 1 -type d -iname "*${__app}*.app" | grep -q .; } ||
-		{ [ -z "${__cask}" ] && command -v "${__app}" >/dev/null 2>&1; }; then
-		echo_date "'${__app}' is already installed"
-		return 0
-	else
-		echo_date "Installing '${__app}'..."
-		[ -n "${__tap}" ] && brew tap "${__tap}"
-		if [ -n "${__cask}" ]; then
-			brew install --cask "${__app}"
-		else
-			brew install "${__iname}"
-		fi
-	fi
-
-}
-
 [ -n "${IS_MAC}" ] && brew_install 1password --cask
 brew_install aichat
 brew_install asciinema
@@ -197,18 +149,11 @@ brew_install asciinema
 [ -n "${IS_MAC_MINI}" ] && brew_install pgadmin4 --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install pgcli
 [ -n "${IS_MAC_MINI}" ] && brew_install postgres postgresql@17
-[ -n "${IS_MAC_MINI}" ] && brew_install postico --cask
 brew_install prettier
-[ -n "${IS_MAC}" ] && brew_install protonvpn --cask
-[ -n "${IS_MAC_MINI_DW}" ] && brew_install restic
 [ -n "${IS_MAC_MINI}" ] && brew_install redis-stack --cask
 brew_install rename
 [ -n "${IS_MAC}" ] && brew_install rlwrap
 brew_install rust-analyzer
-[ -n "${IS_MAC_MINI_DW}" ] && brew_install syncthing
-brew_install tailscale
-brew_install tmux
-brew_install topgrade
 [ -n "${IS_MAC_MINI}" ] && brew_install transmission --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install visual-studio-code --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install vlc --cask

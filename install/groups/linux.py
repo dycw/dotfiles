@@ -31,6 +31,7 @@ from install.lib import (
     install_neovim_dependencies,
     install_pre_commit,
     install_pyright,
+    install_restic,
     install_ripgrep,
     install_rsync,
     install_ruff,
@@ -42,6 +43,7 @@ from install.lib import (
     install_syncthing,
     install_tailscale,
     install_tmux,
+    install_topgrade,
     install_uv,
     install_vim,
     install_wezterm,
@@ -99,12 +101,14 @@ def setup_linux(
     install_macchanger()
     install_neovim(nvim_dir=nvim_dir)
     install_neovim_dependencies()
+    install_restic()
     install_ripgrep(ripgreprc=ripgreprc)
     install_rsync()
     install_shellcheck()
     install_shfmt()
     install_starship(starship_toml=starship_toml)
     install_syncthing()
+    install_topgrade()
     install_tmux(
         tmux_conf_oh_my_tmux=tmux_conf_oh_my_tmux, tmux_conf_local=tmux_conf_local
     )
