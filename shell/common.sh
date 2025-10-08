@@ -189,31 +189,8 @@ clean_dirs() {
 	find "${__clean_dirs_dir}" -type d -delete
 }
 
-# local
-__file="${HOME}/common.local.sh"
-if [ -f "$__file" ]; then
-	. "$__file"
-fi
-
 # pyright + pytest
 pyrt() { pyright "$@" && pytest "$@"; }
-
-# tailscale
-if command -v tailscale >/dev/null 2>&1 && command -v tailscaled >/dev/null 2>&1; then
-	if command -v tailscaled >/dev/null 2>&1; then
-		ts_down() {
-			[ $# -ne 0 ] && echo_date "'ts_down' accepts no arguments; got $#" && return 1
-			echo_date "Stopping 'tailscale'..."
-			sudo tailscale down
-			echo_date "Logging out of 'tailscale'..."
-			sudo tailscale logout
-			echo_date "Cleaning 'tailscaled'..."
-			sudo tailscaled --cleanup
-			echo_date "Killing 'tailscaled'..."
-			sudo pkill tailscaled
-		}
-	fi
-fi
 
 # tmux
 if command -v tmux >/dev/null 2>&1; then
@@ -238,31 +215,6 @@ if command -v tmux >/dev/null 2>&1; then
 			echo_date "'tmux_attach' accepts [0..1] arguments; got $#" && return 1
 		fi
 		tmux attach -t "${__tmux_attach_session}"
-	}
-	tmux_current_window() {
-		[ $# -ne 0 ] && echo_date "'tmux_current_window' accepts no arguments; got $#" && return 1
-		tmux display-message -p '#S:#I'
-	}
-	tmux_detach() {
-		[ $# -ne 0 ] && echo_date "'tmux_detach' accepts no arguments; got $#" && return 1
-		tmux detach
-	}
-	tmux_kill_window() {
-		[ $# -ne 0 ] && echo_date "'tmux_kill_window' accepts no arguments; got $#" && return 1
-		tmux kill-window
-	}
-	tmux_list_keys() {
-		if [ $# -eq 0 ]; then
-			tmux list-keys
-		elif [ $# -eq 1 ]; then
-			tmux list-keys -T "$1"
-		else
-			echo_date "'tmux_list_keys' accepts [0..1] arguments; got $#" && return 1
-		fi
-	}
-	tmux_ls() {
-		[ $# -ne 0 ] && echo_date "'tmux_ls' accepts no arguments; got $#" && return 1
-		tmux ls
 	}
 	# layouts
 	if [ -z "$TMUX" ]; then
