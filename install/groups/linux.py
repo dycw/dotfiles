@@ -13,7 +13,6 @@ from install.lib import (
     install_delta,
     install_direnv,
     install_docker,
-    install_dropbox,
     install_dust,
     install_eza,
     install_fd,
@@ -87,7 +86,6 @@ def setup_linux(
     install_curl()
     install_delta()
     install_direnv()
-    install_dropbox()
     install_dust()
     install_eza()
     install_fd(ignore=fd_ignore)

@@ -69,7 +69,7 @@
   },
   "lazy.nvim": {
     "branch": "main",
-    "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a"
+    "commit": "59334064f8604ca073791c25dcc5c9698865406e"
   },
   "lazydev.nvim": {
     "branch": "main",
@@ -77,7 +77,7 @@
   },
   "leap.nvim": {
     "branch": "main",
-    "commit": "ce65ca3563647a73c7e5555e0c94eed1317d2d83"
+    "commit": "07304103f6bd923004fdef9262d9a4d7925fb70a"
   },
   "lualine.nvim": {
     "branch": "master",
