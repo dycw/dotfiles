@@ -85,7 +85,10 @@ def install_bat() -> None:
             else:
                 _LOGGER.info("Installing 'bat'...")
                 apt_install("bat")
-            symlink(LOCAL_BIN / "bat", which("batcat"))
+            if (path_to := which("batcat")) is None:
+                msg = "'batcat' should be installed"
+                raise RuntimeError(msg)
+            symlink(LOCAL_BIN / "bat", path_to)
         case never:
             assert_never(never)
 
@@ -342,7 +345,10 @@ def install_ggrep() -> None:
     else:
         _LOGGER.info("Installing 'ggrep'...")
         brew_install("grep")
-    symlink_if_given(LOCAL_BIN / "grep", which("ggrep"))
+    if (path_to := which("ggrep")) is None:
+        msg = "'ggrep' should be installed"
+        raise RuntimeError(msg)
+    symlink(LOCAL_BIN / "grep", path_to)
 
 
 def install_gh() -> None:
@@ -446,7 +452,10 @@ def install_gsed() -> None:
     else:
         _LOGGER.info("Installing 'gsed'...")
         brew_install("gnu-sed")
-    symlink_if_given(LOCAL_BIN / "sed", which("gsed"))
+    if (path_to := which("gsed")) is None:
+        msg = "'gsed' should be installed"
+        raise RuntimeError(msg)
+    symlink(LOCAL_BIN / "sed", path_to)
 
 
 def install_iperf3() -> None:
