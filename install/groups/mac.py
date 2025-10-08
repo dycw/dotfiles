@@ -17,6 +17,7 @@ from install.lib import (
     install_fd,
     install_fish,
     install_fzf,
+    install_ggrep,
     install_gh,
     install_ghostty,
     install_git,
@@ -95,6 +96,7 @@ def setup_mac(
         config=fish_config, env=fish_env, git=fish_git, work=fish_work
     )
     install_fzf(fzf_fish=fzf_fish)  # after brew
+    install_ggrep()  # after brew
     install_gh()  # after brew
     install_ghostty()  # after brew
     install_glab()  # after brew

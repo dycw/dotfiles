@@ -335,6 +335,15 @@ def install_fzf(*, fzf_fish: PathLike | None = None) -> None:
             cp(path, XDG_CONFIG_HOME / f"fish/functions/{path.name}")
 
 
+def install_ggrep() -> None:
+    if have_command("ggrep"):
+        _LOGGER.debug("'ggrep' is already installed")
+    else:
+        _LOGGER.info("Installing 'ggrep'...")
+        brew_install("ggrep")
+    symlink_if_given(LOCAL_BIN / "grep", which("ggrep"))
+
+
 def install_gh() -> None:
     if have_command("gh"):
         _LOGGER.debug("'gh' is already installed")
@@ -433,9 +442,9 @@ def install_glab(*, config_yml: PathLike | None = None) -> None:
 def install_gsed() -> None:
     if have_command("gsed"):
         _LOGGER.debug("'gsed' is already installed")
-        return
-    _LOGGER.info("Installing 'gsed'...")
-    brew_install("gnu-sed")
+    else:
+        _LOGGER.info("Installing 'gsed'...")
+        brew_install("gnu-sed")
     symlink_if_given(LOCAL_BIN / "sed", which("gsed"))
 
 
@@ -944,6 +953,7 @@ __all__ = [
     "install_fd",
     "install_fish",
     "install_fzf",
+    "install_ggrep",
     "install_gh",
     "install_ghostty",
     "install_git",
