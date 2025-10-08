@@ -41,7 +41,7 @@ class _Settings:
         return _Settings(**vars(parser.parse_args()))
 
 
-def _setup_mac_book() -> None:
+def _setup_macbook() -> None:
     _LOGGER.info("Setting up MacBook...")
     setup_mac(
         fish_config=FISH_CONFIG,
@@ -72,4 +72,4 @@ if __name__ == "__main__":
         style="{",
         level="DEBUG" if settings.verbose else "INFO",
     )
-    _setup_mac_book()
+    _setup_macbook()

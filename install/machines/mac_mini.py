@@ -43,7 +43,7 @@ class _Settings:
 
 
 def _setup_mac_mini() -> None:
-    _LOGGER.info("Setting up Mac-Mini...")
+    _LOGGER.info("Setting up Mac Mini...")
     setup_mac(
         fd_ignore=FD_IGNORE,
         fish_config=FISH_CONFIG,
