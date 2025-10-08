@@ -21,6 +21,7 @@ from install.utilities import (
     full_path,
     have_command,
     luarocks_install,
+    mac_app_exists,
     replace_lines,
     run_commands,
     symlink,
@@ -575,7 +576,7 @@ def install_neovim_dependencies() -> None:
 
 
 def install_postico() -> None:
-    if brew_installed("postico"):
+    if mac_app_exists("Postico 2"):
         _LOGGER.debug("'postico' is already installed")
         return
     _LOGGER.info("Installing 'postico'...")

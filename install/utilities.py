@@ -160,6 +160,10 @@ def luarocks_install(package: str, /) -> None:
     run_commands(f"sudo luarocks install {package}")
 
 
+def mac_app_exists(app: str, /) -> bool:
+    return full_path(f"/Applications/{app}.app").is_dir()
+
+
 def replace_line(path: PathLike, from_: str, to: str, /) -> None:
     if not contains_line(path, from_):
         _LOGGER.debug("%r not found in %r", from_, str(path))
@@ -317,6 +321,7 @@ __all__ = [
     "have_command",
     "is_root",
     "luarocks_install",
+    "mac_app_exists",
     "replace_lines",
     "rm",
     "run_commands",
