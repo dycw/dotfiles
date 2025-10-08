@@ -236,7 +236,7 @@ def which(cmd: str, /) -> Path | None:
 def yield_download(url: str, /) -> Iterator[Path]:
     filename = full_path(urlparse(url).path).name
     with TemporaryDirectory() as temp_dir:
-        temp_file = full_path(temp_dir, filename)
+        temp_file = temp_dir / filename
         download(url, temp_file)
         yield temp_file
 

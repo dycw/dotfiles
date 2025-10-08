@@ -3,7 +3,6 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from install import install_shfmt
 from install.groups.common import setup_common
 from install.lib import (
     install_age,
@@ -32,6 +31,8 @@ from install.lib import (
     install_pyright,
     install_ripgrep,
     install_ruff,
+    install_shellcheck,
+    install_shfmt,
     install_sops,
     install_starship,
     install_stylua,
@@ -39,6 +40,8 @@ from install.lib import (
     install_uv,
     install_vim,
     install_watch,
+    install_yq,
+    install_zoxide,
 )
 
 if TYPE_CHECKING:
@@ -96,6 +99,7 @@ def setup_mac(
     install_pyright()  # after brew
     install_ripgrep(ripgreprc=ripgreprc)  # after brew
     install_ruff()  # after brew
+    install_shellcheck()  # after brew
     install_shfmt()  # after brew
     install_sops(age_secret_key=age_secret_key)  # after brew
     install_starship(starship_toml=starship_toml)  # after brew
@@ -104,6 +108,8 @@ def setup_mac(
     install_uv()  # after brew
     install_vim()  # after brew
     install_watch()  # after brew
+    install_yq()  # after brew
+    install_zoxide()  # after brew
     # keyboard international
     # mouse up/down
 

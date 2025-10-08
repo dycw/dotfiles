@@ -1,9 +1,13 @@
 from pathlib import Path
 
 HOME = Path("~").expanduser()
-KNOWN_HOSTS = HOME / ".ssh/known_hosts"
+
+SSH = HOME / ".ssh"
 LOCAL_BIN = HOME / ".local/bin"
 XDG_CONFIG_HOME = HOME / "~/.config"
+
+AUTHORIZED_KEYS = SSH / "authorized_keys"
+KNOWN_HOSTS = SSH / "known_hosts"
 
 
 INSTALL = Path(__file__).parent
@@ -34,6 +38,7 @@ STARSHIP_TOML = STARSHIP / "starship.toml"
 
 
 __all__ = [
+    "AUTHORIZED_KEYS",
     "BOTTOM",
     "BOTTOM_TOML",
     "FD",
@@ -60,6 +65,7 @@ __all__ = [
     "REPO_ROOT",
     "RIPGREP",
     "RIPGREPRC",
+    "SSH",
     "STARSHIP",
     "STARSHIP_TOML",
     "XDG_CONFIG_HOME",

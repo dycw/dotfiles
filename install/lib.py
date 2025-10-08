@@ -2,12 +2,19 @@ from __future__ import annotations
 
 from logging import getLogger
 from os import environ
+from pathlib import Path
 from re import search
 from shutil import which
 from typing import TYPE_CHECKING, assert_never
 from zipfile import ZipFile
 
-from install.constants import HOME, KNOWN_HOSTS, LOCAL_BIN, XDG_CONFIG_HOME
+from install.constants import (
+    AUTHORIZED_KEYS,
+    HOME,
+    KNOWN_HOSTS,
+    LOCAL_BIN,
+    XDG_CONFIG_HOME,
+)
 from install.enums import System
 from install.utilities import (
     TemporaryDirectory,
@@ -602,6 +609,20 @@ def install_ruff() -> None:
             assert_never(never)
 
 
+def install_shellcheck() -> None:
+    if have_command("shellcheck"):
+        _LOGGER.debug("'shellcheck' is already installed")
+        return
+    _LOGGER.info("Installing 'shellcheck'...")
+    match System.identify():
+        case System.mac:
+            brew_install("shellcheck")
+        case System.linux:
+            apt_install("shellcheck")
+        case never:
+            assert_never(never)
+
+
 def install_shfmt() -> None:
     if have_command("shfmt"):
         _LOGGER.debug("'shfmt' is already installed")
@@ -719,12 +740,61 @@ def install_watch() -> None:
     brew_install("watch")
 
 
+def install_yq() -> None:
+    if have_command("yq"):
+        _LOGGER.debug("'yq' is already installed")
+        return
+    _LOGGER.info("Installing 'yq'...")
+    match System.identify():
+        case System.mac:
+            brew_install("yq")
+        case System.linux:
+            path_to = LOCAL_BIN / "yq"
+            with yield_github_latest_download(
+                "mikefarah", "yq", "yq_linux_amd64"
+            ) as binary:
+                cp(binary, path_to, executable=True)
+        case never:
+            assert_never(never)
+
+
+def install_zoxide() -> None:
+    if have_command("zoxide"):
+        _LOGGER.debug("'zoxide' is already installed")
+        return
+    _LOGGER.info("Installing 'zoxide'...")
+    match System.identify():
+        case System.mac:
+            brew_install("zoxide")
+        case System.linux:
+            apt_install("zoxide")
+        case never:
+            assert_never(never)
+
+
 def setup_pdb(*, pdbrc: PathLike | None = None) -> None:
     symlink_if_given(HOME / ".pdbrc", pdbrc)
 
 
 def setup_psql(*, psqlrc: PathLike | None = None) -> None:
     symlink_if_given(HOME / ".psqlrc", psqlrc)
+
+
+def setup_ssh_keys(ssh_keys: PathLike, /) -> None:
+    def run(path: PathLike, /) -> None:
+        keys = [
+            stripped
+            for line in full_path(path).read_text().splitlines()
+            if (stripped := line.strip()) != ""
+        ]
+        joined = "\n".join(keys)
+        _ = AUTHORIZED_KEYS.write_text(joined)
+
+    if isinstance(ssh_keys, Path) or full_path(ssh_keys).is_file():
+        run(ssh_keys)
+        return
+    with yield_download(ssh_keys) as temp_file:
+        run(temp_file)
 
 
 __all__ = [
@@ -761,6 +831,7 @@ __all__ = [
     "install_ripgrep",
     "install_rsync",
     "install_ruff",
+    "install_shellcheck",
     "install_shfmt",
     "install_sops",
     "install_starship",
@@ -769,6 +840,9 @@ __all__ = [
     "install_uv",
     "install_vim",
     "install_watch",
+    "install_yq",
+    "install_zoxide",
     "setup_pdb",
     "setup_psql",
+    "setup_ssh_keys",
 ]

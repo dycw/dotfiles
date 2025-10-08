@@ -33,14 +33,6 @@ def install_python3_13_venv() -> None:
     apt_install("python3.13-venv")
 
 
-def install_shellcheck() -> None:
-    if have_command("shellcheck"):
-        _LOGGER.debug("'shellcheck' is already installed")
-        return
-    _LOGGER.info("Installing 'shellcheck'...")
-    apt_install("shellcheck")
-
-
 def install_spotify() -> None:
     if have_command("spotify"):
         _LOGGER.debug("'spotify' is already installed")
@@ -102,16 +94,6 @@ def install_wezterm() -> None:
     symlink("~/.config/wezterm/wezterm.lua", f"{_get_script_dir()}/wezterm/wezterm.lua")
 
 
-def install_yq() -> None:
-    if have_command("yq"):
-        _LOGGER.debug("'yq' is already installed")
-        return
-    _LOGGER.info("Installing 'yq'...")
-    path_to = f"{_get_local_bin()}/yq"
-    with _yield_github_latest_download("mikefarah", "yq", "yq_linux_amd64") as binary:
-        _copyfile(binary, path_to, executable=True)
-
-
 def install_zoom() -> None:
     if have_command("zoom"):
         _LOGGER.debug("'zoom' is already installed")
@@ -119,32 +101,6 @@ def install_zoom() -> None:
     _LOGGER.info("Installing 'zoom'...")
     apt_install("libxcb-xinerama0", "libxcb-xtest0", "libxcb-cursor0")
     _dpkg_install("zoom_amd64.deb")
-
-
-def install_zoxide() -> None:
-    if have_command("zoxide"):
-        _LOGGER.debug("'zoxide' is already installed")
-        return
-    _LOGGER.info("Installing 'zoxide'...")
-    apt_install("zoxide")
-
-
-def _setup_ssh_keys(ssh_keys: Path | str, /) -> None:
-    if isinstance(ssh_keys, Path) or full_path(ssh_keys).is_file():
-        _setup_ssh_keys_core(ssh_keys)
-        return
-    with _yield_download(ssh_keys) as temp_file:
-        _setup_ssh_keys_core(temp_file)
-
-
-def _setup_ssh_keys_core(path_from: Path | str, /) -> None:
-    keys = [
-        stripped
-        for line in full_path(path_from).read_text().splitlines()
-        if (stripped := line.strip()) != ""
-    ]
-    joined = "\n".join(keys)
-    _ = full_path("~/.ssh/authorized_keys").write_text(joined)
 
 
 def _setup_sshd() -> None:

@@ -33,6 +33,7 @@ from install.lib import (
     install_ripgrep,
     install_rsync,
     install_ruff,
+    install_shellcheck,
     install_shfmt,
     install_sops,
     install_starship,
@@ -40,6 +41,9 @@ from install.lib import (
     install_syncthing,
     install_uv,
     install_vim,
+    install_yq,
+    install_zoom,
+    install_zoxide,
 )
 
 if TYPE_CHECKING:
@@ -89,12 +93,15 @@ def setup_linux(
     install_neovim(nvim_dir=nvim_dir)
     install_ripgrep(ripgreprc=ripgreprc)
     install_rsync()
+    install_shellcheck()
     install_shfmt()
     install_sops(age_secret_key=age_secret_key)
     install_starship(starship_toml=starship_toml)
     install_stylua()
     install_syncthing()
     install_vim()
+    install_yq()
+    install_zoxide()
     install_docker()  # after curl
     install_fish(  # after curl
         config=fish_config, env=fish_env, git=fish_git, work=fish_work
