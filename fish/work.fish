@@ -31,7 +31,8 @@ function mount-shared-drive
     if test (count $argv) -eq 0
         echo "'mount-shared-drive' expected [1..) arguments SUBNET; got $(count $argv)" >&2; and return 1
     end
-    set -l dir /mnt/qrt-$subnet
+    set -l subnet $argv[1]
+    set -l dir
     switch (uname)
         case Darwin
             set dir /Volumes/qrt-$subnet
@@ -40,19 +41,9 @@ function mount-shared-drive
         case *
             echo "Invalid OS; got '$(uname)'" >&2; and return 1
     end
-    sudo mkdir -p $dir
-    set -l subnet $argv[1]
+    sudo command mkdir -p $dir
     set -l pool_name
     set -l dataset_name
-    switch (uname)
-        case Darwin
-            set dir /Volumes/qrt-$subnet
-        case Linux
-            set dir /mnt/qrt-$subnet
-        case *
-            echo "Invalid OS; got '$(uname)'" >&2; and return 1
-    end
-    sudo mkdir -p $dir
     switch $subnet
         case main
             set pool_name mypool

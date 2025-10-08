@@ -374,6 +374,16 @@ if type -q tailscale; and type -q tailscaled
         sudo tailscale up --accept-dns --accept-routes --auth-key="file:$TAILSCALE_AUTH_KEY" \
             --login-server="$TAILSCALE_LOGIN_SERVER" --reset
     end
+    function ts-down
+        echo "Stopping 'tailscale'..."
+        sudo tailscale down
+        echo "Logging out of 'tailscale'..."
+        sudo tailscale logout
+        echo "Cleaning 'tailscaled'..."
+        sudo tailscaled --cleanup
+        echo "Killing 'tailscaled'..."
+        sudo pkill tailscaled
+    end
     function ts-exit-node
         sudo tailscale set --exit-node=qrt-nanode
     end
@@ -381,7 +391,6 @@ if type -q tailscale; and type -q tailscaled
         sudo tailscale set --exit-node=
     end
 end
-
 # tmux
 function tmux-conf
     $EDITOR $HOME/dotfiles/tmux/tmux.conf.local
