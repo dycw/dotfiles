@@ -718,6 +718,7 @@ __all__ = [
     "install_starship",
     "install_uv",
     "install_vim",
+    "install_watch",
     "setup_pdb",
     "setup_psql",
 ]

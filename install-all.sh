@@ -206,10 +206,7 @@ brew_install rename
 [ -n "${IS_MAC}" ] && brew_install rlwrap
 brew_install rust-analyzer
 brew_install shellcheck
-brew_install shfmt
-brew_install sops
 [ -n "${IS_MAC_MINI}" ] && brew_install spotify --cask
-brew_install starship
 brew_install stylua
 [ -n "${IS_MAC_MINI_DW}" ] && brew_install syncthing
 brew_install tailscale

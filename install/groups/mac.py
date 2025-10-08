@@ -98,6 +98,7 @@ def setup_mac(
     install_starship(starship_toml=starship_toml)  # after brew
     install_uv()  # after brew
     install_vim()  # after brew
+    install_watch()  # after brew
     # keyboard international
     # mouse up/down
 
