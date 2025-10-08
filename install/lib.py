@@ -653,6 +653,25 @@ def install_sops(*, age_secret_key: PathLike | None = None) -> None:
     symlink_if_given(XDG_CONFIG_HOME / "sops/age/keys.txt", age_secret_key)
 
 
+def install_spotify() -> None:
+    if have_command("spotify"):
+        _LOGGER.debug("'spotify' is already installed")
+        return
+    _LOGGER.info("Installing 'spotify'...")
+    match System.identify():
+        case System.mac:
+            brew_install("spotify", cask=True)
+        case System.linux:
+            check_for_commands("curl")
+            run_commands(
+                "curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg",
+                'echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list',
+            )
+            apt_install("spotify-client")
+        case never:
+            assert_never(never)
+
+
 def install_starship(*, starship_toml: PathLike | None = None) -> None:
     if have_command("starship"):
         _LOGGER.debug("'starship' is already installed")
@@ -698,6 +717,35 @@ def install_syncthing() -> None:
             apt_install("syncthing")
         case never:
             assert_never(never)
+
+
+def install_tailscale(*, auth_key: PathLike | None = None) -> None:
+    if have_command("tailscale"):
+        _LOGGER.debug("'tailscale' is already installed")
+    else:
+        _LOGGER.info("Installing 'tailscale'...")
+        match System.identify():
+            case System.mac:
+                brew_install("syncthing")
+            case System.linux:
+                check_for_commands("curl")
+                run_commands("curl -fsSL https://tailscale.com/install.sh | sh")
+            case never:
+                assert_never(never)
+    try:
+        path_from = environ["TAILSCALE_AUTH_KEY"]
+    except KeyError:
+        pass
+    else:
+        if isinstance(auth_key, Path) or (
+            isinstance(auth_key, str) and full_path(auth_key).exists()
+        ):
+            symlink_if_given(path_from, auth_key)
+        elif isinstance(auth_key, str):
+            with TemporaryDirectory() as temp_dir:
+                temp_file = temp_dir.joinpath("auth-key.txt")
+                _ = temp_file.write_text(auth_key)
+                symlink_if_given(path_from, temp_dir)
 
 
 def install_tmux(
@@ -810,7 +858,7 @@ def setup_ssh_keys(ssh_keys: PathLike, /) -> None:
         joined = "\n".join(keys)
         _ = (SSH / "authorized_keys").write_text(joined)
 
-    if isinstance(ssh_keys, Path) or full_path(ssh_keys).is_file():
+    if isinstance(ssh_keys, Path) or full_path(ssh_keys).exists():
         run(ssh_keys)
         return
     with yield_download(ssh_keys) as temp_file:
@@ -863,9 +911,11 @@ __all__ = [
     "install_shellcheck",
     "install_shfmt",
     "install_sops",
+    "install_spotify",
     "install_starship",
     "install_stylua",
     "install_syncthing",
+    "install_tailscale",
     "install_tmux",
     "install_uv",
     "install_vim",

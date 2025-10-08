@@ -38,6 +38,7 @@ from install.lib import (
     install_starship,
     install_stylua,
     install_syncthing,
+    install_tailscale,
     install_tmux,
     install_uv,
     install_vim,
@@ -70,6 +71,7 @@ def setup_mac(
     psqlrc: PathLike | None = None,
     ripgreprc: PathLike | None = None,
     starship_toml: PathLike | None = None,
+    tailscale_auth_key: PathLike | None = None,
     tmux_conf_oh_my_tmux: PathLike | None = None,
     tmux_conf_local: PathLike | None = None,
 ) -> None:
@@ -111,6 +113,7 @@ def setup_mac(
     install_starship(starship_toml=starship_toml)  # after brew
     install_stylua()  # after brew
     install_syncthing()  # after brew
+    install_tailscale(auth_key=tailscale_auth_key)  # after brew
     install_tmux(  # after brew
         tmux_conf_oh_my_tmux=tmux_conf_oh_my_tmux, tmux_conf_local=tmux_conf_local
     )

@@ -23,6 +23,7 @@ from install.constants import (
     TMUX_CONF_OH_MY_TMUX,
 )
 from install.groups.mac import setup_mac
+from install.lib import install_spotify
 
 _LOGGER = getLogger(__name__)
 
@@ -59,6 +60,7 @@ def _setup_mac_mini() -> None:
         tmux_conf_oh_my_tmux=TMUX_CONF_OH_MY_TMUX,
         tmux_conf_local=TMUX_CONF_LOCAL,
     )
+    install_spotify()
 
 
 if __name__ == "__main__":

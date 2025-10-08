@@ -39,6 +39,7 @@ from install.lib import (
     install_starship,
     install_stylua,
     install_syncthing,
+    install_tailscale,
     install_tmux,
     install_uv,
     install_vim,
@@ -70,6 +71,7 @@ def setup_linux(
     psqlrc: PathLike | None = None,
     ripgreprc: PathLike | None = None,
     starship_toml: PathLike | None = None,
+    tailscale_auth_key: PathLike | None = None,
     tmux_conf_oh_my_tmux: PathLike | None = None,
     tmux_conf_local: PathLike | None = None,
 ) -> None:
@@ -113,6 +115,7 @@ def setup_linux(
     install_fish(  # after curl
         config=fish_config, env=fish_env, git=fish_git, work=fish_work
     )
+    install_tailscale(auth_key=tailscale_auth_key)  # after curl
     install_uv()  # after curl
     install_luacheck()  # after lurocks
     install_bump_my_version()  # after uv
