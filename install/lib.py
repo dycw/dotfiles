@@ -460,7 +460,7 @@ def install_iperf3() -> None:
         case System.mac:
             brew_install("iperf3")
         case System.linux:
-            apt_install("iperf3")
+            apt_install("iperf3", env={"DEBIAN_FRONTEND": "noninteractive"})
         case never:
             assert_never(never)
 

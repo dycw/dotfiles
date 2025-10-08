@@ -24,13 +24,13 @@ if TYPE_CHECKING:
 _LOGGER = getLogger(__name__)
 
 
-def apt_install(*packages: str) -> None:
+def apt_install(*packages: str, env: Mapping[str, str | None] | None = None) -> None:
     check_for_commands("apt")
     apt_update()
     desc = ", ".join(map(repr, packages))
     _LOGGER.info("Installing %s...", desc)
     joined = " ".join(packages)
-    run_commands(f"sudo apt -y install {joined}")
+    run_commands(f"sudo apt -y install {joined}", env=env)
 
 
 def apt_update() -> None:
