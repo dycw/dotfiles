@@ -26,7 +26,7 @@ class _Settings:
         return _Settings(**vars(parser.parse_args()))
 
 
-def _main(*, verbose: bool = False) -> None:
+def _setup_macbook_remote(*, verbose: bool = False) -> None:
     _LOGGER.info("Setting up Macbook remotely...")
     with TemporaryDirectory() as _temp_dir:
         temp_dir = Path(_temp_dir)
@@ -59,4 +59,4 @@ if __name__ == "__main__":
         style="{",
         level="DEBUG" if settings.verbose else "INFO",
     )
-    _main()
+    _setup_macbook_remote()
