@@ -34,6 +34,7 @@ from install.lib import (
     install_pyright,
     install_restic,
     install_ripgrep,
+    install_rlwrap,
     install_ruff,
     install_shellcheck,
     install_shfmt,
@@ -47,6 +48,7 @@ from install.lib import (
     install_uv,
     install_vim,
     install_watch,
+    install_watchexec,
     install_wezterm,
     install_yq,
     install_zoxide,
@@ -91,7 +93,6 @@ def setup_mac(
     install_bump_my_version()  # after brew
     install_delta()  # after brew
     install_direnv()  # after brew
-    # !unsure    install_dropbox()  # after brew
     install_dust()  # after brew
     install_eza()  # after brew
     install_fd(ignore=fd_ignore)
@@ -115,6 +116,7 @@ def setup_mac(
     install_pyright()  # after brew
     install_restic()  # after brew
     install_ripgrep(ripgreprc=ripgreprc)  # after brew
+    install_rlwrap()  # after brew
     install_ruff()  # after brew
     install_shellcheck()  # after brew
     install_shfmt()  # after brew
@@ -130,7 +132,8 @@ def setup_mac(
     install_uv()  # after brew
     install_vim()  # after brew
     install_watch()  # after brew
-    install_wezterm(wezterm_lua=wezterm_lua)
+    install_watchexec()  # after brew
+    install_wezterm(wezterm_lua=wezterm_lua)  # after brew
     install_yq()  # after brew
     install_zoxide()  # after brew
     setup_sshd()  # after gsed

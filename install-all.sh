@@ -152,13 +152,7 @@ brew_install asciinema
 brew_install prettier
 [ -n "${IS_MAC_MINI}" ] && brew_install redis-stack --cask
 brew_install rename
-[ -n "${IS_MAC}" ] && brew_install rlwrap
 brew_install rust-analyzer
-[ -n "${IS_MAC_MINI}" ] && brew_install transmission --cask
-[ -n "${IS_MAC_MINI}" ] && brew_install visual-studio-code --cask
-[ -n "${IS_MAC_MINI}" ] && brew_install vlc --cask
-brew_install watchexec
-[ -n "${IS_MAC_MINI}" ] && brew_install whatsapp --cask
 [ -n "${IS_UBUNTU}" ] && brew_install xclip
 [ -n "${IS_UBUNTU}" ] && brew_install xsel
 
