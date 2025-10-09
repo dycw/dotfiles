@@ -426,7 +426,7 @@ def install_gitweb() -> None:
             with yield_github_latest_download(
                 "yoannfleurydev", "gitweb", "gitweb-linux"
             ) as binary:
-                cp(binary, path_to, executable=True)
+                cp(binary, path_to, executable=True, ownership=True)
         case never:
             assert_never(never)
 
