@@ -461,9 +461,17 @@ end
 
 function remove-remote
     if test (count $argv) -lt 1
-        echo "'remove' expected [1..) arguments NAME; got $(count $argv)" >&2; and return 1
+        echo "'remove-remote' expected [1..) arguments NAME; got $(count $argv)" >&2; and return 1
     end
     git remote remove $argv
+end
+
+function set-remote
+    if test (count $argv) -lt 2
+        echo "'set-remote' expected [2..) arguments NAME URL; got $(count $argv)" >&2; and return 1
+    end
+    git remote set-url $argv; or return $status
+    git remote set-url --push $argv
 end
 
 function grem
