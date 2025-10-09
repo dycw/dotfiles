@@ -51,7 +51,6 @@ from install.lib import (
     install_xclip,
     install_yq,
     install_zoxide,
-    setup_sshd,
 )
 
 if TYPE_CHECKING:
@@ -76,6 +75,7 @@ def setup_linux(
     pdbrc: PathLike | None = None,
     psqlrc: PathLike | None = None,
     ripgreprc: PathLike | None = None,
+    ssh_config: PathLike | None = None,
     starship_toml: PathLike | None = None,
     tailscale_auth_key: PathLike | None = None,
     tmux_conf_oh_my_tmux: PathLike | None = None,
@@ -83,8 +83,7 @@ def setup_linux(
     wezterm_lua: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up Linux...")
-    setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
-    setup_sshd()
+    setup_common(pdbrc=pdbrc, psqlrc=psqlrc, ssh_config=ssh_config)
     install_age()
     install_build_essential()
     install_curl()

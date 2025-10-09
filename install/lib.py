@@ -8,7 +8,7 @@ from shutil import which
 from typing import TYPE_CHECKING, assert_never
 from zipfile import ZipFile
 
-from install.constants import HOME, LOCAL_BIN, SSH, SSHD_CONFIG, XDG_CONFIG_HOME
+from install.constants import HOME, LOCAL_BIN, SSH, XDG_CONFIG_HOME
 from install.enums import System
 from install.utilities import (
     TemporaryDirectory,
@@ -1047,6 +1047,10 @@ def setup_psql(*, psqlrc: PathLike | None = None) -> None:
     symlink_if_given(HOME / ".psqlrc", psqlrc)
 
 
+def setup_ssh(*, config: PathLike | None = None) -> None:
+    symlink_if_given(SSH / ".config", config)
+
+
 def setup_ssh_keys(ssh_keys: PathLike, /) -> None:
     def run(path: PathLike, /) -> None:
         keys = [
@@ -1066,7 +1070,7 @@ def setup_ssh_keys(ssh_keys: PathLike, /) -> None:
 
 def setup_sshd() -> None:
     replace_lines(
-        SSHD_CONFIG,
+        "/etc/ssh/sshd_config",
         ("#PermitRootLogin prohibit-password", "PermitRootLogin no"),
         ("#PubkeyAuthentication yes", "PubkeyAuthentication yes"),
         ("#PasswordAuthentication yes", "PasswordAuthentication no"),
@@ -1139,5 +1143,7 @@ __all__ = [
     "install_zoxide",
     "setup_pdb",
     "setup_psql",
+    "setup_ssh",
     "setup_ssh_keys",
+    "setup_sshd",
 ]

@@ -1,9 +1,5 @@
 from pathlib import Path
 
-ETC = Path("/etc")
-SSHD_CONFIG = ETC / "ssh/sshd_config"
-
-
 HOME = Path("~").expanduser()
 XDG_CONFIG_HOME = HOME / ".config"
 LOCAL_BIN = HOME / ".local/bin"
@@ -27,6 +23,7 @@ NVIM = REPO_ROOT / "nvim"
 PDBRC = REPO_ROOT / "pdb/pdbrc"
 PSQLRC = REPO_ROOT / "psql/psqlrc"
 RIPGREPRC = REPO_ROOT / "ripgrep/ripgreprc"
+SSH_CONFIG = REPO_ROOT / "ssh/config"
 STARSHIP_TOML = REPO_ROOT / "starship/starship.toml"
 _tmux = REPO_ROOT / "tmux"
 TMUX_CONF_OH_MY_TMUX = _tmux / ".tmux/.tmux.conf"
@@ -36,7 +33,6 @@ WEZTERM_LUA = XDG_CONFIG_HOME / "wezterm/wezterm.lua"
 
 __all__ = [
     "BOTTOM_TOML",
-    "ETC",
     "FD_IGNORE",
     "FISH_CONFIG",
     "FISH_ENV",
@@ -54,7 +50,7 @@ __all__ = [
     "REPO_ROOT",
     "RIPGREPRC",
     "SSH",
-    "SSHD_CONFIG",
+    "SSH_CONFIG",
     "STARSHIP_TOML",
     "TMUX_CONF_LOCAL",
     "TMUX_CONF_OH_MY_TMUX",
