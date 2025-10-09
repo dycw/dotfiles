@@ -267,7 +267,14 @@ def touch(path: PathLike, /) -> None:
 
 def update_submodules() -> None:
     _LOGGER.info("Updating submodules...")
-    run_commands("git submodule update")
+    run_commands(
+        "git submodule update --init --recursive",
+        """git submodule foreach --recursive '
+            git checkout -- . &&
+            git checkout $(git symbolic-ref refs/remotes/origin/HEAD | sed "s#.*/##") &&
+            git pull --ff-only
+        '""",
+    )
 
 
 def uv_tool_install(tool: str, /) -> None:
