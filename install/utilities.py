@@ -6,7 +6,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager, suppress
 from grp import getgrgid
 from logging import getLogger
-from os import environ, getenv, geteuid, getgid, getuid
+from os import environ, getegid, getenv, geteuid
 from pathlib import Path
 from pwd import getpwuid
 from re import search
@@ -82,14 +82,17 @@ def chmod(path: PathLike, /) -> None:
 def chown(path: PathLike, /) -> None:
     path = full_path(path)
     stat = path.stat()
-    uid, gid = getuid(), getgid()
-    user = getpwuid(uid).pw_name
-    group = getgrgid(gid).gr_name
-    if (stat.st_uid == uid) and (stat.st_gid == gid):
-        _LOGGER.debug("%r is already owned by '%s:%s'", str(path), user, group)
+    file_user, curr_user = [getpwuid(i).pw_name for i in [geteuid(), stat.st_uid]]
+    file_group, curr_group = [getgrgid(i).gr_name for i in [getegid(), stat.st_gid]]
+    if (file_user == curr_user) and (file_group == curr_group):
+        _LOGGER.debug(
+            "%r is already owned by '%s:%s'", str(path), file_user, file_group
+        )
         return
-    _LOGGER.info("Setting ownership of %r to '%s:%s'...", str(path), user, group)
-    run_commands(f"chown {uid}:{gid} {path}")
+    _LOGGER.info(
+        "Setting ownership of %r to '%s:%s'...", str(path), file_user, file_group
+    )
+    run_commands(f"sudo chown {curr_user}:{curr_group} {path}")
 
 
 def contains_line(path: PathLike, text: str, /, *, flags: int = 0) -> bool:
