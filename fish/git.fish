@@ -632,7 +632,7 @@ function gta
         set tag $argv[1]
         set sha $argv[2]
         git tag -a "$tag" "$sha" -m "$tag"; or return $status
-        git push --set-upstream origin --tags; or return $status
+        git push --tags --force --set-upstream origin; or return $status
         set argv $argv[3..-1]
     end
     __git_log -n 20
