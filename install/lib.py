@@ -152,7 +152,7 @@ def install_curl() -> None:
         _LOGGER.debug("'curl' is already installed")
         return
     _LOGGER.info("Installing 'curl'...")
-    apt_install("git")
+    apt_install("curl")
 
 
 def install_delta() -> None:
