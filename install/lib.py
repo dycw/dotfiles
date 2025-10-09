@@ -635,7 +635,7 @@ def install_pyright() -> None:
 
 
 def install_restic() -> None:
-    if brew_installed("restic"):
+    if have_command("restic"):
         _LOGGER.debug("'restic' is already installed")
         return
     _LOGGER.info("Installing 'restic'...")
@@ -643,7 +643,7 @@ def install_restic() -> None:
         case System.mac:
             brew_install("restic")
         case System.linux:
-            uv_tool_install("restic")
+            apt_install("restic")
         case never:
             assert_never(never)
 
@@ -846,7 +846,7 @@ def install_topgrade() -> None:
         case System.mac:
             brew_install("topgrade")
         case System.linux:
-            raise NotImplementedError
+            _LOGGER.warning("\n\n\n\ntopgrade: not implemented\n\n\n\n")
         case never:
             assert_never(never)
 
@@ -976,6 +976,14 @@ def install_whatsapp() -> None:
         return
     _LOGGER.info("Installing 'whatsapp'...")
     brew_install("whatsapp", cask=True)
+
+
+def install_xclip() -> None:
+    if have_command("xclip"):
+        _LOGGER.debug("'xclip' is already installed")
+        return
+    _LOGGER.info("Installing 'xclip'...")
+    apt_install("xclip")
 
 
 def install_yq() -> None:
@@ -1125,6 +1133,7 @@ __all__ = [
     "install_watchexec",
     "install_wezterm",
     "install_whatsapp",
+    "install_xclip",
     "install_yq",
     "install_zoom",
     "install_zoxide",
