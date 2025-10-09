@@ -74,11 +74,11 @@ export TAILSCALE_AUTH_KEY=$XDG_CONFIG_HOME/tailscale/auth-key.txt
 
 # tmux
 if test -z "$TMUX"
-    set -l count (tmux ls ^/dev/null | wc -l)
+    set -l count (tmux ls | wc -l)
     if test "$count" -eq 0
         tmux new
     else if test "$count" -eq 1
-        tmux attach -t (tmux ls | cut -d: -f1)
+        tmux attach
     else
         echo "Detected $count tmux sessions detected
  skipping auto-new/attach"
