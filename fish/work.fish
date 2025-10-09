@@ -21,7 +21,7 @@ if type -q git
         if test (count $argv) -ge 2
             set args $args --dir $argv[2]
         end
-        __git_clone --repo ssh://git@gitlab.main:2424/qrt/$argv[1] $args
+        __git_clone --repo ssh://git@gitlab:2424/qrt/$argv[1] $args
     end
 
 end
@@ -76,6 +76,12 @@ if not test -L $ssh_to; or not test (readlink $ssh_to) = $ssh_from
 end
 
 # work
-if test -f $HOME/work/infra/shell/fish.fish
-    source $HOME/work/infra/shell/fish.fish
+set -l infra
+if test -d $HOME/work/infra
+    set infra $HOME/work/infra
+else if test -d $HOME/work-gitlab/infra
+    set infra $HOME/work/infra-gitlab
+end
+if set -q infra; and test -f $infra/shell/fish.fish
+    source $infra/shell/fish.fish
 end
