@@ -82,15 +82,15 @@ def chmod(path: PathLike, /) -> None:
 def chown(path: PathLike, /) -> None:
     path = full_path(path)
     stat = path.stat()
-    file_user, curr_user = [getpwuid(i).pw_name for i in [geteuid(), stat.st_uid]]
-    file_group, curr_group = [getgrgid(i).gr_name for i in [getegid(), stat.st_gid]]
+    file_user, curr_user = [getpwuid(i).pw_name for i in [stat.st_uid, geteuid()]]
+    file_group, curr_group = [getgrgid(i).gr_name for i in [stat.st_gid, getegid()]]
     if (file_user == curr_user) and (file_group == curr_group):
         _LOGGER.debug(
-            "%r is already owned by '%s:%s'", str(path), file_user, file_group
+            "%r is already owned by '%s:%s'", str(path), curr_user, curr_group
         )
         return
     _LOGGER.info(
-        "Setting ownership of %r to '%s:%s'...", str(path), file_user, file_group
+        "Setting ownership of %r to '%s:%s'...", str(path), curr_user, curr_group
     )
     run_commands(f"sudo chown {curr_user}:{curr_group} {path}")
 
