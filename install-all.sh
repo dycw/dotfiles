@@ -144,7 +144,6 @@ brew_install asciinema
 [ -n "${IS_MAC_MINI}" ] && brew_install cargo-nextest
 [ -n "${IS_MAC_MINI}" ] && brew_install db-browser-for-sqlite --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install libreoffice --cask
-[ -n "${IS_MAC_MINI}" ] && brew_install maturin
 # brew_install node > brew link --overwrite node
 [ -n "${IS_MAC_MINI}" ] && brew_install pgadmin4 --cask
 [ -n "${IS_MAC_MINI}" ] && brew_install pgcli

@@ -541,6 +541,20 @@ def install_macchanger() -> None:
             assert_never(never)
 
 
+def install_maturin() -> None:
+    if have_command("maturin"):
+        _LOGGER.debug("'maturin' is already installed")
+        return
+    _LOGGER.info("Installing 'maturin'...")
+    match System.identify():
+        case System.mac:
+            brew_install("maturin")
+        case System.linux:
+            uv_tool_install("maturin")
+        case never:
+            assert_never(never)
+
+
 def install_neovim(*, nvim_dir: PathLike | None = None) -> None:
     if have_command("nvim"):
         _LOGGER.debug("'neovim' is already installed")
@@ -1079,6 +1093,7 @@ __all__ = [
     "install_luacheck",
     "install_luarocks",
     "install_macchanger",
+    "install_maturin",
     "install_neovim",
     "install_neovim_dependencies",
     "install_postico",

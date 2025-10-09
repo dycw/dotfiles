@@ -29,6 +29,7 @@ from install.lib import (
     install_just,
     install_luacheck,
     install_macchanger,
+    install_maturin,
     install_neovim,
     install_pre_commit,
     install_pyright,
@@ -111,6 +112,7 @@ def setup_mac(
     install_just()  # after brew
     install_luacheck()  # after brew
     install_macchanger()  # after brew
+    install_maturin()  # after brew
     install_neovim(nvim_dir=nvim_dir)  # after brew
     install_pre_commit()  # after brew
     install_pyright()  # after brew
