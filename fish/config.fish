@@ -452,21 +452,19 @@ function tmux-conf
 end
 if type -q tmux
     function tmux-attach
-        set -l target
         if test (count $argv) -eq 0
-            set -l count (tmux ls ^/dev/null | wc -l)
+            set -l count (tmux ls | wc -l)
             if test "$count" -eq 0
                 tmux new
                 return
             else if test "$count" -eq 1
-                set target (tmux ls | cut -d: -f1)
+                tmux attach
             else
                 echo "'tmux-attach' expected [1..) arguments SESSION; got "(count $argv) >&2; and return 1
             end
         else
-            set target $argv[1]
+            tmux attach -t $argv[1]
         end
-        tmux attach -t $target
     end
     function tmux-reload
         tmux source-file $XDG_CONFIG_HOME/tmux/tmux.conf
