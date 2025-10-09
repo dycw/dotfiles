@@ -27,6 +27,7 @@ from install.lib import (
     install_luacheck,
     install_luarocks,
     install_macchanger,
+    install_maturin,
     install_neovim,
     install_neovim_dependencies,
     install_pre_commit,
@@ -128,6 +129,7 @@ def setup_linux(
     install_yq()  # after curl, jq
     install_luacheck()  # after lurocks
     install_bump_my_version()  # after uv
+    install_maturin()  # after uv
     install_pre_commit()  # after uv
     install_pyright()  # after uv
     install_ruff()  # after uv
