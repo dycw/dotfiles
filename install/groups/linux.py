@@ -48,6 +48,7 @@ from install.lib import (
     install_uv,
     install_vim,
     install_wezterm,
+    install_xclip,
     install_yq,
     install_zoxide,
     setup_sshd,
@@ -114,6 +115,7 @@ def setup_linux(
         tmux_conf_oh_my_tmux=tmux_conf_oh_my_tmux, tmux_conf_local=tmux_conf_local
     )
     install_vim()
+    install_xclip()
     install_zoxide()
     install_docker()  # after curl
     install_fish(  # after curl

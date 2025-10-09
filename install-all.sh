@@ -152,8 +152,6 @@ brew_install prettier
 [ -n "${IS_MAC_MINI}" ] && brew_install redis-stack --cask
 brew_install rename
 brew_install rust-analyzer
-[ -n "${IS_UBUNTU}" ] && brew_install xclip
-[ -n "${IS_UBUNTU}" ] && brew_install xsel
 
 # brew/services
 brew_services() {
@@ -199,8 +197,6 @@ apt_install() {
 	fi
 }
 if [ -n "${IS_UBUNTU}" ]; then
-	apt_install curl
-	apt_install git
 	apt_install libgtk-3-0 # for keymapp
 	apt_install libpq-dev
 	apt_install libusb-1.0-0  # for keymapp
