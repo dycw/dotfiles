@@ -65,6 +65,16 @@ function mount-shared-drive
     end
 end
 
+# SSH
+set -l ssh_to $HOME/.ssh/config.d/gitlab
+set -l ssh_from $HOME/work/infra/gitlab/ssh-config
+if not test -L $ssh_to; or not test (readlink $ssh_to) = $ssh_from
+    if test -e $ssh_to
+        rm $ssh_to
+    end
+    ln -s $ssh_from $ssh_to
+end
+
 # work
 if test -f $HOME/work/infra/shell/fish.fish
     source $HOME/work/infra/shell/fish.fish

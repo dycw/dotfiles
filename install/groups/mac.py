@@ -53,7 +53,6 @@ from install.lib import (
     install_wezterm,
     install_yq,
     install_zoxide,
-    setup_sshd,
 )
 
 if TYPE_CHECKING:
@@ -78,6 +77,7 @@ def setup_mac(
     pdbrc: PathLike | None = None,
     psqlrc: PathLike | None = None,
     ripgreprc: PathLike | None = None,
+    ssh_config: PathLike | None = None,
     starship_toml: PathLike | None = None,
     tailscale_auth_key: PathLike | None = None,
     tmux_conf_oh_my_tmux: PathLike | None = None,
@@ -85,7 +85,7 @@ def setup_mac(
     wezterm_lua: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up Mac...")
-    setup_common(pdbrc=pdbrc, psqlrc=psqlrc)
+    setup_common(pdbrc=pdbrc, psqlrc=psqlrc, ssh_config=ssh_config)
     install_brew()
     install_git(config=git_config, ignore=git_ignore)
     install_age()  # after brew
@@ -138,7 +138,6 @@ def setup_mac(
     install_wezterm(wezterm_lua=wezterm_lua)  # after brew
     install_yq()  # after brew
     install_zoxide()  # after brew
-    setup_sshd()  # after gsed
     # keyboard international
     # mouse up/down
 

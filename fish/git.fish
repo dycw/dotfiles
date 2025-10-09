@@ -451,7 +451,22 @@ end
 
 # remote
 
-function gre
+function add-remote
+    if test (count $argv) -lt 2
+        echo "'add-remote' expected [2..) arguments NAME URL; got $(count $argv)" >&2; and return 1
+    end
+    git remote add $argv
+    git remote set-url --push $argv
+end
+
+function remove-remote
+    if test (count $argv) -lt 1
+        echo "'remove' expected [1..) arguments NAME; got $(count $argv)" >&2; and return 1
+    end
+    git remote remove $argv
+end
+
+function grem
     git remote -v
 end
 
@@ -502,7 +517,7 @@ end
 
 # restore
 
-function gre
+function gres
     git restore $argv
 end
 
