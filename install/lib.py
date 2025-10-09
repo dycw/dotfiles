@@ -141,6 +141,7 @@ def install_brew() -> None:
         _LOGGER.debug("'brew' is already installed")
         return
     _LOGGER.info("Installing 'brew'...")
+    check_for_commands("curl")
     run_commands(
         "curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash",
         env={"NONINTERACTIVE": "1"},
@@ -953,11 +954,11 @@ def install_wezterm(*, wezterm_lua: PathLike | None = None) -> None:
         _LOGGER.debug("'wezterm' is already installed")
     else:
         _LOGGER.info("Installing 'wezterm'...")
-        check_for_commands("curl")
         match System.identify():
             case System.mac:
                 brew_install("wezterm", cask=True)
             case System.linux:
+                check_for_commands("curl")
                 run_commands(
                     "curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg",
                     "echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list",
