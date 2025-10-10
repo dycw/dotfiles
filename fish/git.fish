@@ -73,7 +73,7 @@ end
 
 function gbm
     if test (count $argv) -lt 1
-        echo "'gbm' expected [1..) arguments BRANCH; got $(count $argv)" >&2; and return 1
+        echo "'gbm' expected [1..) arguments BRANCH: got $(count $argv)" >&2; and return 1
     end
     git branch -m $argv
 end
@@ -117,7 +117,7 @@ function gcb
     else if test (count $argv) -eq 3
         set args $args --title $argv[1] --num $argv[2] --part
     else
-        echo "'gcb' expected [0..3] arguments TITLE NUM PART; got $(count $argv)" >&2; and return 1
+        echo "'gcb' expected [0..3] arguments TITLE NUM PART: got $(count $argv)" >&2; and return 1
     end
     __git_checkout_open $args
 end
@@ -129,7 +129,7 @@ function gcbr
     else if test (count $argv) -eq 1
         set branch $argv[1]
     else
-        echo "'gcbt' expected [0..1] arguments BRANCH; got "(count $argv) >&2; and return 1
+        echo "'gcbt' expected [0..1] arguments BRANCH: got "(count $argv) >&2; and return 1
     end
     git checkout -b $branch -t origin/$branch
 end
@@ -192,7 +192,7 @@ function __git_checkout_open
     if test -n "$_flag_title"
         set title $_flag_title
     else
-        set title (__auto_msg)
+        set title (__auto_msg); or return $status
     end
     set -l args
     if test -n "$_flag_num"
@@ -207,7 +207,7 @@ end
 
 function __git_checkout_close
     if test (count $argv) -lt 1
-        echo "'__git_checkout_close' expected [1..) arguments TARGET; got $(count $argv)" >&2; and return 1
+        echo "'__git_checkout_close' expected [1..) arguments TARGET: got $(count $argv)" >&2; and return 1
     end
     argparse delete exit -- $argv; or return $status
     set -l target $argv[1]
@@ -232,7 +232,7 @@ end
 
 function gcl
     if test (count $argv) -lt 1
-        echo "'gcl' expected [1..2) arguments REPO DIR; got $(count $argv)" >&2; and return 1
+        echo "'gcl' expected [1..2) arguments REPO DIR: got $(count $argv)" >&2; and return 1
     end
     set -l args
     if test (count $argv) -ge 2
@@ -272,13 +272,13 @@ function __git_commit
     if test -n "$_flag_message"
         set message $_flag_message
     else
-        set message (__auto_msg)
+        set message (__auto_msg); or return $status
     end
     set -l args
     if test $_flag_no_verify
         set args $args --no-verify
     end
-    git commit --message="'$message'" $args; or return $status
+    git commit --message="'$message'" $args
 end
 
 function __git_commit_until
@@ -419,7 +419,7 @@ function __git_push
     if test -n "$_flag_force"
         set args $args --force
     end
-    set args $args --set-upstream origin (current-branch)
+    set args $args --set-upstream origin (current-branch); or return $status
     if test -n "$_flag_no_verify"
         set args $args --no-verify
     end
@@ -453,7 +453,7 @@ end
 
 function add-remote
     if test (count $argv) -lt 2
-        echo "'add-remote' expected [2..) arguments NAME URL; got $(count $argv)" >&2; and return 1
+        echo "'add-remote' expected [2..) arguments NAME URL: got $(count $argv)" >&2; and return 1
     end
     git remote add $argv
     git remote set-url --push $argv
@@ -461,14 +461,14 @@ end
 
 function remove-remote
     if test (count $argv) -lt 1
-        echo "'remove-remote' expected [1..) arguments NAME; got $(count $argv)" >&2; and return 1
+        echo "'remove-remote' expected [1..) arguments NAME: got $(count $argv)" >&2; and return 1
     end
     git remote remove $argv
 end
 
 function set-remote
     if test (count $argv) -lt 2
-        echo "'set-remote' expected [2..) arguments NAME URL; got $(count $argv)" >&2; and return 1
+        echo "'set-remote' expected [2..) arguments NAME URL: got $(count $argv)" >&2; and return 1
     end
     git remote set-url $argv; or return $status
     git remote set-url --push $argv
@@ -488,7 +488,7 @@ end
 
 function __remote_is
     if test (count $argv) -lt 1
-        echo "'__remote_is' expected [1..) arguments REMOTE; got $(count $argv)" >&2; and return 1
+        echo "'__remote_is' expected [1..) arguments REMOTE: got $(count $argv)" >&2; and return 1
     end
     if remote-name | grep -q $argv[1]
         return 0
@@ -564,7 +564,7 @@ end
 
 function __is_valid_ref
     if test (count $argv) -lt 1
-        echo "'__is_valid_ref' expected [1..) arguments REF; got $(count $argv)" >&2; and return 1
+        echo "'__is_valid_ref' expected [1..) arguments REF: got $(count $argv)" >&2; and return 1
     end
     set -l ref $argv[1]
     git show-ref --verify --quiet refs/heads/$ref; or git show-ref --verify --quiet refs/remotes/$ref; or git show-ref --verify --quiet refs/tags/$ref; or git rev-parse --verify --quiet $ref >/dev/null
@@ -632,7 +632,7 @@ end
 
 function gta
     if test (math (count $argv) % 2) -ne 0
-        echo "'gta' accepts an even number of arguments; got (count $argv)" >&2; and return 1
+        echo "'gta' accepts an even number of arguments: got (count $argv)" >&2; and return 1
     end
     set -l tag
     set -l sha
@@ -660,7 +660,7 @@ function __github_create
     if test -n "$_flag_title"
         set title $_flag_title
     else
-        set title (__auto_msg)
+        set title (__auto_msg); or return $status
     end
     set -l body
     if test -n "$_flag_body"
@@ -687,26 +687,27 @@ function __github_exists
     set -l branch (current-branch); or return $status
     set -l num (gh pr list --head=$branch --json number --jq '. | length'); or return $status
     if test $num -eq 0
-        echo "'__github_exists' expected a PR for '$branch'
-got none" >&2; and return 1
+        echo "'__github_exists' expected a PR for '$branch': got none" >&2; and return 1
     else if test $num -eq 1
         return 0
     else
-        echo "'__github_exists' expected a unique PR for '$branch'
-got $num" >&2; and return 1
+        echo "'__github_exists' expected a unique PR for '$branch': got $num" >&2; and return 1
     end
 end
 
 function __github_merge
     argparse exit -- $argv; or return $status
+    set -l branch (current-branch); or return $status
     if not __github_exists &>/dev/null
-        echo "'__github_merge' could not find an open PR for '$(current-branch)'" >&2; and return 1
+        echo "'__github_merge' could not find an open PR for '$branch'" >&2; and return 1
     end
+    set -l repo (repo-name); or return $status
     set -l start (date +%s)
+    set -l elapsed
     gh pr merge --auto --delete-branch --squash; or return $status
     while __github_merging
-        set -l elapsed (math (date +%s) - $start)
-        echo "$(repo-name)/$(current-branch) is still merging... ($elapsed s)"
+        set elapsed (math (date +%s) - $start)
+        echo "$repo/$branch is still merging... (${elapsed}s)"
         sleep 1
     end
     set -l args
@@ -718,7 +719,7 @@ end
 
 function __github_merging
     set -l branch (current-branch); or return $status
-    set -l state (gh pr view --json state | jq -r .state)
+    set -l state (gh pr view --json state | jq -r .state); or return $status
     if test -z "$state" -o "$state" != OPEN
         return 1
     end
@@ -736,7 +737,8 @@ function __github_view
     else if type -q gitweb
         gitweb
     else
-        echo "'__github_view' could not find an open PR for $(current-branch), nor could it find 'gitweb'" >&2; and return 1
+        set -l branch (current-branch); or return $status
+        echo "'__github_view' could not find an open PR for $branch, nor could it find 'gitweb'" >&2; and return 1
     end
 end
 
@@ -748,14 +750,53 @@ function __gitlab_create
     if test -n "$_flag_title"
         set title $_flag_title
     else
-        set title (__auto_msg)
+        set title (__auto_msg); or return $status
     end
     if test -n "$_flag_description"
         set description $_flag_description
     else
         set description .
     end
-    gh mr create --push --remove-source-branch --squash-before-merge $args --title $title --description $description
+    glab mr create --push --remove-source-branch --squash-before-merge $args --title $title --description $description
+end
+
+function __gitlab_exists
+    __gitlab_mr_num &>/dev/null
+end
+
+function __gitlab_merge
+    argparse exit -- $argv; or return $status
+    set -l branch (current-branch); or return $status
+    if not __gitlab_exists
+        echo "'__gitlab_merge' could not find an open MR for '$branch'" >&2; and return 1
+    end
+    set -l merge_status (__gitlab_mr_merge_status); or return $status
+    if test "$merge_status" = conflict; or test "$merge_status" = need_rebase; or test "$merge_status" = 'not open'
+        echo "'$branch' cannot be merged: got $merge_status" >&2; and return 1
+    end
+    set -l repo (repo-name); or return $status
+    set -l start (date +%s)
+    set -l elapsed
+    glab mr merge --remove-source-branch --squash --yes # never early exit
+    while __gitlab_merging
+        set elapsed (math (date +%s) - $start)
+        set merge_status (__gitlab_mr_merge_status); or return $status
+        echo "'$repo/$branch' is still merging... ($merge_status, ${elapsed}s)"
+        sleep 1
+    end
+end
+
+function __gitlab_merging
+    set -l state (__gitlab_mr_state); or return $status
+    if test $state != opened
+        return 1
+    end
+    set -l pid (__gitlab_mr_pid); or return $status
+    set -l branch (current-branch); or return $status
+    if glab api "projects/$pid/repository/branches/$branch" &>/dev/null
+        return 0
+    end
+    return 1
 end
 
 function __gitlab_update
@@ -767,32 +808,52 @@ function __gitlab_update
     if test -n "$_flag_body"
         set args $args --description $_flag_description
     end
-    gh mr update (__gitlab_mr_num) $args
-end
-
-function __gitlab_mr_exists
+    set -l num (__gitlab_mr_num); or return $status
+    glab mr update $num $args
 end
 
 function __gitlab_mr_json
     set -l branch (current-branch); or return $status
     set -l json (glab mr list --output=json --source-branch=$branch); or return $status
-    set -l num (printf "%s" "$json" | jq length); or return $status
+    set -l num (printf %s $json | jq length); or return $status
     if test $num -eq 0
-        echo "'__gitlab_mr_json' expected an MR for '$branch'
-got none" >&2; and return 1
+        echo "'__gitlab_mr_json' expected an MR for '$branch': got none" >&2; and return 1
     else if test $num -eq 1
         printf "%s" "$json" | jq '.[0]' | jq
     else
-        echo "'__gitlab_mr_json' expected a unique MR for '$branch'
-got $num" >&2; and return 1
+        echo "'__gitlab_mr_json' expected a unique MR for '$branch': got $num" >&2; and return 1
     end
 end
 
+function __gitlab_mr_merge_status
+    set -l json (__gitlab_mr_json); or return $status
+    printf %s\n $json | jq -r .detailed_merge_status
+end
+
+function __gitlab_mr_num
+    set -l json (__gitlab_mr_json); or return $status
+    printf %s\n $json | jq -r .iid
+end
+
+function __gitlab_mr_pid
+    set -l json (__gitlab_mr_json); or return $status
+    printf %s\n $json | jq -r .target_project_id
+end
+
+function __gitlab_mr_state
+    set -l json (__gitlab_mr_json); or return $status
+    printf %s\n $json | jq -r .state
+end
+
 function __gitlab_view
-    if type -q gitweb
+    set -l num (__gitlab_mr_num)
+    if test -n $num
+        glab mr view $num --web
+    else if type -q gitweb
         gitweb
     else
-        echo "'__gitlab_view' could not find 'gitweb'" >&2; and return 1
+        set -l branch $(current-branch); or return $status
+        echo "'__gitlab_view' could not find an open MR for '$branch', nor could it find 'gitweb'" >&2; and return 1
     end
 end
 
@@ -808,13 +869,16 @@ function ghc
     else if test (count $argv) -eq 2
         set args $args --title $argv[1] --num $argv[2]
     else
-        echo "'ghc' expected [0..2] arguments TITLE NUM; got $(count $argv)" >&2; and return 1
+        echo "'ghc' expected [0..2] arguments TITLE NUM: got $(count $argv)" >&2; and return 1
     end
     __github_or_gitlab_create $args
 end
 
 function __github_or_gitlab_create
     argparse title= body= -- $argv; or return $status
+    if test -z "$_flag_title"; and test -z "$_flag_body"
+        echo "'__github_or_gitlab_create' expected ) arguments -t/--title or -b/--body: got neither" >&2; and return 1
+    end
     set -l args
     if test -n "$_flag_title"
         set args $args --title $_flag_title
@@ -830,18 +894,31 @@ function __github_or_gitlab_create
         end
         __gitlab_create $args
     else
-        echo "Invalid remote
-got '$(remote-name)'" >&2; and return 1
+        set -l remote $(remote-name); or return $status
+        echo "Invalid remote: got '$remote'" >&2; and return 1
     end
 end
 
 # edit
 
 function ghe
-    if test (count $argv) -lt 1
-        echo "'ghe' expected [0..) arguments -t/--title or -b/--body; got $(count $argv)" >&2; and return 1
+    set -l args
+    if test (count $argv) -eq 0
+    else if test (count $argv) -eq 1
+        set args $args --title $argv[1]
+    else if test (count $argv) -eq 2
+        set args $args --title $argv[1] --num $argv[2]
+    else
+        echo "'ghe' expected [0..2] arguments TITLE NUM: got $(count $argv)" >&2; and return 1
     end
-    argparse t/title= b/body= -- $argv; or return $status
+    __github_or_gitlab_edit $args
+end
+
+function __github_or_gitlab_edit
+    argparse title= body= -- $argv; or return $status
+    if test -z "$_flag_title"; and test -z "$_flag_body"
+        echo "'__github_or_gitlab_edit' expected ) arguments -t/--title or -b/--body: got neither" >&2; and return 1
+    end
     set -l args
     if test -n "$_flag_title"
         set args $args --title $_flag_title
@@ -857,8 +934,8 @@ function ghe
         end
         __gitlab_update $args
     else
-        echo "Invalid remote
-got '$(remote-name)'" >&2; and return 1
+        set -l remote $(remote-name); or return $status
+        echo "Invalid remote: got '$remote'" >&2; and return 1
     end
 end
 
@@ -882,7 +959,8 @@ function __github_or_gitlab_merge
     else if __remote_is_gitlab
         __gitlab_merge $args
     else
-        echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
+        set -l remote $(remote-name); or return $status
+        echo "Invalid remote: got '$remote'" >&2; and return 1
     end
 end
 
@@ -898,7 +976,8 @@ function __github_or_gitlab_view
     else if __remote_is_gitlab
         __gitlab_view
     else
-        echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
+        set -l remote $(remote-name); or return $status
+        echo "Invalid remote: got '$remote'" >&2; and return 1
     end
 end
 
@@ -967,121 +1046,141 @@ end
 #
 function ggc
     if test (count $argv) -lt 1
-        echo "'ggc' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggc' expected ) arguments TITLE
+    got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] $argv[2..]
 end
 function ggcf
     if test (count $argv) -lt 1
-        echo "'ggcf' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcf' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --force $argv[2..]
 end
 function ggcn
     if test (count $argv) -lt 1
-        echo "'ggcn' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcn' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --no-verify $argv[2..]
 end
 function ggcfn
     if test (count $argv) -lt 1
-        echo "'ggcfn' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcfn' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --force --no-verify $argv[2..]
 end
 function ggcw
     if test (count $argv) -lt 1
-        echo "'ggcw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcw' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --web $argv[2..]
 end
 function ggcfw
     if test (count $argv) -lt 1
-        echo "'ggcfw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcfw' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --force --web $argv[2..]
 end
 function ggcnw
     if test (count $argv) -lt 1
-        echo "'ggcnw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcnw' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --no-verify --web $argv[2..]
 end
 function ggcfnw
     if test (count $argv) -lt 1
-        echo "'ggcfnw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcfnw' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --force --no-verify --web $argv[2..]
 end
 function ggce
     if test (count $argv) -lt 1
-        echo "'ggce' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggce' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --exit $argv[2..]
 end
 function ggcfe
     if test (count $argv) -lt 1
-        echo "'ggcfe' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcfe' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --force --exit $argv[2..]
 end
 function ggcne
     if test (count $argv) -lt 1
-        echo "'ggcne' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcne' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --no-verify --exit $argv[2..]
 end
 function ggcfne
     if test (count $argv) -lt 1
-        echo "'ggcfne' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcfne' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --force --no-verify --exit $argv[2..]
 end
 function ggcm
     if test (count $argv) -lt 1
-        echo "'ggcm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcm' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --merge $argv[2..]
 end
 function ggcfm
     if test (count $argv) -lt 1
-        echo "'ggcfm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcfm' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --force --merge $argv[2..]
 end
 function ggcnm
     if test (count $argv) -lt 1
-        echo "'ggcnm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcnm' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --no-verify --merge $argv[2..]
 end
 function ggcfnm
     if test (count $argv) -lt 1
-        echo "'ggcfnm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcfnm' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --force --no-verify --merge $argv[2..]
 end
 function ggcx
     if test (count $argv) -lt 1
-        echo "'ggcx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcx' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --merge --exit $argv[2..]
 end
 function ggcfx
     if test (count $argv) -lt 1
-        echo "'ggcfx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcfx' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --force --merge --exit $argv[2..]
 end
 function ggcnx
     if test (count $argv) -lt 1
-        echo "'ggcnx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcnx' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --no-verify --merge --exit $argv[2..]
 end
 function ggcfnx
     if test (count $argv) -lt 1
-        echo "'ggcfnx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcfnx' expected ) arguments TITLE
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] --force --no-verify --merge --exit $argv[2..]
 end
@@ -1138,12 +1237,12 @@ end
 #### utilities ################################################################
 
 function __auto_msg
-    echo (date "+%Y-%m-%d %H:%M:%S (%a)") " > " (hostname) " > " $USER
+    echo (date "+%Y-%m-%d %H:%M:%S (%a)") " >" (hostname) " >" $USER
 end
 
 function __clean_branch_name
     if test (count $argv) -lt 1
-        echo "'__clean_branch_name' expected [1..) arguments BRANCH; got $(count $argv)" >&2; and return 1
+        echo "'__clean_branch_name' expected ) arguments BRANCH: got $(count $argv)" >&2; and return 1
     end
     echo $argv[1] | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' \
         | sed -E 's/^-+|-+$//g' | cut -c1-80
