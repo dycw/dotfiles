@@ -866,8 +866,7 @@ function ghc
     else if test (count $argv) -eq 2
         set args $args --title $argv[1] --num $argv[2]
     else
-        echo "'ghc' expected [0..2] arguments TITLE NUM
-        got $(count $argv)" >&2; and return 1
+        echo "'ghc' expected [0..2] arguments TITLE NUM; got $(count $argv)" >&2; and return 1
     end
     __github_or_gitlab_create $args
 end
@@ -889,8 +888,7 @@ function __github_or_gitlab_create
         end
         __gitlab_create $args
     else
-        echo "Invalid remote
-        got '$(remote-name)'" >&2; and return 1
+        echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
     end
 end
 
@@ -898,8 +896,7 @@ end
 
 function ghe
     if test (count $argv) -lt 1
-        echo "'ghe' expected ) arguments -t/--title or -b/--body
-    got $(count $argv)" >&2; and return 1
+        echo "'ghe' expected [1..) arguments -t/--title or -b/--body; got $(count $argv)" >&2; and return 1
     end
     argparse t/title= b/body= -- $argv; or return $status
     set -l args
@@ -917,8 +914,7 @@ function ghe
         end
         __gitlab_update $args
     else
-        echo "Invalid remote
-    got '$(remote-name)'" >&2; and return 1
+        echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
     end
 end
 
@@ -942,8 +938,7 @@ function __github_or_gitlab_merge
     else if __remote_is_gitlab
         __gitlab_merge $args
     else
-        echo "Invalid remote
-    got '$(remote-name)'" >&2; and return 1
+        echo "Invalid remote got '$(remote-name)'" >&2; and return 1
     end
 end
 
