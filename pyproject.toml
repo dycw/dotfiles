@@ -15,7 +15,7 @@ version = "0.0.0"
 # bump-my-version
 [tool.bumpversion]
 allow_dirty = true
-current_version = "0.3.133"
+current_version = "0.3.134"
 
 # pyright
 [tool.pyright]
@@ -68,6 +68,7 @@ ignore = [
   "Q001",  # bad-quotes-multiline-string
   "Q002",  # bad-quotes-docstring
   "Q003",  # avoidable-escaped-quote
+  "S202",  # tarfile-unsafe-members ()
   "S310",  # suspicious-url-open-usage
   "S602",  # subprocess-popen-with-shell-equals-true
   "S607",  # start-process-with-partial-path
