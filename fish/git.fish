@@ -707,7 +707,7 @@ function __github_merge
     gh pr merge --auto --delete-branch --squash; or return $status
     while __github_merging
         set elapsed (math (date +%s) - $start)
-        echo "$repo/$branch is still merging... (${elapsed}s)"
+        echo "$repo/$branch is still merging... ($elapsed s)"
         sleep 1
     end
     set -l args
@@ -761,7 +761,11 @@ function __gitlab_create
 end
 
 function __gitlab_exists
-    __gitlab_mr_num &>/dev/null
+    if __gitlab_mr_json &>/dev/null
+        return 0
+    else
+        return 1
+    end
 end
 
 function __gitlab_merge
@@ -781,7 +785,7 @@ function __gitlab_merge
     while __gitlab_merging
         set elapsed (math (date +%s) - $start)
         set merge_status (__gitlab_mr_merge_status); or return $status
-        echo "'$repo/$branch' is still merging... ($merge_status, ${elapsed}s)"
+        echo "'$repo/$branch' is still merging... ($merge_status, $elapsed s)"
         sleep 1
     end
 end
