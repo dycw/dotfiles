@@ -49,7 +49,7 @@
   },
   "grug-far.nvim": {
     "branch": "main",
-    "commit": "48f9afb684de1c191af7bed96bc1db85ba33f6a4"
+    "commit": "2e991081c0e653e151fc9e659514d7c2fc31d22a"
   },
   "guess-indent.nvim": {
     "branch": "main",
@@ -121,7 +121,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "e688b486fe9291f151eae7e5c0b5a5c4ef980847"
+    "commit": "cc2f5f2fa28d240574808e78847978ed6ef20d2a"
   },
   "nvim-rip-substitute": {
     "branch": "main",

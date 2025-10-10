@@ -251,11 +251,6 @@ fi
 
 # uv
 if command -v uv >/dev/null 2>&1; then
-	uvpld() {
-		[ $# -ne 0 ] && echo_date "'uvpld' accepts no arguments; got $#" && return 1
-		__uvpld '.project.dependencies[]'
-		__uvpld '.["dependency-groups"].dev[]'
-	}
 	uvpyc() {
 		if [ $# -eq 0 ]; then
 			__uvpyc_dir="$(pwd)"
@@ -266,20 +261,5 @@ if command -v uv >/dev/null 2>&1; then
 		fi
 		uv tool run pyclean "${__uvpyc_dir}"
 		clean_dirs "${__uvpyc_dir}"
-	}
-	__uvpld() {
-		[ $# -ne 1 ] && echo_date "'__uvpld' accepts 1 argument; got $#" && return 1
-		__uvpld_deps=$(uv pip list --color=never)
-		yq -r "$1" 'pyproject.toml' |
-			sed 's/\[.*\]//; s/[ ,<>=!].*//' |
-			while IFS= read -r __uvpld_dep; do
-				[ -n "${__uvpld_dep}" ] || continue
-				__uvpld_res=$(printf "%s\n" "${__uvpld_deps}" | grep --color=never -i "^${__uvpld_dep} ")
-				if [ -n "${__uvpld_res}" ]; then
-					echo "${__uvpld_res}"
-				else
-					echo "${__uvpld_dep} <--> N/A"
-				fi
-			done
 	}
 fi

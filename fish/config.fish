@@ -89,13 +89,13 @@ end
 # chown
 function chown-files
     if test (count $argv) -lt 1
-        echo "'chown-files' expected [1..) arguments ownE; got "(count $argv) >&2; and return 1
+        echo "'chown-files' expected [1..) arguments OWNER; got "(count $argv) >&2; and return 1
     end
     find . -type f -exec chown $argv[1] {} \;
 end
 function chown-dirs
     if test (count $argv) -lt 1
-        echo "'chown-dirs' expected [1..) arguments ownE; got "(count $argv) >&2; and return 1
+        echo "'chown-dirs' expected [1..) arguments OWNER; got "(count $argv) >&2; and return 1
     end
     find . -type d -exec chown $argv[1] {} \;
 end
@@ -506,6 +506,41 @@ if type -q uv
     function uvo
         uv pip list --outdated
     end
+    function uvpo
+        set -l dep_and_vers
+        set -l name
+        set -l ver
+        for p in '.project.dependencies[]' '.["dependency-groups"].dev[]'
+            for dep in (yq -r $p pyproject.toml)
+                if test -n "$dep"
+                    set name (echo $dep | sed 's/\[.*\]//; s/[ ,<>=!].*//')
+                    set ver (string match -r '\d+\.\d+\.\d+' $dep)
+                    if test -n "$ver"
+                        set dep_and_vers $dep_and_vers "$name|$ver"
+                    end
+                end
+            end
+        end
+        set -l dep_and_vers (printf "%s\n" $dep_and_vers | sort -u)
+        for dep_ver in $dep_and_vers
+            __uvpo_core $dep_ver
+        end
+    end
+    function __uvpo_core
+        if test (count $argv) -ne 1
+            echo_date "'__uvpo_core' accepts 1 argumens DEP_VER; got " (count $argv); and return 1
+        end
+        set -l name (string split '|' $argv[1])[1]
+        set -l pyproject (string split '|' $argv[1])[2]
+        set -l current (uv pip list --color=never | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $2}')
+        set -l latest (uv pip list --color=never --outdated | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $4}')
+        test -z "$latest"; and set latest N/A
+        if test "$current" != "$pyproject"
+            printf "%-20s %-10s %-10s %-10s\n" $name $pyproject $current $latest
+        else if test -n "$latest"; and test "$latest" != "$py"
+            printf "%-20s %-10s %-10s %-10s\n" $name $pyproject $current $latest
+        end
+    end
 end
 
 # vim
@@ -534,5 +569,5 @@ function __edit_ancestor
         end
         set dir (dirname $dir)
     end
-    echo "'editancestor' did not find a file named '$file' in any parent directory" >&2; and return 1
+    echo "'edit_ancestor' did not find a file named '$file' in any parent directory" >&2; and return 1
 end
