@@ -874,6 +874,9 @@ end
 
 function __github_or_gitlab_create
     argparse title= body= -- $argv; or return $status
+    if test -z "$_flag_title"; and test -z "$_flag_body"
+        echo "'__github_or_gitlab_create' expected [1..) arguments -t/--title or -b/--body; got neither" >&2; and return 1
+    end
     set -l args
     if test -n "$_flag_title"
         set args $args --title $_flag_title
@@ -896,10 +899,23 @@ end
 # edit
 
 function ghe
-    if test (count $argv) -lt 1
-        echo "'ghe' expected [1..) arguments -t/--title or -b/--body; got $(count $argv)" >&2; and return 1
+    set -l args
+    if test (count $argv) -eq 0
+    else if test (count $argv) -eq 1
+        set args $args --title $argv[1]
+    else if test (count $argv) -eq 2
+        set args $args --title $argv[1] --num $argv[2]
+    else
+        echo "'ghe' expected [0..2] arguments TITLE NUM; got $(count $argv)" >&2; and return 1
     end
-    argparse t/title= b/body= -- $argv; or return $status
+    __github_or_gitlab_edit $args
+end
+
+function __github_or_gitlab_edit
+    argparse title= body= -- $argv; or return $status
+    if test -z "$_flag_title"; and test -z "$_flag_body"
+        echo "'__github_or_gitlab_edit' expected [1..) arguments -t/--title or -b/--body; got neither" >&2; and return 1
+    end
     set -l args
     if test -n "$_flag_title"
         set args $args --title $_flag_title
