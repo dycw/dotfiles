@@ -807,7 +807,8 @@ function __gitlab_update
     if test -n "$_flag_body"
         set args $args --description $_flag_description
     end
-    gh mr update (__gitlab_mr_num) $args
+    set -l num (__gitlab_mr_num); or return $status
+    gh mr update $num $args
 end
 
 function __gitlab_mr_json
@@ -938,7 +939,7 @@ function __github_or_gitlab_merge
     else if __remote_is_gitlab
         __gitlab_merge $args
     else
-        echo "Invalid remote got '$(remote-name)'" >&2; and return 1
+        echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
     end
 end
 
@@ -954,8 +955,7 @@ function __github_or_gitlab_view
     else if __remote_is_gitlab
         __gitlab_view
     else
-        echo "Invalid remote
-    got '$(remote-name)'" >&2; and return 1
+        echo "Invalid remote; got '$(remote-name)'" >&2; and return 1
     end
 end
 
