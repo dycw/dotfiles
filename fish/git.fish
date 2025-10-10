@@ -260,7 +260,9 @@ function __git_clone
         pre-commit install; or return $status
     end
     if type -q direnv
-        direnv allow .
+        if test -f .env; or test -f .envrc
+            direnv allow .
+        end
     end
     cd $current
 end
