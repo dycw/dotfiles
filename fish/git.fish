@@ -192,7 +192,7 @@ function __git_checkout_open
     if test -n "$_flag_title"
         set title $_flag_title
     else
-        set title (__auto_msg)
+        set title (__auto_msg); or return $status
     end
     set -l args
     if test -n "$_flag_num"
@@ -272,13 +272,13 @@ function __git_commit
     if test -n "$_flag_message"
         set message $_flag_message
     else
-        set message (__auto_msg)
+        set message (__auto_msg); or return $status
     end
     set -l args
     if test $_flag_no_verify
         set args $args --no-verify
     end
-    git commit --message="'$message'" $args; or return $status
+    git commit --message="'$message'" $args
 end
 
 function __git_commit_until
@@ -660,7 +660,7 @@ function __github_create
     if test -n "$_flag_title"
         set title $_flag_title
     else
-        set title (__auto_msg)
+        set title (__auto_msg); or return $status
     end
     set -l body
     if test -n "$_flag_body"
@@ -750,7 +750,7 @@ function __gitlab_create
     if test -n "$_flag_title"
         set title $_flag_title
     else
-        set title (__auto_msg)
+        set title (__auto_msg); or return $status
     end
     if test -n "$_flag_description"
         set description $_flag_description
