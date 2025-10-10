@@ -1239,8 +1239,7 @@ end
 
 function __clean_branch_name
     if test (count $argv) -lt 1
-        echo "'__clean_branch_name' expected ) arguments BRANCH
-got $(count $argv)" >&2; and return 1
+        echo "'__clean_branch_name' expected [1..) arguments BRANCH: got $(count $argv)" >&2; and return 1
     end
     echo $argv[1] | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' \
         | sed -E 's/^-+|-+$//g' | cut -c1-80
