@@ -75,6 +75,7 @@ def setup_mac(
     git_ignore: PathLike | None = None,
     nvim_dir: PathLike | None = None,
     pdbrc: PathLike | None = None,
+    permit_root_login: bool = False,
     psqlrc: PathLike | None = None,
     ripgreprc: PathLike | None = None,
     ssh_config: PathLike | None = None,
@@ -85,7 +86,12 @@ def setup_mac(
     wezterm_lua: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up Mac...")
-    setup_common(pdbrc=pdbrc, psqlrc=psqlrc, ssh_config=ssh_config)
+    setup_common(
+        pdbrc=pdbrc,
+        permit_root_login=permit_root_login,
+        psqlrc=psqlrc,
+        ssh_config=ssh_config,
+    )
     install_brew()
     install_git(config=git_config, ignore=git_ignore)
     install_age()  # after brew

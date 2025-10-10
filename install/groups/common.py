@@ -14,6 +14,7 @@ _LOGGER = getLogger(__name__)
 def setup_common(
     *,
     pdbrc: PathLike | None = None,
+    permit_root_login: bool = False,
     psqlrc: PathLike | None = None,
     ssh_config: PathLike | None = None,
 ) -> None:
@@ -22,7 +23,7 @@ def setup_common(
     setup_pdb(pdbrc=pdbrc)
     setup_psql(psqlrc=psqlrc)
     setup_ssh(config=ssh_config)
-    setup_sshd()
+    setup_sshd(permit_root_login=permit_root_login)
 
 
 __all__ = ["setup_common"]
