@@ -808,7 +808,7 @@ function __gitlab_update
         set args $args --description $_flag_description
     end
     set -l num (__gitlab_mr_num); or return $status
-    gh mr update $num $args
+    glab mr update $num $args
 end
 
 function __gitlab_mr_json
