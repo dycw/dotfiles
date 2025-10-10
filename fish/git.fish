@@ -623,6 +623,9 @@ end
 
 # submodule
 
+function gsa
+    git submodule add $argv
+end
 function gsu
     git submodule update --init --recursive; or return $status
     git submodule foreach --recursive '
