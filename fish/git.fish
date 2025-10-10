@@ -159,17 +159,21 @@ end
 
 function gcfm
     __git_fetch_and_purge; or return $status
-    git checkout origin/$(default-branch) -- $argv
+    set -l branch (default-branch); or return $status
+    git checkout origin/$branch -- $argv
 end
 
 function gm
-    __git_checkout_close $(default-branch)
+    set -l branch (default-branch); or return $status
+    __git_checkout_close $branch
 end
 function gmd
-    __git_checkout_close $(default-branch) --delete
+    set -l branch (default-branch); or return $status
+    __git_checkout_close $branch --delete
 end
 function gmx
-    __git_checkout_close $(default-branch) --delete --exit
+    set -l branch (default-branch); or return $status
+    __git_checkout_close $branch --delete --exit
 end
 
 function __git_checkout_open
@@ -179,11 +183,11 @@ function __git_checkout_open
     if test -z "$_flag_title"; and test -z "$_flag_num"
         set branch dev
     else if test -n "$_flag_title"; and test -z "$_flag_num"
-        set branch (__clean_branch_name $_flag_title)
+        set branch (__clean_branch_name $_flag_title); or return $status
     else if test -z "$_flag_title"; and test -n "$_flag_num"
         set branch $_flag_num
     else
-        set branch "$_flag_num-$(__clean_branch_name $_flag_title)"
+        set branch "$_flag_num-$(__clean_branch_name $_flag_title)"; or return $status
     end
     git checkout -b $branch origin/$(default-branch); or return $status
     git commit --allow-empty --message="$(__auto_msg)" --no-verify; or return $status
@@ -308,7 +312,8 @@ function gdc
     git diff --cached $argv
 end
 function gdm
-    git diff origin/$(default-branch) $argv
+    set -l branch (default-branch); or return $status
+    git diff origin/$branch $argv
 end
 
 # fetch
@@ -436,7 +441,8 @@ end
 
 function grb
     __git_fetch_and_purge; or return $status
-    git rebase --strategy=recursive --strategy-option=theirs origin/$(default-branch)
+    set -l branch (default-branch); or return $status
+    git rebase --strategy=recursive --strategy-option=theirs origin/$branch
 end
 
 function grba
@@ -511,7 +517,8 @@ function gr
 end
 
 function grhom
-    git reset --hard origin/$(default-branch) $argv
+    set -l branch (default-branch); or return $status
+    git reset --hard origin/$branch $argv
 end
 
 function grp
@@ -520,7 +527,8 @@ end
 
 function gsq
     __git_fetch_and_purge; or return $status
-    git reset --soft $(git merge-base origin/$(default-branch) HEAD)
+    set -l branch (default-branch); or return $status
+    git reset --soft $(git merge-base origin/$branch HEAD)
 end
 
 # restore
@@ -714,7 +722,8 @@ function __github_merge
     if test -n "$_flag_exit"
         set args $args --exit
     end
-    __git_checkout_close $(default-branch) --delete $args
+    set -l def_branch (default-branch); or return $status
+    __git_checkout_close $def_branch --delete $args
 end
 
 function __github_merging
@@ -788,6 +797,12 @@ function __gitlab_merge
         echo "'$repo/$branch' is still merging... ($merge_status, $elapsed s)"
         sleep 1
     end
+    set -l args
+    if test -n "$_flag_exit"
+        set args $args --exit
+    end
+    set -l def_branch (default-branch); or return $status
+    __git_checkout_close $def_branch --delete $args
 end
 
 function __gitlab_merging
@@ -830,22 +845,22 @@ function __gitlab_mr_json
 end
 
 function __gitlab_mr_merge_status
-    set -l json (__gitlab_mr_json); or return $status
+    set -l json (__gitlab_mr_json &>/dev/null); or return $status
     printf %s\n $json | jq -r .detailed_merge_status
 end
 
 function __gitlab_mr_num
-    set -l json (__gitlab_mr_json); or return $status
+    set -l json (__gitlab_mr_json &>/dev/null); or return $status
     printf %s\n $json | jq -r .iid
 end
 
 function __gitlab_mr_pid
-    set -l json (__gitlab_mr_json); or return $status
+    set -l json (__gitlab_mr_json &>/dev/null); or return $status
     printf %s\n $json | jq -r .target_project_id
 end
 
 function __gitlab_mr_state
-    set -l json (__gitlab_mr_json); or return $status
+    set -l json (__gitlab_mr_json &>/dev/null); or return $status
     printf %s\n $json | jq -r .state
 end
 
