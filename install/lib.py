@@ -31,7 +31,6 @@ from install.utilities import (
     uv_tool_install,
     yield_download,
     yield_github_latest_download,
-    yield_tar_gz_contents,
 )
 
 if TYPE_CHECKING:
@@ -166,18 +165,10 @@ def install_delta() -> None:
         case System.mac:
             brew_install("git-delta")
         case System.linux:
-            path_to = LOCAL_BIN / "delta"
-            with (
-                yield_github_latest_download(
-                    "dandavison",
-                    "delta",
-                    "delta-${tag}-x86_64-unknown-linux-gnu.tar.gz",
-                ) as tar_gz,
-                yield_tar_gz_contents(tar_gz) as temp_dir,
-            ):
-                (dir_from,) = temp_dir.iterdir()
-                path_from = dir_from.joinpath("delta")
-                cp(path_from, path_to, executable=True, ownership=True)
+            with yield_github_latest_download(
+                "dandavison", "delta", "git-delta_${tag}_amd64.deb"
+            ) as path:
+                dpkg_install(path)
         case never:
             assert_never(never)
 
