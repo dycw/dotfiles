@@ -697,7 +697,7 @@ function __github_exists
     set -l branch (current-branch); or return $status
     set -l num (gh pr list --head=$branch --json number --jq '. | length'); or return $status
     if test $num -eq 0
-        echo "'__github_exists' expected a PR for '$branch': got none" >&2; and return 1
+        return 1
     else if test $num -eq 1
         return 0
     else
@@ -708,7 +708,7 @@ end
 function __github_merge
     argparse exit -- $argv; or return $status
     set -l branch (current-branch); or return $status
-    if not __github_exists &>/dev/null
+    if not __github_exists
         echo "'__github_merge' could not find an open PR for '$branch'" >&2; and return 1
     end
     set -l repo (repo-name); or return $status
@@ -772,11 +772,7 @@ function __gitlab_create
 end
 
 function __gitlab_exists
-    if __gitlab_mr_json &>/dev/null
-        return 0
-    else
-        return 1
-    end
+    __gitlab_mr_json --quiet &>/dev/null
 end
 
 function __gitlab_merge
@@ -834,11 +830,15 @@ function __gitlab_update
 end
 
 function __gitlab_mr_json
+    argparse quiet -- $argv; or return $status
     set -l branch (current-branch); or return $status
     set -l json (glab mr list --output=json --source-branch=$branch); or return $status
     set -l num (printf %s $json | jq length); or return $status
     if test $num -eq 0
-        echo "'__gitlab_mr_json' expected an MR for '$branch': got none" >&2; and return 1
+        if test -z $_flag_quiet
+            echo "'__gitlab_mr_json' expected an MR for '$branch': got none" >&2
+        end
+        return 1
     else if test $num -eq 1
         printf "%s" "$json" | jq '.[0]' | jq
     else
@@ -847,22 +847,22 @@ function __gitlab_mr_json
 end
 
 function __gitlab_mr_merge_status
-    set -l json (__gitlab_mr_json &>/dev/null); or return $status
+    set -l json (__gitlab_mr_json); or return $status
     printf %s\n $json | jq -r .detailed_merge_status
 end
 
 function __gitlab_mr_num
-    set -l json (__gitlab_mr_json &>/dev/null); or return $status
+    set -l json (__gitlab_mr_json); or return $status
     printf %s\n $json | jq -r .iid
 end
 
 function __gitlab_mr_pid
-    set -l json (__gitlab_mr_json &>/dev/null); or return $status
+    set -l json (__gitlab_mr_json); or return $status
     printf %s\n $json | jq -r .target_project_id
 end
 
 function __gitlab_mr_state
-    set -l json (__gitlab_mr_json &>/dev/null); or return $status
+    set -l json (__gitlab_mr_json); or return $status
     printf %s\n $json | jq -r .state
 end
 
@@ -1068,7 +1068,7 @@ end
 function ggc
     if test (count $argv) -lt 1
         echo "'ggc' expected ) arguments TITLE
-    got $(count $argv)" >&2; and return 1
+got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] $argv[2..]
 end
