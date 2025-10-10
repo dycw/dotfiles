@@ -1072,16 +1072,13 @@ def setup_ssh_keys(ssh_keys: PathLike, /) -> None:
 
 
 def setup_sshd(*, permit_root_login: bool = False) -> None:
-    path = full_path("/etc/ssh/sshd_config")
+    value = "prohibit-password" if permit_root_login else "no"
     replace_lines(
-        path,
-        ("#PubkeyAuthentication yes", "PubkeyAuthentication yes"),
+        "/etc/ssh/sshd_config",
         ("#PasswordAuthentication yes", "PasswordAuthentication no"),
+        ("#PermitRootLogin prohibit-password", f"PermitRootLogin {value}"),
+        ("#PubkeyAuthentication yes", "PubkeyAuthentication yes"),
     )
-    if not permit_root_login:
-        replace_lines(
-            path, ("#PermitRootLogin prohibit-password", "PermitRootLogin no")
-        )
 
 
 __all__ = [
