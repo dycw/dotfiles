@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import shutil
+import tarfile
 import tempfile
 from collections.abc import Iterator
 from contextlib import contextmanager, suppress
@@ -314,6 +315,13 @@ def yield_github_latest_download(
         yield temp_file
 
 
+@contextmanager
+def yield_tar_gz_contents(path: Path, /) -> Iterator[Path]:
+    with tarfile.open(path, mode="r:gz") as tf, TemporaryDirectory() as temp_dir:
+        _ = tf.extractall(path=temp_dir)
+        yield Path(temp_dir)
+
+
 __all__ = [
     "TemporaryDirectory",
     "apt_install",
@@ -345,4 +353,5 @@ __all__ = [
     "which",
     "yield_download",
     "yield_github_latest_download",
+    "yield_tar_gz_contents",
 ]
