@@ -12,5 +12,6 @@ else if test -d $HOME/work-gitlab/infra
     set infra $HOME/work-gitlab/infra
 end
 if set -q infra; and test -f $infra/shell/fish.fish
+    echo "Sourcing $infra/shell/fish.fish..."
     source $infra/shell/fish.fish
 end

@@ -124,23 +124,6 @@ if command -v gh >/dev/null 2>&1 || command -v glab >/dev/null 2>&1; then
 			echo_date "'ghv' impossible case" && return 1
 		fi
 	}
-	__gh_create() {
-		[ $# -ne 2 ] && echo_date "'__gh_create' accepts 2 arguments; got $#" && return 1
-		# $1 = title
-		# $2 = body
-		if __is_github && __gh_exists; then
-			gh pr edit --title="$1" --body="$2"
-		elif __is_github && ! __gh_exists; then
-			gh pr create --title="$1" --body="$2"
-		elif __is_gitlab && __gh_exists; then
-			glab mr update "$(__glab_mr_num)" --title="$1" --description="$2"
-		elif __is_gitlab && ! __gh_exists; then
-			glab mr create --title="$1" --description="$2" \
-				--push --remove-source-branch --squash-before-merge
-		else
-			echo_date "'__gh_create' impossible case" && return 1
-		fi
-	}
 	__gh_exists() {
 		[ $# -ne 0 ] && echo_date "'__gh_exists' accepts no arguments; got $#" && return 1
 		if __is_github; then

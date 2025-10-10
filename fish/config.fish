@@ -187,6 +187,7 @@ function fish-env
 end
 function fish-reload
     for file in $XDG_CONFIG_HOME/fish/**/*.fish
+        echo "Reloading $file..."
         source $file
     end
 end
