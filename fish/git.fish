@@ -419,7 +419,7 @@ function __git_push
     if test -n "$_flag_force"
         set args $args --force
     end
-    set args $args --set-upstream origin (current-branch)
+    set args $args --set-upstream origin (current-branch); or return $status
     if test -n "$_flag_no_verify"
         set args $args --no-verify
     end
@@ -707,7 +707,7 @@ function __github_merge
     gh pr merge --auto --delete-branch --squash; or return $status
     while __github_merging
         set elapsed (math (date +%s) - $start)
-        echo "$repo/$branch is still merging... ($elapsed s)"
+        echo "$repo/$branch is still merging... (${elapsed}s)"
         sleep 1
     end
     set -l args
@@ -781,7 +781,7 @@ function __gitlab_merge
     while __gitlab_merging
         set elapsed (math (date +%s) - $start)
         set merge_status (__gitlab_mr_merge_status); or return $status
-        echo "'$repo/$branch' is still merging... ($merge_status, $elapsed s)"
+        echo "'$repo/$branch' is still merging... ($merge_status, ${elapsed}s)"
         sleep 1
     end
 end
@@ -852,7 +852,8 @@ function __gitlab_view
     else if type -q gitweb
         gitweb
     else
-        echo "'__gitlab_view' could not find an open MR for '$(current-branch)', nor could it find 'gitweb'" >&2; and return 1
+        set -l branch $(current-branch); or return $status
+        echo "'__gitlab_view' could not find an open MR for '$branch', nor could it find 'gitweb'" >&2; and return 1
     end
 end
 
@@ -893,7 +894,8 @@ function __github_or_gitlab_create
         end
         __gitlab_create $args
     else
-        echo "Invalid remote: got '$(remote-name)'" >&2; and return 1
+        set -l remote $(remote-name); or return $status
+        echo "Invalid remote: got '$remote'" >&2; and return 1
     end
 end
 
@@ -932,7 +934,8 @@ function __github_or_gitlab_edit
         end
         __gitlab_update $args
     else
-        echo "Invalid remote: got '$(remote-name)'" >&2; and return 1
+        set -l remote $(remote-name); or return $status
+        echo "Invalid remote: got '$remote'" >&2; and return 1
     end
 end
 
@@ -956,8 +959,8 @@ function __github_or_gitlab_merge
     else if __remote_is_gitlab
         __gitlab_merge $args
     else
-        echo "Invalid remote
-got '$(remote-name)'" >&2; and return 1
+        set -l remote $(remote-name); or return $status
+        echo "Invalid remote: got '$remote'" >&2; and return 1
     end
 end
 
@@ -973,8 +976,8 @@ function __github_or_gitlab_view
     else if __remote_is_gitlab
         __gitlab_view
     else
-        echo "Invalid remote
-got '$(remote-name)'" >&2; and return 1
+        set -l remote $(remote-name); or return $status
+        echo "Invalid remote: got '$remote'" >&2; and return 1
     end
 end
 
@@ -1044,7 +1047,7 @@ end
 function ggc
     if test (count $argv) -lt 1
         echo "'ggc' expected ) arguments TITLE
-got $(count $argv)" >&2; and return 1
+    got $(count $argv)" >&2; and return 1
     end
     __git_all --title=$argv[1] $argv[2..]
 end
@@ -1239,7 +1242,7 @@ end
 
 function __clean_branch_name
     if test (count $argv) -lt 1
-        echo "'__clean_branch_name' expected [1..) arguments BRANCH: got $(count $argv)" >&2; and return 1
+        echo "'__clean_branch_name' expected ) arguments BRANCH: got $(count $argv)" >&2; and return 1
     end
     echo $argv[1] | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' \
         | sed -E 's/^-+|-+$//g' | cut -c1-80
