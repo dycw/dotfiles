@@ -932,8 +932,7 @@ function __github_or_gitlab_edit
         end
         __gitlab_update $args
     else
-        echo "Invalid remote
-got '$(remote-name)'" >&2; and return 1
+        echo "Invalid remote: got '$(remote-name)'" >&2; and return 1
     end
 end
 
