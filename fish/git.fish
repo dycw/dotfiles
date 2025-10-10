@@ -767,7 +767,7 @@ end
 function __gitlab_merge
     argparse exit -- $argv; or return $status
     set -l branch (current-branch); or return $status
-    if not __gitlab_exists &>/dev/null
+    if not __gitlab_exists
         echo "'__gitlab_merge' could not find an open MR for '$branch'" >&2; and return 1
     end
     set -l merge_status (__gitlab_mr_merge_status); or return $status
@@ -777,7 +777,7 @@ function __gitlab_merge
     set -l repo (repo-name); or return $status
     set -l start (date +%s)
     set -l elapsed
-    glab mr merge --remove-source-branch --squash --yes; or return $status
+    glab mr merge --remove-source-branch --squash --yes # never early exit
     while __gitlab_merging
         set elapsed (math (date +%s) - $start)
         set merge_status (__gitlab_mr_merge_status); or return $status
