@@ -192,6 +192,9 @@ function fish-reload
     end
 end
 
+# fzf
+set fzf_fd_opts --hidden
+
 # ghostty
 function ghostty-config
     $EDITOR $HOME/dotfiles/ghostty/config
