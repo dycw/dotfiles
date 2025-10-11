@@ -32,7 +32,7 @@ if type -q bump-my-version
     end
     function bump-set
         if test (count $argv) -lt 1
-            echo "'bump-set' expected [1..) arguments VERSION; got "(count $argv) >&2; and return 1
+            echo "'bump-set' expected [1..) arguments VERSION; got $(count $argv)" >&2; and return 1
         end
         bump-my-version replace --new-version $argv[1]
     end
@@ -75,13 +75,13 @@ end
 # chmod
 function chmod-files
     if test (count $argv) -lt 1
-        echo "'chmod-files' expected [1..) arguments MODE; got "(count $argv) >&2; and return 1
+        echo "'chmod-files' expected [1..) arguments MODE; got $(count $argv)" >&2; and return 1
     end
     find . -type f -print0 | xargs -0 chmod $argv[1]
 end
 function chmod-dirs
     if test (count $argv) -lt 1
-        echo "'chmod-dirs' expected [1..) arguments MODE; got "(count $argv) >&2; and return 1
+        echo "'chmod-dirs' expected [1..) arguments MODE; got $(count $argv)" >&2; and return 1
     end
     find . -type d -print0 | xargs -0 chmod $argv[1]
 end
@@ -89,13 +89,13 @@ end
 # chown
 function chown-files
     if test (count $argv) -lt 1
-        echo "'chown-files' expected [1..) arguments OWNER; got "(count $argv) >&2; and return 1
+        echo "'chown-files' expected [1..) arguments OWNER; got $(count $argv)" >&2; and return 1
     end
     find . -type f -exec chown $argv[1] {} \;
 end
 function chown-dirs
     if test (count $argv) -lt 1
-        echo "'chown-dirs' expected [1..) arguments OWNER; got "(count $argv) >&2; and return 1
+        echo "'chown-dirs' expected [1..) arguments OWNER; got $(count $argv)" >&2; and return 1
     end
     find . -type d -exec chown $argv[1] {} \;
 end
@@ -103,7 +103,7 @@ end
 # cp
 function cp
     if test (count $argv) -lt 2
-        echo "'cp' expected [2..) arguments SOURCE ... TARGET; got "(count $argv) >&2; and return 1
+        echo "'cp' expected [2..) arguments SOURCE ... TARGET; got $(count $argv)" >&2; and return 1
     end
     set -l target $argv[-1]
     set -l mkdir_target
@@ -119,7 +119,7 @@ end
 # curl
 function curl-sh
     if test (count $argv) -lt 1
-        echo "'curl-sh' expected [1..) arguments URL; got "(count $argv) >&2; and return 1
+        echo "'curl-sh' expected [1..) arguments URL; got $(count $argv)" >&2; and return 1
     end
     curl -fsSL $argv[1] | sh -s -- $argv[2..]
 end
@@ -138,7 +138,7 @@ end
 # env
 function eg
     if test (count $argv) -lt 1
-        echo "'eg' expected [1..) arguments PATTERN; got "(count $argv) >&2; and return 1
+        echo "'eg' expected [1..) arguments PATTERN; got $(count $argv)" >&2; and return 1
     end
     env | sort | grep -i $argv
 end
@@ -170,7 +170,7 @@ if type -q fd
     end
     function __fd_base
         if test (count $argv) -lt 1
-            echo "'__fd_base' expected [1..) arguments TYPE; got "(count $argv) >&2; and return 1
+            echo "'__fd_base' expected [1..) arguments TYPE; got $(count $argv)" >&2; and return 1
         end
         fd --hidden --type=$argv[1] $argv[2..]
     end
@@ -240,7 +240,7 @@ end
 # mv
 function mv
     if test (count $argv) -lt 2
-        echo "'mv' expected [2..) arguments SOURCE ... TARGET; got "(count $argv) >&2; and return 1
+        echo "'mv' expected [2..) arguments SOURCE ... TARGET; got $(count $argv)" >&2; and return 1
     end
     set -l target $argv[-1]
     set -l mkdir_target
@@ -319,19 +319,19 @@ function pytf
 end
 function pytfk
     if test (count $argv) -lt 1
-        echo "'pytfk' expected [1..) arguments EXPRESSION; got "(count $argv) >&2; and return 1
+        echo "'pytfk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
     end
     __pytest -fk $argv
 end
 function pytfxk
     if test (count $argv) -lt 1
-        echo "'pytfxk' expected [1..) arguments EXPRESSION; got "(count $argv) >&2; and return 1
+        echo "'pytfxk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
     end
     __pytest -fk $argv
 end
 function pytk
     if test (count $argv) -lt 1
-        echo "'pytk' expected [1..) arguments EXPRESSION; got "(count $argv) >&2; and return 1
+        echo "'pytk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
     end
     __pytest -k $argv
 end
@@ -343,7 +343,7 @@ function pytpx
 end
 function pytpxk
     if test (count $argv) -lt 1
-        echo "'pytpxk' expected [1..) arguments EXPRESSION; got "(count $argv) >&2; and return 1
+        echo "'pytpxk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
     end
     __pytest --pdb -x -k $argv
 end
@@ -421,7 +421,7 @@ if type -q tailscale; and type -q tailscaled
     end
     function ts-up
         if not set -q TAILSCALE_AUTH_KEY
-            echo "Env var 'TAILSCALE_AUTH_KEY' does not exist" >&2; and return 1
+            echo "Env var TAILSCALE_AUTH_KEY does not exist" >&2; and return 1
         end
         if not test -f $TAILSCALE_AUTH_KEY
             echo "File '$TAILSCALE_AUTH_KEY' does not exist" >&2; and return 1
@@ -467,7 +467,7 @@ if type -q tmux
             else if test "$count" -eq 1
                 tmux attach
             else
-                echo "'tmux-attach' expected [1..) arguments SESSION; got "(count $argv) >&2; and return 1
+                echo "'tmux-attach' expected [1..) arguments SESSION; got $(count $argv)" >&2; and return 1
             end
         else
             tmux attach -t $argv[1]
@@ -523,7 +523,7 @@ if type -q uv
     s/[ ,<>=!].*//')
                     set ver (string match -r '\d+\.\d+\.\d+' $dep)
                     if test -n "$ver"
-                        set dep_and_vers $dep_and_vers "$name|$ver"
+                        set dep_and_vers $dep_and_vers "$name | $ver"
                     end
                 end
             end
@@ -535,10 +535,10 @@ if type -q uv
     end
     function __uvpo_core
         if test (count $argv) -ne 1
-            echo_date "'__uvpo_core' accepts 1 argumens DEP_VER; got " (count $argv); and return 1
+            echo_date "'__uvpo_core' accepts [1..) arguments DEP_VER; got $(count $argv)"; and return 1
         end
-        set -l name (string split ' | ' $argv[1])[1]
-        set -l pyproject (string split ' | ' $argv[1])[2]
+        set -l name (string split '|' $argv[1])[1]
+        set -l pyproject (string split '|' $argv[1])[2]
         set -l current (uv pip list --color=never | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $2}')
         set -l latest (uv pip list --color=never --outdated | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $4}')
         set -l latest_print
@@ -570,7 +570,7 @@ end
 # private
 function __edit_ancestor
     if test (count $argv) -lt 1
-        echo "'edit_ancestor' expected [1..) arguments FILENAME; got "(count $argv) >&2; and return 1
+        echo "'edit_ancestor' expected [1..) arguments FILENAME; got $(count $argv)" >&2; and return 1
     end
     set file $argv[1]
     set dir (pwd)
