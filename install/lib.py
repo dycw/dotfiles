@@ -184,7 +184,8 @@ def install_direnv(
             case System.mac:
                 brew_install("direnv")
             case System.linux:
-                apt_install("direnv")
+                check_for_commands("curl")
+                run_commands("curl -sfL https://direnv.net/install.sh | sh")
             case never:
                 assert_never(never)
     direnv = XDG_CONFIG_HOME / "direnv"
@@ -769,7 +770,14 @@ def install_starship(*, starship_toml: PathLike | None = None) -> None:
         _LOGGER.debug("'starship' is already installed")
     else:
         _LOGGER.info("Installing 'starship'...")
-        apt_install("starship")
+        match System.identify():
+            case System.mac:
+                brew_install("starship")
+            case System.linux:
+                check_for_commands("curl")
+                run_commands("curl -sS https://starship.rs/install.sh | sh")
+            case never:
+                assert_never(never)
     symlink_if_given(XDG_CONFIG_HOME / "starship.toml", starship_toml)
 
 

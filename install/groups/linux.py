@@ -94,7 +94,6 @@ def setup_linux(
     install_build_essential()
     install_curl()
     install_delta()
-    install_direnv()
     install_dust()
     install_eza()
     install_fd(ignore=fd_ignore)
@@ -113,7 +112,6 @@ def setup_linux(
     install_rsync()
     install_shellcheck()
     install_shfmt()
-    install_starship(starship_toml=starship_toml)
     install_syncthing()
     install_topgrade()
     install_tmux(
@@ -122,6 +120,7 @@ def setup_linux(
     install_vim()
     install_xclip()
     install_zoxide()
+    install_direnv()  # after curl
     install_docker()  # after curl
     install_fish(  # after curl
         config=fish_config, env=fish_env, git=fish_git, work=fish_work
@@ -132,6 +131,7 @@ def setup_linux(
     install_bottom(bottom_toml=bottom_toml)  # after curl, jq
     install_gitweb()  # after curl, jq
     install_sops(age_secret_key=age_secret_key)  # after curl, jq
+    install_starship(starship_toml=starship_toml)  # after curl
     install_stylua()  # after curl, jq
     install_yq()  # after curl, jq
     install_luacheck()  # after lurocks

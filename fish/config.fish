@@ -323,6 +323,12 @@ function pytfk
     end
     __pytest -fk $argv
 end
+function pytfn
+    __pytest -f -nauto $argv
+end
+function pytfnx
+    __pytest -fx -nauto $argv
+end
 function pytfxk
     if test (count $argv) -lt 1
         echo "'pytfxk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
@@ -335,8 +341,20 @@ function pytk
     end
     __pytest -k $argv
 end
+function pytn
+    __pytest -nauto $argv
+end
+function pytnx
+    __pytest -x -nauto $argv
+end
 function pytp
     __pytest --pdb $argv
+end
+function pytpk
+    if test (count $argv) -lt 1
+        echo "'pytpk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
+    end
+    __pytest --pdb -k $argv
 end
 function pytpx
     __pytest --pdb -x $argv
@@ -513,14 +531,15 @@ if type -q uv
         uv pip list --outdated
     end
     function uvpo
+        set -l paths '.project.dependencies[]?' '.["dependency-groups"].*[]?' '.project."optional-dependencies".*[]?'
         set -l dep_and_vers
         set -l name
         set -l ver
-        for p in '.project.dependencies[]' '.["dependency-groups"].dev[]'
+        for p in $paths
             for dep in (yq -r $p pyproject.toml)
                 if test -n "$dep"
                     set name (echo $dep | sed 's/\[.*\]//
-    s/[ ,<>=!].*//')
+        s/[ ,<>=!].*//')
                     set ver (string match -r '\d+\.\d+\.\d+' $dep)
                     if test -n "$ver"
                         set dep_and_vers $dep_and_vers "$name | $ver"
@@ -537,8 +556,8 @@ if type -q uv
         if test (count $argv) -ne 1
             echo_date "'__uvpo_core' accepts [1..) arguments DEP_VER; got $(count $argv)"; and return 1
         end
-        set -l name (string trim (string split '|' $argv[1])[1])
-        set -l pyproject (string trim (string split '|' $argv[1])[2])
+        set -l name (string trim (string split ' | ' $argv[1])[1])
+        set -l pyproject (string trim (string split ' | ' $argv[1])[2])
         set -l current (uv pip list --color=never | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $2}')
         set -l latest (uv pip list --color=never --outdated | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $4}')
         set -l latest_print

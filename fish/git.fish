@@ -795,6 +795,9 @@ function __gitlab_merge
     while __gitlab_merging
         set elapsed (math (date +%s) - $start)
         set merge_status (__gitlab_mr_merge_status); or return $status
+        if test "$merge_status" = mergeable
+            glab mr merge --remove-source-branch --squash --yes
+        end
         echo "'$repo/$branch' is still merging... ($merge_status, $elapsed s)"
         sleep 1
     end
