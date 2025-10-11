@@ -537,8 +537,8 @@ if type -q uv
         if test (count $argv) -ne 1
             echo_date "'__uvpo_core' accepts [1..) arguments DEP_VER; got $(count $argv)"; and return 1
         end
-        set -l name (string split '|' $argv[1])[1]
-        set -l pyproject (string split '|' $argv[1])[2]
+        set -l name (string trim (string split '|' $argv[1])[1])
+        set -l pyproject (string trim (string split '|' $argv[1])[2])
         set -l current (uv pip list --color=never | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $2}')
         set -l latest (uv pip list --color=never --outdated | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $4}')
         set -l latest_print
