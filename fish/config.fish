@@ -193,7 +193,10 @@ function fish-reload
 end
 
 # fzf
-set fzf_fd_opts --hidden
+if type -q fzf
+    set fzf_fd_opts --hidden
+    set fzf_history_time_format '%Y-%m-%d %H:%M:%S (%a)'
+end
 
 # ghostty
 function ghostty-config
@@ -516,7 +519,8 @@ if type -q uv
         for p in '.project.dependencies[]' '.["dependency-groups"].dev[]'
             for dep in (yq -r $p pyproject.toml)
                 if test -n "$dep"
-                    set name (echo $dep | sed 's/\[.*\]//; s/[ ,<>=!].*//')
+                    set name (echo $dep | sed 's/\[.*\]//
+    s/[ ,<>=!].*//')
                     set ver (string match -r '\d+\.\d+\.\d+' $dep)
                     if test -n "$ver"
                         set dep_and_vers $dep_and_vers "$name|$ver"
@@ -533,8 +537,8 @@ if type -q uv
         if test (count $argv) -ne 1
             echo_date "'__uvpo_core' accepts 1 argumens DEP_VER; got " (count $argv); and return 1
         end
-        set -l name (string split '|' $argv[1])[1]
-        set -l pyproject (string split '|' $argv[1])[2]
+        set -l name (string split ' | ' $argv[1])[1]
+        set -l pyproject (string split ' | ' $argv[1])[2]
         set -l current (uv pip list --color=never | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $2}')
         set -l latest (uv pip list --color=never --outdated | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $4}')
         set -l latest_print
