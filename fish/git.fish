@@ -810,11 +810,11 @@ function __gitlab_merge
 end
 
 function __gitlab_merging
-    set -l state (__gitlab_mr_state); or return $status
+    set -l state (__gitlab_mr_state --extract .state); or return $status
     if test $state != opened
         return 1
     end
-    set -l pid (__gitlab_mr_pid); or return $status
+    set -l pid (__gitlab_mr_json --extract .target_project_id); or return $status
     set -l branch (current-branch); or return $status
     if glab api "projects/$pid/repository/branches/$branch" &>/dev/null
         return 0
@@ -836,7 +836,7 @@ function __gitlab_update
 end
 
 function __gitlab_mr_json
-    argparse quiet -- $argv; or return $status
+    argparse quiet extract= -- $argv; or return $status
     set -l branch (current-branch); or return $status
     set -l json (glab mr list --output=json --source-branch=$branch); or return $status
     set -l num (printf %s $json | jq length); or return $status
@@ -846,35 +846,39 @@ function __gitlab_mr_json
         end
         return 1
     else if test $num -eq 1
-        printf "%s" "$json" | jq '.[0]' | jq
+        set -l result (printf "%s\n" "$json" | jq .[0])
+        if test -n "$_flag_extract"
+            printf "%s\n" $result | jq -r "$_flag_extract"
+        else
+            printf "$result" | jq
+        end
     else
         echo "'__gitlab_mr_json' expected a unique MR for '$branch': got $num" >&2; and return 1
     end
 end
 
 function __gitlab_mr_merge_status
-    set -l json (__gitlab_mr_json); or return $status
-    printf %s\n $json | jq -r .detailed_merge_status
+    argparse quiet -- $argv; or return $status
+    set -l args --extract .detailed_merge_status
+    if test -n "$_flag_quiet"
+        set args $args --quiet
+    end
+    __gitlab_mr_json $args
 end
 
 function __gitlab_mr_num
-    set -l json (__gitlab_mr_json); or return $status
-    printf %s\n $json | jq -r .iid
-end
-
-function __gitlab_mr_pid
-    set -l json (__gitlab_mr_json); or return $status
-    printf %s\n $json | jq -r .target_project_id
-end
-
-function __gitlab_mr_state
-    set -l json (__gitlab_mr_json); or return $status
-    printf %s\n $json | jq -r .state
+    argparse quiet -- $argv; or return $status
+    set -l args --extract .iid
+    if test -n "$_flag_quiet"
+        set args $args --quiet
+    end
+    __gitlab_mr_json $args
 end
 
 function __gitlab_view
     set -l num (__gitlab_mr_num)
     if test -n $num
+        echo hi
         glab mr view $num --web
     else if type -q gitweb
         gitweb
