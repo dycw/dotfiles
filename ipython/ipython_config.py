@@ -1,4 +1,9 @@
-config = get_config()  # type: ignore[] # noqa: F821, INP001
+# ruff: noqa: INP001
+
+
+from __future__ import annotations
+
+config = get_config()  # type: ignore[] # noqa: F821
 
 # ------------------------------------------------------------------------------
 # InteractiveShellApp(Configurable) configuration

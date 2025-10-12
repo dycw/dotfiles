@@ -1214,7 +1214,7 @@ if find_spec("pydantic") is not None:
 if find_spec("pytest") is not None:
     _LOGGER.info("Importing `pytest`...")
 
-    from pytest import fixture, mark, param  # noqa: PT013
+    from pytest import fixture, mark, param
 
     _ = [fixture, mark, param]
 
@@ -1696,7 +1696,7 @@ def _add_src_to_sys_path() -> None:
     """Add `src/` to `sys.path`."""
     cmd = ["git", "rev-parse", "--show-toplevel"]
     try:
-        output = check_output(cmd, stderr=PIPE, text=True)  # noqa: S603
+        output = check_output(cmd, stderr=PIPE, text=True)
     except CalledProcessError:
         return
     src = str(Path(output.strip("\n"), "src"))
