@@ -775,7 +775,9 @@ def install_starship(*, starship_toml: PathLike | None = None) -> None:
                 brew_install("starship")
             case System.linux:
                 check_for_commands("curl")
-                run_commands("curl -sS https://starship.rs/install.sh | sh")
+                run_commands(
+                    f"curl -sS https://starship.rs/install.sh | sh -s -- -b {LOCAL_BIN} -y"
+                )
             case never:
                 assert_never(never)
     symlink_if_given(XDG_CONFIG_HOME / "starship.toml", starship_toml)
