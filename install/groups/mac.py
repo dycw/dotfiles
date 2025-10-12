@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING
 from install.groups.common import setup_common
 from install.lib import (
     install_age,
+    install_agg,
+    install_asciinema,
     install_bat,
     install_bottom,
     install_brew,
@@ -95,6 +97,8 @@ def setup_mac(
     install_brew()
     install_git(config=git_config, ignore=git_ignore)
     install_age()  # after brew
+    install_agg()  # after brew
+    install_asciinema()  # after brew
     install_bat()  # after brew
     install_bottom(bottom_toml=bottom_toml)  # after brew
     install_bump_my_version()  # after brew

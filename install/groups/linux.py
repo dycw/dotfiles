@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING
 from install.groups.common import setup_common
 from install.lib import (
     install_age,
+    install_agg,
+    install_asciinema,
     install_bottom,
     install_build_essential,
     install_bump_my_version,
@@ -91,6 +93,8 @@ def setup_linux(
         ssh_config=ssh_config,
     )
     install_age()
+    install_agg()
+    install_asciinema()
     install_build_essential()
     install_curl()
     install_delta()

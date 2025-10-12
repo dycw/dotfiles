@@ -72,6 +72,38 @@ def install_age() -> None:
             assert_never(never)
 
 
+def install_agg() -> None:
+    if have_command("agg"):
+        _LOGGER.debug("'agg' is already installed")
+        return
+    _LOGGER.info("Installing 'agg'...")
+    match System.identify():
+        case System.mac:
+            brew_install("agg")
+        case System.linux:
+            path_to = LOCAL_BIN / "agg"
+            with yield_github_latest_download(
+                "asciinema", "agg", "agg-x86_64-unknown-linux-gnu"
+            ) as binary:
+                cp(binary, path_to, executable=True, ownership=True)
+        case never:
+            assert_never(never)
+
+
+def install_asciinema() -> None:
+    if have_command("asciinema"):
+        _LOGGER.debug("'asciinema' is already installed")
+        return
+    _LOGGER.info("Installing 'asciinema'...")
+    match System.identify():
+        case System.mac:
+            brew_install("asciinema")
+        case System.linux:
+            apt_install("asciinema")
+        case never:
+            assert_never(never)
+
+
 def install_bat() -> None:
     match System.identify():
         case System.mac:
@@ -1098,6 +1130,8 @@ def setup_sshd(*, permit_root_login: bool = False) -> None:
 
 __all__ = [
     "install_age",
+    "install_agg",
+    "install_asciinema",
     "install_bat",
     "install_brew",
     "install_build_essential",
