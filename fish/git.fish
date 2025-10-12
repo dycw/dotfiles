@@ -876,9 +876,8 @@ function __gitlab_mr_num
 end
 
 function __gitlab_view
-    set -l num (__gitlab_mr_num)
-    if test -n $num
-        echo hi
+    set -l num (__gitlab_mr_num --quiet)
+    if test $status = 0; and test -n $num
         glab mr view $num --web
     else if type -q gitweb
         gitweb
