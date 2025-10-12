@@ -352,7 +352,7 @@ function pytfxk
     if test (count $argv) -lt 1
         echo "'pytfxk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
     end
-    __pytest -fk $argv
+    __pytest -fxk $argv
 end
 function pytk
     if test (count $argv) -lt 1

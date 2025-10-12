@@ -1,6 +1,9 @@
 # direnv
 .direnv/
 
+# cache
+.cache/
+
 # prettier
 node_modules/
 
