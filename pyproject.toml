@@ -17,13 +17,6 @@ version = "0.0.0"
 allow_dirty = true
 current_version = "0.3.153"
 
-# nitpick
-[tool.nitpick]
-style = [
-  "https://raw.githubusercontent.com/dycw/nitpick/master/styles/3.14.toml",
-  "https://raw.githubusercontent.com/dycw/nitpick/master/styles/common.toml",
-]
-
 # pyright
 [tool.pyright]
 enableReachabilityAnalysis = false
