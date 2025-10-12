@@ -13,7 +13,7 @@ from pwd import getpwuid
 from re import search
 from stat import S_IXUSR
 from string import Template
-from subprocess import check_call, check_output
+from subprocess import CalledProcessError, check_call, check_output
 from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 from urllib.request import urlopen
@@ -190,12 +190,20 @@ def rm(path: PathLike, /) -> None:
     run_commands(f"sudo rm {path}")
 
 
-def run_commands(*cmds: str, env: Mapping[str, str | None] | None = None) -> None:
+def run_commands(
+    *cmds: str,
+    env: Mapping[str, str | None] | None = None,
+    suppress_failure: bool = False,
+) -> None:
     root = is_root()
     with temp_environ(env):
         for cmd in cmds:
             cmd_use = cmd.replace("sudo ", "") if root else cmd
-            _ = check_call(cmd_use, shell=True)
+            if suppress_failure:
+                with suppress(CalledProcessError):
+                    _ = check_call(cmd_use, shell=True)
+            else:
+                _ = check_call(cmd_use, shell=True)
 
 
 def symlink(path_from: PathLike, path_to: PathLike, /) -> None:
