@@ -5,7 +5,19 @@ from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
 
-from install.constants import (
+from install.groups.mac import setup_mac
+from install.lib import (
+    install_dropbox,
+    install_postico,
+    install_protonvpn,
+    install_spotify,
+    install_transmission,
+    install_vlc,
+    install_vs_code,
+    install_whatsapp,
+    install_zoom,
+)
+from install.more_constants import (
     FD_IGNORE,
     FISH_CONFIG,
     FISH_ENV,
@@ -23,18 +35,6 @@ from install.constants import (
     TMUX_CONF_LOCAL,
     TMUX_CONF_OH_MY_TMUX,
     WEZTERM_LUA,
-)
-from install.groups.mac import setup_mac
-from install.lib import (
-    install_dropbox,
-    install_postico,
-    install_protonvpn,
-    install_spotify,
-    install_transmission,
-    install_vlc,
-    install_vs_code,
-    install_whatsapp,
-    install_zoom,
 )
 
 _LOGGER = getLogger(__name__)
