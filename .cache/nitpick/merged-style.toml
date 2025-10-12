@@ -1,0 +1,190 @@
+[".pre-commit-config.yaml"]
+
+[[".pre-commit-config.yaml".repos]]
+repo = "https://github.com/dycw/pre-commit-hooks"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "run-bump-my-version"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "replace-sequence-str"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "format-requirements"
+
+[[".pre-commit-config.yaml".repos]]
+repo = "https://github.com/andreoliwa/nitpick"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "nitpick-check"
+
+[[".pre-commit-config.yaml".repos]]
+repo = "https://github.com/pre-commit/pre-commit-hooks"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "check-executables-have-shebangs"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+args = ["--autofix"]
+id = "pretty-format-json"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "check-merge-conflict"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "check-symlinks"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "destroyed-symlinks"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "detect-private-key"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "end-of-file-fixer"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+args = ["--fix=lf"]
+id = "mixed-line-ending"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "no-commit-to-branch"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "trailing-whitespace"
+
+[[".pre-commit-config.yaml".repos]]
+repo = "https://github.com/macisamuele/language-formatters-pre-commit-hooks"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+args = ["--autofix", "--trailing-commas"]
+id = "pretty-format-toml"
+
+[[".pre-commit-config.yaml".repos]]
+repo = "https://github.com/astral-sh/ruff-pre-commit"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+args = ["--fix"]
+id = "ruff-check"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "ruff-format"
+
+[[".pre-commit-config.yaml".repos]]
+repo = "https://github.com/shellcheck-py/shellcheck-py"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "shellcheck"
+
+[[".pre-commit-config.yaml".repos]]
+repo = "https://github.com/scop/pre-commit-shfmt"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+id = "shfmt"
+
+[[".pre-commit-config.yaml".repos]]
+repo = "https://github.com/astral-sh/uv-pre-commit"
+
+[[".pre-commit-config.yaml".repos.hooks]]
+args = ["--upgrade"]
+id = "uv-lock"
+
+[nitpick.files.absent]
+".bump2version.cfg" = ""
+".flake8" = ""
+".isort.cfg" = ""
+"MANIFEST.in" = ""
+"package.json" = ""
+"setup.cfg" = ""
+"setup.py" = ""
+
+[nitpick.files.present]
+"pyproject.toml" = ""
+
+["pyproject.toml".build-system]
+build-backend = "uv_build"
+requires = ["uv_build"]
+
+["pyproject.toml".project]
+readme = "README.md"
+requires-python = ">= 3.14"
+
+["pyproject.toml".tool.bumpversion]
+allow_dirty = true
+
+["pyproject.toml".tool.coverage.html]
+directory = ".coverage/html"
+
+["pyproject.toml".tool.coverage.report]
+exclude_also = ["@overload", "if TYPE_CHECKING:"]
+fail_under = 100.0
+skip_covered = true
+skip_empty = true
+
+["pyproject.toml".tool.coverage.run]
+branch = true
+data_file = ".coverage/data"
+parallel = true
+
+["pyproject.toml".tool.pyright]
+deprecateTypingAliases = true
+enableReachabilityAnalysis = false
+pythonVersion = "3.14"
+reportAny = false
+reportCallInDefaultInitializer = true
+reportImplicitOverride = true
+reportImplicitStringConcatenation = true
+reportImportCycles = true
+reportMissingSuperCall = true
+reportMissingTypeArgument = false
+reportMissingTypeStubs = false
+reportPrivateUsage = false
+reportPropertyTypeMismatch = true
+reportShadowedImports = true
+reportUninitializedInstanceVariable = true
+reportUnknownArgumentType = false
+reportUnknownMemberType = false
+reportUnknownParameterType = false
+reportUnknownVariableType = false
+reportUnnecessaryComparison = false
+reportUnnecessaryTypeIgnoreComment = true
+reportUnusedCallResult = true
+reportUnusedImport = false
+reportUnusedVariable = false
+typeCheckingMode = "strict"
+
+["pyproject.toml".tool.pytest.ini_options]
+addopts = ["-ra", "-vv", "--color=auto", "--strict-markers"]
+asyncio_default_fixture_loop_scope = "function"
+asyncio_mode = "auto"
+collect_imported_tests = false
+filterwarnings = ["error"]
+minversion = "8.0"
+testpaths = ["src/tests"]
+xfail_strict = true
+
+["pyproject.toml".tool.ruff]
+src = ["src"]
+target-version = "py314"
+unsafe-fixes = true
+
+["pyproject.toml".tool.ruff.format]
+preview = true
+skip-magic-trailing-comma = true
+
+["pyproject.toml".tool.ruff.lint]
+explicit-preview-rules = true
+fixable = ["ALL"]
+ignore = ["ANN401", "ASYNC109", "C901", "CPY", "D", "DOC", "E501", "PD", "PERF203", "PLC0415", "PLR0911", "PLR0912", "PLR0913", "PLR0915", "PLR2004", "PT012", "PT013", "S202", "S310", "S311", "S602", "S603", "S607", "S101", "W191", "E111", "E114", "E117", "COM812", "COM819", "ISC001", "ISC002"]
+preview = true
+select = ["ALL", "RUF022"]
+
+["pyproject.toml".tool.ruff.lint.extend-per-file-ignores]
+"src/tests/**/*.py" = ["S101"]
+
+["pyproject.toml".tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+["pyproject.toml".tool.ruff.lint.isort]
+required-imports = ["from __future__ import annotations"]
+split-on-trailing-comma = false
