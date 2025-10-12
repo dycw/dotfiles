@@ -185,7 +185,10 @@ def install_direnv(
                 brew_install("direnv")
             case System.linux:
                 check_for_commands("curl")
-                run_commands("curl -sfL https://direnv.net/install.sh | sh")
+                run_commands(
+                    "curl -sfL https://direnv.net/install.sh | bash",
+                    env={"bin_path": str(LOCAL_BIN)},
+                )
             case never:
                 assert_never(never)
     direnv = XDG_CONFIG_HOME / "direnv"
