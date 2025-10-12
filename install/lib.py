@@ -185,6 +185,7 @@ def install_direnv(
                 brew_install("direnv")
             case System.linux:
                 check_for_commands("curl")
+                LOCAL_BIN.mkdir(parents=True, exist_ok=True)
                 run_commands(
                     "curl -sfL https://direnv.net/install.sh | bash",
                     env={"bin_path": str(LOCAL_BIN)},
@@ -778,6 +779,7 @@ def install_starship(*, starship_toml: PathLike | None = None) -> None:
                 brew_install("starship")
             case System.linux:
                 check_for_commands("curl")
+                LOCAL_BIN.mkdir(parents=True, exist_ok=True)
                 run_commands(
                     f"curl -sS https://starship.rs/install.sh | sh -s -- -b {LOCAL_BIN} -y"
                 )
