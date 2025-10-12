@@ -34,7 +34,6 @@ if command -v age >/dev/null 2>&1; then
 		if [ $# -eq 3 ]; then
 			__decrypt_output="$3"
 		elif [ "${2%.enc}" = "$2" ]; then
-			echo hi
 			__decrypt_output="$2.dec"
 		else
 			echo bye
