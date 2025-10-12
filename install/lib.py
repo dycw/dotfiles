@@ -942,7 +942,9 @@ def install_uv() -> None:
             brew_install("uv")
         case System.linux:
             check_for_commands("curl")
-            run_commands("curl -LsSf https://astral.sh/uv/install.sh | sh")
+            run_commands(
+                "curl -LsSf https://astral.sh/uv/install.sh | sh -s -- --mo-modify-path"
+            )
         case never:
             assert_never(never)
 
