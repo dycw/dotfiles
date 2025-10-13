@@ -36,14 +36,6 @@ def _setup_macbook_remote(*, verbose: bool = False) -> None:
         _ = check_call(
             f"git clone {url} {dotfiles}", stdout=DEVNULL, stderr=DEVNULL, shell=True
         )
-        _LOGGER.info("Changing branch...")
-        _ = check_call(  # TEMPORARY!
-            "git checkout re-organize",
-            stdout=DEVNULL,
-            stderr=DEVNULL,
-            shell=True,
-            cwd=dotfiles,
-        )
         cmd = "python3 -m install.machines.macbook"
         if verbose:
             cmd = f"{cmd} -v"
