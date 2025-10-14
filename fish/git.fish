@@ -810,7 +810,7 @@ function __gitlab_merge
 end
 
 function __gitlab_merging
-    set -l state (__gitlab_mr_state --extract .state); or return $status
+    set -l state (__gitlab_mr_json --extract .state); or return $status
     if test $state != opened
         return 1
     end
