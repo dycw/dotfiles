@@ -77,7 +77,7 @@
   },
   "leap.nvim": {
     "branch": "main",
-    "commit": "f5fe479e20d809df7b54ad53142c2bdb0624c62a"
+    "commit": "89b8481b14c72222e4d63e4c791a165f1c340a06"
   },
   "lualine.nvim": {
     "branch": "master",
@@ -105,11 +105,11 @@
   },
   "nvim-autopairs": {
     "branch": "master",
-    "commit": "23320e75953ac82e559c610bec5a90d9c6dfa743"
+    "commit": "7a2c97cccd60abc559344042fefb1d5a85b3e33b"
   },
   "nvim-early-retirement": {
     "branch": "main",
-    "commit": "dadde58b7b0d8dafb00b0dc6900cfe95b380d6fa"
+    "commit": "9109589b542773c9ad2a34067a085874f255577b"
   },
   "nvim-lastplace": {
     "branch": "main",
@@ -121,11 +121,11 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "cc2f5f2fa28d240574808e78847978ed6ef20d2a"
+    "commit": "ac98db2f9f06a56498ec890a96928774eae412c3"
   },
   "nvim-rip-substitute": {
     "branch": "main",
-    "commit": "42c4494386ed33af84424c9a249ab7a20f8a2a51"
+    "commit": "cb41b3f155399597327c39b5d700f7c41f4c6121"
   },
   "nvim-surround": {
     "branch": "main",
@@ -193,7 +193,7 @@
   },
   "tokyonight.nvim": {
     "branch": "main",
-    "commit": "00d92e6009671493fceeb0e4baf644f5b983e6e4"
+    "commit": "d14614cbfc63b6037bfccd48bb982d2ad2003352"
   },
   "vim-caser": {
     "branch": "master",
