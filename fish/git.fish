@@ -296,7 +296,7 @@ function __git_commit_until
     if test -n "$_flag_no_verify"
         set args $args --no-verify
     end
-    for i in (seq 0 2) # @fish-lsp-disable
+    for i in (seq 0 3) # @fish-lsp-disable
         ga $argv; or return $status
         if __git_commit $args
             return 0
