@@ -20,8 +20,6 @@ repos:
             indent_entries=true,
             --option,
             reorder_keys=true,
-            --option,
-            reorder_arrays=true,
           ]
   - repo: https://github.com/dycw/pre-commit-hooks
     rev: 0.13.14
