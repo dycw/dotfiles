@@ -80,8 +80,6 @@ return {
                     "--option",
                     "reorder_keys=true",
                     "--option",
-                    "reorder_arrays=true",
-                    "--option",
                     "reorder_inline_tables=true",
                 },
             },
