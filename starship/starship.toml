@@ -21,52 +21,52 @@ ${container}${netns}${shell}\
 ${character}"""
 
 [[battery.display]]
-threshold = 20
+  threshold = 20
 
 [cmd_duration]
-format = '[${duration}](${style}) '
+  format = '[${duration}](${style}) '
 
 [directory]
-truncation_length = 8
-truncation_symbol = './'
+  truncation_length = 8
+  truncation_symbol = './'
 
 [git_branch]
-format = '[${symbol}${branch}](${style}) '
-symbol = ''
-truncation_length = 20
+  format = '[${symbol}${branch}](${style}) '
+  symbol = ''
+  truncation_length = 20
 
 [golang]
-format = '[${symbol}](${style})'
-version_format = '${raw}'
+  format = '[${symbol}](${style})'
+  version_format = '${raw}'
 
 [hostname]
-format = '[${ssh_symbol}${hostname}](${style}) '
-ssh_only = false
-ssh_symbol = '🌐'
+  format = '[${ssh_symbol}${hostname}](${style}) '
+  ssh_only = false
+  ssh_symbol = '🌐'
 
 [nodejs]
-format = '[${symbol}](${style})'
-version_format = '${raw}'
+  format = '[${symbol}](${style})'
+  version_format = '${raw}'
 
 [package]
-format = '[${symbol}${version}]($style) '
-symbol = '📦'
-version_format = '${raw}'
+  format = '[${symbol}${version}]($style) '
+  symbol = '📦'
+  version_format = '${raw}'
 
 [python]
-format = '[${symbol}](${style})'
-version_format = '${raw}'
+  format = '[${symbol}](${style})'
+  version_format = '${raw}'
 
 [rust]
-format = '[${symbol}](${style})'
-version_format = '${raw}'
+  format = '[${symbol}](${style})'
+  version_format = '${raw}'
 
 [time]
-disabled = false
-format = '[${time}](${style}) '
-style = 'bold blue'
-time_format = '%F %T'
+  disabled = false
+  format = '[${time}](${style}) '
+  style = 'bold blue'
+  time_format = '%F %T'
 
 [username]
-format = '[${user}](${style}) '
-show_always = true
+  format = '[${user}](${style}) '
+  show_always = true

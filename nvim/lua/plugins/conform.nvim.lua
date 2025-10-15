@@ -19,6 +19,7 @@ return {
             rust = { "rustfmt" },
             sh = { "shfmt" },
             sql = { "sql_formatter" },
+            toml = { "taplo" },
             zig = { "zigfmt" },
             -- prettier
             css = { "prettier" },
@@ -27,7 +28,6 @@ return {
             less = { "prettier" },
             markdown = { "prettier" },
             scss = { "prettier" },
-            toml = { "prettier" },
             vue = { "prettier" },
             yaml = { "prettier" },
             -- prettier + rustywind
@@ -69,6 +69,20 @@ return {
                     "--unfixable=SIM105", -- suppressible-exception
                     "--unfixable=SIM114", -- if-with-same-arms
                     "--unfixable=T201", -- print
+                },
+            },
+            taplo = {
+                append_args = {
+                    "--option",
+                    "indent_tables=true",
+                    "--option",
+                    "indent_entries=true",
+                    "--option",
+                    "reorder_keys=true",
+                    "--option",
+                    "reorder_arrays=true",
+                    "--option",
+                    "reorder_inline_tables=true",
                 },
             },
         },
