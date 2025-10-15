@@ -77,11 +77,11 @@
   },
   "leap.nvim": {
     "branch": "main",
-    "commit": "89b8481b14c72222e4d63e4c791a165f1c340a06"
+    "commit": "aa204264ffaf83650ee676ef68f52e327688b048"
   },
   "lualine.nvim": {
     "branch": "master",
-    "commit": "b8c23159c0161f4b89196f74ee3a6d02cdc3a955"
+    "commit": "e533fac71bc361768f90004af695cd1f1aa1900a"
   },
   "mason-lspconfig.nvim": {
     "branch": "main",
