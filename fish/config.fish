@@ -577,13 +577,15 @@ if type -q uv
         end
         set -l name (string trim (string split ' | ' $argv[1])[1])
         set -l pyproject (string trim (string split ' | ' $argv[1])[2])
-        set -l current (uv pip list --color=never | grep "^$name" | awk '{print $2}')
-        set -l latest (uv pip list --color=never --outdated | grep "^$name" | awk '{print $3}')
+        set -l current (uv pip list --color=never | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $2}')
+        set -l latest (uv pip list --color=never --outdated \
+            | string match -r "^$name\s+\d+\.\d+\.\d+\s+\d+\.\d+\.\d+" \
+            | awk '{print $3}')
         set -l latest_print
         if test -n "$latest"
             set latest_print latest
         else
-            set latest_print N/A
+            set latest_print -
         end
         if test "$current" != "$pyproject"
             printf "%-20s %-10s %-10s %-10s\n" $name $pyproject $current $latest_print
