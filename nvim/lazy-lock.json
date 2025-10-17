@@ -49,7 +49,7 @@
   },
   "grug-far.nvim": {
     "branch": "main",
-    "commit": "2e991081c0e653e151fc9e659514d7c2fc31d22a"
+    "commit": "3e72397465f774b01aa38e4fe8e6eecf23d766d9"
   },
   "guess-indent.nvim": {
     "branch": "main",
@@ -73,7 +73,7 @@
   },
   "lazydev.nvim": {
     "branch": "main",
-    "commit": "e28ce52fc7ff79fcb76f0e79ee6fb6182fca90b9"
+    "commit": "258d2a5ef4a3e3d6d9ba9da72c9725c53e9afcbd"
   },
   "leap.nvim": {
     "branch": "main",
@@ -81,7 +81,7 @@
   },
   "lualine.nvim": {
     "branch": "master",
-    "commit": "e533fac71bc361768f90004af695cd1f1aa1900a"
+    "commit": "3946f0122255bc377d14a59b27b609fb3ab25768"
   },
   "mason-lspconfig.nvim": {
     "branch": "main",
@@ -121,7 +121,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "ac98db2f9f06a56498ec890a96928774eae412c3"
+    "commit": "e688b486fe9291f151eae7e5c0b5a5c4ef980847"
   },
   "nvim-rip-substitute": {
     "branch": "main",

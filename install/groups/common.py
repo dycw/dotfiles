@@ -16,13 +16,12 @@ def setup_common(
     pdbrc: PathLike | None = None,
     permit_root_login: bool = False,
     psqlrc: PathLike | None = None,
-    ssh_config: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up common...")
     add_to_known_hosts()
     setup_pdb(pdbrc=pdbrc)
     setup_psql(psqlrc=psqlrc)
-    setup_ssh(*(() if ssh_config is None else (ssh_config,)))
+    setup_ssh()
     setup_sshd(permit_root_login=permit_root_login)
 
 
