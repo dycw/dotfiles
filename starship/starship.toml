@@ -27,6 +27,7 @@ ${character}"""
   format = '[${duration}](${style}) '
 
 [directory]
+  truncate_to_repo = false
   truncation_length = 8
   truncation_symbol = './'
 
