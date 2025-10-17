@@ -22,7 +22,7 @@ def setup_common(
     add_to_known_hosts()
     setup_pdb(pdbrc=pdbrc)
     setup_psql(psqlrc=psqlrc)
-    setup_ssh(config=ssh_config)
+    setup_ssh(*(() if ssh_config is None else (ssh_config,)))
     setup_sshd(permit_root_login=permit_root_login)
 
 
