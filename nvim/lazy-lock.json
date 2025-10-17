@@ -73,7 +73,7 @@
   },
   "lazydev.nvim": {
     "branch": "main",
-    "commit": "258d2a5ef4a3e3d6d9ba9da72c9725c53e9afcbd"
+    "commit": "e28ce52fc7ff79fcb76f0e79ee6fb6182fca90b9"
   },
   "leap.nvim": {
     "branch": "main",
@@ -121,7 +121,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "e688b486fe9291f151eae7e5c0b5a5c4ef980847"
+    "commit": "ac98db2f9f06a56498ec890a96928774eae412c3"
   },
   "nvim-rip-substitute": {
     "branch": "main",
