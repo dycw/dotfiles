@@ -495,7 +495,7 @@ function tmux-conf
     $EDITOR $HOME/dotfiles/tmux/tmux.conf.local
 end
 if type -q tmux
-    function tmux-attach
+    function ta
         if test (count $argv) -eq 0
             set -l count (tmux ls | wc -l)
             if test "$count" -eq 0
@@ -504,7 +504,7 @@ if type -q tmux
             else if test "$count" -eq 1
                 tmux attach
             else
-                echo "'tmux-attach' expected [1..) arguments SESSION; got $(count $argv)" >&2; and return 1
+                echo "'ta' expected [0..1] arguments SESSION; got $(count $argv)" >&2; and return 1
             end
         else
             tmux attach -t $argv[1]
