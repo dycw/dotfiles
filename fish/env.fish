@@ -72,19 +72,6 @@ end
 # tailscale
 export TAILSCALE_AUTH_KEY=$XDG_CONFIG_HOME/tailscale/auth-key.txt
 
-# tmux
-if test -z "$TMUX"
-    set -l count (tmux ls | wc -l)
-    if test "$count" -eq 0
-        tmux new
-    else if test "$count" -eq 1
-        tmux attach
-    else
-        echo "Detected $count tmux sessions detected
- skipping auto-new/attach"
-    end
-end
-
 # XDG
 set -gx XDG_BIN_HOME (set -q XDG_BIN_HOME; and echo $XDG_BIN_HOME; or echo $HOME/.local/bin)
 set -gx XDG_CACHE_HOME (set -q XDG_CACHE_HOME; and echo $XDG_CACHE_HOME; or echo $HOME/.cache)
