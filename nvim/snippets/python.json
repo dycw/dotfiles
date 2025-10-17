@@ -296,7 +296,7 @@
     "prefix": "im-tqdm"
   },
   "from typing import ...": {
-    "body": "from typing import Any, ClassVar, Generic, Literal, NotRequired, Protocol, Required, Self, TypeVar, TypedDict, assert_never, cast, overload, override\n",
+    "body": "from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal, NotRequired, Protocol, Required, Self, TypeVar, TypedDict, assert_never, cast, overload, override\n",
     "prefix": "im-typing"
   },
   "from urllib import ...": {
