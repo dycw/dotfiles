@@ -704,7 +704,7 @@ function __github_exists
     else if test $num -eq 1
         return 0
     else
-        echo "'__github_exists' expected a unique PR for '$branch': got $num" >&2; and return 1
+        echo "'__github_exists' expected a unique PR for '$branch'; got $num" >&2; and return 1
     end
 end
 
@@ -786,7 +786,7 @@ function __gitlab_merge
     end
     set -l merge_status (__gitlab_mr_merge_status); or return $status
     if test "$merge_status" = conflict; or test "$merge_status" = need_rebase; or test "$merge_status" = 'not open'
-        echo "'$branch' cannot be merged: got $merge_status" >&2; and return 1
+        echo "'$branch' cannot be merged; got $merge_status" >&2; and return 1
     end
     set -l repo (repo-name); or return $status
     set -l start (date +%s)
@@ -842,7 +842,7 @@ function __gitlab_mr_json
     set -l num (printf %s $json | jq length); or return $status
     if test $num -eq 0
         if test -z $_flag_quiet
-            echo "'__gitlab_mr_json' expected an MR for '$branch': got none" >&2
+            echo "'__gitlab_mr_json' expected an MR for '$branch'; got none" >&2
         end
         return 1
     else if test $num -eq 1
@@ -853,7 +853,7 @@ function __gitlab_mr_json
             printf "$result" | jq
         end
     else
-        echo "'__gitlab_mr_json' expected a unique MR for '$branch': got $num" >&2; and return 1
+        echo "'__gitlab_mr_json' expected a unique MR for '$branch'; got $num" >&2; and return 1
     end
 end
 
@@ -897,9 +897,9 @@ function ghc
     else if test (count $argv) -eq 1
         set args $args --title $argv[1]
     else if test (count $argv) -eq 2
-        set args $args --title $argv[1] --num $argv[2]
+        set args $args --title $argv[1] --body $argv[2]
     else
-        echo "'ghc' expected [0..2] arguments TITLE NUM; got $(count $argv)" >&2; and return 1
+        echo "'ghc' expected [0..2] arguments TITLE BODY; got $(count $argv)" >&2; and return 1
     end
     __github_or_gitlab_create $args
 end
@@ -925,7 +925,7 @@ function __github_or_gitlab_create
         __gitlab_create $args
     else
         set -l remote $(remote-name); or return $status
-        echo "Invalid remote: got '$remote'" >&2; and return 1
+        echo "Invalid remote; got '$remote'" >&2; and return 1
     end
 end
 
@@ -937,9 +937,9 @@ function ghe
     else if test (count $argv) -eq 1
         set args $args --title $argv[1]
     else if test (count $argv) -eq 2
-        set args $args --title $argv[1] --num $argv[2]
+        set args $args --title $argv[1] --body $argv[2]
     else
-        echo "'ghe' expected [0..2] arguments TITLE NUM: got $(count $argv)" >&2; and return 1
+        echo "'ghe' expected [0..2] arguments TITLE BODY; got $(count $argv)" >&2; and return 1
     end
     __github_or_gitlab_edit $args
 end
@@ -947,7 +947,7 @@ end
 function __github_or_gitlab_edit
     argparse title= body= -- $argv; or return $status
     if test -z "$_flag_title"; and test -z "$_flag_body"
-        echo "'__github_or_gitlab_edit' expected [1..) arguments -t/--title or -b/--body: got neither" >&2; and return 1
+        echo "'__github_or_gitlab_edit' expected [1..) arguments -t/--title or -b/--body neither" >&2; and return 1
     end
     set -l args
     if test -n "$_flag_title"
@@ -965,7 +965,7 @@ function __github_or_gitlab_edit
         __gitlab_update $args
     else
         set -l remote $(remote-name); or return $status
-        echo "Invalid remote: got '$remote'" >&2; and return 1
+        echo "Invalid remote; got '$remote'" >&2; and return 1
     end
 end
 
@@ -990,7 +990,7 @@ function __github_or_gitlab_merge
         __gitlab_merge $args
     else
         set -l remote $(remote-name); or return $status
-        echo "Invalid remote: got '$remote'" >&2; and return 1
+        echo "Invalid remote; got '$remote'" >&2; and return 1
     end
 end
 
@@ -1007,7 +1007,7 @@ function __github_or_gitlab_view
         __gitlab_view
     else
         set -l remote $(remote-name); or return $status
-        echo "Invalid remote: got '$remote'" >&2; and return 1
+        echo "Invalid remote; got '$remote'" >&2; and return 1
     end
 end
 
