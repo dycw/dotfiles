@@ -15,7 +15,7 @@ tmux_conf_copy_to_os_clipboard=true
 
 # -- user customizations ------------------------------------------------------
 # history size
-set -g history-limit 10000
+set -g history-limit 50000
 
 # main pane size
 set -g main-pane-height 67%
