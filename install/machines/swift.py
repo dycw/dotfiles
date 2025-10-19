@@ -4,6 +4,7 @@ from __future__ import annotations
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
+from pathlib import Path
 
 from install.groups.linux import setup_linux
 from install.lib import install_spotify
@@ -26,6 +27,11 @@ from install.more_constants import (
 )
 
 _LOGGER = getLogger(__name__)
+_PATH_MACHINES = Path(__file__).parent
+_PATH_INSTALL = _PATH_MACHINES.parent
+_PATH_CONFIGS = _PATH_INSTALL / "configs"
+_PATH_LINUX = _PATH_CONFIGS / "linux"
+_RESOLV_CONF = _PATH_LINUX / "resolv.conf"
 
 
 @dataclass(order=True, unsafe_hash=True, kw_only=True, slots=True)
@@ -54,6 +60,8 @@ def _setup_swift() -> None:
         nvim_dir=NVIM,
         pdbrc=PDBRC,
         psqlrc=PSQLRC,
+        resolv_conf=_RESOLV_CONF,
+        resolv_conf_immutable=True,
         ripgreprc=RIPGREPRC,
         starship_toml=STARSHIP_TOML,
         tmux_conf_oh_my_tmux=TMUX_CONF_OH_MY_TMUX,
