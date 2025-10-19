@@ -85,7 +85,7 @@
   },
   "mason-lspconfig.nvim": {
     "branch": "main",
-    "commit": "6bdb14f230de0904229ec367b410fb817e59b072"
+    "commit": "2304ff65ecc8cb2afc2484de3e2ed9a407edf0b9"
   },
   "mason-tool-installer.nvim": {
     "branch": "main",
