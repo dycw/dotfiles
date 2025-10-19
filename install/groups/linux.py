@@ -76,6 +76,8 @@ def setup_linux(
     pdbrc: PathLike | None = None,
     permit_root_login: bool = False,
     psqlrc: PathLike | None = None,
+    resolv_conf: PathLike | None = None,
+    resolv_conf_immutable: bool = False,
     ripgreprc: PathLike | None = None,
     starship_toml: PathLike | None = None,
     tailscale_auth_key: PathLike | None = None,
@@ -84,7 +86,13 @@ def setup_linux(
     wezterm_lua: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up Linux...")
-    setup_common(pdbrc=pdbrc, permit_root_login=permit_root_login, psqlrc=psqlrc)
+    setup_common(
+        pdbrc=pdbrc,
+        permit_root_login=permit_root_login,
+        psqlrc=psqlrc,
+        resolv_conf=resolv_conf,
+        resolv_conf_immutable=resolv_conf_immutable,
+    )
     install_age()
     install_agg()
     install_asciinema()
