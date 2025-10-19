@@ -256,6 +256,11 @@ function mkdir
     command mkdir -p $argv
 end
 
+# mode
+for swap in $HOME/.mode.sw*
+    command rm -v $swap
+end
+
 # mv
 function mv
     if test (count $argv) -lt 2
