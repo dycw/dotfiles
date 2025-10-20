@@ -1,6 +1,11 @@
 # dependency groups
 [dependency-groups]
-  dev = ["rich>=14.1.0"]
+  dev = [
+    "pyright[nodejs]>=1.1.406",
+    "pytest>=8.4.2",
+    "pytest-xdist>=3.8.0",
+    "rich>=14.2.0",
+  ]
 
 # project
 [project]
@@ -12,7 +17,7 @@
 # bump-my-version
 [tool.bumpversion]
   allow_dirty = true
-  current_version = "0.3.174"
+  current_version = "0.3.175"
 
 # pyright
 [tool.pyright]

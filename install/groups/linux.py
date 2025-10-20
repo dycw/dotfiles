@@ -33,7 +33,6 @@ from install.lib import (
     install_neovim,
     install_neovim_dependencies,
     install_pre_commit,
-    install_pyright,
     install_restic,
     install_ripgrep,
     install_rsync,
@@ -136,7 +135,6 @@ def setup_linux(
     install_bump_my_version()  # after uv
     install_maturin()  # after uv
     install_pre_commit()  # after uv
-    install_pyright()  # after uv
     install_ruff()  # after uv
 
 

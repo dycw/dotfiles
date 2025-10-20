@@ -34,7 +34,6 @@ from install.lib import (
     install_maturin,
     install_neovim,
     install_pre_commit,
-    install_pyright,
     install_restic,
     install_ripgrep,
     install_rlwrap,
@@ -119,7 +118,6 @@ def setup_mac(
     install_maturin()  # after brew
     install_neovim(nvim_dir=nvim_dir)  # after brew
     install_pre_commit()  # after brew
-    install_pyright()  # after brew
     install_restic()  # after brew
     install_ripgrep(ripgreprc=ripgreprc)  # after brew
     install_rlwrap()  # after brew
