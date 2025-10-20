@@ -45,7 +45,7 @@
   },
   "gitsigns.nvim": {
     "branch": "main",
-    "commit": "1ee5c1fd068c81f9dd06483e639c2aa4587dc197"
+    "commit": "20ad4419564d6e22b189f6738116b38871082332"
   },
   "grug-far.nvim": {
     "branch": "main",
@@ -77,7 +77,7 @@
   },
   "leap.nvim": {
     "branch": "main",
-    "commit": "aa204264ffaf83650ee676ef68f52e327688b048"
+    "commit": "7068a0576694efb72798696de65155d503bcb0ef"
   },
   "lualine.nvim": {
     "branch": "master",
@@ -133,7 +133,7 @@
   },
   "nvim-tree.lua": {
     "branch": "master",
-    "commit": "e397756d2a79d74314ea4cd3efc41300e91c0ff0"
+    "commit": "64e2192f5250796aa4a7f33c6ad888515af50640"
   },
   "nvim-treesitter": {
     "branch": "master",
@@ -193,7 +193,7 @@
   },
   "tokyonight.nvim": {
     "branch": "main",
-    "commit": "d14614cbfc63b6037bfccd48bb982d2ad2003352"
+    "commit": "e63c42a42b11cd6225f009dd949b9ee0fccc15ef"
   },
   "vim-caser": {
     "branch": "master",

@@ -631,7 +631,7 @@ function gsu
     git submodule foreach --recursive '
         git checkout -- . &&
         git checkout $(git symbolic-ref refs/remotes/origin/HEAD | sed "s#.*/##") &&
-        git pull --ff-only
+        git pull --all --ff-only --force --prune --tags
     '
 end
 
