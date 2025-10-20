@@ -331,7 +331,7 @@ end
 # pyright + pytest
 function pyrt
     pyright; or return $status
-    pytest -nauto
+    pytest --numprocesses auto
 end
 
 # pytest
@@ -339,25 +339,25 @@ function pyt
     __pytest $argv
 end
 function pytf
-    __pytest -f $argv
+    __pytest --looponfail $argv
 end
 function pytfk
     if test (count $argv) -lt 1
         echo "'pytfk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
     end
-    __pytest -fk $argv
+    __pytest --looponfail -k $argv
 end
 function pytfn
-    __pytest -f -nauto $argv
+    __pytest --looponfail --numprocesses auto $argv
 end
 function pytfnx
-    __pytest -fx -nauto $argv
+    __pytest --looponfailx --numprocesses auto $argv
 end
 function pytfxk
     if test (count $argv) -lt 1
         echo "'pytfxk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
     end
-    __pytest -fxk $argv
+    __pytest --exitfirst --looponfail -k $argv
 end
 function pytk
     if test (count $argv) -lt 1
@@ -366,10 +366,10 @@ function pytk
     __pytest -k $argv
 end
 function pytn
-    __pytest -nauto $argv
+    __pytest --numprocesses auto $argv
 end
 function pytnx
-    __pytest -x -nauto $argv
+    __pytest --exitfirst --numprocesses auto $argv
 end
 function pytp
     __pytest --pdb $argv
@@ -381,19 +381,19 @@ function pytpk
     __pytest --pdb -k $argv
 end
 function pytpx
-    __pytest --pdb -x $argv
+    __pytest --exitfirst --pdb $argv
 end
 function pytpxk
     if test (count $argv) -lt 1
         echo "'pytpxk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
     end
-    __pytest --pdb -x -k $argv
+    __pytest --exitfirst --pdb -k $argv
 end
 function pytx
-    __pytest -x $argv
+    __pytest --exitfirst $argv
 end
 function pytfx
-    __pytest -fx $argv
+    __pytest --exitfirst --looponfail $argv
 end
 function __pytest
     pytest --color=yes $argv
