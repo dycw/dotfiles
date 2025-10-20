@@ -628,11 +628,7 @@ function gsa
 end
 function gsu
     git submodule update --init --recursive; or return $status
-    git submodule foreach --recursive '
-        git checkout -- . &&
-        git checkout $(git symbolic-ref refs/remotes/origin/HEAD | sed "s#.*/##") &&
-        git pull --all --ff-only --force --prune --tags
-    '
+    git submodule foreach --recursive 'git reset --hard $(git symbolic-ref refs/remotes/origin/HEAD --short) && git pull --ff-only --force --prune --tags'
 end
 
 # symbolic ref
