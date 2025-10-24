@@ -267,46 +267,72 @@ function __git_clone
     cd $current
 end
 
-# commit
+# commit + push
 
 function gc
-    __git_commit
+    __git_commit_push
+end
+function gcn
+    __git_commit_push --no-verify
 end
 
-function __git_commit
+function __git_commit_push
     if git diff --quiet; and git diff --cached --quiet
         return 0
     end
-    argparse message= no-verify -- $argv; or return $status
-    set -l message
-    if test -n "$_flag_message"
-        set message $_flag_message
-    else
-        set message (__auto_msg); or return $status
-    end
-    set -l args
+    argparse no-verify force web exit -- $argv; or return $status
+    set -l commit_args
     if test $_flag_no_verify
-        set args $args --no-verify
+        set commit_args $commit_args --no-verify
     end
-    git commit --message="'$message'" $args
+    git commit --message=$(__auto_msg) $commit_args
+    set -l push_args
+    if test $__flag_force
+        set push_args $push_args --force
+    end
+    if test $__flag_no_verify
+        set push_args $push_args --no-verify
+    end
+    if test $__flag_web
+        set push_args $push_args --web
+    end
+    if test $__flag_exit
+        set push_args $push_args --exit
+    end
+    __git_push $push_args
 end
 
-function __git_commit_until
-    argparse message= no-verify -- $argv; or return $status
-    set -l args
-    if test -n "$_flag_message"
-        set args $args --message $_flag_message
-    end
+function __git_commit_until_push
+    argparse no-verify force web exit -- $argv; or return $status
+    set -l commit_args
     if test -n "$_flag_no_verify"
-        set args $args --no-verify
+        set commit_args $commit_args --no-verify
     end
+    set -l committed 0
     for i in (seq 0 3) # @fish-lsp-disable
         ga $argv; or return $status
-        if __git_commit $args
-            return 0
+        if __git_commit_push $commit_args
+            set committed 1
+            break
         end
     end
-    return 1
+    if test $committed = 0
+        return 1
+    end
+    set -l push_args
+    if test $__flag_force
+        set push_args $push_args --force
+    end
+    if test $__flag_no_verify
+        set push_args $push_args --no-verify
+    end
+    if test $__flag_web
+        set push_args $push_args --web
+    end
+    if test $__flag_exit
+        set push_args $push_args --exit
+    end
+    __git_push $push_args
 end
 
 # diff
@@ -1196,7 +1222,7 @@ function ggcfnx
 end
 
 function __git_all
-    argparse title= num= part force no-verify web exit merge -- $argv; or return $status
+    argparse title= num= part no-verify force web exit merge -- $argv; or return $status
 
     if test -n "$_flag_title"
         set -l checkout_args
@@ -1214,26 +1240,20 @@ function __git_all
 
     __git_add $argv; or return $status # don't use force
 
-    set -l commit_args
+    set -l commit_push_args
     if test -n "$_flag_no_verify"
-        set commit_args $commit_args --no-verify
+        set commit_push_args $commit_push_args --no-verify
     end
-    __git_commit_until $commit_args; or return $status
-
-    set -l push_args
     if test -n "$_flag_force"
-        set push_args $push_args --force
-    end
-    if test -n "$_flag_no_verify"
-        set push_args $push_args --no-verify
+        set commit_push_args $commit_push_args --force
     end
     if test -n "$_flag_web"
-        set push_args $push_args --web
+        set commit_push_args $commit_push_args --web
     end
     if test -n "$_flag_exit"; and test -z "$_flag_merge"
-        set push_args $push_args --exit
+        set commit_push_args $commit_push_args --exit
     end
-    __git_push $push_args; or return $status
+    __git_commit_until_push $commit_push_args; or return $status
 
     if test -n "$_flag_merge"
         set -l merge_args
