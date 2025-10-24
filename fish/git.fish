@@ -144,7 +144,7 @@ function gco
     git checkout $branch
 end
 
-function gcf
+function gcof
     if test (count $argv) -eq 0
         git checkout -- .
     else
@@ -278,6 +278,45 @@ end
 function gcf
     __git_commit_push --force
 end
+function gcnf
+    __git_commit_push --no-verify --force
+end
+function gcw
+    __git_commit_push --web
+end
+function gcnw
+    __git_commit_push --no-verify --web
+end
+function gcfw
+    __git_commit_push --force --web
+end
+function gcnfw
+    __git_commit_push --no-verify --force --web
+end
+function gce
+    __git_commit_push --exit
+end
+function gcne
+    __git_commit_push --no-verify --exit
+end
+function gcfe
+    __git_commit_push --force --exit
+end
+function gcnfe
+    __git_commit_push --no-verify --force --exit
+end
+function gcx
+    __git_commit_push --web --exit
+end
+function gcnx
+    __git_commit_push --no-verify --web --exit
+end
+function gcfx
+    __git_commit_push --force --web --exit
+end
+function gcnfx
+    __git_commit_push --no-verify --force --web --exit
+end
 
 function __git_commit_push
     if git diff --quiet; and git diff --cached --quiet
@@ -407,50 +446,50 @@ end
 function gp
     __git_push
 end
-function gpf
-    __git_push --force
-end
 function gpn
     __git_push --no-verify
 end
-function gpfn
-    __git_push --force --no-verify
+function gpf
+    __git_push --force
+end
+function gpnf
+    __git_push --no-verify --force
 end
 function gpw
     __git_push --web
 end
-function gpfw
-    __git_push --force --web
-end
 function gpnw
     __git_push --no-verify --web
 end
-function gpfnw
-    __git_push --force --no-verify --web
+function gpfw
+    __git_push --force --web
+end
+function gpnfw
+    __git_push --no-verify --force --web
 end
 function gpe
     __git_push --exit
 end
-function gpfe
-    __git_push --force --exit
-end
 function gpne
     __git_push --no-verify --exit
 end
-function gpfne
-    __git_push --force --no-verify --exit
+function gpfe
+    __git_push --force --exit
+end
+function gpnfe
+    __git_push --no-verify --force --exit
 end
 function gpx
     __git_push --web --exit
 end
-function gpfx
-    __git_push --force --web --exit
-end
 function gpnx
     __git_push --no-verify --web --exit
 end
-function gpfnx
-    __git_push --force --no-verify --web --exit
+function gpfx
+    __git_push --force --web --exit
+end
+function gpnfx
+    __git_push --no-verify --force --web --exit
 end
 
 function __git_push
@@ -1052,7 +1091,7 @@ function ggf
     __git_all $argv --force
 end
 function ggnf
-    __git_all $argv --force --no-verify
+    __git_all $argv --no-verify --force
 end
 function ggw
     __git_all $argv --web
