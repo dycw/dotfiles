@@ -327,6 +327,12 @@ end
 function pyrightconfig
     __edit_ancestor pyrightconfig.json
 end
+if type -q watchexec
+    function wpyr
+        set -l cmd "cd $(pwd); pyright"
+        watchexec --exts json --exts py --exts toml --exts yaml --shell bash -- $cmd
+    end
+end
 
 # pyright + pytest
 function pyrt
@@ -400,6 +406,9 @@ function __pytest
 end
 
 # python
+function p3
+    python3 $argv
+end
 function pyproject
     __edit_ancestor pyproject.toml
 end
@@ -543,6 +552,9 @@ if type -q uv
             set args $args --with $arg
         end
         uv run --with jupyterlab --with juputetlab-vim $args jupyter lab
+    end
+    function pyc
+        uv tool run pyclean --debris=all .
     end
     function uvl
         if test (count $argv) -eq 0
