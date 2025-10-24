@@ -1048,7 +1048,7 @@ end
 function ggn
     __git_all $argv --no-verify
 end
-function ggfn
+function ggnf
     __git_all $argv --force --no-verify
 end
 function ggw
@@ -1060,8 +1060,8 @@ end
 function ggnw
     __git_all $argv --no-verify --web
 end
-function ggfnw
-    __git_all $argv --force --no-verify --web
+function ggnfw
+    __git_all $argv --no-verify --force --web
 end
 function gge
     __git_all $argv --exit
@@ -1072,8 +1072,8 @@ end
 function ggne
     __git_all $argv --no-verify --exit
 end
-function ggfne
-    __git_all $argv --force --no-verify --exit
+function ggnfe
+    __git_all $argv --no-verify --force --exit
 end
 function ggm
     __git_all $argv --merge
@@ -1084,8 +1084,8 @@ end
 function ggnm
     __git_all $argv --no-verify --merge
 end
-function ggfnm
-    __git_all $argv --force --no-verify --merge
+function ggnfm
+    __git_all $argv --no-verify --force --merge
 end
 function ggx
     __git_all $argv --merge --exit
@@ -1096,8 +1096,8 @@ end
 function ggnx
     __git_all $argv --no-verify --merge --exit
 end
-function ggfnx
-    __git_all $argv --force --no-verify --merge --exit
+function ggnfx
+    __git_all $argv --no-verify --force --merge --exit
 end
 #
 function ggc
@@ -1118,11 +1118,11 @@ function ggcn
     end
     __git_all --title=$argv[1] --no-verify $argv[2..]
 end
-function ggcfn
+function ggcnf
     if test (count $argv) -lt 1
-        echo "'ggcfn' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcnf' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
     end
-    __git_all --title=$argv[1] --force --no-verify $argv[2..]
+    __git_all --title=$argv[1] --no-verify --force $argv[2..]
 end
 function ggcw
     if test (count $argv) -lt 1
@@ -1142,11 +1142,11 @@ function ggcnw
     end
     __git_all --title=$argv[1] --no-verify --web $argv[2..]
 end
-function ggcfnw
+function ggcnfw
     if test (count $argv) -lt 1
-        echo "'ggcfnw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcnfw' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
     end
-    __git_all --title=$argv[1] --force --no-verify --web $argv[2..]
+    __git_all --title=$argv[1] --no-verify --force --web $argv[2..]
 end
 function ggce
     if test (count $argv) -lt 1
@@ -1166,11 +1166,11 @@ function ggcne
     end
     __git_all --title=$argv[1] --no-verify --exit $argv[2..]
 end
-function ggcfne
+function ggcnfe
     if test (count $argv) -lt 1
-        echo "'ggcfne' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcnfe' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
     end
-    __git_all --title=$argv[1] --force --no-verify --exit $argv[2..]
+    __git_all --title=$argv[1] --no-verify --force --exit $argv[2..]
 end
 function ggcm
     if test (count $argv) -lt 1
@@ -1190,11 +1190,11 @@ function ggcnm
     end
     __git_all --title=$argv[1] --no-verify --merge $argv[2..]
 end
-function ggcfnm
+function ggcnfm
     if test (count $argv) -lt 1
-        echo "'ggcfnm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcnfm' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
     end
-    __git_all --title=$argv[1] --force --no-verify --merge $argv[2..]
+    __git_all --title=$argv[1] --no-verify --force --merge $argv[2..]
 end
 function ggcx
     if test (count $argv) -lt 1
@@ -1214,11 +1214,11 @@ function ggcnx
     end
     __git_all --title=$argv[1] --no-verify --merge --exit $argv[2..]
 end
-function ggcfnx
+function ggcnfx
     if test (count $argv) -lt 1
-        echo "'ggcfnx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
+        echo "'ggcnfx' expected [1..) arguments TITLE; got $(count $argv)" >&2; and return 1
     end
-    __git_all --title=$argv[1] --force --no-verify --merge --exit $argv[2..]
+    __git_all --title=$argv[1] --no-verify --force --merge --exit $argv[2..]
 end
 
 function __git_all
