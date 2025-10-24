@@ -329,16 +329,16 @@ function __git_commit_push
     end
     git commit --message=$(__auto_msg) $commit_args
     set -l push_args
-    if test $__flag_force
+    if test $_flag_force
         set push_args $push_args --force
     end
-    if test $__flag_no_verify
+    if test $_flag_no_verify
         set push_args $push_args --no-verify
     end
-    if test $__flag_web
+    if test $_flag_web
         set push_args $push_args --web
     end
-    if test $__flag_exit
+    if test $_flag_exit
         set push_args $push_args --exit
     end
     __git_push $push_args
@@ -362,16 +362,16 @@ function __git_commit_until_push
         return 1
     end
     set -l push_args
-    if test $__flag_force
+    if test $_flag_force
         set push_args $push_args --force
     end
-    if test $__flag_no_verify
+    if test $_flag_no_verify
         set push_args $push_args --no-verify
     end
-    if test $__flag_web
+    if test $_flag_web
         set push_args $push_args --web
     end
-    if test $__flag_exit
+    if test $_flag_exit
         set push_args $push_args --exit
     end
     __git_push $push_args
