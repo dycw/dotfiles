@@ -319,7 +319,7 @@ function gcnfx
 end
 
 function __git_commit_push
-    if git diff --quiet; and git diff --cached --quiet
+    if __is_clean
         return 0
     end
     argparse no-verify force web exit -- $argv; or return $status
@@ -327,7 +327,7 @@ function __git_commit_push
     if test $_flag_no_verify
         set commit_args $commit_args --no-verify
     end
-    git commit --message=$(__auto_msg) $commit_args
+    git commit --message=$(__auto_msg) $commit_args; or return $status
     set -l push_args
     if test $_flag_force
         set push_args $push_args --force
@@ -350,16 +350,19 @@ function __git_commit_until_push
     if test -n "$_flag_no_verify"
         set commit_args $commit_args --no-verify
     end
-    set -l committed 0
-    for i in (seq 0 3) # @fish-lsp-disable
-        ga $argv; or return $status
-        if __git_commit_push $commit_args
-            set committed 1
-            break
+    set -l attempts 5
+    set -l proceed 0
+    for i in (seq 0 $attempts) # @fish-lsp-disable
+        while test $proceed = 0
+            ga $argv; or return $status
+            __git_commit_push $commit_args
+            if test $status -eq 0; and __is_clean
+                set proceed 1
+            end
         end
     end
-    if test $committed = 0
-        return 1
+    if test $proceed = 0
+        echo "'__git_commit_until_push' failed after $attempts" >&2; and return 1
     end
     set -l push_args
     if test $_flag_force
@@ -388,6 +391,10 @@ end
 function gdm
     set -l branch (default-branch); or return $status
     git diff origin/$branch $argv
+end
+
+function __is_clean
+    git diff --quiet; and git diff --cached --quiet
 end
 
 # fetch
