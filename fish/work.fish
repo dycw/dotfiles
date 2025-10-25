@@ -13,6 +13,6 @@ else if test -d $HOME/work/infra
 else if test -d $HOME/work-gitlab/infra
     set infra $HOME/work-gitlab/infra
 end
-if set -q infra; and test -f $infra/shell/fish.fish
-    source $infra/shell/fish.fish
+if set -q infra; and test -f $infra/shell/infra.fish
+    source $infra/shell/infra.fish
 end
