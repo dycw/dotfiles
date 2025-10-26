@@ -351,7 +351,7 @@ function __git_commit_until_push
         set commit_args $commit_args --no-verify
     end
     set -l proceed 0
-    for i in (seq 1 5) # @fish-lsp-disable
+    for i in (seq 1 5)
         if test $proceed -eq 0
             ga $argv; or return $status
             __git_commit_push $commit_args
@@ -361,7 +361,7 @@ function __git_commit_until_push
         end
     end
     if test $proceed -eq 0
-        echo "'__git_commit_until_push' failed after $attempts" >&2; and return 1
+        echo "'__git_commit_until_push' failed after $i attempts" >&2; and return 1
     end
     set -l push_args
     if test $_flag_force
