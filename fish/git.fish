@@ -350,10 +350,9 @@ function __git_commit_until_push
     if test -n "$_flag_no_verify"
         set commit_args $commit_args --no-verify
     end
-    set -l attempts 5
     set -l proceed 0
-    for i in (seq 0 $attempts)
-        while test $i -lt $attempts; and test $proceed = 0
+    for i in (seq 1 5) # @fish-lsp-disable
+        if test $proceed -eq 0
             ga $argv; or return $status
             __git_commit_push $commit_args
             if test $status -eq 0; and __is_clean
@@ -361,7 +360,7 @@ function __git_commit_until_push
             end
         end
     end
-    if test $proceed = 0
+    if test $proceed -eq 0
         echo "'__git_commit_until_push' failed after $attempts" >&2; and return 1
     end
     set -l push_args
