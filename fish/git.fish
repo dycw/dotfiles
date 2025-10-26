@@ -352,8 +352,8 @@ function __git_commit_until_push
     end
     set -l attempts 5
     set -l proceed 0
-    for i in (seq 0 $attempts) # @fish-lsp-disable
-        while test $proceed = 0
+    for i in (seq 0 $attempts)
+        while test $i -lt $attempts; and test $proceed = 0
             ga $argv; or return $status
             __git_commit_push $commit_args
             if test $status -eq 0; and __is_clean
