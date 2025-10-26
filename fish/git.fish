@@ -719,17 +719,15 @@ end
 # tag
 
 function gta
-    if test (math (count $argv) % 2) -ne 0
-        echo "'gta' accepts an even number of arguments; got (count $argv)" >&2; and return 1
-    end
-    set -l tag
-    set -l sha
-    while test (count $argv) -gt 0
-        set tag $argv[1]
-        set sha $argv[2]
-        git tag -a "$tag" "$sha" -m "$tag"; or return $status
-        git push --tags --force --set-upstream origin; or return $status
-        set argv $argv[3..-1]
+    if test (count $argv) -eq 1
+        __git_tag_push $argv[1] HEAD
+    else if test (math (count $argv) % 2) -ne 0
+        while test (count $argv) -gt 0
+            __git_tag_push $argv[1..2]
+            set argv $argv[3..-1]
+        end
+    else
+        echo "'gta' expected 1 or an even number of arguments; got (count $argv)" >&2; and return 1
     end
     __git_log -n 20
 end
@@ -738,6 +736,16 @@ function gtd
     git tag --delete $argv; or return $status
     git push --delete origin $argv; or return $status
     __git_log -n 20
+end
+
+function __git_tag_push
+    if test (count $argv) -lt 2
+        echo "'__git_tag_push' expected [2..] arguments TAG SHA; got $(count $argv)" >&2; and return 1
+    end
+    set -l tag $argv[1]
+    set -l sha $argv[2]
+    git tag -a "$tag" "$sha" -m "$tag"; or return $status
+    git push --tags --force --set-upstream origin; or return $status
 end
 
 #### github ###################################################################
