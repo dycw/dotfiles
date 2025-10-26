@@ -29,6 +29,7 @@ from install.lib import (
     install_iperf3,
     install_jq,
     install_just,
+    install_libpq,
     install_luacheck,
     install_macchanger,
     install_maturin,
@@ -113,6 +114,7 @@ def setup_mac(
     install_iperf3()  # after brew
     install_jq()  # after brew
     install_just()  # after brew
+    install_libpq()  # after brew
     install_luacheck()  # after brew
     install_macchanger()  # after brew
     install_maturin()  # after brew
