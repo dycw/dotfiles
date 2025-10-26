@@ -719,7 +719,13 @@ end
 # tag
 
 function gta
-    if test (count $argv) -eq 1
+    if test (count $argv ) -eq 0
+        if type -q bump-my-version
+            __git_tag_push (bump-my-version show current_version) HEAD
+        else
+            echo "'gta' expected 'bump-my-version' to be available" >&2; and return 1
+        end
+    else if test (count $argv) -eq 1
         __git_tag_push $argv[1] HEAD
     else if test (math (count $argv) % 2) -ne 0
         while test (count $argv) -gt 0
@@ -729,13 +735,13 @@ function gta
     else
         echo "'gta' expected 1 or an even number of arguments; got (count $argv)" >&2; and return 1
     end
-    __git_log -n 20
+    __git_log -n 10
 end
 
 function gtd
     git tag --delete $argv; or return $status
     git push --delete origin $argv; or return $status
-    __git_log -n 20
+    __git_log -n 10
 end
 
 function __git_tag_push
