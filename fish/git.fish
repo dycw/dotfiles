@@ -881,13 +881,15 @@ function __gitlab_merge
     set -l elapsed
     glab mr merge --remove-source-branch --squash --yes # never early exit
     while __gitlab_merging
-        set elapsed (math (date +%s) - $start)
         set merge_status (__gitlab_mr_merge_status); or return $status
-        if test "$merge_status" = mergeable
-            glab mr merge --remove-source-branch --squash --yes
+        if test "$merge_status" = ci_still_running; or test "$merge_status" = unchecked
+            if glab mr merge --remove-source-branch --squash --yes &>/dev/null
+                break
+            end
+            set elapsed (math (date +%s) - $start)
+            echo "'$repo/$branch' is still merging... ($merge_status, $elapsed s)"
+            sleep 1
         end
-        echo "'$repo/$branch' is still merging... ($merge_status, $elapsed s)"
-        sleep 1
     end
     set -l def_branch (default-branch); or return $status
     set -l args

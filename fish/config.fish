@@ -356,8 +356,11 @@ end
 function pytfn
     __pytest --looponfail --numprocesses auto $argv
 end
+function pytfnr
+    __pytest --force-regen --looponfail --numprocesses auto $argv
+end
 function pytfnx
-    __pytest --looponfailx --numprocesses auto $argv
+    __pytest -x --looponfail --numprocesses auto $argv
 end
 function pytfxk
     if test (count $argv) -lt 1
@@ -373,6 +376,9 @@ function pytk
 end
 function pytn
     __pytest --numprocesses auto $argv
+end
+function pytnr
+    __pytest --force-regen --numprocesses auto $argv
 end
 function pytnx
     __pytest --exitfirst --numprocesses auto $argv
@@ -568,6 +574,8 @@ if type -q uv
     end
     function uvpo
         set -l paths '.project.dependencies[]?' '.["dependency-groups"].*[]?' '.project."optional-dependencies".*[]?'
+        set -l all_current (uv pip list --color=never | string collect)
+        set -l outdated (uv pip list --color=never --outdated | string collect)
         set -l dep_and_vers
         set -l name
         set -l ver
@@ -584,18 +592,25 @@ if type -q uv
             end
         end
         set -l dep_and_vers (printf "%s\n" $dep_and_vers | sort -u)
+        set -l num_deps (count $dep_and_vers)
+        printf "Checking %d dependencies...\n" $num_deps
         for dep_ver in $dep_and_vers
-            __uvpo_core $dep_ver
+            __uvpo_core $all_current $outdated $dep_ver
         end
+        printf "Finished checking %d dependencies\n" $num_deps
     end
     function __uvpo_core
-        if test (count $argv) -ne 1
-            echo_date "'__uvpo_core' accepts [1..) arguments DEP_VER; got $(count $argv)"; and return 1
+        if test (count $argv) -lt 3
+            echo "'__uvpo_core' accepts [3..) arguments ALL_CURRENT OUTDATED DEP_VER; got $(count $argv)" >&2; and return 1
         end
-        set -l name (string trim (string split ' | ' $argv[1])[1])
-        set -l pyproject (string trim (string split ' | ' $argv[1])[2])
-        set -l current (uv pip list --color=never | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $2}')
-        set -l latest (uv pip list --color=never --outdated \
+        set -l all_current $argv[1]
+        set -l outdated $argv[2]
+        set -l dep_ver (string split " | " $argv[3])
+        set -l name (string trim $dep_ver[1])
+        set -l pyproject (string trim $dep_ver[2])
+        set -l current (printf "%s\n" $all_current \
+            | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $2}')
+        set -l latest (printf "%s\n" $outdated \
             | string match -r "^$name\s+\d+\.\d+\.\d+\s+\d+\.\d+\.\d+" \
             | awk '{print $3}')
         set -l latest_print
