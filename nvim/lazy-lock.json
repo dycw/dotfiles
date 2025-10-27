@@ -69,7 +69,7 @@
   },
   "lazy.nvim": {
     "branch": "main",
-    "commit": "db067881fff0fd4be8c00e5bde7492e0e1c77a2f"
+    "commit": "ed4dc336a73c18da6fea6e1cf7ad6e1b76d281eb"
   },
   "lazydev.nvim": {
     "branch": "main",
@@ -145,7 +145,7 @@
   },
   "nvim-web-devicons": {
     "branch": "master",
-    "commit": "b8221e42cf7287c4dcde81f232f58d7b947c210d"
+    "commit": "8dcb311b0c92d460fac00eac706abd43d94d68af"
   },
   "plenary.nvim": {
     "branch": "master",
@@ -153,11 +153,11 @@
   },
   "rainbow-delimiters.nvim": {
     "branch": "master",
-    "commit": "3277ad5f96eb03c9d618c88e24f683e4364e578c"
+    "commit": "b6b3c9e3f8db02a56416b8ee25d3dbd079ebf26b"
   },
   "rustaceanvim": {
     "branch": "master",
-    "commit": "12504405821c05874d2d1f6b5ec919f9808e2c99"
+    "commit": "88d13a79fc9009f9c04a1eab4970c3e9a2d4e6d6"
   },
   "sort.nvim": {
     "branch": "main",

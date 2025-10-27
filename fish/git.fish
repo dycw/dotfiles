@@ -718,7 +718,7 @@ end
 # tag
 
 function gta
-    if test (count $argv ) -eq 0
+    if test (count $argv) -eq 0
         if type -q bump-my-version
             __git_tag_push (bump-my-version show current_version) HEAD
         else
@@ -726,13 +726,13 @@ function gta
         end
     else if test (count $argv) -eq 1
         __git_tag_push $argv[1] HEAD
-    else if test (math (count $argv) % 2) -ne 0
+    else if test (math (count $argv) % 2) -eq 0
         while test (count $argv) -gt 0
             __git_tag_push $argv[1..2]
             set argv $argv[3..-1]
         end
     else
-        echo "'gta' expected 1 or an even number of arguments; got (count $argv)" >&2; and return 1
+        echo "'gta' expected 0, 1 or an even number of arguments; got $(count $argv)" >&2; and return 1
     end
     __git_log -n 10
 end
