@@ -889,15 +889,18 @@ function __gitlab_merge
         echo "'$repo/$branch' is still merging... ($merge_status, $elapsed s)"
         sleep 1
     end
+    set -l def_branch (default-branch); or return $status
     set -l args
     if test -n "$_flag_exit"
         set args $args --exit
     end
-    set -l def_branch (default-branch); or return $status
     __git_checkout_close $def_branch --delete $args
 end
 
 function __gitlab_merging
+    if not __gitlab_exists
+        return 1
+    end
     set -l state (__gitlab_mr_json --extract .state); or return $status
     if test $state != opened
         return 1
