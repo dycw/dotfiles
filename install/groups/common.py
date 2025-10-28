@@ -15,6 +15,7 @@ from install.lib import (
 if TYPE_CHECKING:
     from install.types import PathLike
 
+
 _LOGGER = getLogger(__name__)
 
 
