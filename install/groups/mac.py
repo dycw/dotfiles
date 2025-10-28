@@ -60,6 +60,7 @@ from install.lib import (
 if TYPE_CHECKING:
     from install.types import PathLike
 
+
 _LOGGER = getLogger(__name__)
 
 
@@ -79,6 +80,8 @@ def setup_mac(
     pdbrc: PathLike | None = None,
     permit_root_login: bool = False,
     psqlrc: PathLike | None = None,
+    resolv_conf: PathLike | None = None,
+    resolv_conf_immutable: bool = False,
     ripgreprc: PathLike | None = None,
     starship_toml: PathLike | None = None,
     tailscale_auth_key: PathLike | None = None,
@@ -87,7 +90,13 @@ def setup_mac(
     wezterm_lua: PathLike | None = None,
 ) -> None:
     _LOGGER.info("Setting up Mac...")
-    setup_common(pdbrc=pdbrc, permit_root_login=permit_root_login, psqlrc=psqlrc)
+    setup_common(
+        pdbrc=pdbrc,
+        permit_root_login=permit_root_login,
+        psqlrc=psqlrc,
+        resolv_conf=resolv_conf,
+        resolv_conf_immutable=resolv_conf_immutable,
+    )
     install_brew()
     install_git(config=git_config, ignore=git_ignore)
     install_age()  # after brew

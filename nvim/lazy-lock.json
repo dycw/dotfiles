@@ -69,11 +69,11 @@
   },
   "lazy.nvim": {
     "branch": "main",
-    "commit": "ed4dc336a73c18da6fea6e1cf7ad6e1b76d281eb"
+    "commit": "f0f5bbb9e5bfae5e6468f9359ffea3d151418176"
   },
   "lazydev.nvim": {
     "branch": "main",
-    "commit": "01bc2aacd51cf9021eb19d048e70ce3dd09f7f93"
+    "commit": "c2dfe354571a8255c5d3e96a9a4c297c89ce2347"
   },
   "leap.nvim": {
     "branch": "main",
@@ -85,7 +85,7 @@
   },
   "mason-lspconfig.nvim": {
     "branch": "main",
-    "commit": "1d77bd86e1c3eaa777010c95dad455b83823f247"
+    "commit": "35ec9e1425c2f9a36f556893336af4f302c63214"
   },
   "mason-tool-installer.nvim": {
     "branch": "main",
@@ -121,7 +121,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "ef40b787e68eb44b11e65596fdc46a1ad3445ccc"
+    "commit": "513fc3e2d1a041f2cf0a6379de2670ec586f4469"
   },
   "nvim-rip-substitute": {
     "branch": "main",
@@ -193,7 +193,7 @@
   },
   "tokyonight.nvim": {
     "branch": "main",
-    "commit": "4fe1b0c44f5d6ee769cdfbdffc7ccb703f53feda"
+    "commit": "2642dbb83333e0575d1c3436e1d837926871c5fb"
   },
   "vim-caser": {
     "branch": "master",
@@ -217,7 +217,7 @@
   },
   "which-key.nvim": {
     "branch": "main",
-    "commit": "b4177e3eaf15fe5eb8357ebac2286d488be1ed00"
+    "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a"
   },
   "wildfire.nvim": {
     "branch": "master",
