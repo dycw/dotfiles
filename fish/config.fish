@@ -85,7 +85,9 @@ end
 function cdh
     set -l current (pwd)
     cd /; or return $status
-    cd $current
+    eval $(direnv export fish); or return $status
+    cd $current; or return $status
+    eval $(direnv export fish)
 end
 function cdw
     cd $HOME/work
@@ -400,6 +402,9 @@ function pytpxk
         echo "'pytpxk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
     end
     __pytest --exitfirst --pdb -k $argv
+end
+function pytr
+    __pytest --force-regen $argv
 end
 function pytx
     __pytest --exitfirst $argv
