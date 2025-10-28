@@ -513,6 +513,9 @@ if type -q tailscale; and type -q tailscaled
     function ts-no-exit-node
         sudo tailscale set --exit-node=
     end
+    function wts
+        watch --color --differences --interval=0.5 -- tailscale status
+    end
 end
 
 # tmux
