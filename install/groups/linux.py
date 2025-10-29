@@ -28,7 +28,6 @@ from install.lib import (
     install_just,
     install_luacheck,
     install_luarocks,
-    install_macchanger,
     install_maturin,
     install_neovim,
     install_neovim_dependencies,
@@ -110,7 +109,6 @@ def setup_linux(
     install_jq()
     install_just()
     install_luarocks()
-    install_macchanger()
     install_neovim(nvim_dir=nvim_dir)
     install_neovim_dependencies()
     install_restic()
