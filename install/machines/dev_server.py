@@ -26,7 +26,6 @@ from install.constants import (
     REPO_WEZTERM_LUA,
 )
 from install.groups.linux import setup_linux
-from install.lib import install_spotify
 
 _LOGGER = getLogger(__name__)
 
@@ -44,8 +43,8 @@ class _Settings:
         return _Settings(**vars(parser.parse_args()))
 
 
-def _setup_swift() -> None:
-    _LOGGER.info("Setting up Swift...")
+def _setup_dev() -> None:
+    _LOGGER.info("Setting up dev server...")
     setup_linux(
         bottom_toml=REPO_BOTTOM_TOML,
         fd_ignore=REPO_FD_IGNORE,
@@ -67,7 +66,6 @@ def _setup_swift() -> None:
         tmux_conf_local=REPO_TMUX_CONF_LOCAL,
         wezterm_lua=REPO_WEZTERM_LUA,
     )
-    install_spotify()
 
 
 if __name__ == "__main__":
@@ -78,4 +76,4 @@ if __name__ == "__main__":
         style="{",
         level="DEBUG" if settings.verbose else "INFO",
     )
-    _setup_swift()
+    _setup_dev()
