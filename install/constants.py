@@ -38,7 +38,8 @@ REPO_ROOT = PATH_INSTALL.parent
 
 
 PATH_CONFIGS = PATH_INSTALL / "configs"
-PATH_CONFIGS_LINUX = PATH_CONFIGS / "linux"
+CONFIGS_LINUX = PATH_CONFIGS / "linux"
+LINUX_RESOLV_CONF = CONFIGS_LINUX / "resolv.conf"
 
 
 REPO_BOTTOM_TOML = REPO_ROOT / "bottom/bottom.toml"
@@ -61,12 +62,13 @@ REPO_STARSHIP_TOML = REPO_ROOT / "starship/starship.toml"
 REPO_TMUX = REPO_ROOT / "tmux"
 REPO_TMUX_CONF_OH_MY_TMUX = REPO_TMUX / ".tmux/.tmux.conf"
 REPO_TMUX_CONF_LOCAL = REPO_TMUX / "tmux.conf.local"
-REPO_WEZTERM_LUA = XDG_CONFIG_HOME / "wezterm/wezterm.lua"
+REPO_WEZTERM_LUA = REPO_ROOT / "wezterm/wezterm.lua"
 
 
 __all__ = [
     "AUTHORIZED_KEYS",
     "BASHRC",
+    "CONFIGS_LINUX",
     "CONFIG_BOTTOM_TOML",
     "CONFIG_DIRENV",
     "CONFIG_FD_IGNORE",
@@ -85,9 +87,9 @@ __all__ = [
     "ETC",
     "HOME",
     "KNOWN_HOSTS",
+    "LINUX_RESOLV_CONF",
     "LOCAL_BIN",
     "PATH_CONFIGS",
-    "PATH_CONFIGS_LINUX",
     "PATH_INSTALL",
     "PDBRC",
     "PSQLRC",
