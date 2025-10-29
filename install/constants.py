@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .installer_constants import (
+from install.installer_constants import (
     AUTHORIZED_KEYS,
     BASHRC,
     CONFIG_BOTTOM_TOML,
@@ -33,8 +33,14 @@ from .installer_constants import (
     XDG_CONFIG_HOME,
 )
 
-INSTALL = Path(__file__).parent
-REPO_ROOT = INSTALL.parent
+PATH_INSTALL = Path(__file__).parent
+REPO_ROOT = PATH_INSTALL.parent
+
+
+PATH_CONFIGS = PATH_INSTALL / "configs"
+PATH_CONFIGS_LINUX = PATH_CONFIGS / "linux"
+
+
 REPO_BOTTOM_TOML = REPO_ROOT / "bottom/bottom.toml"
 REPO_FD_IGNORE = REPO_ROOT / "fd/ignore"
 REPO_FISH = REPO_ROOT / "fish"
@@ -78,9 +84,11 @@ __all__ = [
     "CONFIG_WEZTERM_LUA",
     "ETC",
     "HOME",
-    "INSTALL",
     "KNOWN_HOSTS",
     "LOCAL_BIN",
+    "PATH_CONFIGS",
+    "PATH_CONFIGS_LINUX",
+    "PATH_INSTALL",
     "PDBRC",
     "PSQLRC",
     "REPO_BOTTOM_TOML",
