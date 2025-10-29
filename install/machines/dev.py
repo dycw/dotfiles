@@ -7,6 +7,8 @@ from logging import basicConfig, getLogger
 
 from install.constants import (
     LINUX_RESOLV_CONF,
+    REPO_BOTTOM_TOML,
+    REPO_FD_IGNORE,
     REPO_FISH_CONFIG,
     REPO_FISH_ENV,
     REPO_FISH_GIT,
@@ -45,6 +47,8 @@ class _Settings:
 def _setup_swift() -> None:
     _LOGGER.info("Setting up Swift...")
     setup_linux(
+        bottom_toml=REPO_BOTTOM_TOML,
+        fd_ignore=REPO_FD_IGNORE,
         fish_config=REPO_FISH_CONFIG,
         fish_env=REPO_FISH_ENV,
         fish_git=REPO_FISH_GIT,
