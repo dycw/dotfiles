@@ -4,34 +4,31 @@ from __future__ import annotations
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
-from pathlib import Path
 
+from install.constants import (
+    LINUX_RESOLV_CONF,
+    REPO_BOTTOM_TOML,
+    REPO_FD_IGNORE,
+    REPO_FISH_CONFIG,
+    REPO_FISH_ENV,
+    REPO_FISH_GIT,
+    REPO_FISH_WORK,
+    REPO_FZF_FISH,
+    REPO_GIT_CONFIG,
+    REPO_GIT_IGNORE,
+    REPO_NVIM,
+    REPO_PDBRC,
+    REPO_PSQLRC,
+    REPO_RIPGREPRC,
+    REPO_STARSHIP_TOML,
+    REPO_TMUX_CONF_LOCAL,
+    REPO_TMUX_CONF_OH_MY_TMUX,
+    REPO_WEZTERM_LUA,
+)
 from install.groups.linux import setup_linux
 from install.lib import install_spotify
-from install.more_constants import (
-    FISH_CONFIG,
-    FISH_ENV,
-    FISH_GIT,
-    FISH_WORK,
-    FZF_FISH,
-    GIT_CONFIG,
-    GIT_IGNORE,
-    NVIM,
-    PDBRC,
-    PSQLRC,
-    RIPGREPRC,
-    STARSHIP_TOML,
-    TMUX_CONF_LOCAL,
-    TMUX_CONF_OH_MY_TMUX,
-    WEZTERM_LUA,
-)
 
 _LOGGER = getLogger(__name__)
-_PATH_MACHINES = Path(__file__).parent
-_PATH_INSTALL = _PATH_MACHINES.parent
-_PATH_CONFIGS = _PATH_INSTALL / "configs"
-_PATH_LINUX = _PATH_CONFIGS / "linux"
-_RESOLV_CONF = _PATH_LINUX / "resolv.conf"
 
 
 @dataclass(order=True, unsafe_hash=True, kw_only=True, slots=True)
@@ -50,23 +47,25 @@ class _Settings:
 def _setup_swift() -> None:
     _LOGGER.info("Setting up Swift...")
     setup_linux(
-        fish_config=FISH_CONFIG,
-        fish_env=FISH_ENV,
-        fish_git=FISH_GIT,
-        fish_work=FISH_WORK,
-        fzf_fish=FZF_FISH,
-        git_config=GIT_CONFIG,
-        git_ignore=GIT_IGNORE,
-        nvim_dir=NVIM,
-        pdbrc=PDBRC,
-        psqlrc=PSQLRC,
-        resolv_conf=_RESOLV_CONF,
+        bottom_toml=REPO_BOTTOM_TOML,
+        fd_ignore=REPO_FD_IGNORE,
+        fish_config=REPO_FISH_CONFIG,
+        fish_env=REPO_FISH_ENV,
+        fish_git=REPO_FISH_GIT,
+        fish_work=REPO_FISH_WORK,
+        fzf_fish=REPO_FZF_FISH,
+        git_config=REPO_GIT_CONFIG,
+        git_ignore=REPO_GIT_IGNORE,
+        nvim_dir=REPO_NVIM,
+        pdbrc=REPO_PDBRC,
+        psqlrc=REPO_PSQLRC,
+        ripgreprc=REPO_RIPGREPRC,
+        starship_toml=REPO_STARSHIP_TOML,
+        tmux_conf_oh_my_tmux=REPO_TMUX_CONF_OH_MY_TMUX,
+        tmux_conf_local=REPO_TMUX_CONF_LOCAL,
+        wezterm_lua=REPO_WEZTERM_LUA,
+        resolv_conf=LINUX_RESOLV_CONF,
         resolv_conf_immutable=True,
-        ripgreprc=RIPGREPRC,
-        starship_toml=STARSHIP_TOML,
-        tmux_conf_oh_my_tmux=TMUX_CONF_OH_MY_TMUX,
-        tmux_conf_local=TMUX_CONF_LOCAL,
-        wezterm_lua=WEZTERM_LUA,
     )
     install_spotify()
 

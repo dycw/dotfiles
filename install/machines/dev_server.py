@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from logging import basicConfig, getLogger
 
 from install.constants import (
+    LINUX_RESOLV_CONF,
     REPO_BOTTOM_TOML,
     REPO_FD_IGNORE,
     REPO_FISH_CONFIG,
@@ -24,18 +25,7 @@ from install.constants import (
     REPO_TMUX_CONF_OH_MY_TMUX,
     REPO_WEZTERM_LUA,
 )
-from install.groups.mac import setup_mac
-from install.lib import (
-    install_dropbox,
-    install_postico,
-    install_protonvpn,
-    install_spotify,
-    install_transmission,
-    install_vlc,
-    install_vs_code,
-    install_whatsapp,
-    install_zoom,
-)
+from install.groups.linux import setup_linux
 
 _LOGGER = getLogger(__name__)
 
@@ -53,9 +43,9 @@ class _Settings:
         return _Settings(**vars(parser.parse_args()))
 
 
-def _setup_mac_mini() -> None:
-    _LOGGER.info("Setting up Mac Mini...")
-    setup_mac(
+def _setup_dev() -> None:
+    _LOGGER.info("Setting up dev server...")
+    setup_linux(
         bottom_toml=REPO_BOTTOM_TOML,
         fd_ignore=REPO_FD_IGNORE,
         fish_config=REPO_FISH_CONFIG,
@@ -68,21 +58,14 @@ def _setup_mac_mini() -> None:
         nvim_dir=REPO_NVIM,
         pdbrc=REPO_PDBRC,
         psqlrc=REPO_PSQLRC,
+        resolv_conf=LINUX_RESOLV_CONF,
+        resolv_conf_immutable=True,
         ripgreprc=REPO_RIPGREPRC,
         starship_toml=REPO_STARSHIP_TOML,
         tmux_conf_oh_my_tmux=REPO_TMUX_CONF_OH_MY_TMUX,
         tmux_conf_local=REPO_TMUX_CONF_LOCAL,
         wezterm_lua=REPO_WEZTERM_LUA,
     )
-    install_dropbox()
-    install_postico()
-    install_protonvpn()
-    install_spotify()
-    install_transmission()
-    install_vlc()
-    install_vs_code()
-    install_whatsapp()
-    install_zoom()
 
 
 if __name__ == "__main__":
@@ -93,4 +76,4 @@ if __name__ == "__main__":
         style="{",
         level="DEBUG" if settings.verbose else "INFO",
     )
-    _setup_mac_mini()
+    _setup_dev()
