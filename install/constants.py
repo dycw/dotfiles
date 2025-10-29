@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from .installer_constants import (
     AUTHORIZED_KEYS,
     BASHRC,
@@ -31,6 +33,31 @@ from .installer_constants import (
     XDG_CONFIG_HOME,
 )
 
+INSTALL = Path(__file__).parent
+REPO_ROOT = INSTALL.parent
+REPO_BOTTOM_TOML = REPO_ROOT / "bottom/bottom.toml"
+REPO_FD_IGNORE = REPO_ROOT / "fd/ignore"
+REPO_FISH = REPO_ROOT / "fish"
+REPO_FISH_CONFIG = REPO_FISH / "config.fish"
+REPO_FISH_ENV = REPO_FISH / "env.fish"
+REPO_FISH_GIT = REPO_FISH / "git.fish"
+REPO_FISH_WORK = REPO_FISH / "work.fish"
+REPO_FZF_FISH = REPO_ROOT / "fzf/fzf.fish"
+REPO_GIT = REPO_ROOT / "git"
+REPO_GIT_CONFIG = REPO_GIT / "config"
+REPO_GIT_IGNORE = REPO_GIT / "ignore"
+REPO_NVIM = REPO_ROOT / "nvim"
+REPO_PDBRC = REPO_ROOT / "pdb/pdbrc"
+REPO_PSQLRC = REPO_ROOT / "psql/psqlrc"
+REPO_RIPGREPRC = REPO_ROOT / "ripgrep/ripgreprc"
+REPO_SSH_CONFIG = REPO_ROOT / "ssh/config"
+REPO_STARSHIP_TOML = REPO_ROOT / "starship/starship.toml"
+REPO_TMUX = REPO_ROOT / "tmux"
+REPO_TMUX_CONF_OH_MY_TMUX = REPO_TMUX / ".tmux/.tmux.conf"
+REPO_TMUX_CONF_LOCAL = REPO_TMUX / "tmux.conf.local"
+REPO_WEZTERM_LUA = XDG_CONFIG_HOME / "wezterm/wezterm.lua"
+
+
 __all__ = [
     "AUTHORIZED_KEYS",
     "BASHRC",
@@ -51,10 +78,33 @@ __all__ = [
     "CONFIG_WEZTERM_LUA",
     "ETC",
     "HOME",
+    "INSTALL",
     "KNOWN_HOSTS",
     "LOCAL_BIN",
     "PDBRC",
     "PSQLRC",
+    "REPO_BOTTOM_TOML",
+    "REPO_FD_IGNORE",
+    "REPO_FISH",
+    "REPO_FISH_CONFIG",
+    "REPO_FISH_ENV",
+    "REPO_FISH_GIT",
+    "REPO_FISH_WORK",
+    "REPO_FZF_FISH",
+    "REPO_GIT",
+    "REPO_GIT_CONFIG",
+    "REPO_GIT_IGNORE",
+    "REPO_NVIM",
+    "REPO_PDBRC",
+    "REPO_PSQLRC",
+    "REPO_RIPGREPRC",
+    "REPO_ROOT",
+    "REPO_SSH_CONFIG",
+    "REPO_STARSHIP_TOML",
+    "REPO_TMUX",
+    "REPO_TMUX_CONF_LOCAL",
+    "REPO_TMUX_CONF_OH_MY_TMUX",
+    "REPO_WEZTERM_LUA",
     "RESOLV_CONF",
     "SSH",
     "SSH_CONFIG",
