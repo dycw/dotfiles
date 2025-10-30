@@ -5,13 +5,13 @@ from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
 
-from install.constants import (
+from ..constants import (
     REPO_STARSHIP_TOML,
     REPO_TMUX_CONF_LOCAL,
     REPO_TMUX_CONF_OH_MY_TMUX,
 )
-from install.groups.mac import setup_mac
-from install.lib import install_dropbox, install_zoom
+from ..groups.mac import setup_mac
+from ..lib import install_dropbox, install_zoom
 
 _LOGGER = getLogger(__name__)
 

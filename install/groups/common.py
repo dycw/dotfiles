@@ -3,7 +3,7 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from install.lib import (
+from ..lib import (
     add_to_known_hosts,
     setup_pdb,
     setup_psql,
@@ -13,7 +13,7 @@ from install.lib import (
 )
 
 if TYPE_CHECKING:
-    from install.types import PathLike
+    from ..types import PathLike
 
 
 _LOGGER = getLogger(__name__)
