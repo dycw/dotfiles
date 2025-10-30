@@ -4,7 +4,6 @@ from __future__ import annotations
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
-from typing import TYPE_CHECKING
 
 from install.constants import (
     REPO_STARSHIP_TOML,
@@ -13,9 +12,6 @@ from install.constants import (
 )
 from install.groups.mac import setup_mac
 from install.lib import install_dropbox, install_zoom
-
-if TYPE_CHECKING:
-    from install.types import PathLike
 
 _LOGGER = getLogger(__name__)
 
@@ -33,10 +29,9 @@ class _Settings:
         return _Settings(**vars(parser.parse_args()))
 
 
-def _setup_macbook(*, glab_config_yml: PathLike | None = None) -> None:
+def _setup_macbook() -> None:
     _LOGGER.info("Setting up MacBook...")
     setup_mac(
-        glab_config_yml=glab_config_yml,
         starship_toml=REPO_STARSHIP_TOML,
         tmux_conf_oh_my_tmux=REPO_TMUX_CONF_OH_MY_TMUX,
         tmux_conf_local=REPO_TMUX_CONF_LOCAL,

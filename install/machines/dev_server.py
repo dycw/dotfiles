@@ -4,11 +4,12 @@ from __future__ import annotations
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
-from typing import TYPE_CHECKING
 
 from install.constants import (
     LINUX_RESOLV_CONF,
     REPO_BOTTOM_TOML,
+    REPO_DIRENV_TOML,
+    REPO_DIRENVRC,
     REPO_FD_IGNORE,
     REPO_FISH_CONFIG,
     REPO_FISH_ENV,
@@ -28,9 +29,6 @@ from install.constants import (
 )
 from install.groups.linux import setup_linux
 
-if TYPE_CHECKING:
-    from install.types import PathLike
-
 _LOGGER = getLogger(__name__)
 
 
@@ -47,10 +45,12 @@ class _Settings:
         return _Settings(**vars(parser.parse_args()))
 
 
-def _setup_dev_server(*, glab_config_yml: PathLike | None = None) -> None:
+def _setup_dev_server() -> None:
     _LOGGER.info("Setting up dev server...")
     setup_linux(
         bottom_toml=REPO_BOTTOM_TOML,
+        direnv_toml=REPO_DIRENV_TOML,
+        direnvrc=REPO_DIRENVRC,
         fd_ignore=REPO_FD_IGNORE,
         fish_config=REPO_FISH_CONFIG,
         fish_env=REPO_FISH_ENV,
@@ -59,7 +59,6 @@ def _setup_dev_server(*, glab_config_yml: PathLike | None = None) -> None:
         fzf_fish=REPO_FZF_FISH,
         git_config=REPO_GIT_CONFIG,
         git_ignore=REPO_GIT_IGNORE,
-        glab_config_yml=glab_config_yml,
         nvim_dir=REPO_NVIM,
         pdbrc=REPO_PDBRC,
         psqlrc=REPO_PSQLRC,

@@ -67,6 +67,8 @@ def setup_mac(
     *,
     age_secret_key: PathLike | None = None,
     bottom_toml: PathLike | None = None,
+    direnv_toml: PathLike | None = None,
+    direnvrc: PathLike | None = None,
     fd_ignore: PathLike | None = None,
     fish_config: PathLike | None = None,
     fish_env: PathLike | None = None,
@@ -106,7 +108,7 @@ def setup_mac(
     install_bottom(bottom_toml=bottom_toml)  # after brew
     install_bump_my_version()  # after brew
     install_delta()  # after brew
-    install_direnv()  # after brew
+    install_direnv(direnv_toml=direnv_toml, direnvrc=direnvrc)  # after brew
     install_dust()  # after brew
     install_eza()  # after brew
     install_fd(ignore=fd_ignore)
