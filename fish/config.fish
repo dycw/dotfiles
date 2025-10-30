@@ -364,6 +364,9 @@ end
 function pytfnx
     __pytest -x --looponfail --numprocesses auto $argv
 end
+function pytfr
+    __pytest --force-regen --looponfail $argv
+end
 function pytfxk
     if test (count $argv) -lt 1
         echo "'pytfxk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
