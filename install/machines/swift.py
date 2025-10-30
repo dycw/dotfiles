@@ -32,6 +32,9 @@ from install.lib import install_spotify
 if TYPE_CHECKING:
     from install.types import PathLike
 
+if TYPE_CHECKING:
+    from install.types import PathLike
+
 _LOGGER = getLogger(__name__)
 
 
