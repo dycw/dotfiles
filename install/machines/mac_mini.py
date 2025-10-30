@@ -4,6 +4,7 @@ from __future__ import annotations
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
+from typing import TYPE_CHECKING
 
 from install.constants import (
     REPO_BOTTOM_TOML,
@@ -37,6 +38,9 @@ from install.lib import (
     install_zoom,
 )
 
+if TYPE_CHECKING:
+    from install.types import PathLike
+
 _LOGGER = getLogger(__name__)
 
 
@@ -53,7 +57,7 @@ class _Settings:
         return _Settings(**vars(parser.parse_args()))
 
 
-def _setup_mac_mini() -> None:
+def _setup_mac_mini(*, glab_config_yml: PathLike | None = None) -> None:
     _LOGGER.info("Setting up Mac Mini...")
     setup_mac(
         bottom_toml=REPO_BOTTOM_TOML,
@@ -65,6 +69,7 @@ def _setup_mac_mini() -> None:
         fzf_fish=REPO_FZF_FISH,
         git_config=REPO_GIT_CONFIG,
         git_ignore=REPO_GIT_IGNORE,
+        glab_config_yml=glab_config_yml,
         nvim_dir=REPO_NVIM,
         pdbrc=REPO_PDBRC,
         psqlrc=REPO_PSQLRC,
