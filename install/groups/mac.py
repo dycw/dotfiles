@@ -75,6 +75,7 @@ def setup_mac(
     fzf_fish: PathLike | None = None,
     git_config: PathLike | None = None,
     git_ignore: PathLike | None = None,
+    glab_config_yml: PathLike | None = None,
     nvim_dir: PathLike | None = None,
     pdbrc: PathLike | None = None,
     permit_root_login: bool = False,
@@ -117,7 +118,7 @@ def setup_mac(
     install_gh()  # after brew
     install_ghostty()  # after brew
     install_gitweb()  # after brew
-    install_glab()  # after brew
+    install_glab(config_yml=glab_config_yml)  # after brew
     install_gsed()  # after brew
     install_iperf3()  # after brew
     install_jq()  # after brew

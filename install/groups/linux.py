@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from logging import getLogger
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from install.groups.common import setup_common
@@ -23,6 +24,7 @@ from install.lib import (
     install_gh,
     install_git,
     install_gitweb,
+    install_glab,
     install_iperf3,
     install_jq,
     install_just,
@@ -72,6 +74,7 @@ def setup_linux(
     fzf_fish: PathLike | None = None,
     git_config: PathLike | None = None,
     git_ignore: PathLike | None = None,
+    glab_config_yml: PathLike | None = None,
     nvim_dir: PathLike | None = None,
     pdbrc: PathLike | None = None,
     permit_root_login: bool = False,
@@ -105,6 +108,7 @@ def setup_linux(
     install_fzf(fzf_fish=fzf_fish)
     install_gh()
     install_git(config=git_config, ignore=git_ignore)
+    install_glab(config_yml=glab_config_yml)
     install_iperf3()
     install_jq()
     install_just()
