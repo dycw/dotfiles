@@ -73,11 +73,11 @@
   },
   "lazydev.nvim": {
     "branch": "main",
-    "commit": "faf46237f0df43a29e12abd143ff1a0bbac27b7e"
+    "commit": "371cd7434cbf95606f1969c2c744da31b77fcfa6"
   },
   "leap.nvim": {
     "branch": "main",
-    "commit": "44e3a60a7a62069e5c9445b7a8104612d4f060cb"
+    "commit": "673517c316a0808a2f6948ed863e18c6cc03da21"
   },
   "lualine.nvim": {
     "branch": "master",
@@ -85,7 +85,7 @@
   },
   "mason-lspconfig.nvim": {
     "branch": "main",
-    "commit": "3590d66effccc7376d8c3dbe45e8291f9fed2843"
+    "commit": "d7b5feb6e769e995f7fcf44d92f49f811c51d10c"
   },
   "mason-tool-installer.nvim": {
     "branch": "main",
@@ -121,7 +121,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "87d30189b24caa496b54affd65594a309ac6d929"
+    "commit": "e25994a1c2373784364852cd904cb39b6d75f227"
   },
   "nvim-rip-substitute": {
     "branch": "main",

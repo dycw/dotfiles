@@ -8,12 +8,36 @@ return {
         local leap = require("leap")
         local keymap_set = require("utilities").keymap_set
 
-        leap.add_default_mappings()
+        keymap_set({ "n", "x", "o" }, "s", "<Plug>(leap)")
+        keymap_set("n", "S", "<Plug>(leap-from-window)")
 
-        -- remote actions
-        keymap_set({ "n", "x", "o" }, "gs", function()
-            require("leap.remote").action()
-        end, "leap remote")
+        -- remote
+        keymap_set({ "n", "o" }, "gs", function()
+            require("leap.remote").action({
+                input = v.fn.mode(true):match("o") and "" or "v",
+            })
+        end)
+
+        -- Forced linewise version (`gS{leap}jjy`):
+        keymap_set({ "n", "o" }, "gS", function()
+            require("leap.remote").action({ input = "V" })
+        end)
+
+        -- Exclude whitespace and the middle of alphabetic words from preview:
+        --   foobar[baaz] = quux
+        --   ^----^^^--^^-^-^--^
+        require("leap").opts.preview = function(ch0, ch1, ch2)
+            return not (ch1:match("%s") or (ch0:match("%a") and ch1:match("%a") and ch2:match("%a")))
+        end
+
+        -- Define equivalence classes for brackets and quotes, in addition to
+        -- the default whitespace group:
+        require("leap").opts.equivalence_classes = {
+            " \t\r\n",
+            "([{",
+            ")]}",
+            "'\"`",
+        }
 
         -- 1-character search (enhanced f/t motions)
         do
