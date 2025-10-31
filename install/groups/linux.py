@@ -8,6 +8,7 @@ from ..lib import (
     install_age,
     install_agg,
     install_asciinema,
+    install_bat,
     install_bottom,
     install_build_essential,
     install_bump_my_version,
@@ -100,6 +101,7 @@ def setup_linux(
     install_age()
     install_agg()
     install_asciinema()
+    install_bat()
     install_build_essential()
     install_curl()
     install_delta()
