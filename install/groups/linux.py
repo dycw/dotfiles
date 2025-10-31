@@ -45,6 +45,7 @@ from ..lib import (
     install_stylua,
     install_syncthing,
     install_tailscale,
+    install_taplo,
     install_tmux,
     install_topgrade,
     install_uv,
@@ -124,6 +125,7 @@ def setup_linux(
     install_shellcheck()
     install_shfmt()
     install_syncthing()
+    install_taplo()
     install_topgrade()
     install_tmux(
         tmux_conf_oh_my_tmux=tmux_conf_oh_my_tmux, tmux_conf_local=tmux_conf_local
