@@ -568,7 +568,7 @@ if type -q uv
         for arg in $argv
             set args $args --with $arg
         end
-        uv run --with jupyterlab --with juputetlab-vim $args jupyter lab
+        uv run --with jupyterlab --with jupyterlab-vim $args jupyter lab
     end
     function pyc
         uv tool run pyclean --debris=all .
