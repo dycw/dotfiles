@@ -384,8 +384,7 @@ function gdc
     git diff --cached $argv
 end
 function gdm
-    set -l branch (git default-remote-branch); or return $status
-    git diff $branch $argv
+    git diff-remote $argv
 end
 
 # fetch

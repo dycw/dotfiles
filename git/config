@@ -5,6 +5,7 @@
   purge-local = "!git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D"
 
   # diff
+  diff-remote = "!git diff $(git default-remote-branch)"
   is-clean = "!git diff --quiet && git diff --cached --quiet"
 
   # fetch
