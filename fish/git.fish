@@ -540,19 +540,11 @@ function grem
     git remote -v
 end
 
-function remote-name
-    git remote get-url origin
-end
-
-function repo-name
-    basename -s .git $(remote-name)
-end
-
 function __remote_is
     if test (count $argv) -lt 1
         echo "'__remote_is' expected [1..) arguments REMOTE; got $(count $argv)" >&2; and return 1
     end
-    if remote-name | grep -q $argv[1]
+    if git remote-name | grep -q $argv[1]
         return 0
     else
         return 1
@@ -749,7 +741,7 @@ function __github_merge
     if not __github_exists
         echo "'__github_merge' could not find an open PR for '$curr_branch'" >&2; and return 1
     end
-    set -l repo (repo-name); or return $status
+    set -l repo (git repo-name); or return $status
     set -l start (date +%s)
     set -l elapsed
     gh pr merge --auto --delete-branch --squash; or return $status
@@ -811,7 +803,7 @@ end
 
 function __gitlab_merge
     argparse exit -- $argv; or return $status
-    set -l repo (repo-name); or return $status
+    set -l repo (git repo-name); or return $status
     set -l branch (git current-branch); or return $status
     set -l start (date +%s); or return $status
     set -l i 0
@@ -944,7 +936,7 @@ function __github_or_gitlab_create
         end
         __gitlab_create $args
     else
-        set -l remote $(remote-name); or return $status
+        set -l remote $(git remote-name); or return $status
         echo "Invalid remote; got '$remote'" >&2; and return 1
     end
 end
@@ -982,7 +974,7 @@ function __github_or_gitlab_edit
         end
         __gitlab_update $args
     else
-        set -l remote $(remote-name); or return $status
+        set -l remote $(git remote-name); or return $status
         echo "Invalid remote; got '$remote'" >&2; and return 1
     end
 end
@@ -1007,7 +999,7 @@ function __github_or_gitlab_merge
     else if __remote_is_gitlab
         __gitlab_merge $args
     else
-        set -l remote $(remote-name); or return $status
+        set -l remote $(git remote-name); or return $status
         echo "Invalid remote; got '$remote'" >&2; and return 1
     end
 end
@@ -1024,7 +1016,7 @@ function __github_or_gitlab_view
     else if __remote_is_gitlab
         __gitlab_view
     else
-        set -l remote $(remote-name); or return $status
+        set -l remote $(git remote-name); or return $status
         echo "Invalid remote; got '$remote'" >&2; and return 1
     end
 end
