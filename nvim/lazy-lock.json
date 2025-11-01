@@ -117,7 +117,7 @@
   },
   "nvim-lint": {
     "branch": "master",
-    "commit": "9da1fb942dd0668d5182f9c8dee801b9c190e2bb"
+    "commit": "8c694e1a1ee2ac14df931679cd54e6b8d402c2c2"
   },
   "nvim-lspconfig": {
     "branch": "master",
