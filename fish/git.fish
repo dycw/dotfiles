@@ -160,15 +160,15 @@ function gcfm
 end
 
 function gm
-    set -l branch (git default-branch); or return $status
+    set -l branch (git default-local-branch); or return $status
     __git_checkout_close $branch
 end
 function gmd
-    set -l branch (git default-branch); or return $status
+    set -l branch (git default-local-branch); or return $status
     __git_checkout_close $branch --delete
 end
 function gmx
-    set -l branch (git default-branch); or return $status
+    set -l branch (git default-local-branch); or return $status
     __git_checkout_close $branch --delete --exit
 end
 
@@ -185,7 +185,7 @@ function __git_checkout_open
     else
         set branch "$_flag_num-$(__clean_branch_name $_flag_title)"; or return $status
     end
-    git checkout -b $branch origin/$(git default-branch); or return $status
+    git checkout -b $branch $(git default-remote-branch); or return $status
     git commit --allow-empty --message="$(__auto_msg)" --no-verify; or return $status
     __git_push --no-verify; or return $status
     set -l title
@@ -384,8 +384,7 @@ function gdc
     git diff --cached $argv
 end
 function gdm
-    set -l branch (git default-remote-branch); or return $status
-    git diff $branch $argv
+    git diff-remote $argv
 end
 
 # fetch
@@ -497,8 +496,8 @@ end
 
 function grb
     git fetch-default; or return $status
-    set -l branch (git default-branch); or return $status
-    git rebase --strategy=recursive --strategy-option=theirs origin/$branch
+    set -l branch (git default-remote-branch); or return $status
+    git rebase --strategy=recursive --strategy-option=theirs $branch
 end
 
 function grba
@@ -540,19 +539,11 @@ function grem
     git remote -v
 end
 
-function remote-name
-    git remote get-url origin
-end
-
-function repo-name
-    basename -s .git $(remote-name)
-end
-
 function __remote_is
     if test (count $argv) -lt 1
         echo "'__remote_is' expected [1..) arguments REMOTE; got $(count $argv)" >&2; and return 1
     end
-    if remote-name | grep -q $argv[1]
+    if git remote-name | grep -q $argv[1]
         return 0
     else
         return 1
@@ -573,8 +564,8 @@ function gr
 end
 
 function grhom
-    set -l branch (git default-branch); or return $status
-    git reset --hard origin/$branch $argv
+    set -l branch (git default-remote-branch); or return $status
+    git reset --hard $branch $argv
 end
 
 function grp
@@ -583,8 +574,8 @@ end
 
 function gsq
     git fetch-default; or return $status
-    set -l branch (git default-branch); or return $status
-    git reset --soft $(git merge-base origin/$branch HEAD)
+    set -l branch (git default-remote-branch); or return $status
+    git reset --soft $(git merge-base $branch HEAD)
 end
 
 # restore
@@ -645,11 +636,11 @@ function wg
             git -c color.ui=always diff --stat
         fi
         branch=$(printf "%-6s" "$(git default-local-branch)")
-        if ! git diff origin/$branch --quiet; then
+        if ! git diff-remote --quiet; then
             printf "\n==== diff origin/$branch =======================================================\n"
-            git -c color.ui=always diff origin/$branch --stat
+            git -c color.ui=always diff-remote --stat
         fi
-        if (git remote get-url origin 2>/dev/null | grep -q github) && (command -v gh >/dev/null 2>&1); then
+        if (git remote-name | grep -q github) && (command -v gh >/dev/null 2>&1); then
             printf "\n==== github ==================================================================="
             gh pr status
         fi
@@ -745,24 +736,24 @@ end
 
 function __github_merge
     argparse exit -- $argv; or return $status
-    set -l branch (git current-branch); or return $status
+    set -l curr_branch (git current-branch); or return $status
     if not __github_exists
-        echo "'__github_merge' could not find an open PR for '$branch'" >&2; and return 1
+        echo "'__github_merge' could not find an open PR for '$curr_branch'" >&2; and return 1
     end
-    set -l repo (repo-name); or return $status
+    set -l repo (git repo-name); or return $status
     set -l start (date +%s)
     set -l elapsed
     gh pr merge --auto --delete-branch --squash; or return $status
     while __github_merging
         set elapsed (math (date +%s) - $start)
-        echo "$repo/$branch is still merging... ($elapsed s)"
+        echo "$repo/$curr_branch is still merging... ($elapsed s)"
         sleep 1
     end
     set -l args
     if test -n "$_flag_exit"
         set args $args --exit
     end
-    set -l def_branch (git default-branch); or return $status
+    set -l def_branch (git default-local-branch); or return $status
     __git_checkout_close $def_branch --delete $args
 end
 
@@ -811,7 +802,7 @@ end
 
 function __gitlab_merge
     argparse exit -- $argv; or return $status
-    set -l repo (repo-name); or return $status
+    set -l repo (git repo-name); or return $status
     set -l branch (git current-branch); or return $status
     set -l start (date +%s); or return $status
     set -l i 0
@@ -846,7 +837,7 @@ function __gitlab_merge
         echo "'$repo/$branch' is still merging... ($i, $merge_status, $elapsed s)"
         sleep 1
     end
-    set -l def_branch (git default-branch); or return $status
+    set -l def_branch (git default-local-branch); or return $status
     set -l args
     if test -n "$_flag_exit"
         set args $args --exit
@@ -944,7 +935,7 @@ function __github_or_gitlab_create
         end
         __gitlab_create $args
     else
-        set -l remote $(remote-name); or return $status
+        set -l remote $(git remote-name); or return $status
         echo "Invalid remote; got '$remote'" >&2; and return 1
     end
 end
@@ -982,7 +973,7 @@ function __github_or_gitlab_edit
         end
         __gitlab_update $args
     else
-        set -l remote $(remote-name); or return $status
+        set -l remote $(git remote-name); or return $status
         echo "Invalid remote; got '$remote'" >&2; and return 1
     end
 end
@@ -1007,7 +998,7 @@ function __github_or_gitlab_merge
     else if __remote_is_gitlab
         __gitlab_merge $args
     else
-        set -l remote $(remote-name); or return $status
+        set -l remote $(git remote-name); or return $status
         echo "Invalid remote; got '$remote'" >&2; and return 1
     end
 end
@@ -1024,7 +1015,7 @@ function __github_or_gitlab_view
     else if __remote_is_gitlab
         __gitlab_view
     else
-        set -l remote $(remote-name); or return $status
+        set -l remote $(git remote-name); or return $status
         echo "Invalid remote; got '$remote'" >&2; and return 1
     end
 end
