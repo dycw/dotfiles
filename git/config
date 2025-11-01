@@ -8,6 +8,10 @@
   # fetch
   fetch-default = "!git fetch --all --force --prune --prune-tags --recurse-submodules=yes --tags && git purge-local"
 
+  # show-ref
+  is-valid-ref = "!f() { git is-valid-ref1 $1 || git is-valid-ref1 heads/$1 || git is-valid-ref1 remotes/$1 || git is-valid-ref1 tags/$1 >/dev/null; }; f"
+  is-valid-ref1 = "!f() { git show-ref --verify --quiet refs/$1; }; f"
+
   # symbolic-ref
   default-remote-branch = "!git symbolic-ref refs/remotes/origin/HEAD --short"
   default-local-branch = "!git default-remote-branch | sed \"s#origin/##\""

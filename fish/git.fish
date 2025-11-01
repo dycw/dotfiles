@@ -144,7 +144,7 @@ function gcof
     if test (count $argv) -eq 0
         git checkout -- .
     else
-        if __is_valid_ref $argv[1]
+        if git is-valid-ref $argv[1]
             git fetch-default; or return $status
             git checkout $argv[1] -- $argv[2..]
         else
