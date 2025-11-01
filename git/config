@@ -1,9 +1,10 @@
 [alias]
   # branch
+  branch-default = "!git branch --all --list --sort=-committerdate --verbose"
   purge-local = "!git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D"
 
   # diff
-  is-clean = "!git diff --quiet; and git diff --cached --quiet"
+  is-clean = "!git diff --quiet && git diff --cached --quiet"
 
   # fetch
   fetch-default = "!git fetch --all --force --prune --prune-tags --recurse-submodules=yes --tags && git purge-local"

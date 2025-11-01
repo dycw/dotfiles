@@ -47,7 +47,7 @@ end
 # branch
 
 function gb
-    git branch --all --list --sort=-committerdate --verbose $argv
+    git branch-default
 end
 
 function gbd
