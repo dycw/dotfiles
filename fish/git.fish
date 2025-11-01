@@ -665,12 +665,6 @@ function gsu
     git submodules-update
 end
 
-# symbolic ref
-
-function default-branch
-    git symbolic-ref refs/remotes/origin/HEAD | sed 's#.*/##'
-end
-
 # tag
 
 function gta
