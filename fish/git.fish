@@ -640,7 +640,7 @@ function wg
             printf "\n==== diff origin/$branch =======================================================\n"
             git -c color.ui=always diff-remote --stat
         fi
-        if (git remote get-url origin 2>/dev/null | grep -q github) && (command -v gh >/dev/null 2>&1); then
+        if (git remote-name | grep -q github) && (command -v gh >/dev/null 2>&1); then
             printf "\n==== github ==================================================================="
             gh pr status
         fi
