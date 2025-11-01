@@ -1078,8 +1078,7 @@ function __github_or_gitlab_view
         __gitlab_view
     else
         set -l remote $(remote-name); or return $status
-        echo "Invalid remote
-    got '$remote'" >&2; and return 1
+        echo "Invalid remote; got '$remote'" >&2; and return 1
     end
 end
 
