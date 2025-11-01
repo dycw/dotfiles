@@ -862,10 +862,6 @@ function __gitlab_create
     glab mr create --push --remove-source-branch --squash-before-merge $args --title $title --description $description
 end
 
-function __gitlab_exists
-    __gitlab_mr_json --quiet &>/dev/null
-end
-
 function __gitlab_merge
     argparse exit -- $argv; or return $status
     set -l repo (repo-name); or return $status
@@ -925,15 +921,11 @@ function __gitlab_update
 end
 
 function __gitlab_mr_json
-    argparse quiet -- $argv; or return $status
     set -l branch (current-branch); or return $status
     set -l json (glab mr list --output=json --source-branch=$branch); or return $status
     set -l num (printf %s $json | jq length); or return $status
     if test $num -eq 0
-        if test -n "$_flag_quiet"
-            echo "'__gitlab_mr_json' expected an MR for '$branch'; got none" >&2
-        end
-        return 100
+        echo "'__gitlab_mr_json' expected an MR for '$branch'; got none" >&2; and return 100
     else if test $num -eq 1
         printf "%s\n" "$json" | jq .[0]
     else
