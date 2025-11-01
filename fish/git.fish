@@ -213,7 +213,7 @@ function __git_checkout_close
     set -l target $argv[1]
     set -l original (git current-branch); or return $status
     git checkout $target; or return $status
-    __git_pull_force; or return $status
+    git pull-default; or return $status
     if test -n "$_flag_delete"
         git branch-delete $original
     end
@@ -414,12 +414,7 @@ end
 # pull
 
 function gpl
-    __git_pull_force $argv
-end
-
-function __git_pull_force
-    __git_branch_purge_local; or return $status
-    git pull --all --ff-only --force --prune --tags $argv
+    git pull-default $argv
 end
 
 # push
