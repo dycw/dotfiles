@@ -1,6 +1,7 @@
 [alias]
   # branch
   branch-default = "!git branch --all --list --sort=-committerdate --verbose"
+  branch-delete = "!git branch --delete --force"
   purge-local = "!git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D"
 
   # diff

@@ -53,11 +53,11 @@ end
 function gbd
     if test (count $argv) -eq 0
         __git_branch_fzf_local --multi | while read branch
-            __git_branch_delete $branch
+            git branch-delete $branch
         end
     else
         for branch in $argv
-            __git_branch_delete $branch
+            git branch-delete $branch
         end
     end
 end
@@ -76,10 +76,6 @@ function gbm
         echo "'gbm' expected [1..) arguments BRANCH; got $(count $argv)" >&2; and return 1
     end
     git branch -m $argv
-end
-
-function __git_branch_delete
-    git branch --delete --force $argv
 end
 
 function __git_branch_fzf_local
@@ -219,7 +215,7 @@ function __git_checkout_close
     git checkout $target; or return $status
     __git_pull_force; or return $status
     if test -n "$_flag_delete"
-        __git_branch_delete $original
+        git branch-delete $original
     end
     if test -n "$_flag_exit"
         exit
