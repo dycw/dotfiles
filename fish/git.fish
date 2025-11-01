@@ -148,7 +148,7 @@ function gcof
     if test (count $argv) -eq 0
         git checkout -- .
     else
-        if __is_valid_ref $argv[1]
+        if git is-valid-ref $argv[1]
             git fetch-default; or return $status
             git checkout $argv[1] -- $argv[2..]
         else
@@ -637,16 +637,6 @@ end
 
 function __git_rm
     git rm -rf $argv
-end
-
-# show-ref
-
-function __is_valid_ref
-    if test (count $argv) -lt 1
-        echo "'__is_valid_ref' expected [1..) arguments REF; got $(count $argv)" >&2; and return 1
-    end
-    set -l ref $argv[1]
-    git show-ref --verify --quiet refs/heads/$ref; or git show-ref --verify --quiet refs/remotes/$ref; or git show-ref --verify --quiet refs/tags/$ref; or git rev-parse --verify --quiet $ref >/dev/null
 end
 
 # stash
