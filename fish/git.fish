@@ -868,30 +868,38 @@ end
 
 function __gitlab_merge
     argparse exit -- $argv; or return $status
-    set -l branch (current-branch); or return $status
-    set -l json (__gitlab_mr_json 2>&1)
-    if test $status -ne 0
-        echo "'__gitlab_merge' could not find an open MR for '$branch'" >&2; and return 1
-    end
-    set -l merge_status (__gitlab_mr_merge_status); or return $status
-    if test "$merge_status" = conflict; or test "$merge_status" = need_rebase; or test "$merge_status" = 'not open'
-        echo "'$branch' cannot be merged; got $merge_status" >&2; and return 1
-    end
     set -l repo (repo-name); or return $status
-    set -l start (date +%s)
-    set -l elapsed
-    glab mr merge --remove-source-branch --squash --yes # never early exit
-    sleep 1
-    while __gitlab_merging
-        set merge_status (__gitlab_mr_merge_status); or return $status
-        if test "$merge_status" = ci_still_running; or test "$merge_status" = unchecked
-            if glab mr merge --remove-source-branch --squash --yes &>/dev/null
-                break
-            end
-            set elapsed (math (date +%s) - $start)
-            echo "'$repo/$branch' is still merging... ($merge_status, $elapsed s)"
-            sleep 1
+    set -l branch (current-branch); or return $status
+    set -l start (date +%s); or return $status
+    set -l i 0
+    while true
+        set -l json (__gitlab_mr_json 2>&1)
+        set -l json_status $status
+        if test $i -eq 0; and $json_status -eq 100
+            echo "'__gitlab_merge' expected an MR for '$branch'; got none" >&2; and return 1
+        else if test $json_status -eq 101
+            echo "'__gitlab_merge' expected a unique MR for '$branch'" >&2; and return 1
+        else if test $json_status -ne 0
+            echo "'__gitlab_merge' expected an exit status of 0, 100 or 101; got $json_status" >&2; and return 1
         end
+        set -l state (echo $json | jq .state); or return $status
+        if test $state != opened
+            echo "'__gitlab_merge' expected the MR for '$branch' to be opened; got '$state'" >&2; and return 1
+        end
+        set -l merge_status (__gitlab_mr_merge_status $json); or return $status
+        if test "$merge_status" = conflict; or test "$merge_status" = need_rebase; or test "$merge_status" = 'not open'
+            echo "'__gitlab_merge' cannot merge the MR for '$branch' because of merge status '$merge_status'" >&2; and return 1
+        end
+        glab mr merge --remove-source-branch --squash --yes &>/dev/null
+        set -l i (math $i+1)
+        set -l json (__gitlab_mr_json 2>&1)
+        if test $status -eq 100
+            break
+        end
+        set -l merge_status (__gitlab_mr_merge_status $json); or return $status
+        set -l elapsed (math (date +%s) - $start)
+        echo "'$repo/$branch' is still merging... ($i, $merge_status, $elapsed s)"
+        sleep 1
     end
     set -l def_branch (default-branch); or return $status
     set -l args
@@ -899,22 +907,6 @@ function __gitlab_merge
         set args $args --exit
     end
     __git_checkout_close $def_branch --delete $args
-end
-
-function __gitlab_merging
-    if not __gitlab_exists
-        return 1
-    end
-    set -l state (__gitlab_mr_json --extract .state); or return $status
-    if test $state != opened
-        return 1
-    end
-    set -l pid (__gitlab_mr_json --extract .target_project_id); or return $status
-    set -l branch (current-branch); or return $status
-    if glab api "projects/$pid/repository/branches/$branch" &>/dev/null
-        return 0
-    end
-    return 1
 end
 
 function __gitlab_update
@@ -939,35 +931,32 @@ function __gitlab_mr_json
         if test -n "$_flag_quiet"
             echo "'__gitlab_mr_json' expected an MR for '$branch'; got none" >&2
         end
-        return 1
+        return 100
     else if test $num -eq 1
         printf "%s\n" "$json" | jq .[0]
     else
-        echo "'__gitlab_mr_json' expected a unique MR for '$branch'; got $num" >&2; and return 2
+        echo "'__gitlab_mr_json' expected a unique MR for '$branch'; got $num" >&2; and return 101
     end
 end
 
 function __gitlab_mr_merge_status
-    argparse quiet -- $argv; or return $status
-    set -l args --extract .detailed_merge_status
-    if test -n "$_flag_quiet"
-        set args $args --quiet
+    if test (count $argv) -lt 1
+        echo "'__gitlab_mr_merge_status' expected [1..) arguments JSON; got $(count $argv)" >&2; and return 1
     end
-    __gitlab_mr_json $args
+    echo (string collect $argv) | jq -r .detailed_merge_status
 end
 
 function __gitlab_mr_num
-    argparse quiet -- $argv; or return $status
-    set -l args --extract .iid
-    if test -n "$_flag_quiet"
-        set args $args --quiet
+    if test (count $argv) -lt 1
+        echo "'__gitlab_mr_num' expected [1..) arguments JSON; got $(count $argv)" >&2; and return 1
     end
-    __gitlab_mr_json $args
+    echo (string collect $argv) | jq -r .iid
 end
 
 function __gitlab_view
-    set -l num (__gitlab_mr_num --quiet)
-    if test $status = 0; and test -n $num
+    set -l json (__gitlab_mr_json 2>&1)
+    if test $status = 0
+        set -l num (__gitlab_mr_num $json)
         glab mr view $num --web
     else if type -q gitweb
         gitweb
@@ -989,8 +978,7 @@ function ghc
     else if test (count $argv) -eq 2
         set args $args --title $argv[1] --body $argv[2]
     else
-        echo "'ghc' expected [0..2] arguments TITLE BODY
-            got $(count $argv)" >&2; and return 1
+        echo "'ghc' expected [0..2] arguments TITLE BODY; got $(count $argv)" >&2; and return 1
     end
     __github_or_gitlab_create $args
 end
