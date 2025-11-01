@@ -882,7 +882,7 @@ function __gitlab_merge
         else if test $json_status -ne 0
             echo "'__gitlab_merge' expected an exit status of 0, 100 or 101; got $json_status" >&2; and return 1
         end
-        set -l state (echo $json | jq .state); or return $status
+        set -l state (echo $json | jq -r .state); or return $status
         if test $state != opened
             echo "'__gitlab_merge' expected the MR for '$branch' to be opened; got '$state'" >&2; and return 1
         end
