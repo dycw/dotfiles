@@ -160,15 +160,15 @@ function gcfm
 end
 
 function gm
-    set -l branch (git default-branch); or return $status
+    set -l branch (git default-local-branch); or return $status
     __git_checkout_close $branch
 end
 function gmd
-    set -l branch (git default-branch); or return $status
+    set -l branch (git default-local-branch); or return $status
     __git_checkout_close $branch --delete
 end
 function gmx
-    set -l branch (git default-branch); or return $status
+    set -l branch (git default-local-branch); or return $status
     __git_checkout_close $branch --delete --exit
 end
 
@@ -185,7 +185,7 @@ function __git_checkout_open
     else
         set branch "$_flag_num-$(__clean_branch_name $_flag_title)"; or return $status
     end
-    git checkout -b $branch origin/$(git default-branch); or return $status
+    git checkout -b $branch $(git default-remote-branch); or return $status
     git commit --allow-empty --message="$(__auto_msg)" --no-verify; or return $status
     __git_push --no-verify; or return $status
     set -l title
@@ -497,8 +497,8 @@ end
 
 function grb
     git fetch-default; or return $status
-    set -l branch (git default-branch); or return $status
-    git rebase --strategy=recursive --strategy-option=theirs origin/$branch
+    set -l branch (git default-remote-branch); or return $status
+    git rebase --strategy=recursive --strategy-option=theirs $branch
 end
 
 function grba
@@ -573,8 +573,8 @@ function gr
 end
 
 function grhom
-    set -l branch (git default-branch); or return $status
-    git reset --hard origin/$branch $argv
+    set -l branch (git default-remote-branch); or return $status
+    git reset --hard $branch $argv
 end
 
 function grp
@@ -583,8 +583,8 @@ end
 
 function gsq
     git fetch-default; or return $status
-    set -l branch (git default-branch); or return $status
-    git reset --soft $(git merge-base origin/$branch HEAD)
+    set -l branch (git default-remote-branch); or return $status
+    git reset --soft $(git merge-base $branch HEAD)
 end
 
 # restore
@@ -745,9 +745,9 @@ end
 
 function __github_merge
     argparse exit -- $argv; or return $status
-    set -l branch (git current-branch); or return $status
+    set -l curr_branch (git current-branch); or return $status
     if not __github_exists
-        echo "'__github_merge' could not find an open PR for '$branch'" >&2; and return 1
+        echo "'__github_merge' could not find an open PR for '$curr_branch'" >&2; and return 1
     end
     set -l repo (repo-name); or return $status
     set -l start (date +%s)
@@ -755,14 +755,14 @@ function __github_merge
     gh pr merge --auto --delete-branch --squash; or return $status
     while __github_merging
         set elapsed (math (date +%s) - $start)
-        echo "$repo/$branch is still merging... ($elapsed s)"
+        echo "$repo/$curr_branch is still merging... ($elapsed s)"
         sleep 1
     end
     set -l args
     if test -n "$_flag_exit"
         set args $args --exit
     end
-    set -l def_branch (git default-branch); or return $status
+    set -l def_branch (git default-local-branch); or return $status
     __git_checkout_close $def_branch --delete $args
 end
 
@@ -846,7 +846,7 @@ function __gitlab_merge
         echo "'$repo/$branch' is still merging... ($i, $merge_status, $elapsed s)"
         sleep 1
     end
-    set -l def_branch (git default-branch); or return $status
+    set -l def_branch (git default-local-branch); or return $status
     set -l args
     if test -n "$_flag_exit"
         set args $args --exit
