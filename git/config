@@ -15,7 +15,7 @@
   log-default = "!git log --abbrev-commit --decorate=short --pretty=\"format:%C(red)%h%C(reset) | %C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)\""
 
   # pull
-  pull-default = "!git pull --all --force --prune --recurse-submodules=yes --tags"
+  pull-default = "!git pull --all --force --prune --recurse-submodules=yes --tags && git purge-local"
 
   # remote
   remote-name = "!git remote get-url origin"
