@@ -1,3 +1,22 @@
+[alias]
+  # branch
+  purge-local = "!git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D"
+
+  # diff
+  is-clean = "!git diff --quiet; and git diff --cached --quiet"
+
+  # fetch
+  fetch-default = "!git fetch --all --force --prune --prune-tags --recurse-submodules=yes --tags && git purge-local"
+
+  # symbolic-ref
+  default-remote-branch = "!git symbolic-ref refs/remotes/origin/HEAD --short"
+  default-local-branch = "!git default-remote-branch | sed \"s#origin/##\""
+
+  fetch-and-purge = "!git fetch-all && git purge-local"
+  log-short = "!git log --abbrev-commit --decorate=short --pretty=\"format:%C(red)%h%C(reset) | %C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)\""
+  pull-all = "!git pull --all --force --prune --recurse-submodules=yes --tags"
+  submodules-update = "!git submodule update --init --recursive && git submodule foreach --recursive 'git checkout --force $(git default-branch | sed \"s#origin/##\") && git pull-all'"
+
 [apply]
   whitespace = nowarn
 
