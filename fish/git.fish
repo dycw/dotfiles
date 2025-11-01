@@ -875,7 +875,7 @@ function __gitlab_merge
     while true
         set -l json (__gitlab_mr_json 2>&1)
         set -l json_status $status
-        if test $i -eq 0; and $json_status -eq 100
+        if test $i -eq 0; and test $json_status -eq 100
             echo "'__gitlab_merge' expected an MR for '$branch'; got none" >&2; and return 1
         else if test $json_status -eq 101
             echo "'__gitlab_merge' expected a unique MR for '$branch'" >&2; and return 1
