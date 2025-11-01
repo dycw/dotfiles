@@ -144,7 +144,7 @@ function gcof
     if test (count $argv) -eq 0
         git checkout -- .
     else
-        if git is-valid-ref $argv[1]
+        if __is_valid_ref $argv[1]
             git fetch-default; or return $status
             git checkout $argv[1] -- $argv[2..]
         else
@@ -663,6 +663,12 @@ function gsa
 end
 function gsu
     git submodules-update
+end
+
+# symbolic ref
+
+function default-branch
+    git symbolic-ref refs/remotes/origin/HEAD | sed 's#.*/##'
 end
 
 # tag
