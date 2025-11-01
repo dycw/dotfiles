@@ -11,7 +11,7 @@ function fish-git
 end
 
 function git-ignore
-    $EDITOR $(repo-root)/pyproject.toml
+    $EDITOR $(git repo-root)/pyproject.toml
 end
 
 #### git ######################################################################
@@ -47,23 +47,23 @@ end
 # branch
 
 function gb
-    git branch --all --list --sort=-committerdate --verbose $argv
+    git branch-default
 end
 
 function gbd
     if test (count $argv) -eq 0
         __git_branch_fzf_local --multi | while read branch
-            __git_branch_delete $branch
+            git branch-delete $branch
         end
     else
         for branch in $argv
-            __git_branch_delete $branch
+            git branch-delete $branch
         end
     end
 end
 
 function gbdr
-    __git_fetch_and_purge; or echo $status
+    git fetch-default; or return $status
     if test (count $argv) -eq 0
         __git_branch_fzf_remote --multi | xargs -r -I{} git push --delete origin "{}"
     else
@@ -76,10 +76,6 @@ function gbm
         echo "'gbm' expected [1..) arguments BRANCH; got $(count $argv)" >&2; and return 1
     end
     git branch -m $argv
-end
-
-function __git_branch_delete
-    git branch --delete --force $argv
 end
 
 function __git_branch_fzf_local
@@ -148,8 +144,8 @@ function gcof
     if test (count $argv) -eq 0
         git checkout -- .
     else
-        if __is_valid_ref $argv[1]
-            __git_fetch_and_purge; or return $status
+        if git is-valid-ref $argv[1]
+            git fetch-default; or return $status
             git checkout $argv[1] -- $argv[2..]
         else
             git checkout -- $argv
@@ -158,27 +154,27 @@ function gcof
 end
 
 function gcfm
-    __git_fetch_and_purge; or return $status
-    set -l branch (default-branch); or return $status
-    git checkout origin/$branch -- $argv
+    git fetch-default; or return $status
+    set -l branch (git default-remote-branch); or return $status
+    git checkout $branch -- $argv
 end
 
 function gm
-    set -l branch (default-branch); or return $status
+    set -l branch (git default-branch); or return $status
     __git_checkout_close $branch
 end
 function gmd
-    set -l branch (default-branch); or return $status
+    set -l branch (git default-branch); or return $status
     __git_checkout_close $branch --delete
 end
 function gmx
-    set -l branch (default-branch); or return $status
+    set -l branch (git default-branch); or return $status
     __git_checkout_close $branch --delete --exit
 end
 
 function __git_checkout_open
     argparse title= num= part -- $argv; or return $status
-    __git_fetch_and_purge; or return $status
+    git fetch-default; or return $status
     set -l branch
     if test -z "$_flag_title"; and test -z "$_flag_num"
         set branch dev
@@ -189,7 +185,7 @@ function __git_checkout_open
     else
         set branch "$_flag_num-$(__clean_branch_name $_flag_title)"; or return $status
     end
-    git checkout -b $branch origin/$(default-branch); or return $status
+    git checkout -b $branch origin/$(git default-branch); or return $status
     git commit --allow-empty --message="$(__auto_msg)" --no-verify; or return $status
     __git_push --no-verify; or return $status
     set -l title
@@ -215,11 +211,11 @@ function __git_checkout_close
     end
     argparse delete exit -- $argv; or return $status
     set -l target $argv[1]
-    set -l original (current-branch); or return $status
+    set -l original (git current-branch); or return $status
     git checkout $target; or return $status
     __git_pull_force; or return $status
     if test -n "$_flag_delete"
-        __git_branch_delete $original
+        git branch-delete $original
     end
     if test -n "$_flag_exit"
         exit
@@ -319,7 +315,7 @@ function gcnfx
 end
 
 function __git_commit_push
-    if __is_clean
+    if git is-clean
         return 0
     end
     argparse no-verify force web exit -- $argv; or return $status
@@ -355,7 +351,7 @@ function __git_commit_until_push
         if test $proceed -eq 0
             ga $argv; or return $status
             __git_commit_push $commit_args
-            if test $status -eq 0; and __is_clean
+            if test $status -eq 0; and git is-clean
                 set proceed 1
             end
         end
@@ -388,23 +384,14 @@ function gdc
     git diff --cached $argv
 end
 function gdm
-    set -l branch (default-branch); or return $status
-    git diff origin/$branch $argv
-end
-
-function __is_clean
-    git diff --quiet; and git diff --cached --quiet
+    set -l branch (git default-remote-branch); or return $status
+    git diff $branch $argv
 end
 
 # fetch
 
 function gf
-    __git_fetch_and_purge
-end
-
-function __git_fetch_and_purge
-    git fetch --all --force --prune --prune-tags --recurse-submodules=yes --tags; or return $status
-    __git_branch_purge_local
+    git fetch-default
 end
 
 # log
@@ -416,18 +403,7 @@ function gl
     else if string match -qr '^[0-9]+$' -- $argv[1]; and test $argv[1] -gt 0
         set args $args -n $argv[1]
     end
-    __git_log $args
-end
-
-function __git_log
-    argparse n= -- $argv; or return $status
-    set -l args
-    if test -n $_flag_n
-        set args $args --max-count=$_flag_n
-    end
-    git log --abbrev-commit --decorate=short \
-        --pretty='format:%C(red)%h%C(reset) | %C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)' \
-        $args
+    git log-default $args
 end
 
 # mv
@@ -504,7 +480,7 @@ function __git_push
     if test -n "$_flag_force"
         set args $args --force
     end
-    set args $args --set-upstream origin (current-branch); or return $status
+    set args $args --set-upstream origin (git current-branch); or return $status
     if test -n "$_flag_no_verify"
         set args $args --no-verify
     end
@@ -520,8 +496,8 @@ end
 # rebase
 
 function grb
-    __git_fetch_and_purge; or return $status
-    set -l branch (default-branch); or return $status
+    git fetch-default; or return $status
+    set -l branch (git default-branch); or return $status
     git rebase --strategy=recursive --strategy-option=theirs origin/$branch
 end
 
@@ -597,7 +573,7 @@ function gr
 end
 
 function grhom
-    set -l branch (default-branch); or return $status
+    set -l branch (git default-branch); or return $status
     git reset --hard origin/$branch $argv
 end
 
@@ -606,8 +582,8 @@ function grp
 end
 
 function gsq
-    __git_fetch_and_purge; or return $status
-    set -l branch (default-branch); or return $status
+    git fetch-default; or return $status
+    set -l branch (git default-branch); or return $status
     git reset --soft $(git merge-base origin/$branch HEAD)
 end
 
@@ -624,15 +600,7 @@ end
 # rev-parse
 
 function cdr
-    cd (repo-root)
-end
-
-function current-branch
-    git rev-parse --abbrev-ref HEAD
-end
-
-function repo-root
-    git rev-parse --show-toplevel
+    cd (git repo-root)
 end
 
 # rm
@@ -646,16 +614,6 @@ end
 
 function __git_rm
     git rm -rf $argv
-end
-
-# show-ref
-
-function __is_valid_ref
-    if test (count $argv) -lt 1
-        echo "'__is_valid_ref' expected [1..) arguments REF; got $(count $argv)" >&2; and return 1
-    end
-    set -l ref $argv[1]
-    git show-ref --verify --quiet refs/heads/$ref; or git show-ref --verify --quiet refs/remotes/$ref; or git show-ref --verify --quiet refs/tags/$ref; or git rev-parse --verify --quiet $ref >/dev/null
 end
 
 # stash
@@ -686,8 +644,7 @@ function wg
             printf "\n==== diff =====================================================================\n"
             git -c color.ui=always diff --stat
         fi
-        branch=$(git symbolic-ref refs/remotes/origin/HEAD | sed "s#.*/##")
-        branch=$(printf "%-6s" "$branch")
+        branch=$(printf "%-6s" "$(git default-local-branch)")
         if ! git diff origin/$branch --quiet; then
             printf "\n==== diff origin/$branch =======================================================\n"
             git -c color.ui=always diff origin/$branch --stat
@@ -705,14 +662,7 @@ function gsa
     git submodule add $argv
 end
 function gsu
-    git submodule update --init --recursive; or return $status
-    git submodule foreach --recursive 'git checkout --force $(git symbolic-ref refs/remotes/origin/HEAD --short | sed ''s#origin/##'') && git pull --ff-only --force --prune --tags'
-end
-
-# symbolic ref
-
-function default-branch
-    git symbolic-ref refs/remotes/origin/HEAD | sed 's#.*/##'
+    git submodules-update
 end
 
 # tag
@@ -720,27 +670,24 @@ end
 function gta
     if test (count $argv) -eq 0
         if type -q bump-my-version
-            __git_tag_push (bump-my-version show current_version) HEAD
+            git tag-add (bump-my-version show current_version) HEAD
         else
             echo "'gta' expected 'bump-my-version' to be available" >&2; and return 1
         end
     else if test (count $argv) -eq 1
-        __git_tag_push $argv[1] HEAD
+        git tag-add $argv[1] HEAD
     else if test (math (count $argv) % 2) -eq 0
         while test (count $argv) -gt 0
-            __git_tag_push $argv[1..2]
+            git tag-add $argv[1..2]
             set argv $argv[3..-1]
         end
     else
         echo "'gta' expected 0, 1 or an even number of arguments; got $(count $argv)" >&2; and return 1
     end
-    __git_log -n 10
 end
 
 function gtd
-    git tag --delete $argv; or return $status
-    git push --delete origin $argv; or return $status
-    __git_log -n 10
+    git tag-delete $argv
 end
 
 function __git_tag_push
@@ -785,7 +732,7 @@ function __github_edit
 end
 
 function __github_exists
-    set -l branch (current-branch); or return $status
+    set -l branch (git current-branch); or return $status
     set -l num (gh pr list --head=$branch --json number --jq '. | length'); or return $status
     if test $num -eq 0
         return 1
@@ -798,7 +745,7 @@ end
 
 function __github_merge
     argparse exit -- $argv; or return $status
-    set -l branch (current-branch); or return $status
+    set -l branch (git current-branch); or return $status
     if not __github_exists
         echo "'__github_merge' could not find an open PR for '$branch'" >&2; and return 1
     end
@@ -815,12 +762,12 @@ function __github_merge
     if test -n "$_flag_exit"
         set args $args --exit
     end
-    set -l def_branch (default-branch); or return $status
+    set -l def_branch (git default-branch); or return $status
     __git_checkout_close $def_branch --delete $args
 end
 
 function __github_merging
-    set -l branch (current-branch); or return $status
+    set -l branch (git current-branch); or return $status
     set -l state (gh pr view --json state | jq -r .state); or return $status
     if test -z "$state" -o "$state" != OPEN
         return 1
@@ -839,7 +786,7 @@ function __github_view
     else if type -q gitweb
         gitweb
     else
-        set -l branch (current-branch); or return $status
+        set -l branch (git current-branch); or return $status
         echo "'__github_view' could not find an open PR for $branch, nor could it find 'gitweb'" >&2; and return 1
     end
 end
@@ -865,7 +812,7 @@ end
 function __gitlab_merge
     argparse exit -- $argv; or return $status
     set -l repo (repo-name); or return $status
-    set -l branch (current-branch); or return $status
+    set -l branch (git current-branch); or return $status
     set -l start (date +%s); or return $status
     set -l i 0
     while true
@@ -899,7 +846,7 @@ function __gitlab_merge
         echo "'$repo/$branch' is still merging... ($i, $merge_status, $elapsed s)"
         sleep 1
     end
-    set -l def_branch (default-branch); or return $status
+    set -l def_branch (git default-branch); or return $status
     set -l args
     if test -n "$_flag_exit"
         set args $args --exit
@@ -921,7 +868,7 @@ function __gitlab_update
 end
 
 function __gitlab_mr_json
-    set -l branch (current-branch); or return $status
+    set -l branch (git current-branch); or return $status
     set -l json (glab mr list --output=json --source-branch=$branch); or return $status
     set -l num (printf %s $json | jq length); or return $status
     if test $num -eq 0
@@ -955,7 +902,7 @@ function __gitlab_view
     else if type -q gitweb
         gitweb
     else
-        set -l branch $(current-branch); or return $status
+        set -l branch $(git current-branch); or return $status
         echo "'__gitlab_view' could not find an open MR for '$branch', nor could it find 'gitweb'" >&2; and return 1
     end
 end
