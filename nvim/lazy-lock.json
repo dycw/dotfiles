@@ -121,7 +121,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "e25994a1c2373784364852cd904cb39b6d75f227"
+    "commit": "a89bfcfd0e44f898341ac8a80ba83ccf6218bef3"
   },
   "nvim-rip-substitute": {
     "branch": "main",

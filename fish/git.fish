@@ -891,7 +891,7 @@ function __gitlab_merge
             echo "'__gitlab_merge' cannot merge the MR for '$branch' because of merge status '$merge_status'" >&2; and return 1
         end
         glab mr merge --remove-source-branch --squash --yes &>/dev/null
-        set -l i (math $i+1)
+        set i (math $i+1)
         set -l json (__gitlab_mr_json 2>&1)
         if test $status -eq 100
             break
