@@ -636,9 +636,9 @@ function wg
             git -c color.ui=always diff --stat
         fi
         branch=$(printf "%-6s" "$(git default-local-branch)")
-        if ! git diff origin/$branch --quiet; then
+        if ! git diff-remote --quiet; then
             printf "\n==== diff origin/$branch =======================================================\n"
-            git -c color.ui=always diff origin/$branch --stat
+            git -c color.ui=always diff-remote --stat
         fi
         if (git remote get-url origin 2>/dev/null | grep -q github) && (command -v gh >/dev/null 2>&1); then
             printf "\n==== github ==================================================================="
