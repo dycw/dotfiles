@@ -648,7 +648,7 @@ function gsa
     git submodule add $argv
 end
 function gsu
-    git submodules-update
+    git submodule-update
 end
 
 # tag
