@@ -1,6 +1,10 @@
 set dotenv-load := true
 set positional-arguments := true
 
+@setup-dev-server *args:
+  just update
+  python3 -m install.machines.dev_server "$@"
+
 @setup-mac-book *args:
   just update
   python3 -m install.machines.macbook "$@"
@@ -14,6 +18,5 @@ set positional-arguments := true
   python3 -m install.machines.swift "$@"
 
 @update:
-  git pull --force
-  git submodule update --init --recursive
-  git submodule foreach --recursive 'git checkout -- . && git checkout $(git symbolic-ref refs/remotes/origin/HEAD | sed "s#.*/##") && git pull --ff-only'
+  git pull-default
+  git submodule-update
