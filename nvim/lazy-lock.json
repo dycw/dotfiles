@@ -29,7 +29,7 @@
   },
   "conform.nvim": {
     "branch": "master",
-    "commit": "26c02e1155a4980900bdccabca4516f4c712aae9"
+    "commit": "cde4da5c1083d3527776fee69536107d98dae6c9"
   },
   "dial.nvim": {
     "branch": "master",
@@ -69,7 +69,7 @@
   },
   "lazy.nvim": {
     "branch": "main",
-    "commit": "202d8e92b3a74ac88eb3a7f1e40fb59b4c2a6535"
+    "commit": "e6a8824858757ca9cd4f5ae1a72d845fa5c46a39"
   },
   "lazydev.nvim": {
     "branch": "main",
@@ -185,7 +185,7 @@
   },
   "telescope.nvim": {
     "branch": "master",
-    "commit": "84b9ba066d1860f7a586ce9cd732fd6c4f77d1d9"
+    "commit": "47a8530e79a484d55ba5efa3768fc0b0c023d497"
   },
   "text-case.nvim": {
     "branch": "main",
@@ -193,7 +193,7 @@
   },
   "tokyonight.nvim": {
     "branch": "main",
-    "commit": "b13cfc1286d2aa8bda6ce137b79e857d5a3d5739"
+    "commit": "5da1b76e64daf4c5d410f06bcb6b9cb640da7dfd"
   },
   "vim-caser": {
     "branch": "master",

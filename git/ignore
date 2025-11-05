@@ -1,6 +1,5 @@
 **/*.swp
 **/.DS_Store
-**/.env
 **/.mode.sw*
 **/.ruff_cache/
 **/__pycache__/
