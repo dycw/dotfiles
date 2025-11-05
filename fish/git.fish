@@ -663,7 +663,7 @@ function gta
     else if test (count $argv) -eq 1
         git tag-add $argv[1] HEAD
     else if test (math (count $argv) % 2) -eq 0
-        while test (count $argv) -ge 1
+        while test (count $argv) -ge 2
             git tag-add $argv[1..2]
             set argv $argv[3..-1]
         end
