@@ -4,8 +4,8 @@ services:
       - net_admin
     container_name: tailscale
     environment:
-      - TS_AUTHKEY=file:${TS_AUTHKEY_FILE:?}
-      - TS_EXTRA_ARGS=--accept-dns --accept-routes --force-reauth --login-server=${TS_LOGIN_SERVER:?} --reset
+      - TS_AUTHKEY=file:/run/secrets/auth_key.txt
+      - TS_EXTRA_ARGS=--accept-dns=true --accept-routes=true --force-reauth --login-server=${TS_LOGIN_SERVER:?} --reset
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
     hostname: DW-Swift
@@ -15,6 +15,10 @@ services:
     volumes:
       - tailscale-state:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun
+
+secrets:
+  auth_key.txt:
+    file: ${TS_AUTHKEY_FILE:?}
 
 volumes:
   tailscale-state:
