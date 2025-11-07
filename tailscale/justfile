@@ -17,3 +17,8 @@ set positional-arguments := true
 
 @restart:
   just down && just upd
+
+# status
+
+@status:
+  docker exec -i tailscale tailscale status
