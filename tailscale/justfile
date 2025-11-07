@@ -4,7 +4,7 @@ set positional-arguments := true
 # up/down
 
 @logs:
-  docker logs --follow
+  docker logs --follow tailscale
 
 @up:
   docker compose up
