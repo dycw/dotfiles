@@ -491,7 +491,7 @@ if type -q docker
         docker exec -i tailscale tailscale set --exit-node=
     end
     function wts
-        docker exec -i tailscale watch -n 0.5 -- tailscale status
+        docker exec -i tailscale watch -n1 -- tailscale status
     end
 end
 

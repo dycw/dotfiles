@@ -32,4 +32,4 @@ set positional-arguments := true
   docker exec -i tailscale tailscale status
 
 @watch-status:
-  docker exec -i tailscale watch -n 0.5 -- tailscale status
+  docker exec -i tailscale watch -n1 -- tailscale status
