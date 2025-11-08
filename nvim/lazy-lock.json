@@ -149,7 +149,7 @@
   },
   "rainbow-delimiters.nvim": {
     "branch": "master",
-    "commit": "1812e4a121cb05e1a3103acf01b2cb691cddcaf2"
+    "commit": "8aafe2cbd89cd4090f573a98cab6b20366576fde"
   },
   "rustaceanvim": {
     "branch": "master",
@@ -181,7 +181,7 @@
   },
   "telescope.nvim": {
     "branch": "master",
-    "commit": "d143e80a1989c70d95fde7d9bd26c41e9f9928a4"
+    "commit": "0294ae3eafe662c438addb8692d9c98ef73a983e"
   },
   "text-case.nvim": {
     "branch": "main",
