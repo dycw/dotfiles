@@ -324,7 +324,13 @@ end
 
 # pyright
 function pyr
-    pyright $argv
+    if type -q pyright
+        pyright $argv
+    else if type -q uv
+        uv tool run pyright $argv
+    else
+        echo "'pyr' expected 'pyright' or 'uv' to be available; got neither" >&2; and return 1
+    end
 end
 function pyrightconfig
     __edit_ancestor pyrightconfig.json
