@@ -31,6 +31,7 @@ from .constants import (
     LOCAL_BIN,
     PDBRC,
     PSQLRC,
+    REPO_DIRENV,
     RESOLV_CONF,
     SSH_CONFIG,
     SSH_CONFIG_D,
@@ -226,9 +227,7 @@ def install_delta() -> None:
             assert_never(never)
 
 
-def install_direnv(
-    *, direnv_toml: PathLike | None = None, direnvrc: PathLike | None = None
-) -> None:
+def install_direnv() -> None:
     if have_command("direnv"):
         _LOGGER.debug("'direnv' is already installed")
     else:
@@ -245,10 +244,8 @@ def install_direnv(
                 )
             case never:
                 assert_never(never)
-    if direnv_toml is not None:
-        symlink(CONFIG_DIRENV / "direnv.toml", direnv_toml)
-    if direnvrc is not None:
-        symlink(CONFIG_DIRENV / "direnvrc", direnvrc)
+    for name in ["direnv.toml", "direnvrc"]:
+        symlink(CONFIG_DIRENV / name, REPO_DIRENV / name)
 
 
 def install_docker() -> None:

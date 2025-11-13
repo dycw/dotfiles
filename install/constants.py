@@ -50,8 +50,6 @@ LINUX_RESOLV_CONF = CONFIGS_LINUX / "resolv.conf"
 
 REPO_BOTTOM_TOML = REPO_ROOT / "bottom/bottom.toml"
 REPO_DIRENV = REPO_ROOT / "direnv"
-REPO_DIRENV_TOML = REPO_DIRENV / "direnv.toml"
-REPO_DIRENVRC = REPO_DIRENV / "direnvrc"
 REPO_FD_IGNORE = REPO_ROOT / "fd/ignore"
 REPO_FISH = REPO_ROOT / "fish"
 REPO_FISH_CONFIG = REPO_FISH / "config.fish"
@@ -108,8 +106,6 @@ __all__ = [
     "PSQLRC",
     "REPO_BOTTOM_TOML",
     "REPO_DIRENV",
-    "REPO_DIRENVRC",
-    "REPO_DIRENV_TOML",
     "REPO_FD_IGNORE",
     "REPO_FISH",
     "REPO_FISH_CONFIG",
