@@ -69,7 +69,6 @@ def setup_linux(
     *,
     age_secret_key: PathLike | None = None,
     bottom_toml: PathLike | None = None,
-    fd_ignore: PathLike | None = None,
     fish_config: PathLike | None = None,
     fish_env: PathLike | None = None,
     fish_git: PathLike | None = None,
@@ -112,7 +111,7 @@ def setup_linux(
     install_delta()
     install_dust()
     install_eza()
-    install_fd(ignore=fd_ignore)
+    install_fd()
     install_fzf(fzf_fish=fzf_fish)
     install_gh()
     install_git(config=git_config, ignore=git_ignore)
