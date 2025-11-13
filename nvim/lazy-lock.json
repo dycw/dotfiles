@@ -49,7 +49,7 @@
   },
   "grug-far.nvim": {
     "branch": "main",
-    "commit": "3e72397465f774b01aa38e4fe8e6eecf23d766d9"
+    "commit": "b58b2d65863f4ebad88b10a1ddd519e5380466e0"
   },
   "guess-indent.nvim": {
     "branch": "main",
@@ -81,7 +81,7 @@
   },
   "mason-lspconfig.nvim": {
     "branch": "main",
-    "commit": "d6274160025ceac91ee46db7db664d5c699a214d"
+    "commit": "b1d9a914b02ba5660f1e272a03314b31d4576fe2"
   },
   "mason-tool-installer.nvim": {
     "branch": "main",
@@ -117,7 +117,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "2010fc6ec03e2da552b4886fceb2f7bc0fc2e9c0"
+    "commit": "b34fbdffdcb6295c7a25df6ba375452a2e73c32e"
   },
   "nvim-rip-substitute": {
     "branch": "main",
@@ -129,7 +129,7 @@
   },
   "nvim-tree.lua": {
     "branch": "master",
-    "commit": "68c67adfabfd1ce923839570507ef2e81ab8a408"
+    "commit": "1eda2569394f866360e61f590f1796877388cb8a"
   },
   "nvim-treesitter": {
     "branch": "master",
@@ -137,7 +137,7 @@
   },
   "nvim-treesitter-context": {
     "branch": "master",
-    "commit": "ec308c7827b5f8cb2dd0ad303a059c945dd21969"
+    "commit": "660861b1849256398f70450afdf93908d28dc945"
   },
   "nvim-web-devicons": {
     "branch": "master",
@@ -181,7 +181,7 @@
   },
   "telescope.nvim": {
     "branch": "master",
-    "commit": "0294ae3eafe662c438addb8692d9c98ef73a983e"
+    "commit": "3a12a853ebf21ec1cce9a92290e3013f8ae75f02"
   },
   "text-case.nvim": {
     "branch": "main",
