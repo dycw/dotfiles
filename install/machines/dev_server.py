@@ -8,8 +8,6 @@ from logging import basicConfig, getLogger
 from ..constants import (
     LINUX_RESOLV_CONF,
     REPO_BOTTOM_TOML,
-    REPO_DIRENV_TOML,
-    REPO_DIRENVRC,
     REPO_FD_IGNORE,
     REPO_FISH_CONFIG,
     REPO_FISH_ENV,
@@ -49,8 +47,6 @@ def _setup_dev_server() -> None:
     _LOGGER.info("Setting up dev server...")
     setup_linux(
         bottom_toml=REPO_BOTTOM_TOML,
-        direnv_toml=REPO_DIRENV_TOML,
-        direnvrc=REPO_DIRENVRC,
         fd_ignore=REPO_FD_IGNORE,
         fish_config=REPO_FISH_CONFIG,
         fish_env=REPO_FISH_ENV,
