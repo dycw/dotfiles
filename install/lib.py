@@ -15,8 +15,6 @@ from .constants import (
     BASHRC,
     CONFIG_BOTTOM_TOML,
     CONFIG_DIRENV,
-    CONFIG_FISH,
-    CONFIG_FISH_CONF_D,
     CONFIG_FISH_FUNCTIONS,
     CONFIG_GIT,
     CONFIG_GLAB_CONFIG_YML,
@@ -343,13 +341,7 @@ def install_fd() -> None:
     symlink(XDG_CONFIG_HOME / "fd/ignore", REPO_ROOT / "fd/ignore")
 
 
-def install_fish(
-    *,
-    config: PathLike | None = None,
-    env: PathLike | None = None,
-    git: PathLike | None = None,
-    work: PathLike | None = None,
-) -> None:
+def install_fish() -> None:
     if have_command("fish"):
         _LOGGER.debug("'fish' is already installed")
     else:
@@ -371,14 +363,13 @@ def install_fish(
     else:
         _LOGGER.info("Setting 'fish' as the default shell...")
         _ = run_commands("sudo chsh -s $(which fish)")
-    if config is not None:
-        symlink(CONFIG_FISH / "config.fish", config)
-    if env is not None:
-        symlink(CONFIG_FISH_CONF_D / "0-env.fish", env)
-    if git is not None:
-        symlink(CONFIG_FISH_CONF_D / "git.fish", git)
-    if work is not None:
-        symlink(CONFIG_FISH_CONF_D / "work.fish", work)
+    for from_, to in [
+        ("config.fish", "config.fish"),
+        ("conf.d/0-env.fish", "env.fish"),
+        ("conf.d/git.fish", "git.fish"),
+        ("conf.d/work.fish", "work.fish"),
+    ]:
+        symlink(XDG_CONFIG_HOME / "fish" / from_, REPO_ROOT / "fish" / to)
 
 
 def install_fzf(*, fzf_fish: PathLike | None = None) -> None:
