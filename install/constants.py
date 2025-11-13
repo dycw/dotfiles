@@ -60,7 +60,9 @@ REPO_NVIM = REPO_ROOT / "nvim"
 REPO_PDBRC = REPO_ROOT / "pdb/pdbrc"
 REPO_PSQLRC = REPO_ROOT / "psql/psqlrc"
 REPO_RIPGREPRC = REPO_ROOT / "ripgrep/ripgreprc"
-REPO_SSH_CONFIG = REPO_ROOT / "ssh/config"
+REPO_SSH = REPO_ROOT / "ssh"
+REPO_SSH_DEFAULT = REPO_SSH / "default"
+REPO_SSH_GITLAB = REPO_SSH / "gitlab"
 REPO_STARSHIP_TOML = REPO_ROOT / "starship/starship.toml"
 REPO_TMUX = REPO_ROOT / "tmux"
 REPO_TMUX_CONF_OH_MY_TMUX = REPO_TMUX / ".tmux/.tmux.conf"
@@ -115,7 +117,9 @@ __all__ = [
     "REPO_PSQLRC",
     "REPO_RIPGREPRC",
     "REPO_ROOT",
-    "REPO_SSH_CONFIG",
+    "REPO_SSH",
+    "REPO_SSH_DEFAULT",
+    "REPO_SSH_GITLAB",
     "REPO_STARSHIP_TOML",
     "REPO_TMUX",
     "REPO_TMUX_CONF_LOCAL",
