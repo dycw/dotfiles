@@ -469,10 +469,23 @@ function ssh-config
     $EDITOR $HOME/.ssh/config
 end
 function ssh-mac
-    ssh derekwan@dw-mac
+    ssh-auto derekwan@dw-mac
 end
 function ssh-swift
-    ssh derek@dw-swift
+    ssh-auto derek@dw-swift
+end
+function ssh-auto
+    if test (count $argv) -lt 1
+        echo "'ssh-auto' expected [1..] arguments DESTINATION; got $(count $argv)" >&2; and return 1
+    end
+    set -l destination $argv[1]
+    if not command ssh -o StrictHostKeyChecking=yes $destination
+        set -l parts (string split -m1 @ $destination)
+        set -l host $parts[2]
+        ssh-keygen -R $host
+        ssh-keyscan -H -q -t ed25519 $host >>~/.ssh/known_hosts
+        ssh $destination
+    end
 end
 
 # ssl
