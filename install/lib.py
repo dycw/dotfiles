@@ -15,7 +15,6 @@ from .constants import (
     BASHRC,
     CONFIG_BOTTOM_TOML,
     CONFIG_DIRENV,
-    CONFIG_FD_IGNORE,
     CONFIG_FISH,
     CONFIG_FISH_CONF_D,
     CONFIG_FISH_FUNCTIONS,
@@ -32,9 +31,11 @@ from .constants import (
     PDBRC,
     PSQLRC,
     REPO_DIRENV,
+    REPO_ROOT,
     RESOLV_CONF,
     SSH_CONFIG,
     SSH_CONFIG_D,
+    XDG_CONFIG_HOME,
 )
 from .enums import System
 from .utilities import (
@@ -322,7 +323,7 @@ def install_eza() -> None:
             assert_never(never)
 
 
-def install_fd(*, ignore: PathLike | None = None) -> None:
+def install_fd() -> None:
     if have_command("fd"):
         _LOGGER.debug("'fd-find' is already installed")
     else:
@@ -339,8 +340,7 @@ def install_fd(*, ignore: PathLike | None = None) -> None:
             msg = "'fdfind' should be installed"
             raise RuntimeError(msg)
         symlink(LOCAL_BIN / "fd", path_to)
-    if ignore is not None:
-        symlink(CONFIG_FD_IGNORE, ignore)
+    symlink(XDG_CONFIG_HOME / "fd/ignore", REPO_ROOT / "fd/ignore")
 
 
 def install_fish(
