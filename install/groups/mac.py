@@ -58,7 +58,9 @@ from ..lib import (
 )
 
 if TYPE_CHECKING:
-    from ..types import PathLike
+    from collections.abc import Iterable
+
+    from ..types import PathLike, SSHSymlink, SSHTemplate
 
 
 _LOGGER = getLogger(__name__)
@@ -86,6 +88,8 @@ def setup_mac(
     resolv_conf: PathLike | None = None,
     resolv_conf_immutable: bool = False,
     ripgreprc: PathLike | None = None,
+    ssh_symlinks: Iterable[SSHSymlink] = (),
+    ssh_templates: Iterable[SSHTemplate] = (),
     starship_toml: PathLike | None = None,
     tailscale_auth_key: PathLike | None = None,
     tmux_conf_oh_my_tmux: PathLike | None = None,
@@ -99,6 +103,8 @@ def setup_mac(
         psqlrc=psqlrc,
         resolv_conf=resolv_conf,
         resolv_conf_immutable=resolv_conf_immutable,
+        ssh_symlinks=ssh_symlinks,
+        ssh_templates=ssh_templates,
     )
     install_brew()
     install_git(config=git_config, ignore=git_ignore)

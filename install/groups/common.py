@@ -13,7 +13,9 @@ from ..lib import (
 )
 
 if TYPE_CHECKING:
-    from ..types import PathLike
+    from collections.abc import Iterable
+
+    from ..types import PathLike, SSHSymlink, SSHTemplate
 
 
 _LOGGER = getLogger(__name__)
@@ -26,13 +28,15 @@ def setup_common(
     psqlrc: PathLike | None = None,
     resolv_conf: PathLike | None = None,
     resolv_conf_immutable: bool = False,
+    ssh_symlinks: Iterable[SSHSymlink] = (),
+    ssh_templates: Iterable[SSHTemplate,] = (),
 ) -> None:
     _LOGGER.info("Setting up common...")
     add_to_known_hosts()
     setup_pdb(pdbrc=pdbrc)
     setup_psql(psqlrc=psqlrc)
     setup_resolv_conf(resolv_conf=resolv_conf, immutable=resolv_conf_immutable)
-    setup_ssh()
+    setup_ssh(symlinks=ssh_symlinks, templates=ssh_templates)
     setup_sshd(permit_root_login=permit_root_login)
 
 
