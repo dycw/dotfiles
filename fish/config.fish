@@ -33,6 +33,13 @@ if type -q bat
     end
 end
 
+# batwatch
+if type -q batwatch
+    function bw
+        batwatch -n0.5 $argv
+    end
+end
+
 # bottom
 function bottom-toml
     $EDITOR $HOME/dotfiles/bottom/bottom.toml
