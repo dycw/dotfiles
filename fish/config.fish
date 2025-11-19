@@ -642,6 +642,9 @@ if type -q uv
             printf "%-20s %-10s %-10s %-10s\n" $name $pyproject $current $latest
         end
     end
+    function uvrp
+        uv run python3 -m $argv
+    end
 end
 
 # vim
