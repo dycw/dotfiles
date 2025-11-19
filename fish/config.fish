@@ -486,13 +486,19 @@ function ssh-auto
         echo "'ssh-auto' expected [1..] arguments DESTINATION; got $(count $argv)" >&2; and return 1
     end
     set -l destination $argv[1]
-    if not command ssh -o StrictHostKeyChecking=yes $destination
+    if not __ssh_strict $destination
         set -l parts (string split -m1 @ $destination)
         set -l host $parts[2]
         ssh-keygen -R $host
-        ssh-keyscan -H -q -t ed25519 $host >>~/.ssh/known_hosts
-        ssh $destination
+        ssh-keyscan -q -t ed25519 $host >>~/.ssh/known_hosts
+        __ssh_strict $destination
     end
+end
+function __ssh_strict
+    if test (count $argv) -lt 1
+        echo "'__ssh_strict' expected [1..] arguments DESTINATION; got $(count $argv)" >&2; and return 1
+    end
+    ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes $argv
 end
 
 # ssl
