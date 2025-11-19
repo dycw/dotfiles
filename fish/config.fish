@@ -643,7 +643,7 @@ if type -q uv
         end
     end
     function uvrp
-        uv pip list --outdated
+        uv run python3 -m $argv
     end
 end
 
