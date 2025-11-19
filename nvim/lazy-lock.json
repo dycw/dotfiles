@@ -63,6 +63,10 @@
     "branch": "master",
     "commit": "005b56001b2cb30bfa61b7986bc50657816ba4ba"
   },
+  "iswap.nvim": {
+    "branch": "master",
+    "commit": "e02cc91f2a8feb5c5a595767d208c54b6e3258ec"
+  },
   "lazy.nvim": {
     "branch": "main",
     "commit": "85c7ff3711b730b4030d03144f6db6375044ae82"
@@ -105,7 +109,7 @@
   },
   "nvim-early-retirement": {
     "branch": "main",
-    "commit": "9109589b542773c9ad2a34067a085874f255577b"
+    "commit": "dad93ba67cfe67ca841019ceba3da44415da8852"
   },
   "nvim-lastplace": {
     "branch": "main",
@@ -117,7 +121,7 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "d4f77e7a9a4b910622a0bc225e482c4c808e4099"
+    "commit": "b7c48a7111534b66bee077da8035ac7208a294ff"
   },
   "nvim-rip-substitute": {
     "branch": "main",
