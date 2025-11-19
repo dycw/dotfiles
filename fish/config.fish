@@ -642,7 +642,7 @@ if type -q uv
             printf "%-20s %-10s %-10s %-10s\n" $name $pyproject $current $latest
         end
     end
-    function uvo
+    function uvp
         uv pip list --outdated
     end
 end
