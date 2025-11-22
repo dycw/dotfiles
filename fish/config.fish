@@ -286,6 +286,13 @@ function mv
     command mv -fv $argv
 end
 
+# linode
+if type -q uv
+    function linode-cli
+        uv tool run linode-cli $argv
+    end
+end
+
 # neovim
 function cd-nvim-plugins
     cd $XDG_CONFIG_HOME/nvim/lua/plugins
