@@ -6,6 +6,9 @@
     git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D \
   "
 
+  # clean
+  clean-default = "!git clean --force -d -x"
+
   # diff
   diff-remote = "!git diff $(git default-remote-branch)"
   is-clean = "!git diff --quiet && git diff --cached --quiet"
@@ -35,6 +38,7 @@
 
   # reset
   hard-reset = "!f() { \
+    git clean-default && \
     git fetch-default && \
     { if [ "$(git current-branch)" != 'master' ]; then \
         git checkout master; \
