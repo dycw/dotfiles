@@ -20,7 +20,7 @@
   # log
   log-default = "! \
     git log --abbrev-commit --decorate=short \
-    --pretty=\"format:%C(red)%h%C(reset) | %C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)\" \
+      --pretty=\"format:%C(red)%h%C(reset) | %C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)\" \
   "
 
   # pull
@@ -36,7 +36,9 @@
   # reset
   hard-reset = "!f() { \
     git fetch-default && \
-    { if [ "$(git current-branch)" != 'master' ]; then \
+    { if [ "$(git current-branch)" == 'master' ]; then \
+        git reset --hard origin/master \
+      else \
         git checkout master; \
       fi; } && \
     { if [ "$1" != master ] && "$(git is-valid-ref $1)"; then \
