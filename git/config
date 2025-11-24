@@ -36,11 +36,10 @@
   # reset
   hard-reset = "!f() { \
     git fetch-default && \
-    { if [ "$(git current-branch)" == 'master' ]; then \
-        git reset --hard origin/master \
-      else \
+    { if [ "$(git current-branch)" != 'master' ]; then \
         git checkout master; \
       fi; } && \
+    git reset --hard origin/master && \
     { if [ "$1" != master ] && "$(git is-valid-ref $1)"; then \
         git branch -D $1; \
       fi; } && \
