@@ -33,7 +33,7 @@
   },
   "dial.nvim": {
     "branch": "master",
-    "commit": "f0404ec1f83a03f2c3457e60087c6331d1cbb83f"
+    "commit": "f97c0c7fa7d5111bc04a91d0f693900fb2d95861"
   },
   "fidget.nvim": {
     "branch": "main",
@@ -125,7 +125,7 @@
   },
   "nvim-rip-substitute": {
     "branch": "main",
-    "commit": "b61f9dcbe0c14b8632a51debc2966068aee84a1a"
+    "commit": "7cc8620569682e7e95907b579cc3e2b4f1a84887"
   },
   "nvim-surround": {
     "branch": "main",
