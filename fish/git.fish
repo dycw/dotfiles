@@ -428,8 +428,8 @@ end
 function gpf
     __git_push --force
 end
-function gpnf
-    __git_push --no-verify --force
+function gpfn
+    __git_push --force --no-verify
 end
 function gpw
     __git_push --web
@@ -440,8 +440,8 @@ end
 function gpfw
     __git_push --force --web
 end
-function gpnfw
-    __git_push --no-verify --force --web
+function gpfnw
+    __git_push --force --no-verify --web
 end
 function gpe
     __git_push --exit
@@ -452,8 +452,8 @@ end
 function gpfe
     __git_push --force --exit
 end
-function gpnfe
-    __git_push --no-verify --force --exit
+function gpfne
+    __git_push --force --no-verify --exit
 end
 function gpx
     __git_push --web --exit
@@ -464,8 +464,8 @@ end
 function gpfx
     __git_push --force --web --exit
 end
-function gpnfx
-    __git_push --no-verify --force --web --exit
+function gpfnx
+    __git_push --force --no-verify --web --exit
 end
 
 function __git_push
@@ -509,7 +509,7 @@ function __git_rebase
         if test -n "$_flag_web"
             set args $args --web
         end
-        __git_push $args
+        __git_push --force --no-verify $args
     end
 end
 
