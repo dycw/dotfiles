@@ -505,11 +505,12 @@ function __git_rebase
     set -l branch (git default-remote-branch); or return $status
     git rebase --strategy=recursive --strategy-option=theirs $branch; or return $status
     if test -n "$_flag_push"
+        pre-commit run --all-files
         set -l args
         if test -n "$_flag_web"
             set args $args --web
         end
-        __git_push --force --no-verify $args
+        __git_all --no-verify --force $args
     end
 end
 
