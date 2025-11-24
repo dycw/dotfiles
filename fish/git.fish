@@ -490,9 +490,27 @@ end
 # rebase
 
 function grb
+    __git_rebase
+end
+function grbp
+    __git_rebase --push
+end
+function grbw
+    __git_rebase --push --web
+end
+
+function __git_rebase
+    argparse push web -- $argv; or return $status
     git fetch-default; or return $status
     set -l branch (git default-remote-branch); or return $status
-    git rebase --strategy=recursive --strategy-option=theirs $branch
+    git rebase --strategy=recursive --strategy-option=theirs $branch; or return $status
+    if test -n "$_flag_push"
+        set -l args
+        if test -n "$_flag_web"
+            set args $args --web
+        end
+        __git_push $args
+    end
 end
 
 function grba
