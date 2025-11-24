@@ -650,7 +650,10 @@ if type -q uv
         end
     end
     function uvrp
-        uv run python3 -m $argv
+        uv run python -m $argv
+    end
+    function uvrpd
+        uv run python -m pdb --command continue -m $argv
     end
 end
 
