@@ -58,6 +58,7 @@ return {
             { "end", "start", "stop" },
             { "entered", "exited" },
             { "entry", "exit" },
+            { "external", "internal" },
             { "failure", "success" },
             { "first", "last" },
             { "float", "int" },
