@@ -109,7 +109,7 @@
   },
   "nvim-early-retirement": {
     "branch": "main",
-    "commit": "dad93ba67cfe67ca841019ceba3da44415da8852"
+    "commit": "6fb7d87a965e439cfb4e04a5c0e5038010fc015b"
   },
   "nvim-lastplace": {
     "branch": "main",
