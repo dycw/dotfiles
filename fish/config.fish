@@ -485,6 +485,9 @@ end
 function ssh-mac
     ssh-auto derekwan@dw-mac
 end
+function ssh-rh-mac
+    ssh-auto derekwan@rh-mac
+end
 function ssh-swift
     ssh-auto derek@dw-swift
 end

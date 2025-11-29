@@ -85,6 +85,7 @@ return {
             { "off", "on" },
             { "only", "skip" },
             { "positive", "negative" },
+            { "public", "private" },
             { "read", "write" },
             { "starting", "stopping" },
             { "stderr", "stdout" },
