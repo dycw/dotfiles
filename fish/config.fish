@@ -60,7 +60,12 @@ if type -q bump-my-version
         if test (count $argv) -lt 1
             echo "'bump-set' expected [1..) arguments VERSION; got $(count $argv)" >&2; and return 1
         end
-        bump-my-version replace --new-version $argv[1]
+        while true
+            if bump-my-version replace --new-version $argv[1]
+                return
+            end
+            sleep 2
+        end
     end
 end
 
@@ -344,9 +349,9 @@ end
 # pyright
 function pyr
     if type -q pyright
-        pyright $argv
+        pyright .
     else if type -q uv
-        uv tool run pyright $argv
+        uv tool run pyright .
     else
         echo "'pyr' expected 'pyright' or 'uv' to be available; got neither" >&2; and return 1
     end
