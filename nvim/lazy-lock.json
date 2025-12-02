@@ -125,7 +125,7 @@
   },
   "nvim-rip-substitute": {
     "branch": "main",
-    "commit": "93c618239be15efc84c2aa9c6809e6f2846b3a7a"
+    "commit": "e5dbf22e0f43dbf92181acf3e15404758ce1d20e"
   },
   "nvim-surround": {
     "branch": "main",
@@ -133,7 +133,7 @@
   },
   "nvim-tree.lua": {
     "branch": "master",
-    "commit": "776a5cdfac948b490e06f1d1d22c4cb986e40699"
+    "commit": "59088b96a32ea47caf4976e164dbd88b86447fb7"
   },
   "nvim-treesitter": {
     "branch": "master",
