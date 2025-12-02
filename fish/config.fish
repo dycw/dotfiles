@@ -366,6 +366,16 @@ function pyrt
     pyright; or return $status
     pytest --numprocesses auto
 end
+function pyrtf
+    while true
+        while not pyright
+            sleep 2
+        end
+        while not pytest --numprocesses auto
+            sleep 2
+        end
+    end
+end
 
 # pytest
 function pyt
