@@ -368,11 +368,19 @@ function pyrt
 end
 function pyrtf
     while true
-        while not pyright
-            sleep 2
+        if type -q pyright
+            while not pyright
+                sleep 2
+            end
+        else
+            echo "'pyrtf' expected 'pyright' to be available" >&2; and return 1
         end
-        while not pytest --numprocesses auto
-            sleep 2
+        if type -q pytest
+            while not pytest --numprocesses auto
+                sleep 2
+            end
+        else
+            echo "'pyrtf' expected 'pytest' to be available" >&2; and return 1
         end
     end
 end
