@@ -40,6 +40,7 @@ return {
                 end, "diagnostic [l]ine")
                 map("<Leader>ca", v.lsp.buf.code_action, "code [a]ction", { "n", "x" })
                 map("gD", v.lsp.buf.declaration, "[d]eclaration")
+                map("<Leader>lr", "<Cmd>LspRestart<CR>", "[r]estart")
                 map("<Leader>rn", v.lsp.buf.rename, "re[n]ame")
 
                 -- The following two autocommands are used to highlight
