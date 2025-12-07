@@ -29,7 +29,7 @@
   },
   "conform.nvim": {
     "branch": "master",
-    "commit": "4993e07fac6679d0a5005aa7499e0bad2bd39f19"
+    "commit": "ffe26e8df8115c9665d24231f8a49fadb2d611ce"
   },
   "dial.nvim": {
     "branch": "master",
@@ -109,7 +109,7 @@
   },
   "nvim-early-retirement": {
     "branch": "main",
-    "commit": "cd29cf40af7473530a8598245ba1d348fd5e1fa0"
+    "commit": "82d297f56bccc5c380395b484fe0d1cd37f80d13"
   },
   "nvim-lastplace": {
     "branch": "main",
@@ -117,15 +117,15 @@
   },
   "nvim-lint": {
     "branch": "master",
-    "commit": "d1118791070d090777398792a73032a0ca5c79ff"
+    "commit": "ebe535956106c60405b02220246e135910f6853d"
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "effe4bf2e1afb881ea67291c648b68dd3dfc927a"
+    "commit": "a2bd1cf7b0446a7414aaf373cea5e4ca804c9c69"
   },
   "nvim-rip-substitute": {
     "branch": "main",
-    "commit": "e5dbf22e0f43dbf92181acf3e15404758ce1d20e"
+    "commit": "3a9fbae9b8afa3567f6f3c761407c5b4dcafb5df"
   },
   "nvim-surround": {
     "branch": "main",
@@ -141,7 +141,7 @@
   },
   "nvim-treesitter-context": {
     "branch": "master",
-    "commit": "660861b1849256398f70450afdf93908d28dc945"
+    "commit": "64dd4cf3f6fd0ab17622c5ce15c91fc539c3f24a"
   },
   "nvim-web-devicons": {
     "branch": "master",
