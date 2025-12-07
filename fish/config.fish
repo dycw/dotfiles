@@ -4,7 +4,6 @@ if ! status is-interactive
     exit
 end
 
-# age
 # asciinema
 if type -q asciinema
     function asciinema-record
