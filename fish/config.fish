@@ -228,6 +228,10 @@ function fish-reload
         echo "Reloading $file..."
         source $file
     end
+    if set -q INFRA_FISH_CONFIG; and test -f $INFRA_FISH_CONFIG
+        echo "Reloading $INFRA_FISH_CONFIG..."
+        source $INFRA_FISH_CONFIG
+    end
 end
 
 # fzf

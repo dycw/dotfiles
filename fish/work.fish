@@ -5,14 +5,13 @@ if ! status is-interactive
 end
 
 # work
-set -l infra
-if test -d $HOME/infra
-    set infra $HOME/infra
-else if test -d $HOME/work/infra
-    set infra $HOME/work/infra
-else if test -d $HOME/work-gitlab/infra
-    set infra $HOME/work-gitlab/infra
+if test -f $HOME/infra/shell/infra.fish
+    export INFRA_FISH_CONFIG=$HOME/infra/shell/infra.fish
+else if test -f $HOME/work/infra/shell/infra.fish
+    export INFRA_FISH_CONFIG=$HOME/work/infra/shell/infra.fish
+else if test -f $HOME/work-gitlab/infra/shell/infra.fish
+    export INFRA_FISH_CONFIG=$HOME/work-gitlab/infra/shell/infra.fish
 end
-if set -q infra; and test -f $infra/shell/infra.fish
-    source $infra/shell/infra.fish
+if set -q INFRA_FISH_CONFIG; and test -f $INFRA_FISH_CONFIG
+    source $INFRA_FISH_CONFIG
 end
