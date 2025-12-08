@@ -544,6 +544,16 @@ function ssl-mac
     ssh -N -L 8888:localhost:8888 derekwan@dw-mac
 end
 
+# sops
+if type -q sops
+    function sops-new
+        if test (count $argv) -lt 2
+            echo "'sops-new' expected [2..] arguments AGE FILE; got $(count $argv)" >&2; and return 1
+        end
+        sops edit --age $argv[1] $argv[2]
+    end
+end
+
 # starship
 function starship-toml
     $EDITOR $HOME/dotfiles/starship/starship.toml
