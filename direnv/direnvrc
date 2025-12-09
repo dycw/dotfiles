@@ -11,4 +11,3 @@ use_uv_python() {
 	. "${activate}"
 	uv sync --all-extras --active --locked
 }
-use_uv_python
