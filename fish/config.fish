@@ -343,6 +343,13 @@ function watch-resolv-conf
     watch --color --differences --interval=1 -- cat /etc/resolv.conf
 end
 
+# ping
+function ping-ts
+    ping -D $argv | while read pong
+        echo "$(date "+%Y-%m-%d %H:%M:%S"): $pong"
+    end
+end
+
 # pre-commit
 function pre-commit-config
     __edit_ancestor .pre-commit-config.yaml
