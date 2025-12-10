@@ -109,7 +109,7 @@
   },
   "nvim-early-retirement": {
     "branch": "main",
-    "commit": "82d297f56bccc5c380395b484fe0d1cd37f80d13"
+    "commit": "702c18c66673fe068e5112e479027ca348266871"
   },
   "nvim-lastplace": {
     "branch": "main",
@@ -125,7 +125,7 @@
   },
   "nvim-rip-substitute": {
     "branch": "main",
-    "commit": "3a9fbae9b8afa3567f6f3c761407c5b4dcafb5df"
+    "commit": "37640813bdd57a403df541cb47a1adfdd352e27f"
   },
   "nvim-surround": {
     "branch": "main",
@@ -133,7 +133,7 @@
   },
   "nvim-tree.lua": {
     "branch": "master",
-    "commit": "59088b96a32ea47caf4976e164dbd88b86447fb7"
+    "commit": "eb33612bff2fb31f54946fb5dcadc89e905e81ec"
   },
   "nvim-treesitter": {
     "branch": "master",
