@@ -517,6 +517,22 @@ function cargo-toml
 end
 
 # ssh
+function add-known-host
+    if test (count $argv) -eq 0
+        echo "'ssh-auto' expected [1..2] arguments HOST PORT; got $(count $argv)" >&2; and return 1
+    end
+    set -l host $argv[1]
+    if test (count $argv) -ge 2
+        set -l port $argv[2]
+    end
+    if set -q port
+        ssh-keygen -R "[$host]:$port"
+        ssh-keyscan -p $port $host >>~/.ssh/known_hosts
+    else
+        ssh-keygen -R $host
+        ssh-keyscan $host >>~/.ssh/known_hosts
+    end
+end
 function authorized-keys
     $EDITOR $HOME/.ssh/authorized_keys
 end
