@@ -163,8 +163,23 @@ if type -q curl
 end
 
 # direnv
-function dea
-    direnv allow .
+if type -q direnv
+    function dea
+        direnv allow .
+    end
+end
+
+# docker
+if type -q docker
+    function dim
+        docker images --all
+    end
+    function dps
+        docker ps --all --size
+    end
+    function wdps
+        watch --color --differences --interval=1 -- docker ps --all --size
+    end
 end
 
 # dns
