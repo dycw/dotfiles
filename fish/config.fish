@@ -353,8 +353,27 @@ end
 
 # ping
 function ping-ts
-    ping $argv | while read pong
-        echo "$(date "+%Y-%m-%d %H:%M:%S"): $pong"
+    argparse c/count i/interval w/deadline -- $argv; or return $status
+    set -l args
+    if test -n "$_flag_count"
+        set args $args -c "$_flag_count"
+    end
+    if test -n "$_flag_interval"
+        set args $args -i "$_flag_interval"
+    else
+        set args $args -i 2
+    end
+    if test -n "$_flag_deadline"
+        set args $args -W "$_flag_deadline"
+    else
+        set args $args -W 2
+    end
+    if test (count $argv) -lt 1
+        echo "'ping-ts' expected [1..) arguments ... DESTINATION; got $(count $argv)" >&2; and return 1
+    end
+    set -l destination $argv[-1]
+    ping -O $args $argv | while read pong
+        echo "[$(date "+%Y-%m-%d %H:%M:%S")/$destination] $pong"
     end
 end
 
