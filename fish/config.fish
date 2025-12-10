@@ -345,7 +345,7 @@ end
 
 # ping
 function ping-ts
-    ping -D $argv | while read pong
+    ping $argv | while read pong
         echo "$(date "+%Y-%m-%d %H:%M:%S"): $pong"
     end
 end
