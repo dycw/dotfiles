@@ -274,6 +274,14 @@ if test -f $HOME/local.fish
     source $HOME/local.fish
 end
 
+# lsof
+function check-port
+    if test (count $argv) -lt 1
+        echo "'check-port' expected [1..) argument PORT; got $(count $argv)" >&2; and return 1
+    end
+    lsof -i :$argv[1]
+end
+
 # mkdir
 function mkdir
     command mkdir -p $argv
@@ -531,8 +539,6 @@ function add-known-host
     set -l host $argv[1]
     if test (count $argv) -ge 2
         set -l port $argv[2]
-    end
-    if set -q port
         ssh-keygen -R "[$host]:$port"
         ssh-keyscan -p $port $host >>~/.ssh/known_hosts
     else
