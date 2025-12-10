@@ -514,7 +514,7 @@ end
 function ssh-config
     $EDITOR $HOME/.ssh/config
 end
-function ssh-mac
+function ssh-dw-mac
     ssh-auto derekwan@dw-mac
 end
 function ssh-rh-mac
