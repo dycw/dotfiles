@@ -377,6 +377,14 @@ if type -q pre-commit
     end
 end
 
+# protonvpn
+if type -q uv
+    function protonvpn
+        uv tool run --from protonvpn-cli protonvpn $argv
+        # plan = VPN plus
+    end
+end
+
 # pyright
 function pyr
     if type -q pyright
