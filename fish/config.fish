@@ -191,7 +191,7 @@ if type -q eza
             --header --long --time-style=long-iso $argv
     end
     function wl
-        watch --color --differences --interval=0.5 -- \
+        watch --color --differences --interval=1 -- \
             eza --all --classify=always --color=always --git --group \
             --group-directories-first --header --long --reverse \
             --sort=modified --time-style=long-iso $argv
@@ -329,6 +329,18 @@ if type -q nvim
     function n
         nvim $argv
     end
+end
+
+# networking
+function resolv-conf
+    if test (id -u) -eq 0
+        $EDITOR /etc/resolv.conf
+    else
+        sudo $EDITOR /etc/resolv.conf
+    end
+end
+function watch-resolv-conf
+    watch --color --differences --interval=1 -- cat /etc/resolv.conf
 end
 
 # pre-commit
@@ -505,6 +517,22 @@ function cargo-toml
 end
 
 # ssh
+function add-known-host
+    if test (count $argv) -eq 0
+        echo "'ssh-auto' expected [1..2] arguments HOST PORT; got $(count $argv)" >&2; and return 1
+    end
+    set -l host $argv[1]
+    if test (count $argv) -ge 2
+        set -l port $argv[2]
+    end
+    if set -q port
+        ssh-keygen -R "[$host]:$port"
+        ssh-keyscan -p $port $host >>~/.ssh/known_hosts
+    else
+        ssh-keygen -R $host
+        ssh-keyscan $host >>~/.ssh/known_hosts
+    end
+end
 function authorized-keys
     $EDITOR $HOME/.ssh/authorized_keys
 end
@@ -564,18 +592,34 @@ function starship-toml
 end
 
 # tailscale
-if type -q docker
+if type -q tailscale; or type -q docker
     function ts
-        docker exec -i tailscale tailscale status
+        if type -q tailscale
+            tailscale status
+        else
+            docker exec -i tailscale tailscale status
+        end
     end
     function ts-exit-node
-        docker exec -i tailscale tailscale set --exit-node=qrt-nanode
+        if type -q tailscale
+            tailscale set --exit-node=qrt-nanode
+        else
+            docker exec -i tailscale tailscale set --exit-node=qrt-nanode
+        end
     end
     function ts-no-exit-node
-        docker exec -i tailscale tailscale set --exit-node=
+        if type -q tailscale
+            tailscale set --exit-node=
+        else
+            docker exec -i tailscale tailscale set --exit-node=
+        end
     end
     function wts
-        docker exec -i tailscale watch -n1 -- tailscale status
+        if type -q tailscale
+            watch --color --differences --interval=1 -- tailscale status
+        else
+            docker exec -i tailscale watch --color --differences --interval=1 -- tailscale status
+        end
     end
 end
 
