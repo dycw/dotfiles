@@ -171,14 +171,21 @@ end
 
 # docker
 if type -q docker
+    function dco
+        docker container prune --force
+        docker container ls --all --size
+    end
     function dim
+        docker image prune --all --force
         docker images --all
     end
     function dps
+        docker container prune --force
         docker ps --all --size
     end
     function wdps
-        watch --color --differences --interval=1 -- docker ps --all --size
+        watch --color --differences --interval=1 -- \
+            docker container prune --force && docker ps --all --size
     end
 end
 
