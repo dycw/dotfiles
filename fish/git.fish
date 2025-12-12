@@ -956,11 +956,15 @@ function __gitea_merge
     set -l index (__gitea_pulls_index (__gitea_pulls_json))
     set -l repo (git repo-name); or return $status
     set -l start (date +%s); or return $status
+    set -l i 0
     set -l elapsed
     while __gitea_exists
-        tea pull merge --style squash $index >/dev/null 2>&1
+        if tea pull merge --style squash $index >/dev/null 2>&1; and not __gitea_exists
+            break
+        end
+        set i (math $i+1)
         set elapsed (math (date +%s) - $start)
-        echo "$repo/$curr_branch is still merging... ($elapsed s)"
+        echo "$repo/$curr_branch is still merging... ($i, $elapsed s)"
         sleep 1
     end
     set -l def_branch (git default-local-branch); or return $status
