@@ -1042,12 +1042,28 @@ end
 # edit
 
 function ghe
+    argparse title= body= -- $argv; or return $status
     set -l args
-    if test (count $argv) -eq 0
-    else if test (count $argv) -eq 1
+    if test -n "$_flag_title"
+        set args $args --title $_flag_title
+    end
+    if test -n "$_flag_body"
+        set args $args --body $_flag_body
+    end
+    if test (count $argv) -eq 1
+        if test -n "$_flag_title"
+            echo "'ghe' expected [1..2] arguments TITLE BODY without --title; got $(count $argv)" >&2; and return 1
+        end
         set args $args --title $argv[1]
-    else
+    else if test (count $argv) -eq 2
+        if test -n "$_flag_title"
+            echo "'ghe' expected [1..2] arguments TITLE BODY without --title; got $(count $argv)" >&2; and return 1
+        else if test -n "$_flag_body"
+            echo "'ghe' expected [1..2] arguments TITLE BODY without --body; got $(count $argv)" >&2; and return 1
+        end
         set args $args --title $argv[1] --body $argv[2]
+    else
+        echo "'ghe' expected [1..2] arguments TITLE BODY; got $(count $argv)" >&2; and return 1
     end
     __git_edit $args
 end
