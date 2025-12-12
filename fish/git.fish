@@ -918,8 +918,18 @@ end
 #### gitea ####################################################################
 
 function __gitea_create
-    echo 'NOT IMPLEMENTED'
-    exit 1
+    argparse title= description= -- $argv; or return $status
+    set -l title
+    if test -n "$_flag_title"
+        set title $_flag_title
+    else
+        set title (__auto_msg); or return $status
+    end
+    set -l args
+    if test -n "$_flag_description"
+        set args $args --description $_flag_description
+    end
+    tea pulls create --title $title $aGS
 end
 
 function __gitea_exists
@@ -989,6 +999,7 @@ end
 function ghc
     set -l args
     if test (count $argv) -eq 0
+        set args $args --title (__auto_msg)
     else if test (count $argv) -eq 1
         set args $args --title $argv[1]
     else if test (count $argv) -eq 2
@@ -996,17 +1007,16 @@ function ghc
     else
         echo "'ghc' expected [0..2] arguments TITLE BODY; got $(count $argv)" >&2; and return 1
     end
-    __git_create
+    __git_create $args
 end
 
 function __git_create
     argparse title= body= -- $argv; or return $status
-    if test -z "$_flag_title"; and test -z "$_flag_body"
-        echo "'__git_create' expected [1..) arguments -t/--title or -b/--body; got neither" >&2; and return 1
-    end
     set -l args
     if test -n "$_flag_title"
         set args $args --title $_flag_title
+    else
+        set args $args --title (__auto_msg)
     end
     if __remote_is_github
         if test -n "$_flag_body"
