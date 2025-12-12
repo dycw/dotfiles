@@ -795,7 +795,7 @@ function __github_view
         gitweb
     else
         set -l branch (git current-branch); or return $status
-        echo "'__github_view' could not find an open PR for $branch, nor could it find 'gitweb'" >&2; and return 1
+        echo "'__github_view' could not find an open PR for '$branch', nor could it find 'gitweb'" >&2; and return 1
     end
 end
 
@@ -1001,9 +1001,15 @@ function __gitea_pulls_index
 end
 
 function __gitea_view
-    set -l json (__gitea_pulls_json 2>&1); or return $status
-    set -l url (echo $json | jq -r .url); or return $status
-    open $url
+    set -l json (__gitea_pulls_json 2>&1)
+    set -l json_status $status
+    if test $json_status -eq 0
+        set -l url (echo $json | jq -r .url); or return $status
+        open $url
+    else
+        set -l branch (git current-branch); or return $status
+        echo "'__gitea_view' could not find an open PR for '$branch'" >&2; and return 1
+    end
 end
 
 #### github + gitlab ##########################################################
