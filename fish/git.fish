@@ -955,22 +955,11 @@ function __gitea_merge
     end
     set -l repo (git repo-name); or return $status
     set -l start (date +%s); or return $status
-    while true
-        set -l json (__gitea_mr_json 2>&1)
-        set -l json_status $status
-        set -l merge_status (__gitea_mr_merge_status $json); or return $status
-        if test "$merge_status" = conflict; or test "$merge_status" = need_rebase; or test "$merge_status" = 'not open'
-            echo "'__gitea_merge' cannot merge the MR for '$curr_branch' because of merge status '$merge_status'" >&2; and return 1
-        end
-        glab mr merge --remove-source-branch --squash --yes &>/dev/null
-        set i (math $i+1)
-        set -l json (__gitea_mr_json 2>&1)
-        if test $status -eq 100
-            break
-        end
-        set -l merge_status (__gitea_mr_merge_status $json); or return $status
-        set -l elapsed (math (date +%s) - $start)
-        echo "'$repo/$curr_branch' is still merging... ($i, $merge_status, $elapsed s)"
+    set -l elapsed
+    tea pulls merge --style squash (__gitea_pulls_index (__gitea_pulls_json)); or return $status
+    while not __gitea_exists
+        set elapsed (math (date +%s) - $start)
+        echo "$repo/$curr_branch is still merging... ($elapsed s)"
         sleep 1
     end
     set -l def_branch (git default-local-branch); or return $status
