@@ -976,6 +976,9 @@ function __gitea_merge
 end
 
 function __gitea_pulls_json
+    if test (count $argv) -ge 1
+        echo "'__gitea_pulls_json' expected 0 arguments; got $(count $argv)" >&2; and return 1
+    end
     set -l json (tea pulls list --fields index,state,author,author-id,url,title,body,mergeable,base,base-commit,head,diff,patch,created,updated,deadline,assignees,milestone,labels,comments --output=json); or return $status
     set -l branch (git current-branch); or return $status
     set json (echo $json | jq -r --arg branch "$branch" '[.[] | select(.head == $branch)]'); or return $status
@@ -995,6 +998,12 @@ function __gitea_pulls_index
     end
     set -l json (__gitea_pulls_json); or return $status
     echo $json | jq -r .index
+end
+
+function __gitlab_view
+    set -l json (__gitea_pulls_json 2>&1); or return $status
+    set -l url (echo $json | jq -r .url)
+    open $url
 end
 
 #### github + gitlab ##########################################################
@@ -1135,6 +1144,8 @@ function __github_or_gitlab_view
         __github_view
     else if __remote_is_gitlab
         __gitlab_view
+    else if __remote_is_gitea
+        __gitea_view
     else
         set -l remote $(git remote-name); or return $status
         echo "Invalid remote; got '$remote'" >&2; and return 1
