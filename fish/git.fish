@@ -953,7 +953,7 @@ function __gitea_merge
     if not __gitea_exists
         echo "'__gitea_merge' could not find an open PR for '$curr_branch'" >&2; and return 1
     end
-    set -l index (__gitea_pulls_index (__gitea_pulls_json))
+    set -l index (__gitea_pulls_index )
     set -l repo (git repo-name); or return $status
     set -l start (date +%s); or return $status
     set -l i 0
@@ -976,10 +976,10 @@ function __gitea_merge
 end
 
 function __gitea_pulls_json
-    set -l json (tea pulls list --fields index,head --output=json); or return $status
+    set -l json (tea pulls list --fields index,state,author,author-id,url,title,body,mergeable,base,base-commit,head,diff,patch,created,updated,deadline,assignees,milestone,labels,comments --output=json); or return $status
     set -l branch (git current-branch); or return $status
-    set json (printf %s "$json" | jq -r --arg branch "$branch" '[.[] | select(.head == $branch)]'); or return $status
-    set -l num (printf %s $json | jq length); or return $status
+    set json (echo $json | jq -r --arg branch "$branch" '[.[] | select(.head == $branch)]'); or return $status
+    set -l num (echo $json | jq length); or return $status
     if test $num -eq 0
         echo "'__gitea_pulls_json' expected a PR for '$branch'; got none" >&2; and return 100
     else if test $num -eq 1
@@ -990,10 +990,11 @@ function __gitea_pulls_json
 end
 
 function __gitea_pulls_index
-    if test (count $argv) -eq 0
-        echo "'__gitea_pulls_index' expected [1..) arguments JSON; got $(count $argv)" >&2; and return 1
+    if test (count $argv) -ge 1
+        echo "'__gitea_pulls_index' expected 0 arguments; got $(count $argv)" >&2; and return 1
     end
-    echo (string collect $argv) | jq -r .index
+    set -l json (__gitea_pulls_json); or return $status
+    echo $json | jq -r .index
 end
 
 #### github + gitlab ##########################################################
