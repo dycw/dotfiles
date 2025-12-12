@@ -953,11 +953,12 @@ function __gitea_merge
     if not __gitea_exists
         echo "'__gitea_merge' could not find an open PR for '$curr_branch'" >&2; and return 1
     end
+    set -l index (__gitea_pulls_index (__gitea_pulls_json))
     set -l repo (git repo-name); or return $status
     set -l start (date +%s); or return $status
     set -l elapsed
-    tea pulls merge --style squash (__gitea_pulls_index (__gitea_pulls_json)); or return $status
-    while not __gitea_exists
+    while __gitea_exists
+        tea pull merge --style squash $index >/dev/null 2>&1
         set elapsed (math (date +%s) - $start)
         echo "$repo/$curr_branch is still merging... ($elapsed s)"
         sleep 1
