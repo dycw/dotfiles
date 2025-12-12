@@ -177,3 +177,6 @@
 [user]
   email = d.wan@icloud.com
   name = Derek Wan
+[credential "https://dw-mac.char-bleak.ts.net:3000"]
+	helper =
+	helper = !tea login helper
