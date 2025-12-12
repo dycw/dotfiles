@@ -1002,7 +1002,7 @@ end
 
 function __gitea_view
     set -l json (__gitea_pulls_json 2>&1); or return $status
-    set -l url (echo $json | jq -r .url)
+    set -l url (echo $json | jq -r .url); or return $status
     open $url
 end
 
