@@ -964,7 +964,7 @@ function __gitea_merge
         end
         set i (math $i+1)
         set elapsed (math (date +%s) - $start)
-        echo "$repo/$curr_branch is still merging... ($i, $elapsed s)"
+        echo "'$repo/$curr_branch' is still merging... ($i, $elapsed s)"
         sleep 1
     end
     set -l def_branch (git default-local-branch); or return $status
@@ -976,8 +976,9 @@ function __gitea_merge
 end
 
 function __gitea_pulls_json
+    set -l json (tea pulls list --fields index,head --output=json); or return $status
     set -l branch (git current-branch); or return $status
-    set -l json (tea pulls list --fields index,mergeable,head --output=json); or return $status
+    set json (printf %s "$json" | jq -r --arg branch "$branch" '[.[] | select(.head == $branch)]'); or return $status
     set -l num (printf %s $json | jq length); or return $status
     if test $num -eq 0
         echo "'__gitea_pulls_json' expected a PR for '$branch'; got none" >&2; and return 100
@@ -993,18 +994,6 @@ function __gitea_pulls_index
         echo "'__gitea_pulls_index' expected [1..) arguments JSON; got $(count $argv)" >&2; and return 1
     end
     echo (string collect $argv) | jq -r .index
-end
-
-function __gitea_pulls_mergeable
-    if test (count $argv) -eq 0
-        echo "'__gitea_pulls_mergeable' expected [1..) arguments JSON; got $(count $argv)" >&2; and return 1
-    end
-    set -l mergeable (echo (string collect $argv) | jq -r '.mergeable')
-    if test "$mergeable" = true
-        return 0
-    else
-        return 1
-    end
 end
 
 #### github + gitlab ##########################################################
