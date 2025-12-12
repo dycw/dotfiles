@@ -202,7 +202,7 @@ function __git_checkout_open
             set args $args "Closes $_flag_num"
         end
     end
-    __github_or_gitlab_create --title $title $args
+    __git_create --title $title $args
 end
 
 function __git_checkout_close
@@ -820,28 +820,28 @@ end
 function __gitlab_merge
     argparse exit -- $argv; or return $status
     set -l repo (git repo-name); or return $status
-    set -l branch (git current-branch); or return $status
+    set -l curr_branch (git current-branch); or return $status
     set -l start (date +%s); or return $status
     set -l i 0
     while true
         set -l json (__gitlab_mr_json 2>&1)
         set -l json_status $status
         if test $i -eq 0; and test $json_status -eq 100
-            echo "'__gitlab_merge' expected an MR for '$branch'; got none" >&2; and return 1
+            echo "'__gitlab_merge' expected an MR for '$curr_branch'; got none" >&2; and return 1
         else if test $i -ge 1; and test $json_status -eq 100
             break
         else if test $json_status -eq 101
-            echo "'__gitlab_merge' expected a unique MR for '$branch'" >&2; and return 1
+            echo "'__gitlab_merge' expected a unique MR for '$curr_branch'" >&2; and return 1
         else if test $json_status -ne 0
             echo "'__gitlab_merge' expected an exit status of 0, 100 or 101; got $json_status" >&2; and return 1
         end
         set -l state (echo $json | jq -r .state); or return $status
         if test $state != opened
-            echo "'__gitlab_merge' expected the MR for '$branch' to be opened; got '$state'" >&2; and return 1
+            echo "'__gitlab_merge' expected the MR for '$curr_branch' to be opened; got '$state'" >&2; and return 1
         end
         set -l merge_status (__gitlab_mr_merge_status $json); or return $status
         if test "$merge_status" = conflict; or test "$merge_status" = need_rebase; or test "$merge_status" = 'not open'
-            echo "'__gitlab_merge' cannot merge the MR for '$branch' because of merge status '$merge_status'" >&2; and return 1
+            echo "'__gitlab_merge' cannot merge the MR for '$curr_branch' because of merge status '$merge_status'" >&2; and return 1
         end
         glab mr merge --remove-source-branch --squash --yes &>/dev/null
         set i (math $i+1)
@@ -851,7 +851,7 @@ function __gitlab_merge
         end
         set -l merge_status (__gitlab_mr_merge_status $json); or return $status
         set -l elapsed (math (date +%s) - $start)
-        echo "'$repo/$branch' is still merging... ($i, $merge_status, $elapsed s)"
+        echo "'$repo/$curr_branch' is still merging... ($i, $merge_status, $elapsed s)"
         sleep 1
     end
     set -l def_branch (git default-local-branch); or return $status
@@ -915,6 +915,73 @@ function __gitlab_view
     end
 end
 
+#### gitea ####################################################################
+
+function __gitea_create
+    echo 'NOT IMPLEMENTED'
+    exit 1
+end
+
+function __gitea_exists
+    set -l branch (git current-branch); or return $status
+    set -l num (tea pulls list --state open --output json '. | length'); or return $status
+    if test $num -eq 0
+        return 1
+    else if test $num -eq 1
+        return 0
+    else
+        echo "'__gitea_exists' expected a unique PR for '$branch'; got $num" >&2; and return 1
+    end
+end
+
+function __gitea_merge
+    argparse exit -- $argv; or return $status
+    set -l curr_branch (git current-branch); or return $status
+    if not __gitea_exists
+        echo "'__gitea_merge' could not find an open PR for '$curr_branch'" >&2; and return 1
+    end
+    set -l repo (git repo-name); or return $status
+    set -l start (date +%s); or return $status
+    set -l i 0
+    while true
+        set -l json (__gitea_mr_json 2>&1)
+        set -l json_status $status
+        if test $i -eq 0; and test $json_status -eq 100
+            echo "'__gitea_merge' expected an MR for '$branch'; got none" >&2; and return 1
+        else if test $i -ge 1; and test $json_status -eq 100
+            break
+        else if test $json_status -eq 101
+            echo "'__gitea_merge' expected a unique MR for '$branch'" >&2; and return 1
+        else if test $json_status -ne 0
+            echo "'__gitea_merge' expected an exit status of 0, 100 or 101; got $json_status" >&2; and return 1
+        end
+        set -l state (echo $json | jq -r .state); or return $status
+        if test $state != opened
+            echo "'__gitea_merge' expected the MR for '$branch' to be opened; got '$state'" >&2; and return 1
+        end
+        set -l merge_status (__gitea_mr_merge_status $json); or return $status
+        if test "$merge_status" = conflict; or test "$merge_status" = need_rebase; or test "$merge_status" = 'not open'
+            echo "'__gitea_merge' cannot merge the MR for '$branch' because of merge status '$merge_status'" >&2; and return 1
+        end
+        glab mr merge --remove-source-branch --squash --yes &>/dev/null
+        set i (math $i+1)
+        set -l json (__gitea_mr_json 2>&1)
+        if test $status -eq 100
+            break
+        end
+        set -l merge_status (__gitea_mr_merge_status $json); or return $status
+        set -l elapsed (math (date +%s) - $start)
+        echo "'$repo/$branch' is still merging... ($i, $merge_status, $elapsed s)"
+        sleep 1
+    end
+    set -l def_branch (git default-local-branch); or return $status
+    set -l args
+    if test -n "$_flag_exit"
+        set args $args --exit
+    end
+    __git_checkout_close $def_branch --delete $args
+end
+
 #### github + gitlab ##########################################################
 
 # create
@@ -929,13 +996,13 @@ function ghc
     else
         echo "'ghc' expected [0..2] arguments TITLE BODY; got $(count $argv)" >&2; and return 1
     end
-    __github_or_gitlab_create $args
+    __git_create
 end
 
-function __github_or_gitlab_create
+function __git_create
     argparse title= body= -- $argv; or return $status
     if test -z "$_flag_title"; and test -z "$_flag_body"
-        echo "'__github_or_gitlab_create' expected [1..) arguments -t/--title or -b/--body; got neither" >&2; and return 1
+        echo "'__git_create' expected [1..) arguments -t/--title or -b/--body; got neither" >&2; and return 1
     end
     set -l args
     if test -n "$_flag_title"
