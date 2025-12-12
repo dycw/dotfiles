@@ -994,16 +994,16 @@ function __gitea_pulls_json
     end
 end
 
-function __gitlab_pulls_index
+function __gitea_pulls_index
     if test (count $argv) -eq 0
-        echo "'__gitlab_pulls_index' expected [1..) arguments JSON; got $(count $argv)" >&2; and return 1
+        echo "'__gitea_pulls_index' expected [1..) arguments JSON; got $(count $argv)" >&2; and return 1
     end
     echo (string collect $argv) | jq -r .index
 end
 
-function __gitlab_pulls_mergeable
+function __gitea_pulls_mergeable
     if test (count $argv) -eq 0
-        echo "'__gitlab_pulls_mergeable' expected [1..) arguments JSON; got $(count $argv)" >&2; and return 1
+        echo "'__gitea_pulls_mergeable' expected [1..) arguments JSON; got $(count $argv)" >&2; and return 1
     end
     set -l mergeable (echo (string collect $argv) | jq -r '.mergeable')
     if test "$mergeable" = true
