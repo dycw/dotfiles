@@ -480,7 +480,7 @@ function __git_push
     end
     git push $args; or return $status
     if test -n "$_flag_web"
-        __github_or_gitlab_view; or return $status
+        __git_view; or return $status
     end
     if test -n "$_flag_exit"
         exit
@@ -1136,10 +1136,10 @@ end
 # view
 
 function gw
-    __github_or_gitlab_view
+    __git_view
 end
 
-function __github_or_gitlab_view
+function __git_view
     if __remote_is_github
         __github_view
     else if __remote_is_gitlab
