@@ -1049,13 +1049,13 @@ function ghe
     else
         set args $args --title $argv[1] --body $argv[2]
     end
-    __github_or_gitlab_edit $args
+    __git_edit $args
 end
 
-function __github_or_gitlab_edit
+function __git_edit
     argparse title= body= -- $argv; or return $status
     if test -z "$_flag_title"; and test -z "$_flag_body"
-        echo "'__github_or_gitlab_edit' expected [1..) arguments -t/--title or -b/--body; got neither" >&2; and return 1
+        echo "'__git_edit' expected [1..) arguments -t/--title or -b/--body; got neither" >&2; and return 1
     end
     set -l args
     if test -n "$_flag_title"
