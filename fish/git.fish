@@ -570,6 +570,9 @@ end
 function __remote_is_gitlab
     __remote_is gitlab
 end
+function __remote_is_gitea
+    __remote_is ts.net
+end
 
 # reset
 
@@ -948,6 +951,11 @@ function __github_or_gitlab_create
             set args $args --description $_flag_description
         end
         __gitlab_create $args
+    else if __remote_is_gitea
+        if test -n "$_flag_body"
+            set args $args --description $_flag_description
+        end
+        __gitea_create $args
     else
         set -l remote $(git remote-name); or return $status
         echo "Invalid remote; got '$remote'" >&2; and return 1
@@ -995,13 +1003,13 @@ end
 # merge
 
 function ghm
-    __github_or_gitlab_merge
+    __git_merge
 end
 function ghx
-    __github_or_gitlab_merge --exit
+    __git_merge --exit
 end
 
-function __github_or_gitlab_merge
+function __git_merge
     argparse exit -- $argv; or return $status
     set -l args
     if test -n "$_flag_exit"
@@ -1011,6 +1019,8 @@ function __github_or_gitlab_merge
         __github_merge $args
     else if __remote_is_gitlab
         __gitlab_merge $args
+    else if __remote_is_gitea
+        __gitea_merge $args
     else
         set -l remote $(git remote-name); or return $status
         echo "Invalid remote; got '$remote'" >&2; and return 1
@@ -1257,7 +1267,7 @@ function __git_all
         if test -n "$_flag_exit"
             set merge_args $merge_args --exit
         end
-        __github_or_gitlab_merge $merge_args
+        __git_merge $merge_args
     end
 end
 
