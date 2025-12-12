@@ -758,7 +758,7 @@ function __github_merge
         echo "'__github_merge' could not find an open PR for '$curr_branch'" >&2; and return 1
     end
     set -l repo (git repo-name); or return $status
-    set -l start (date +%s)
+    set -l start (date +%s); or return $status
     set -l elapsed
     gh pr merge --auto --delete-branch --squash; or return $status
     while __github_merging
@@ -934,13 +934,16 @@ end
 
 function __gitea_exists
     set -l branch (git current-branch); or return $status
-    set -l num (tea pulls list --state open --output json '. | length'); or return $status
-    if test $num -eq 0
-        return 1
-    else if test $num -eq 1
+    __gitea_pulls_json >/dev/null 2>&1
+    set -l json_status $status
+    if test $json_status -eq 0
         return 0
+    else if test $json_status -eq 100
+        return 1
+    else if test $json_status -eq 101
+        echo "'__gitea_exists' expected a unique MR for '$branch'" >&2; and return 1
     else
-        echo "'__gitea_exists' expected a unique PR for '$branch'; got $num" >&2; and return 1
+        echo "'__gitea_exists' expected an exit status of 0, 100 or 101; got $json_status" >&2; and return 1
     end
 end
 
@@ -952,26 +955,12 @@ function __gitea_merge
     end
     set -l repo (git repo-name); or return $status
     set -l start (date +%s); or return $status
-    set -l i 0
     while true
         set -l json (__gitea_mr_json 2>&1)
         set -l json_status $status
-        if test $i -eq 0; and test $json_status -eq 100
-            echo "'__gitea_merge' expected an MR for '$branch'; got none" >&2; and return 1
-        else if test $i -ge 1; and test $json_status -eq 100
-            break
-        else if test $json_status -eq 101
-            echo "'__gitea_merge' expected a unique MR for '$branch'" >&2; and return 1
-        else if test $json_status -ne 0
-            echo "'__gitea_merge' expected an exit status of 0, 100 or 101; got $json_status" >&2; and return 1
-        end
-        set -l state (echo $json | jq -r .state); or return $status
-        if test $state != opened
-            echo "'__gitea_merge' expected the MR for '$branch' to be opened; got '$state'" >&2; and return 1
-        end
         set -l merge_status (__gitea_mr_merge_status $json); or return $status
         if test "$merge_status" = conflict; or test "$merge_status" = need_rebase; or test "$merge_status" = 'not open'
-            echo "'__gitea_merge' cannot merge the MR for '$branch' because of merge status '$merge_status'" >&2; and return 1
+            echo "'__gitea_merge' cannot merge the MR for '$curr_branch' because of merge status '$merge_status'" >&2; and return 1
         end
         glab mr merge --remove-source-branch --squash --yes &>/dev/null
         set i (math $i+1)
@@ -981,7 +970,7 @@ function __gitea_merge
         end
         set -l merge_status (__gitea_mr_merge_status $json); or return $status
         set -l elapsed (math (date +%s) - $start)
-        echo "'$repo/$branch' is still merging... ($i, $merge_status, $elapsed s)"
+        echo "'$repo/$curr_branch' is still merging... ($i, $merge_status, $elapsed s)"
         sleep 1
     end
     set -l def_branch (git default-local-branch); or return $status
@@ -990,6 +979,38 @@ function __gitea_merge
         set args $args --exit
     end
     __git_checkout_close $def_branch --delete $args
+end
+
+function __gitea_pulls_json
+    set -l branch (git current-branch); or return $status
+    set -l json (tea pulls list --fields index,mergeable,head --output=json); or return $status
+    set -l num (printf %s $json | jq length); or return $status
+    if test $num -eq 0
+        echo "'__gitea_pulls_json' expected a PR for '$branch'; got none" >&2; and return 100
+    else if test $num -eq 1
+        printf "%s\n" "$json" | jq .[0]
+    else
+        echo "'__gitea_pulls_json' expected a unique PR for '$branch'; got $num" >&2; and return 101
+    end
+end
+
+function __gitlab_pulls_index
+    if test (count $argv) -eq 0
+        echo "'__gitlab_pulls_index' expected [1..) arguments JSON; got $(count $argv)" >&2; and return 1
+    end
+    echo (string collect $argv) | jq -r .index
+end
+
+function __gitlab_pulls_mergeable
+    if test (count $argv) -eq 0
+        echo "'__gitlab_pulls_mergeable' expected [1..) arguments JSON; got $(count $argv)" >&2; and return 1
+    end
+    set -l mergeable (echo (string collect $argv) | jq -r '.mergeable')
+    if test "$mergeable" = true
+        return 0
+    else
+        return 1
+    end
 end
 
 #### github + gitlab ##########################################################
@@ -1050,29 +1071,28 @@ function ghe
     if test -n "$_flag_body"
         set args $args --body $_flag_body
     end
-    if test (count $argv) -eq 1
+    if test (count $argv) -eq 0
+    else if test (count $argv) -eq 1
         if test -n "$_flag_title"
-            echo "'ghe' expected [1..2] arguments TITLE BODY without --title; got $(count $argv)" >&2; and return 1
+            echo "'ghe' got 1 argument TITLE but also --title; got $(count $argv)" >&2; and return 1
         end
         set args $args --title $argv[1]
     else if test (count $argv) -eq 2
         if test -n "$_flag_title"
-            echo "'ghe' expected [1..2] arguments TITLE BODY without --title; got $(count $argv)" >&2; and return 1
+            echo "'ghe' got 2 arguments TITLE BODY but also --title; got $(count $argv)" >&2; and return 1
         else if test -n "$_flag_body"
-            echo "'ghe' expected [1..2] arguments TITLE BODY without --body; got $(count $argv)" >&2; and return 1
+            echo "'ghe' got 2 arguments TITLE BODY but also --body; got $(count $argv)" >&2; and return 1
         end
         set args $args --title $argv[1] --body $argv[2]
     else
         echo "'ghe' expected [1..2] arguments TITLE BODY; got $(count $argv)" >&2; and return 1
     end
+    echo $args
     __git_edit $args
 end
 
 function __git_edit
     argparse title= body= -- $argv; or return $status
-    if test -z "$_flag_title"; and test -z "$_flag_body"
-        echo "'__git_edit' expected [1..) arguments -t/--title or -b/--body; got neither" >&2; and return 1
-    end
     set -l args
     if test -n "$_flag_title"
         set args $args --title $_flag_title
