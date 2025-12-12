@@ -104,6 +104,9 @@ end
 function cdw
     cd $HOME/work
 end
+function cdt
+    cd $HOME/work-gitea
+end
 
 # chmod
 function chmod-files
@@ -405,6 +408,10 @@ function pre-commit-config
 end
 if type -q pre-commit
     function pca
+        pre-commit run --all-files
+    end
+    function pca-force
+        rm -rf "$HOME/.cache/pre-commit-hooks"
         pre-commit run --all-files
     end
     function pcau
