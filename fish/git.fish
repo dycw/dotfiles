@@ -1000,7 +1000,7 @@ function __gitea_pulls_index
     echo $json | jq -r .index
 end
 
-function __gitlab_view
+function __gitea_view
     set -l json (__gitea_pulls_json 2>&1); or return $status
     set -l url (echo $json | jq -r .url)
     open $url
