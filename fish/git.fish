@@ -953,7 +953,7 @@ function __gitea_merge
     if not __gitea_exists
         echo "'__gitea_merge' could not find an open PR for '$curr_branch'" >&2; and return 1
     end
-    set -l index (__gitea_pulls_index )
+    set -l index (__gitea_pulls_index); or return $status
     set -l repo (git repo-name); or return $status
     set -l start (date +%s); or return $status
     set -l i 0
