@@ -1,5 +1,5 @@
 return {
-    "dycw/wildfire.nvim",
+    "sustech-data/wildfire.nvim",
     config = function()
         require("wildfire").setup()
     end,
