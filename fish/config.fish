@@ -442,7 +442,11 @@ function pyr
     if type -q pyright
         pyright .
     else if type -q uv
-        uv tool run pyright .
+        set -l args
+        if test -f .venv/bin/python
+            set args $args --pythonpath .venv/bin/python
+        end
+        uv tool run pyright $args .
     else
         echo "'pyr' expected 'pyright' or 'uv' to be available; got neither" >&2; and return 1
     end
