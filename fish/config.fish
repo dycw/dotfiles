@@ -101,11 +101,15 @@ function cdh
     cd $current; or return $status
     eval $(direnv export fish)
 end
-function cdw
-    cd $HOME/work
+function cdp
+    set -l dir $HOME/personal
+    command mkdir -p $dir
+    cd $dir
 end
-function cdt
-    cd $HOME/work-gitea
+function cdw
+    set -l dir $HOME/work
+    command mkdir -p $dir
+    cd $dir
 end
 
 # chmod
@@ -658,6 +662,11 @@ end
 # starship
 function starship-toml
     $EDITOR $HOME/dotfiles/starship/starship.toml
+end
+
+# tail
+function tf
+    tail -F --verbose $argv
 end
 
 # tailscale
