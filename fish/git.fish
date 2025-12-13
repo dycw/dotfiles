@@ -1086,7 +1086,6 @@ function ghe
     else
         echo "'ghe' expected [1..2] arguments TITLE BODY; got $(count $argv)" >&2; and return 1
     end
-    echo $args
     __git_edit $args
 end
 
