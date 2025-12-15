@@ -384,7 +384,11 @@ function gdc
     git diff --cached $argv
 end
 function gdm
-    git diff-remote $argv
+    if test (count $argv) -ge 1
+        git diff (git default-remote-branch) -- $argv
+    else
+        git diff (git default-remote-branch)
+    end
 end
 
 # fetch
