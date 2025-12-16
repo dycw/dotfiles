@@ -371,9 +371,13 @@ end
 # networking
 function resolv-conf
     if test (id -u) -eq 0
+        chattr -i /etc/resolv.conf || true
         $EDITOR /etc/resolv.conf
+        chattr +i /etc/resolv.conf || true
     else
+        sudo chattr -i /etc/resolv.conf || true
         sudo $EDITOR /etc/resolv.conf
+        sudo chattr +i /etc/resolv.conf || true
     end
 end
 function watch-resolv-conf
