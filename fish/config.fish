@@ -424,6 +424,7 @@ if type -q pre-commit
     end
     function pcau
         pre-commit autoupdate
+        pre-commit run --all-files
     end
     function pci
         pre-commit install
