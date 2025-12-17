@@ -386,7 +386,7 @@ end
 
 # ping
 function ping-ts
-    argparse c/count i/interval w/deadline -- $argv; or return $status
+    argparse c/count= i/interval= w/deadline= -- $argv; or return $status
     set -l args
     if test -n "$_flag_count"
         set args $args -c "$_flag_count"
@@ -619,7 +619,14 @@ function authorized-keys
     $EDITOR $HOME/.ssh/authorized_keys
 end
 function generate-ssh-key
-    ssh-keygen -C '' -f id_ed25519 -P '' -t ed25519
+    argparse f/filename= -- $argv; or return $status
+    set -l filename_use
+    if test -n "$_flag_filename"
+        set filename_use $_flag_filename
+    else
+        set filename_use id_ed25519
+    end
+    ssh-keygen -C '' -f $filename_use -P '' -t ed25519 $args
 end
 function known-hosts
     $EDITOR $HOME/.ssh/known_hosts
