@@ -618,6 +618,9 @@ end
 function authorized-keys
     $EDITOR $HOME/.ssh/authorized_keys
 end
+function generate-ssh-key
+    ssh-keygen -C '' -f id_ed25519 -P '' -t ed25519
+end
 function known-hosts
     $EDITOR $HOME/.ssh/known_hosts
 end
