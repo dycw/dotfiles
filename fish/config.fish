@@ -423,7 +423,7 @@ if type -q pre-commit
         pre-commit run --all-files
     end
     function pcau
-        pre-commit autoupdate
+        pre-commit autoupdate --jobs=10
         pre-commit run --all-files
     end
     function pci
@@ -444,17 +444,7 @@ end
 
 # pyright
 function pyr
-    if type -q pyright
-        pyright .
-    else if type -q uv
-        set -l args
-        if test -f .venv/bin/python
-            set args $args --pythonpath .venv/bin/python
-        end
-        uv tool run pyright $args .
-    else
-        echo "'pyr' expected 'pyright' or 'uv' to be available; got neither" >&2; and return 1
-    end
+    __pyright $argv
 end
 function pyrightconfig
     __edit_ancestor pyrightconfig.json
@@ -465,23 +455,36 @@ if type -q watchexec
         watchexec --exts json --exts py --exts toml --exts yaml --shell bash -- $cmd
     end
 end
+function __pyright
+    if type -q pyright
+        pyright .
+    else if type -q uv
+        set -l args
+        if test -f .venv/bin/python
+            set args $args --pythonpath .venv/bin/python
+        end
+        uv tool run pyright $args .
+    else
+        echo "'__pyright' expected 'pyright' or 'uv' to be available; got neither" >&2; and return 1
+    end
+end
 
 # pyright + pytest
 function pyrt
-    pyright; or return $status
-    pytest --numprocesses auto
+    __pyright $argv; or return $status
+    pytest --numprocesses auto $argv
 end
 function pyrtf
     while true
         if type -q pyright
-            while not pyright
+            while not __pyright $argv
                 sleep 2
             end
         else
             echo "'pyrtf' expected 'pyright' to be available" >&2; and return 1
         end
         if type -q pytest
-            while not pytest --numprocesses auto
+            while not pytest --numprocesses auto $argv
                 sleep 2
             end
         else
