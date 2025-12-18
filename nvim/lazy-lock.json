@@ -65,7 +65,7 @@
   },
   "lazy.nvim": {
     "branch": "main",
-    "commit": "85c7ff3711b730b4030d03144f6db6375044ae82"
+    "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97"
   },
   "lazydev.nvim": {
     "branch": "main",
@@ -101,7 +101,7 @@
   },
   "nvim-autopairs": {
     "branch": "master",
-    "commit": "d9e44e54384e5b0f3536339c65484f2e41b528e3"
+    "commit": "c2a0dd0d931d0fb07665e1fedb1ea688da3b80b4"
   },
   "nvim-early-retirement": {
     "branch": "main",
@@ -113,15 +113,15 @@
   },
   "nvim-lint": {
     "branch": "master",
-    "commit": "ae64d6466ed92b68353122d920e314ff2c8dd0a8"
+    "commit": "c47b71d146a0b638f46672e6704c322369385df6"
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "ef96fce99c72ff4b6e9c44ed6b15f8a52e6a7284"
+    "commit": "c4f67bf85b01a57e3c130352c0a0e453ab8cd5b9"
   },
   "nvim-rip-substitute": {
     "branch": "main",
-    "commit": "2bb104d735c7ea7e3b555112c40c1824a626e15b"
+    "commit": "3023802f8d00091f8b6b02f8aa1aa96c392c9583"
   },
   "nvim-surround": {
     "branch": "main",
