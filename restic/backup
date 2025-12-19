@@ -9,15 +9,21 @@ if [ -f "$_env" ]; then
 	echo_date "Sourcing environment file '$_env'..."
 	source "$_env"
 
-	declare -a _paths=("$HOME"/Dropbox "$HOME"/work)
+	declare -a _paths=("$HOME"/Dropbox "$HOME"/personal "$HOME"/work)
 	for _path in "${_paths[@]}"; do
 		if [ -d "$_path" ]; then
 			echo_date "Backing up '$_path'..."
-			restic backup "$_path"
+			restic backup --exclude .venv "$_path"
 		else
 			echo_date "Unable to find '$_path'; skipping..."
 		fi
 	done
+
+	echo_date "Forgetting & pruning..."
+	restic forget --keep-within-hourly 7d --keep-within-daily 1m \
+		--keep-within-weekly 1y --keep-within-monthly 5y \
+		--keep-within-yearly 10y --prune --repack-small \
+		--repack-uncompressed
 else
 	echo_date "Unable to find environment file '$_env'; exiting..."
 fi

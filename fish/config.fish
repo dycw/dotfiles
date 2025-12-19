@@ -475,21 +475,24 @@ function pyrt
     pytest --numprocesses auto $argv
 end
 function pyrtf
+    set -l n 5
     while true
-        if type -q pyright
+        if type -q pyright; or type -q uv
             while not __pyright $argv
-                sleep 2
+                sleep $n
             end
         else
             echo "'pyrtf' expected 'pyright' to be available" >&2; and return 1
         end
+        sleep $n
         if type -q pytest
             while not pytest --numprocesses auto $argv
-                sleep 2
+                sleep $n
             end
         else
             echo "'pyrtf' expected 'pytest' to be available" >&2; and return 1
         end
+        sleep $n
     end
 end
 

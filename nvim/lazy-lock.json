@@ -49,7 +49,7 @@
   },
   "grug-far.nvim": {
     "branch": "main",
-    "commit": "b58b2d65863f4ebad88b10a1ddd519e5380466e0"
+    "commit": "bc589a1ba340a00ae40bf1436401eac5b1454687"
   },
   "guess-indent.nvim": {
     "branch": "main",
