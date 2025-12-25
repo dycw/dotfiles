@@ -640,15 +640,6 @@ end
 function ssh-config
     $EDITOR $HOME/.ssh/config
 end
-function ssh-dw-mac
-    ssh-auto derekwan@dw-mac
-end
-function ssh-rh-mac
-    ssh-auto derekwan@rh-mac
-end
-function ssh-swift
-    ssh-auto derek@dw-swift
-end
 function ssh-auto
     if test (count $argv) -lt 1
         echo "'ssh-auto' expected [1..] arguments DESTINATION; got $(count $argv)" >&2; and return 1
@@ -696,33 +687,63 @@ end
 
 # tailscale
 if type -q tailscale; or type -q docker
+    function ssh-dw-mac
+        ssh-auto derekwan@(ts-ip dw-mac)
+    end
+    function ssh-rh-mac
+        ssh-auto derekwan@(ts-ip rh-mac)
+    end
+    function ssh-swift
+        ssh-auto derek@(ts-ip dw-swift)
+    end
     function ts
-        if type -q tailscale
-            tailscale status
-        else
-            docker exec -i tailscale tailscale status
+        set -l args
+        if not type -q tailscale; and type -q docker
+            set args $args docker exec --interactive tailscale
         end
+        set args $args tailscale status
+        $args
     end
     function ts-exit-node
-        if type -q tailscale
-            tailscale set --exit-node=qrt-nanode
-        else
-            docker exec -i tailscale tailscale set --exit-node=qrt-nanode
+        set -l args
+        if not type -q tailscale; and type -q docker
+            set args $args docker exec --interactive tailscale
         end
+        set args $args tailscale set --exit-node=qrt-nanode
+        $args
+    end
+    function ts-ip
+        if test (count $argv) -lt 1
+            echo "'ts-ip' expected [1..) arguments HOSTNAME; got $(count $argv)" >&2; and return 1
+        end
+        set -l args
+        if not type -q tailscale; and type -q docker
+            set args $args docker exec --interactive tailscale
+        end
+        set args $args tailscale status --json
+        $args 2>/dev/null \
+            | jq .Peer \
+            | jq values[] \
+            | jq --arg hostname $argv[1] 'select(.HostName | ascii_downcase == ($hostname | ascii_downcase))' \
+            | jq .TailscaleIPs[] \
+            | jq 'select(contains("."))' \
+            | jq --slurp --raw-output first
     end
     function ts-no-exit-node
-        if type -q tailscale
-            tailscale set --exit-node=
-        else
-            docker exec -i tailscale tailscale set --exit-node=
+        set -l args
+        if not type -q tailscale; and type -q docker
+            set args $args docker exec --interactive tailscale
         end
+        set args $args tailscale set --exit-node=
+        $args
     end
     function wts
-        if type -q tailscale
-            watch --color --differences --interval=1 -- tailscale status
-        else
-            docker exec -i tailscale watch --color --differences --interval=1 -- tailscale status
+        set -l args
+        if not type -q tailscale; and type -q docker
+            set args $args docker exec --interactive tailscale
         end
+        set args $args watch --color --differences --interval=1 -- tailscale status
+        $args
     end
 end
 
