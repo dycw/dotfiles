@@ -3,7 +3,7 @@ default_install_hook_types: [pre-commit, pre-push]
 repos:
   # fixers
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.3
+    rev: v0.14.10
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -22,7 +22,7 @@ repos:
             reorder_keys=true,
           ]
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.13.24
+    rev: 0.13.26
     hooks:
       - id: check-submodules-updated
         args: [--run-every=PT5M]
