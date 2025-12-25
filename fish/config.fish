@@ -311,6 +311,12 @@ function check-port
     lsof -i :$argv[1]
 end
 
+# mac
+if test (uname) = Darwin
+    function sleep-display
+        pmset displaysleepnow
+    end
+end
 # mkdir
 function mkdir
     command mkdir -p $argv
