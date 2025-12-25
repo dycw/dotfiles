@@ -1,0 +1,29 @@
+set dotenv-load := true
+set positional-arguments := true
+
+# up/down
+
+@up:
+  tailscale up
+
+@down:
+  tailscale down
+
+@restart:
+  just down && just upd
+
+# exit node
+
+@exit-node:
+  tailscale set --exit-node=qrt-nanode
+
+@no-exit-node:
+  tailscale set --exit-node=
+
+# status
+
+@status:
+  tailscale status
+
+@watch-status:
+  watch -n1 -- tailscale status
