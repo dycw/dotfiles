@@ -698,27 +698,30 @@ end
 if type -q tailscale; or type -q docker
     function ts
         set -l args
-        if type -q docker
+        if not type -q tailscale; and type -q docker
             set args $args docker exec --interactive tailscale
         end
-        $args tailscale status
+        set args $args tailscale status
+        $args
     end
     function ts-exit-node
         set -l args
-        if type -q docker
+        if not type -q tailscale; and type -q docker
             set args $args docker exec --interactive tailscale
         end
-        $args tailscale set --exit-node=qrt-nanode
+        set args $args tailscale set --exit-node=qrt-nanode
+        $args
     end
     function ts-ip
         if test (count $argv) -lt 1
             echo "'ts-ip' expected [1..) arguments HOSTNAME; got $(count $argv)" >&2; and return 1
         end
         set -l args
-        if type -q docker
+        if not type -q tailscale; and type -q docker
             set args $args docker exec --interactive tailscale
         end
-        $args tailscale status --json 2>/dev/null \
+        set args $args tailscale status --json
+        $args 2>/dev/null \
             | jq .Peer \
             | jq values[] \
             | jq --arg hostname $argv[1] 'select(.HostName | ascii_downcase == ($hostname | ascii_downcase))' \
@@ -727,18 +730,20 @@ if type -q tailscale; or type -q docker
             | jq --slurp --raw-output first
     end
     function ts-no-exit-node
-        if type -q tailscale
-            tailscale set --exit-node=
-        else
-            docker exec -i tailscale tailscale set --exit-node=
+        set -l args
+        if not type -q tailscale; and type -q docker
+            set args $args docker exec --interactive tailscale
         end
+        set args $args tailscale set --exit-node=
+        $args
     end
     function wts
-        if type -q tailscale
-            watch --color --differences --interval=1 -- tailscale status
-        else
-            docker exec -i tailscale watch --color --differences --interval=1 -- tailscale status
+        set -l args
+        if not type -q tailscale; and type -q docker
+            set args $args docker exec --interactive tailscale
         end
+        set args $args watch --color --differences --interval=1 -- tailscale status
+        $args
     end
 end
 
