@@ -4,7 +4,10 @@ set positional-arguments := true
 # up/down
 
 @up:
-  tailscale up
+  tailscale up --accept-dns --accept-routes \
+    --auth-key="file:${TAILSCALE_AUTH_KEY:?}" --force-reauth \
+    --hostname="${TAILSCALE_HOSTNAME:?}" \
+    --login-server=${TAILSCALE_LOGIN_SERVER:?} --reset
 
 @down:
   tailscale down

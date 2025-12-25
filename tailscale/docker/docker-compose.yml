@@ -5,7 +5,7 @@ services:
     container_name: tailscale
     environment:
       - TS_AUTHKEY=file:/run/secrets/auth_key.txt
-      - TS_EXTRA_ARGS=--accept-dns --accept-routes --force-reauth --login-server=${TS_LOGIN_SERVER:?} --reset
+      - TS_EXTRA_ARGS=--accept-dns --accept-routes --force-reauth --login-server=${TAILSCALE_LOGIN_SERVER:?} --reset
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
     hostname: ${TAILSCALE_HOSTNAME:?}
