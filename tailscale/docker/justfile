@@ -1,0 +1,35 @@
+set dotenv-load := true
+set positional-arguments := true
+
+# up/down
+
+@logs:
+  docker logs --follow tailscale
+
+@up:
+  docker compose up
+
+@upd:
+  docker compose up --detach
+
+@down:
+  docker compose down
+
+@restart:
+  just down && just upd
+
+# exit node
+
+@exit-node:
+  docker exec -i tailscale tailscale set --exit-node=qrt-nanode
+
+@no-exit-node:
+  docker exec -i tailscale tailscale set --exit-node=
+
+# status
+
+@status:
+  docker exec -i tailscale tailscale status
+
+@watch-status:
+  docker exec -i tailscale watch -n1 -- tailscale status
