@@ -701,8 +701,7 @@ if type -q tailscale; or type -q docker
         if type -q docker
             set args $args docker exec --interactive tailscale
         end
-        set args $args tailscale status
-        $args
+        $args tailscale status
     end
     function ts-exit-node
         set -l args
