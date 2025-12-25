@@ -1,17 +1,12 @@
 # dependency groups
 [dependency-groups]
-  dev = [
-    "pyright[nodejs]>=1.1.406",
-    "pytest>=8.4.2",
-    "pytest-xdist>=3.8.0",
-    "rich>=14.2.0",
-  ]
+  dev = ["pyright", "pytest", "pytest-xdist", "rich"]
 
 # project
 [project]
   dependencies = []
   name = "dotfiles"
-  requires-python = ">= 3.13"
+  requires-python = ">=3.12"
   version = "0.0.0"
 
 # bump-my-version
@@ -38,7 +33,7 @@
 
 # ruff
 [tool.ruff]
-  target-version = "py313"
+  target-version = "py312"
   unsafe-fixes = true
 
   [tool.ruff.format]
