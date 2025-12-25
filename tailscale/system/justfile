@@ -5,9 +5,9 @@ set positional-arguments := true
 
 @up:
   tailscale up --accept-dns --accept-routes \
-    --auth-key="file:${TAILSCALE_AUTH_KEY:?}" --force-reauth \
-    --hostname="${TAILSCALE_HOSTNAME:?}" \
-    --login-server=${TAILSCALE_LOGIN_SERVER:?} --reset
+    --auth-key "file:${TAILSCALE_AUTH_KEY:?}" --force-reauth \
+    --hostname "${TAILSCALE_HOSTNAME:?}" \
+    --login-server ${TAILSCALE_LOGIN_SERVER:?} --reset
 
 @down:
   tailscale down
