@@ -640,15 +640,6 @@ end
 function ssh-config
     $EDITOR $HOME/.ssh/config
 end
-function ssh-dw-mac
-    ssh-auto derekwan@dw-mac
-end
-function ssh-rh-mac
-    ssh-auto derekwan@rh-mac
-end
-function ssh-swift
-    ssh-auto derek@dw-swift
-end
 function ssh-auto
     if test (count $argv) -lt 1
         echo "'ssh-auto' expected [1..] arguments DESTINATION; got $(count $argv)" >&2; and return 1
@@ -696,6 +687,15 @@ end
 
 # tailscale
 if type -q tailscale; or type -q docker
+    function ssh-dw-mac
+        ssh-auto derekwan@(ts-ip dw-mac)
+    end
+    function ssh-rh-mac
+        ssh-auto derekwan@(ts-ip rh-mac)
+    end
+    function ssh-swift
+        ssh-auto derek@(ts-ip dw-swift)
+    end
     function ts
         set -l args
         if not type -q tailscale; and type -q docker
