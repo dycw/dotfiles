@@ -697,17 +697,43 @@ end
 # tailscale
 if type -q tailscale; or type -q docker
     function ts
-        if type -q tailscale
-            tailscale status
-        else
-            docker exec -i tailscale tailscale status
+        set -l args
+        if type -q docker
+            set args $args docker exec --interactive tailscale
         end
+        set args $args tailscale status
+        $args
     end
     function ts-exit-node
-        if type -q tailscale
+        set -l args
+        if type -q docker
+            set args $args docker exec --interactive tailscale
+        end
             tailscale set --exit-node=qrt-nanode
         else
             docker exec -i tailscale tailscale set --exit-node=qrt-nanode
+        end
+    end
+    function ts-ip
+        if test (count $argv) -lt 1
+            echo "'ts-ip' expected [1..) arguments HOSTNAME; got $(count $argv)" >&2; and return 1
+        end
+        if type -q tailscale
+            tailscale status --json 2>/dev/null \
+                | jq .Peer \
+                | jq values[] \
+                | jq --arg hostname $argv[1] 'select(.HostName | ascii_downcase == ($hostname | ascii_downcase))' \
+                | jq .TailscaleIPs[] \
+                | jq 'select(contains("."))' \
+                | jq --slurp --raw-output first
+        else
+            docker exec -i tailscale tailscale status --json 2>/dev/null \
+                | jq .Peer \
+                | jq values[] \
+                | jq --arg hostname $argv[1] 'select(.HostName | ascii_downcase == ($hostname | ascii_downcase))' \
+                | jq .TailscaleIPs[] \
+                | jq 'select(contains("."))' \
+                | jq --slurp --raw-output first
         end
     end
     function ts-no-exit-node
