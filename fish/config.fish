@@ -572,6 +572,9 @@ end
 function pytx
     __pytest --exitfirst $argv
 end
+function pkytx
+    __pytest --exitfirst -k $argv
+end
 function pytfx
     __pytest --exitfirst --looponfail $argv
 end
