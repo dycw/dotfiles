@@ -9,6 +9,9 @@
     | xargs -r git branch -D \
   "
 
+  # checkout
+  reset-unmerged = "checkout --conflict=merge ."
+
   # clean
   clean-default = "! \
     git clean --force -d -x && \
@@ -17,6 +20,7 @@
 
   # diff
   diff-remote = "!git diff $(git default-remote-branch)"
+  nvim-unmerged = "!git diff --name-only --diff-filter=U -z | xargs -0 nvim"
   is-clean = "!git diff --quiet && git diff --cached --quiet"
 
   # fetch
