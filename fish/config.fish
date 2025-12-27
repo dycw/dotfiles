@@ -527,6 +527,9 @@ end
 function pytfr
     __pytest --force-regen --looponfail $argv
 end
+function pytfx
+    __pytest --exitfirst --looponfail $argv
+end
 function pytfxk
     if test (count $argv) -lt 1
         echo "'pytfxk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
@@ -572,11 +575,11 @@ end
 function pytx
     __pytest --exitfirst $argv
 end
-function pkytx
+function pytxk
+    if test (count $argv) -lt 1
+        echo "'pytxk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
+    end
     __pytest --exitfirst -k $argv
-end
-function pytfx
-    __pytest --exitfirst --looponfail $argv
 end
 function __pytest
     pytest --color=yes $argv
