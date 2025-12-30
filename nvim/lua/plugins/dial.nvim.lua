@@ -42,6 +42,7 @@ return {
             { "after", "before" },
             { "all", "any" },
             { "and", "or" },
+            { "append", "extend" },
             { "ascending", "descending" },
             { "ask", "bid" },
             { "backward", "forward" },
