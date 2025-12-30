@@ -29,7 +29,7 @@
   },
   "conform.nvim": {
     "branch": "master",
-    "commit": "5420c4b5ea0aeb99c09cfbd4fd0b70d257b44f25"
+    "commit": "df83eeaab265dacd2eef139a78e502a3f8926618"
   },
   "dial.nvim": {
     "branch": "master",
@@ -49,7 +49,7 @@
   },
   "gitsigns.nvim": {
     "branch": "main",
-    "commit": "718e1eda17ebab87f686af5dcc7684b204041eef"
+    "commit": "130beacf8a51f00aede9c31064c749136679a321"
   },
   "grug-far.nvim": {
     "branch": "main",
@@ -85,7 +85,7 @@
   },
   "mason-lspconfig.nvim": {
     "branch": "main",
-    "commit": "9f9c67795d0795a6e8612f5a899ca64a074a1076"
+    "commit": "4cfe411526a7a99c18281135e8b4765ae6330d15"
   },
   "mason-tool-installer.nvim": {
     "branch": "main",
@@ -109,7 +109,7 @@
   },
   "nvim-early-retirement": {
     "branch": "main",
-    "commit": "35609953a8851b77fc5adb6a44865eafe28a8e86"
+    "commit": "15080cd0643f4e142300025b9bf12c7762cf2631"
   },
   "nvim-lastplace": {
     "branch": "main",
@@ -121,11 +121,11 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "d696e36d5792daf828f8c8e8d4b9aa90c1a10c2a"
+    "commit": "41ceb6bba3a40128b7841f5b7f5a9dae7201e823"
   },
   "nvim-rip-substitute": {
     "branch": "main",
-    "commit": "2122039ba254c3611946825f5b94b673d6e8ecbc"
+    "commit": "4973cc8159d8da21c91d5d7b537f1bfc5dfc35db"
   },
   "nvim-surround": {
     "branch": "main",
@@ -185,7 +185,7 @@
   },
   "telescope.nvim": {
     "branch": "master",
-    "commit": "4d0f5e0e7f69071e315515c385fab2a4eff07b3d"
+    "commit": "3f8109cd21abe9fdb274a09da1e3c176673254b4"
   },
   "text-case.nvim": {
     "branch": "main",
