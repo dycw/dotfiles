@@ -625,7 +625,33 @@ function grmc
 end
 
 function __git_rm
+    argparse cached -- $argv; or return $status
+    set -l args
+    if test -n "$_flag_cached"
+        set args $args --cached
+    end
     git rm -rf $argv
+end
+
+# switch
+
+function gsw
+    __git_switch $argv
+end
+function gswc
+    if test (count $argv) -eq 0
+        echo "'gswc' expected [1..) arguments BRANCH; got $(count $argv)" >&2; and return 1
+    end
+    __git_switch --create=$argv[1] $argv[2..]
+end
+
+function __git_switch
+    argparse create= -- $argv; or return $status
+    set -l args
+    if test -n "$_flag_create"
+        set args $args --create="$_flag_create"
+    end
+    git switch $args $argv
 end
 
 # stash
