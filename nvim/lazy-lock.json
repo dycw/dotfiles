@@ -185,7 +185,7 @@
   },
   "telescope.nvim": {
     "branch": "master",
-    "commit": "3f8109cd21abe9fdb274a09da1e3c176673254b4"
+    "commit": "3333a52ff548ba0a68af6d8da1e54f9cd96e9179"
   },
   "text-case.nvim": {
     "branch": "main",

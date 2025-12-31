@@ -702,11 +702,14 @@ if type -q tailscale; or type -q docker
     function ssh-dw-mac
         ssh-auto derekwan@(ts-ip dw-mac)
     end
+    function ssh-dw-swift
+        ssh-auto derek@(ts-ip dw-swift)
+    end
     function ssh-rh-mac
         ssh-auto derekwan@(ts-ip rh-mac)
     end
-    function ssh-swift
-        ssh-auto derek@(ts-ip dw-swift)
+    function ssh-rh-macbook
+        ssh-auto derekwan@(ts-ip rh-macbook)
     end
     function ts
         set -l args
