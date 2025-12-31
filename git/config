@@ -107,6 +107,7 @@
 
 [checkout]
   defaultRemote = origin
+  guess = true
 
 [commit]
   verbose = true
