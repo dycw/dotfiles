@@ -125,7 +125,7 @@ function gcbr
     else if test (count $argv) -eq 1
         set branch $argv[1]
     else
-        echo "'gcbt' expected [0..1] arguments BRANCH; got "(count $argv) >&2; and return 1
+        echo "'gcbr' expected [0..1] arguments BRANCH; got "(count $argv) >&2; and return 1
     end
     git checkout -b $branch -t origin/$branch
 end
