@@ -545,6 +545,12 @@ end
 function pytn
     __pytest --numprocesses auto $argv
 end
+function pytnk
+    if test (count $argv) -lt 1
+        echo "'pytnk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
+    end
+    __pytest --numprocesses auto -k $argv
+end
 function pytnr
     __pytest --force-regen --numprocesses auto $argv
 end
