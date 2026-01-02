@@ -3,17 +3,17 @@ set positional-arguments := true
 
 # up/down
 
-@up:
+@up *args:
   tailscale up --accept-dns --accept-routes \
-    --auth-key "file:${TAILSCALE_AUTH_KEY:?}" --force-reauth \
+    --auth-key "file:${TAILSCALE_AUTH_KEY:?}" \
     --hostname "${TAILSCALE_HOSTNAME:?}" \
-    --login-server ${TAILSCALE_LOGIN_SERVER:?} --reset
+    --login-server ${TAILSCALE_LOGIN_SERVER:?} --reset {{args}}
 
 @down:
   tailscale down
 
-@restart:
-  just down && just up
+@restart *args:
+  just down && just up {{args}}
 
 # exit node
 
