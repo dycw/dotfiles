@@ -29,7 +29,7 @@
   },
   "conform.nvim": {
     "branch": "master",
-    "commit": "4b713b9da0061a54750bfed457e190459be28c7b"
+    "commit": "8314f4c9e205e7f30b62147069729f9a1227d8bf"
   },
   "dial.nvim": {
     "branch": "master",
@@ -49,7 +49,7 @@
   },
   "gitsigns.nvim": {
     "branch": "main",
-    "commit": "130beacf8a51f00aede9c31064c749136679a321"
+    "commit": "6bd29494e3f79ff08be1d35bc1926ed23c22ed9a"
   },
   "grug-far.nvim": {
     "branch": "main",
@@ -125,7 +125,7 @@
   },
   "nvim-rip-substitute": {
     "branch": "main",
-    "commit": "4973cc8159d8da21c91d5d7b537f1bfc5dfc35db"
+    "commit": "58de82d542153809bbf2fe317b60f981818291df"
   },
   "nvim-surround": {
     "branch": "main",

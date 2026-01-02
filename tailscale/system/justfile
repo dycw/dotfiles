@@ -13,7 +13,7 @@ set positional-arguments := true
   tailscale down
 
 @restart:
-  just down && just upd
+  just down && just up
 
 # exit node
 
