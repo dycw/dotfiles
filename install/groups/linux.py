@@ -69,9 +69,6 @@ def setup_linux(
     *,
     age_secret_key: PathLike | None = None,
     bottom_toml: PathLike | None = None,
-    direnv_toml: PathLike | None = None,
-    direnvrc: PathLike | None = None,
-    fd_ignore: PathLike | None = None,
     fish_config: PathLike | None = None,
     fish_env: PathLike | None = None,
     fish_git: PathLike | None = None,
@@ -114,7 +111,7 @@ def setup_linux(
     install_delta()
     install_dust()
     install_eza()
-    install_fd(ignore=fd_ignore)
+    install_fd()
     install_fzf(fzf_fish=fzf_fish)
     install_gh()
     install_git(config=git_config, ignore=git_ignore)
@@ -139,7 +136,7 @@ def setup_linux(
     install_vim()
     install_xclip()
     install_zoxide()
-    install_direnv(direnv_toml=direnv_toml, direnvrc=direnvrc)  # after curl
+    install_direnv()  # after curl
     install_docker()  # after curl
     install_fish(  # after curl
         config=fish_config, env=fish_env, git=fish_git, work=fish_work
