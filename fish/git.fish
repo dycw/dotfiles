@@ -572,10 +572,10 @@ function __remote_is_github
     __remote_is github
 end
 function __remote_is_gitlab
-    false
+    __remote_is gitlab
 end
 function __remote_is_gitea
-    __remote_is gitlab or __remote_is ts.net
+    __remote_is gitea or __remote_is ts.net
 end
 
 # reset
