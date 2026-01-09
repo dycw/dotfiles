@@ -808,14 +808,14 @@ if type -q uv
         for arg in $argv
             set args $args --with $arg
         end
-        uv run --with ipython $args ipython
+        uv run --with dycw-utilities --with ipython $args ipython
     end
     function jl
         set -l args
         for arg in $argv
             set args $args --with $arg
         end
-        uv run --with jupyterlab --with jupyterlab-vim $args jupyter lab
+        uv run --with dycw-utilities --with jupyterlab --with jupyterlab-vim $args jupyter lab
     end
     function pyc
         uv tool run pyclean --debris=all .
