@@ -4,17 +4,18 @@ repos:
     hooks:
       - id: conformalize-repo
         args:
-          - --description=Library of actions
+          - --ci--push--tag
+          - --description=My dotfiles
           - --envrc
           - --envrc--uv
           - --gitignore
-          - --ci--push--tag
           - --pre-commit--prettier
           - --pre-commit--python
           - --pre-commit--ruff
           - --pre-commit--shell
           - --pre-commit--taplo
           - --pre-commit--uv
+          - --pyproject
           - --pyright
           - --python-version=3.12
           - --repo-name=dotfiles
