@@ -435,7 +435,7 @@ if type -q prek
     function pri
         prek install --overwrite --install-hooks
     end
-    function pcu
+    function pru
         prek uninstall
     end
     function __prek_run
