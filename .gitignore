@@ -1,29 +1,3 @@
-# direnv
-.direnv/
-
-# cache
-.cache/
-
-# prettier
-node_modules/
-
-# secrets
-**/*auth*
-**/*credential*
-**/*login*
-**/*password*
-**/*secret*
-**/*token*
-
-# venv
-.venv/
-
-# vim
-.mode.sw*
-**/*.swp
-**/__pycache__/
-
-
 #### STANDARD GITIGNORE #######################################################
 
 # Byte-compiled / optimized / DLL files
