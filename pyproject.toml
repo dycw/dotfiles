@@ -12,7 +12,7 @@
 # bump-my-version
 [tool.bumpversion]
   allow_dirty = true
-  current_version = "0.3.285"
+  current_version = "0.3.286"
 
 # pyright
 [tool.pyright]

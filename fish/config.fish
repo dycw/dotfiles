@@ -820,6 +820,13 @@ if type -q uv
     function pyc
         uv tool run pyclean --debris=all .
     end
+    function uvbp
+        if test (count $argv) -lt 1
+            echo "'uvbp' accepts [1..) arguments TOKEN; got $(count $argv)" >&2; and return 1
+        end
+        uv build --wheel --clear
+        uv publish --token $argv[1]
+    end
     function uvl
         if test (count $argv) -eq 0
             uv pip list
@@ -829,59 +836,6 @@ if type -q uv
     end
     function uvo
         uv pip list --outdated
-    end
-    function uvpo
-        set -l paths '.project.dependencies[]?' '.["dependency-groups"].*[]?' '.project."optional-dependencies".*[]?'
-        set -l all_current (uv pip list --color=never | string collect)
-        set -l outdated (uv pip list --color=never --outdated | string collect)
-        set -l dep_and_vers
-        set -l name
-        set -l ver
-        for p in $paths
-            for dep in (yq -r $p pyproject.toml)
-                if test -n "$dep"
-                    set name (echo $dep | sed 's/\[.*\]//
-        s/[ ,<>=!].*//')
-                    set ver (string match -r '\d+\.\d+\.\d+' $dep)
-                    if test -n "$ver"
-                        set dep_and_vers $dep_and_vers "$name | $ver"
-                    end
-                end
-            end
-        end
-        set -l dep_and_vers (printf "%s\n" $dep_and_vers | sort -u)
-        set -l num_deps (count $dep_and_vers)
-        printf "Checking %d dependencies...\n" $num_deps
-        for dep_ver in $dep_and_vers
-            __uvpo_core $all_current $outdated $dep_ver
-        end
-        printf "Finished checking %d dependencies\n" $num_deps
-    end
-    function __uvpo_core
-        if test (count $argv) -lt 3
-            echo "'__uvpo_core' accepts [3..) arguments ALL_CURRENT OUTDATED DEP_VER; got $(count $argv)" >&2; and return 1
-        end
-        set -l all_current $argv[1]
-        set -l outdated $argv[2]
-        set -l dep_ver (string split " | " $argv[3])
-        set -l name (string trim $dep_ver[1])
-        set -l pyproject (string trim $dep_ver[2])
-        set -l current (printf "%s\n" $all_current \
-            | string match -r "^$name\s+\d+\.\d+\.\d+" | awk '{print $2}')
-        set -l latest (printf "%s\n" $outdated \
-            | string match -r "^$name\s+\d+\.\d+\.\d+\s+\d+\.\d+\.\d+" \
-            | awk '{print $3}')
-        set -l latest_print
-        if test -n "$latest"
-            set latest_print latest
-        else
-            set latest_print -
-        end
-        if test "$current" != "$pyproject"
-            printf "%-20s %-10s %-10s %-10s\n" $name $pyproject $current $latest_print
-        else if test -n "$latest"; and test "$latest" != "$pyproject"
-            printf "%-20s %-10s %-10s %-10s\n" $name $pyproject $current $latest
-        end
     end
     function uvrp
         uv run python -m $argv
