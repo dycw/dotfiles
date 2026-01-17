@@ -180,5 +180,5 @@
   sort = version:refname
 
 [user]
-  email = d.wan@icloud.com
-  name = Derek Wan
+	email = noreply@github.com
+	name = github-actions-bot
