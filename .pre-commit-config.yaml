@@ -1,41 +1,99 @@
-default_install_hook_types: [pre-commit, pre-push]
-
 repos:
-  # fixers
+  - repo: https://github.com/dycw/actions
+    rev: 0.15.2
+    hooks:
+      - id: conformalize-repo
+        args:
+          - --description=Library of actions
+          - --envrc
+          - --envrc--uv
+          - --gitignore
+          - --ci--push--tag
+          - --pre-commit--prettier
+          - --pre-commit--python
+          - --pre-commit--ruff
+          - --pre-commit--shell
+          - --pre-commit--taplo
+          - --pre-commit--uv
+          - --repo-name=dotfiles
+          - --ruff
+      - id: format-requirements
+      - id: replace-sequence-strs
+      - id: touch-empty-py
+      - id: touch-py-typed
+      - id: update-requirements
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: destroyed-symlinks
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args:
+          - --fix=lf
+      - id: no-commit-to-branch
+      - id: pretty-format-json
+        args:
+          - --autofix
+      - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: prettier
+        name: prettier
+        entry: npx prettier --write
+        language: system
+        types_or:
+          - markdown
+          - yaml
+      - id: fish_indent
+        name: fish_indent
+        entry: fish_indent
+        language: system
+        files: \.fish$
+        args: [--write]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.10
+    rev: v0.14.13
     hooks:
       - id: ruff-check
-        args: [--fix]
+        args:
+          - --fix
       - id: ruff-format
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.12.0-2
+    hooks:
+      - id: shfmt
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.11.0
+    hooks:
+      - id: shellcheck
   - repo: https://github.com/compwa/taplo-pre-commit
     rev: v0.9.3
     hooks:
       - id: taplo-format
         args:
-          [
-            --option,
-            indent_tables=true,
-            --option,
-            indent_entries=true,
-            --option,
-            reorder_keys=true,
-          ]
-  - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.13.26
+          - --option
+          - indent_tables=true
+          - --option
+          - indent_entries=true
+          - --option
+          - reorder_keys=true
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.9.26
     hooks:
-      - id: check-submodules-updated
-        args: [--run-every=PT5M]
-      # - id: check-version-bumped
-      - id: run-bump-my-version
+      - id: uv-lock
+        args:
+          - --upgrade
+          - --resolution
+          - highest
+          - --prerelease
+          - disallow
   - repo: https://github.com/johnnymorganz/stylua
     rev: v2.3.1
     hooks:
       - id: stylua
-  - repo: https://github.com/jumanjihouse/pre-commit-hooks
-    rev: 3.0.0
-    hooks:
-      - id: shfmt
   - repo: https://github.com/pamoller/xmlformatter
     rev: v0.2.8
     hooks:
@@ -43,37 +101,3 @@ repos:
         types: []
         types_or: [plist, xml]
         args: [--eof-newline]
-  - repo: local
-    hooks:
-      - id: fish_indent
-        name: fish_indent
-        entry: fish_indent
-        language: system
-        files: \.fish$
-        args: [--write]
-      - id: prettier
-        name: prettier
-        entry: prettier
-        language: system
-        types_or: [markdown]
-        args: [--write, --log-level=silent]
-  # linters
-  - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.11.0.1
-    hooks:
-      - id: shellcheck
-  # fixers/linters
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
-    hooks:
-      - id: check-merge-conflict
-      - id: check-symlinks
-      - id: destroyed-symlinks
-      - id: detect-private-key
-      - id: end-of-file-fixer
-      - id: mixed-line-ending
-        args: [--fix=lf]
-      - id: no-commit-to-branch
-      - id: pretty-format-json
-        args: [--autofix]
-      - id: trailing-whitespace

@@ -416,27 +416,30 @@ function ping-ts
     end
 end
 
-# pre-commit
+# prek
 function pre-commit-config
     __edit_ancestor .pre-commit-config.yaml
 end
-if type -q pre-commit
-    function pca
-        pre-commit run --all-files
+if type -q prek
+    function pr
+        __prek_run
     end
-    function pca-force
+    function prf
         rm -rf "$HOME/.cache/pre-commit-hooks"
-        pre-commit run --all-files
+        __prek_run
     end
-    function pcau
-        pre-commit autoupdate --jobs=10
-        pre-commit run --all-files
+    function pu
+        prek auto-update --jobs=10
+        __prek_run
     end
-    function pci
-        pre-commit install
+    function pri
+        prek install --overwrite --install-hooks
     end
-    function pcui
-        pre-commit uninstall
+    function pcu
+        prek uninstall
+    end
+    function __prek_run
+        prek run --all-files
     end
 end
 

@@ -1,6 +1,11 @@
 # dependency groups
 [dependency-groups]
-  dev = ["pyright", "pytest", "pytest-xdist", "rich"]
+  dev = [
+    "pyright>=1.1.408, <2",
+    "pytest>=9.0.2, <10",
+    "pytest-xdist>=3.8.0, <4",
+    "rich>=14.2.0, <15",
+  ]
 
 # project
 [project]
