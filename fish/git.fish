@@ -252,8 +252,8 @@ function __git_clone
     git clone --recurse-submodules $_flag_repo $dir; or return $status
     set -l current (pwd)
     cd $dir
-    if type -q pre-commit
-        pre-commit install; or return $status
+    if type -q prek
+        prek install; or return $status
     end
     if type -q direnv
         if test -f .env; or test -f .envrc
@@ -509,7 +509,7 @@ function __git_rebase
     set -l branch (git default-remote-branch); or return $status
     git rebase --strategy=recursive --strategy-option=theirs $branch; or return $status
     if test -n "$_flag_push"
-        pre-commit run --all-files
+        prek run --all-files
         set -l args
         if test -n "$_flag_web"
             set args $args --web
