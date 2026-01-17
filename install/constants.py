@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .installer_constants import (
+from install.installer_constants import (
     AUTHORIZED_KEYS,
     BASHRC,
     CONFIG_BOTTOM_TOML,

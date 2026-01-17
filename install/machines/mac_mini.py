@@ -5,7 +5,7 @@ from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
 
-from ..constants import (
+from install.constants import (
     REPO_BOTTOM_TOML,
     REPO_DIRENV_TOML,
     REPO_DIRENVRC,
@@ -28,8 +28,8 @@ from ..constants import (
     REPO_TMUX_CONF_OH_MY_TMUX,
     REPO_WEZTERM_LUA,
 )
-from ..groups.mac import setup_mac
-from ..lib import (
+from install.groups.mac import setup_mac
+from install.lib import (
     install_dropbox,
     install_postico,
     install_protonvpn,
