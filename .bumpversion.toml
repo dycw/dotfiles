@@ -1,3 +1,4 @@
-[tool.bumpversion]
-  allow_dirty = true
-  current_version = "0.3.287"
+[tool]
+  [tool.bumpversion]
+    allow_dirty = true
+    current_version = "0.3.287"

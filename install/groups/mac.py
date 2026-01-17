@@ -3,8 +3,8 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from ..groups.common import setup_common
-from ..lib import (
+from install.groups.common import setup_common
+from install.lib import (
     install_age,
     install_agg,
     install_asciinema,
@@ -60,7 +60,7 @@ from ..lib import (
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from ..types import PathLike, SSHSymlink, SSHTemplate
+    from install.types import PathLike, SSHSymlink, SSHTemplate
 
 
 _LOGGER = getLogger(__name__)

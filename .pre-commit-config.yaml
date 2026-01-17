@@ -15,6 +15,8 @@ repos:
           - --pre-commit--shell
           - --pre-commit--taplo
           - --pre-commit--uv
+          - --pyright
+          - --python-version=3.12
           - --repo-name=dotfiles
           - --ruff
       - id: format-requirements

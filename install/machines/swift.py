@@ -5,7 +5,7 @@ from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from dataclasses import dataclass
 from logging import basicConfig, getLogger
 
-from ..constants import (
+from install.constants import (
     LINUX_RESOLV_CONF,
     REPO_BOTTOM_TOML,
     REPO_DIRENV_TOML,
@@ -27,8 +27,8 @@ from ..constants import (
     REPO_TMUX_CONF_OH_MY_TMUX,
     REPO_WEZTERM_LUA,
 )
-from ..groups.linux import setup_linux
-from ..lib import install_spotify
+from install.groups.linux import setup_linux
+from install.lib import install_spotify
 
 _LOGGER = getLogger(__name__)
 

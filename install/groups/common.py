@@ -3,7 +3,7 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from ..lib import (
+from install.lib import (
     add_to_known_hosts,
     setup_pdb,
     setup_psql,
@@ -15,7 +15,7 @@ from ..lib import (
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from ..types import PathLike, SSHSymlink, SSHTemplate
+    from install.types import PathLike, SSHSymlink, SSHTemplate
 
 
 _LOGGER = getLogger(__name__)
