@@ -439,7 +439,7 @@ if type -q prek
         prek uninstall
     end
     function __prek_run
-        prek run --all-files
+        prek run --all-files --show-diff-on-failure --quiet
     end
 end
 
