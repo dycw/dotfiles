@@ -1251,7 +1251,7 @@ if find_spec("rich") is not None:
     _LOGGER.info("Importing `rich`...")
 
     import rich
-    from rich import inspect, print
+    from rich import inspect, print  # noqa: A004
     from rich import print as p
     from rich.pretty import pprint, pretty_repr
 

@@ -1,4 +1,5 @@
 set dotenv-load := true
+set fallback := true
 set positional-arguments := true
 
 # up/down
