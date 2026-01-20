@@ -13,7 +13,6 @@ repos:
           - --python
           - --python-package-name-external=dycw-dotfiles
           - --python-package-name-internal=dotfiles
-          - --python-version=3.12
           - --repo-name=dotfiles
           - --shell
           - --toml
@@ -42,7 +41,6 @@ repos:
       - id: setup-ci-pull-request
         args:
           - --repo-name=dotfiles
-          - --python-version=3.12
         priority: 20
       - id: setup-ci-push
         priority: 20
@@ -51,7 +49,6 @@ repos:
       - id: setup-direnv
         args:
           - --python
-          - --python-version=3.12
         priority: 20
       - id: setup-git
         priority: 20
@@ -64,11 +61,8 @@ repos:
           - --description=Dotfiles
           - --python-package-name-external=dycw-dotfiles
           - --python-package-name-internal=dotfiles
-          - --python-version=3.12
         priority: 20
       - id: setup-pyright
-        args:
-          - --python-version=3.12
         priority: 20
       - id: setup-pytest
         args:
@@ -80,8 +74,6 @@ repos:
           - --description=Dotfiles
         priority: 20
       - id: setup-ruff
-        args:
-          - --python-version=3.12
         priority: 20
       - id: update-ci-action-versions
         priority: 20
