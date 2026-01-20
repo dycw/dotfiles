@@ -96,7 +96,7 @@ wheels = [
 
 [[package]]
 name = "dycw-dotfiles"
-version = "0.4.5"
+version = "0.4.6"
 source = { editable = "." }
 
 [package.dev-dependencies]
