@@ -1,11 +1,14 @@
 repos:
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.14.66
+    rev: 0.14.67
     hooks:
       - id: add-hooks
         args:
           - --ci-github
           - --description=Dotfiles
+          - --fish
+          - --just
+          - --lua
           - --prettier
           - --python
           - --python-package-name-external=dycw-dotfiles
@@ -14,6 +17,7 @@ repos:
           - --repo-name=dotfiles
           - --shell
           - --toml
+          - --xml
         priority: 10
       - id: add-future-import-annotations
         priority: 10
@@ -54,6 +58,8 @@ repos:
           - --python-version=3.12
         priority: 10
       - id: setup-git
+        priority: 10
+      - id: setup-just
         priority: 10
       - id: setup-pyproject
         args:
@@ -164,11 +170,27 @@ repos:
           - --option
           - reorder_keys=true
         priority: 20
+  - repo: https://github.com/johnnymorganz/stylua
+    rev: v2.3.1
+    hooks:
+      - id: stylua
+        priority: 10
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.11.0
     hooks:
       - id: shellcheck
         priority: 20
+  - repo: https://github.com/pamoller/xmlformatter
+    rev: v0.2.8
+    hooks:
+      - id: xml-formatter
+        types: []
+        types_or:
+          - plist
+          - xml
+        args:
+          - --eof-newline
+        priority: 10
   - repo: https://github.com/scop/pre-commit-shfmt
     rev: v3.12.0-2
     hooks:
@@ -176,6 +198,14 @@ repos:
         priority: 10
   - repo: local
     hooks:
+      - id: fish_indent
+        name: fish_indent
+        entry: fish_indent
+        language: unsupported
+        files: \.fish$
+        args:
+          - --write
+        priority: 10
       - id: prettier
         name: prettier
         entry: npx prettier --write
