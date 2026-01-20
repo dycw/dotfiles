@@ -347,7 +347,7 @@ function __git_commit_until_push
         set commit_args $commit_args --no-verify
     end
     set -l proceed 0
-    for i in (seq 1 2)
+    for i in (seq 1 3)
         if test $proceed -eq 0
             ga $argv; or return $status
             __git_commit_push $commit_args
