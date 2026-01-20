@@ -425,11 +425,7 @@ if type -q prek
         __prek_run
     end
     function prf
-        rm -rf "$HOME/.cache/pre-commit-hooks"
-        __prek_run
-    end
-    function pu
-        prek auto-update --jobs=10
+        rm -rf "$HOME/.cache/pre-commit-hooks/throttle"
         __prek_run
     end
     function pri
@@ -437,6 +433,16 @@ if type -q prek
     end
     function pru
         prek uninstall
+    end
+    function pu
+        __prek_auto_update
+    end
+    function pur
+        __prek_auto_update
+        __prek_run
+    end
+    function __prek_auto_update
+        prek auto-update --jobs=10 --verbose
     end
     function __prek_run
         prek run --all-files --show-diff-on-failure --quiet
@@ -604,6 +610,16 @@ end
 
 # rm
 function rm
+    if contains -- .git $argv
+        read -P "Are you sure you want to remove '.git'? (y/N) " reply
+        switch $reply
+            case y Y
+                # continue
+            case '*'
+                echo "Exiting..." >&2; and return 1
+                return 1
+        end
+    end
     command rm -frv $argv
 end
 function unlink
