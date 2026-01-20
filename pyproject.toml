@@ -13,6 +13,8 @@
   build-backend = "uv_build"
   requires = ["uv_build"]
 
-[tool.uv.build-backend]
-  module-name = "dotfiles"
-  module-root = "src"
+[tool]
+  [tool.uv]
+    [tool.uv.build-backend]
+      module-name = "dotfiles"
+      module-root = "src"
