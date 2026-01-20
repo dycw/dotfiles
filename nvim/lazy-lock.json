@@ -29,7 +29,7 @@
   },
   "conform.nvim": {
     "branch": "master",
-    "commit": "5ac2bb57a9096f00ca50e1a3c46020d5930319b8"
+    "commit": "c2526f1cde528a66e086ab1668e996d162c75f4f"
   },
   "dial.nvim": {
     "branch": "master",
@@ -185,7 +185,7 @@
   },
   "telescope.nvim": {
     "branch": "master",
-    "commit": "a8c2223ea6b185701090ccb1ebc7f4e41c4c9784"
+    "commit": "0d8b6eaa0b5ae6bb3d9785f7a3ba4a4c6c1b1af2"
   },
   "text-case.nvim": {
     "branch": "main",
