@@ -1,6 +1,3 @@
-.env
-
-
 #### STANDARD GITIGNORE #######################################################
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -244,3 +241,5 @@ shelves/
 tmp/
 
 #### END OF CUSTOM GITIGNORE ##################################################
+
+.env
