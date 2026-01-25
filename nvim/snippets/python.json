@@ -331,6 +331,10 @@
     "body": "marks=mark.skip",
     "prefix": "mms"
   },
+  "marks=mark.xfail": {
+    "body": "marks=mark.xfail",
+    "prefix": "mmx"
+  },
   "raise NotImplementedError": {
     "body": "raise NotImplementedError\n",
     "prefix": "nie"
