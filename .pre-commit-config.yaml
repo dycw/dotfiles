@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.14.99
+    rev: 0.14.118
     hooks:
       - id: add-hooks
         args:
@@ -32,6 +32,8 @@ repos:
         priority: 20
       - id: run-prek-autoupdate
         priority: 10
+      - id: run-uv-lock
+        priority: 20
       - id: run-version-bump
         priority: 20
       - id: setup-bump-my-version
@@ -43,6 +45,8 @@ repos:
           - --repo-name=dotfiles
         priority: 20
       - id: setup-ci-push
+        args:
+          - --python
         priority: 20
       - id: setup-coverage
         priority: 20
@@ -51,6 +55,8 @@ repos:
           - --python
         priority: 20
       - id: setup-git
+        args:
+          - --python
         priority: 20
       - id: setup-just
         priority: 20
@@ -118,7 +124,7 @@ repos:
       - id: trailing-whitespace
         priority: 20
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.13
+    rev: v0.14.14
     hooks:
       - id: ruff-check
         args:
