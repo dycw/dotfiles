@@ -390,6 +390,21 @@ function watch-resolv-conf
     watch --color --differences --interval=1 -- cat /etc/resolv.conf
 end
 
+# nmcli
+if type -q nmcli
+    function spoof-mac-address
+        set -l name (nmcli connection show --active | awk '$3=="wifi"{print $1}')
+        function rb
+            od -An -N1 -tu1 /dev/urandom | tr -d ' '
+        end
+        set -l first (math "2 + 2 * ($(rb) % 127)")
+        set -l mac (printf '%02X:%02X:%02X:%02X:%02X:%02X' $first (rb) (rb) (rb) (rb) (rb))
+        nmcli connection modify "$name" 802-11-wireless.cloned-mac-address "$mac"
+        nmcli connection down "$name"
+        nmcli connection up "$name"
+    end
+end
+
 # ping
 function ping-ts
     argparse c/count= i/interval= w/deadline= -- $argv; or return $status
