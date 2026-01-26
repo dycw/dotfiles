@@ -496,7 +496,7 @@ function __pyright
         end
         uv tool run pyright $args .
     else
-        echo "'__pyright' expected pyright or uv to be available got neither" >&2; and return 1
+        echo "'__pyright' expected pyright or uv to be available; got neither" >&2; and return 1
     end
 end
 
