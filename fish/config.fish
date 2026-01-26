@@ -394,7 +394,6 @@ end
 if type -q nmcli
     function spoof-mac-address
         set -l name (nmcli connection show --active | awk '$3=="wifi"{print $1}')
-        echo
         function rb
             od -An -N1 -tu1 /dev/urandom | tr -d ' '
         end
