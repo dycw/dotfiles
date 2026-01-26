@@ -3,7 +3,6 @@ local v = vim
 -- luacheck: pop
 
 return {
-    "ggandor/leap.nvim",
     config = function()
         local leap = require("leap")
         local keymap_set = require("utilities").keymap_set
@@ -67,4 +66,5 @@ return {
     opts = {
         labels = {}, -- force auto-jumping to the first match
     },
+    url = "https://codeberg.org/andyg/leap.nvim",
 }
