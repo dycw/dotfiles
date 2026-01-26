@@ -28,6 +28,7 @@ config.skip_close_confirmation_for_processes_named = {
     "proxmox",
     "wezterm",
 }
+config.warn_about_missing_glyphs = false
 config.window_close_confirmation = "NeverPrompt"
 config.window_padding = {
     left = "8",
