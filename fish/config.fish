@@ -392,7 +392,7 @@ end
 
 # nmcli
 if type -q nmcli
-    function spoof-mac-address2
+    function spoof-mac-address
         set -l name (nmcli connection show --active | awk '$3=="wifi"{print $1}')
         echo
         function rb
