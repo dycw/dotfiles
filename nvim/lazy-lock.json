@@ -77,7 +77,7 @@
   },
   "leap.nvim": {
     "branch": "main",
-    "commit": "f19d43590c4b6d31188ee1ea2954d2b7558a9e11"
+    "commit": "572fbcfd2cca5f7b3e56b1ac1d720861f2a4db78"
   },
   "lualine.nvim": {
     "branch": "master",
@@ -213,7 +213,7 @@
   },
   "vim-tmux-navigator": {
     "branch": "master",
-    "commit": "c45243dc1f32ac6bcf6068e5300f3b2b237e576a"
+    "commit": "e41c431a0c7b7388ae7ba341f01a0d217eb3a432"
   },
   "which-key.nvim": {
     "branch": "main",
