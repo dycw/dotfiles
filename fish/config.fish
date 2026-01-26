@@ -482,8 +482,7 @@ function pyrightconfig
 end
 if type -q watchexec
     function wpyr
-        set -l cmd "cd $(pwd)
-        pyright"
+        set -l cmd "cd $(pwd); pyright"
         watchexec --exts json --exts py --exts toml --exts yaml --shell bash -- $cmd
     end
 end
