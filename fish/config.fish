@@ -390,6 +390,22 @@ function watch-resolv-conf
     watch --color --differences --interval=1 -- cat /etc/resolv.conf
 end
 
+# nmcli
+if type -q nmcli
+    function spoof-mac-address2
+        set -l name (nmcli connection show --active | awk '$3=="wifi"{print $1}')
+        echo
+        function rb
+            od -An -N1 -tu1 /dev/urandom | tr -d ' '
+        end
+        set -l first (math "2 + 2 * ($(rb) % 127)")
+        set -l mac (printf '%02X:%02X:%02X:%02X:%02X:%02X' $first (rb) (rb) (rb) (rb) (rb))
+        nmcli connection modify "$name" 802-11-wireless.cloned-mac-address "$mac"
+        nmcli connection down "$name"
+        nmcli connection up "$name"
+    end
+end
+
 # ping
 function ping-ts
     argparse c/count= i/interval= w/deadline= -- $argv; or return $status
@@ -466,7 +482,8 @@ function pyrightconfig
 end
 if type -q watchexec
     function wpyr
-        set -l cmd "cd $(pwd); pyright"
+        set -l cmd "cd $(pwd)
+        pyright"
         watchexec --exts json --exts py --exts toml --exts yaml --shell bash -- $cmd
     end
 end
@@ -480,7 +497,7 @@ function __pyright
         end
         uv tool run pyright $args .
     else
-        echo "'__pyright' expected 'pyright' or 'uv' to be available; got neither" >&2; and return 1
+        echo "'__pyright' expected pyright or uv to be available got neither" >&2; and return 1
     end
 end
 
@@ -497,7 +514,7 @@ function pyrtf
                 sleep $n
             end
         else
-            echo "'pyrtf' expected 'pyright' to be available" >&2; and return 1
+            echo "'pyrtf' expected pyright to be available" >&2; and return 1
         end
         sleep $n
         if type -q pytest
@@ -505,7 +522,7 @@ function pyrtf
                 sleep $n
             end
         else
-            echo "'pyrtf' expected 'pytest' to be available" >&2; and return 1
+            echo "'pyrtf' expected pytest to be available" >&2; and return 1
         end
         sleep $n
     end
@@ -520,7 +537,8 @@ function pytf
 end
 function pytfk
     if test (count $argv) -lt 1
-        echo "'pytfk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
+        echo "'pytfk' expected ) arguments EXPRESSION
+    got $(count $argv)" >&2; and return 1
     end
     __pytest --looponfail -k $argv
 end
@@ -541,13 +559,15 @@ function pytfx
 end
 function pytfxk
     if test (count $argv) -lt 1
-        echo "'pytfxk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
+        echo "'pytfxk' expected ) arguments EXPRESSION
+got $(count $argv)" >&2; and return 1
     end
     __pytest --exitfirst --looponfail -k $argv
 end
 function pytk
     if test (count $argv) -lt 1
-        echo "'pytk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
+        echo "'pytk' expected ) arguments EXPRESSION
+got $(count $argv)" >&2; and return 1
     end
     __pytest -k $argv
 end
@@ -556,7 +576,8 @@ function pytn
 end
 function pytnk
     if test (count $argv) -lt 1
-        echo "'pytnk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
+        echo "'pytnk' expected ) arguments EXPRESSION
+got $(count $argv)" >&2; and return 1
     end
     __pytest --numprocesses auto -k $argv
 end
@@ -571,7 +592,8 @@ function pytp
 end
 function pytpk
     if test (count $argv) -lt 1
-        echo "'pytpk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
+        echo "'pytpk' expected ) arguments EXPRESSION
+got $(count $argv)" >&2; and return 1
     end
     __pytest --pdb -k $argv
 end
@@ -580,7 +602,8 @@ function pytpx
 end
 function pytpxk
     if test (count $argv) -lt 1
-        echo "'pytpxk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
+        echo "'pytpxk' expected ) arguments EXPRESSION
+got $(count $argv)" >&2; and return 1
     end
     __pytest --exitfirst --pdb -k $argv
 end
@@ -592,7 +615,8 @@ function pytx
 end
 function pytxk
     if test (count $argv) -lt 1
-        echo "'pytxk' expected [1..) arguments EXPRESSION; got $(count $argv)" >&2; and return 1
+        echo "'pytxk' expected ) arguments EXPRESSION
+got $(count $argv)" >&2; and return 1
     end
     __pytest --exitfirst -k $argv
 end
@@ -646,7 +670,8 @@ end
 # ssh
 function add-known-host
     if test (count $argv) -eq 0
-        echo "'ssh-auto' expected [1..2] arguments HOST PORT; got $(count $argv)" >&2; and return 1
+        echo "'ssh-auto' expected [1..2] arguments HOST PORT
+got $(count $argv)" >&2; and return 1
     end
     set -l host $argv[1]
     if test (count $argv) -ge 2
@@ -679,7 +704,8 @@ function ssh-config
 end
 function ssh-auto
     if test (count $argv) -lt 1
-        echo "'ssh-auto' expected [1..] arguments DESTINATION; got $(count $argv)" >&2; and return 1
+        echo "'ssh-auto' expected [1..] arguments DESTINATION
+got $(count $argv)" >&2; and return 1
     end
     set -l destination $argv[1]
     if not __ssh_strict $destination
@@ -692,7 +718,8 @@ function ssh-auto
 end
 function __ssh_strict
     if test (count $argv) -lt 1
-        echo "'__ssh_strict' expected [1..] arguments DESTINATION; got $(count $argv)" >&2; and return 1
+        echo "'__ssh_strict' expected [1..] arguments DESTINATION
+got $(count $argv)" >&2; and return 1
     end
     ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes $argv
 end
@@ -706,7 +733,8 @@ end
 if type -q sops
     function sops-new
         if test (count $argv) -lt 2
-            echo "'sops-new' expected [2..] arguments AGE FILE; got $(count $argv)" >&2; and return 1
+            echo "'sops-new' expected [2..] arguments AGE FILE
+got $(count $argv)" >&2; and return 1
         end
         sops edit --age $argv[1] $argv[2]
     end
@@ -754,7 +782,8 @@ if type -q tailscale; or type -q docker
     end
     function ts-ip
         if test (count $argv) -lt 1
-            echo "'ts-ip' expected [1..) arguments HOSTNAME; got $(count $argv)" >&2; and return 1
+            echo "'ts-ip' expected ) arguments HOSTNAME
+got $(count $argv)" >&2; and return 1
         end
         set -l args
         if not type -q tailscale; and type -q docker
@@ -801,7 +830,8 @@ if type -q tmux
             else if test "$count" -eq 1
                 tmux attach
             else
-                echo "'ta' expected [0..1] arguments SESSION; got $(count $argv)" >&2; and return 1
+                echo "'ta' expected [0..1] arguments SESSION
+got $(count $argv)" >&2; and return 1
             end
         else
             tmux attach -t $argv[1]
@@ -841,7 +871,8 @@ if type -q uv
     end
     function uvbp
         if test (count $argv) -lt 1
-            echo "'uvbp' accepts [1..) arguments TOKEN; got $(count $argv)" >&2; and return 1
+            echo "'uvbp' accepts ) arguments TOKEN
+got $(count $argv)" >&2; and return 1
         end
         uv build --wheel --clear
         uv publish --token $argv[1]
@@ -879,7 +910,8 @@ end
 # private
 function __edit_ancestor
     if test (count $argv) -lt 1
-        echo "'edit_ancestor' expected [1..) arguments FILENAME; got $(count $argv)" >&2; and return 1
+        echo "'edit_ancestor' expected ) arguments FILENAME
+got $(count $argv)" >&2; and return 1
     end
     set file $argv[1]
     set dir (pwd)
