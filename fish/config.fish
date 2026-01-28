@@ -436,6 +436,18 @@ function pre-commit-config
     __edit_ancestor .pre-commit-config.yaml
 end
 if type -q prek
+    function pg
+        for i in (seq 1 3)
+            __prek_auto_update
+            __prek_run
+            if type -q __git_all
+                __git_all
+            end
+            if test $status -eq 0
+                return 0
+            end
+        end
+    end
     function pr
         __prek_run
     end
@@ -455,6 +467,9 @@ if type -q prek
     function pur
         __prek_auto_update
         __prek_run
+        if type -q __git_all
+            __git_all
+        end
     end
     function __prek_auto_update
         prek auto-update --jobs=10 --verbose
