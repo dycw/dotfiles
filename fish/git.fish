@@ -1036,6 +1036,8 @@ function __gitea_view
     if test $json_status -eq 0
         set -l url (echo $json | jq -r .url); or return $status
         open $url
+    else if type -q tea
+        tea open
     else
         set -l branch (git current-branch); or return $status
         echo "'__gitea_view' could not find an open PR for '$branch'" >&2; and return 1

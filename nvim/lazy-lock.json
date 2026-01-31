@@ -53,7 +53,7 @@
   },
   "grug-far.nvim": {
     "branch": "main",
-    "commit": "1f7a722a9b9f0206a345377c13e62542f484398a"
+    "commit": "14babc9b4520184d9696ef282eb7ac20687d4373"
   },
   "guess-indent.nvim": {
     "branch": "main",
@@ -77,7 +77,7 @@
   },
   "leap.nvim": {
     "branch": "main",
-    "commit": "572fbcfd2cca5f7b3e56b1ac1d720861f2a4db78"
+    "commit": "1ea6ecb9cf1b961e507f39d4b4f37e89b7c72011"
   },
   "lualine.nvim": {
     "branch": "master",
@@ -85,7 +85,7 @@
   },
   "mason-lspconfig.nvim": {
     "branch": "main",
-    "commit": "fb179adb7161b53ec998b1139002473434586c3f"
+    "commit": "c953789db7fd28eafe5eb5659846d34b5024b3cc"
   },
   "mason-tool-installer.nvim": {
     "branch": "main",
@@ -105,11 +105,11 @@
   },
   "nvim-autopairs": {
     "branch": "master",
-    "commit": "c2a0dd0d931d0fb07665e1fedb1ea688da3b80b4"
+    "commit": "59bce2eef357189c3305e25bc6dd2d138c1683f5"
   },
   "nvim-early-retirement": {
     "branch": "main",
-    "commit": "79ea1568df53986e0d9f4d36fd542933a34b2e61"
+    "commit": "f017b93c96565a3dede63f93924f1fed2dba9c1f"
   },
   "nvim-lastplace": {
     "branch": "main",
@@ -117,15 +117,15 @@
   },
   "nvim-lint": {
     "branch": "master",
-    "commit": "ca6ea12daf0a4d92dc24c5c9ae22a1f0418ade37"
+    "commit": "b3292aac30b935d4cccf0904053d1c7930df8a20"
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "ff9c0af8f9b2097fdd2695058db7e04c193908aa"
+    "commit": "3f58aeca0c6ece8a9fb8782ea3fcb6024f285be3"
   },
   "nvim-rip-substitute": {
     "branch": "main",
-    "commit": "af69702b1e6881b0330d22d3a62989e320d4d6d1"
+    "commit": "6d6b5bfc7b3b502ac4eda200eff9a4ec4b98a0c7"
   },
   "nvim-surround": {
     "branch": "main",
@@ -133,7 +133,7 @@
   },
   "nvim-tree.lua": {
     "branch": "master",
-    "commit": "c07ce43527e5f0242121f4eb1feb7ac0ecea8275"
+    "commit": "037d89e60fb01a6c11a48a19540253b8c72a3c32"
   },
   "nvim-treesitter": {
     "branch": "master",
@@ -161,7 +161,7 @@
   },
   "sort.nvim": {
     "branch": "main",
-    "commit": "edb97568e39b8822a29d0e241cfc65df41889f6e"
+    "commit": "3365768ad75fb7aa2a74ebaf609b7c802354fd46"
   },
   "targets.vim": {
     "branch": "master",
