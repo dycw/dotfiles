@@ -42,6 +42,9 @@
     git purge-local \
   "
 
+  # push
+  branch-delete-remote = "!git push --delete origin"
+
   # remote
   remote-name = "!git remote get-url origin"
   repo-name = "!basename -s .git $(git remote-name)"
