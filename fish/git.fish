@@ -209,13 +209,16 @@ function __git_checkout_close
     if test (count $argv) -eq 0
         echo "'__git_checkout_close' expected [1..) arguments TARGET; got $(count $argv)" >&2; and return 1
     end
-    argparse delete exit -- $argv; or return $status
+    argparse delete delete-remote exit -- $argv; or return $status
     set -l target $argv[1]
     set -l original (git current-branch); or return $status
     git checkout $target; or return $status
     git pull-default; or return $status
     if test -n "$_flag_delete"
         git branch-delete $original
+    end
+    if test -n "$_flag_delete_remote"
+        git branch-delete-remote $original
     end
     if test -n "$_flag_exit"
         exit
@@ -1002,7 +1005,7 @@ function __gitea_merge
     if test -n "$_flag_exit"
         set args $args --exit
     end
-    __git_checkout_close $def_branch --delete $args
+    __git_checkout_close $def_branch --delete --delete-remote $args
 end
 
 function __gitea_pulls_json
