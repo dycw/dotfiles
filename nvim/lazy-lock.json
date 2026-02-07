@@ -13,7 +13,7 @@
   },
   "blink.cmp": {
     "branch": "main",
-    "commit": "b19413d214068f316c78978b08264ed1c41830ec"
+    "commit": "4b18c32adef2898f95cdef6192cbd5796c1a332d"
   },
   "bufferline.nvim": {
     "branch": "main",
@@ -49,11 +49,11 @@
   },
   "gitsigns.nvim": {
     "branch": "main",
-    "commit": "abf82a65f185bd54adc0679f74b7d6e1ada690c9"
+    "commit": "1ce96a464fdbc24208e24c117e2021794259005d"
   },
   "grug-far.nvim": {
     "branch": "main",
-    "commit": "14babc9b4520184d9696ef282eb7ac20687d4373"
+    "commit": "275dbedc96e61a6b8d1dfb28ba51586ddd233dcf"
   },
   "guess-indent.nvim": {
     "branch": "main",
@@ -77,7 +77,7 @@
   },
   "leap.nvim": {
     "branch": "main",
-    "commit": "1ea6ecb9cf1b961e507f39d4b4f37e89b7c72011"
+    "commit": "d7316deae68dc93d6957020cdda6d7bb399218fb"
   },
   "lualine.nvim": {
     "branch": "master",
@@ -85,7 +85,7 @@
   },
   "mason-lspconfig.nvim": {
     "branch": "main",
-    "commit": "c953789db7fd28eafe5eb5659846d34b5024b3cc"
+    "commit": "ae609525ddf01c153c39305730b1791800ffe4fe"
   },
   "mason-tool-installer.nvim": {
     "branch": "main",
@@ -109,7 +109,7 @@
   },
   "nvim-early-retirement": {
     "branch": "main",
-    "commit": "f017b93c96565a3dede63f93924f1fed2dba9c1f"
+    "commit": "05f50eb61d3303678981c7510c126204ac5af4f0"
   },
   "nvim-lastplace": {
     "branch": "main",
@@ -121,11 +121,11 @@
   },
   "nvim-lspconfig": {
     "branch": "master",
-    "commit": "3f58aeca0c6ece8a9fb8782ea3fcb6024f285be3"
+    "commit": "66fd02ad1c7ea31616d3ca678fa04e6d0b360824"
   },
   "nvim-rip-substitute": {
     "branch": "main",
-    "commit": "6d6b5bfc7b3b502ac4eda200eff9a4ec4b98a0c7"
+    "commit": "1fae57ead7e1f3221286beced9e32fdd661e453b"
   },
   "nvim-surround": {
     "branch": "main",
@@ -145,7 +145,7 @@
   },
   "nvim-web-devicons": {
     "branch": "master",
-    "commit": "803353450c374192393f5387b6a0176d0972b848"
+    "commit": "746ffbb17975ebd6c40142362eee1b0249969c5c"
   },
   "plenary.nvim": {
     "branch": "master",

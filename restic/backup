@@ -9,7 +9,7 @@ if [ -f "$_env" ]; then
 	echo_date "Sourcing environment file '$_env'..."
 	source "$_env"
 
-	declare -a _paths=("$HOME"/Dropbox "$HOME"/personal "$HOME"/restic-repos "$HOME"/work)
+	declare -a _paths=("$HOME"/Dropbox "$HOME"/personal "$HOME"/work)
 	for _path in "${_paths[@]}"; do
 		if [ -d "$_path" ]; then
 			echo_date "Backing up '$_path'..."
