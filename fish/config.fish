@@ -634,6 +634,12 @@ end
 function p3
     python3 $argv
 end
+function p3pdb
+    if test (count $argv) -eq 0
+        echo "'p3pdb' expected [1..) arguments EXECUTABLE; got $(count $argv)" >&2; and return 1
+    end
+    python -m pdb -c continue "$(which $argv[1])" argv[2..]
+end
 function pyproject
     __edit_ancestor pyproject.toml
 end
