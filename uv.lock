@@ -599,6 +599,13 @@ dependencies = [
     { name = "libcst" },
 ]
 
+[package.optional-dependencies]
+cli = [
+    { name = "click" },
+    { name = "dycw-utilities" },
+    { name = "libcst" },
+]
+
 [package.dev-dependencies]
 dev = [
     { name = "aeventkit" },
@@ -648,8 +655,11 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = ">=8.3.1" },
+    { name = "click", marker = "extra == 'cli'", specifier = "==8.3.1" },
     { name = "dycw-utilities", specifier = ">=0.188.23" },
+    { name = "dycw-utilities", marker = "extra == 'cli'", specifier = "==0.188.23" },
     { name = "libcst", specifier = ">=1.8.6" },
+    { name = "libcst", marker = "extra == 'cli'", specifier = "==1.8.6" },
 ]
 provides-extras = ["cli"]
 
