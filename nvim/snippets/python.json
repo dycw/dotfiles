@@ -45,7 +45,7 @@
   },
   "@settings(function_scoped_fixture)": {
     "body": "@settings(suppress_health_check={HealthCheck.function_scoped_fixture})\n",
-    "prefix": "settings-filter-too-much"
+    "prefix": "settings-function-scoped-fixture"
   },
   "@settings(generate)": {
     "body": "@settings(phases={Phase.generate})\n",
@@ -769,7 +769,7 @@
   },
   "from polars import Struct": {
     "body": "from polars import Struct\n",
-    "prefix": "po-struct"
+    "prefix": "po-Struct"
   },
   "from polars import UInt16": {
     "body": "from polars import UInt16\n",
@@ -1258,6 +1258,26 @@
   "from utilities.core import to_logger": {
     "body": "from utilities.core import to_logger\n",
     "prefix": "ut-to-logger"
+  },
+  "from utilities.subprocess import set_hostname_cmd": {
+    "body": "from utilities.subprocess import set_hostname_cmd\n",
+    "prefix": "ut-set-hostname-cmd"
+  },
+  "from utilities.subprocess import ssh": {
+    "body": "from utilities.subprocess import ssh\n",
+    "prefix": "ut-ssh"
+  },
+  "from utilities.subprocess import ssh_keyscan": {
+    "body": "from utilities.subprocess import ssh_keyscan\n",
+    "prefix": "ut-ssh-keyscan"
+  },
+  "from utilities.subprocess import sudo_cmd": {
+    "body": "from utilities.subprocess import sudo_cmd\n",
+    "prefix": "ut-sudo-cmd"
+  },
+  "from utilities.subprocess import tee_cmd": {
+    "body": "from utilities.subprocess import tee_cmd\n",
+    "prefix": "ut-tee-cmd"
   },
   "from uuid import UUID": {
     "body": "from uuid import UUID\n",
