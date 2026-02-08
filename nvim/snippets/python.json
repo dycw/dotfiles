@@ -1259,6 +1259,26 @@
     "body": "from utilities.core import to_logger\n",
     "prefix": "ut-to-logger"
   },
+  "from utilities.subprocess import set_hostname_cmd": {
+    "body": "from utilities.subprocess import set_hostname_cmd\n",
+    "prefix": "ut-set-hostname-cmd"
+  },
+  "from utilities.subprocess import ssh": {
+    "body": "from utilities.subprocess import ssh\n",
+    "prefix": "ut-ssh"
+  },
+  "from utilities.subprocess import ssh_keyscan": {
+    "body": "from utilities.subprocess import ssh_keyscan\n",
+    "prefix": "ut-ssh-keyscan"
+  },
+  "from utilities.subprocess import sudo_cmd": {
+    "body": "from utilities.subprocess import sudo_cmd\n",
+    "prefix": "ut-sudo-cmd"
+  },
+  "from utilities.subprocess import tee_cmd": {
+    "body": "from utilities.subprocess import tee_cmd\n",
+    "prefix": "ut-tee-cmd"
+  },
   "from uuid import UUID": {
     "body": "from uuid import UUID\n",
     "prefix": "uu-uuid"
