@@ -1464,14 +1464,17 @@ if find_spec("utilities") is not None:
     from utilities.os import CPU_COUNT
     from utilities.pathlib import ensure_suffix, get_repo_root, list_dir
     from utilities.pydantic import ensure_secret, extract_secret
+    from utilities.pytest import skipif_ci, throttle_test
     from utilities.random import get_state, shuffle
     from utilities.shelve import yield_shelf
     from utilities.subprocess import (
+        run,
         set_hostname_cmd,
         ssh,
         ssh_keyscan,
         sudo_cmd,
         tee_cmd,
+        uv_run,
     )
     from utilities.text import parse_bool, parse_none
     from utilities.threading import BackgroundTask, run_in_background
@@ -1514,6 +1517,7 @@ if find_spec("utilities") is not None:
         LOCAL_TIME_ZONE_NAME,
         MICROSECOND,
         MILLISECOND,
+        MINUTE,
         MINUTE,
         MONTH,
         MaybeIterable,
@@ -1613,6 +1617,7 @@ if find_spec("utilities") is not None:
         set_up_logging,
         show,
         shuffle,
+        skipif_ci,
         sleep_max,
         sleep_rounded,
         sleep_until,
@@ -1622,6 +1627,7 @@ if find_spec("utilities") is not None:
         sudo_cmd,
         sync_sleep,
         tee_cmd,
+        throttle_test,
         to_date,
         to_date_time_delta,
         to_logger,
@@ -1633,6 +1639,7 @@ if find_spec("utilities") is not None:
         to_zoned_date_time,
         transpose,
         unique_everseen,
+        uv_run,
         write_pickle,
         yield_fields,
         yield_shelf,

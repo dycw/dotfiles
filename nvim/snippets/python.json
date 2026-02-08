@@ -1243,6 +1243,10 @@
     "body": "from utilities.click import argument\n",
     "prefix": "ut-argument"
   },
+  "from utilities.constants import MINUTE": {
+    "body": "from utilities.constants import MINUTE\n",
+    "prefix": "ut-minute"
+  },
   "from utilities.contextvars import set_global_breakpoint": {
     "body": "from utilities.contextvars import set_global_breakpoint\n",
     "prefix": "ut-set-global-breakpoint"
@@ -1267,6 +1271,18 @@
     "body": "from utilities.pydantic import extract_secret\n",
     "prefix": "ut-extract-secret"
   },
+  "from utilities.pytest import skipif_ci": {
+    "body": "from utilities.pytest import skipif_ci\n",
+    "prefix": "ut-skipif-ci"
+  },
+  "from utilities.pytest import throttle_test": {
+    "body": "from utilities.pytest import throttle_test\n",
+    "prefix": "ut-throttle-test"
+  },
+  "from utilities.subprocess import run": {
+    "body": "from utilities.subprocess import run\n",
+    "prefix": "ut-run"
+  },
   "from utilities.subprocess import set_hostname_cmd": {
     "body": "from utilities.subprocess import set_hostname_cmd\n",
     "prefix": "ut-set-hostname-cmd"
@@ -1286,6 +1302,10 @@
   "from utilities.subprocess import tee_cmd": {
     "body": "from utilities.subprocess import tee_cmd\n",
     "prefix": "ut-tee-cmd"
+  },
+  "from utilities.subprocess import uv_run": {
+    "body": "from utilities.subprocess import uv_run\n",
+    "prefix": "ut-uv-run"
   },
   "from uuid import UUID": {
     "body": "from uuid import UUID\n",
