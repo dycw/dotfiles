@@ -184,7 +184,6 @@ from typing import (
     TypedDict,
     TypeGuard,
     TypeVar,
-    Union,
     overload,
     override,
 )
@@ -264,7 +263,6 @@ _ = [
     TypeVar,
     TypedDict,
     UUID,
-    Union,
     ZoneInfo,
     abc,
     abstractmethod,
@@ -438,8 +436,7 @@ if find_spec("altair") is not None:
     from altair import Chart, condition, datum
 
     _ = [Chart, alt, altair, condition, datum]
-
-    alt.data_transformers.enable("vegafusion")
+    _ = alt.data_transformers.enable("vegafusion")
 
     if find_spec("utilities") is not None:
         from utilities.altair import (
@@ -466,11 +463,6 @@ if find_spec("atomicwrites") is not None:
 
     _ = [atomicwrites]
 
-    if find_spec("utilities") is not None:
-        from utilities.atomicwrites import writer
-
-        _ = [writer]
-
 
 if find_spec("beartype") is not None:
     _LOGGER.info("Importing `beartype`...")
@@ -480,8 +472,8 @@ if find_spec("beartype") is not None:
     _ = [beartype]
 
 
-if find_spec("beartype") is not None:
-    _LOGGER.info("Importing `beartype`...")
+if find_spec("bidict") is not None:
+    _LOGGER.info("Importing `bidict`...")
 
     from bidict import bidict
 
@@ -536,10 +528,6 @@ if find_spec("eventkit") is not None:
 
     _ = [eventkit]
 
-    if find_spec("utilities") is not None:
-        from utilities.aeventkit import add_listener
-
-        _ = [add_listener]
 
 if find_spec("frozendict") is not None:
     _LOGGER.info("Importing `frozendict`...")
@@ -570,7 +558,6 @@ if find_spec("holoviews") is not None:
         "show_grid": True,
         "tools": ["pan", "wheel_zoom", "reset", "save", "fullscreen"],
     }
-
     _ = [extension, holoviews, hv]
 
 

@@ -3,15 +3,28 @@
   requires = ["uv_build"]
 
 [dependency-groups]
-  dev = ["dycw-utilities[test]>=0.188.23", "pyright>=1.1.408", "rich>=14.3.2"]
+  dev = [
+    "aeventkit>=2.1.0",
+    "altair>=6.0.0",
+    "atomicwrites>=1.4.1",
+    "beartype>=0.22.9",
+    "bidict>=0.23.1",
+    "bs4>=0.0.2",
+    "cachetools>=7.0.0",
+    "click>=8.3.1",
+    "cvxpy>=1.8.1",
+    "dacite>=1.9.2",
+    "dycw-utilities[test]>=0.188.23",
+    "frozendict>=2.4.7",
+    "holoviews>=1.22.1",
+    "humanize>=4.15.0",
+    "pyright>=1.1.408",
+    "rich>=14.3.2",
+  ]
 
 [project]
   authors = [{ email = "d.wan@icloud.com", name = "Derek Wan" }]
-  dependencies = [
-    "click>=8.3.1",
-    "dycw-utilities>=0.188.23",
-    "libcst>=1.8.6",
-]
+  dependencies = ["click>=8.3.1", "dycw-utilities>=0.188.23", "libcst>=1.8.6"]
   description = "Dotfiles"
   name = "dycw-dotfiles"
   readme = "README.md"
@@ -22,7 +35,7 @@
     dotfiles-cli = "dotfiles._cli:cli"
 
   [project.optional-dependencies]
-    cli = ["click==8.3.1", "dycw-utilities==0.188.23"]
+    cli = ["click==8.3.1", "dycw-utilities==0.188.23", "libcst==1.8.6"]
 [tool]
   [tool.uv]
     [tool.uv.build-backend]
