@@ -12,7 +12,6 @@
     "bidict>=0.23.1",
     "bs4>=0.0.2",
     "cachetools>=7.0.0",
-    "click>=8.3.1",
     "cvxpy>=1.8.1",
     "dacite>=1.9.2",
     "dycw-utilities[test]>=0.188.23",
