@@ -184,7 +184,6 @@ from typing import (
     TypedDict,
     TypeGuard,
     TypeVar,
-    Union,
     overload,
     override,
 )
@@ -195,11 +194,7 @@ from zoneinfo import ZoneInfo
 _LOGGER = getLogger("startup.py")
 _LOGGER.addHandler(handler := StreamHandler(stdout))
 handler.setFormatter(
-    Formatter(
-        fmt="{asctime} | {process} | {name}:{lineno} | {message}",
-        datefmt="%Y-%m-%d %H:%M:%S",
-        style="{",
-    )
+    Formatter(fmt="{asctime} | {message}", datefmt="%Y-%m-%d %H:%M:%S", style="{")
 )
 handler.setLevel("INFO")
 _LOGGER.setLevel("INFO")
@@ -264,7 +259,6 @@ _ = [
     TypeVar,
     TypedDict,
     UUID,
-    Union,
     ZoneInfo,
     abc,
     abstractmethod,
@@ -438,8 +432,7 @@ if find_spec("altair") is not None:
     from altair import Chart, condition, datum
 
     _ = [Chart, alt, altair, condition, datum]
-
-    alt.data_transformers.enable("vegafusion")
+    _ = alt.data_transformers.enable("vegafusion")
 
     if find_spec("utilities") is not None:
         from utilities.altair import (
@@ -466,11 +459,6 @@ if find_spec("atomicwrites") is not None:
 
     _ = [atomicwrites]
 
-    if find_spec("utilities") is not None:
-        from utilities.atomicwrites import writer
-
-        _ = [writer]
-
 
 if find_spec("beartype") is not None:
     _LOGGER.info("Importing `beartype`...")
@@ -480,8 +468,8 @@ if find_spec("beartype") is not None:
     _ = [beartype]
 
 
-if find_spec("beartype") is not None:
-    _LOGGER.info("Importing `beartype`...")
+if find_spec("bidict") is not None:
+    _LOGGER.info("Importing `bidict`...")
 
     from bidict import bidict
 
@@ -536,10 +524,6 @@ if find_spec("eventkit") is not None:
 
     _ = [eventkit]
 
-    if find_spec("utilities") is not None:
-        from utilities.aeventkit import add_listener
-
-        _ = [add_listener]
 
 if find_spec("frozendict") is not None:
     _LOGGER.info("Importing `frozendict`...")
@@ -570,7 +554,6 @@ if find_spec("holoviews") is not None:
         "show_grid": True,
         "tools": ["pan", "wheel_zoom", "reset", "save", "fullscreen"],
     }
-
     _ = [extension, holoviews, hv]
 
 
@@ -660,8 +643,8 @@ if find_spec("joblib") is not None:
     _ = [joblib]
 
 
-if find_spec("lightweight_charts") is not None:
-    _LOGGER.info("Importing `lightweight_charts`...")
+if find_spec("lightweight-charts") is not None:
+    _LOGGER.info("Importing `lightweight-charts`...")
 
     import lightweight_charts
 
@@ -673,8 +656,8 @@ if find_spec("lightweight_charts") is not None:
         _ = [save_chart, yield_chart]
 
 
-if find_spec("more_itertools") is not None:
-    _LOGGER.info("Importing `more_itertools`...")
+if find_spec("more-itertools") is not None:
+    _LOGGER.info("Importing `more-itertools`...")
 
     import more_itertools
     import more_itertools as mi
@@ -705,6 +688,7 @@ if find_spec("more_itertools") is not None:
     ]
 
     if find_spec("utilities") is not None:
+        from utilities.core import always_iterable
         from utilities.more_itertools import (
             BucketMappingError,
             Split,
@@ -716,6 +700,7 @@ if find_spec("more_itertools") is not None:
         )
 
         _ = [
+            always_iterable,
             BucketMappingError,
             Split,
             bucket_mapping,
@@ -756,7 +741,7 @@ if find_spec("numpy") is not None:
         histogram,
         hstack,
         iinfo,
-        inf,
+        inf,  # type: ignore[reportGeneralTypeIssues]
         int8,
         int16,
         int32,
@@ -773,7 +758,7 @@ if find_spec("numpy") is not None:
         maximum,
         memmap,
         minimum,
-        nan,
+        nan,  # type: ignore[reportGeneralTypeIssues]
         nan_to_num,
         nansum,
         ndarray,
@@ -903,7 +888,7 @@ if find_spec("pandas") is not None:
 
     set_option(
         "display.float_format",
-        lambda x: f"{x:,.5f}",
+        lambda x: f"{x:,.5f}",  # type: ignore[reportUnknownLambdaType]
         "display.min_rows",
         _PANDAS_POLARS_ROWS,
         "display.max_rows",
@@ -963,7 +948,6 @@ if find_spec("polars") is not None:
         min_horizontal,
         read_avro,
         read_csv,
-        read_csv_batched,
         read_database,
         read_database_uri,
         read_delta,
@@ -977,11 +961,7 @@ if find_spec("polars") is not None:
         sum_horizontal,
         when,
     )
-    from polars._typing import (  # type: ignore []
-        IntoExprColumn,
-        PolarsDataType,
-        SchemaDict,
-    )
+    from polars._typing import IntoExprColumn, PolarsDataType, SchemaDict
     from polars.datatypes import DataTypeClass
     from polars.exceptions import (
         ColumnNotFoundError,
@@ -996,7 +976,7 @@ if find_spec("polars") is not None:
         assert_series_not_equal,
     )
 
-    Config(
+    _ = Config(
         tbl_rows=_PANDAS_POLARS_ROWS,
         tbl_cols=_PANDAS_POLARS_COLS,
         thousands_separator=True,
@@ -1060,7 +1040,6 @@ if find_spec("polars") is not None:
         polars,
         read_avro,
         read_csv,
-        read_csv_batched,
         read_database,
         read_database_uri,
         read_delta,
@@ -1182,8 +1161,9 @@ if find_spec("polars") is not None:
         from whenever import Date
     _ = [Date]
 
-if find_spec("polars_ols") is not None:
-    _LOGGER.info("Importing `polars_ols`...")
+
+if find_spec("polars-ols") is not None:
+    _LOGGER.info("Importing `polars-ols`...")
 
     import polars_ols
 
@@ -1193,6 +1173,7 @@ if find_spec("polars_ols") is not None:
         from utilities.polars_ols import compute_rolling_ols
 
         _ = [compute_rolling_ols]
+
 
 if find_spec("pqdm") is not None:
     _LOGGER.info("Importing `pqdm`...")
@@ -1331,14 +1312,6 @@ if find_spec("sqlalchemy") is not None:
 
             _ = [insert_dataframe, select_to_dataframe]
 
-if find_spec("streamlit") is not None:
-    _LOGGER.info("Importing `streamlit`...")
-
-    import streamlit
-    import streamlit as st
-
-    _ = [st, streamlit]
-
 
 if find_spec("stringcase") is not None:
     _LOGGER.info("Importing `stringcase`...")
@@ -1380,25 +1353,11 @@ if find_spec("tzdata") is not None:
 
     _ = [tzdata]
 
-    if find_spec("utilities") is not None:
-        from utilities.tzdata import HongKong, Tokyo, USCentral, USEastern
-
-        _ = [HongKong, Tokyo, USCentral, USEastern]
-
 
 if find_spec("tzlocal") is not None:
     import tzlocal
 
     _ = [tzlocal]
-
-    if find_spec("utilities") is not None:
-        from utilities.tzlocal import (
-            LOCAL_TIME_ZONE,
-            LOCAL_TIME_ZONE_NAME,
-            get_local_time_zone,
-        )
-
-        _ = [LOCAL_TIME_ZONE, LOCAL_TIME_ZONE_NAME, get_local_time_zone]
 
 
 if find_spec("utilities") is not None:
@@ -1412,11 +1371,70 @@ if find_spec("utilities") is not None:
         put_items_nowait,
         sleep_max,
         sleep_rounded,
-        sleep_td,
         sleep_until,
     )
-    from utilities.dataclasses import dataclass_repr, dataclass_to_dict, yield_fields
-    from utilities.enum import ensure_enum
+    from utilities.constants import (
+        DAY,
+        HOUR,
+        LOCAL_TIME_ZONE,
+        LOCAL_TIME_ZONE_NAME,
+        MICROSECOND,
+        MILLISECOND,
+        MINUTE,
+        MONTH,
+        NOW_LOCAL,
+        NOW_UTC,
+        SECOND,
+        SYSTEM_RANDOM,
+        TODAY_LOCAL,
+        TODAY_UTC,
+        UTC,
+        WEEK,
+        YEAR,
+        ZERO_DAYS,
+        ZERO_TIME,
+        HongKong,
+        Tokyo,
+        USCentral,
+        USEastern,
+    )
+    from utilities.core import (
+        CheckUniqueError,
+        OneEmptyError,
+        OneError,
+        OneNonUniqueError,
+        async_sleep,
+        check_unique,
+        chunked,
+        extract_group,
+        extract_groups,
+        get_class,
+        get_class_name,
+        get_today_local,
+        kebab_case,
+        num_days,
+        num_hours,
+        num_microseconds,
+        num_milliseconds,
+        num_minutes,
+        num_months,
+        num_nanoseconds,
+        num_seconds,
+        num_weeks,
+        num_years,
+        pascal_case,
+        read_pickle,
+        set_up_logging,
+        snake_case,
+        sync_sleep,
+        to_date,
+        to_time_zone_name,
+        to_zone_info,
+        transpose,
+        unique_everseen,
+        write_pickle,
+    )
+    from utilities.dataclasses import dataclass_to_dict, yield_fields
     from utilities.functions import (
         ensure_class,
         ensure_float,
@@ -1425,49 +1443,24 @@ if find_spec("utilities") is not None:
         ensure_plain_date_time,
         ensure_str,
         ensure_zoned_date_time,
-        get_class,
-        get_class_name,
     )
     from utilities.functools import partial
     from utilities.iterables import (
-        OneEmptyError,
-        OneError,
-        OneNonUniqueError,
-        always_iterable,
-        check_duplicates,
         check_iterables_equal,
         check_lengths_equal,
         check_mappings_equal,
         check_sets_equal,
         check_subset,
         check_superset,
-        chunked,
         groupby_lists,
         one,
-        one_maybe,
         one_str,
-        one_unique,
-        transpose,
-        unique_everseen,
     )
     from utilities.jupyter import show
-    from utilities.logging import (
-        SizeAndTimeRotatingFileHandler,
-        basic_config,
-        setup_logging,
-    )
     from utilities.math import ewm_parameters, is_integral, safe_round
     from utilities.os import CPU_COUNT
-    from utilities.pathlib import (
-        ensure_suffix,
-        get_package_root,
-        get_repo_root,
-        get_root,
-        list_dir,
-    )
-    from utilities.pickle import read_pickle, write_pickle
-    from utilities.random import SYSTEM_RANDOM, get_state, shuffle
-    from utilities.re import extract_group, extract_groups
+    from utilities.pathlib import ensure_suffix, get_repo_root, list_dir
+    from utilities.random import get_state, shuffle
     from utilities.shelve import yield_shelf
     from utilities.text import parse_bool, parse_none
     from utilities.threading import BackgroundTask, run_in_background
@@ -1483,55 +1476,31 @@ if find_spec("utilities") is not None:
         make_isinstance,
     )
     from utilities.whenever import (
-        DAY,
-        HOUR,
-        MICROSECOND,
-        MILLISECOND,
-        MINUTE,
-        MONTH,
-        NOW_LOCAL,
-        NOW_UTC,
-        SECOND,
-        TODAY_LOCAL,
-        TODAY_UTC,
-        WEEK,
-        YEAR,
-        ZERO_DAYS,
-        ZERO_TIME,
         DatePeriod,
         ZonedDateTimePeriod,
         format_compact,
         get_now,
         get_now_local,
         get_today,
-        get_today_local,
-        to_date,
         to_date_time_delta,
-        to_days,
-        to_hours,
-        to_microseconds,
-        to_milliseconds,
-        to_minutes,
-        to_months,
-        to_months_and_days,
-        to_nanoseconds,
         to_py_date_or_date_time,
         to_py_time_delta,
-        to_seconds,
         to_time_delta,
-        to_weeks,
-        to_years,
         to_zoned_date_time,
     )
-    from utilities.zoneinfo import UTC, to_time_zone_name, to_zone_info
 
     _ = [
         BackgroundTask,
         CPU_COUNT,
+        CheckUniqueError,
+        CheckUniqueError,
         DAY,
         DatePeriod,
         EnhancedTaskGroup,
         HOUR,
+        HongKong,
+        LOCAL_TIME_ZONE,
+        LOCAL_TIME_ZONE_NAME,
         MICROSECOND,
         MILLISECOND,
         MINUTE,
@@ -1541,36 +1510,38 @@ if find_spec("utilities") is not None:
         NOW_UTC,
         Number,
         OneEmptyError,
+        OneEmptyError,
         OneError,
+        OneError,
+        OneNonUniqueError,
         OneNonUniqueError,
         SECOND,
         SYSTEM_RANDOM,
-        SizeAndTimeRotatingFileHandler,
         StrMapping,
         TODAY_LOCAL,
         TODAY_UTC,
         TimeZone,
         Timer,
+        Tokyo,
+        USCentral,
+        USEastern,
         UTC,
         WEEK,
         YEAR,
         ZERO_DAYS,
         ZERO_TIME,
         ZonedDateTimePeriod,
-        always_iterable,
-        basic_config,
-        check_duplicates,
+        async_sleep,
         check_iterables_equal,
         check_lengths_equal,
         check_mappings_equal,
         check_sets_equal,
         check_subset,
         check_superset,
+        check_unique,
         chunked,
-        dataclass_repr,
         dataclass_to_dict,
         ensure_class,
-        ensure_enum,
         ensure_float,
         ensure_int,
         ensure_not_none,
@@ -1590,9 +1561,7 @@ if find_spec("utilities") is not None:
         get_literal_elements,
         get_now,
         get_now_local,
-        get_package_root,
         get_repo_root,
-        get_root,
         get_state,
         get_today,
         get_today_local,
@@ -1602,44 +1571,44 @@ if find_spec("utilities") is not None:
         is_instance_gen,
         is_integral,
         is_subclass_gen,
+        kebab_case,
         list_dir,
         make_isinstance,
+        num_days,
+        num_hours,
+        num_microseconds,
+        num_milliseconds,
+        num_minutes,
+        num_months,
+        num_nanoseconds,
+        num_seconds,
+        num_weeks,
+        num_years,
         one,
-        one_maybe,
         one_str,
-        one_unique,
         parse_bool,
         parse_none,
         partial,
+        pascal_case,
         put_items,
         put_items_nowait,
         read_pickle,
         run_in_background,
         safe_round,
-        setup_logging,
+        set_up_logging,
         show,
         shuffle,
         sleep_max,
         sleep_rounded,
-        sleep_td,
         sleep_until,
+        snake_case,
+        sync_sleep,
         to_date,
         to_date_time_delta,
-        to_days,
-        to_hours,
-        to_microseconds,
-        to_milliseconds,
-        to_minutes,
-        to_months,
-        to_months_and_days,
-        to_nanoseconds,
         to_py_date_or_date_time,
         to_py_time_delta,
-        to_seconds,
         to_time_delta,
         to_time_zone_name,
-        to_weeks,
-        to_years,
         to_zone_info,
         to_zoned_date_time,
         transpose,
@@ -1650,15 +1619,6 @@ if find_spec("utilities") is not None:
     ]
 
 
-if find_spec("xarray") is not None:
-    _LOGGER.info("Importing `xarray`...")
-
-    import xarray
-    from xarray import DataArray, Dataset
-
-    _ = [xarray, DataArray, Dataset]
-
-
 if find_spec("whenever") is not None:
     _LOGGER.info("Importing `whenever`...")
 
@@ -1667,8 +1627,8 @@ if find_spec("whenever") is not None:
         Date,
         DateDelta,
         DateTimeDelta,
-        LocalDateTime,
         MonthDay,
+        PlainDateTime,
         Time,
         TimeDelta,
         YearMonth,
@@ -1679,7 +1639,7 @@ if find_spec("whenever") is not None:
         Date,
         DateDelta,
         DateTimeDelta,
-        LocalDateTime,
+        PlainDateTime,
         MonthDay,
         Time,
         TimeDelta,
@@ -1687,6 +1647,15 @@ if find_spec("whenever") is not None:
         ZonedDateTime,
         whenever,
     ]
+
+
+if find_spec("xarray") is not None:
+    _LOGGER.info("Importing `xarray`...")
+
+    import xarray
+    from xarray import DataArray, Dataset
+
+    _ = [xarray, DataArray, Dataset]
 
 
 # functions
