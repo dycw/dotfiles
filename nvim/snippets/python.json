@@ -271,10 +271,6 @@
     "body": "from sys import stderr, stdout\n",
     "prefix": "im-sys"
   },
-  "from tabulate import ...": {
-    "body": "from tabulate import tabulate\n",
-    "prefix": "im-tabulate"
-  },
   "from tempfile import ...": {
     "body": "from tempfile import TemporaryDirectory\n",
     "prefix": "im-tempfile"

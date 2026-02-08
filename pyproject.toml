@@ -7,12 +7,22 @@
 
 [project]
   authors = [{ email = "d.wan@icloud.com", name = "Derek Wan" }]
+  dependencies = [
+    "click>=8.3.1",
+    "dycw-utilities>=0.188.23",
+    "libcst>=1.8.6",
+]
   description = "Dotfiles"
   name = "dycw-dotfiles"
   readme = "README.md"
   requires-python = ">= 3.12"
   version = "0.4.15"
 
+  [project.scripts]
+    dotfiles-cli = "dotfiles._cli:cli"
+
+  [project.optional-dependencies]
+    cli = ["click==8.3.1", "dycw-utilities==0.188.23"]
 [tool]
   [tool.uv]
     [tool.uv.build-backend]
