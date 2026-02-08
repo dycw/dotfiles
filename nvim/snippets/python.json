@@ -45,7 +45,7 @@
   },
   "@settings(function_scoped_fixture)": {
     "body": "@settings(suppress_health_check={HealthCheck.function_scoped_fixture})\n",
-    "prefix": "settings-filter-too-much"
+    "prefix": "settings-function-scoped-fixture"
   },
   "@settings(generate)": {
     "body": "@settings(phases={Phase.generate})\n",
@@ -769,7 +769,7 @@
   },
   "from polars import Struct": {
     "body": "from polars import Struct\n",
-    "prefix": "po-struct"
+    "prefix": "po-Struct"
   },
   "from polars import UInt16": {
     "body": "from polars import UInt16\n",

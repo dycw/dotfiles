@@ -1473,7 +1473,7 @@ if find_spec("utilities") is not None:
     from utilities.text import parse_bool, parse_none
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
-    from utilities.types import MaybeIterable, Number, StrMapping, TimeZone
+    from utilities.types import MaybeIterable, Number, SecretLike, StrMapping, TimeZone
     from utilities.typing import (
         get_args,
         get_literal_elements,
@@ -1525,6 +1525,7 @@ if find_spec("utilities") is not None:
         OneNonUniqueError,
         SECOND,
         SYSTEM_RANDOM,
+        SecretLike,
         StrMapping,
         TODAY_LOCAL,
         TODAY_UTC,
