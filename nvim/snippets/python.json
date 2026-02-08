@@ -79,10 +79,6 @@
     "body": "class Test${1:ClassName}:\n    def test_${2:method_name}(self, $3) -> None:\n        ${4:pass}\n\n",
     "prefix": "class-test"
   },
-  "from ... import ... (tests)": {
-    "body": "from typing import TYPE_CHECKING\nfrom hypothesis import HealthCheck, Phase, given, reproduce_failure, settings\nfrom pytest import RaisesGroup, approx, fixture, mark, param, raises, skip\nfrom utilities.contextvars import set_global_breakpoint\n\nif TYPE_CHECKING:\n    from pytest_benchmark.fixture import BenchmarkFixture\n    from pytest_lazy_fixtures import lf\n    from pytest_regressions.dataframe_regression import DataFrameRegressionFixture\n",
-    "prefix": "im-tests"
-  },
   "from __future__ import ...": {
     "body": "from __future__ import annotations\n",
     "prefix": "im-future"
@@ -167,6 +163,26 @@
     "body": "from hypothesis import HealthCheck, Phase, assume, given, reproduce_failure, settings\nfrom hypothesis.errors import InvalidArgument\nfrom hypothesis.strategies import binary, booleans, builds, composite, data, DataObject, dates, datetimes, DrawFn, floats, integers, just, lists, none, permutations, randoms, sampled_from, sets, tuples\n",
     "prefix": "im-hypothesis"
   },
+  "from hypothesis import HealthCheck": {
+    "body": "from hypothesis import HealthCheck\n",
+    "prefix": "hy-health-check"
+  },
+  "from hypothesis import Phase": {
+    "body": "from hypothesis import Phase\n",
+    "prefix": "hy-phase"
+  },
+  "from hypothesis import given": {
+    "body": "from hypothesis import given\n",
+    "prefix": "hy-given"
+  },
+  "from hypothesis import reproduce_failure": {
+    "body": "from hypothesis import reproduce_failure\n",
+    "prefix": "hy-reproduce-failure"
+  },
+  "from hypothesis import settings": {
+    "body": "from hypothesis import settings\n",
+    "prefix": "hy-settings"
+  },
   "from ib_async import ...": {
     "body": "from ib_async import IB, CommissionReport, ContFuture, Contract, ContractDetails, Crypto, Execution, Fill, Forex, Future, Index, Order, OrderStatus, Stock, Trade\n",
     "prefix": "im-ib-async"
@@ -222,6 +238,46 @@
   "from polars import ...": {
     "body": "import polars as pl\nfrom polars import Boolean, DataFrame, Date, Datetime, Duration, Enum, Expr, Float64, Int8, Int16, Int32, Int64, List, Series, String, Struct, UInt8, UInt16, UInt32, UInt64, Utf8, all_horizontal, any_horizontal, coalesce, col, concat, date_range, date_ranges, datetime_range, element, from_epoch, int_range, int_ranges, lit, max_horizontal, min_horizontal, repeat, struct, when\nfrom polars._typing import IntoExpr, IntoExprColumn, SchemaDict\nfrom polars.exceptions import ColumnNotFoundError, ComputeError, NoRowsReturnedError\n",
     "prefix": "im-polars"
+  },
+  "from pytest import RaisesGroup": {
+    "body": "from pytest import RaisesGroup\n",
+    "prefix": "py-raises-group"
+  },
+  "from pytest import approx": {
+    "body": "from pytest import approx\n",
+    "prefix": "py-approx"
+  },
+  "from pytest import fixture": {
+    "body": "from pytest import fixture\n",
+    "prefix": "py-fixture"
+  },
+  "from pytest import mark": {
+    "body": "from pytest import mark\n",
+    "prefix": "py-mark"
+  },
+  "from pytest import param": {
+    "body": "from pytest import param\n",
+    "prefix": "py-param"
+  },
+  "from pytest import raises": {
+    "body": "from pytest import raises\n",
+    "prefix": "py-raises"
+  },
+  "from pytest import skip": {
+    "body": "from pytest import skip\n",
+    "prefix": "py-skip"
+  },
+  "from pytest_benchmark.fixture import BenchmarkFixture": {
+    "body": "from pytest_benchmark.fixture import BenchmarkFixture\n",
+    "prefix": "py-benchmark-fixture"
+  },
+  "from pytest_lazy_fixtures import lf": {
+    "body": "from pytest_lazy_fixtures import lf\n",
+    "prefix": "py-lf"
+  },
+  "from pytest_regressions.dataframe_regression import DataFrameRegressionFixture": {
+    "body": "from pytest_regressions.dataframe_regression import DataFrameRegressionFixture\n",
+    "prefix": "py-data-frame-regression-fixture"
   },
   "from random import ...": {
     "body": "from random import Random, choice, randint, seed, shuffle\n",
@@ -299,6 +355,10 @@
     "body": "from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal, NotRequired, Protocol, Required, Self, TypeVar, TypedDict, assert_never, cast, overload, override\n",
     "prefix": "im-typing"
   },
+  "from typing import TYPE_CHECKING": {
+    "body": "from typing import TYPE_CHECKING\n",
+    "prefix": "ty-type-checking"
+  },
   "from urllib import ...": {
     "body": "from urllib.parse import ParseResult, urlparse\nfrom urllib.request import Request, urlopen\n",
     "prefix": "im-urllib"
@@ -314,6 +374,10 @@
   "from utilities.click import argument": {
     "body": "from utilities.click import argument\n",
     "prefix": "ut-argument"
+  },
+  "from utilities.contextvars import set_global_breakpoint": {
+    "body": "from utilities.contextvars import set_global_breakpoint\n",
+    "prefix": "ut-set-global-breakpoint"
   },
   "from utilities.core import is_pytest": {
     "body": "from utilities.core import is_pytest\n",
