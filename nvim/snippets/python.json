@@ -323,10 +323,6 @@
     "body": "from utilities.click import argument\n",
     "prefix": "ut-argument"
   },
-  "from utilities.core import is_pytest": {
-    "body": "from utilities.core import is_pytest\n",
-    "prefix": "ut-is-pytest"
-  },
   "from utilities.core import set_up_logging": {
     "body": "from utilities.core import set_up_logging\n",
     "prefix": "ut-set-up-logging"
