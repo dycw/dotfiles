@@ -158,6 +158,7 @@ from os import environ, getenv
 from pathlib import Path
 from random import shuffle
 from re import escape, findall, search
+from shlex import join
 from shutil import copyfile, rmtree
 from statistics import fmean, mean
 from subprocess import PIPE, CalledProcessError, check_call, check_output, run
@@ -334,6 +335,7 @@ _ = [
     it,
     itemgetter,
     itertools,
+    join,
     json,
     locale,
     log,
@@ -1461,14 +1463,18 @@ if find_spec("utilities") is not None:
     from utilities.math import ewm_parameters, is_integral, safe_round
     from utilities.os import CPU_COUNT
     from utilities.pathlib import ensure_suffix, get_repo_root, list_dir
+    from utilities.pydantic import ensure_secret, extract_secret
+    from utilities.pytest import skipif_ci, throttle_test
     from utilities.random import get_state, shuffle
     from utilities.shelve import yield_shelf
     from utilities.subprocess import (
+        run,
         set_hostname_cmd,
         ssh,
         ssh_keyscan,
         sudo_cmd,
         tee_cmd,
+        uv_run,
     )
     from utilities.text import parse_bool, parse_none
     from utilities.threading import BackgroundTask, run_in_background
@@ -1511,6 +1517,7 @@ if find_spec("utilities") is not None:
         LOCAL_TIME_ZONE_NAME,
         MICROSECOND,
         MILLISECOND,
+        MINUTE,
         MINUTE,
         MONTH,
         MaybeIterable,
@@ -1555,12 +1562,14 @@ if find_spec("utilities") is not None:
         ensure_int,
         ensure_not_none,
         ensure_plain_date_time,
+        ensure_secret,
         ensure_str,
         ensure_suffix,
         ensure_zoned_date_time,
         ewm_parameters,
         extract_group,
         extract_groups,
+        extract_secret,
         format_compact,
         get_args,
         get_class,
@@ -1608,6 +1617,7 @@ if find_spec("utilities") is not None:
         set_up_logging,
         show,
         shuffle,
+        skipif_ci,
         sleep_max,
         sleep_rounded,
         sleep_until,
@@ -1617,6 +1627,7 @@ if find_spec("utilities") is not None:
         sudo_cmd,
         sync_sleep,
         tee_cmd,
+        throttle_test,
         to_date,
         to_date_time_delta,
         to_logger,
@@ -1628,6 +1639,7 @@ if find_spec("utilities") is not None:
         to_zoned_date_time,
         transpose,
         unique_everseen,
+        uv_run,
         write_pickle,
         yield_fields,
         yield_shelf,

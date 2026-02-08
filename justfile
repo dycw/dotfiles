@@ -2,22 +2,16 @@ set dotenv-load := true
 set fallback := true
 set positional-arguments := true
 
-@setup-dev-server *args:
-  just update
-  python3 -m install.machines.dev_server "$@"
+# set up
 
-@setup-mac-book *args:
-  just update
-  python3 -m install.machines.macbook "$@"
+@set-up-dev-server *args:
+  python3 -m install.machines.dev_server {{args}}
 
-@setup-mac-mini *args:
-  just update
-  python3 -m install.machines.mac_mini "$@"
+@set-up-mac-book *args:
+  python3 -m install.machines.macbook {{args}}
 
-@setup-swift *args:
-  just update
-  python3 -m install.machines.swift "$@"
+@set-up-mac-mini *args:
+  python3 -m install.machines.mac_mini {{args}}
 
-@update:
-  git pull-default
-  git submodule-update
+@set-up-swift *args:
+  python3 -m install.machines.swift {{args}}
