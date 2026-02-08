@@ -1255,6 +1255,14 @@
     "body": "from utilities.core import to_logger\n",
     "prefix": "ut-to-logger"
   },
+  "from utilities.pydantic import ensure_secret": {
+    "body": "from utilities.pydantic import ensure_secret\n",
+    "prefix": "ut-ensure-secret"
+  },
+  "from utilities.pydantic import extract_secret": {
+    "body": "from utilities.pydantic import extract_secret\n",
+    "prefix": "ut-extract-secret"
+  },
   "from utilities.subprocess import set_hostname_cmd": {
     "body": "from utilities.subprocess import set_hostname_cmd\n",
     "prefix": "ut-set-hostname-cmd"

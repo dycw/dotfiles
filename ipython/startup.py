@@ -1461,6 +1461,7 @@ if find_spec("utilities") is not None:
     from utilities.math import ewm_parameters, is_integral, safe_round
     from utilities.os import CPU_COUNT
     from utilities.pathlib import ensure_suffix, get_repo_root, list_dir
+    from utilities.pydantic import ensure_secret, extract_secret
     from utilities.random import get_state, shuffle
     from utilities.shelve import yield_shelf
     from utilities.subprocess import (
@@ -1555,12 +1556,14 @@ if find_spec("utilities") is not None:
         ensure_int,
         ensure_not_none,
         ensure_plain_date_time,
+        ensure_secret,
         ensure_str,
         ensure_suffix,
         ensure_zoned_date_time,
         ewm_parameters,
         extract_group,
         extract_groups,
+        extract_secret,
         format_compact,
         get_args,
         get_class,
