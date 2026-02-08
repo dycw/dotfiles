@@ -900,12 +900,8 @@
     "prefix": "py-fixture"
   },
   "from pytest import mark": {
-    "body": "from pytest import mark\n",
+    "body": "from pytest import mark, param\n",
     "prefix": "py-mark"
-  },
-  "from pytest import param": {
-    "body": "from pytest import param\n",
-    "prefix": "py-param"
   },
   "from pytest import raises": {
     "body": "from pytest import raises\n",
