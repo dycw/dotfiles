@@ -287,21 +287,37 @@
     "body": "from frozendict import frozendict\n",
     "prefix": "fr-frozendict"
   },
-  "from functools import ...": {
-    "body": "from functools import cached_property, partial, reduce, total_ordering, wraps\n",
-    "prefix": "im-functools"
+  "from functools import cached_property": {
+    "body": "from functools import cached_property\n",
+    "prefix": "fu-cached-property"
   },
-  "from getpass import ...": {
+  "from functools import partial": {
+    "body": "from functools import partial\n",
+    "prefix": "fu-partial"
+  },
+  "from functools import reduce": {
+    "body": "from functools import reduce\n",
+    "prefix": "fu-reduce"
+  },
+  "from functools import total_ordering": {
+    "body": "from functools import total_ordering\n",
+    "prefix": "fu-total-ordering"
+  },
+  "from functools import wraps": {
+    "body": "from functools import wraps\n",
+    "prefix": "fu-wraps"
+  },
+  "from getpass import getuser": {
     "body": "from getpass import getuser\n",
-    "prefix": "im-getpass"
+    "prefix": "ge-getuser"
   },
-  "from humanize import ...": {
-    "body": "from humanize import naturaldelta, naturaltime\n",
-    "prefix": "im-humanize"
+  "from humanize import naturaldelta": {
+    "body": "from humanize import naturaldelta\n",
+    "prefix": "hu-naturaldelta"
   },
-  "from hypothesis import ...": {
-    "body": "from hypothesis import HealthCheck, Phase, assume, given, reproduce_failure, settings\nfrom hypothesis.errors import InvalidArgument\nfrom hypothesis.strategies import binary, booleans, builds, composite, data, DataObject, dates, datetimes, DrawFn, floats, integers, just, lists, none, permutations, randoms, sampled_from, sets, tuples\n",
-    "prefix": "im-hypothesis"
+  "from humanize import naturaltime": {
+    "body": "from humanize import naturaltime\n",
+    "prefix": "hu-naturaltime"
   },
   "from hypothesis import HealthCheck": {
     "body": "from hypothesis import HealthCheck\n",
@@ -310,6 +326,10 @@
   "from hypothesis import Phase": {
     "body": "from hypothesis import Phase\n",
     "prefix": "hy-phase"
+  },
+  "from hypothesis import assume": {
+    "body": "from hypothesis import assume\n",
+    "prefix": "hy-assume"
   },
   "from hypothesis import given": {
     "body": "from hypothesis import given\n",
@@ -323,41 +343,293 @@
     "body": "from hypothesis import settings\n",
     "prefix": "hy-settings"
   },
-  "from ib_async import ...": {
-    "body": "from ib_async import IB, CommissionReport, ContFuture, Contract, ContractDetails, Crypto, Execution, Fill, Forex, Future, Index, Order, OrderStatus, Stock, Trade\n",
-    "prefix": "im-ib-async"
+  "from hypothesis.errors import InvalidArgument": {
+    "body": "from hypothesis.errors import InvalidArgument\n",
+    "prefix": "hy-invalid-argument"
   },
-  "from importlib import ...": {
+  "from hypothesis.strategies import DataObject": {
+    "body": "from hypothesis.strategies import DataObject\n",
+    "prefix": "hy-data-object"
+  },
+  "from hypothesis.strategies import DrawFn": {
+    "body": "from hypothesis.strategies import DrawFn\n",
+    "prefix": "hy-draw-fn"
+  },
+  "from hypothesis.strategies import binary": {
+    "body": "from hypothesis.strategies import binary\n",
+    "prefix": "hy-binary"
+  },
+  "from hypothesis.strategies import booleans": {
+    "body": "from hypothesis.strategies import booleans\n",
+    "prefix": "hy-booleans"
+  },
+  "from hypothesis.strategies import builds": {
+    "body": "from hypothesis.strategies import builds\n",
+    "prefix": "hy-builds"
+  },
+  "from hypothesis.strategies import composite": {
+    "body": "from hypothesis.strategies import composite\n",
+    "prefix": "hy-composite"
+  },
+  "from hypothesis.strategies import data": {
+    "body": "from hypothesis.strategies import data\n",
+    "prefix": "hy-data"
+  },
+  "from hypothesis.strategies import dates": {
+    "body": "from hypothesis.strategies import dates\n",
+    "prefix": "hy-dates"
+  },
+  "from hypothesis.strategies import datetimes": {
+    "body": "from hypothesis.strategies import datetimes\n",
+    "prefix": "hy-datetimes"
+  },
+  "from hypothesis.strategies import floats": {
+    "body": "from hypothesis.strategies import floats\n",
+    "prefix": "hy-floats"
+  },
+  "from hypothesis.strategies import integers": {
+    "body": "from hypothesis.strategies import integers\n",
+    "prefix": "hy-integers"
+  },
+  "from hypothesis.strategies import just": {
+    "body": "from hypothesis.strategies import just\n",
+    "prefix": "hy-just"
+  },
+  "from hypothesis.strategies import lists": {
+    "body": "from hypothesis.strategies import lists\n",
+    "prefix": "hy-lists"
+  },
+  "from hypothesis.strategies import none": {
+    "body": "from hypothesis.strategies import none\n",
+    "prefix": "hy-none"
+  },
+  "from hypothesis.strategies import permutations": {
+    "body": "from hypothesis.strategies import permutations\n",
+    "prefix": "hy-permutations"
+  },
+  "from hypothesis.strategies import randoms": {
+    "body": "from hypothesis.strategies import randoms\n",
+    "prefix": "hy-randoms"
+  },
+  "from hypothesis.strategies import sampled_from": {
+    "body": "from hypothesis.strategies import sampled_from\n",
+    "prefix": "hy-sampled-from"
+  },
+  "from hypothesis.strategies import sets": {
+    "body": "from hypothesis.strategies import sets\n",
+    "prefix": "hy-sets"
+  },
+  "from hypothesis.strategies import tuples": {
+    "body": "from hypothesis.strategies import tuples\n",
+    "prefix": "hy-tuples"
+  },
+  "from ib_async import CommissionReport": {
+    "body": "from ib_async import CommissionReport\n",
+    "prefix": "ib-commission-report"
+  },
+  "from ib_async import ContFuture": {
+    "body": "from ib_async import ContFuture\n",
+    "prefix": "ib-cont-future"
+  },
+  "from ib_async import Contract": {
+    "body": "from ib_async import Contract\n",
+    "prefix": "ib-contract"
+  },
+  "from ib_async import ContractDetails": {
+    "body": "from ib_async import ContractDetails\n",
+    "prefix": "ib-contract-details"
+  },
+  "from ib_async import Crypto": {
+    "body": "from ib_async import Crypto\n",
+    "prefix": "ib-crypto"
+  },
+  "from ib_async import Execution": {
+    "body": "from ib_async import Execution\n",
+    "prefix": "ib-execution"
+  },
+  "from ib_async import Fill": {
+    "body": "from ib_async import Fill\n",
+    "prefix": "ib-fill"
+  },
+  "from ib_async import Forex": {
+    "body": "from ib_async import Forex\n",
+    "prefix": "ib-forex"
+  },
+  "from ib_async import Future": {
+    "body": "from ib_async import Future\n",
+    "prefix": "ib-future"
+  },
+  "from ib_async import IB": {
+    "body": "from ib_async import IB\n",
+    "prefix": "ib-ib"
+  },
+  "from ib_async import Index": {
+    "body": "from ib_async import Index\n",
+    "prefix": "ib-index"
+  },
+  "from ib_async import Order": {
+    "body": "from ib_async import Order\n",
+    "prefix": "ib-order"
+  },
+  "from ib_async import OrderStatus": {
+    "body": "from ib_async import OrderStatus\n",
+    "prefix": "ib-order-status"
+  },
+  "from ib_async import Stock": {
+    "body": "from ib_async import Stock\n",
+    "prefix": "ib-stock"
+  },
+  "from ib_async import Trade": {
+    "body": "from ib_async import Trade\n",
+    "prefix": "ib-trade"
+  },
+  "from importlib.resources import files": {
     "body": "from importlib.resources import files\n",
-    "prefix": "im-importlib"
+    "prefix": "im-files"
   },
-  "from inspect import ...": {
+  "from inspect import signature": {
     "body": "from inspect import signature\n",
-    "prefix": "im-inspect"
+    "prefix": "in-signature"
   },
-  "from io import ...": {
+  "from io import StringIO": {
     "body": "from io import StringIO\n",
-    "prefix": "im-io"
+    "prefix": "io-string-io"
   },
-  "from itertools import ...": {
-    "body": "from itertools import accumulate, chain, count, cycle, dropwhile, groupby, islice, pairwise, product, repeat, starmap, takewhile\n",
-    "prefix": "im-itertools"
+  "from itertools import accumulate": {
+    "body": "from itertools import accumulate\n",
+    "prefix": "it-accumulate"
   },
-  "from logging import ...": {
-    "body": "from logging import Formatter, Handler, StreamHandler, basicConfig, getLogger\n",
-    "prefix": "im-logging"
+  "from itertools import chain": {
+    "body": "from itertools import chain\n",
+    "prefix": "it-chain"
   },
-  "from math import ...": {
-    "body": "from math import inf, isclose, isnan, nan\n",
-    "prefix": "im-math"
+  "from itertools import count": {
+    "body": "from itertools import count\n",
+    "prefix": "it-count"
   },
-  "from more_itertools import ...": {
-    "body": "from more_itertools import chunked, iterate, map_except, partition, split_after\n",
-    "prefix": "im-more-itertools"
+  "from itertools import cycle": {
+    "body": "from itertools import cycle\n",
+    "prefix": "it-cycle"
+  },
+  "from itertools import dropwhile": {
+    "body": "from itertools import dropwhile\n",
+    "prefix": "it-dropwhile"
+  },
+  "from itertools import groupby": {
+    "body": "from itertools import groupby\n",
+    "prefix": "it-groupby"
+  },
+  "from itertools import islice": {
+    "body": "from itertools import islice\n",
+    "prefix": "it-islice"
+  },
+  "from itertools import pairwise": {
+    "body": "from itertools import pairwise\n",
+    "prefix": "it-pairwise"
+  },
+  "from itertools import product": {
+    "body": "from itertools import product\n",
+    "prefix": "it-product"
+  },
+  "from itertools import repeat": {
+    "body": "from itertools import repeat\n",
+    "prefix": "it-repeat"
+  },
+  "from itertools import starmap": {
+    "body": "from itertools import starmap\n",
+    "prefix": "it-starmap"
+  },
+  "from itertools import takewhile": {
+    "body": "from itertools import takewhile\n",
+    "prefix": "it-takewhile"
+  },
+  "from logging import Formatter": {
+    "body": "from logging import Formatter\n",
+    "prefix": "lo-formatter"
+  },
+  "from logging import Handler": {
+    "body": "from logging import Handler\n",
+    "prefix": "lo-handler"
+  },
+  "from logging import StreamHandler": {
+    "body": "from logging import StreamHandler\n",
+    "prefix": "lo-stream-handler"
+  },
+  "from logging import basicConfig": {
+    "body": "from logging import basicConfig\n",
+    "prefix": "lo-basic-config"
+  },
+  "from logging import getLogger": {
+    "body": "from logging import getLogger\n",
+    "prefix": "lo-get-logger"
+  },
+  "from math import inf": {
+    "body": "from math import inf\n",
+    "prefix": "ma-inf"
+  },
+  "from math import isclose": {
+    "body": "from math import isclose\n",
+    "prefix": "ma-isclose"
+  },
+  "from math import isnan": {
+    "body": "from math import isnan\n",
+    "prefix": "ma-isnan"
+  },
+  "from math import nan": {
+    "body": "from math import nan\n",
+    "prefix": "ma-nan"
+  },
+  "from more_itertools import chunked": {
+    "body": "from more_itertools import chunked\n",
+    "prefix": "mo-chunked"
+  },
+  "from more_itertools import iterate": {
+    "body": "from more_itertools import iterate\n",
+    "prefix": "mo-iterate"
+  },
+  "from more_itertools import map_except": {
+    "body": "from more_itertools import map_except\n",
+    "prefix": "mo-map-except"
+  },
+  "from more_itertools import partition": {
+    "body": "from more_itertools import partition\n",
+    "prefix": "mo-partition"
+  },
+  "from more_itertools import split_after": {
+    "body": "from more_itertools import split_after\n",
+    "prefix": "mo-split-after"
   },
   "from numpy import ...": {
-    "body": "import numpy as np\nfrom numpy import arange, full, isnan, linspace, nan, ndarray, pi\n",
+    "body": "import numpy as np",
     "prefix": "im-numpy"
+  },
+  "from numpy import arange": {
+    "body": "from numpy import arange\n",
+    "prefix": "nu-arange"
+  },
+  "from numpy import full": {
+    "body": "from numpy import full\n",
+    "prefix": "nu-full"
+  },
+  "from numpy import isnan": {
+    "body": "from numpy import isnan\n",
+    "prefix": "nu-isnan"
+  },
+  "from numpy import linspace": {
+    "body": "from numpy import linspace\n",
+    "prefix": "nu-linspace"
+  },
+  "from numpy import nan": {
+    "body": "from numpy import nan\n",
+    "prefix": "nu-nan"
+  },
+  "from numpy import ndarray": {
+    "body": "from numpy import ndarray\n",
+    "prefix": "nu-ndarray"
+  },
+  "from numpy import pi": {
+    "body": "from numpy import pi\n",
+    "prefix": "nu-pi"
   },
   "from operator import ...": {
     "body": "from operator import add, and_, eq, ge, gt, le, lt, mul, ne, neg, or_, sub, truediv\n",
