@@ -91,45 +91,93 @@
     "body": "from abc import abstractmethod\n",
     "prefix": "ab-abstractmethod"
   },
-  "from argparse import ...": {
-    "body": "from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser\n",
-    "prefix": "im-argparse"
+  "from argparse import ArgumentDefaultsHelpFormatter": {
+    "body": "from argparse import ArgumentDefaultsHelpFormatter\n",
+    "prefix": "ar-argument-defaults-help-formatter"
   },
-  "from asyncio import ...": {
-    "body": "from asyncio import Event, Lock, Queue, Task, TaskGroup, create_task, get_event_loop, run, sleep\n",
-    "prefix": "im-asyncio"
+  "from argparse import ArgumentParser": {
+    "body": "from argparse import ArgumentParser\n",
+    "prefix": "ar-argument-parser"
   },
-  "from base64 import ...": {
-    "body": "from base64 import b64decode, b64encode\n",
-    "prefix": "im-base64"
+  "from asyncio import Event": {
+    "body": "from asyncio import Event\n",
+    "prefix": "as-event"
   },
-  "from beartype import ...": {
+  "from asyncio import Lock": {
+    "body": "from asyncio import Lock\n",
+    "prefix": "as-lock"
+  },
+  "from asyncio import Queue": {
+    "body": "from asyncio import Queue\n",
+    "prefix": "as-queue"
+  },
+  "from asyncio import Task": {
+    "body": "from asyncio import Task\n",
+    "prefix": "as-task"
+  },
+  "from asyncio import TaskGroup": {
+    "body": "from asyncio import TaskGroup\n",
+    "prefix": "as-task-group"
+  },
+  "from asyncio import create_task": {
+    "body": "from asyncio import create_task\n",
+    "prefix": "as-create-task"
+  },
+  "from asyncio import get_event_loop": {
+    "body": "from asyncio import get_event_loop\n",
+    "prefix": "as-get-event-loop"
+  },
+  "from asyncio import run": {
+    "body": "from asyncio import run\n",
+    "prefix": "as-run"
+  },
+  "from asyncio import sleep": {
+    "body": "from asyncio import sleep\n",
+    "prefix": "as-sleep"
+  },
+  "from base64 import b64decode": {
+    "body": "from base64 import b64decode\n",
+    "prefix": "ba-b64-decode"
+  },
+  "from base64 import b64encode": {
+    "body": "from base64 import b64encode\n",
+    "prefix": "ba-b64-encode"
+  },
+  "from beartype import beartype": {
     "body": "from beartype import beartype\n",
-    "prefix": "im-beartype"
+    "prefix": "be-beartype"
   },
-  "from bidict import ...": {
+  "from bidict import bidict": {
     "body": "from bidict import bidict\n",
-    "prefix": "im-bidict"
+    "prefix": "bi-bidict"
   },
-  "from cachetools import ...": {
+  "from cachetools.func import ttl_cache": {
     "body": "from cachetools.func import ttl_cache\n",
-    "prefix": "im-cachetools"
-  },
-  "from click import ...": {
-    "body": "from click import argument, command, option\nfrom click.testing import CliRunner\n",
-    "prefix": "im-click"
+    "prefix": "ca-ttl-cache"
   },
   "from click import argument": {
     "body": "from click import argument\n",
     "prefix": "cl-argument"
   },
+  "from click import command": {
+    "body": "from click import command\n",
+    "prefix": "cl-command"
+  },
   "from click import group": {
     "body": "from click import group\n",
     "prefix": "cl-group"
   },
+  "from click import option": {
+    "body": "from click import option\n",
+    "prefix": "cl-option"
+  },
   "from click import version_option": {
     "body": "from click import version_option\n",
     "prefix": "cl-version-option"
+  },
+  "from click.testing import CliRunner": {
+    "body": "from click.testing import CliRunner\n",
+    "prefix": "cl-cli-runner"
   },
   "from collections import ...": {
     "body": "from collections import Counter, deque\nfrom collections.abc import Awaitable, Callable, Iterable, Iterator, Mapping, Sequence\nfrom collections.abc import Set as AbstractSet\n",
