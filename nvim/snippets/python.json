@@ -79,13 +79,17 @@
     "body": "class Test${1:ClassName}:\n    def test_${2:method_name}(self, $3) -> None:\n        ${4:pass}\n\n",
     "prefix": "class-test"
   },
-  "from __future__ import ...": {
+  "from __future__ import annotations": {
     "body": "from __future__ import annotations\n",
-    "prefix": "im-future"
+    "prefix": "fu-annotations"
   },
-  "from abc import ...": {
-    "body": "from abc import ABC, abstractmethod\n",
-    "prefix": "im-abc"
+  "from abc import ABC": {
+    "body": "from abc import ABC\n",
+    "prefix": "ab-abc"
+  },
+  "from abc import abstractmethod": {
+    "body": "from abc import abstractmethod\n",
+    "prefix": "ab-abstractmethod"
   },
   "from argparse import ...": {
     "body": "from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser\n",

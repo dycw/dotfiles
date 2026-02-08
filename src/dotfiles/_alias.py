@@ -68,7 +68,7 @@ def _import_from_to_dict(imp: ImportFrom, /) -> tuple[str, StrDict]:
     value: StrDict = {}
     value["body"] = f"{key}\n"
     (parsed,) = parse_import(imp)
-    prefix_head = parsed.module.split(".")[0][:2]
+    prefix_head = parsed.module.split(".")[0].strip("_")[:2]
     if parsed.name is None:
         raise ImpossibleCaseError(case=[f"{parsed.name=}"])
     prefix_tail = kebab_case(parsed.name)
