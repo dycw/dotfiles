@@ -179,25 +179,113 @@
     "body": "from click.testing import CliRunner\n",
     "prefix": "cl-cli-runner"
   },
-  "from collections import ...": {
-    "body": "from collections import Counter, deque\nfrom collections.abc import Awaitable, Callable, Iterable, Iterator, Mapping, Sequence\nfrom collections.abc import Set as AbstractSet\n",
-    "prefix": "im-collections"
+  "from collections import Counter": {
+    "body": "from collections import Counter\n",
+    "prefix": "co-counter"
   },
-  "from contextlib import ...": {
-    "body": "from contextlib import AsyncExitStack, ExitStack, asynccontextmanager, contextmanager, redirect_stderr, redirect_stdout, suppress\n",
-    "prefix": "im-contextlib"
+  "from collections import deque": {
+    "body": "from collections import deque\n",
+    "prefix": "co-deque"
   },
-  "from dataclasses import ...": {
-    "body": "from dataclasses import InitVar, asdict, astuple, dataclass, field, replace\n",
-    "prefix": "im-dataclasses"
+  "from collections.abc import Awaitable": {
+    "body": "from collections.abc import Awaitable\n",
+    "prefix": "co-awaitable"
   },
-  "from enum import ...": {
-    "body": "from enum import Enum, StrEnum, auto, unique\n",
-    "prefix": "im-enum"
+  "from collections.abc import Callable": {
+    "body": "from collections.abc import Callable\n",
+    "prefix": "co-callable"
   },
-  "from frozendict import ...": {
+  "from collections.abc import Iterable": {
+    "body": "from collections.abc import Iterable\n",
+    "prefix": "co-iterable"
+  },
+  "from collections.abc import Iterator": {
+    "body": "from collections.abc import Iterator\n",
+    "prefix": "co-iterator"
+  },
+  "from collections.abc import Mapping": {
+    "body": "from collections.abc import Mapping\n",
+    "prefix": "co-mapping"
+  },
+  "from collections.abc import Sequence": {
+    "body": "from collections.abc import Sequence\n",
+    "prefix": "co-sequence"
+  },
+  "from collections.abc import Set as AbstractSet": {
+    "body": "from collections.abc import Set as AbstractSet\n",
+    "prefix": "co-abstract-set"
+  },
+  "from contextlib import AsyncExitStack": {
+    "body": "from contextlib import AsyncExitStack\n",
+    "prefix": "co-async-exit-stack"
+  },
+  "from contextlib import ExitStack": {
+    "body": "from contextlib import ExitStack\n",
+    "prefix": "co-exit-stack"
+  },
+  "from contextlib import asynccontextmanager": {
+    "body": "from contextlib import asynccontextmanager\n",
+    "prefix": "co-asynccontextmanager"
+  },
+  "from contextlib import contextmanager": {
+    "body": "from contextlib import contextmanager\n",
+    "prefix": "co-contextmanager"
+  },
+  "from contextlib import redirect_stderr": {
+    "body": "from contextlib import redirect_stderr\n",
+    "prefix": "co-redirect-stderr"
+  },
+  "from contextlib import redirect_stdout": {
+    "body": "from contextlib import redirect_stdout\n",
+    "prefix": "co-redirect-stdout"
+  },
+  "from contextlib import suppress": {
+    "body": "from contextlib import suppress\n",
+    "prefix": "co-suppress"
+  },
+  "from dataclasses import InitVar": {
+    "body": "from dataclasses import InitVar\n",
+    "prefix": "da-init-var"
+  },
+  "from dataclasses import asdict": {
+    "body": "from dataclasses import asdict\n",
+    "prefix": "da-asdict"
+  },
+  "from dataclasses import astuple": {
+    "body": "from dataclasses import astuple\n",
+    "prefix": "da-astuple"
+  },
+  "from dataclasses import dataclass": {
+    "body": "from dataclasses import dataclass\n",
+    "prefix": "da-dataclass"
+  },
+  "from dataclasses import field": {
+    "body": "from dataclasses import field\n",
+    "prefix": "da-field"
+  },
+  "from dataclasses import replace": {
+    "body": "from dataclasses import replace\n",
+    "prefix": "da-replace"
+  },
+  "from enum import Enum": {
+    "body": "from enum import Enum\n",
+    "prefix": "en-enum"
+  },
+  "from enum import StrEnum": {
+    "body": "from enum import StrEnum\n",
+    "prefix": "en-str-enum"
+  },
+  "from enum import auto": {
+    "body": "from enum import auto\n",
+    "prefix": "en-auto"
+  },
+  "from enum import unique": {
+    "body": "from enum import unique\n",
+    "prefix": "en-unique"
+  },
+  "from frozendict import frozendict": {
     "body": "from frozendict import frozendict\n",
-    "prefix": "im-frozendict"
+    "prefix": "fr-frozendict"
   },
   "from functools import ...": {
     "body": "from functools import cached_property, partial, reduce, total_ordering, wraps\n",
