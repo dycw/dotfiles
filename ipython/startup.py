@@ -1428,6 +1428,7 @@ if find_spec("utilities") is not None:
         snake_case,
         sync_sleep,
         to_date,
+        to_logger,
         to_time_zone_name,
         to_zone_info,
         transpose,
@@ -1462,6 +1463,13 @@ if find_spec("utilities") is not None:
     from utilities.pathlib import ensure_suffix, get_repo_root, list_dir
     from utilities.random import get_state, shuffle
     from utilities.shelve import yield_shelf
+    from utilities.subprocess import (
+        set_hostname_cmd,
+        ssh,
+        ssh_keyscan,
+        sudo_cmd,
+        tee_cmd,
+    )
     from utilities.text import parse_bool, parse_none
     from utilities.threading import BackgroundTask, run_in_background
     from utilities.timer import Timer
@@ -1595,6 +1603,7 @@ if find_spec("utilities") is not None:
         read_pickle,
         run_in_background,
         safe_round,
+        set_hostname_cmd,
         set_up_logging,
         show,
         shuffle,
@@ -1602,9 +1611,14 @@ if find_spec("utilities") is not None:
         sleep_rounded,
         sleep_until,
         snake_case,
+        ssh,
+        ssh_keyscan,
+        sudo_cmd,
         sync_sleep,
+        tee_cmd,
         to_date,
         to_date_time_delta,
+        to_logger,
         to_py_date_or_date_time,
         to_py_time_delta,
         to_time_delta,
