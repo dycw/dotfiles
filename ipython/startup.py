@@ -1375,7 +1375,6 @@ if find_spec("utilities") is not None:
         put_items_nowait,
         sleep_max,
         sleep_rounded,
-        sleep_td,
         sleep_until,
     )
     from utilities.constants import (
@@ -1390,6 +1389,7 @@ if find_spec("utilities") is not None:
         NOW_LOCAL,
         NOW_UTC,
         SECOND,
+        SYSTEM_RANDOM,
         TODAY_LOCAL,
         TODAY_UTC,
         UTC,
@@ -1407,8 +1407,11 @@ if find_spec("utilities") is not None:
         OneEmptyError,
         OneError,
         OneNonUniqueError,
+        async_sleep,
         check_unique,
         chunked,
+        extract_group,
+        extract_groups,
         get_class,
         get_class_name,
         get_today_local,
@@ -1422,9 +1425,15 @@ if find_spec("utilities") is not None:
         num_seconds,
         num_weeks,
         num_years,
+        read_pickle,
+        set_up_logging,
+        sync_sleep,
         to_date,
         to_time_zone_name,
         to_zone_info,
+        transpose,
+        unique_everseen,
+        write_pickle,
     )
     from utilities.dataclasses import dataclass_to_dict, yield_fields
     from utilities.functions import (
@@ -1446,30 +1455,13 @@ if find_spec("utilities") is not None:
         check_superset,
         groupby_lists,
         one,
-        one_maybe,
         one_str,
-        one_unique,
-        transpose,
-        unique_everseen,
     )
     from utilities.jupyter import show
-    from utilities.logging import (
-        SizeAndTimeRotatingFileHandler,
-        basic_config,
-        setup_logging,
-    )
     from utilities.math import ewm_parameters, is_integral, safe_round
     from utilities.os import CPU_COUNT
-    from utilities.pathlib import (
-        ensure_suffix,
-        get_package_root,
-        get_repo_root,
-        get_root,
-        list_dir,
-    )
-    from utilities.pickle import read_pickle, write_pickle
-    from utilities.random import SYSTEM_RANDOM, get_state, shuffle
-    from utilities.re import extract_group, extract_groups
+    from utilities.pathlib import ensure_suffix, get_repo_root, list_dir
+    from utilities.random import get_state, shuffle
     from utilities.shelve import yield_shelf
     from utilities.text import parse_bool, parse_none
     from utilities.threading import BackgroundTask, run_in_background
@@ -1526,7 +1518,6 @@ if find_spec("utilities") is not None:
         OneNonUniqueError,
         SECOND,
         SYSTEM_RANDOM,
-        SizeAndTimeRotatingFileHandler,
         StrMapping,
         TODAY_LOCAL,
         TODAY_UTC,
@@ -1541,7 +1532,6 @@ if find_spec("utilities") is not None:
         ZERO_DAYS,
         ZERO_TIME,
         ZonedDateTimePeriod,
-        basic_config,
         check_iterables_equal,
         check_lengths_equal,
         check_mappings_equal,
@@ -1571,9 +1561,7 @@ if find_spec("utilities") is not None:
         get_literal_elements,
         get_now,
         get_now_local,
-        get_package_root,
         get_repo_root,
-        get_root,
         get_state,
         get_today,
         get_today_local,
@@ -1596,9 +1584,7 @@ if find_spec("utilities") is not None:
         num_weeks,
         num_years,
         one,
-        one_maybe,
         one_str,
-        one_unique,
         parse_bool,
         parse_none,
         partial,
@@ -1607,12 +1593,13 @@ if find_spec("utilities") is not None:
         read_pickle,
         run_in_background,
         safe_round,
-        setup_logging,
+        set_up_logging,
         show,
         shuffle,
         sleep_max,
         sleep_rounded,
-        sleep_td,
+        sync_sleep,
+        async_sleep,
         sleep_until,
         to_date,
         to_date_time_delta,
