@@ -599,10 +599,6 @@
     "body": "from more_itertools import split_after\n",
     "prefix": "mo-split-after"
   },
-  "from numpy import ...": {
-    "body": "import numpy as np",
-    "prefix": "im-numpy"
-  },
   "from numpy import arange": {
     "body": "from numpy import arange\n",
     "prefix": "nu-arange"
@@ -631,25 +627,265 @@
     "body": "from numpy import pi\n",
     "prefix": "nu-pi"
   },
-  "from operator import ...": {
-    "body": "from operator import add, and_, eq, ge, gt, le, lt, mul, ne, neg, or_, sub, truediv\n",
-    "prefix": "im-operator"
+  "from operator import add": {
+    "body": "from operator import add\n",
+    "prefix": "op-add"
   },
-  "from optuna import ...": {
-    "body": "from optuna import Study, Trial\nfrom optuna.pruners import BasePruner\nfrom optuna.samplers import BaseSampler\nfrom optuna.study import StudyDirection\n",
-    "prefix": "im-optuna"
+  "from operator import and_": {
+    "body": "from operator import and_\n",
+    "prefix": "op-and-"
   },
-  "from os import ...": {
+  "from operator import eq": {
+    "body": "from operator import eq\n",
+    "prefix": "op-eq"
+  },
+  "from operator import ge": {
+    "body": "from operator import ge\n",
+    "prefix": "op-ge"
+  },
+  "from operator import gt": {
+    "body": "from operator import gt\n",
+    "prefix": "op-gt"
+  },
+  "from operator import le": {
+    "body": "from operator import le\n",
+    "prefix": "op-le"
+  },
+  "from operator import lt": {
+    "body": "from operator import lt\n",
+    "prefix": "op-lt"
+  },
+  "from operator import mul": {
+    "body": "from operator import mul\n",
+    "prefix": "op-mul"
+  },
+  "from operator import ne": {
+    "body": "from operator import ne\n",
+    "prefix": "op-ne"
+  },
+  "from operator import neg": {
+    "body": "from operator import neg\n",
+    "prefix": "op-neg"
+  },
+  "from operator import or_": {
+    "body": "from operator import or_\n",
+    "prefix": "op-or-"
+  },
+  "from operator import sub": {
+    "body": "from operator import sub\n",
+    "prefix": "op-sub"
+  },
+  "from operator import truediv": {
+    "body": "from operator import truediv\n",
+    "prefix": "op-truediv"
+  },
+  "from optuna import Study": {
+    "body": "from optuna import Study\n",
+    "prefix": "op-study"
+  },
+  "from optuna import Trial": {
+    "body": "from optuna import Trial\n",
+    "prefix": "op-trial"
+  },
+  "from optuna.pruners import BasePruner": {
+    "body": "from optuna.pruners import BasePruner\n",
+    "prefix": "op-base-pruner"
+  },
+  "from optuna.samplers import BaseSampler": {
+    "body": "from optuna.samplers import BaseSampler\n",
+    "prefix": "op-base-sampler"
+  },
+  "from optuna.study import StudyDirection": {
+    "body": "from optuna.study import StudyDirection\n",
+    "prefix": "op-study-direction"
+  },
+  "from os import environ": {
     "body": "from os import environ\n",
-    "prefix": "im-os"
+    "prefix": "os-environ"
   },
-  "from pathlib import ...": {
+  "from pathlib import Path": {
     "body": "from pathlib import Path\n",
-    "prefix": "im-pathlib"
+    "prefix": "pa-path"
   },
-  "from polars import ...": {
-    "body": "import polars as pl\nfrom polars import Boolean, DataFrame, Date, Datetime, Duration, Enum, Expr, Float64, Int8, Int16, Int32, Int64, List, Series, String, Struct, UInt8, UInt16, UInt32, UInt64, Utf8, all_horizontal, any_horizontal, coalesce, col, concat, date_range, date_ranges, datetime_range, element, from_epoch, int_range, int_ranges, lit, max_horizontal, min_horizontal, repeat, struct, when\nfrom polars._typing import IntoExpr, IntoExprColumn, SchemaDict\nfrom polars.exceptions import ColumnNotFoundError, ComputeError, NoRowsReturnedError\n",
-    "prefix": "im-polars"
+  "from polars import Boolean": {
+    "body": "from polars import Boolean\n",
+    "prefix": "po-boolean"
+  },
+  "from polars import DataFrame": {
+    "body": "from polars import DataFrame\n",
+    "prefix": "po-data-frame"
+  },
+  "from polars import Date": {
+    "body": "from polars import Date\n",
+    "prefix": "po-date"
+  },
+  "from polars import Datetime": {
+    "body": "from polars import Datetime\n",
+    "prefix": "po-datetime"
+  },
+  "from polars import Duration": {
+    "body": "from polars import Duration\n",
+    "prefix": "po-duration"
+  },
+  "from polars import Enum": {
+    "body": "from polars import Enum\n",
+    "prefix": "po-enum"
+  },
+  "from polars import Expr": {
+    "body": "from polars import Expr\n",
+    "prefix": "po-expr"
+  },
+  "from polars import Float64": {
+    "body": "from polars import Float64\n",
+    "prefix": "po-float64"
+  },
+  "from polars import Int16": {
+    "body": "from polars import Int16\n",
+    "prefix": "po-int16"
+  },
+  "from polars import Int32": {
+    "body": "from polars import Int32\n",
+    "prefix": "po-int32"
+  },
+  "from polars import Int64": {
+    "body": "from polars import Int64\n",
+    "prefix": "po-int64"
+  },
+  "from polars import Int8": {
+    "body": "from polars import Int8\n",
+    "prefix": "po-int8"
+  },
+  "from polars import List": {
+    "body": "from polars import List\n",
+    "prefix": "po-list"
+  },
+  "from polars import Series": {
+    "body": "from polars import Series\n",
+    "prefix": "po-series"
+  },
+  "from polars import String": {
+    "body": "from polars import String\n",
+    "prefix": "po-string"
+  },
+  "from polars import Struct": {
+    "body": "from polars import Struct\n",
+    "prefix": "po-struct"
+  },
+  "from polars import UInt16": {
+    "body": "from polars import UInt16\n",
+    "prefix": "po-u-int16"
+  },
+  "from polars import UInt32": {
+    "body": "from polars import UInt32\n",
+    "prefix": "po-u-int32"
+  },
+  "from polars import UInt64": {
+    "body": "from polars import UInt64\n",
+    "prefix": "po-u-int64"
+  },
+  "from polars import UInt8": {
+    "body": "from polars import UInt8\n",
+    "prefix": "po-u-int8"
+  },
+  "from polars import Utf8": {
+    "body": "from polars import Utf8\n",
+    "prefix": "po-utf8"
+  },
+  "from polars import all_horizontal": {
+    "body": "from polars import all_horizontal\n",
+    "prefix": "po-all-horizontal"
+  },
+  "from polars import any_horizontal": {
+    "body": "from polars import any_horizontal\n",
+    "prefix": "po-any-horizontal"
+  },
+  "from polars import coalesce": {
+    "body": "from polars import coalesce\n",
+    "prefix": "po-coalesce"
+  },
+  "from polars import col": {
+    "body": "from polars import col\n",
+    "prefix": "po-col"
+  },
+  "from polars import concat": {
+    "body": "from polars import concat\n",
+    "prefix": "po-concat"
+  },
+  "from polars import date_range": {
+    "body": "from polars import date_range\n",
+    "prefix": "po-date-range"
+  },
+  "from polars import date_ranges": {
+    "body": "from polars import date_ranges\n",
+    "prefix": "po-date-ranges"
+  },
+  "from polars import datetime_range": {
+    "body": "from polars import datetime_range\n",
+    "prefix": "po-datetime-range"
+  },
+  "from polars import element": {
+    "body": "from polars import element\n",
+    "prefix": "po-element"
+  },
+  "from polars import from_epoch": {
+    "body": "from polars import from_epoch\n",
+    "prefix": "po-from-epoch"
+  },
+  "from polars import int_range": {
+    "body": "from polars import int_range\n",
+    "prefix": "po-int-range"
+  },
+  "from polars import int_ranges": {
+    "body": "from polars import int_ranges\n",
+    "prefix": "po-int-ranges"
+  },
+  "from polars import lit": {
+    "body": "from polars import lit\n",
+    "prefix": "po-lit"
+  },
+  "from polars import max_horizontal": {
+    "body": "from polars import max_horizontal\n",
+    "prefix": "po-max-horizontal"
+  },
+  "from polars import min_horizontal": {
+    "body": "from polars import min_horizontal\n",
+    "prefix": "po-min-horizontal"
+  },
+  "from polars import repeat": {
+    "body": "from polars import repeat\n",
+    "prefix": "po-repeat"
+  },
+  "from polars import struct": {
+    "body": "from polars import struct\n",
+    "prefix": "po-struct"
+  },
+  "from polars import when": {
+    "body": "from polars import when\n",
+    "prefix": "po-when"
+  },
+  "from polars._typing import IntoExpr": {
+    "body": "from polars._typing import IntoExpr\n",
+    "prefix": "po-into-expr"
+  },
+  "from polars._typing import IntoExprColumn": {
+    "body": "from polars._typing import IntoExprColumn\n",
+    "prefix": "po-into-expr-column"
+  },
+  "from polars._typing import SchemaDict": {
+    "body": "from polars._typing import SchemaDict\n",
+    "prefix": "po-schema-dict"
+  },
+  "from polars.exceptions import ColumnNotFoundError": {
+    "body": "from polars.exceptions import ColumnNotFoundError\n",
+    "prefix": "po-column-not-found-error"
+  },
+  "from polars.exceptions import ComputeError": {
+    "body": "from polars.exceptions import ComputeError\n",
+    "prefix": "po-compute-error"
+  },
+  "from polars.exceptions import NoRowsReturnedError": {
+    "body": "from polars.exceptions import NoRowsReturnedError\n",
+    "prefix": "po-no-rows-returned-error"
   },
   "from pytest import RaisesGroup": {
     "body": "from pytest import RaisesGroup\n",
@@ -691,89 +927,309 @@
     "body": "from pytest_regressions.dataframe_regression import DataFrameRegressionFixture\n",
     "prefix": "py-data-frame-regression-fixture"
   },
-  "from random import ...": {
-    "body": "from random import Random, choice, randint, seed, shuffle\n",
-    "prefix": "im-random"
+  "from random import Random": {
+    "body": "from random import Random\n",
+    "prefix": "ra-random"
   },
-  "from re import ...": {
-    "body": "import re\nfrom re import DOTALL, IGNORECASE, MULTILINE, escape, findall, search, sub\n",
-    "prefix": "im-re"
+  "from random import choice": {
+    "body": "from random import choice\n",
+    "prefix": "ra-choice"
   },
-  "from redis import ...": {
+  "from random import randint": {
+    "body": "from random import randint\n",
+    "prefix": "ra-randint"
+  },
+  "from random import seed": {
+    "body": "from random import seed\n",
+    "prefix": "ra-seed"
+  },
+  "from random import shuffle": {
+    "body": "from random import shuffle\n",
+    "prefix": "ra-shuffle"
+  },
+  "from re import DOTALL": {
+    "body": "from re import DOTALL\n",
+    "prefix": "re-dotall"
+  },
+  "from re import IGNORECASE": {
+    "body": "from re import IGNORECASE\n",
+    "prefix": "re-ignorecase"
+  },
+  "from re import MULTILINE": {
+    "body": "from re import MULTILINE\n",
+    "prefix": "re-multiline"
+  },
+  "from re import escape": {
+    "body": "from re import escape\n",
+    "prefix": "re-escape"
+  },
+  "from re import findall": {
+    "body": "from re import findall\n",
+    "prefix": "re-findall"
+  },
+  "from re import search": {
+    "body": "from re import search\n",
+    "prefix": "re-search"
+  },
+  "from re import sub": {
+    "body": "from re import sub\n",
+    "prefix": "re-sub"
+  },
+  "from redis.asyncio import Redis": {
     "body": "from redis.asyncio import Redis\n",
-    "prefix": "im-redis"
+    "prefix": "re-redis"
   },
-  "from reprlib import ...": {
-    "body": "import reprlib\nfrom reprlib import repr\n",
-    "prefix": "im-reprlib"
+  "from reprlib import repr": {
+    "body": "from reprlib import repr\n",
+    "prefix": "re-repr"
   },
-  "from rich import ...": {
+  "from rich.pretty import pretty_repr": {
     "body": "from rich.pretty import pretty_repr\n",
-    "prefix": "im-rich"
+    "prefix": "ri-pretty-repr"
   },
-  "from shutil import ...": {
-    "body": "from shutil import copyfile, move, rmtree, which\n",
-    "prefix": "im-shutil"
+  "from shutil import copyfile": {
+    "body": "from shutil import copyfile\n",
+    "prefix": "sh-copyfile"
   },
-  "from sqlalchemy import ...": {
-    "body": "from sqlalchemy import Column, and_, func, insert, or_, select, text\nfrom sqlalchemy.engine.url import URL\nfrom sqlalchemy.exc import MultipleResultsFound, NoResultFound\n",
-    "prefix": "im-sqlalchemy"
+  "from shutil import move": {
+    "body": "from shutil import move\n",
+    "prefix": "sh-move"
   },
-  "from stat import ...": {
-    "body": "from stat import S_IRGRP, S_IROTH, S_IRUSR, S_ISUID, S_IWGRP, S_IWOTH, S_IWUSR, S_IXGRP, S_IXOTH, S_IXUSR\n",
-    "prefix": "im-stat"
+  "from shutil import rmtree": {
+    "body": "from shutil import rmtree\n",
+    "prefix": "sh-rmtree"
   },
-  "from statistics import ...": {
-    "body": "from statistics import fmean, mean\n",
-    "prefix": "im-statistics"
+  "from shutil import which": {
+    "body": "from shutil import which\n",
+    "prefix": "sh-which"
   },
-  "from string import ...": {
-    "body": "from string import Template, ascii_letters\n",
-    "prefix": "im-string"
+  "from sqlalchemy import Column": {
+    "body": "from sqlalchemy import Column\n",
+    "prefix": "sq-column"
   },
-  "from subprocess import ...": {
-    "body": "from subprocess import CalledProcessError, check_call, check_output, run\n",
-    "prefix": "im-subprocess"
+  "from sqlalchemy import and_": {
+    "body": "from sqlalchemy import and_\n",
+    "prefix": "sq-and-"
   },
-  "from sys import ...": {
-    "body": "from sys import stderr, stdout\n",
-    "prefix": "im-sys"
+  "from sqlalchemy import func": {
+    "body": "from sqlalchemy import func\n",
+    "prefix": "sq-func"
   },
-  "from tempfile import ...": {
+  "from sqlalchemy import insert": {
+    "body": "from sqlalchemy import insert\n",
+    "prefix": "sq-insert"
+  },
+  "from sqlalchemy import or_": {
+    "body": "from sqlalchemy import or_\n",
+    "prefix": "sq-or-"
+  },
+  "from sqlalchemy import select": {
+    "body": "from sqlalchemy import select\n",
+    "prefix": "sq-select"
+  },
+  "from sqlalchemy import text": {
+    "body": "from sqlalchemy import text\n",
+    "prefix": "sq-text"
+  },
+  "from sqlalchemy.engine.url import URL": {
+    "body": "from sqlalchemy.engine.url import URL\n",
+    "prefix": "sq-url"
+  },
+  "from sqlalchemy.exc import MultipleResultsFound": {
+    "body": "from sqlalchemy.exc import MultipleResultsFound\n",
+    "prefix": "sq-multiple-results-found"
+  },
+  "from sqlalchemy.exc import NoResultFound": {
+    "body": "from sqlalchemy.exc import NoResultFound\n",
+    "prefix": "sq-no-result-found"
+  },
+  "from stat import S_IRGRP": {
+    "body": "from stat import S_IRGRP\n",
+    "prefix": "st-s-irgrp"
+  },
+  "from stat import S_IROTH": {
+    "body": "from stat import S_IROTH\n",
+    "prefix": "st-s-iroth"
+  },
+  "from stat import S_IRUSR": {
+    "body": "from stat import S_IRUSR\n",
+    "prefix": "st-s-irusr"
+  },
+  "from stat import S_ISUID": {
+    "body": "from stat import S_ISUID\n",
+    "prefix": "st-s-isuid"
+  },
+  "from stat import S_IWGRP": {
+    "body": "from stat import S_IWGRP\n",
+    "prefix": "st-s-iwgrp"
+  },
+  "from stat import S_IWOTH": {
+    "body": "from stat import S_IWOTH\n",
+    "prefix": "st-s-iwoth"
+  },
+  "from stat import S_IWUSR": {
+    "body": "from stat import S_IWUSR\n",
+    "prefix": "st-s-iwusr"
+  },
+  "from stat import S_IXGRP": {
+    "body": "from stat import S_IXGRP\n",
+    "prefix": "st-s-ixgrp"
+  },
+  "from stat import S_IXOTH": {
+    "body": "from stat import S_IXOTH\n",
+    "prefix": "st-s-ixoth"
+  },
+  "from stat import S_IXUSR": {
+    "body": "from stat import S_IXUSR\n",
+    "prefix": "st-s-ixusr"
+  },
+  "from statistics import fmean": {
+    "body": "from statistics import fmean\n",
+    "prefix": "st-fmean"
+  },
+  "from statistics import mean": {
+    "body": "from statistics import mean\n",
+    "prefix": "st-mean"
+  },
+  "from string import Template": {
+    "body": "from string import Template\n",
+    "prefix": "st-template"
+  },
+  "from string import ascii_letters": {
+    "body": "from string import ascii_letters\n",
+    "prefix": "st-ascii-letters"
+  },
+  "from subprocess import CalledProcessError": {
+    "body": "from subprocess import CalledProcessError\n",
+    "prefix": "su-called-process-error"
+  },
+  "from subprocess import check_call": {
+    "body": "from subprocess import check_call\n",
+    "prefix": "su-check-call"
+  },
+  "from subprocess import check_output": {
+    "body": "from subprocess import check_output\n",
+    "prefix": "su-check-output"
+  },
+  "from subprocess import run": {
+    "body": "from subprocess import run\n",
+    "prefix": "su-run"
+  },
+  "from sys import stderr": {
+    "body": "from sys import stderr\n",
+    "prefix": "sy-stderr"
+  },
+  "from sys import stdout": {
+    "body": "from sys import stdout\n",
+    "prefix": "sy-stdout"
+  },
+  "from tempfile import TemporaryDirectory": {
     "body": "from tempfile import TemporaryDirectory\n",
-    "prefix": "im-tempfile"
+    "prefix": "te-temporary-directory"
   },
-  "from tenacity import ...": {
+  "from tenacity import retry": {
     "body": "from tenacity import retry\n",
-    "prefix": "im-tenacity"
+    "prefix": "te-retry"
   },
-  "from textwrap import ...": {
+  "from textwrap import dedent": {
+    "body": "from textwrap import dedent\n",
+    "prefix": "te-dedent"
+  },
+  "from textwrap import indent": {
     "body": "from textwrap import indent\n",
-    "prefix": "im-textwrap"
+    "prefix": "te-indent"
   },
-  "from threading import ...": {
+  "from threading import RLock": {
     "body": "from threading import RLock\n",
-    "prefix": "im-threading"
+    "prefix": "th-r-lock"
   },
-  "from time import ...": {
+  "from time import sleep": {
     "body": "from time import sleep\n",
-    "prefix": "im-time"
+    "prefix": "ti-sleep"
   },
-  "from tqdm import ...": {
-    "body": "from tqdm import tqdm, trange\n",
-    "prefix": "im-tqdm"
+  "from tqdm import tqdm": {
+    "body": "from tqdm import tqdm\n",
+    "prefix": "tq-tqdm"
   },
-  "from typing import ...": {
-    "body": "from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal, NotRequired, Protocol, Required, Self, TypeVar, TypedDict, assert_never, cast, overload, override\n",
-    "prefix": "im-typing"
+  "from tqdm import trange": {
+    "body": "from tqdm import trange\n",
+    "prefix": "tq-trange"
+  },
+  "from typing import Any": {
+    "body": "from typing import Any\n",
+    "prefix": "ty-any"
+  },
+  "from typing import ClassVar": {
+    "body": "from typing import ClassVar\n",
+    "prefix": "ty-class-var"
+  },
+  "from typing import Generic": {
+    "body": "from typing import Generic\n",
+    "prefix": "ty-generic"
+  },
+  "from typing import Literal": {
+    "body": "from typing import Literal\n",
+    "prefix": "ty-literal"
+  },
+  "from typing import NotRequired": {
+    "body": "from typing import NotRequired\n",
+    "prefix": "ty-not-required"
+  },
+  "from typing import Protocol": {
+    "body": "from typing import Protocol\n",
+    "prefix": "ty-protocol"
+  },
+  "from typing import Required": {
+    "body": "from typing import Required\n",
+    "prefix": "ty-required"
+  },
+  "from typing import Self": {
+    "body": "from typing import Self\n",
+    "prefix": "ty-self"
   },
   "from typing import TYPE_CHECKING": {
     "body": "from typing import TYPE_CHECKING\n",
     "prefix": "ty-type-checking"
   },
-  "from urllib import ...": {
-    "body": "from urllib.parse import ParseResult, urlparse\nfrom urllib.request import Request, urlopen\n",
-    "prefix": "im-urllib"
+  "from typing import TypeVar": {
+    "body": "from typing import TypeVar\n",
+    "prefix": "ty-type-var"
+  },
+  "from typing import TypedDict": {
+    "body": "from typing import TypedDict\n",
+    "prefix": "ty-typed-dict"
+  },
+  "from typing import assert_never": {
+    "body": "from typing import assert_never\n",
+    "prefix": "ty-assert-never"
+  },
+  "from typing import cast": {
+    "body": "from typing import cast\n",
+    "prefix": "ty-cast"
+  },
+  "from typing import overload": {
+    "body": "from typing import overload\n",
+    "prefix": "ty-overload"
+  },
+  "from typing import override": {
+    "body": "from typing import override\n",
+    "prefix": "ty-override"
+  },
+  "from urllib.parse import ParseResult": {
+    "body": "from urllib.parse import ParseResult\n",
+    "prefix": "ur-parse-result"
+  },
+  "from urllib.parse import urlparse": {
+    "body": "from urllib.parse import urlparse\n",
+    "prefix": "ur-urlparse"
+  },
+  "from urllib.request import Request": {
+    "body": "from urllib.request import Request\n",
+    "prefix": "ur-request"
+  },
+  "from urllib.request import urlopen": {
+    "body": "from urllib.request import urlopen\n",
+    "prefix": "ur-urlopen"
   },
   "from utilities.click import CONTEXT_SETTINGS": {
     "body": "from utilities.click import CONTEXT_SETTINGS\n",
@@ -811,17 +1267,53 @@
     "body": "from uuid import uuid4\n",
     "prefix": "uu-uuid4"
   },
-  "from whenever import ...": {
-    "body": "from whenever import Date, DateDelta, DateTimeDelta, PlainDateTime, Time, TimeDelta, ZonedDateTime\n",
-    "prefix": "im-whenever"
+  "from whenever import Date": {
+    "body": "from whenever import Date\n",
+    "prefix": "wh-date"
   },
-  "from zoneinfo import ...": {
+  "from whenever import DateDelta": {
+    "body": "from whenever import DateDelta\n",
+    "prefix": "wh-date-delta"
+  },
+  "from whenever import DateTimeDelta": {
+    "body": "from whenever import DateTimeDelta\n",
+    "prefix": "wh-date-time-delta"
+  },
+  "from whenever import PlainDateTime": {
+    "body": "from whenever import PlainDateTime\n",
+    "prefix": "wh-plain-date-time"
+  },
+  "from whenever import Time": {
+    "body": "from whenever import Time\n",
+    "prefix": "wh-time"
+  },
+  "from whenever import TimeDelta": {
+    "body": "from whenever import TimeDelta\n",
+    "prefix": "wh-time-delta"
+  },
+  "from whenever import ZonedDateTime": {
+    "body": "from whenever import ZonedDateTime\n",
+    "prefix": "wh-zoned-date-time"
+  },
+  "from zoneinfo import ZoneInfo": {
     "body": "from zoneinfo import ZoneInfo\n",
-    "prefix": "im-zoneinfo"
+    "prefix": "zo-zone-info"
   },
   "import datetime as dt": {
     "body": "import datetime as dt\n",
     "prefix": "im-datetime"
+  },
+  "import numpy as np": {
+    "body": "import numpy as np",
+    "prefix": "im-numpy"
+  },
+  "import polars as pl": {
+    "body": "import polars as pl",
+    "prefix": "im-polars"
+  },
+  "import re": {
+    "body": "import re\n",
+    "prefix": "im-re"
   },
   "logger: LoggerAdapter = field(init=False)": {
     "body": "logger: LoggerAdapter = field(init=False)\n",
@@ -844,7 +1336,7 @@
     "prefix": "nie"
   },
   "read_pickle (test)": {
-    "body": "from utilities.pathlib import get_repo_root\nfrom utilities.pickle import read_pickle\n\n${1:obj} = read_pickle(get_repo_root().joinpath(\"pickles\", \"pytest-tmp.gz\"))\n",
+    "body": "from utilities.core import read_pickle\nfrom utilities.pathlib import get_repo_root\n\n${1:obj} = read_pickle(get_repo_root().joinpath(\"pickles\", \"pytest-tmp.gz\"))\n",
     "prefix": "test-read-pickle"
   },
   "with raises(...):": {
@@ -852,7 +1344,7 @@
     "prefix": "with-raises"
   },
   "write_pickle (test)": {
-    "body": "from utilities.pathlib import get_repo_root\nfrom utilities.pickle import write_pickle\n\nwrite_pickle(${1:obj}, get_repo_root().joinpath(\"pickles\", \"pytest-tmp.gz\"), overwrite=True)\n",
+    "body": "from utilities.core import write_pickle\nfrom utilities.path import get_repo_root\n\nwrite_pickle(${1:obj}, get_repo_root().joinpath(\"pickles\", \"pytest-tmp.gz\"), overwrite=True)\n",
     "prefix": "test-write-pickle"
   }
 }
