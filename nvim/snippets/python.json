@@ -1299,21 +1299,281 @@
     "body": "from zoneinfo import ZoneInfo\n",
     "prefix": "zo-zone-info"
   },
+  "import abc": {
+    "body": "import abc\n",
+    "prefix": "im-abc"
+  },
+  "import ast": {
+    "body": "import ast\n",
+    "prefix": "im-ast"
+  },
+  "import asyncio": {
+    "body": "import asyncio\n",
+    "prefix": "im-asyncio"
+  },
+  "import base64": {
+    "body": "import base64\n",
+    "prefix": "im-base64"
+  },
+  "import bisect": {
+    "body": "import bisect\n",
+    "prefix": "im-bisect"
+  },
+  "import builtins": {
+    "body": "import builtins\n",
+    "prefix": "im-builtins"
+  },
+  "import calendar": {
+    "body": "import calendar\n",
+    "prefix": "im-calendar"
+  },
+  "import cmath": {
+    "body": "import cmath\n",
+    "prefix": "im-cmath"
+  },
+  "import concurrent.futures": {
+    "body": "import concurrent.futures\n",
+    "prefix": "im-concurrent"
+  },
+  "import contextlib": {
+    "body": "import contextlib\n",
+    "prefix": "im-contextlib"
+  },
+  "import contextvars": {
+    "body": "import contextvars\n",
+    "prefix": "im-contextvars"
+  },
+  "import copy": {
+    "body": "import copy\n",
+    "prefix": "im-copy"
+  },
+  "import csv": {
+    "body": "import csv\n",
+    "prefix": "im-csv"
+  },
+  "import dataclasses": {
+    "body": "import dataclasses\n",
+    "prefix": "im-dataclasses"
+  },
+  "import datetime": {
+    "body": "import datetime\n",
+    "prefix": "im-datetime"
+  },
   "import datetime as dt": {
     "body": "import datetime as dt\n",
     "prefix": "im-datetime"
   },
+  "import decimal": {
+    "body": "import decimal\n",
+    "prefix": "im-decimal"
+  },
+  "import enum": {
+    "body": "import enum\n",
+    "prefix": "im-enum"
+  },
+  "import fractions": {
+    "body": "import fractions\n",
+    "prefix": "im-fractions"
+  },
+  "import functools": {
+    "body": "import functools\n",
+    "prefix": "im-functools"
+  },
+  "import gettext": {
+    "body": "import gettext\n",
+    "prefix": "im-gettext"
+  },
+  "import glob": {
+    "body": "import glob\n",
+    "prefix": "im-glob"
+  },
+  "import gzip": {
+    "body": "import gzip\n",
+    "prefix": "im-gzip"
+  },
+  "import hashlib": {
+    "body": "import hashlib\n",
+    "prefix": "im-hashlib"
+  },
+  "import heapq": {
+    "body": "import heapq\n",
+    "prefix": "im-heapq"
+  },
+  "import imaplib": {
+    "body": "import imaplib\n",
+    "prefix": "im-imaplib"
+  },
+  "import inspect": {
+    "body": "import inspect\n",
+    "prefix": "im-inspect"
+  },
+  "import io": {
+    "body": "import io\n",
+    "prefix": "im-io"
+  },
+  "import itertools": {
+    "body": "import itertools\n",
+    "prefix": "im-itertools"
+  },
+  "import json": {
+    "body": "import json\n",
+    "prefix": "im-json"
+  },
+  "import locale": {
+    "body": "import locale\n",
+    "prefix": "im-locale"
+  },
+  "import logging": {
+    "body": "import logging\n",
+    "prefix": "im-logging"
+  },
+  "import math": {
+    "body": "import math\n",
+    "prefix": "im-math"
+  },
+  "import multiprocessing": {
+    "body": "import multiprocessing\n",
+    "prefix": "im-multiprocessing"
+  },
+  "import numbers": {
+    "body": "import numbers\n",
+    "prefix": "im-numbers"
+  },
   "import numpy as np": {
-    "body": "import numpy as np",
+    "body": "import numpy as np\n",
     "prefix": "im-numpy"
   },
+  "import operator": {
+    "body": "import operator\n",
+    "prefix": "im-operator"
+  },
+  "import os": {
+    "body": "import os\n",
+    "prefix": "im-os"
+  },
+  "import pathlib": {
+    "body": "import pathlib\n",
+    "prefix": "im-pathlib"
+  },
+  "import pickle": {
+    "body": "import pickle\n",
+    "prefix": "im-pickle"
+  },
+  "import platform": {
+    "body": "import platform\n",
+    "prefix": "im-platform"
+  },
   "import polars as pl": {
-    "body": "import polars as pl",
+    "body": "import polars as pl\n",
     "prefix": "im-polars"
+  },
+  "import poplib": {
+    "body": "import poplib\n",
+    "prefix": "im-poplib"
+  },
+  "import pprint": {
+    "body": "import pprint\n",
+    "prefix": "im-pprint"
+  },
+  "import random": {
+    "body": "import random\n",
+    "prefix": "im-random"
   },
   "import re": {
     "body": "import re\n",
     "prefix": "im-re"
+  },
+  "import reprlib": {
+    "body": "import reprlib\n",
+    "prefix": "im-reprlib"
+  },
+  "import secrets": {
+    "body": "import secrets\n",
+    "prefix": "im-secrets"
+  },
+  "import shutil": {
+    "body": "import shutil\n",
+    "prefix": "im-shutil"
+  },
+  "import smtplib": {
+    "body": "import smtplib\n",
+    "prefix": "im-smtplib"
+  },
+  "import socket": {
+    "body": "import socket\n",
+    "prefix": "im-socket"
+  },
+  "import stat": {
+    "body": "import stat\n",
+    "prefix": "im-stat"
+  },
+  "import statistics": {
+    "body": "import statistics\n",
+    "prefix": "im-statistics"
+  },
+  "import string": {
+    "body": "import string\n",
+    "prefix": "im-string"
+  },
+  "import subprocess": {
+    "body": "import subprocess\n",
+    "prefix": "im-subprocess"
+  },
+  "import sys": {
+    "body": "import sys\n",
+    "prefix": "im-sys"
+  },
+  "import tempfile": {
+    "body": "import tempfile\n",
+    "prefix": "im-tempfile"
+  },
+  "import textwrap": {
+    "body": "import textwrap\n",
+    "prefix": "im-textwrap"
+  },
+  "import threading": {
+    "body": "import threading\n",
+    "prefix": "im-threading"
+  },
+  "import time": {
+    "body": "import time\n",
+    "prefix": "im-time"
+  },
+  "import types": {
+    "body": "import types\n",
+    "prefix": "im-types"
+  },
+  "import typing": {
+    "body": "import typing\n",
+    "prefix": "im-typing"
+  },
+  "import unittest": {
+    "body": "import unittest\n",
+    "prefix": "im-unittest"
+  },
+  "import urllib": {
+    "body": "import urllib\n",
+    "prefix": "im-urllib"
+  },
+  "import uuid": {
+    "body": "import uuid\n",
+    "prefix": "im-uuid"
+  },
+  "import wave": {
+    "body": "import wave\n",
+    "prefix": "im-wave"
+  },
+  "import zipfile": {
+    "body": "import zipfile\n",
+    "prefix": "im-zipfile"
+  },
+  "import zlib": {
+    "body": "import zlib\n",
+    "prefix": "im-zlib"
+  },
+  "import zoneinfo": {
+    "body": "import zoneinfo\n",
+    "prefix": "im-zoneinfo"
   },
   "logger: LoggerAdapter = field(init=False)": {
     "body": "logger: LoggerAdapter = field(init=False)\n",

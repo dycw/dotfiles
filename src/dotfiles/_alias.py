@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING, assert_never, override
+from typing import TYPE_CHECKING, override
 
 from libcst import (
     CSTVisitor,
@@ -12,8 +12,7 @@ from libcst import (
     parse_module,
 )
 from utilities.core import kebab_case, to_logger
-from utilities.errors import ImpossibleCaseError
-from utilities.libcst import generate_import_from, parse_import
+from utilities.libcst import generate_import, generate_import_from, parse_import
 from utilities.subprocess import run
 
 if TYPE_CHECKING:
@@ -28,14 +27,8 @@ def generate_alias(text: str, /) -> None:
     _ = module.visit(collector)
     data: StrDict = {}
     for imp in collector.imports:
-        match imp:
-            case Import():
-                raise NotImplementedError
-            case ImportFrom():
-                key, value = _import_from_to_dict(imp)
-                data[key] = value
-            case never:
-                assert_never(never)
+        key, value = _to_key_value(imp)
+        data[key] = value
     raw_json = json.dumps(data)
     formatted_json = run("prettier", "--parser", "json", input=raw_json, return_=True)
     _LOGGER.info("\n%s", formatted_json)
@@ -58,21 +51,24 @@ class _ImportCollector(CSTVisitor):
     def _append(self, node: Import | ImportFrom) -> None:
         for parsed in parse_import(node):
             if parsed.name is None:
-                raise ValueError(parsed)
-            node = generate_import_from(parsed.module, parsed.name)
+                node = generate_import(parsed.module)
+            else:
+                node = generate_import_from(parsed.module, parsed.name)
             self.imports.append(node)
 
 
-def _import_from_to_dict(imp: ImportFrom, /) -> tuple[str, StrDict]:
+def _to_key_value(imp: Import | ImportFrom, /) -> tuple[str, StrDict]:
     key = _get_code(imp).rstrip("\n")
     value: StrDict = {}
     value["body"] = f"{key}\n"
     (parsed,) = parse_import(imp)
-    prefix_head = parsed.module.split(".")[0].strip("_")[:2]
+    module = parsed.module.split(".")[0].strip("_")
     if parsed.name is None:
-        raise ImpossibleCaseError(case=[f"{parsed.name=}"])
-    prefix_tail = kebab_case(parsed.name)
-    value["prefix"] = f"{prefix_head}-{prefix_tail}"
+        prefix = f"im-{module}"
+    else:
+        kebab_name = kebab_case(parsed.name)
+        prefix = f"{module[:2]}-{kebab_name}"
+    value["prefix"] = prefix
     return key, value
 
 

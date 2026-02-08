@@ -194,11 +194,7 @@ from zoneinfo import ZoneInfo
 _LOGGER = getLogger("startup.py")
 _LOGGER.addHandler(handler := StreamHandler(stdout))
 handler.setFormatter(
-    Formatter(
-        fmt="{asctime} | {process} | {name}:{lineno} | {message}",
-        datefmt="%Y-%m-%d %H:%M:%S",
-        style="{",
-    )
+    Formatter(fmt="{asctime} | {message}", datefmt="%Y-%m-%d %H:%M:%S", style="{")
 )
 handler.setLevel("INFO")
 _LOGGER.setLevel("INFO")
