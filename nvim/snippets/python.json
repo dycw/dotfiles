@@ -60,7 +60,7 @@
     "prefix": "im-datetime"
   },
   "_LOGGER = to_logger(__name__)": {
-    "body": "from utilities.logging import to_logger\n\n_LOGGER = to_logger(__name__)\n\n",
+    "body": "from utilities.core import to_logger\n\n_LOGGER = to_logger(__name__)\n\n",
     "prefix": "logger-name"
   },
   "assert 0, '!!!'": {
@@ -126,6 +126,10 @@
   "from click import ...": {
     "body": "from click import argument, command, option\nfrom click.testing import CliRunner\n",
     "prefix": "im-click"
+  },
+  "from click import argument": {
+    "body": "from click import argument\n",
+    "prefix": "cl-argument"
   },
   "from collections import ...": {
     "body": "from collections import Counter, deque\nfrom collections.abc import Awaitable, Callable, Iterable, Iterator, Mapping, Sequence\nfrom collections.abc import Set as AbstractSet\n",
@@ -303,13 +307,17 @@
     "body": "from urllib.parse import ParseResult, urlparse\nfrom urllib.request import Request, urlopen\n",
     "prefix": "im-urllib"
   },
-  "from utilities import ...": {
-    "body": "from utilities.asyncio import EnhancedTaskGroup, sleep_td, timeout_td\nfrom utilities.atomicwrites import writer\nfrom utilities.dataclasses import dataclass_repr, dataclass_to_dict, replace_non_sentinel, yield_fields\nfrom utilities.enum import parse_enum\nfrom utilities.errors import ImpossibleCaseError\nfrom utilities.functions import ensure_date, ensure_float, ensure_int, ensure_member, ensure_not_none, ensure_number, get_class_name, get_func_name\nfrom utilities.functools import cache, partial\nfrom utilities.hypothesis import assume_does_not_raise, int_arrays, lists_fixed_length, pairs, temp_paths, text_ascii, text_ascii_lower, text_ascii_upper, zoned_date_times\nfrom utilities.inflect import counted_noun\nfrom utilities.iterables import OneEmptyError, OneError, OneNonUniqueError, always_iterable, check_duplicates, groupby_lists, merge_mappings, merge_sets, merge_str_mappings, one, take, transpose\nfrom utilities.jupyter import show\nfrom utilities.logging import basic_config, setup_logging, to_logger\nfrom utilities.math import round_, safe_round\nfrom utilities.more_itertools import bucket_mapping, partition_list, peekable\nfrom utilities.orjson import deserialize, read_object, serialize, write_object\nfrom utilities.os import CPU_COUNT, get_env_var, is_debug, is_pytest, temp_environ\nfrom utilities.pathlib import ensure_suffix, get_repo_root, get_root, list_dir\nfrom utilities.pickle import read_pickle, write_pickle\nfrom utilities.polars import DatetimeUTC, ExprLike, ExprOrSeries, check_polars_dataframe, convert_time_zone, insert_after, insert_before, insert_between, struct_dtype, try_reify_expr, zoned_date_time_dtype, zoned_date_time_period_dtype\nfrom utilities.random import SYSTEM_RANDOM, bernoulli, get_state, shuffle\nfrom utilities.re import extract_group, extract_groups\nfrom utilities.sentinel import Sentinel, sentinel\nfrom utilities.shelve import yield_shelf\nfrom utilities.sqlalchemy import get_table, insert_items\nfrom utilities.sqlalchemy_polars import insert_dataframe, select_to_dataframe\nfrom utilities.tempfile import TemporaryDirectory\nfrom utilities.text import strip_and_dedent, to_str, unique_str\nfrom utilities.timer import Timer\nfrom utilities.traceback import format_exception_stack, make_except_hook\nfrom utilities.types import Delta, LogLevel, MaybeIterable, Number, PathLike, Seed, SequenceStr, StrMapping\nfrom utilities.typing import get_args, get_literal_elements\nfrom utilities.tzdata import HongKong, Tokyo, USCentral, USEastern\nfrom utilities.tzlocal import get_local_time_zone\nfrom utilities.version import Version\nfrom utilities.warnings import suppress_warnings\nfrom utilities.whenever import HOUR, MILLISECOND, MINUTE, MONTH, SECOND, WEEK, YEAR, format_compact, get_now, get_now_local, get_today, get_today_local, to_date, to_date_time_delta, to_days, to_hours, to_py_time_delta, to_zoned_date_time\nfrom utilities.zoneinfo import UTC\n",
-    "prefix": "im-utilities"
+  "from utilities.core import to_logger": {
+    "body": "from utilities.core import to_logger\n",
+    "prefix": "ut-to-logger"
   },
-  "from uuid import ...": {
-    "body": "from uuid import UUID, uuid4\n",
-    "prefix": "im-uuid"
+  "from uuid import UUID": {
+    "body": "from uuid import UUID\n",
+    "prefix": "uu-uuid"
+  },
+  "from uuid import uuid4": {
+    "body": "from uuid import uuid4\n",
+    "prefix": "uu-uuid4"
   },
   "from whenever import ...": {
     "body": "from whenever import Date, DateDelta, DateTimeDelta, PlainDateTime, Time, TimeDelta, ZonedDateTime\n",
