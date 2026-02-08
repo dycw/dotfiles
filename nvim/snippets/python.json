@@ -55,10 +55,6 @@
     "body": "@settings(max_examples=1)\n",
     "prefix": "settings-max-examples"
   },
-  "Import 'datetime'": {
-    "body": "import datetime as dt\n",
-    "prefix": "im-datetime"
-  },
   "_LOGGER = to_logger(__name__)": {
     "body": "from utilities.core import to_logger\n\n_LOGGER = to_logger(__name__)\n\n",
     "prefix": "logger-name"
@@ -82,10 +78,6 @@
   "class TestClass:": {
     "body": "class Test${1:ClassName}:\n    def test_${2:method_name}(self, $3) -> None:\n        ${4:pass}\n\n",
     "prefix": "class-test"
-  },
-  "data: DataObject": {
-    "body": "data: DataObject",
-    "prefix": "data-object"
   },
   "from ... import ... (tests)": {
     "body": "from typing import TYPE_CHECKING\nfrom hypothesis import HealthCheck, Phase, given, reproduce_failure, settings\nfrom pytest import RaisesGroup, approx, fixture, mark, param, raises, skip\nfrom utilities.contextvars import set_global_breakpoint\n\nif TYPE_CHECKING:\n    from pytest_benchmark.fixture import BenchmarkFixture\n    from pytest_lazy_fixtures import lf\n    from pytest_regressions.dataframe_regression import DataFrameRegressionFixture\n",
@@ -350,6 +342,10 @@
   "from zoneinfo import ...": {
     "body": "from zoneinfo import ZoneInfo\n",
     "prefix": "im-zoneinfo"
+  },
+  "import datetime as dt": {
+    "body": "import datetime as dt\n",
+    "prefix": "im-datetime"
   },
   "logger: LoggerAdapter = field(init=False)": {
     "body": "logger: LoggerAdapter = field(init=False)\n",
