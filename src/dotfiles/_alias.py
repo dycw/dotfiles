@@ -62,12 +62,13 @@ def _to_key_value(imp: Import | ImportFrom, /) -> tuple[str, StrDict]:
     value: StrDict = {}
     value["body"] = f"{key}\n"
     (parsed,) = parse_import(imp)
-    module = parsed.module.split(".")[0].strip("_")
     if parsed.name is None:
-        prefix = f"im-{module}"
+        kebab_module = kebab_case(parsed.module)
+        prefix = f"im-{kebab_module}"
     else:
+        module2 = parsed.module.split(".")[0].strip("_")[:2]
         kebab_name = kebab_case(parsed.name)
-        prefix = f"{module[:2]}-{kebab_name}"
+        prefix = f"{module2}-{kebab_name}"
     value["prefix"] = prefix
     return key, value
 

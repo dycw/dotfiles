@@ -1333,7 +1333,7 @@
   },
   "import concurrent.futures": {
     "body": "import concurrent.futures\n",
-    "prefix": "im-concurrent"
+    "prefix": "im-concurrent-futures"
   },
   "import contextlib": {
     "body": "import contextlib\n",
@@ -1354,10 +1354,6 @@
   "import dataclasses": {
     "body": "import dataclasses\n",
     "prefix": "im-dataclasses"
-  },
-  "import datetime": {
-    "body": "import datetime\n",
-    "prefix": "im-datetime"
   },
   "import datetime as dt": {
     "body": "import datetime as dt\n",
