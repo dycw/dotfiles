@@ -983,6 +983,10 @@
     "body": "from rich.pretty import pretty_repr\n",
     "prefix": "ri-pretty-repr"
   },
+  "from shlex import join": {
+    "body": "from shlex import join\n",
+    "prefix": "sh-join"
+  },
   "from shutil import copyfile": {
     "body": "from shutil import copyfile\n",
     "prefix": "sh-copyfile"

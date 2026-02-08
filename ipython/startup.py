@@ -158,6 +158,7 @@ from os import environ, getenv
 from pathlib import Path
 from random import shuffle
 from re import escape, findall, search
+from shlex import join
 from shutil import copyfile, rmtree
 from statistics import fmean, mean
 from subprocess import PIPE, CalledProcessError, check_call, check_output, run
@@ -334,6 +335,7 @@ _ = [
     it,
     itemgetter,
     itertools,
+    join,
     json,
     locale,
     log,
