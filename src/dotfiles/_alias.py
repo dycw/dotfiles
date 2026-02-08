@@ -6,17 +6,14 @@ from typing import TYPE_CHECKING, assert_never, override
 from libcst import (
     CSTVisitor,
     Import,
-    ImportAlias,
     ImportFrom,
     Module,
-    Name,
     SimpleStatementLine,
     parse_module,
 )
-from typing_extensions import runtime
-from utilities.core import TemporaryFile, kebab_case, pascal_case, to_logger
+from utilities.core import kebab_case, to_logger
 from utilities.errors import ImpossibleCaseError
-from utilities.libcst import _ParseImportOutput, generate_import_from, parse_import
+from utilities.libcst import generate_import_from, parse_import
 from utilities.subprocess import run
 
 if TYPE_CHECKING:
@@ -29,13 +26,14 @@ def generate_alias(text: str, /) -> None:
     module = parse_module(text)
     collector = _ImportCollector()
     _ = module.visit(collector)
-    data: list[StrDict] = []
+    data: StrDict = {}
     for imp in collector.imports:
         match imp:
             case Import():
                 raise NotImplementedError
             case ImportFrom():
-                data.append(_import_from_to_dict(imp))
+                key, value = _import_from_to_dict(imp)
+                data[key] = value
             case never:
                 assert_never(never)
     raw_json = json.dumps(data)
@@ -65,19 +63,17 @@ class _ImportCollector(CSTVisitor):
             self.imports.append(node)
 
 
-def _import_from_to_dict(imp: ImportFrom, /) -> StrDict:
-    outer: StrDict = {}
-    inner: StrDict = {}
-    code = _get_code(imp).rstrip("\n")
-    outer[code] = inner
-    inner["body"] = f"{code}\n"
+def _import_from_to_dict(imp: ImportFrom, /) -> tuple[str, StrDict]:
+    key = _get_code(imp).rstrip("\n")
+    value: StrDict = {}
+    value["body"] = f"{key}\n"
     (parsed,) = parse_import(imp)
     prefix_head = parsed.module.split(".")[0][:2]
     if parsed.name is None:
         raise ImpossibleCaseError(case=[f"{parsed.name=}"])
     prefix_tail = kebab_case(parsed.name)
-    inner["prefix"] = f"{prefix_head}-{prefix_tail}"
-    return outer
+    value["prefix"] = f"{prefix_head}-{prefix_tail}"
+    return key, value
 
 
 def _get_code(imp: Import | ImportFrom, /) -> str:

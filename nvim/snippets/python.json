@@ -131,6 +131,14 @@
     "body": "from click import argument\n",
     "prefix": "cl-argument"
   },
+  "from click import group": {
+    "body": "from click import group\n",
+    "prefix": "cl-group"
+  },
+  "from click import version_option": {
+    "body": "from click import version_option\n",
+    "prefix": "cl-version-option"
+  },
   "from collections import ...": {
     "body": "from collections import Counter, deque\nfrom collections.abc import Awaitable, Callable, Iterable, Iterator, Mapping, Sequence\nfrom collections.abc import Set as AbstractSet\n",
     "prefix": "im-collections"
@@ -302,6 +310,26 @@
   "from urllib import ...": {
     "body": "from urllib.parse import ParseResult, urlparse\nfrom urllib.request import Request, urlopen\n",
     "prefix": "im-urllib"
+  },
+  "from utilities.click import CONTEXT_SETTINGS": {
+    "body": "from utilities.click import CONTEXT_SETTINGS\n",
+    "prefix": "ut-context-settings"
+  },
+  "from utilities.click import Str": {
+    "body": "from utilities.click import Str\n",
+    "prefix": "ut-str"
+  },
+  "from utilities.click import argument": {
+    "body": "from utilities.click import argument\n",
+    "prefix": "ut-argument"
+  },
+  "from utilities.core import is_pytest": {
+    "body": "from utilities.core import is_pytest\n",
+    "prefix": "ut-is-pytest"
+  },
+  "from utilities.core import set_up_logging": {
+    "body": "from utilities.core import set_up_logging\n",
+    "prefix": "ut-set-up-logging"
   },
   "from utilities.core import to_logger": {
     "body": "from utilities.core import to_logger\n",
