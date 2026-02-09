@@ -57,7 +57,7 @@
   name = "dycw-dotfiles"
   readme = "README.md"
   requires-python = ">= 3.12"
-  version = "0.4.19"
+  version = "0.4.20"
 
   [project.scripts]
     dotfiles-cli = "dotfiles._cli:cli"
