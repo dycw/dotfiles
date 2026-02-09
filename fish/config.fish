@@ -682,7 +682,7 @@ end
 # ssh
 function add-known-host
     if test (count $argv) -eq 0
-        echo "'ssh-auto' expected [1..2] arguments HOST PORT; got $(count $argv)" >&2; and return 1
+        echo "'add-known-host' expected [1..2] arguments HOST PORT; got $(count $argv)" >&2; and return 1
     end
     set -l host $argv[1]
     if test (count $argv) -ge 2

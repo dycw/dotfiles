@@ -591,7 +591,7 @@ wheels = [
 
 [[package]]
 name = "dycw-dotfiles"
-version = "0.4.17"
+version = "0.4.18"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
@@ -656,8 +656,8 @@ dev = [
 requires-dist = [
     { name = "click", specifier = ">=8.3.1" },
     { name = "click", marker = "extra == 'cli'", specifier = "==8.3.1" },
-    { name = "dycw-utilities", specifier = ">=0.188.23" },
-    { name = "dycw-utilities", marker = "extra == 'cli'", specifier = "==0.188.23" },
+    { name = "dycw-utilities", specifier = ">=0.188.26" },
+    { name = "dycw-utilities", marker = "extra == 'cli'", specifier = "==0.188.26" },
     { name = "libcst", specifier = ">=1.8.6" },
     { name = "libcst", marker = "extra == 'cli'", specifier = "==1.8.6" },
 ]
@@ -674,7 +674,7 @@ dev = [
     { name = "cachetools", specifier = ">=7.0.0" },
     { name = "cvxpy", specifier = ">=1.8.1" },
     { name = "dacite", specifier = ">=1.9.2" },
-    { name = "dycw-utilities", extras = ["test"], specifier = ">=0.188.23" },
+    { name = "dycw-utilities", extras = ["test"], specifier = ">=0.188.26" },
     { name = "frozendict", specifier = ">=2.4.7" },
     { name = "holoviews", specifier = ">=1.22.1" },
     { name = "humanize", specifier = ">=4.15.0" },
@@ -723,7 +723,7 @@ wheels = [
 
 [[package]]
 name = "dycw-utilities"
-version = "0.188.23"
+version = "0.188.26"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "coloredlogs" },
@@ -735,7 +735,7 @@ dependencies = [
     { name = "whenever" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0c/7d/7c49a96c2a46bce1cfdf8c2a5f483552169e6f58b974fcf1fb7a8eb7eb24/dycw_utilities-0.188.23-py3-none-any.whl", hash = "sha256:6083ee74d866f86ba87d0681a6bffd260fa6a0d4303000be374bfe3e84306d18", size = 211390, upload-time = "2026-02-07T04:18:56.907Z" },
+    { url = "https://files.pythonhosted.org/packages/b5/37/cdbe2446a45d8badc59db8b19a9fac52535385d5c83eb868c8cb858808d6/dycw_utilities-0.188.26-py3-none-any.whl", hash = "sha256:e8b07c0708806cba165f365a0d64785e7b701291be39ef50042e889597b6d982", size = 212085, upload-time = "2026-02-09T06:40:12.271Z" },
 ]
 
 [package.optional-dependencies]
@@ -2459,11 +2459,11 @@ wheels = [
 
 [[package]]
 name = "setuptools"
-version = "81.0.0"
+version = "82.0.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/0d/1c/73e719955c59b8e424d015ab450f51c0af856ae46ea2da83eba51cc88de1/setuptools-81.0.0.tar.gz", hash = "sha256:487b53915f52501f0a79ccfd0c02c165ffe06631443a886740b91af4b7a5845a", size = 1198299, upload-time = "2026-02-06T21:10:39.601Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/82/f3/748f4d6f65d1756b9ae577f329c951cda23fb900e4de9f70900ced962085/setuptools-82.0.0.tar.gz", hash = "sha256:22e0a2d69474c6ae4feb01951cb69d515ed23728cf96d05513d36e42b62b37cb", size = 1144893, upload-time = "2026-02-08T15:08:40.206Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e1/e3/c164c88b2e5ce7b24d667b9bd83589cf4f3520d97cad01534cd3c4f55fdb/setuptools-81.0.0-py3-none-any.whl", hash = "sha256:fdd925d5c5d9f62e4b74b30d6dd7828ce236fd6ed998a08d81de62ce5a6310d6", size = 1062021, upload-time = "2026-02-06T21:10:37.175Z" },
+    { url = "https://files.pythonhosted.org/packages/e1/c6/76dc613121b793286a3f91621d7b75a2b493e0390ddca50f11993eadf192/setuptools-82.0.0-py3-none-any.whl", hash = "sha256:70b18734b607bd1da571d097d236cfcfacaf01de45717d59e6e04b96877532e0", size = 1003468, upload-time = "2026-02-08T15:08:38.723Z" },
 ]
 
 [[package]]
