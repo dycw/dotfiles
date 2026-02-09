@@ -1,0 +1,46 @@
+{
+  "LOCAL": {
+    "activated": true,
+    "activeHoursQueue": {
+      "time": {
+        "end": {
+          "hours": 23,
+          "minutes": 0
+        },
+        "start": {
+          "hours": 8,
+          "minutes": 0
+        }
+      },
+      "timestamp": 1770726163006
+    },
+    "challengeText": "The%20procrastinator%20is%20often%20remarkably%20optimistic%20about%20his%20ability%20to%20complete%20a%20task%20on%20a%20tight%20deadline%3B%20this%20is%20usually%20accompanied%20by%20expressions%20of%20reassurance%20that%20everything%20is%20under%20control.%20(Therefore%2C%20there%20is%20no%20need%20to%20start.)%20Lulled%20by%20a%20false%20sense%20of%20security%2C%20time%20passes.%20At%20some%20point%2C%20he%20crosses%20over%20an%20imaginary%20starting%20time%20and%20suddenly%20realizes%2C%20%22Oh%20no!%20I%20am%20not%20in%20control!%20There%20isn't%20enough%20time!%22",
+    "youtube/autoplay-disabled": true,
+    "youtube/black-white-mode": true,
+    "youtube/comments-hidden": true,
+    "youtube/end-cards-disabled": true,
+    "youtube/explore-hidden": true,
+    "youtube/home-page-hidden": true,
+    "youtube/recommended-hidden": true,
+    "youtube/shorts-hidden": true,
+    "youtube/subscriptions-hidden": true,
+    "youtube/top-bar-hidden": true
+  },
+  "SYNC": {
+    "timers": {
+      "u4nE5-Q9S-vPUzgHsR5dJ": {
+        "allowedTimeMs": 0,
+        "blocklist": [],
+        "brandIds": [
+          "27215",
+          "2136"
+        ],
+        "id": "u4nE5-Q9S-vPUzgHsR5dJ",
+        "isEnabled": true,
+        "isSynced": false,
+        "name": "Default",
+        "type": "group"
+      }
+    }
+  }
+}
