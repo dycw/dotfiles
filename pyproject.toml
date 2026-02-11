@@ -11,10 +11,10 @@
     "beartype>=0.22.9",
     "bidict>=0.23.1",
     "bs4>=0.0.2",
-    "cachetools>=7.0.0",
+    "cachetools>=7.0.1",
     "cvxpy>=1.8.1",
     "dacite>=1.9.2",
-    "dycw-utilities[test]>=0.188.26",
+    "dycw-utilities[test]>=0.188.30",
     "frozendict>=2.4.7",
     "holoviews>=1.22.1",
     "humanize>=4.15.0",
@@ -33,7 +33,7 @@
     "pqdm>=0.2.0",
     "pydantic>=2.12.5",
     "pyright>=1.1.408",
-    "redis>=7.1.0",
+    "redis>=7.1.1",
     "requests>=2.32.5",
     "rich>=14.3.2",
     "scikit-learn>=1.8.0",
@@ -52,18 +52,18 @@
 
 [project]
   authors = [{ email = "d.wan@icloud.com", name = "Derek Wan" }]
-  dependencies = ["click>=8.3.1", "dycw-utilities>=0.188.26", "libcst>=1.8.6"]
+  dependencies = ["click>=8.3.1", "dycw-utilities>=0.188.30", "libcst>=1.8.6"]
   description = "Dotfiles"
   name = "dycw-dotfiles"
   readme = "README.md"
   requires-python = ">= 3.12"
-  version = "0.4.20"
+  version = "0.4.21"
 
   [project.scripts]
     dotfiles-cli = "dotfiles._cli:cli"
 
   [project.optional-dependencies]
-    cli = ["click==8.3.1", "dycw-utilities==0.188.26", "libcst==1.8.6"]
+    cli = ["click==8.3.1", "dycw-utilities==0.188.30", "libcst==1.8.6"]
 
 
 [tool]

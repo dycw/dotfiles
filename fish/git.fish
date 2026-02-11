@@ -998,7 +998,7 @@ function __gitea_merge
         set i (math $i+1)
         set elapsed (math (date +%s) - $start)
         echo "'$repo/$curr_branch' is still merging... ($i, $elapsed s)"
-        sleep 1
+        sleep 5
     end
     set -l def_branch (git default-local-branch); or return $status
     set -l args
