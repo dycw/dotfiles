@@ -1247,6 +1247,10 @@
     "body": "from utilities.constants import MINUTE\n",
     "prefix": "ut-minute"
   },
+  "from utilities.constants import sentinel, Sentinel": {
+    "body": "from utilities.constants import sentinel, Sentinel\n",
+    "prefix": "ut-sentinel"
+  },
   "from utilities.contextvars import set_global_breakpoint": {
     "body": "from utilities.contextvars import set_global_breakpoint\n",
     "prefix": "ut-set-global-breakpoint"

@@ -1193,6 +1193,11 @@ if find_spec("pydantic") is not None:
 
     _ = [pydantic, BaseModel]
 
+    if find_spec("utilities") is not None:
+        from utilities.pydantic import ensure_secret, extract_secret
+
+        _ = [ensure_secret, extract_secret]
+
 
 if find_spec("pytest") is not None:
     _LOGGER.info("Importing `pytest`...")
@@ -1396,9 +1401,11 @@ if find_spec("utilities") is not None:
         ZERO_DAYS,
         ZERO_TIME,
         HongKong,
+        Sentinel,
         Tokyo,
         USCentral,
         USEastern,
+        sentinel,
     )
     from utilities.core import (
         CheckUniqueError,
@@ -1463,7 +1470,6 @@ if find_spec("utilities") is not None:
     from utilities.math import ewm_parameters, is_integral, safe_round
     from utilities.os import CPU_COUNT
     from utilities.pathlib import ensure_suffix, get_repo_root, list_dir
-    from utilities.pydantic import ensure_secret, extract_secret
     from utilities.pytest import skipif_ci, throttle_test
     from utilities.random import get_state, shuffle
     from utilities.shelve import yield_shelf
@@ -1518,7 +1524,6 @@ if find_spec("utilities") is not None:
         MICROSECOND,
         MILLISECOND,
         MINUTE,
-        MINUTE,
         MONTH,
         MaybeIterable,
         NOW_LOCAL,
@@ -1533,6 +1538,7 @@ if find_spec("utilities") is not None:
         SECOND,
         SYSTEM_RANDOM,
         SecretLike,
+        Sentinel,
         StrMapping,
         TODAY_LOCAL,
         TODAY_UTC,
@@ -1562,14 +1568,12 @@ if find_spec("utilities") is not None:
         ensure_int,
         ensure_not_none,
         ensure_plain_date_time,
-        ensure_secret,
         ensure_str,
         ensure_suffix,
         ensure_zoned_date_time,
         ewm_parameters,
         extract_group,
         extract_groups,
-        extract_secret,
         format_compact,
         get_args,
         get_class,
@@ -1613,6 +1617,7 @@ if find_spec("utilities") is not None:
         read_pickle,
         run_in_background,
         safe_round,
+        sentinel,
         set_hostname_cmd,
         set_up_logging,
         show,
