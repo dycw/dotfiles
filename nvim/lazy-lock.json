@@ -61,7 +61,7 @@
   },
   "inc-rename.nvim": {
     "branch": "main",
-    "commit": "2597bccb57d1b570fbdbd4adf88b955f7ade715b"
+    "commit": "a2f4b564c72ea1f22cba2caa97db603618d16d6f"
   },
   "indent-blankline.nvim": {
     "branch": "master",
@@ -137,7 +137,7 @@
   },
   "nvim-tree.lua": {
     "branch": "master",
-    "commit": "1df1960d0e3a26643a4100f64fa03b991b9f4b85"
+    "commit": "516f95e8efec035d344114c591e56b7fb2d4c0dc"
   },
   "nvim-treesitter": {
     "branch": "master",

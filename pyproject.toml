@@ -14,12 +14,12 @@
     "cachetools>=7.0.1",
     "cvxpy>=1.8.1",
     "dacite>=1.9.2",
-    "dycw-utilities[test]>=0.191.0",
+    "dycw-utilities[test]>=0.191.1",
     "frozendict>=2.4.7",
     "holoviews>=1.22.1",
     "humanize>=4.15.0",
     "hvplot>=0.12.2",
-    "hypothesis>=6.151.5",
+    "hypothesis>=6.151.6",
     "ib-async>=2.1.0",
     "inflect>=7.5.0",
     "joblib>=1.5.3",
@@ -52,12 +52,12 @@
 
 [project]
   authors = [{ email = "d.wan@icloud.com", name = "Derek Wan" }]
-  dependencies = ["click>=8.3.1", "dycw-utilities>=0.191.0", "libcst>=1.8.6"]
+  dependencies = ["click>=8.3.1", "dycw-utilities>=0.191.1", "libcst>=1.8.6"]
   description = "Dotfiles"
   name = "dycw-dotfiles"
   readme = "README.md"
   requires-python = ">= 3.12"
-  version = "0.4.22"
+  version = "0.4.23"
 
   [project.scripts]
     dotfiles-cli = "dotfiles._cli:cli"

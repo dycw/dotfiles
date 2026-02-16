@@ -274,6 +274,17 @@ function ghostty-config
     $EDITOR $HOME/dotfiles/ghostty/config
 end
 
+# git
+function yield-git-repos
+    set -l dir $argv[-1]
+    for dir in */
+        if test -d "$dir/.git"
+            set abs (realpath "$dir")
+            echo $abs
+        end
+    end
+end
+
 # hypothesis
 function hypothesis-ci
     export HYPOTHESIS_PROFILE=ci
