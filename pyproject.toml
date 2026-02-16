@@ -46,7 +46,7 @@
     "tqdm>=4.67.3",
     "tzdata>=2025.3",
     "tzlocal>=5.3.1",
-    "xarray>=2026.1.0",
+    "xarray>=2026.2.0",
   ]
 
 
@@ -57,13 +57,13 @@
   name = "dycw-dotfiles"
   readme = "README.md"
   requires-python = ">= 3.12"
-  version = "0.4.23"
+  version = "0.4.24"
 
   [project.scripts]
     dotfiles-cli = "dotfiles._cli:cli"
 
   [project.optional-dependencies]
-    cli = ["click==8.3.1", "dycw-utilities==0.191.0", "libcst==1.8.6"]
+    cli = ["dycw-utilities==0.191.1"]
 
 
 [tool]
