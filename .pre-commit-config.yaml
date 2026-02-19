@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.14.138
+    rev: 0.15.22
     hooks:
       - id: add-hooks
         args:
@@ -24,6 +24,8 @@ repos:
         priority: 40
       - id: format-pre-commit-config
         priority: 30
+      - id: format-pytest
+        priority: 30
       - id: format-requirements
         priority: 30
       - id: replace-sequence-str
@@ -36,15 +38,16 @@ repos:
         priority: 20
       - id: setup-bump-my-version
         args:
-          - --python-package-name-internal=dotfiles
+          - --package-name=dotfiles
         priority: 20
       - id: setup-ci-pull-request
         args:
           - --repo-name=dotfiles
+          - --set-up
         priority: 20
       - id: setup-ci-push
         args:
-          - --python
+          - --package
         priority: 20
       - id: setup-coverage
         priority: 20
@@ -63,19 +66,19 @@ repos:
       - id: setup-pyproject
         args:
           - --description=Dotfiles
-          - --python-package-name-external=dycw-dotfiles
-          - --python-package-name-internal=dotfiles
+          - --name-external=dycw-dotfiles
+          - --name-internal=dotfiles
         priority: 20
       - id: setup-pyright
         priority: 20
       - id: setup-pytest
         args:
-          - --python-package-name-internal=dotfiles
+          - --package-name=dotfiles
         priority: 20
       - id: setup-readme
         args:
-          - --repo-name=dotfiles
           - --description=Dotfiles
+          - --repo-name=dotfiles
         priority: 20
       - id: setup-ruff
         priority: 20
@@ -135,13 +138,10 @@ repos:
     hooks:
       - id: taplo-format
         args:
-          - --option
-          - indent_tables=true
-          - --option
-          - indent_entries=true
-          - --option
-          - reorder_keys=true
-        priority: 40
+          - --option=indent_entries=true
+          - --option=indent_tables=true
+          - --option=reorder_keys=true
+        priority: 30
   - repo: https://github.com/johnnymorganz/stylua
     rev: v2.3.1
     hooks:
