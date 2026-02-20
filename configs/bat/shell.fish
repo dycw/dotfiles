@@ -8,7 +8,7 @@ end
 
 ###############################################################################
 
-if type -q batcat and not type -q bat
+if not type -q bat; and type -q batcat
     function bat
         batcat $argv
     end
