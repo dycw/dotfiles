@@ -1,7 +1,0 @@
-{
-  "interactionMode": "notebook",
-  "showAllKernelActivity": false,
-  "promptCellConfig": {
-    "autoClosingBrackets": true,
-  },
-}
