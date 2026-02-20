@@ -14,4 +14,4 @@ link() {
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up 'postgres'..."
 
-link shell.sh fish/conf.d/postgres.fish
+link shell.fish fish/conf.d/postgres.fish
