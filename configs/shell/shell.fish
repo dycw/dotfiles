@@ -41,7 +41,7 @@ end
 
 #### path dotfiles ############################################################
 
-set -l SCRIPT_DIR (cd (dirname (status filename)); and pwd -P)
+set -l SCRIPT_DIR (cd (dirname (realpath ( status filename))); and pwd -P)
 set -gx PATH_DOTFILES (cd "$SCRIPT_DIR/../.."; and pwd -P)
 
 #### swap files ###############################################################
