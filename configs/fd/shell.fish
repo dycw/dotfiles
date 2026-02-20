@@ -8,7 +8,7 @@ end
 
 ###############################################################################
 
-if type -q fdfind; and not type -q fd
+if not type -q fd; and type -q fdfind
     function fd
         fdfind $argv
     end
