@@ -1,5 +1,0 @@
-Host gitlab
-  HostName gitlab.qrt
-  IdentitiesOnly yes
-  Port 2424
-  User git
