@@ -1,4 +1,4 @@
 return {
-	"arthurxavierx/vim-caser",
-	event = "VeryLazy",
+    "arthurxavierx/vim-caser",
+    event = "VeryLazy",
 }

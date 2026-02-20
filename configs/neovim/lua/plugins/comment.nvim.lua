@@ -1,3 +1,3 @@
 return {
-	"numtostr/comment.nvim",
+    "numtostr/comment.nvim",
 }

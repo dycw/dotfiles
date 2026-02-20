@@ -11,7 +11,7 @@ opt.breakindent = true
 
 -- Sync clipboard between OS and Neovim
 v.schedule(function()
-	opt.clipboard = "unnamedplus"
+    opt.clipboard = "unnamedplus"
 end)
 
 -- Number of screen lines to use for the command-line

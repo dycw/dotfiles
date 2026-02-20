@@ -9,35 +9,35 @@ keymap_set("n", ";", ":", "Command")
 
 -- copy/paste mode
 keymap_set({ "n", "v" }, "<F2>", function()
-	if v.wo.number then
-		v.opt.number = false
-		v.opt.relativenumber = false
-		v.opt.signcolumn = "no"
-		v.opt.paste = true
-		pcall(function()
-			require("ibl").update({ enabled = false })
-		end)
-	else
-		v.opt.number = true
-		v.opt.relativenumber = true
-		v.opt.signcolumn = "yes"
-		v.opt.paste = false
-		pcall(function()
-			require("ibl").update({ enabled = true })
-		end)
-	end
+    if v.wo.number then
+        v.opt.number = false
+        v.opt.relativenumber = false
+        v.opt.signcolumn = "no"
+        v.opt.paste = true
+        pcall(function()
+            require("ibl").update({ enabled = false })
+        end)
+    else
+        v.opt.number = true
+        v.opt.relativenumber = true
+        v.opt.signcolumn = "yes"
+        v.opt.paste = false
+        pcall(function()
+            require("ibl").update({ enabled = true })
+        end)
+    end
 end, "Copy/paste mode")
 
 -- global marks
 local prefixes = "m'"
 local letters = "abcdefghijklmnopqrstuvwxyz"
 for i = 1, #prefixes do
-	local prefix = prefixes:sub(i, i)
-	for j = 1, #letters do
-		local lower_letter = letters:sub(j, j)
-		local upper_letter = string.upper(lower_letter)
-		keymap_set({ "n", "v" }, prefix .. lower_letter, prefix .. upper_letter, "Mark " .. upper_letter)
-	end
+    local prefix = prefixes:sub(i, i)
+    for j = 1, #letters do
+        local lower_letter = letters:sub(j, j)
+        local upper_letter = string.upper(lower_letter)
+        keymap_set({ "n", "v" }, prefix .. lower_letter, prefix .. upper_letter, "Mark " .. upper_letter)
+    end
 end
 
 -- navigation

@@ -1,4 +1,4 @@
 return {
-	"romainl/vim-cool",
-	event = "VeryLazy",
+    "romainl/vim-cool",
+    event = "VeryLazy",
 }
