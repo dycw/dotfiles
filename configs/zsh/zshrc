@@ -1,0 +1,20 @@
+#!/usr/bin/env zsh
+# shellcheck disable=SC1090,SC1091
+
+# If not running interactively, don't do anything
+if ! [ -o interactive ]; then
+  return
+fi
+
+# Load shared POSIX shell snippets
+setopt NULL_GLOB
+for file in "${HOME}"/.config/posix/*.sh; do
+  # restore original settings since 'set -u' (nounset) can brick /etc/profile.d/*
+  current="$(set +o)"
+  if [ -f "${file}" ]; then
+    . "${file}"
+  fi
+  eval "${current}"
+  unset current
+done
+unsetopt NULL_GLOB
