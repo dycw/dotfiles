@@ -4,7 +4,7 @@ set -eu
 
 ###############################################################################
 
-if command -v fd >/dev/null 2>&1; then
+if command -v fd >/dev/null 2>&1 || command -v fdfind >/dev/null 2>&1; then
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] 'fd' is already installed"
 	exit
 fi
