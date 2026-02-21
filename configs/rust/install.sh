@@ -38,7 +38,8 @@ debian | macmini | macbook)
 		echo "[$(date '+%Y-%m-%d %H:%M:%S')] 'cargo-binstall' is already installed"
 	else
 		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'cargo-binstall'..."
-		cargo install --locked cargo-binstall
+		curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+		https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
 	fi
 
 	install_tool bacon
