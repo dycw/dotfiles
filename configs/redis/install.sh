@@ -18,7 +18,7 @@ debian)
 		chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg
 		echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list
 		apt-get update
-		apt-get install redis
+		apt-get install -y redis
 		systemctl enable redis-server
 		systemctl start redis-server
 	else
@@ -27,7 +27,7 @@ debian)
 		sudo chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg
 		echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
 		sudo apt-get update
-		sudo apt-get install redis
+		sudo apt-get install -y redis
 		sudo systemctl enable redis-server
 		sudo systemctl start redis-server
 	fi
