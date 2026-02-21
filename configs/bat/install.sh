@@ -4,7 +4,7 @@ set -eu
 
 ###############################################################################
 
-if command -v bat >/dev/null 2>&1; then
+if command -v bat >/dev/null 2>&1 || command -v batcat >/dev/null 2>&1; then
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] 'bat' is already installed"
 	exit
 fi
