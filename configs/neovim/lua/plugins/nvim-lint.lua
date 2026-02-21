@@ -8,6 +8,7 @@ return {
         local lint = require("lint")
         lint.linters_by_ft = {
             haskell = { "hlint" },
+            lua = { "luacheck" },
             python = { "ruff" },
             sh = { "shellcheck" },
             sql = { "sqlfluff" },
