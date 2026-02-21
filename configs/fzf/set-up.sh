@@ -7,8 +7,9 @@ set -eu
 script_dir=$(dirname -- "$(realpath -- "$0")")
 
 link() {
-	mkdir -p "$(dirname -- "$2")"
-	ln -sfn "$1" "${XDG_CONFIG_HOME:-${HOME}/.config}/$2"
+	dest="${XDG_CONFIG_HOME:-${HOME}/.config}/$2"
+	mkdir -p "$(dirname -- "${dest}")"
+	ln -sfn "$1" "${dest}"
 }
 
 link_here() {

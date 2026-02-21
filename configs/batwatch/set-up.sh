@@ -9,9 +9,6 @@ link() {
 	dest="${XDG_CONFIG_HOME:-${HOME}/.config}/$2"
 	mkdir -p "$(dirname -- "${dest}")"
 	ln -sfn "${src}" "${dest}"
-	mkdir -p "$(dirname -- "$2")"
-	script_dir=$(dirname -- "$(realpath -- "$0")")
-	ln -sfn "${script_dir}/$1" "${XDG_CONFIG_HOME:-${HOME}/.config}/$2"
 }
 
 ###############################################################################
