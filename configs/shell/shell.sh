@@ -22,7 +22,7 @@ export XDG_STATE_HOME="${XDG_STATE_HOME:-${HOME}/.local/state}"
 #### interactive only #########################################################
 
 if ! case $- in *i*) true ;; *) false ;; esac then
-	exit 0
+	return
 fi
 
 #### editor ###################################################################

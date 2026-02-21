@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
 set -eu
-if ! case $- in *i*) true ;; *) false ;; esac || ! command -v direnv >/dev/null 2>&1; then
-	exit 0
+if [ "${-#*i}" = "$-" ] || ! command -v direnv >/dev/null 2>&1; then
+	return
 fi
 
 ###############################################################################
