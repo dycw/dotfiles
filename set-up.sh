@@ -134,7 +134,7 @@ run_local_other() {
 	trap 'rm -f -- "${tmp}"' EXIT HUP INT TERM
 	cp -- "${self}" "${tmp}"
 	chmod 0755 "${tmp}"
-	su - "${user}" -c "sh ${tmp}"
+	su - "${user}" -c "sh '${tmp}'"
 }
 
 #### run remote ###############################################################
@@ -145,17 +145,16 @@ run_remote() {
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up '${target}'..."
 
 	self=$(realpath -- "$0")
-	cmd=$(
-		cat <<'EOF'
+	tmp=$(
+		ssh -p "${port}" "${target}" /bin/sh -s <<'EOF'
 set -eu
-tmp=$(mktemp "${TMPDIR:-/tmp}/set-up.XXXXXX") || exit 1
-trap 'rm -f -- "$tmp"' EXIT HUP INT TERM
-cat >"${tmp}"
-chmod 0755 "${tmp}"
-sh "${tmp}"
+mktemp "${TMPDIR:-/tmp}/set-up.XXXXXX"
 EOF
 	)
-	cat "${self}" | ssh -p "${port}" "${target}" /bin/sh -c "${cmd}"
+	cat "${self}" | ssh -p "${port}" "${target}" /bin/sh -c "cat >'${tmp}'"
+	ssh -p "${port}" "${target}" /bin/sh -c "chmod 0755 '${tmp}'"
+	ssh -p "${port}" "${target}" /bin/sh -c "'${tmp}'"
+	ssh -p "${port}" "${target}" /bin/sh -c "rm -f -- '${tmp}'"
 }
 
 #### main #####################################################################
