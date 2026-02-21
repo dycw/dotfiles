@@ -315,6 +315,10 @@ function ssh-auto
     end
 end
 
+function ssh-debian-13
+    ssh-auto -p 2222 nonroot@localhost
+end
+
 function __ssh_strict
     if test (count $argv) -lt 1
         echo "'__ssh_strict' expected [1..] arguments DESTINATION; got $(count $argv)" >&2; and return 1
