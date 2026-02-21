@@ -142,7 +142,7 @@ function yield-git-repos
     set -l dir $argv[-1]
     for dir in */
         if test -d "$dir/.git"
-            set abs (realpath "$dir")
+            set abs (realpath -- "$dir")
             echo $abs
         end
     end
