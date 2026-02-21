@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'iperf3'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		DEBIAN_FRONTEND=noninteractive apt install -y iperf3
+		DEBIAN_FRONTEND=noninteractive apt-get install -y iperf3
 	else
-		DEBIAN_FRONTEND=noninteractive sudo apt install -y iperf3
+		sudo DEBIAN_FRONTEND=noninteractive apt-get install -y iperf3
 	fi
 	;;
 macmini)
