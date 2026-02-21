@@ -11,19 +11,19 @@ local_user=''        # username to run as (via su)
 ssh_user_hostname='' # user@host
 ssh_port=''          # empty => default
 
-usage() {
+show_usage_and_exit() {
 	cat <<'EOF' >&2
 Usage:
   entrypoint.sh
-  entrypoint.sh --ssh user@host [--port 2222]
   entrypoint.sh --user username
+  entrypoint.sh --ssh user@host [--port 222]
 
 Notes:
   - No args: setup current user locally.
+  - --user: runs the setup as another local user.
   - --ssh: runs the setup remotely over SSH.
-  - --user: runs the setup as another local user (typically run as root).
 EOF
-	exit 2
+	exit 1
 }
 
 die() {
@@ -37,39 +37,58 @@ while [ $# -gt 0 ]; do
 	case "$1" in
 	--user=*)
 		local_user=${1#--user=}
-		[ -n "$local_user" ] || die "Empty --user"
+		if [ -z "${local_user}" ]; then
+			echo "[$(date '+%Y-%m-%d %H:%M:%S')] Empty '--user'; exiting..." >&2
+			show_usage_and_exit
+		fi
 		shift
 		;;
 	--user)
-		[ $# -ge 2 ] || usage
+		if [ $# -le 1 ]; then
+			echo "[$(date '+%Y-%m-%d %H:%M:%S')] '--user' requires an argument; exiting..." >&2
+			show_usage_and_exit
+		fi
 		local_user=$2
 		shift 2
 		;;
 	--ssh=*)
 		ssh_user_hostname=${1#--ssh=}
-		[ -n "$ssh_user_hostname" ] || die "Empty --ssh target"
+		if [ -z "${ssh_user_hostname}" ]; then
+			echo "[$(date '+%Y-%m-%d %H:%M:%S')] Empty '--ssh'; exiting..." >&2
+			show_usage_and_exit
+		fi
 		shift
 		;;
 	--ssh)
-		[ $# -ge 2 ] || usage
+		if [ $# -le 1 ]; then
+			echo "[$(date '+%Y-%m-%d %H:%M:%S')] '--ssh' requires an argument; exiting..." >&2
+			show_usage_and_exit
+		fi
 		ssh_user_hostname=$2
 		shift 2
 		;;
 	--port=*)
 		ssh_port=${1#--port=}
-		[ -n "$ssh_port" ] || die "Empty --port"
+		if [ -z "${port}" ]; then
+			echo "[$(date '+%Y-%m-%d %H:%M:%S')] Empty '--port'; exiting..." >&2
+			show_usage_and_exit
+		fi
 		shift
 		;;
 	--port)
-		[ $# -ge 2 ] || usage
+		if [ $# -le 1 ]; then
+			echo "[$(date '+%Y-%m-%d %H:%M:%S')] '--port' requires an argument; exiting..." >&2
+			show_usage_and_exit
+		fi
 		ssh_port=$2
 		shift 2
 		;;
 	-h | --help)
-		usage
+		show_usage_and_exit
 		;;
 	*)
-		die "Unknown argument: $1"
+		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Unsupport argument '$1'; exiting..." >&2
+		show_usage_and_exit
 		;;
 	esac
 done
