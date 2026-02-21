@@ -41,8 +41,8 @@ end
 
 #### path dotfiles ############################################################
 
-set -l SCRIPT_DIR (dirname (realpath (status filename)))
-set -gx PATH_DOTFILES (realpath "$SCRIPT_DIR/../..")
+set -l script_dir (dirname (realpath (status filename)))
+set -gx PATH_DOTFILES (realpath "$script_dir/../..")
 
 #### swap files ###############################################################
 
