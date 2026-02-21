@@ -13,7 +13,7 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'uv'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		uv -LsSf https://astral.sh/uv/install.sh |
+		curl -LsSf https://astral.sh/uv/install.sh |
 			UV_INSTALL_DIR=/usr/local/bin UV_NO_MODIFY_PATH=1 sh
 	else
 		curl -LsSf https://astral.sh/uv/install.sh |
