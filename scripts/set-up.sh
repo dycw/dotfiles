@@ -7,7 +7,7 @@ set -eu
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up '$(hostname)'..."
 
-script_dir=$(cd -- "$(dirname -- "$0")" && pwd -P)
+script_dir=$(dirname -- "$(realpath -- "$0")")
 sh "${script_dir}/_lib/install.sh"
 
 configs="$(dirname -- "${script_dir}")/configs"

@@ -4,7 +4,7 @@ set -eu
 
 ###############################################################################
 
-script_dir=$(cd -- "$(dirname -- "$0")" && pwd -P)
+script_dir=$(dirname -- "$(realpath -- "$0")")
 
 link() {
 	mkdir -p "$(dirname -- "$2")"

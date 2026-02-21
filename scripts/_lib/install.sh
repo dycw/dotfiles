@@ -26,7 +26,7 @@ fi
 
 #### configs ##################################################################
 
-SCRIPT_DIR=$(cd -- "$(dirname -- "$0")" && pwd -P)
+SCRIPT_DIR=$(dirname -- "$(realpath -- "$0")")
 configs="$(dirname -- "$(dirname -- "${SCRIPT_DIR}")")"/configs
 
 #### per-system ###############################################################
