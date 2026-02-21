@@ -13,5 +13,3 @@ URL='https://oryx.nyc3.cdn.digitaloceanspaces.com/keymapp/keymapp-latest.tar.gz'
 curl -fsSL "${URL}" | tar -xz -C "${TEMP_DIR}"
 
 install -Dm755 "${TEMP_DIR}/keymapp" "${HOME}/.local/bin/keymapp"
-
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Finished setting up 'keymapp'"

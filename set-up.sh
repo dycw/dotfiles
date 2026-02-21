@@ -102,7 +102,7 @@ else
 	run_local_self
 fi
 
-#### run local ################################################################
+#### run local self ###########################################################
 
 run_local_self() {
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up '$(hostname)'..."
@@ -130,10 +130,23 @@ run_local_self() {
 	fi
 
 	sh "${HOME}/${dotfiles}/scripts/_internal/install.sh"
-	sh "${HOME}/${dotfiles}/scripts/_internal/install.sh"
-
-	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Finished setting up '$(hostname)'..."
+	sh "${HOME}/${dotfiles}/scripts/_internal/set-up.sh"
 }
+
+#### run local self ###########################################################
+
+run_local_other() {
+	user="$1"
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up '${user}' on '$(hostname)'..."
+
+	script_self=$(realpath -- "$0")
+	tmp_self=$(mktemp -t set-up.XXXXXX)
+	trap 'rm -f -- "${tmp_self}"' EXIT HUP INT TERM
+	cp -- "${script_self}" "${tmp_self}"
+	chmod 0755 "${tmp_self}"
+	su - "${user}" -c "sh -- '${tmp_self}'"
+}
+
 # Runs on the target machine *as the target user*.
 # Assumes: HOME is set correctly for that user.
 setup_body_sh='
@@ -165,25 +178,6 @@ echo "[$(date +'%Y-%m-%d %H:%M:%S')] Running set-up.sh..."
 sh "$DEST/set-up.sh"
 '
 
-run_local_current_user() {
-	echo "[$(timestamp)] Mode: local (current user)"
-	# run in a clean sh instance to avoid relying on caller env
-	sh -c "$setup_body_sh"
-}
-
-run_local_other_user() {
-	u=$1
-	echo "[$(timestamp)] Mode: local (as user '$u')"
-
-	if ! command -v su >/dev/null 2>&1; then
-		die "su not found; cannot switch to user '$u'"
-	fi
-
-	# Prefer login shell (-) so HOME is correct.
-	# Use `sh -c` in the target account so the script runs with that user's env.
-	su - "$u" -c "sh -c $(printf %s "$setup_body_sh" | sed "s/'/'\\\\''/g; s/^/'/; s/\$/'/")"
-}
-
 run_remote() {
 	target=$1
 	port=$2
@@ -211,7 +205,7 @@ EOF
 if [ -n "$ssh_user_hostname" ]; then
 	run_remote "$ssh_user_hostname" "$ssh_port"
 elif [ -n "$local_user" ]; then
-	run_local_other_user "$local_user"
+	run_local_other "$local_user"
 else
 	run_local_current_user
 fi
