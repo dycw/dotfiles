@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'git'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y git
+		apt-get install -y git
 	else
-		sudo apt install -y git
+		sudo apt-get install -y git
 	fi
 	;;
 *) ;;

@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'delta'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y git-delta
+		apt-get install -y git-delta
 	else
-		sudo apt install -y git-delta
+		sudo apt-get install -y git-delta
 	fi
 	;;
 macmini)

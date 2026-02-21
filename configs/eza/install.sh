@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'eza'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y eza
+		apt-get install -y eza
 	else
-		sudo apt install -y eza
+		sudo apt-get install -y eza
 	fi
 	;;
 macmini)

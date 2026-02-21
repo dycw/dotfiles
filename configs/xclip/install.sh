@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'xclip'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y xclip
+		apt-get install -y xclip
 	else
-		sudo apt install -y xclip
+		sudo apt-get install -y xclip
 	fi
 	;;
 macmini)

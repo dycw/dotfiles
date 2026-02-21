@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'gh'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y gh
+		apt-get install -y gh
 	else
-		sudo apt install -y gh
+		sudo apt-get install -y gh
 	fi
 	;;
 macmini)

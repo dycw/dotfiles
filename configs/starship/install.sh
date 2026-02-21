@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'starship'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y starship
+		apt-get install -y starship
 	else
-		sudo apt install -y starship
+		sudo apt-get install -y starship
 	fi
 	;;
 macmini)

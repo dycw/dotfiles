@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'rsync'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y rsync
+		apt-get install -y rsync
 	else
-		sudo apt install -y rsync
+		sudo apt-get install -y rsync
 	fi
 	;;
 *) ;;

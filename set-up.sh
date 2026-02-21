@@ -103,9 +103,9 @@ run_local_self() {
 			. /etc/os-release
 			if [ "${ID:-}" = debian ]; then
 				if [ "$(id -u)" -eq 0 ]; then
-					apt install -y git
+					apt-get install -y git
 				else
-					sudo apt install -y git
+					sudo apt-get install -y git
 				fi
 			fi
 		else

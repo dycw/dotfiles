@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'rename'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y rename
+		apt-get install -y rename
 	else
-		sudo apt install -y rename
+		sudo apt-get install -y rename
 	fi
 	;;
 macmini)

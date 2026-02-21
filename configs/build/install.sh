@@ -11,9 +11,9 @@ debian)
 	else
 		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'build-essential'..."
 		if [ "$(id -u)" -eq 0 ]; then
-			apt install -y build-essential
+			apt-get install -y build-essential
 		else
-			sudo apt install -y build-essential
+			sudo apt-get install -y build-essential
 		fi
 	fi
 
@@ -22,9 +22,9 @@ debian)
 	else
 		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'libpq-dev'..."
 		if [ "$(id -u)" -eq 0 ]; then
-			apt install -y libpq-dev
+			apt-get install -y libpq-dev
 		else
-			sudo apt install -y libpq-dev
+			sudo apt-get install -y libpq-dev
 		fi
 	fi
 	;;

@@ -35,15 +35,15 @@ case "${system:-}" in
 debian)
 	sh "${configs}"/sudo/install.sh "${system}"
 	if [ "$(id -u)" -eq 0 ]; then
-		apt update
-		apt full-upgrade -y
-		apt autoremove -y
-		apt clean
+		apt-get update
+		apt-get dist-upgrade -y
+		apt-get autoremove -y
+		apt-get clean
 	else
-		sudo apt update
-		sudo apt full-upgrade -y
-		sudo apt autoremove -y
-		sudo apt clean
+		sudo apt-get update
+		sudo apt-get dist-upgrade -y
+		sudo apt-get autoremove -y
+		sudo apt-get clean
 	fi
 	sh "${configs}"/curl/install.sh "${system}"
 	;;

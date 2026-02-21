@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'just'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y just
+		apt-get install -y just
 	else
-		sudo apt install -y just
+		sudo apt-get install -y just
 	fi
 	;;
 macmini)

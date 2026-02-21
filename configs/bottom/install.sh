@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'bottom'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y btm
+		apt-get install -y btm
 	else
-		sudo apt install -y btm
+		sudo apt-get install -y btm
 	fi
 	;;
 macmini)

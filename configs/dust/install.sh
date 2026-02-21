@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'dust'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y du-dust
+		apt-get install -y du-dust
 	else
-		sudo apt install -y du-dust
+		sudo apt-get install -y du-dust
 	fi
 	;;
 macmini)

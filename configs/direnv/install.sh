@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'direnv'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y direnv
+		apt-get install -y direnv
 	else
-		sudo apt install -y direnv
+		sudo apt-get install -y direnv
 	fi
 	;;
 macmini)
