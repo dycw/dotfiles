@@ -12,6 +12,5 @@ if ! [ -f "${HOME}/.ssh/authorized_keys" ]; then
 fi
 
 if ! [ -d "${HOME}/.ssh/config.d" ]; then
-	echo 2
 	uvx --from dycw-installer[cli]@latest set-up-ssh
 fi
