@@ -5,8 +5,8 @@ set -eu
 
 #### parse arguments ##########################################################
 
+dotfiles="${HOME}/dotfiles"
 repo='https://github.com/dycw/dotfiles.git'
-dotfiles='dotfiles'
 local_user=''
 target=''
 port=''
@@ -114,13 +114,18 @@ run_local_self() {
 		fi
 	fi
 
-	if ! [ -d "${HOME}/${dotfiles}" ]; then
+	if [ -d "${dotfiles}" ]; then
+		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Updating repo..."
+		git -C "${dotfiles}" fetch origin
+		git -C "${dotfiles}" reset --hard origin/master
+		git -C "${dotfiles}" submodule update --init --recursive
+	else
 		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Cloning repo..."
-		git clone --recurse-submodules "${repo}" "${HOME}/${dotfiles}"
+		git clone --recurse-submodules "${repo}" "${dotfiles}"
 	fi
 
-	sh "${HOME}/${dotfiles}/scripts/_internal/install.sh"
-	sh "${HOME}/${dotfiles}/scripts/_internal/set-up.sh"
+	sh "${dotfiles}/scripts/_internal/install.sh"
+	sh "${dotfiles}/scripts/_internal/set-up.sh"
 }
 
 #### run local other ##########################################################
