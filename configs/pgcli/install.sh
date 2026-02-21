@@ -10,7 +10,7 @@ if command -v pgcli >/dev/null 2>&1; then
 fi
 
 case "$1" in
-debian | macbook)
+debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'pgcli'..."
 	script_dir=$(dirname -- "$(realpath -- "$0")")
 	configs="$(dirname -- "${script_dir}")"
