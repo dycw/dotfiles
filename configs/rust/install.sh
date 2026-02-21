@@ -28,7 +28,7 @@ debian | macmini | macbook)
 		curl -LsSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 		rustup toolchain install stable
 		rustup default stable
-		rustup component add clippy rustfmt rust-analyzer
+		rustup component add clippy rust-analyzer rust-docs rustfmt
 	fi
 
 	if command -v cargo-binstall >/dev/null 2>&1; then
