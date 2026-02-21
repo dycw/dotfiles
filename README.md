@@ -2,10 +2,8 @@
 
 Dotfiles
 
-## Setup machines:
-
-# MacBook
+## Install
 
 ```
-curl -fsSL https://raw.githubusercontent.com/dycw/dotfiles/refs/heads/re-organize/install/remotes/macbook.py | python3
+curl -fsSL https://raw.githubusercontent.com/dycw/dotfiles/refs/heads/master/set-up.sh | sh
 ```
