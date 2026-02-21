@@ -1,15 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090,SC1091
 
-# ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
-
 # If not running interactively, don't do anything
-case $- in
-*i*) ;;
-*) return ;;
-esac
+if [[ $- != *i* ]]; then
+    return
+fi
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -41,7 +36,9 @@ fi
 for file in "${HOME}"/.config/posix/*.sh; do
     # restore original settings since 'set -u' (nounset) can brick /etc/profile.d/*
     current="$(set +o)"
-    [ -f "${file}" ] && . "${file}"
+    if [ -f "${file}" ]; then
+        . "${file}"
+    fi
     eval "${current}"
     unset current
 done
