@@ -140,11 +140,11 @@ run_local_other() {
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up '${user}' on '$(hostname)'..."
 
 	script_self=$(realpath -- "$0")
-	tmp_self=$(mktemp -t set-up.XXXXXX)
+	tmp_self=$(mktemp "${TMPDIR:-/tmp}/set-up.XXXXXX")
 	trap 'rm -f -- "${tmp_self}"' EXIT HUP INT TERM
 	cp -- "${script_self}" "${tmp_self}"
 	chmod 0755 "${tmp_self}"
-	su - "${user}" -c "sh -- '${tmp_self}'"
+	su - "${user}" -c "sh '${tmp_self}'"
 }
 
 # Runs on the target machine *as the target user*.
