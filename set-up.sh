@@ -146,15 +146,18 @@ run_remote() {
 
 	self=$(realpath -- "$0")
 	tmp=$(
-		ssh -p "${port}" "${target}" /bin/sh -s <<'EOF'
+		ssh -p "$port" "$target" /bin/sh -s <<'EOF'
 set -eu
 mktemp "${TMPDIR:-/tmp}/set-up.XXXXXX"
 EOF
 	)
-	cat "${self}" | ssh -p "${port}" "${target}" /bin/sh -c "cat >'${tmp}'"
-	ssh -p "${port}" "${target}" /bin/sh -c "chmod 0755 '${tmp}'"
-	ssh -p "${port}" "${target}" /bin/sh -c "'${tmp}'"
-	ssh -p "${port}" "${target}" /bin/sh -c "rm -f -- '${tmp}'"
+	tmp=$(printf '%s' "${tmp}") # trailing slash
+	ssh -p "${port}" "${target}" /bin/sh -s "${tmp}" <<'EOF'
+set -eu
+chmod 0755 "$1"
+sh "$1"
+rm -f -- "$1"
+EOF
 }
 
 #### main #####################################################################
