@@ -13,7 +13,7 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'redis'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt-get install lsb-release curl gpg
+		apt-get install -y lsb-release curl gpg
 		curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
 		chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg
 		echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list
@@ -22,7 +22,7 @@ debian)
 		systemctl enable redis-server
 		systemctl start redis-server
 	else
-		sudo apt-get install lsb-release curl gpg
+		sudo apt-get -y install lsb-release curl gpg
 		curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
 		sudo chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg
 		echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
