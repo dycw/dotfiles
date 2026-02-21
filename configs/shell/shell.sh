@@ -43,8 +43,8 @@ fi
 
 #### path dotfiles ############################################################
 
-SCRIPT_DIR=$(dirname -- "$(realpath -- "$0")")
-PATH_DOTFILES=$(realpath -- "${SCRIPT_DIR}/../..")
+script_dir=$(dirname -- "$(realpath -- "$0")")
+PATH_DOTFILES=$(realpath -- "${script_dir}/../..")
 export PATH_DOTFILES
 
 #### swap files ###############################################################
