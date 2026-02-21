@@ -26,8 +26,8 @@ fi
 
 #### configs ##################################################################
 
-SCRIPT_DIR=$(dirname -- "$(realpath -- "$0")")
-configs="$(dirname -- "$(dirname -- "${SCRIPT_DIR}")")"/configs
+script_dir=$(dirname -- "$(realpath -- "$0")")
+configs="$(dirname -- "$(dirname -- "${script_dir}")")"/configs
 
 #### per-system ###############################################################
 
