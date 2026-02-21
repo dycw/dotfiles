@@ -94,14 +94,22 @@ while [ $# -gt 0 ]; do
 	esac
 done
 
-# mutually exclusive: --ssh vs --user
 if [ -n "${local_user}" ] && [ -n "${ssh_user_hostname}" ]; then
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Mutually exclusive arguments '--user' and '--ssh' were given; exiting..." >&2
 	show_usage_and_exit
 fi
 
-# --- helpers -----------------------------------------------------------------
-timestamp() { date '+%Y-%m-%d %H:%M:%S'; }
+#### main #####################################################################
+
+if [ -n "${local_user}" ]; then
+	run_local_other "${local_user}"
+elif [ -n "${ssh_user_hostname}" ]; then
+	run_remote "${ssh_user_hostname}" "${ssh_port}"
+else
+	run_local_self
+fi
+
+#### run local ################################################################
 
 # Runs on the target machine *as the target user*.
 # Assumes: HOME is set correctly for that user.
