@@ -3,19 +3,19 @@
 
 # If not running interactively, don't do anything
 if ! [[ -o interactive ]]; then
-  return
+    return
 fi
 
 #### common POSIX #############################################################
 #
 setopt NULL_GLOB
 for file in "${HOME}"/.config/posix/*.sh; do
-  # restore original settings since 'set -u' (nounset) can brick /etc/profile.d/*
-  current="$(set +o)"
-  if [ -f "${file}" ]; then
-    . "${file}"
-  fi
-  eval "${current}"
-  unset current
+    # restore original settings since 'set -u' (nounset) can brick /etc/profile.d/*
+    current="$(set +o)"
+    if [ -f "${file}" ]; then
+        . "${file}"
+    fi
+    eval "${current}"
+    unset current
 done
 unsetopt NULL_GLOB
