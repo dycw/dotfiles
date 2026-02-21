@@ -39,5 +39,9 @@ fi
 
 # Load shared POSIX shell snippets
 for file in "${HOME}"/.config/posix/*.sh; do
+    # restore original settings since 'set -u' (nounset) can brick /etc/profile.d/*
+    current="$(set +o)"
     [ -f "${file}" ] && . "${file}"
+    eval "${current}"
+    unset current
 done
