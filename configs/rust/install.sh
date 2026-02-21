@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# shellcheck disable=SC1091
 
 set -eu
 
@@ -26,6 +27,7 @@ debian | macmini | macbook)
 	else
 		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'rust'..."
 		curl -LsSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+		. "$HOME/.cargo/env"
 		rustup toolchain install stable
 		rustup default stable
 		rustup component add clippy rust-analyzer rust-docs rustfmt
