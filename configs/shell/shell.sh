@@ -43,7 +43,7 @@ fi
 
 #### path dotfiles ############################################################
 
-SCRIPT_DIR=$(cd -- "$(dirname -- "$0")" && pwd -P)
+SCRIPT_DIR=$(dirname -- "$(realpath -- "$0")")
 PATH_DOTFILES="$(cd -- "$(dirname -- "$(dirname -- "${SCRIPT_DIR}")")")"
 export PATH_DOTFILES
 

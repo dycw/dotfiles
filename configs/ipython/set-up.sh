@@ -6,7 +6,7 @@ set -eu
 
 link() {
 	mkdir -p "$(dirname -- "$2")"
-	script_dir=$(cd -- "$(dirname -- "$0")" && pwd -P)
+	script_dir=$(dirname -- "$(realpath -- "$0")")
 	ln -sfn "${script_dir}/$1" "$2"
 }
 
