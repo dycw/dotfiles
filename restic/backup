@@ -1,29 +1,39 @@
-#!/usr/bin/env bash
-# shellcheck source=/dev/null
+#!/usr/bin/env sh
+# shellcheck disable=SC1090
 
-_script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-_env="$_script_dir/.env"
-echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
+set -eu
 
-if [ -f "$_env" ]; then
-	echo_date "Sourcing environment file '$_env'..."
-	source "$_env"
+#### env ######################################################################
 
-	declare -a _paths=("$HOME"/Dropbox "$HOME"/personal "$HOME"/work)
-	for _path in "${_paths[@]}"; do
-		if [ -d "$_path" ]; then
-			echo_date "Backing up '$_path'..."
-			restic backup --exclude .venv "$_path"
-		else
-			echo_date "Unable to find '$_path'; skipping..."
-		fi
-	done
+script_dir=$(dirname -- "$(realpath -- "$0")")
+env="${script_dir}/.env"
 
-	echo_date "Forgetting & pruning..."
-	restic forget --keep-within-hourly 7d --keep-within-daily 1m \
-		--keep-within-weekly 1y --keep-within-monthly 5y \
-		--keep-within-yearly 10y --prune --repack-small \
-		--repack-uncompressed
-else
-	echo_date "Unable to find environment file '$_env'; exiting..."
+if ! [ -r "${env}" ]; then
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Unable to find environment file '${env}'; exiting..." >&2
+	exit 1
 fi
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Sourcing '${env}'..."
+. "${env}"
+
+#### backup ###################################################################
+
+for p in \
+	"${HOME}/Dropbox" \
+	"${HOME}/personal" \
+	"${HOME}/work"; do
+	if [ -d "${p}" ]; then
+		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Backing up '${p}'..."
+		restic backup --exclude .venv "${p}"
+	else
+		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Unable to find '${p}'; skipping..." >&2
+	fi
+done
+
+#### forget ###################################################################
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Forgetting & pruning..."
+restic forget --keep-within-hourly 7d --keep-within-daily 1m \
+	--keep-within-weekly 1y --keep-within-monthly 5y \
+	--keep-within-yearly 10y --prune --repack-small \
+	--repack-uncompressed
