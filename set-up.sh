@@ -1,15 +1,15 @@
 #!/usr/bin/env sh
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC1091
 
 set -eu
 
-###############################################################################
+#### parse arguments ##########################################################
 
 repo='https://github.com/dycw/dotfiles.git'
-dotfiles='dotfiles'  # under target user's $HOME
-local_user=''        # username to run as (via su)
-ssh_user_hostname='' # user@host
-ssh_port=''          # empty => default
+dotfiles='dotfiles'
+local_user=''
+ssh_user_hostname=''
+ssh_port=''
 
 show_usage_and_exit() {
 	cat <<'EOF' >&2
@@ -26,13 +26,6 @@ Notes:
 EOF
 	exit 1
 }
-
-die() {
-	printf '%s\n' "$*" >&2
-	exit 1
-}
-
-#### parse arguments ##########################################################
 
 while [ $# -gt 0 ]; do
 	case "$1" in
@@ -111,6 +104,36 @@ fi
 
 #### run local ################################################################
 
+run_local_self() {
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up '$(hostname)'..."
+
+	if ! command -v git >/dev/null 2>&1; then
+		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'git'..."
+		if [ "$(uname)" = Linux ] && [ -r /etc/os-release ]; then
+			. /etc/os-release
+			if [ "${ID:-}" = debian ]; then
+				if [ "$(id -u)" -eq 0 ]; then
+					apt install -y git
+				else
+					sudo apt install -y git
+				fi
+			fi
+		else
+			echo "Unsupported OS '$(uname)'; exiting..." >&2
+			exit 1
+		fi
+	fi
+
+	if ! [ -d "${HOME}/${dotfiles}" ]; then
+		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Cloning repo..."
+		git clone --recurse-submodules "${repo}" "${HOME}/${dotfiles}"
+	fi
+
+	sh "${HOME}/${dotfiles}/scripts/_internal/install.sh"
+	sh "${HOME}/${dotfiles}/scripts/_internal/install.sh"
+
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Finished setting up '$(hostname)'..."
+}
 # Runs on the target machine *as the target user*.
 # Assumes: HOME is set correctly for that user.
 setup_body_sh='

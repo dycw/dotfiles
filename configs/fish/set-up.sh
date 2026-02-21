@@ -15,7 +15,7 @@ link() {
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up 'fish'..."
 
-case "$(uname -s)" in
+case "$(uname)" in
 Darwin)
 	USER_SHELL=$(dscl . -read "/Users/${USER}" UserShell | awk '{print $2}')
 	;;
@@ -23,7 +23,7 @@ Linux)
 	USER_SHELL=$(getent passwd "${USER}" | cut -d: -f7)
 	;;
 *)
-	echo "Unsupported OS '$(uname -s)'; exiting..." >&2
+	echo "Unsupported OS '$(uname)'; exiting..." >&2
 	exit 1
 	;;
 esac
