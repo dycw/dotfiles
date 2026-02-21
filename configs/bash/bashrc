@@ -1,29 +1,23 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090,SC1091
 
-# If not running interactively, don't do anything
 if [[ $- != *i* ]]; then
     return
 fi
 
-# don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options
+#### history ##################################################################
+
 HISTCONTROL=ignoreboth
-
-# append to the history file, don't overwrite it
-shopt -s histappend
-
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=1000
 HISTFILESIZE=2000
+shopt -s histappend
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
+#### check window size ########################################################
+
 shopt -s checkwinsize
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
+#### completion ###############################################################
+
 if ! shopt -oq posix; then
     if [ -f /usr/share/bash-completion/bash_completion ]; then
         . /usr/share/bash-completion/bash_completion
@@ -32,13 +26,12 @@ if ! shopt -oq posix; then
     fi
 fi
 
-# Load shared POSIX shell snippets
+#### common POSIX #############################################################
+
 for file in "${HOME}"/.config/posix/*.sh; do
     # restore original settings since 'set -u' (nounset) can brick /etc/profile.d/*
     current="$(set +o)"
-    if [ -f "${file}" ]; then
-        . "${file}"
-    fi
+    [ -f "${file}" ] && . "${file}"
     eval "${current}"
     unset current
 done
