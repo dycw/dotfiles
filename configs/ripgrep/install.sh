@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'ripgrep'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y ripgrep
+		apt-get install -y ripgrep
 	else
-		sudo apt install -y ripgrep
+		sudo apt-get install -y ripgrep
 	fi
 	;;
 macmini)

@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'curl'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y curl
+		apt-get install -y curl
 	else
-		sudo apt install -y curl
+		sudo apt-get install -y curl
 	fi
 	;;
 *) ;;

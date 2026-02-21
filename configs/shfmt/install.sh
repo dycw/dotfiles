@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'shfmt'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y shfmt
+		apt-get install -y shfmt
 	else
-		sudo apt install -y shfmt
+		sudo apt-get install -y shfmt
 	fi
 	;;
 macmini)

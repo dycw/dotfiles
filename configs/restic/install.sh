@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'restic'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y restic
+		apt-get install -y restic
 	else
-		sudo apt install -y restic
+		sudo apt-get install -y restic
 	fi
 	;;
 macmini)

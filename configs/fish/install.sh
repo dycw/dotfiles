@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'fish'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y fish
+		apt-get install -y fish
 	else
-		sudo apt install -y fish
+		sudo apt-get install -y fish
 	fi
 	;;
 macmini)

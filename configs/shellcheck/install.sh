@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'shellcheck'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y shellcheck
+		apt-get install -y shellcheck
 	else
-		sudo apt install -y shellcheck
+		sudo apt-get install -y shellcheck
 	fi
 	;;
 macmini)

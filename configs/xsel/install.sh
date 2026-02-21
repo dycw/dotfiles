@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'xsel'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y xsel
+		apt-get install -y xsel
 	else
-		sudo apt install -y xsel
+		sudo apt-get install -y xsel
 	fi
 	;;
 macmini)

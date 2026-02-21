@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'asciinema'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y asciinema
+		apt-get install -y asciinema
 	else
-		sudo apt install -y asciinema
+		sudo apt-get install -y asciinema
 	fi
 	;;
 macmini)

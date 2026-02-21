@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'fzf'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y fzf
+		apt-get install -y fzf
 	else
-		sudo apt install -y fzf
+		sudo apt-get install -y fzf
 	fi
 	;;
 macmini)

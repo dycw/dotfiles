@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'rlwrap'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y rlwrap
+		apt-get install -y rlwrap
 	else
-		sudo apt install -y rlwrap
+		sudo apt-get install -y rlwrap
 	fi
 	;;
 macmini)

@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'sd'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y sd
+		apt-get install -y sd
 	else
-		sudo apt install -y sd
+		sudo apt-get install -y sd
 	fi
 	;;
 macmini)

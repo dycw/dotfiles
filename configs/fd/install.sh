@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'fd'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y fd-find
+		apt-get install -y fd-find
 	else
-		sudo apt install -y fd-find
+		sudo apt-get install -y fd-find
 	fi
 	;;
 macmini)

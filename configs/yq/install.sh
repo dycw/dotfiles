@@ -13,9 +13,9 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'yq'..."
 	if [ "$(id -u)" -eq 0 ]; then
-		apt install -y yq
+		apt-get install -y yq
 	else
-		sudo apt install -y yq
+		sudo apt-get install -y yq
 	fi
 	;;
 macmini)
