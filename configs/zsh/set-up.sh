@@ -13,6 +13,6 @@ link() {
 
 ###############################################################################
 
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up 'bash'..."
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up 'zsh'..."
 
 link zshrc .zshrc
