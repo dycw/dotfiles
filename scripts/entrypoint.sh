@@ -13,6 +13,7 @@ ssh_port=''          # empty => default
 
 show_usage_and_exit() {
 	cat <<'EOF' >&2
+
 Usage:
   entrypoint.sh
   entrypoint.sh --user username
@@ -87,15 +88,16 @@ while [ $# -gt 0 ]; do
 		show_usage_and_exit
 		;;
 	*)
-		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Unsupport argument '$1'; exiting..." >&2
+		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Unsupported argument '$1'; exiting..." >&2
 		show_usage_and_exit
 		;;
 	esac
 done
 
 # mutually exclusive: --ssh vs --user
-if [ -n "$ssh_user_hostname" ] && [ -n "$local_user" ]; then
-	die "Use either --ssh or --user, not both"
+if [ -n "${local_user}" ] && [ -n "${ssh_user_hostname}" ]; then
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Mutually exclusive arguments '--user' and '--ssh' were given; exiting..." >&2
+	show_usage_and_exit
 fi
 
 # --- helpers -----------------------------------------------------------------
