@@ -13,7 +13,7 @@ case "$1" in
 debian)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'luacheck'..."
 	script_dir=$(dirname -- "$(realpath -- "$0")")
-	configs="$(dirname -- "${script_dir}")"/configs
+	configs="$(dirname -- "${script_dir}")"
 	sh "${configs}/luarocks/install.sh" debian
 	if [ "$(id -u)" -eq 0 ]; then
 		luarocks install luacheck
