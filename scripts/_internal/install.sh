@@ -63,7 +63,3 @@ sh "${configs}"/uv/install.sh ${system}
 find "${configs}" -type f -name 'install.sh' ! -path "${configs}/tmux/.tmux/*" | sort | while IFS= read -r script; do
 	sh "${script}" "${system}"
 done
-
-#### finish ###################################################################
-
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Finished installing apps on '$(hostname)'..."
