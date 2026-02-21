@@ -21,7 +21,7 @@ install_tool() {
 ###############################################################################
 
 case "$1" in
-debian | macmini | macbook)
+debian | macmini)
 	if command -v rustup >/dev/null 2>&1; then
 		echo "[$(date '+%Y-%m-%d %H:%M:%S')] 'rust' is already installed"
 	else
