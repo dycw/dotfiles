@@ -146,7 +146,7 @@ run_remote() {
 
 	self=$(realpath -- "$0")
 	tmp=$(
-		ssh -p "$port" "$target" /bin/sh -s <<'EOF'
+		ssh -p "${port}" "${target}" /bin/sh -s <<'EOF'
 set -eu
 mktemp "${TMPDIR:-/tmp}/set-up.XXXXXX"
 EOF
