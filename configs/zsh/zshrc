@@ -2,11 +2,12 @@
 # shellcheck disable=SC1090,SC1091
 
 # If not running interactively, don't do anything
-if ! [ -o interactive ]; then
+if ! [[ -o interactive ]]; then
   return
 fi
 
-# Load shared POSIX shell snippets
+#### common POSIX #############################################################
+#
 setopt NULL_GLOB
 for file in "${HOME}"/.config/posix/*.sh; do
   # restore original settings since 'set -u' (nounset) can brick /etc/profile.d/*
