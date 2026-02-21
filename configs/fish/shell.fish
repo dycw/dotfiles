@@ -316,7 +316,7 @@ function ssh-auto
 end
 
 function ssh-debian-13
-    ssh-auto -p 2222 nonroot@localhost
+    ssh -p 2222 derek@localhost
 end
 
 function __ssh_strict
