@@ -7,10 +7,6 @@ fi
 
 ###############################################################################
 
-if [ -z "${PS1-}" ] || ! command -v zoxide >/dev/null 2>&1; then
-	exit
-fi
-
 if [ -n "${BASH_VERSION-}" ]; then
 	eval "$(zoxide init --cmd j bash)"
 elif [ -n "${ZSH_VERSION-}" ]; then

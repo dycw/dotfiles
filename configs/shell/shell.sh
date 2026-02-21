@@ -21,7 +21,7 @@ export XDG_STATE_HOME="${XDG_STATE_HOME:-${HOME}/.local/state}"
 
 #### interactive only #########################################################
 
-if ! case $- in *i*) true ;; *) false ;; esac then
+if [ "${-#*i}" = "$-" ]; then
 	return
 fi
 
