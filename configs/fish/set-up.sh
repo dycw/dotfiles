@@ -28,8 +28,15 @@ Linux)
 	;;
 esac
 
-if command -v fish >/dev/null 2>&1 && [ "${USER_SHELL}" != "$(which fish)" ]; then
-	chsh -s "$(which fish)"
+if command -v fish >/dev/null 2>&1; then
+	fish_path="$(command -v fish)"
+	if [ "${USER_SHELL}" != "${fish_path}" ]; then
+		if [ -t 0 ]; then
+			chsh -s "${fish_path}"
+		else
+			echo "[$(date '+%Y-%m-%d %H:%M:%S')] 'fish' is not the default shell; run \"chsh -s '${fish_path}'\""
+		fi
+	fi
 fi
 
 link shell.fish fish/conf.d/fish.fish
