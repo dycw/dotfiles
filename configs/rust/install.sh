@@ -29,6 +29,7 @@ debian | macmini | macbook)
 		rustup toolchain install stable
 		rustup default stable
 		rustup component add clippy rust-analyzer rust-docs rustfmt
+		rustup target add x86_64-unknown-linux-gnu x86_64-apple-darwin aarch64-apple-darwin
 	fi
 
 	if command -v cargo-binstall >/dev/null 2>&1; then
