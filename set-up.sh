@@ -153,7 +153,6 @@ EOF
 	)
 	tmp=$(printf '%s' "${tmp}") # trailing slash
 	ssh -p "${port}" "${target}" "cat > '${tmp}'" <"${self}"
-	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Temporary file '${tmp}' on '${target}'"
 	ssh -p "${port}" "${target}" /bin/sh -s "${tmp}" <<'EOF'
 set -eu
 chmod 0755 "$1"
