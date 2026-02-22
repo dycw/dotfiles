@@ -41,6 +41,13 @@ elif command -v nano >/dev/null 2>&1; then
 	export VISUAL=nano
 fi
 
+#### ls #######################################################################
+
+if ! command -v eza >/dev/null 2>&1; then
+	l() { la "$@"; }
+	la() { ls -ahl --color=always "$@"; }
+fi
+
 #### path dotfiles ############################################################
 
 script_dir=$(dirname -- "$(realpath -- "$0")")
