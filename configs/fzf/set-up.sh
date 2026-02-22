@@ -12,19 +12,26 @@ link() {
 	ln -sfn "$1" "${dest}"
 }
 
-link_here() {
+link_adj() {
 	link "${script_dir}/$1" "$2"
+}
+
+link_submodule_dir() {
+	dir="$1"
+	for file in "${script_dir}"/fzf.fish/"${dir}"/*.fish; do
+		if [ -e "${file}" ]; then
+			name=$(basename -- "${file}")
+			link "${file}" "fish/${dir}/${name}"
+		fi
+	done
 }
 
 ###############################################################################
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up 'fzf'..."
 
-link_here shell.fish fish/conf.d/fzf.fish
-link_here shell.sh posix/fzf.sh
-link_here fzf.fish/conf.d/fzf.fish fish/conf.d/fzf-fish-plugin.fish
-for file in "${script_dir}"/fzf.fish/functions/*.fish; do
-	[ -e "$file" ] || continue
-	name=$(basename -- "${file}")
-	link "${file}" "fish/functions/${name}"
+link_adj shell.fish fish/conf.d/fzf.fish
+link_adj shell.sh posix/fzf.sh
+for dir in completions conf.d functions; do
+	link_submodule_dir "${dir}"
 done

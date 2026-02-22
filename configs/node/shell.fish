@@ -1,11 +1,13 @@
 #!/usr/bin/env fish
 
-if not status is-interactive
-    exit
+#### node (interactive & non-interactive) #####################################
+
+if command -q brew; and brew --prefix node >/dev/null 2>&1; and test -d (brew --prefix node)/bin
+    fish_add_path (brew --prefix node)/bin
 end
 
-###############################################################################
+#### interactive only #########################################################
 
-if test -d /opt/homebrew/opt/node/bin
-    fish_add_path /opt/homebrew/opt/node/bin
+if not status is-interactive
+    exit
 end
