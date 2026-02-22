@@ -22,5 +22,9 @@ macmini)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'tmux'..."
 	brew install tmux
 	;;
+macbook)
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'tmux'..."
+	uvx --from dycw-installer[cli]@latest set-up-tmux
+	;;
 *) ;;
 esac
