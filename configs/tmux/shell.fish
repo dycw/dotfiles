@@ -15,7 +15,7 @@ function ta
         else if test "$count" -eq 1
             tmux attach
         else
-            echo "'ta' expected [0..1] arguments SESSION; got $(count $argv)" >&2; and return 1
+            echo "'ta' expected at most 1 existing session; got $count" >&2; and return 1
         end
     else
         tmux attach -t $argv[1]
