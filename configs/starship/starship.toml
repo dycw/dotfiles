@@ -73,8 +73,12 @@ ${character}"""
 
 [git_commit]
   format = ' [${hash}${tag}](${style})'
-  style = 'blue'
+  style = 'bold blue'
   tag_disabled = false
+
+[git_state]
+  format = ' [${state}(${progress_current}/${progress_total})]($style)'
+  style = 'bold blue'
 
 [golang]
   format = '[${symbol}](${style})'
