@@ -15,19 +15,19 @@ end
 #### ssh #####################################################################
 
 function ssh-dw-mac
-    ssh-auto derekwan@(ts-ip dw-mac.tail.net)
+    ssh-auto derekwan@dw-mac.tail.net
 end
 
 function ssh-dw-swift
-    ssh-auto derek@(ts-ip dw-swift.tail.net)
+    ssh-auto derek@dw-swift.tail.net
 end
 
 function ssh-rh-mac
-    ssh-auto derekwan@(ts-ip rh-mac.tail.net)
+    ssh-auto derekwan@rh-mac.tail.net
 end
 
 function ssh-rh-macbook
-    ssh-auto derekwan@(ts-ip rh-macbook.tail.net)
+    ssh-auto derekwan@rh-macbook.tail.net
 end
 
 function ts
