@@ -1,18 +1,14 @@
 format = """\
-${username}${sudo} › ${hostname} › ${localip} › ${directory}\
+${username}${sudo} › ${hostname} › ${localip} › ${directory} \
 ${git_branch}${git_commit}${git_state}${git_status}${git_metrics}\
-${container}${docker_context}\
-${custom}\
-${cmd_duration}\
-\
+${container}${docker_context}${custom}${cmd_duration}\
+› ${time}\
 ${line_break}\
 \
-${time}\
-
-${battery}${character}"""
+${character}"""
 
 right_format = """\
-${memory_usage}"""
+${battery}${memory_usage}${shlvl}"""
 
 [[battery.display]]
   threshold = 10
@@ -31,7 +27,7 @@ ${memory_usage}"""
 
 [git_branch]
   always_show_remote = true
-  format = ' › ${symbol}[${branch}](${style})'
+  format = '› ${symbol}[${branch}](${style})'
   style = 'blue'
   symbol = ''
   truncation_length = 20
@@ -96,6 +92,14 @@ ${memory_usage}"""
   format = '[${symbol}](${style})'
   version_format = '${raw}'
 
+[shlvl]
+  disabled = false
+  format = '( [${symbol}${shlvl}]($style) )'
+  repeat = true
+  style = 'bold red'
+  symbol = '↕️'
+  threshold = 3
+
 [sudo]
   disabled = false
   format = '( [${symbol}]($style))'
@@ -103,9 +107,9 @@ ${memory_usage}"""
 
 [time]
   disabled = false
-  format = '[${time}](${style}) '
-  style = 'bold blue'
-  time_format = '%F %T'
+  format = '[${time}](${style})'
+  style = 'dimmed white'
+  time_format = '%T,%d-%b-%Y%Z, %F'
 
 [username]
   format = '[${user}](${style})'
