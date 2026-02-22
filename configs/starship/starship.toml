@@ -80,7 +80,7 @@ ${character}"""
   added_style = 'white'
   deleted_style = 'white'
   disabled = false
-  format = ' ([+${added}](${added_style}))([-${deleted}](${deleted_style}))'
+  format = '([ +${added}](${added_style}))([ -${deleted}](${deleted_style}))'
   ignore_submodules = true
 
 [git_state]
