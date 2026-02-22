@@ -22,5 +22,9 @@ macmini)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'bat'..."
 	brew install bat
 	;;
+macbook)
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'bat'..."
+	uvx --from dycw-installer[cli]@latest set-up-bat
+	;;
 *) ;;
 esac
