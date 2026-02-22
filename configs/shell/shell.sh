@@ -56,7 +56,8 @@ export PATH_DOTFILES
 
 #### swap files ###############################################################
 
-for swap in "${HOME}"/.mode.sw*; do
-	[ -e "${swap}" ] || continue
-	rm -v -- "${swap}"
+for file in "${HOME}"/.mode.sw*; do
+	if [ -e "${file}" ]; then
+		rm -v -- "${file}"
+	fi
 done
