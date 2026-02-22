@@ -1,5 +1,5 @@
 format = """\
-${username}${sudo} › ${hostname} › ${localip} › ${directory} \
+${username}${sudo} › ${hostname}${localip} › ${directory} \
 ${git_branch}${git_commit}${git_state}${git_status}${git_metrics}\
 ${container}${docker_context}${custom}\
 ${line_break}\
@@ -68,8 +68,8 @@ ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
 
 [localip]
   disabled = false
-  format = '[${localipv4}]($style)'
-  ssh_only = false
+  format = '( › [${localipv4}]($style))'
+  ssh_only = true
   style = 'blue'
 
 [memory_usage]
