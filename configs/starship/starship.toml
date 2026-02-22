@@ -1,9 +1,40 @@
-format = """
+format = """\
+${username} › ${hostname} ${localip} › ${directory} › \
+${git_branch}${git_commit}${git_state}${git_metrics}${git_status} › \
+$git_branch\
+$git_commit\
+$git_state\
+$git_metrics\
+$git_status\
+$git_status\
+$docker_context\
+$aws\
+$gcloud\
+$openstack\
+$azure\
+$nats\
+$direnv\
+$env_var\
+$mise\
+$crystal\
+$custom\
+$sudo\
+$cmd_duration\
+$line_break\
+$jobs\
+$battery\
+$time\
+$status\
+$os\
+$container\
+$netns\
+$shell\
+
+${memory_usage}\
 ${time}\
 ${directory}\
 ${git_branch}${git_commit}${git_state}${git_metrics}${git_status}\
 ${docker_context}\
-${username}${hostname}${localip}${shlvl}\
 ${c}${cmake}${cobol}${daml}${dart}${deno}${dotnet}${elixir}${elm}${erlang}${fennel}${gleam}${golang}${guix_shell}${haskell}${haxe}${helm}${java}${julia}${kotlin}${gradle}${lua}${nim}${nodejs}${ocaml}${opa}${perl}${php}${pulumi}${purescript}${python}${quarto}${raku}${rlang}${red}${ruby}${rust}${scala}${solidity}${swift}${terraform}${typst}${vlang}${vagrant}${zig}\
 ${buf}${nix_shell}${conda}${meson}${spack}\
 ${package}\
@@ -27,28 +58,39 @@ ${character}"""
   format = '[${duration}](${style}) '
 
 [directory]
+  format = '[$path]($style)[$read_only]($read_only_style)'
+  style = 'bold yellow'
   truncate_to_repo = false
   truncation_length = 8
   truncation_symbol = './'
 
 [git_branch]
-  format = '[${symbol}${branch}](${style}) '
+  always_show_remote = true
+  format = '${symbol}[${branch}](${style})'
+  style = 'blue'
   symbol = ''
   truncation_length = 20
+
+[git_commit]
+  format = ' [${hash}${tag}](${style})'
+  style = 'blue'
+  tag_disabled = false
 
 [golang]
   format = '[${symbol}](${style})'
   version_format = '${raw}'
 
 [hostname]
-  format = '[${ssh_symbol}${hostname}](${style}) '
+  format = '[${hostname}](${style})${ssh_symbol}'
   ssh_only = false
   ssh_symbol = '🌐'
+  style = 'blue'
 
 [localip]
   disabled = false
-  format = '[${localipv4}]($style) '
+  format = '[${localipv4}]($style)'
   ssh_only = false
+  style = 'blue'
 
 [nodejs]
   format = '[${symbol}](${style})'
@@ -74,5 +116,7 @@ ${character}"""
   time_format = '%F %T'
 
 [username]
-  format = '[${user}](${style}) '
+  format = '[${user}](${style})'
   show_always = true
+  style_root = 'yellow'
+  style_user = 'yellow'
