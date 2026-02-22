@@ -34,7 +34,7 @@ ${character}
   style = 'dimmed white'
 
 [container]
-  format = ' [${symbol}(${style})'
+  format = '( [${symbol}](${style}))'
   style = 'dimmed white'
   symbol = '⬢'
 
