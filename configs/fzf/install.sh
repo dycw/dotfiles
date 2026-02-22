@@ -22,5 +22,9 @@ macmini)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'fzf'..."
 	brew install fzf
 	;;
+macbook)
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'fzf'..."
+	uvx --from dycw-installer[cli]@latest set-up-fzf
+	;;
 *) ;;
 esac

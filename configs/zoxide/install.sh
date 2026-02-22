@@ -22,5 +22,9 @@ macmini)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'zoxide'..."
 	brew install zoxide
 	;;
+macbook)
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'zoxide'..."
+	uvx --from dycw-installer[cli]@latest set-up-zoxide
+	;;
 *) ;;
 esac

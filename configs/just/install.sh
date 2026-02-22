@@ -22,5 +22,9 @@ macmini)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'just'..."
 	brew install just
 	;;
+macbook)
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'just'..."
+	uvx --from dycw-installer[cli]@latest set-up-just
+	;;
 *) ;;
 esac

@@ -22,5 +22,9 @@ macmini)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'delta'..."
 	brew install git-delta
 	;;
+macbook)
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'delta'..."
+	uvx --from dycw-installer[cli]@latest set-up-delta
+	;;
 *) ;;
 esac
