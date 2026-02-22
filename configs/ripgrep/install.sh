@@ -22,5 +22,9 @@ macmini)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'ripgrep'..."
 	brew install ripgrep
 	;;
+macbook)
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'ripgrep'..."
+	uvx --from dycw-installer[cli]@latest set-up-ripgrep
+	;;
 *) ;;
 esac
