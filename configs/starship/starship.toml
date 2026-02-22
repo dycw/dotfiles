@@ -1,55 +1,26 @@
 format = """\
-${username} › ${hostname} ${localip} › ${directory}\
-${git_branch}${git_commit}${git_state}${git_status}${git_metrics} › \
-$docker_context\
-$aws\
-$gcloud\
-$openstack\
-$azure\
-$nats\
-$direnv\
-$env_var\
-$mise\
-$crystal\
-$custom\
-$sudo\
-$cmd_duration\
-$line_break\
-$jobs\
-$battery\
-$time\
-$status\
-$os\
-$container\
-$netns\
-$shell\
-
-${memory_usage}\
+${username}${sudo} › ${hostname} › ${localip} › ${directory}\
+${git_branch}${git_commit}${git_state}${git_status}${git_metrics}\
+${container}${docker_context}\
+${custom}\
+${cmd_duration}\
+\
+${line_break}\
+\
 ${time}\
-${directory}\
-${git_branch}${git_commit}${git_state}${git_metrics}${git_status}\
-${docker_context}\
-${c}${cmake}${cobol}${daml}${dart}${deno}${dotnet}${elixir}${elm}${erlang}${fennel}${gleam}${golang}${guix_shell}${haskell}${haxe}${helm}${java}${julia}${kotlin}${gradle}${lua}${nim}${nodejs}${ocaml}${opa}${perl}${php}${pulumi}${purescript}${python}${quarto}${raku}${rlang}${red}${ruby}${rust}${scala}${solidity}${swift}${terraform}${typst}${vlang}${vagrant}${zig}\
-${buf}${nix_shell}${conda}${meson}${spack}\
-${package}\
-${memory_usage}\
-${aws}${gcloud}${openstack}${azure}\
-${nats}\
-${direnv}${env_var}\
-${mise}\
-${crystal}${custom}${sudo}\
-${cmd_duration}${line_break}\
-${jobs}\
-${battery}${status}\
-${os}\
-${container}${netns}${shell}\
-${character}"""
+
+${battery}${character}"""
+
+right_format = """\
+${memory_usage}"""
 
 [[battery.display]]
-  threshold = 20
+  threshold = 10
 
 [cmd_duration]
-  format = '[${duration}](${style}) '
+  format = '( …[${duration}](${style}))'
+  min_time = 5_000
+  style = 'white'
 
 [directory]
   format = '[${path}](${style})[${read_only}](${read_only_style})'
@@ -83,14 +54,14 @@ ${character}"""
 
 [git_status]
   format = '( [${all_status}${ahead_behind}]($style))'
-  style = 'bold red'
+  style = 'white'
 
 [golang]
   format = '[${symbol}](${style})'
   version_format = '${raw}'
 
 [hostname]
-  format = '[${hostname}](${style})${ssh_symbol}'
+  format = '[${hostname}](${style})( ${ssh_symbol})'
   ssh_only = false
   ssh_symbol = '🌐'
   style = 'blue'
@@ -100,6 +71,13 @@ ${character}"""
   format = '[${localipv4}]($style)'
   ssh_only = false
   style = 'blue'
+
+[memory_usage]
+  disabled = false
+  format = '( [${ram}(|${swap})](${style}) )'
+  style = 'bold red'
+  symbol = '🐏'
+  threshold = 80
 
 [nodejs]
   format = '[${symbol}](${style})'
@@ -117,6 +95,11 @@ ${character}"""
 [rust]
   format = '[${symbol}](${style})'
   version_format = '${raw}'
+
+[sudo]
+  disabled = false
+  format = '( [${symbol}]($style))'
+  symbol = '🧙'
 
 [time]
   disabled = false
