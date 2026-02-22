@@ -2,12 +2,14 @@ format = """\
 ${username}${sudo} › ${hostname}${localip} › ${directory}\
 ${git_branch}${git_commit}${git_state}${git_status}${git_metrics}\
 ${container}${docker_context}${golang}${lua}${nodejs}${python}${rust}${package}\
+${fill}\
+${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}\
+\
 ${line_break}\
 \
-${character}"""
+${character}
+"""
 
-right_format = """\
-${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
 
 [battery]
   charging_symbol = '󰂄'
@@ -36,6 +38,9 @@ ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
   truncate_to_repo = false
   truncation_length = 8
   truncation_symbol = './'
+
+[fill]
+  symbol = ' '
 
 [git_branch]
   always_show_remote = true
@@ -146,5 +151,5 @@ ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
 [username]
   format = '[${user}](${style})'
   show_always = true
-  style_root = 'yellow'
-  style_user = 'yellow'
+  style_root = 'blue'
+  style_user = 'blue'
