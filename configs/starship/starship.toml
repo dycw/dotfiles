@@ -113,7 +113,7 @@ ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
   disabled = false
   format = '[${time}](${style})'
   style = 'dimmed white'
-  time_format = '%F %T%Z'
+  time_format = '%T, %F%Z'
 
 [username]
   format = '[${user}](${style})'
