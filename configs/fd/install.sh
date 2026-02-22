@@ -22,5 +22,9 @@ macmini)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'fd'..."
 	brew install fd
 	;;
+macbook)
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'fd'..."
+	uvx --from dycw-installer[cli]@latest set-up-fd
+	;;
 *) ;;
 esac
