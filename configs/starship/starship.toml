@@ -14,7 +14,7 @@ ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}"""
   threshold = 10
 
 [cmd_duration]
-  format = '( …[${duration}](${style}))'
+  format = '( …[${duration}](${style}) )'
   min_time = 5_000
   style = 'white'
 
