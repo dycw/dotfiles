@@ -14,7 +14,7 @@ ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
 
 [cmd_duration]
   format = '( …[${duration}](${style}) )'
-  min_time = 5_000
+  min_time = 5_0000
   style = 'white'
 
 [directory]
