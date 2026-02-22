@@ -1,6 +1,6 @@
 #!/usr/bin/env fish
 
-#### local (interactive & non-interactive) ####################################
+#### npm global (interactive & non-interactive) ###############################
 
 if test -d $HOME/.npm-global/bin
     fish_add_path $HOME/.npm-global/bin
