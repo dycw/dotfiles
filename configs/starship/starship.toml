@@ -1,14 +1,13 @@
 format = """\
 ${username}${sudo} › ${hostname} › ${localip} › ${directory} \
 ${git_branch}${git_commit}${git_state}${git_status}${git_metrics}\
-${container}${docker_context}${custom} \
-› ${time}\
+${container}${docker_context}${custom}\
 ${line_break}\
 \
 ${character}"""
 
 right_format = """\
-${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}"""
+${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
 
 [[battery.display]]
   threshold = 10
@@ -108,7 +107,7 @@ ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}"""
 [time]
   disabled = false
   format = '[${time}](${style})'
-  style = 'dimmed yellow'
+  style = 'dimmed white'
   time_format = '%F %T%Z'
 
 [username]
