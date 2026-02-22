@@ -18,7 +18,7 @@ link_adj() {
 
 link_submodule_dir() {
 	dir="$1"
-	for file in "${script_dir}"/fzf.fish/"${dir}"/*.fish; do
+	for file in "${script_dir}"/"${dir}"/*.fish; do
 		if [ -e "${file}" ]; then
 			name=$(basename -- "${file}")
 			link "${file}" "fish/${dir}/${name}"

@@ -4,3 +4,6 @@
 [submodule "configs/fzf/fzf.fish"]
 	path = configs/fzf/fzf.fish
 	url = https://github.com/PatrickF1/fzf.fish.git
+[submodule "configs/nvm/nvm.fish"]
+	path = configs/nvm/nvm.fish
+	url = https://github.com/jorgebucaran/nvm.fish

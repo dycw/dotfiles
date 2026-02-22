@@ -1,2 +1,3 @@
 configs/fzf/fzf.fish
+configs/nvm/nvim.fish
 configs/tmux/.tmux
