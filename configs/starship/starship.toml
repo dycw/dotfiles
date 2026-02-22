@@ -1,21 +1,21 @@
 format = """\
 ${username}${sudo} › ${hostname} › ${localip} › ${directory} \
 ${git_branch}${git_commit}${git_state}${git_status}${git_metrics}\
-${container}${docker_context}${custom}${cmd_duration}\
+${container}${docker_context}${custom} \
 › ${time}\
 ${line_break}\
 \
 ${character}"""
 
 right_format = """\
-${battery}${memory_usage}${shlvl}"""
+${battery}${cmd_duration}${memory_usage}${shlvl}"""
 
 [[battery.display]]
   threshold = 10
 
 [cmd_duration]
   format = '( …[${duration}](${style}))'
-  min_time = 5_000
+  min_time = 500
   style = 'white'
 
 [directory]
@@ -108,8 +108,8 @@ ${battery}${memory_usage}${shlvl}"""
 [time]
   disabled = false
   format = '[${time}](${style})'
-  style = 'dimmed white'
-  time_format = '%T,%d-%b-%Y%Z, %F'
+  style = 'yellow'
+  time_format = '%F %T%Z'
 
 [username]
   format = '[${user}](${style})'
