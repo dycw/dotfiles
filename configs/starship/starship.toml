@@ -1,5 +1,5 @@
 format = """\
-${username} › ${hostname} ${localip} › ${directory} › \
+${username} › ${hostname} ${localip} › ${directory}\
 ${git_branch}${git_commit}${git_state}${git_status}${git_metrics} › \
 $git_branch\
 $git_commit\
@@ -58,7 +58,7 @@ ${character}"""
   format = '[${duration}](${style}) '
 
 [directory]
-  format = '[$path]($style)[$read_only]($read_only_style)'
+  format = '[${path}](${style})[${read_only}](${read_only_style})'
   style = 'bold yellow'
   truncate_to_repo = false
   truncation_length = 8
@@ -66,7 +66,7 @@ ${character}"""
 
 [git_branch]
   always_show_remote = true
-  format = '${symbol}[${branch}](${style})'
+  format = ' › ${symbol}[${branch}](${style})'
   style = 'blue'
   symbol = ''
   truncation_length = 20
@@ -80,12 +80,19 @@ ${character}"""
   added_style = 'white'
   deleted_style = 'white'
   disabled = false
-  format = '([ +${added}](${added_style}))([ -${deleted}](${deleted_style}))'
+  # format = '([ +${added}](${added_style}))([ -${deleted}](${deleted_style}))'
+  # format = '([ +${added}](${added_style}))([ -${deleted}](${deleted_style}))'
+  # format = '( [+${added}](${added_style})( -${deleted}](${deleted_style}))'
+  format = '( +${added}(${added_style})(-${deleted})(${deleted_style}))'
   ignore_submodules = true
 
 [git_state]
   format = ' [${state}(${progress_current}/${progress_total})]($style)'
   style = 'bold blue'
+
+[git_status]
+  format = '( [${all_status}${ahead_behind}]($style))'
+  style = 'bold red'
 
 [golang]
   format = '[${symbol}](${style})'
