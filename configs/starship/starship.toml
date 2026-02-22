@@ -15,7 +15,7 @@ ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
 [cmd_duration]
   format = '( …[${duration}](${style}) )'
   min_time = 10_000
-  style = 'white'
+  style = 'yellow'
 
 [directory]
   format = '[${path}](${style})[${read_only}](${read_only_style})'
@@ -60,6 +60,11 @@ ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
   ssh_only = false
   ssh_symbol = '🌐'
   style = 'blue'
+
+[jobs]
+  disabled = false
+  format = '( [${symbol}${number}](${style}) )'
+  style = 'bold red'
 
 [localip]
   disabled = false
