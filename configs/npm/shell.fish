@@ -11,3 +11,11 @@ end
 if not status is-interactive
     exit
 end
+
+#### interactive only #########################################################
+
+if set -q XDG_CONFIG_HOME
+    export NVM_DIR=$XDG_CONFIG_HOME/nvm
+else
+    export NVM_DIR=$HOME/.config/nvm
+end
