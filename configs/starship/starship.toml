@@ -1,7 +1,7 @@
 format = """\
 ${username}${sudo} › ${hostname}${localip} › ${directory}\
 ${git_branch}${git_commit}${git_state}${git_status}${git_metrics}\
-${container}${docker_context}${custom}\
+${container}${docker_context}${golang}${lua}${nodejs}${python}${rust}${package}\
 ${line_break}\
 \
 ${character}"""
@@ -9,8 +9,21 @@ ${character}"""
 right_format = """\
 ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
 
-[[battery.display]]
-  threshold = 10
+[battery]
+  charging_symbol = '󰂄'
+  discharging_symbol = '󰂃'
+  empty_symbol = '󰂎'
+  format = '( [${symbol}${percentage}](${style}) )'
+  full_symbol = '󰁹'
+  unknown_symbol = '󰁽'
+
+  [[battery.display]]
+    style = 'bold red'
+    threshold = 10
+
+  [[battery.display]]
+    style = 'bold yellow'
+    threshold = 30
 
 [cmd_duration]
   format = '( …[${duration}](${style}) )'
@@ -37,8 +50,8 @@ ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
   tag_disabled = false
 
 [git_metrics]
-  added_style = 'white'
-  deleted_style = 'white'
+  added_style = 'dimmed white'
+  deleted_style = 'dimmed white'
   disabled = false
   format = '( (+${added})(${added_style})(-${deleted})(${deleted_style}))'
   ignore_submodules = true
@@ -49,10 +62,12 @@ ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
 
 [git_status]
   format = '( [${all_status}${ahead_behind}]($style))'
-  style = 'white'
+  style = 'dimmed white'
 
 [golang]
-  format = '[${symbol}](${style})'
+  format = '( [${symbol}](${style}))'
+  style = 'dimmed white'
+  symbol = '🐹'
   version_format = '${raw}'
 
 [hostname]
@@ -72,28 +87,41 @@ ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
   ssh_only = true
   style = 'blue'
 
+[lua]
+  format = '( [${symbol}](${style}))'
+  style = 'dimmed white'
+  symbol = '🌙'
+  version_format = '${raw}'
+
 [memory_usage]
   disabled = false
-  format = '( [${ram}(|${swap})](${style}) )'
+  format = '( ${symbol}[${ram}(|${swap})](${style}) )'
   style = 'bold red'
   symbol = '🐏'
   threshold = 80
 
 [nodejs]
-  format = '[${symbol}](${style})'
+  format = '( [${symbol}](${style}))'
+  style = 'dimmed white'
+  symbol = ' '
   version_format = '${raw}'
 
 [package]
-  format = '[${symbol}${version}]($style) '
+  format = '( [${symbol}${version}](${style}))'
+  style = 'dimmed white'
   symbol = '📦'
   version_format = '${raw}'
 
 [python]
-  format = '[${symbol}](${style})'
+  format = '( [${symbol}](${style}))'
+  style = 'dimmed white'
+  symbol = '🐍'
   version_format = '${raw}'
 
 [rust]
-  format = '[${symbol}](${style})'
+  format = '( [${symbol}](${style}))'
+  style = 'dimmed white'
+  symbol = '🦀'
   version_format = '${raw}'
 
 [shlvl]
