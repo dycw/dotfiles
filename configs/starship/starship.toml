@@ -1,12 +1,6 @@
 format = """\
 ${username} › ${hostname} ${localip} › ${directory}\
 ${git_branch}${git_commit}${git_state}${git_status}${git_metrics} › \
-$git_branch\
-$git_commit\
-$git_state\
-$git_metrics\
-$git_status\
-$git_status\
 $docker_context\
 $aws\
 $gcloud\
@@ -80,10 +74,7 @@ ${character}"""
   added_style = 'white'
   deleted_style = 'white'
   disabled = false
-  # format = '([ +${added}](${added_style}))([ -${deleted}](${deleted_style}))'
-  # format = '([ +${added}](${added_style}))([ -${deleted}](${deleted_style}))'
-  # format = '( [+${added}](${added_style})( -${deleted}](${deleted_style}))'
-  format = '( +${added}(${added_style})(-${deleted})(${deleted_style}))'
+  format = '( (+${added})(${added_style})(-${deleted})(${deleted_style}))'
   ignore_submodules = true
 
 [git_state]
