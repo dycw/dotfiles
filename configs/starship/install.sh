@@ -22,5 +22,9 @@ macmini)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'starship'..."
 	brew install starship
 	;;
+macbook)
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'starship'..."
+	uvx --from dycw-installer[cli]@latest set-up-starship
+	;;
 *) ;;
 esac

@@ -22,5 +22,9 @@ macmini)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'direnv'..."
 	brew install direnv
 	;;
+macbook)
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'direnv'..."
+	uvx --from dycw-installer[cli]@latest set-up-direnv
+	;;
 *) ;;
 esac
