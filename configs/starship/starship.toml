@@ -9,13 +9,21 @@ ${character}"""
 right_format = """\
 ${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}"""
 
-[[battery.display]]
-  style = 'bold red'
-  threshold = 10
+[battery]
+  charging_symbol = '󰂄'
+  discharging_symbol = '󰂃'
+  empty_symbol = '󰂎'
+  format = '( [${symbol}${percentage}](${style}) )'
+  full_symbol = '󰁹'
+  unknown_symbol = '󰁽'
 
-[[battery.display]]
-  style = 'bold yellow'
-  threshold = 30
+  [[battery.display]]
+    style = 'bold red'
+    threshold = 10
+
+  [[battery.display]]
+    style = 'bold yellow'
+    threshold = 30
 
 [cmd_duration]
   format = '( …[${duration}](${style}) )'
