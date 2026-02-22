@@ -47,6 +47,8 @@ macbook)
 	for dir in completions conf.d functions; do
 		link_submodule_dir "${dir}"
 	done
+
+	nvm install latest
 	;;
 *) ;;
 esac
