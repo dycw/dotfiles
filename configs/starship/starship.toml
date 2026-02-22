@@ -1,9 +1,10 @@
 format = """\
-${username}${sudo} › ${hostname}${localip} › ${directory}\
+${hostname}${container}${localip} › ${directory}\
 ${git_branch}${git_commit}${git_state}${git_status}${git_metrics}\
-${container}${docker_context}${golang}${lua}${nodejs}${python}${rust}${package}\
+${golang}${lua}${nodejs}${python}${rust}${package}\
 ${fill}\
-${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}${time}\
+${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}\
+${username}${sudo} ‹ ${time}\
 \
 ${line_break}\
 \
@@ -15,7 +16,7 @@ ${character}
   charging_symbol = '󰂄'
   discharging_symbol = '󰂃'
   empty_symbol = '󰂎'
-  format = '( [${symbol}${percentage}](${style}) )'
+  format = '([${symbol}${percentage}](${style}) ‹ )'
   full_symbol = '󰁹'
   unknown_symbol = '󰁽'
 
@@ -28,9 +29,14 @@ ${character}
     threshold = 30
 
 [cmd_duration]
-  format = '( …[${duration}](${style}) )'
+  format = '([${duration}](${style}) ‹ )'
   min_time = 10_000
-  style = 'yellow'
+  style = 'dimmed white'
+
+[container]
+  format = ' [${symbol}(${style})'
+  style = 'dimmed white'
+  symbol = '⬢'
 
 [directory]
   format = '[${path}](${style})[${read_only}](${read_only_style})'
@@ -44,14 +50,14 @@ ${character}
 
 [git_branch]
   always_show_remote = true
-  format = '› ${symbol}[${branch}](${style})'
-  style = 'blue'
+  format = '( ${symbol}[${branch}](${style}))'
+  style = 'dimmer white'
   symbol = ''
   truncation_length = 20
 
 [git_commit]
-  format = '[${hash}${tag}](${style})'
-  style = 'bold blue'
+  format = '( [${hash}${tag}](${style}))'
+  style = 'dimmer white'
   tag_disabled = false
 
 [git_metrics]
@@ -62,7 +68,7 @@ ${character}
   ignore_submodules = true
 
 [git_state]
-  format = ' [${state}(${progress_current}/${progress_total})]($style)'
+  format = '( [${state}(${progress_current}/${progress_total})]($style))'
   style = 'bold blue'
 
 [git_status]
@@ -83,14 +89,14 @@ ${character}
 
 [jobs]
   disabled = false
-  format = '( [${symbol}${number}](${style}) )'
+  format = '([${symbol}${number}](${style}) ‹ )'
   style = 'bold red'
 
 [localip]
   disabled = false
-  format = '( › [${localipv4}]($style))'
+  format = '( [${localipv4}]($style))'
   ssh_only = true
-  style = 'blue'
+  style = 'dimmed white'
 
 [lua]
   format = '( [${symbol}](${style}))'
@@ -100,7 +106,7 @@ ${character}
 
 [memory_usage]
   disabled = false
-  format = '( ${symbol}[${ram}(|${swap})](${style}) )'
+  format = '(${symbol}[${ram}(|${swap})](${style}) ‹ )'
   style = 'bold red'
   symbol = '🐏'
   threshold = 80
@@ -131,7 +137,7 @@ ${character}
 
 [shlvl]
   disabled = false
-  format = '( [${symbol}${shlvl}]($style) )'
+  format = '([${symbol}${shlvl}]($style) ‹ )'
   repeat = true
   style = 'bold red'
   symbol = '↕️'
