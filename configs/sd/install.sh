@@ -22,5 +22,9 @@ macmini)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'sd'..."
 	brew install sd
 	;;
+macbook)
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'sd'..."
+	uvx --from dycw-installer[cli]@latest set-up-sd
+	;;
 *) ;;
 esac

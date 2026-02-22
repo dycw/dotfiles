@@ -22,5 +22,9 @@ macmini)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'shellcheck'..."
 	brew install shellcheck
 	;;
+macbook)
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'shellcheck'..."
+	uvx --from dycw-installer[cli]@latest set-up-shellcheck
+	;;
 *) ;;
 esac
