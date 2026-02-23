@@ -4,7 +4,7 @@ ${git_branch}${git_commit}${git_state}${git_status}${git_metrics}\
 ${golang}${lua}${nodejs}${python}${rust}${package}\
 ${fill}\
 ${battery}${jobs}${memory_usage}${shlvl}\
-${time} │ ${username}${sudo}\
+${time}${custom.tz} │ ${username}${sudo}\
 \
 ${line_break}\
 \
@@ -37,6 +37,13 @@ ${character}
   format = '( [${symbol}](${style}))'
   style = 'dimmed white'
   symbol = '⬢'
+
+[custom]
+  [custom.tz]
+    command = "date +%Z"
+    format = "[${output}](${style})"
+    style = "dimmed white"
+    when = "true"
 
 [directory]
   format = '[${path}](${style})[${read_only}](${read_only_style})'
