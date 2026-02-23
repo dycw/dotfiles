@@ -3,8 +3,8 @@ ${hostname}${container}${localip} › ${directory}\
 ${git_branch}${git_commit}${git_state}${git_status}${git_metrics}\
 ${golang}${lua}${nodejs}${python}${rust}${package}\
 ${fill}\
-${battery}${cmd_duration}${jobs}${memory_usage}${shlvl}\
-${username}${sudo} ‹ ${time}\
+${battery}${jobs}${memory_usage}${shlvl}\
+${time} ‹ ${username}${sudo}\
 \
 ${line_break}\
 \
@@ -50,7 +50,7 @@ ${character}
 
 [git_branch]
   always_show_remote = true
-  format = '( ${symbol}[${branch}](${style}))'
+  format = '( › ${symbol}[${branch}](${style}))'
   style = 'dimmer white'
   symbol = ''
   truncation_length = 20
@@ -69,7 +69,7 @@ ${character}
 
 [git_state]
   format = '( [${state}(${progress_current}/${progress_total})]($style))'
-  style = 'bold blue'
+  style = 'bold white'
 
 [git_status]
   format = '( [${all_status}${ahead_behind}]($style))'
@@ -85,7 +85,7 @@ ${character}
   format = '[${hostname}](${style})( ${ssh_symbol})'
   ssh_only = false
   ssh_symbol = '🌐'
-  style = 'blue'
+  style = 'white'
 
 [jobs]
   disabled = false
@@ -152,10 +152,10 @@ ${character}
   disabled = false
   format = '[${time}](${style})'
   style = 'dimmed white'
-  time_format = '%T, %F%Z'
+  time_format = '%T'
 
 [username]
   format = '[${user}](${style})'
   show_always = true
-  style_root = 'blue'
-  style_user = 'blue'
+  style_root = 'white'
+  style_user = 'white'
