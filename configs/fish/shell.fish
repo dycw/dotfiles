@@ -271,10 +271,10 @@ function add-known-host
     if test (count $argv) -ge 2
         set -l port $argv[2]
         ssh-keygen -R "[$host]:$port"
-        ssh-keyscan -p $port $host >>~/.ssh/known_hosts
+        __ssh_keyscan $host -p $port
     else
         ssh-keygen -R $host
-        ssh-keyscan $host >>~/.ssh/known_hosts
+        __ssh_keyscan $host
     end
 end
 
@@ -310,13 +310,39 @@ function ssh-auto
         set -l parts (string split -m1 @ $destination)
         set -l host $parts[2]
         ssh-keygen -R $host
-        ssh-keyscan -q -t ed25519 $host >>~/.ssh/known_hosts
+        __ssh_keyscan $host
         __ssh_strict $destination
     end
 end
 
 function ssh-debian-13
     ssh -p 2222 derek@localhost
+end
+
+function __ssh_keyscan
+    if test (count $argv) -lt 1
+        echo "'__ssh_keyscan' expected [1..] arguments HOST; got $(count $argv)" >&2; and return 1
+    end
+    argparse p/port= -- $argv; or return $status
+    set -l args -t ed25519
+    if test -n "$_flag_port"
+        set args $args -p "$_flag_port"
+    end
+    set args $args $argv[1]
+    set -l tmp (mktemp)
+    ssh-keyscan $args -q >>~/.ssh/known_hosts 2>$tmp
+    set -l result $status
+    if test $result -eq 0
+        return
+    end
+    if grep -q "illegal option -- q" $tmp
+        ssh-keyscan $args >>~/.ssh/known_hosts
+    else
+        cat $tmp >&2
+        rm -f $tmp
+        return $result
+    end
+    rm -f $tmp
 end
 
 function __ssh_strict
