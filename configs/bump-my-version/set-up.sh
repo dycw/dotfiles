@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+set -eu
+
+###############################################################################
+
+link() {
+	src="$(dirname -- "$(realpath -- "$0")")/$1"
+	dest="${XDG_CONFIG_HOME:-${HOME}/.config}/$2"
+	mkdir -p "$(dirname -- "${dest}")"
+	ln -sfn "${src}" "${dest}"
+}
+
+###############################################################################
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Setting up 'bump-my-version'..."
+
+link shell.fish fish/conf.d/bump-my-version.fish
