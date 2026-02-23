@@ -31,23 +31,23 @@ ${character}
 [cmd_duration]
   format = '([${duration}](${style}) │ )'
   min_time = 10_000
-  style = 'dimmed white'
+  style = 'white'
 
 [container]
   format = '( [${symbol}](${style}))'
-  style = 'dimmed white'
+  style = 'white'
   symbol = '⬢'
 
 [custom]
   [custom.tz]
     command = "date +%Z"
     format = "[${output}](${style})"
-    style = "dimmed white"
+    style = "white"
     when = "true"
 
 [directory]
   format = '[${path}](${style})[${read_only}](${read_only_style})'
-  style = 'dimmed white'
+  style = 'white'
   truncate_to_repo = false
   truncation_length = 8
   truncation_symbol = './'
@@ -68,8 +68,8 @@ ${character}
   tag_disabled = false
 
 [git_metrics]
-  added_style = 'dimmed white'
-  deleted_style = 'dimmed white'
+  added_style = 'white'
+  deleted_style = 'white'
   disabled = false
   format = '((+${added})(${added_style})(-${deleted})(${deleted_style}))'
   ignore_submodules = true
@@ -80,11 +80,11 @@ ${character}
 
 [git_status]
   format = '( [${all_status}${ahead_behind}]($style))'
-  style = 'dimmed white'
+  style = 'white'
 
 [golang]
   format = '( [${symbol}](${style}))'
-  style = 'dimmed white'
+  style = 'white'
   symbol = '🐹'
   version_format = '${raw}'
 
@@ -103,11 +103,11 @@ ${character}
   disabled = false
   format = '( [${localipv4}]($style))'
   ssh_only = true
-  style = 'dimmed white'
+  style = 'white'
 
 [lua]
   format = '( [${symbol}](${style}))'
-  style = 'dimmed white'
+  style = 'white'
   symbol = '🌙'
   version_format = '${raw}'
 
@@ -120,25 +120,25 @@ ${character}
 
 [nodejs]
   format = '( [${symbol}](${style}))'
-  style = 'dimmed white'
+  style = 'white'
   symbol = ' '
   version_format = '${raw}'
 
 [package]
   format = '( [${symbol}${version}](${style}))'
-  style = 'dimmed white'
+  style = 'white'
   symbol = '📦'
   version_format = '${raw}'
 
 [python]
   format = '( [${symbol}](${style}))'
-  style = 'dimmed white'
+  style = 'white'
   symbol = '🐍'
   version_format = '${raw}'
 
 [rust]
   format = '( [${symbol}](${style}))'
-  style = 'dimmed white'
+  style = 'white'
   symbol = '🦀'
   version_format = '${raw}'
 
@@ -158,7 +158,7 @@ ${character}
 [time]
   disabled = false
   format = '[${time}](${style})'
-  style = 'dimmed white'
+  style = 'white'
   time_format = '%T'
 
 [username]
