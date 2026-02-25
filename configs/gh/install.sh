@@ -22,5 +22,9 @@ macmini)
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'gh'..."
 	brew install gh
 	;;
+macbook)
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing 'gh'..."
+	uvx --from dycw-installer[cli]@latest set-up-gh
+	;;
 *) ;;
 esac
