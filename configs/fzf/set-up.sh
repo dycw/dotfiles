@@ -21,7 +21,12 @@ link_submodule_dir() {
 	for file in "${script_dir}"/fzf.fish/"${dir}"/*.fish; do
 		if [ -e "${file}" ]; then
 			name=$(basename -- "${file}")
-			link "${file}" "fish/${dir}/${name}"
+			if [ "${name}" = fzf.fish ]; then
+				name_use=fzf-fish-plugin.fish
+			else
+				name_use="${name}"
+			fi
+			link "${file}" "fish/${dir}/${name_use}"
 		fi
 	done
 }
