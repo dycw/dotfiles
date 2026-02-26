@@ -337,12 +337,11 @@ function ssh-auto
         echo "'ssh-auto' expected [1..] arguments DESTINATION; got $(count $argv)" >&2; and return 1
     end
     argparse r/root -- $argv; or return $status
-    set -l args
     set -l destination $argv[1]
+    set -l args $destination
     if test -n "$_flag_root"
         set args $args --root
     end
-    set args $args $destination
     if not __ssh_strict $args
         set -l parts (string split -m1 @ $destination)
         set -l host $parts[2]
