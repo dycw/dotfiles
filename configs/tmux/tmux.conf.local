@@ -122,7 +122,7 @@ bind-key C-m choose-tree -Zs "join-pane -t '%%'"
 bind-key \\ split-window -h -c "#{pane_current_path}"
 bind-key | split-window -h -c "#{pane_current_path}" ssh
 bind-key - split-window -v -c "#{pane_current_path}"
-bind-key - split-window -v -c "#{pane_current_path}" ssh
+bind-key _ split-window -v -c "#{pane_current_path}" ssh
 
 # swap pane
 bind-key s display-panes -d 750 \; \
