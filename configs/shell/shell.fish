@@ -336,13 +336,19 @@ function ssh-auto
     if test (count $argv) -lt 1
         echo "'ssh-auto' expected [1..] arguments DESTINATION; got $(count $argv)" >&2; and return 1
     end
+    argparse r/root -- $argv; or return $status
+    set -l args
     set -l destination $argv[1]
-    if not __ssh_strict $destination
+    if test -n "$_flag_root"
+        set args $args --root
+    end
+    set args $args $destination
+    if not __ssh_strict $args
         set -l parts (string split -m1 @ $destination)
         set -l host $parts[2]
         ssh-keygen -R $host
         __ssh_keyscan $host
-        __ssh_strict $destination
+        __ssh_strict $args
     end
 end
 
@@ -380,7 +386,15 @@ function __ssh_strict
     if test (count $argv) -lt 1
         echo "'__ssh_strict' expected [1..] arguments DESTINATION; got $(count $argv)" >&2; and return 1
     end
-    ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes $argv
+    argparse r/root -- $argv; or return $status
+    set -l args
+    set -l destination $argv[1]
+    if test -n "$_flag_root"
+        set args $args -t $destination 'sudo -i'
+    else
+        set args $args $destination
+    end
+    ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes $args
 end
 
 #### tail #####################################################################
