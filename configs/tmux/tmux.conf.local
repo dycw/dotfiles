@@ -2,7 +2,7 @@
 tmux_conf_new_session_retain_current_path=false
 
 # -- windows & pane creation --------------------------------------------------
-tmux_conf_new_window_retain_current_path=false
+tmux_conf_new_window_retain_current_path=true
 tmux_conf_new_window_reconnect_ssh=false
 tmux_conf_new_pane_retain_current_path=true
 tmux_conf_new_pane_reconnect_ssh=false
@@ -119,9 +119,10 @@ bind-key M choose-tree -Zw "join-pane -t '%%'"
 bind-key C-m choose-tree -Zs "join-pane -t '%%'"
 
 # split windows in the current directory
-bind-key \\ split-window -c "#{pane_current_path}" -h
-bind-key | split-window -c "#{pane_current_path}" -h
-bind-key - split-window -c "#{pane_current_path}" -v
+bind-key \\ split-window -h -c "#{pane_current_path}"
+bind-key | split-window -h -c "#{pane_current_path}" ssh
+bind-key - split-window -v -c "#{pane_current_path}"
+bind-key _ split-window -v -c "#{pane_current_path}" ssh
 
 # swap pane
 bind-key s display-panes -d 750 \; \
