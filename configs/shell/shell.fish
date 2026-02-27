@@ -131,6 +131,13 @@ function cp
     command cp -frv $argv
 end
 
+#### dns ######################################################################
+
+function flush
+    sudo dscacheutil -flushcache
+    sudo killall -HUP mDNSResponder
+end
+
 #### env ######################################################################
 
 function eg
