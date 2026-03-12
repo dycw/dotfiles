@@ -888,9 +888,208 @@
 				<string>ˈkɪt.ˈti.ˈɻʌ.nəɻ</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CreationDate</key>
+			<real>793831954.27534997</real>
+			<key>LocaleIdentifier</key>
+			<string>en_US</string>
+			<key>ModificationDate</key>
+			<real>793831954.27534997</real>
+			<key>Text</key>
+			<string>script</string>
+			<key>TextIPAs</key>
+			<array>
+				<string>ˈskɻɪkt</string>
+				<string>ˈskɻɪpt</string>
+				<string>skɻɪt</string>
+				<string>skɻɪkt</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CreationDate</key>
+			<real>793831962.24599898</real>
+			<key>LocaleIdentifier</key>
+			<string>en_US</string>
+			<key>ModificationDate</key>
+			<real>793831962.24599898</real>
+			<key>Text</key>
+			<string>submodule</string>
+			<key>TextIPAs</key>
+			<array>
+				<string>ˈsʌb.ˈmo͡ʊ.d͡ʒə.ɻo͡ʊ</string>
+				<string>ˈsʌb.ˈmo͡ʊ.ˈd͡ʒu.əl</string>
+				<string>ˈsʌb.ˈmɑ.ˈd͡ʒu.əl</string>
+				<string>ˈsʌp.ˈmo͡ʊ.ˈd͡ʒu.əl</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CreationDate</key>
+			<real>794404013.70596099</real>
+			<key>LocaleIdentifier</key>
+			<string>en_US</string>
+			<key>ModificationDate</key>
+			<real>794404013.70596099</real>
+			<key>Text</key>
+			<string>ruff</string>
+			<key>TextIPAs</key>
+			<array>
+				<string>ˈɻɑlf</string>
+				<string>ˈɻʌf</string>
+				<string>ˈɻɑf</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CreationDate</key>
+			<real>794404022.12317002</real>
+			<key>LocaleIdentifier</key>
+			<string>en_US</string>
+			<key>ModificationDate</key>
+			<real>794404022.12317002</real>
+			<key>Text</key>
+			<string>pyright</string>
+			<key>TextIPAs</key>
+			<array>
+				<string>ˈpa͡ɪ.ˈɻa͡ɪ</string>
+				<string>ˈpa͡ɪ.ˈɻa͡ɪt</string>
+				<string>ˈpa͡ɪ.ˈbɻa͡ɪt</string>
+				<string>ˈpa͡ɪ.ˈɻɔ͡ɪ</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CreationDate</key>
+			<real>794428148.17018199</real>
+			<key>LocaleIdentifier</key>
+			<string>en_US</string>
+			<key>ModificationDate</key>
+			<real>794428148.17018199</real>
+			<key>Text</key>
+			<string>refactoring</string>
+			<key>TextIPAs</key>
+			<array>
+				<string>ɻi.ˈfʌk.tə.ɻɪŋ</string>
+				<string>ɻi.ˈfɛk.tə.ɻɪŋ</string>
+				<string>ɻi.ˈfæk.tə.ɻɪŋ</string>
+				<string>ˈɻi.ˈfɛk.tə.ɻɪŋ</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CreationDate</key>
+			<real>794430018.10726595</real>
+			<key>LocaleIdentifier</key>
+			<string>en_US</string>
+			<key>ModificationDate</key>
+			<real>794430018.10726595</real>
+			<key>Text</key>
+			<string>failing</string>
+			<key>TextIPAs</key>
+			<array>
+				<string>ˈfe͡ɪt.nɪŋ</string>
+				<string>ˈfe͡ɪ.ˈθɪŋ</string>
+				<string>ˈfe͡ɪ.nɪŋ</string>
+				<string>ˈfe͡ɪ.tɪŋ</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CreationDate</key>
+			<real>794432926.43357694</real>
+			<key>LocaleIdentifier</key>
+			<string>en_US</string>
+			<key>ModificationDate</key>
+			<real>794432926.43357694</real>
+			<key>Text</key>
+			<string>Dockerfile</string>
+			<key>TextIPAs</key>
+			<array>
+				<string>ˈpɑ.kɻɪ.ˈfʌ.ˈhɪl</string>
+				<string>ˈpɑ.kɻɪ.ˈfʌŋ.go͡ʊ</string>
+				<string>ˈpɑ.kɻə.ˈfʌŋ.go͡ʊ</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CreationDate</key>
+			<real>794436066.28966701</real>
+			<key>LocaleIdentifier</key>
+			<string>en_US</string>
+			<key>ModificationDate</key>
+			<real>794436066.28966701</real>
+			<key>Text</key>
+			<string>cron jobs</string>
+			<key>TextIPAs</key>
+			<array>
+				<string>ˈkɻɑn.d͡ʒəlbz</string>
+				<string>ˈkɻɑn.d͡ʒəldz</string>
+				<string>ˈkɻɑn.d͡ʒəlts</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CreationDate</key>
+			<real>794449356.53144205</real>
+			<key>LocaleIdentifier</key>
+			<string>en_US</string>
+			<key>ModificationDate</key>
+			<real>794449356.53144205</real>
+			<key>Text</key>
+			<string>Debian</string>
+			<key>TextIPAs</key>
+			<array>
+				<string>ˈdɛ.fi.ən</string>
+				<string>ˈdɛ.pi.ən</string>
+				<string>ˈdɛ.bi.ən</string>
+				<string>ˈdɛ.ˈpi.ən</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CreationDate</key>
+			<real>794449364.52042997</real>
+			<key>LocaleIdentifier</key>
+			<string>en_US</string>
+			<key>ModificationDate</key>
+			<real>794449364.52042997</real>
+			<key>Text</key>
+			<string>Ubuntu</string>
+			<key>TextIPAs</key>
+			<array>
+				<string>ˈbɑn.ˈtu</string>
+				<string>ˈbʌn.ˈtu</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CreationDate</key>
+			<real>794539218.75066197</real>
+			<key>LocaleIdentifier</key>
+			<string>en_US</string>
+			<key>ModificationDate</key>
+			<real>794539218.75066197</real>
+			<key>Text</key>
+			<string>Linux</string>
+			<key>TextIPAs</key>
+			<array>
+				<string>ˈhu.ˈnɛ.nɪks</string>
+				<string>ˈlɛ.tɪks</string>
+				<string>ˈhu.ˈnɛ.tɪks</string>
+				<string>ˈlɛ.nɪks</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CreationDate</key>
+			<real>794789661.781672</real>
+			<key>LocaleIdentifier</key>
+			<string>en_US</string>
+			<key>ModificationDate</key>
+			<real>794789661.781672</real>
+			<key>Text</key>
+			<string>pull request</string>
+			<key>TextIPAs</key>
+			<array>
+				<string>ˈpul.vəɻ.ˈkwɛst</string>
+				<string>ˈpʊl.vəɻ.ˈkwɛst</string>
+				<string>ˈpu.gɻɪ.ˈkwɛst</string>
+				<string>ˈpʊl.bɻɪ.ˈkwɛst</string>
+			</array>
+		</dict>
 	</array>
 	<key>ExportDate</key>
-	<real>793830437.44517899</real>
+	<real>794789673.97324896</real>
 	<key>SystemVersion</key>
 	<dict>
 		<key>BuildID</key>
