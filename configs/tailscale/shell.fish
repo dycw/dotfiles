@@ -1,5 +1,13 @@
 #!/usr/bin/env fish
 
+#### local (interactive & non-interactive) ####################################
+
+if test -d /Applications/Tailscale.app/Contents/MacOS
+    fish_add_path /Applications/Tailscale.app/Contents/MacOS
+end
+
+#### interactive only #########################################################
+
 if not status is-interactive
     exit
 end
@@ -31,37 +39,49 @@ function ssh-rh-macbook
 end
 
 function ts
-    set -l args
-    if not type -q tailscale; and type -q docker
-        set args $args docker exec --interactive tailscale
+    if type -q tailscale
+        tailscale status
+    else if type -q Tailscale
+        Tailscale status
+    else if type -q docker
+        docker exec --interactive tailscale tailscale status
+    else
+        echo "'ts' expected 'tailscale', 'Tailscale' or 'docker' to be available; got neither" >&2; and return 1
     end
-    set args $args tailscale status
-    $args
 end
 
 function ts-exit-node
-    set -l args
-    if not type -q tailscale; and type -q docker
-        set args $args docker exec --interactive tailscale
+    if type -q tailscale
+        tailscale set --exit-node=qrt-nanode
+    else if type -q Tailscale
+        Tailscale set --exit-node=qrt-nanode
+    else if type -q docker
+        docker exec --interactive tailscale tailscale set --exit-node=qrt-nanode
+    else
+        echo "'ts-exit-node' expected 'tailscale', 'Tailscale' or 'docker' to be available; got neither" >&2; and return 1
     end
-    set args $args tailscale set --exit-node=qrt-nanode
-    $args
 end
 
 function ts-no-exit-node
-    set -l args
-    if not type -q tailscale; and type -q docker
-        set args $args docker exec --interactive tailscale
+    if type -q tailscale
+        tailscale set --exit-node=
+    else if type -q Tailscale
+        Tailscale set --exit-node=
+    else if type -q docker
+        docker exec --interactive tailscale tailscale set --exit-node=
+    else
+        echo "'ts-no-exit-node' expected 'tailscale', 'Tailscale' or 'docker' to be available; got neither" >&2; and return 1
     end
-    set args $args tailscale set --exit-node=
-    $args
 end
 
 function wts
-    set -l args
-    if not type -q tailscale; and type -q docker
-        set args $args docker exec --interactive tailscale
+    if type -q tailscale
+        watch --color --differences --interval=1 -- tailscale status
+    else if type -q Tailscale
+        watch --color --differences --interval=1 -- Tailscale status
+    else if type -q docker
+        docker exec --interactive tailscale watch --color --differences --interval=1 -- tailscale status
+    else
+        echo "'wts' expected 'tailscale', 'Tailscale' or 'docker' to be available; got neither" >&2; and return 1
     end
-    set args $args watch --color --differences --interval=1 -- tailscale status
-    $args
 end
