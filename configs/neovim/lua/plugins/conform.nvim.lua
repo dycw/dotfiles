@@ -78,8 +78,6 @@ return {
                     "--option",
                     "indent_tables=true",
                     "--option",
-                    "reorder_arrays=true",
-                    "--option",
                     "reorder_inline_tables=true",
                     "--option",
                     "reorder_keys=true",

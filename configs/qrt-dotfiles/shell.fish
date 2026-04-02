@@ -6,10 +6,16 @@ end
 
 ###############################################################################
 
-if test -f $HOME/work/qrt-dotfiles/fish/config.fish
-    source $HOME/work/qrt-dotfiles/fish/config.fish
-end
-
-if test -f $HOME/work-ai/qrt-dotfiles/fish/config.fish
-    source $HOME/work-ai/qrt-dotfiles/fish/config.fish
+for base in $HOME/work $HOME/work-ai $HOME/work-ai/derek
+    set dotfiles "$base/qrt-dotfiles"
+    if test -d "$dotfiles"
+        set fish "$dotfiles/fish/config.fish"
+        if test -f $fish
+            source $fish
+        end
+        set yaml "$dotfiles/tea/config.yml"
+        if test -f $yaml
+            ln -sf "$yaml" ~/.config/tea/config.yml
+        end
+    end
 end
