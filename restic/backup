@@ -24,7 +24,10 @@ for p in \
 	"${HOME}/work"; do
 	if [ -d "${p}" ]; then
 		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Backing up '${p}'..."
-		restic backup --exclude .venv "${p}"
+		restic backup --exclude .git \
+			--exclude .venv \
+			--exclude node_modules \
+			--exclude target "${p}"
 	else
 		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Unable to find '${p}'; skipping..." >&2
 	fi
