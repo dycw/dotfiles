@@ -77,12 +77,6 @@ function cdw
     cd $dir
 end
 
-function cdwa
-    set -l dir $HOME/work-ai
-    command mkdir -p $dir
-    cd $dir
-end
-
 #### chmod ####################################################################
 
 function chmod-files

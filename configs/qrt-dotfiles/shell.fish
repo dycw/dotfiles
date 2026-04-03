@@ -6,7 +6,7 @@ end
 
 ###############################################################################
 
-for base in $HOME/work $HOME/work-ai $HOME/work-ai/derek
+for base in $HOME/work $HOME/work/derek
     set dotfiles "$base/qrt-dotfiles"
     if test -d "$dotfiles"
         set fish "$dotfiles/fish/config.fish"
