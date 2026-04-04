@@ -163,17 +163,6 @@ else if type -q nano
     set -gx VISUAL nano
 end
 
-#### path dotfiles ############################################################
-
-set -l script_dir (dirname -- (realpath -- (status filename)))
-set -gx PATH_DOTFILES (realpath -- "$script_dir/../..")
-
-#### swap files ###############################################################
-
-for swap in $HOME/.mode.sw*
-    command rm -v $swap
-end
-
 #### git ######################################################################
 
 function yield-git-repos
@@ -250,6 +239,11 @@ function spoof-mac-address
     nmcli connection up "$name"
 end
 
+#### path dotfiles ############################################################
+
+set -l script_dir (dirname -- (realpath -- (status filename)))
+set -gx PATH_DOTFILES (realpath -- "$script_dir/../..")
+
 #### ping #####################################################################
 
 function ping-ts
@@ -274,6 +268,20 @@ function ping-ts
     set -l destination $argv[-1]
     ping -O $args $argv | while read pong
         echo "[$(date "+%Y-%m-%d %H:%M:%S")/$destination] $pong"
+    end
+end
+
+#### repo-lint ################################################################
+
+if type -q repo-lint
+    function git-fetch-repo-lint
+        git fetch
+        git hard-reset (git current-branch)
+        if test -f Cargo.toml
+            cargo update
+        end
+        repo-lint
+        __git_all
     end
 end
 
@@ -401,6 +409,12 @@ function __ssh_strict
         set args $args $destination
     end
     ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes $args
+end
+
+#### swap files ###############################################################
+
+for swap in $HOME/.mode.sw*
+    command rm -v $swap
 end
 
 #### tail #####################################################################
