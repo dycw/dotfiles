@@ -7,15 +7,13 @@ end
 ###############################################################################
 
 function pg
-    for i in (seq 1 3)
-        __prek_auto_update
-        __prek_run
-        if type -q __git_all
-            __git_all
-        end
-        if test $status -eq 0
-            return 0
-        end
+    __prek_auto_update
+    __prek_run
+    if type -q __git_all
+        __git_all
+    end
+    if test $status -eq 0
+        return 0
     end
 end
 function pr
