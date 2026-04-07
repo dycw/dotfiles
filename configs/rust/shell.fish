@@ -18,28 +18,24 @@ function ci-log
     set -l log ~/Dropbox/Temporary/logs.txt
     set -l tmp (mktemp)
 
-    # run clippy
-    clippy-log | tee $tmp
-    set -l clippy_status $status
+    clippy-log 2>&1 | tee $tmp
+    set -l clippy_status $pipestatus[1]
 
     if test $clippy_status -ne 0
         mv $tmp $log
         return $clippy_status
     end
 
-    # reset temp
     : >$tmp
 
-    # run nextest
-    nextest-log | tee $tmp
-    set -l nextest_status $status
+    nextest-log 2>&1 | tee $tmp
+    set -l nextest_status $pipestatus[1]
 
     if test $nextest_status -ne 0
         mv $tmp $log
         return $nextest_status
     end
 
-    # both succeeded → empty log
     rm -f $tmp
     : >$log
     return 0
@@ -50,7 +46,7 @@ function clippy-log
         cargo +stable clippy \
         --all-targets \
         --all-features \
-        --locked 2>&1 | tee ~/Dropbox/Temporary/logs.txt
+        --locked
 end
 
 function nextest-log
@@ -58,5 +54,5 @@ function nextest-log
         --locked \
         --all-targets \
         --config-file .configs/nextest.toml \
-        --profile ci 2>&1 | tee ~/Dropbox/Temporary/logs.txt
+        --profile ci 2>&1
 end
