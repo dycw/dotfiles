@@ -60,7 +60,7 @@ ${character}
   format = '( │ ${symbol}[${branch}](${style}))'
   style = 'dimmed white'
   symbol = ''
-  truncation_length = 20
+  truncation_length = 10
 
 [git_commit]
   format = '( [${hash}${tag}](${style}))'
@@ -101,7 +101,7 @@ ${character}
   style = 'bold red'
 
 [localip]
-  disabled = false
+  disabled = true
   format = '( [${localipv4}]($style))'
   ssh_only = true
   style = 'blue'
