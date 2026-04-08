@@ -66,8 +66,7 @@ ${character}
   format = '( [${hash}${tag}](${style}))'
   only_detached = false
   style = 'dimmed white'
-  tag_disabled = false
-  tag_max_candidates = 3
+  tag_disabled = true
 
 [git_metrics]
   added_style = 'white'
