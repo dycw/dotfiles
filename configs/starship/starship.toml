@@ -60,7 +60,7 @@ ${character}
   format = '( │ ${symbol}[${branch}](${style}))'
   style = 'dimmed white'
   symbol = ''
-  truncation_length = 10
+  truncation_length = 20
 
 [git_commit]
   format = '( [${hash}${tag}](${style}))'
