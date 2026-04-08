@@ -15,7 +15,11 @@ end
 #### logs #####################################################################
 
 function ci-log
-    set -l log ~/Dropbox/Temporary/logs.txt
+    set -l sha (git rev-parse --short HEAD)
+    set -l repo (basename (git rev-parse --show-toplevel))
+    set -l branch (git current-branch)
+    set -l log_dir ~/Dropbox/Temporary
+    set -l log "$log_dir/logs—$sha—$repo—$branch.txt"
     set -l tmp (mktemp)
 
     clippy-log 2>&1 | tee $tmp
