@@ -92,7 +92,6 @@ bind-key n new-window
 
 # reload config
 bind-key R source-file ~/.config/tmux/tmux.conf
-
 # resize pane
 bind-key -n M-h resize-pane -L 10
 bind-key -n M-j resize-pane -D 5
@@ -116,6 +115,10 @@ bind-key -T copy-mode-vi C-j select-pane -D
 bind-key -T copy-mode-vi C-k select-pane -U
 bind-key -T copy-mode-vi C-l select-pane -R
 bind-key -T copy-mode-vi C-\\ select-pane -l
+
+# select window
+bind-key -n M-u previous-window
+bind-key -n M-i next-window
 
 # send pane interactively (https://bit.ly/30iQi1i)
 bind-key M choose-tree -Zw "join-pane -t '%%'"
