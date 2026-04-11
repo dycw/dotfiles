@@ -1,5 +1,5 @@
 local wezterm = require("wezterm")
-
+local action = wezterm.action
 local config = wezterm.config_builder()
 
 -- always
@@ -9,12 +9,24 @@ config.hide_tab_bar_if_only_one_tab = true
 config.initial_cols = 200
 config.initial_rows = 100
 config.keys = {
-    {
-        key = "f",
+    { -- disable
         mods = "CMD|CTRL",
-        action = wezterm.action.DisableDefaultAssignment,
+        key = "f",
+        action = action.DisableDefaultAssignment,
+    },
+    { -- previous tab
+        mods = "CMD",
+        key = "j",
+        action = action.ActivateTabRelative(-1),
+    },
+    { -- next tab
+        mods = "CMD",
+        key = "k",
+        action = action.ActivateTabRelative(1),
     },
 }
+config.send_composed_key_when_left_alt_is_pressed = false
+config.send_composed_key_when_right_alt_is_pressed = false
 config.skip_close_confirmation_for_processes_named = {
     "bash",
     "sh",
