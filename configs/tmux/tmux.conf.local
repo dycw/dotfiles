@@ -37,6 +37,9 @@ bind-key ` send-prefix
 # repeat time
 set -g repeat-time 200
 
+# renumber windows
+set -g renumber-windows on
+
 # vi mode
 set -g status-keys vi
 set -g mode-keys vi
