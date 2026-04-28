@@ -3,7 +3,7 @@
 
 set -eu
 
-. "$(dirname -- "$(realpath -- "$0")")/lib.sh"
+. "$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)/lib.sh"
 
 setup_shell_hooks() {
 	log "Setting up shell hooks..."

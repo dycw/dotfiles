@@ -53,3 +53,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run taplo
         run: CI=1 ./.repo/actions/taplo.sh
+
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: CI=1 ./.repo/actions/test.sh

@@ -35,8 +35,12 @@ if ! command -v eza >/dev/null 2>&1; then
 	la() { ls -ahl --color=always "$@"; }
 fi
 
-script_dir=$(dirname -- "$(realpath -- "$0")")
-PATH_DOTFILES=$(realpath -- "${script_dir}/..")
+case "$0" in
+/*) config_self_path=$0 ;;
+*) config_self_path=$(pwd -P)/$0 ;;
+esac
+script_dir=$(CDPATH='' cd -- "$(dirname -- "${config_self_path}")" && pwd -P)
+PATH_DOTFILES=$(CDPATH='' cd -- "${script_dir}/.." && pwd -P)
 export PATH_DOTFILES
 
 for file in "${HOME}"/.mode.sw*; do

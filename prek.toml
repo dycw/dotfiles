@@ -41,5 +41,8 @@
     { args = [
       '.repo/actions/taplo.sh',
     ], entry = "sh", exclude = '^(configs/fzf/fzf\.fish/|configs/nvm/nvm\.fish/|configs/tmux/\.tmux/)', files = '\.toml$', id = "taplo", language = "system", name = "taplo", priority = 10 },
+    { args = [
+      '.repo/actions/test.sh',
+    ], entry = "sh", files = '.*', id = "tests", language = "system", name = "tests", pass_filenames = false, priority = 30 },
   ]
   repo = "local"

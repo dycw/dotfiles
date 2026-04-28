@@ -3,8 +3,12 @@
 
 set -eu
 
-script_dir=$(dirname -- "$(realpath -- "$0")")
-repo_root=$(dirname -- "$(dirname -- "${script_dir}")")
+case "$0" in
+/*) _setup_self_path=$0 ;;
+*) _setup_self_path=$(pwd -P)/$0 ;;
+esac
+script_dir=$(CDPATH='' cd -- "$(dirname -- "${_setup_self_path}")" && pwd -P)
+repo_root=$(CDPATH='' cd -- "${script_dir}/../.." && pwd -P)
 configs="${repo_root}/configs"
 xdg_config_home="${XDG_CONFIG_HOME:-${HOME}/.config}"
 

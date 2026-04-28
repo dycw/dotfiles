@@ -3,7 +3,7 @@
 
 set -eu
 
-. "$(dirname -- "$(realpath -- "$0")")/lib.sh"
+. "$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)/lib.sh"
 
 ensure_brew() {
 	if command -v brew >/dev/null 2>&1; then

@@ -56,3 +56,10 @@ jobs:
     steps:
       - uses: https://gitea.ai/actions/checkout@v6.0.2
       - run: sh ./.repo/actions/taplo.sh
+
+  tests:
+    runs-on: mac
+    timeout-minutes: 10
+    steps:
+      - uses: https://gitea.ai/actions/checkout@v6.0.2
+      - run: sh ./.repo/actions/test.sh

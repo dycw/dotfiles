@@ -3,6 +3,12 @@
 
 set -eu
 
+case "$0" in
+/*) self_path=$0 ;;
+*) self_path=$(pwd -P)/$0 ;;
+esac
+self_dir=$(CDPATH='' cd -- "$(dirname -- "$self_path")" && pwd -P)
+
 #### parse arguments ##########################################################
 
 dotfiles_default="${HOME}/dotfiles"
@@ -23,7 +29,6 @@ fail() {
 
 resolve_dotfiles() {
 	if [ -f "$0" ]; then
-		self_dir=$(dirname -- "$(realpath -- "$0")")
 		if [ -d "${self_dir}/.git" ] && [ -f "${self_dir}/scripts/_setup/install.sh" ]; then
 			dotfiles=${self_dir}
 			return
@@ -182,10 +187,9 @@ run_local_other() {
 	user="$1"
 	log "Setting up '${user}' on '$(hostname)'..."
 
-	self=$(realpath -- "$0")
 	tmp=$(mktemp "${TMPDIR:-/tmp}/setup.XXXXXX")
 	trap 'rm -f -- "${tmp}"' EXIT HUP INT TERM
-	cp -- "${self}" "${tmp}"
+	cp -- "${self_path}" "${tmp}"
 	chmod 0755 "${tmp}"
 	su - "${user}" -c "sh '${tmp}'"
 }
@@ -197,7 +201,6 @@ run_remote() {
 	port=${2:-22}
 	log "Setting up '${target}'..."
 
-	self=$(realpath -- "$0")
 	tmp=$(
 		ssh -p "${port}" "${target}" /bin/sh -s <<'EOF'
 set -eu
@@ -205,7 +208,7 @@ mktemp "${TMPDIR:-/tmp}/setup.XXXXXX"
 EOF
 	)
 	tmp=$(printf '%s' "${tmp}") # trailing slash
-	ssh -p "${port}" "${target}" "cat > '${tmp}'" <"${self}"
+	ssh -p "${port}" "${target}" "cat > '${tmp}'" <"${self_path}"
 	ssh -p "${port}" "${target}" /bin/sh -s "${tmp}" <<'EOF'
 set -eu
 chmod 0755 "$1"
