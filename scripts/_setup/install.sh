@@ -68,7 +68,7 @@ install_common_brew_formulas() {
 		install_brew_formula "${formula}"
 	done
 
-	for formula in dnsmasq flock ggrep yoannfleurydev/gitweb/gitweb; do
+	for formula in dnsmasq flock yoannfleurydev/gitweb/gitweb; do
 		if [ "${platform}" = mac ]; then
 			install_brew_formula "${formula}"
 		fi
