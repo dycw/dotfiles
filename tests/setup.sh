@@ -35,6 +35,19 @@ exit 0
 EOF
 chmod +x "${local_bin}/git"
 
+cat >"${local_bin}/sudo" <<'EOF'
+#!/bin/sh
+while [ $# -gt 0 ]; do
+	case "$1" in
+	-*) shift ;;
+	*) break ;;
+	esac
+done
+[ $# -gt 0 ] && exec "$@"
+exit 0
+EOF
+chmod +x "${local_bin}/sudo"
+
 PATH="${local_bin}:${PATH}" HOME="${local_home}" sh "${local_repo}/setup.sh"
 
 assert_file_contains "git -C ${local_repo} fetch origin" "${local_log}"
@@ -69,7 +82,22 @@ exit 0
 EOF
 chmod +x "${bootstrap_bin}/git"
 
-PATH="${bootstrap_bin}:${PATH}" HOME="${bootstrap_home}" sh "${bootstrap_dir}/setup.sh"
+cat >"${bootstrap_bin}/sudo" <<'EOF'
+#!/bin/sh
+while [ $# -gt 0 ]; do
+	case "$1" in
+	-*) shift ;;
+	*) break ;;
+	esac
+done
+[ $# -gt 0 ] && exec "$@"
+exit 0
+EOF
+chmod +x "${bootstrap_bin}/sudo"
+
+DOTFILES_REPO="https://github.com/dycw/dotfiles.git" \
+	PATH="${bootstrap_bin}:${PATH}" HOME="${bootstrap_home}" \
+	sh "${bootstrap_dir}/setup.sh"
 
 assert_file_contains "git clone --recurse-submodules https://github.com/dycw/dotfiles.git ${bootstrap_home}/dotfiles" "${bootstrap_log}"
 assert_file_contains 'install' "${bootstrap_log}"
