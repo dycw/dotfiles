@@ -58,9 +58,24 @@ install_apt_package() {
 	run_root apt-get install -y "${package}"
 }
 
+uninstall_brew_formula() {
+	formula=$1
+	if ! brew_formula_installed "${formula}"; then
+		return
+	fi
+	log "Uninstalling '${formula}'..."
+	brew uninstall "${formula}"
+}
+
+remove_unwanted_brew_formulas() {
+	for formula in age sops; do
+		uninstall_brew_formula "${formula}"
+	done
+}
+
 install_common_brew_formulas() {
 	for formula in \
-		age asciinema autoconf automake bat bottom coreutils delta \
+		asciinema autoconf automake bat bottom coreutils delta \
 		direnv dust eza fd fzf gh git-delta iperf3 jq just libpq \
 		luacheck luarocks maturin npm pgcli postgresql@18 prettier redis \
 		rename restic ripgrep rlwrap ruff sd shellcheck shfmt starship \
@@ -127,6 +142,7 @@ main() {
 	log "Installing apps on '$(hostname)'..."
 	determine_platform
 	ensure_brew
+	remove_unwanted_brew_formulas
 	install_common_brew_formulas
 	install_rust_tools
 	if [ "${platform}" = linux ]; then
