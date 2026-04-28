@@ -165,7 +165,7 @@ uninstall_brew_formula() {
 }
 
 remove_unwanted_brew_formulas() {
-	for formula in age sops; do
+	for formula in age sops rlwrap yoannfleurydev/gitweb/gitweb; do
 		uninstall_brew_formula "${formula}"
 	done
 }
@@ -175,12 +175,12 @@ install_common_brew_formulas() {
 		asciinema autoconf automake bat bottom coreutils delta \
 		direnv dust eza fd fzf gh git-delta iperf3 jq just libpq \
 		luacheck luarocks maturin npm pgcli postgresql@18 prettier redis \
-		rename restic ripgrep rlwrap ruff sd shellcheck shfmt starship \
+		rename restic ripgrep ruff sd shellcheck shfmt starship \
 		tailscale tmux topgrade uv vim watch yq zoxide; do
 		install_brew_formula "${formula}"
 	done
 
-	for formula in dnsmasq flock yoannfleurydev/gitweb/gitweb; do
+	for formula in dnsmasq flock; do
 		if [ "${platform}" = mac ]; then
 			install_brew_formula "${formula}"
 		fi
