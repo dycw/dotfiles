@@ -24,7 +24,7 @@ fail() {
 resolve_dotfiles() {
 	if [ -f "$0" ]; then
 		self_dir=$(dirname -- "$(realpath -- "$0")")
-		if [ -d "${self_dir}/.git" ] && [ -f "${self_dir}/scripts/_internal/install.sh" ]; then
+		if [ -d "${self_dir}/.git" ] && [ -f "${self_dir}/scripts/_setup/install.sh" ]; then
 			dotfiles=${self_dir}
 			return
 		fi
@@ -172,8 +172,8 @@ run_local_self() {
 		git clone --recurse-submodules "${repo}" "${dotfiles}"
 	fi
 
-	sh "${dotfiles}/scripts/_internal/install.sh"
-	sh "${dotfiles}/scripts/_internal/setup.sh"
+	sh "${dotfiles}/scripts/_setup/install.sh"
+	sh "${dotfiles}/scripts/_setup/setup.sh"
 }
 
 #### run local other ##########################################################
