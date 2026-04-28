@@ -13,7 +13,7 @@ self_dir=$(CDPATH='' cd -- "$(dirname -- "$self_path")" && pwd -P)
 
 dotfiles_default="${HOME}/dotfiles"
 dotfiles=''
-repo=''
+repo="${DOTFILES_REPO:-https://github.com/dycw/dotfiles.git}"
 local_user=''
 target=''
 port=''
@@ -127,19 +127,10 @@ ensure_git() {
 	esac
 }
 
-determine_repo() {
-	if [ -n "${DOTFILES_REPO:-}" ]; then
-		repo="${DOTFILES_REPO}"
-		return
-	fi
-
-	# If Gitea is already reachable, prefer it.
+ensure_ca_cert() {
 	if curl -fsSL --max-time 5 "https://gitea.ai/" >/dev/null 2>&1; then
-		repo='https://gitea.ai/derek/dotfiles.git'
 		return
 	fi
-
-	# Install the QRT CA certificate so that gitea.ai becomes reachable.
 	log "Installing QRT CA certificate..."
 	tmp_cert=$(mktemp "${TMPDIR:-/tmp}/qrt-ca.XXXXXX.crt")
 	printf '%s\n' "${qrt_ca_cert}" >"${tmp_cert}"
@@ -159,13 +150,6 @@ determine_repo() {
 		;;
 	esac
 	rm -f -- "${tmp_cert}"
-
-	# Re-test after cert installation.
-	if curl -fsSL --max-time 5 "https://gitea.ai/" >/dev/null 2>&1; then
-		repo='https://gitea.ai/derek/dotfiles.git'
-	else
-		repo='https://github.com/dycw/dotfiles.git'
-	fi
 }
 
 show_usage_and_exit() {
@@ -257,7 +241,7 @@ run_local_self() {
 	ensure_sudo
 	resolve_dotfiles
 	ensure_git
-	determine_repo
+	ensure_ca_cert
 
 	if [ -d "${dotfiles}" ]; then
 		log "Updating repo..."

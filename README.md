@@ -5,11 +5,9 @@ Dotfiles
 ## Install
 
 The setup script installs the QRT CA certificate if needed, then clones from
-Gitea if reachable or from GitHub otherwise.
+GitHub.
 
 ### GitHub
-
-Works on any machine, including a fresh install with no QRT CA certificate.
 
 ```sh
 curl -fsSL \
@@ -19,8 +17,7 @@ curl -fsSL \
 
 ### Gitea
 
-Works on machines where the QRT CA certificate is already trusted (e.g. after
-running the GitHub command once, or on a managed device).
+Works on machines where the QRT CA certificate is already trusted.
 
 ```sh
 curl -fsSL \

@@ -95,8 +95,7 @@ exit 0
 EOF
 chmod +x "${bootstrap_bin}/sudo"
 
-DOTFILES_REPO="https://github.com/dycw/dotfiles.git" \
-	PATH="${bootstrap_bin}:${PATH}" HOME="${bootstrap_home}" \
+PATH="${bootstrap_bin}:${PATH}" HOME="${bootstrap_home}" \
 	sh "${bootstrap_dir}/setup.sh"
 
 assert_file_contains "git clone --recurse-submodules https://github.com/dycw/dotfiles.git ${bootstrap_home}/dotfiles" "${bootstrap_log}"
