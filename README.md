@@ -4,6 +4,8 @@ Dotfiles
 
 ## Install
 
-```
-curl -fsSL https://raw.githubusercontent.com/dycw/dotfiles/refs/heads/master/set-up.sh | sh
+```sh
+curl -fsSL \
+https://gitea.ai/derek/dotfiles/raw/branch/master/set-up.sh \
+  | sh
 ```

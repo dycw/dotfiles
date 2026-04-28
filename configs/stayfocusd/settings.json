@@ -31,10 +31,7 @@
       "u4nE5-Q9S-vPUzgHsR5dJ": {
         "allowedTimeMs": 0,
         "blocklist": [],
-        "brandIds": [
-          "27215",
-          "2136"
-        ],
+        "brandIds": ["27215", "2136"],
         "id": "u4nE5-Q9S-vPUzgHsR5dJ",
         "isEnabled": true,
         "isSynced": false,

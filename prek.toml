@@ -1,0 +1,45 @@
+[[repos]]
+  hooks = [
+    { id = "check-added-large-files", priority = 20 },
+    { id = "check-case-conflict", priority = 20 },
+    { id = "check-executables-have-shebangs", priority = 20 },
+    { id = "check-json", priority = 20 },
+    { id = "check-json5", priority = 20 },
+    { id = "check-merge-conflict", priority = 20 },
+    { id = "check-symlinks", priority = 20 },
+    { id = "check-toml", priority = 20 },
+    { id = "check-xml", priority = 20 },
+    { id = "check-yaml", priority = 20 },
+    { id = "detect-private-key", priority = 20 },
+    { id = "end-of-file-fixer", priority = 10 },
+    { id = "fix-byte-order-marker", priority = 10 },
+    { args = [
+      '--fix=lf',
+    ], id = "mixed-line-ending", priority = 10 },
+    { id = "no-commit-to-branch", priority = 20 },
+    { id = "trailing-whitespace", priority = 10 },
+  ]
+  repo = "builtin"
+
+[[repos]]
+  hooks = [
+    { args = [
+      '.repo/actions/bump-version.sh',
+    ], entry = "sh", files = '.*', id = "bump-version", language = "system", name = "bump-version", pass_filenames = false, priority = 10 },
+    { args = [
+      '.repo/actions/markdownlint.sh',
+    ], entry = "sh", exclude = '^(configs/fzf/fzf\.fish/|configs/nvm/nvm\.fish/|configs/tmux/\.tmux/)', files = '\.md$', id = "markdownlint", language = "system", name = "markdownlint", priority = 10 },
+    { args = [
+      '.repo/actions/prettier.sh',
+    ], entry = "sh", exclude = '^(configs/fzf/fzf\.fish/|configs/nvm/nvm\.fish/|configs/tmux/\.tmux/)', files = '\.(json|md|yaml|yml)$', id = "prettier", language = "system", name = "prettier", priority = 10 },
+    { args = [
+      '.repo/actions/shellcheck.sh',
+    ], entry = "sh", exclude = '^(configs/fzf/fzf\.fish/|configs/nvm/nvm\.fish/|configs/tmux/\.tmux/)', files = '\.sh$', id = "shellcheck", language = "system", name = "shellcheck", priority = 20 },
+    { args = [
+      '.repo/actions/shfmt.sh',
+    ], entry = "sh", exclude = '^(configs/fzf/fzf\.fish/|configs/nvm/nvm\.fish/|configs/tmux/\.tmux/)', files = '\.sh$', id = "shfmt", language = "system", name = "shfmt", priority = 10 },
+    { args = [
+      '.repo/actions/taplo.sh',
+    ], entry = "sh", exclude = '^(configs/fzf/fzf\.fish/|configs/nvm/nvm\.fish/|configs/tmux/\.tmux/)', files = '\.toml$', id = "taplo", language = "system", name = "taplo", priority = 10 },
+  ]
+  repo = "local"

@@ -702,14 +702,52 @@ function gsu
     git submodule-update
 end
 
+function __git_repo_root
+    git rev-parse --show-toplevel 2>/dev/null
+end
+
+function __git_bump_version_script
+    set -l root (__git_repo_root); or return $status
+    set -l script "$root/.repo/actions/bump-version.sh"
+    if not test -x $script
+        echo "'__git_bump_version_script' expected '$script' to exist and be executable" >&2; and return 1
+    end
+    printf '%s\n' $script
+end
+
+function bump-patch
+    set -l script (__git_bump_version_script); or return $status
+    sh $script patch
+end
+
+function bump-minor
+    set -l script (__git_bump_version_script); or return $status
+    sh $script minor
+end
+
+function bump-major
+    set -l script (__git_bump_version_script); or return $status
+    sh $script major
+end
+
+function bump-set
+    if test (count $argv) -ne 1
+        echo "'bump-set' expected 1 argument VERSION; got $(count $argv)" >&2; and return 1
+    end
+    set -l script (__git_bump_version_script); or return $status
+    sh $script set $argv[1]
+end
+
 # tag
 
 function gta
     if test (count $argv) -eq 0
-        if type -q bump-my-version
-            git tag-add (bump-my-version show current_version) HEAD
+        set -l root (__git_repo_root); or return $status
+        set -l version_file "$root/VERSION"
+        if test -r $version_file
+            git tag-add (string trim -- (cat $version_file)) HEAD
         else
-            echo "'gta' expected 'bump-my-version' to be available" >&2; and return 1
+            echo "'gta' expected '$version_file' to exist" >&2; and return 1
         end
     else if test (count $argv) -eq 1
         git tag-add $argv[1] HEAD

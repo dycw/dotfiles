@@ -1,0 +1,23 @@
+name: push
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: push-${{ gitea.ref }}
+  cancel-in-progress: false
+
+env:
+  CI: 1
+
+jobs:
+  git-tag:
+    runs-on: mac
+    timeout-minutes: 10
+    steps:
+      - uses: https://gitea.ai/actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+      - run: sh ./.repo/actions/git-tag.sh

@@ -1,0 +1,58 @@
+name: pull-request
+
+on:
+  pull_request:
+    branches:
+      - master
+
+concurrency:
+  group: pull-request-${{ gitea.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: 1
+
+jobs:
+  bump-version:
+    runs-on: mac
+    timeout-minutes: 10
+    steps:
+      - uses: https://gitea.ai/actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+      - run: sh ./.repo/actions/bump-version.sh
+
+  markdownlint:
+    runs-on: mac
+    timeout-minutes: 10
+    steps:
+      - uses: https://gitea.ai/actions/checkout@v6.0.2
+      - run: sh ./.repo/actions/markdownlint.sh
+
+  prettier:
+    runs-on: mac
+    timeout-minutes: 10
+    steps:
+      - uses: https://gitea.ai/actions/checkout@v6.0.2
+      - run: sh ./.repo/actions/prettier.sh
+
+  shellcheck:
+    runs-on: mac
+    timeout-minutes: 10
+    steps:
+      - uses: https://gitea.ai/actions/checkout@v6.0.2
+      - run: sh ./.repo/actions/shellcheck.sh
+
+  shfmt:
+    runs-on: mac
+    timeout-minutes: 10
+    steps:
+      - uses: https://gitea.ai/actions/checkout@v6.0.2
+      - run: sh ./.repo/actions/shfmt.sh
+
+  taplo:
+    runs-on: mac
+    timeout-minutes: 10
+    steps:
+      - uses: https://gitea.ai/actions/checkout@v6.0.2
+      - run: sh ./.repo/actions/taplo.sh
