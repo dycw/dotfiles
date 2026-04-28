@@ -13,7 +13,7 @@ self_dir=$(CDPATH='' cd -- "$(dirname -- "$self_path")" && pwd -P)
 
 dotfiles_default="${HOME}/dotfiles"
 dotfiles=''
-repo='https://github.com/dycw/dotfiles.git'
+repo="${DOTFILES_REPO:-https://github.com/dycw/dotfiles.git}"
 local_user=''
 target=''
 port=''
@@ -38,7 +38,7 @@ resolve_dotfiles() {
 }
 
 ensure_git() {
-	if command -v git >/dev/null 2>&1; then
+	if git --version >/dev/null 2>&1; then
 		return
 	fi
 

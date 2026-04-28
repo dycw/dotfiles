@@ -15,6 +15,7 @@ local_home="${tmp}/local-home"
 local_bin="${tmp}/local-bin"
 local_log="${tmp}/local.log"
 mkdir -p "${local_repo}/scripts/_setup" "${local_repo}/.git" "${local_home}" "${local_bin}"
+local_repo=$(CDPATH='' cd -- "${local_repo}" && pwd -P)
 cp "${entrypoint}" "${local_repo}/setup.sh"
 
 cat >"${local_repo}/scripts/_setup/install.sh" <<EOF
