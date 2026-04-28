@@ -1261,7 +1261,7 @@
   },
   "from utilities.core import set_up_logging": {
     "body": "from utilities.core import set_up_logging\n",
-    "prefix": "ut-set-up-logging"
+    "prefix": "ut-setup-logging"
   },
   "from utilities.core import to_logger": {
     "body": "from utilities.core import to_logger\n",

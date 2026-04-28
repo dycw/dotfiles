@@ -6,6 +6,7 @@ Dotfiles
 
 ```sh
 curl -fsSL \
-https://gitea.ai/derek/dotfiles/raw/branch/master/set-up.sh \
+https://raw.githubusercontent.com/dycw/dotfiles/refs/heads/master/ \
+setup.sh \
   | sh
 ```

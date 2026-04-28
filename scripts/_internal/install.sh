@@ -1,65 +1,139 @@
 #!/usr/bin/env sh
-# shellcheck disable=SC1091,SC2016
+# shellcheck disable=SC1090,SC1091,SC2154
 
 set -eu
 
-#### start ####################################################################
+. "$(dirname -- "$(realpath -- "$0")")/lib.sh"
 
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing apps on '$(hostname)'..."
-
-#### determine system #########################################################
-
-unset system
-if [ "$(uname)" = Linux ] && [ -r /etc/os-release ]; then
-	. /etc/os-release
-	if [ "${ID:-}" = debian ]; then
-		system=debian
+ensure_brew() {
+	if command -v brew >/dev/null 2>&1; then
+		return
 	fi
-elif [ "$(uname)" = Darwin ]; then
-	model=$(system_profiler SPHardwareDataType | awk -F': ' '/Model Identifier/ {print $2}')
-	case "${model}" in
-	Mac14,12 | Mac14,3) system=macmini ;;
-	MacBook*) system=macbook ;;
-	*) ;;
-	esac
-fi
+	if [ "${platform}" = linux ]; then
+		log "Installing Linux brew prerequisites..."
+		run_root apt-get update
+		run_root apt-get install -y build-essential curl file git procps sudo
+	fi
+	log "Installing 'brew'..."
+	NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	add_brew_to_path
+	command -v brew >/dev/null 2>&1 || fail "'brew' installation failed"
+}
 
-#### configs ##################################################################
+brew_formula_installed() {
+	brew list --formula "$1" >/dev/null 2>&1
+}
 
-script_dir=$(dirname -- "$(realpath -- "$0")")
-configs="$(dirname -- "$(dirname -- "${script_dir}")")"/configs
+brew_cask_installed() {
+	brew list --cask "$1" >/dev/null 2>&1
+}
 
-#### per-system ###############################################################
+install_brew_formula() {
+	formula=$1
+	if brew_formula_installed "${formula}"; then
+		log "'${formula}' is already installed"
+		return
+	fi
+	log "Installing '${formula}'..."
+	brew install "${formula}"
+}
 
-case "${system:-}" in
-debian)
-	sh "${configs}"/sudo/install.sh "${system}"
-	if [ "$(id -u)" -eq 0 ]; then
-		apt-get update
-		apt-get dist-upgrade -y
-		apt-get autoremove -y
-		apt-get clean
+install_brew_cask() {
+	cask=$1
+	if brew_cask_installed "${cask}"; then
+		log "'${cask}' is already installed"
+		return
+	fi
+	log "Installing '${cask}'..."
+	brew install --cask "${cask}"
+}
+
+install_apt_package() {
+	package=$1
+	if dpkg -s "${package}" >/dev/null 2>&1; then
+		log "'${package}' is already installed"
+		return
+	fi
+	log "Installing '${package}'..."
+	run_root apt-get install -y "${package}"
+}
+
+install_common_brew_formulas() {
+	for formula in \
+		age asciinema autoconf automake bat bottom coreutils delta \
+		direnv dust eza fd fzf gh git-delta iperf3 jq just libpq \
+		luacheck luarocks maturin npm pgcli postgresql@18 prettier redis \
+		rename restic ripgrep rlwrap ruff sd shellcheck shfmt starship \
+		tailscale tmux topgrade uv vim watch yq zoxide; do
+		install_brew_formula "${formula}"
+	done
+
+	for formula in dnsmasq flock ggrep yoannfleurydev/gitweb/gitweb; do
+		if [ "${platform}" = mac ]; then
+			install_brew_formula "${formula}"
+		fi
+	done
+}
+
+install_linux_packages() {
+	for package in curl rsync sudo xclip xsel; do
+		install_apt_package "${package}"
+	done
+}
+
+install_mac_casks() {
+	for cask in \
+		1password agg db-browser-for-sqlite dropbox ghostty pgadmin4 postico \
+		protonvpn redis-stack spotify transmission vlc wezterm whatsapp zoom; do
+		install_brew_cask "${cask}"
+	done
+}
+
+install_rust_tools() {
+	if command -v rustup >/dev/null 2>&1; then
+		log "'rust' is already installed"
 	else
-		sudo apt-get update
-		sudo apt-get dist-upgrade -y
-		sudo apt-get autoremove -y
-		sudo apt-get clean
+		log "Installing 'rust'..."
+		curl -LsSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+		. "${HOME}/.cargo/env"
+		rustup toolchain install stable
+		rustup default stable
+		rustup component add clippy rust-analyzer rust-docs rustfmt
+		rustup target add x86_64-unknown-linux-gnu x86_64-apple-darwin aarch64-apple-darwin
 	fi
-	sh "${configs}"/curl/install.sh "${system}"
-	;;
-macmini)
-	sh "${configs}"/homebrew/install.sh "${system}"
-	;;
-macbook) ;;
-*)
-	echo "Unsupported system '${system}'; exiting..." >&2
-	exit 1
-	;;
-esac
-sh "${configs}"/uv/install.sh ${system}
 
-#### sub-installers ###########################################################
+	if command -v cargo-binstall >/dev/null 2>&1; then
+		log "'cargo-binstall' is already installed"
+	else
+		log "Installing 'cargo-binstall'..."
+		curl -L --proto '=https' --tlsv1.2 -sSf \
+			https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+	fi
 
-find "${configs}" -type f -name 'install.sh' ! -path "${configs}/tmux/.tmux/*" | sort | while IFS= read -r script; do
-	sh "${script}" "${system}"
-done
+	for tool in bacon cargo-audit cargo-deny cargo-edit cargo-nextest sccache; do
+		if command -v "${tool}" >/dev/null 2>&1; then
+			log "'${tool}' is already installed"
+		else
+			log "Installing '${tool}' using 'cargo binstall'..."
+			if ! cargo binstall -y "${tool}"; then
+				log "Installing '${tool}' using 'cargo install'..."
+				cargo install --locked "${tool}"
+			fi
+		fi
+	done
+}
+
+main() {
+	log "Installing apps on '$(hostname)'..."
+	determine_platform
+	ensure_brew
+	install_common_brew_formulas
+	install_rust_tools
+	if [ "${platform}" = linux ]; then
+		install_linux_packages
+	else
+		install_mac_casks
+	fi
+}
+
+main
