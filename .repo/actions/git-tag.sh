@@ -18,8 +18,6 @@ tag_exists_remote() {
 tag=$(read_trimmed_file "${version_file}")
 [ -n "${tag}" ] || fail "VERSION file is empty"
 
-sh "${repo_root}/.repo/actions/bump-version.sh" lint
-
 if tag_exists_local "${tag}"; then
 	log "tag ${tag} already exists locally; skipping"
 	exit 0
