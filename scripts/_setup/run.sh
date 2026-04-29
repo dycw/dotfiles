@@ -125,14 +125,20 @@ brew_cask_installed() {
 	brew list --cask "$1" >/dev/null 2>&1
 }
 
-install_apt_package() {
-	package=$1
-	if dpkg -s "${package}" >/dev/null 2>&1; then
-		log "'${package}' is already installed"
-		return
-	fi
-	log "Installing '${package}'..."
-	run_root apt-get install -y "${package}"
+parallel_install_apt_packages() {
+	tmp=$(mktemp -d)
+	i=0
+	for package in "$@"; do
+		(dpkg -s "${package}" >/dev/null 2>&1 || printf '%s\n' "${package}" >"${tmp}/${i}") &
+		i=$((i + 1))
+	done
+	wait
+	missing=$(cat "${tmp}"/* 2>/dev/null | sort -u || true)
+	rm -rf -- "${tmp}"
+	[ -n "${missing}" ] || return 0
+	log "Installing packages: ${missing}"
+	# shellcheck disable=SC2086
+	run_root apt-get install -y ${missing}
 }
 
 uninstall_brew_formula() {
@@ -200,9 +206,7 @@ install_common_brew_formulas() {
 }
 
 install_linux_packages() {
-	for package in curl rsync sudo xclip xsel; do
-		install_apt_package "${package}"
-	done
+	parallel_install_apt_packages curl rsync sudo xclip xsel
 }
 
 install_mac_casks() {
