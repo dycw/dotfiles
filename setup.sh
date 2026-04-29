@@ -368,9 +368,9 @@ setup_env_sh() {
 		run_root chmod 644 /etc/profile.d/env.sh
 	fi
 	if [ "${platform}" = mac ]; then
-		if ! cmp -s "${configs}/sh/profile-mac" /etc/profile 2>/dev/null; then
+		if ! cmp -s "${configs}/sh/profile" /etc/profile 2>/dev/null; then
 			log "Overwriting /etc/profile to add /etc/profile.d support..."
-			run_root cp -- "${configs}/sh/profile-mac" /etc/profile
+			run_root cp -- "${configs}/sh/profile" /etc/profile
 		fi
 	fi
 }
