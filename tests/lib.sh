@@ -24,7 +24,7 @@ HOME="${home_dir}"
 XDG_CONFIG_HOME="${xdg_dir}"
 export PATH HOME XDG_CONFIG_HOME
 
-_RUN_MAIN=0 . "${test_root}/scripts/_setup/run.sh"
+_SETUP_MAIN=0 . "${test_root}/setup.sh"
 
 sample="${test_root}/README.md"
 link_home "${sample}" .bashrc

@@ -10,19 +10,15 @@ trap 'cleanup_temp_dir "${tmp}"' EXIT HUP INT TERM
 
 entrypoint="${test_root}/setup.sh"
 
+#### local-repo case: running setup.sh from inside the dotfiles dir ###########
+
 local_repo="${tmp}/local-repo"
 local_home="${tmp}/local-home"
 local_bin="${tmp}/local-bin"
 local_log="${tmp}/local.log"
-mkdir -p "${local_repo}/scripts/_setup" "${local_repo}/.git" "${local_home}" "${local_bin}"
+mkdir -p "${local_repo}/configs" "${local_repo}/.git" "${local_home}" "${local_bin}"
 local_repo=$(CDPATH='' cd -- "${local_repo}" && pwd -P)
 cp "${entrypoint}" "${local_repo}/setup.sh"
-
-cat >"${local_repo}/scripts/_setup/run.sh" <<EOF
-#!/bin/sh
-printf 'run\n' >>"${local_log}"
-EOF
-chmod +x "${local_repo}/scripts/_setup/run.sh"
 
 cat >"${local_bin}/git" <<EOF
 #!/bin/sh
@@ -44,11 +40,25 @@ exit 0
 EOF
 chmod +x "${local_bin}/sudo"
 
-PATH="${local_bin}:${PATH}" HOME="${local_home}" sh "${local_repo}/setup.sh"
+# Wrapper lives inside local_repo so that $0-based self_dir resolution finds .git
+cat >"${local_repo}/run-test.sh" <<EOF
+#!/bin/sh
+_SETUP_MAIN=0 . '${local_repo}/setup.sh'
+install_all() { printf 'install_all\n' >>'${local_log}'; }
+setup_all() { printf 'setup_all\n' >>'${local_log}'; }
+determine_platform() { platform=linux; }
+run_local_self
+EOF
+chmod +x "${local_repo}/run-test.sh"
+
+PATH="${local_bin}:${PATH}" HOME="${local_home}" sh "${local_repo}/run-test.sh"
 
 assert_file_contains "git -C ${local_repo} fetch origin" "${local_log}"
 assert_file_contains "git -C ${local_repo} reset --hard origin/master" "${local_log}"
-assert_file_contains 'run' "${local_log}"
+assert_file_contains 'install_all' "${local_log}"
+assert_file_contains 'setup_all' "${local_log}"
+
+#### bootstrap case: running setup.sh from outside the dotfiles dir ###########
 
 bootstrap_dir="${tmp}/bootstrap"
 bootstrap_home="${tmp}/bootstrap-home"
@@ -62,12 +72,7 @@ cat >"${bootstrap_bin}/git" <<EOF
 printf 'git %s\n' "\$*" >>"${bootstrap_log}"
 if [ "\$1" = clone ]; then
 	target=\$4
-	mkdir -p "\${target}/scripts/_setup" "\${target}/.git"
-	cat >"\${target}/scripts/_setup/run.sh" <<'EOR'
-#!/bin/sh
-printf 'run\n' >>"${bootstrap_log}"
-EOR
-	chmod +x "\${target}/scripts/_setup/run.sh"
+	mkdir -p "\${target}/configs" "\${target}/.git"
 fi
 exit 0
 EOF
@@ -86,8 +91,19 @@ exit 0
 EOF
 chmod +x "${bootstrap_bin}/sudo"
 
-PATH="${bootstrap_bin}:${PATH}" HOME="${bootstrap_home}" \
-	sh "${bootstrap_dir}/setup.sh"
+# Wrapper lives outside any .git dir so resolve_dotfiles falls back to clone
+cat >"${bootstrap_dir}/run-test.sh" <<EOF
+#!/bin/sh
+_SETUP_MAIN=0 . '${bootstrap_dir}/setup.sh'
+install_all() { printf 'install_all\n' >>'${bootstrap_log}'; }
+setup_all() { printf 'setup_all\n' >>'${bootstrap_log}'; }
+determine_platform() { platform=linux; }
+run_local_self
+EOF
+chmod +x "${bootstrap_dir}/run-test.sh"
+
+PATH="${bootstrap_bin}:${PATH}" HOME="${bootstrap_home}" sh "${bootstrap_dir}/run-test.sh"
 
 assert_file_contains "git clone --recurse-submodules https://github.com/dycw/dotfiles.git ${bootstrap_home}/dotfiles" "${bootstrap_log}"
-assert_file_contains 'run' "${bootstrap_log}"
+assert_file_contains 'install_all' "${bootstrap_log}"
+assert_file_contains 'setup_all' "${bootstrap_log}"
