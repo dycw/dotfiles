@@ -201,7 +201,7 @@ install_common_brew_formulas() {
 		tailscale tmux topgrade uv vim watch yq zoxide
 
 	if [ "${platform}" = mac ]; then
-		parallel_install_brew_formulas dnsmasq flock
+		parallel_install_brew_formulas agg dnsmasq flock
 	fi
 }
 
@@ -211,7 +211,7 @@ install_linux_packages() {
 
 install_mac_casks() {
 	parallel_install_brew_casks \
-		1password agg db-browser-for-sqlite dropbox ghostty pgadmin4 postico \
+		1password db-browser-for-sqlite dropbox ghostty pgadmin4 postico \
 		protonvpn redis-stack spotify transmission vlc wezterm whatsapp zoom
 }
 
