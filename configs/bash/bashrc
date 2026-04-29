@@ -5,12 +5,6 @@ if [[ $- != *i* ]]; then
     return
 fi
 
-#### env ######################################################################
-
-if [ -f /etc/profile.d/env.sh ]; then
-    . /etc/profile.d/env.sh
-fi
-
 #### history ##################################################################
 
 HISTCONTROL=ignoreboth
@@ -107,6 +101,67 @@ if command -v btm >/dev/null 2>&1; then
     edit_bottom_toml() { "${EDITOR}" "${PATH_DOTFILES}/configs/bottom.toml"; }
 fi
 
+#### cd #######################################################################
+
+..() { cd ..; }
+...() { cd ../..; }
+....() { cd ../../..; }
+cdconfig() { cd "${XDG_CONFIG_HOME:-${HOME}/.config}"; }
+cddb() { cd "${HOME}/Dropbox"; }
+cddbt() { cd "${HOME}/Dropbox/Temporary"; }
+cddf() { cd "${PATH_DOTFILES}"; }
+cddl() { cd "${HOME}/Downloads"; }
+cdp() { mkdir -p "${HOME}/personal" && cd "${HOME}/personal"; }
+cdw() { mkdir -p "${HOME}/work" && cd "${HOME}/work"; }
+
+#### chmod ####################################################################
+
+chmod-files() {
+    if [ "$#" -lt 1 ]; then
+        echo "'chmod-files' expected [1..) arguments MODE; got $#" >&2; return 1
+    fi
+    find . -type f -print0 | xargs -0 chmod "$1"
+}
+chmod-dirs() {
+    if [ "$#" -lt 1 ]; then
+        echo "'chmod-dirs' expected [1..) arguments MODE; got $#" >&2; return 1
+    fi
+    find . -type d -print0 | xargs -0 chmod "$1"
+}
+
+#### chown ####################################################################
+
+chown-files() {
+    if [ "$#" -lt 1 ]; then
+        echo "'chown-files' expected [1..) arguments OWNER; got $#" >&2; return 1
+    fi
+    find . -type f -exec chown "$1" {} \;
+}
+chown-dirs() {
+    if [ "$#" -lt 1 ]; then
+        echo "'chown-dirs' expected [1..) arguments OWNER; got $#" >&2; return 1
+    fi
+    find . -type d -exec chown "$1" {} \;
+}
+
+#### cp #######################################################################
+
+cp() {
+    if [ "$#" -lt 2 ]; then
+        echo "'cp' expected [2..) arguments SOURCE ... TARGET; got $#" >&2; return 1
+    fi
+    local target="${@:$#:1}"
+    if [ "$#" -eq 2 ]; then
+        case "${target}" in
+            */) command mkdir -p "${target}" ;;
+            *)  command mkdir -p "$(dirname -- "${target}")" ;;
+        esac
+    else
+        command mkdir -p "${target}"
+    fi
+    command cp -frv "$@"
+}
+
 #### curl #####################################################################
 
 if command -v curl >/dev/null 2>&1; then
@@ -127,6 +182,24 @@ fi
 if command -v direnv >/dev/null 2>&1; then
     eval "$(direnv hook bash)"
 fi
+
+#### dns ######################################################################
+
+if [ "$(uname)" = Darwin ]; then
+    flush() {
+        sudo dscacheutil -flushcache
+        sudo killall -HUP mDNSResponder
+    }
+fi
+
+#### env ######################################################################
+
+eg() {
+    if [ "$#" -lt 1 ]; then
+        echo "'eg' expected [1..) arguments PATTERN; got $#" >&2; return 1
+    fi
+    env | sort | grep -i "$@"
+}
 
 #### eza ######################################################################
 
@@ -176,6 +249,99 @@ if command -v fzf >/dev/null 2>&1; then
     eval "$(fzf --bash)"
 fi
 
+#### git ######################################################################
+
+if command -v git >/dev/null 2>&1; then
+    # Auto-generate g<alias> wrappers for every git alias in the global config.
+    while IFS= read -r _git_line; do
+        _git_alias=${_git_line%%=*}
+        _git_alias=${_git_alias#alias.}
+        eval "g${_git_alias}() { git ${_git_alias} \"\$@\"; }"
+    done < <(git config --global --list 2>/dev/null | grep '^alias\.')
+    unset _git_line _git_alias
+
+    # cd to repository root
+    cdr() { cd "$(git repo-root)"; }
+
+    # print absolute paths of immediate subdirectories that are git repos
+    yield-git-repos() {
+        for _dir in */; do
+            [ -d "${_dir}/.git" ] && realpath -- "${_dir}"
+        done
+    }
+
+    # fzf-assisted branch operations (override auto-generated stubs)
+    gbd() {
+        if [ "$#" -eq 0 ]; then
+            git branch --format='%(refname:short)' \
+                | fzf --multi | while IFS= read -r _branch; do
+                    git branch-delete "${_branch}"
+                done
+        else
+            for _branch in "$@"; do git branch-delete "${_branch}"; done
+        fi
+    }
+    gcbr() {
+        local branch
+        if [ "$#" -eq 0 ]; then
+            branch=$(git branch --color=never --remotes \
+                | awk '!/->/{ print $1 }' \
+                | fzf \
+                | sed -E 's|^[[:space:]]*origin/||')
+        else
+            branch=$1
+        fi
+        git checkout -b "${branch}" -t "origin/${branch}"
+    }
+    gco() {
+        local branch
+        if [ "$#" -eq 0 ]; then
+            branch=$(git branch --format='%(refname:short)' | fzf)
+        else
+            branch=$1
+        fi
+        git checkout "${branch}"
+    }
+
+    # tag-add with bump-my-version fallback
+    gta() {
+        if [ "$#" -eq 0 ]; then
+            if command -v bump-my-version >/dev/null 2>&1; then
+                git tag-add "$(bump-my-version show current_version)" HEAD
+            else
+                echo "'gta' expected 'bump-my-version' to be available" >&2; return 1
+            fi
+        elif [ "$#" -eq 1 ]; then
+            git tag-add "$1" HEAD
+        elif [ $(( $# % 2 )) -eq 0 ]; then
+            while [ "$#" -ge 2 ]; do
+                git tag-add "$1" "$2"; shift 2
+            done
+        else
+            echo "'gta' expected 0, 1, or an even number of arguments; got $#" >&2; return 1
+        fi
+    }
+
+    # watch git status
+    if command -v watch >/dev/null 2>&1; then
+        wg() {
+            watch --color --interval 2 --no-title --no-wrap -- '
+                echo "==== status ==================================================================="
+                git -c color.ui=always status --short
+                if ! git diff --quiet; then
+                    printf "\n==== diff =====================================================================\n"
+                    git -c color.ui=always diff --stat
+                fi
+                branch=$(printf "%-6s" "$(git default-local-branch)")
+                if ! git diff-remote --quiet; then
+                    printf "\n==== diff origin/%s =======================================================\n" "$branch"
+                    git -c color.ui=always diff-remote --stat
+                fi
+            '
+        }
+    fi
+fi
+
 #### hypothesis ###############################################################
 
 hypothesis_ci() { export HYPOTHESIS_PROFILE=ci; }
@@ -185,6 +351,100 @@ hypothesis_dev() { export HYPOTHESIS_PROFILE=dev; }
 #### ipython ##################################################################
 
 edit_ipython_startup() { "${EDITOR}" "${PATH_DOTFILES}/configs/ipython/startup.py"; }
+
+#### lsof #####################################################################
+
+if command -v lsof >/dev/null 2>&1; then
+    check-port() {
+        if [ "$#" -lt 1 ]; then
+            echo "'check-port' expected [1..) argument PORT; got $#" >&2; return 1
+        fi
+        lsof -i :"$1"
+    }
+fi
+
+#### mkdir ####################################################################
+
+mkdir() { command mkdir -p "$@"; }
+
+#### mv #######################################################################
+
+mv() {
+    if [ "$#" -lt 2 ]; then
+        echo "'mv' expected [2..) arguments SOURCE ... TARGET; got $#" >&2; return 1
+    fi
+    local target="${@:$#:1}"
+    if [ "$#" -eq 2 ]; then
+        case "${target}" in
+            */) command mkdir -p "${target}" ;;
+            *)  command mkdir -p "$(dirname -- "${target}")" ;;
+        esac
+    else
+        command mkdir -p "${target}"
+    fi
+    command mv -fv "$@"
+}
+
+#### networking ###############################################################
+
+if [ "$(uname)" = Linux ]; then
+    resolv-conf() {
+        if [ "$(id -u)" -eq 0 ]; then
+            chattr -i /etc/resolv.conf || true
+            "${EDITOR}" /etc/resolv.conf
+            chattr +i /etc/resolv.conf || true
+        else
+            sudo chattr -i /etc/resolv.conf || true
+            sudo "${EDITOR}" /etc/resolv.conf
+            sudo chattr +i /etc/resolv.conf || true
+        fi
+    }
+    watch-resolv-conf() {
+        watch --color --differences --interval=1 -- cat /etc/resolv.conf
+    }
+fi
+
+if command -v nmcli >/dev/null 2>&1; then
+    spoof-mac-address() {
+        local name
+        name=$(nmcli connection show --active | awk '$3=="wifi"{print $1}')
+        local first
+        first=$(( 2 + 2 * ($(od -An -N1 -tu1 /dev/urandom | tr -d ' ') % 127) ))
+        local mac
+        mac=$(printf '%02X:%02X:%02X:%02X:%02X:%02X' \
+            "${first}" \
+            "$(od -An -N1 -tu1 /dev/urandom | tr -d ' ')" \
+            "$(od -An -N1 -tu1 /dev/urandom | tr -d ' ')" \
+            "$(od -An -N1 -tu1 /dev/urandom | tr -d ' ')" \
+            "$(od -An -N1 -tu1 /dev/urandom | tr -d ' ')" \
+            "$(od -An -N1 -tu1 /dev/urandom | tr -d ' ')")
+        nmcli connection modify "${name}" 802-11-wireless.cloned-mac-address "${mac}"
+        nmcli connection down "${name}"
+        nmcli connection up "${name}"
+    }
+fi
+
+#### ping #####################################################################
+
+ping-ts() {
+    local count='' interval=2 deadline=2 destination=''
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            -c|--count)    count="$2";    shift 2 ;;
+            -i|--interval) interval="$2"; shift 2 ;;
+            -w|--deadline) deadline="$2"; shift 2 ;;
+            *) destination="$1"; shift ;;
+        esac
+    done
+    if [ -z "${destination}" ]; then
+        echo "'ping-ts' expected [1..) arguments ... DESTINATION; got 0" >&2; return 1
+    fi
+    local args=("-i" "${interval}" "-W" "${deadline}")
+    [ -n "${count}" ] && args=("-c" "${count}" "${args[@]}")
+    ping -O "${args[@]}" "${destination}" | while IFS= read -r pong; do
+        printf '[%s/%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "${destination}" "${pong}"
+    done
+}
 
 #### prek #####################################################################
 
@@ -312,17 +572,134 @@ for _base in "${HOME}/work" "${HOME}/work/derek"; do
 done
 unset _base _dotfiles _yaml
 
+#### rm #######################################################################
+
+rm() {
+    for _arg in "$@"; do
+        if [ "${_arg}" = ".git" ]; then
+            printf "Are you sure you want to remove '.git'? (y/N) "
+            read -r _reply
+            case "${_reply}" in
+                y|Y) ;;
+                *) echo "Exiting..." >&2; return 1 ;;
+            esac
+        fi
+    done
+    command rm -frv "$@"
+}
+
+unlink() { for _file in "$@"; do command unlink "${_file}"; done; }
+
 #### ruff #####################################################################
 
 if command -v ruff >/dev/null 2>&1; then
     rw() { ruff check -w "$@"; }
 fi
 
+#### ssh ######################################################################
+
+__ssh_keyscan() {
+    if [ "$#" -lt 1 ]; then
+        echo "'__ssh_keyscan' expected [1..] arguments HOST [PORT]; got $#" >&2; return 1
+    fi
+    local host="$1"; shift
+    local port='' args="-t ed25519"
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            -p) port="$2"; shift 2 ;;
+            *) break ;;
+        esac
+    done
+    [ -n "${port}" ] && args="${args} -p ${port}"
+    local tmp
+    tmp=$(mktemp)
+    # shellcheck disable=SC2086
+    if ssh-keyscan ${args} -q "${host}" >> ~/.ssh/known_hosts 2>"${tmp}"; then
+        rm -f -- "${tmp}"; return
+    fi
+    if grep -q "illegal option -- q" "${tmp}"; then
+        # shellcheck disable=SC2086
+        ssh-keyscan ${args} "${host}" >> ~/.ssh/known_hosts
+    else
+        cat "${tmp}" >&2; rm -f -- "${tmp}"; return 1
+    fi
+    rm -f -- "${tmp}"
+}
+
+__ssh_strict() {
+    local root=0 destination=''
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            -r|--root) root=1; shift ;;
+            *) destination="$1"; shift ;;
+        esac
+    done
+    if [ "${root}" -eq 1 ]; then
+        ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes \
+            -t "${destination}" 'sudo -i'
+    else
+        ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes \
+            "${destination}"
+    fi
+}
+
+add-known-host() {
+    if [ "$#" -eq 0 ]; then
+        echo "'add-known-host' expected [1..2] arguments HOST [PORT]; got $#" >&2; return 1
+    fi
+    local host="$1"
+    if [ "$#" -ge 2 ]; then
+        ssh-keygen -R "[${host}]:$2"
+        __ssh_keyscan "${host}" -p "$2"
+    else
+        ssh-keygen -R "${host}"
+        __ssh_keyscan "${host}"
+    fi
+}
+
+edit-authorized-keys() { "${EDITOR}" "${HOME}/.ssh/authorized_keys"; }
+edit-known-hosts()     { "${EDITOR}" "${HOME}/.ssh/known_hosts"; }
+edit-ssh-config()      { "${EDITOR}" "${HOME}/.ssh/config"; }
+
+generate-ssh-key() {
+    local filename="id_ed25519"
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            -f|--filename) filename="$2"; shift 2 ;;
+            *) break ;;
+        esac
+    done
+    ssh-keygen -C '' -f "${filename}" -P '' -t ed25519
+}
+
+ssh-auto() {
+    if [ "$#" -lt 1 ]; then
+        echo "'ssh-auto' expected [1..] arguments DESTINATION; got $#" >&2; return 1
+    fi
+    local root='' destination=''
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            -r|--root) root='--root'; shift ;;
+            *) destination="$1"; shift ;;
+        esac
+    done
+    if ! __ssh_strict ${root:+"${root}"} "${destination}"; then
+        local host="${destination##*@}"
+        ssh-keygen -R "${host}"
+        __ssh_keyscan "${host}"
+        __ssh_strict ${root:+"${root}"} "${destination}"
+    fi
+}
+
 #### starship #################################################################
 
 if command -v starship >/dev/null 2>&1; then
     eval "$(starship init bash)"
 fi
+
+#### tail #####################################################################
+
+tf() { tail -F --verbose "$@"; }
 
 #### tailscale ################################################################
 
@@ -385,6 +762,15 @@ if command -v tmux >/dev/null 2>&1; then
     }
     tmux_reload() { tmux source-file "${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.conf"; }
 fi
+
+#### touch ####################################################################
+
+touch() {
+    for _file in "$@"; do
+        command mkdir -p "$(dirname -- "${_file}")"
+        command touch "${_file}"
+    done
+}
 
 #### uv #######################################################################
 
