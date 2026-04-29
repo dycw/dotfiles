@@ -358,14 +358,19 @@ setup_bash() {
 	fi
 }
 
-setup_shell_hooks() {
-	log "Setting up shell hooks..."
-	posix_dir="${xdg_config_home}/posix"
-	mkdir -p "${posix_dir}"
-	find "${configs}" -maxdepth 1 -type f -name '*.sh' | sort | while IFS= read -r script; do
-		name=$(basename -- "${script}")
-		ln -sfn "${script}" "${posix_dir}/${name}"
-	done
+setup_env_sh() {
+	log "Setting up /etc/profile.d/env.sh..."
+	if ! cmp -s "${configs}/sh/env.sh" /etc/profile.d/env.sh 2>/dev/null; then
+		run_root mkdir -p /etc/profile.d
+		run_root cp -- "${configs}/sh/env.sh" /etc/profile.d/env.sh
+		run_root chmod 644 /etc/profile.d/env.sh
+	fi
+	if [ "${platform}" = mac ]; then
+		if ! cmp -s "${configs}/sh/profile-mac" /etc/profile 2>/dev/null; then
+			log "Overwriting /etc/profile to add /etc/profile.d support..."
+			run_root cp -- "${configs}/sh/profile-mac" /etc/profile
+		fi
+	fi
 }
 
 setup_keymapp() {
@@ -377,14 +382,12 @@ setup_static_configs() {
 	log "Setting up static configs..."
 	link_config "${configs}/bottom.toml" bottom/bottom.toml
 	link_config "${configs}/direnv.toml" direnv/direnv.toml
-	link_config "${configs}/fd.ignore" fd/ignore
+	link_config "${configs}/fdignore" fd/ignore
 	link_config "${configs}/git/config" git/config
 	link_config "${configs}/git/ignore" git/ignore
 	link_config "${configs}/pgcli.config" pgcli/config
-	link_config "${configs}/ripgrep.ripgreprc" ripgrep/ripgreprc
+	link_config "${configs}/ripgreprc" ripgrep/ripgreprc
 	link_config "${configs}/starship.toml" starship.toml
-	link_config "${configs}/tmux/.tmux/.tmux.conf" tmux/tmux.conf
-	link_config "${configs}/tmux/tmux.conf.local" tmux/tmux.conf.local
 	link_config "${configs}/wezterm.lua" wezterm/wezterm.lua
 	link_direct "${configs}/ipython/ipython_config.py" "${HOME}/.ipython/profile_default/ipython_config.py"
 	link_direct "${configs}/ipython/startup.py" "${HOME}/.ipython/profile_default/startup/startup.py"
@@ -400,9 +403,19 @@ setup_static_configs() {
 	link_direct "${configs}/jupyter/jupyterlab_code_formatter/settings.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/jupyterlab_code_formatter/settings.jupyterlab-settings"
 	link_direct "${configs}/jupyter/notebook/tracker.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings"
 	link_direct "${configs}/jupyter/shortcuts/shortcuts.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings"
-	link_home "${configs}/psql.psqlrc" .psqlrc
+	link_home "${configs}/psqlrc" .psqlrc
 	link_home "${configs}/vimrc" .vimrc
-	link_config "${configs}/neovim" nvim
+}
+
+setup_tmux() {
+	log "Setting up 'tmux'..."
+	tmux_dir="${xdg_config_home}/tmux"
+	mkdir -p "${tmux_dir}"
+	if [ ! -d "${tmux_dir}/.tmux" ]; then
+		git clone https://github.com/gpakosz/.tmux.git "${tmux_dir}/.tmux"
+	fi
+	link_direct "${tmux_dir}/.tmux/.tmux.conf" "${tmux_dir}/tmux.conf"
+	link_config "${configs}/tmux.conf" tmux/tmux.conf.local
 }
 
 remove_legacy_files() {
@@ -413,6 +426,8 @@ remove_legacy_files() {
 	rm -rf -- \
 		"${xdg_config_home}/fish" \
 		"${xdg_config_home}/ghostty" \
+		"${xdg_config_home}/nvim" \
+		"${xdg_config_home}/posix" \
 		"${xdg_config_home}/pudb" \
 		"${xdg_config_home}/stayfocusd" \
 		"${xdg_config_home}/zsh"
@@ -422,8 +437,9 @@ setup_all() {
 	log "Setting up '$(hostname)'..."
 	setup_bash
 	setup_ssh
-	setup_shell_hooks
+	setup_env_sh
 	setup_static_configs
+	setup_tmux
 	remove_legacy_files
 	if [ "${platform}" = linux ]; then
 		setup_keymapp
@@ -586,10 +602,9 @@ run_local_self() {
 		log "Updating repo..."
 		git -C "${dotfiles}" fetch origin
 		git -C "${dotfiles}" reset --hard origin/master
-		git -C "${dotfiles}" submodule update --init --recursive
 	else
 		log "Cloning repo..."
-		git clone --recurse-submodules "${repo}" "${dotfiles}"
+		git clone "${repo}" "${dotfiles}"
 		configs="${dotfiles}/configs"
 	fi
 

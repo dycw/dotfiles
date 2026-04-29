@@ -1,5 +1,13 @@
 [alias]
+  # add
+  a = add --all
+  af = add --force
+  ap = add --all --patch
+
   # branch
+  b = branch-default
+  bdr = push --delete origin
+  bm = branch -m
   branch-default = "!git branch --all --list --sort=-committerdate --verbose"
   branch-delete = "!git branch --delete --force"
   purge-local = "! \
@@ -8,6 +16,9 @@
     | awk -v cur=\"$current\" '$1 != cur && /gone]/{print $1}' \
     | xargs -r git branch -D \
   "
+
+  # cherry-pick
+  cp = cherry-pick
 
   # checkout
   reset-unmerged = "checkout --conflict=merge ."
@@ -19,37 +30,55 @@
   "
 
   # diff
+  d = diff
+  dc = diff --cached
+  dm = "!git diff $(git default-remote-branch)"
   diff-remote = "!git diff $(git default-remote-branch)"
-  nvim-unmerged = "!git diff --name-only --diff-filter=U -z | xargs -0 nvim"
   is-clean = "!git diff --quiet && git diff --cached --quiet"
+  vim-unmerged = "!git diff --name-only --diff-filter=U -z | xargs -0 vim"
 
   # fetch
+  f = fetch-default
   fetch-default = "! \
-    git fetch --all --force --prune --prune-tags --recurse-submodules=yes \
-      --tags && \
+    git fetch --all --force --prune --prune-tags --tags && \
     git purge-local \
   "
 
   # log
+  l = "!git log-default -n 20"
   log-default = "! \
     git log --abbrev-commit --decorate=short \
       --pretty=\"format:%C(red)%h%C(reset) | %C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)\" \
   "
 
   # pull
+  pl = pull-default
   pull-default = "! \
-    git pull --all --force --prune --recurse-submodules=yes --tags && \
+    git pull --all --force --prune --tags && \
     git purge-local \
   "
 
   # push
+  p = push
+  pf = push --force
   branch-delete-remote = "!git push --delete origin"
 
+  # rebase
+  rb = "!git fetch-default && git rebase $(git default-remote-branch)"
+  rba = rebase --abort
+  rbc = rebase --continue
+  rbs = rebase --skip
+
   # remote
+  rem = remote -v
   remote-name = "!git remote get-url origin"
   repo-name = "!basename -s .git $(git remote-name)"
 
   # reset
+  r = reset
+  rhom = "!git reset --hard $(git default-remote-branch)"
+  rp = reset --patch
+  sq = "!git fetch-default && git reset --soft $(git merge-base $(git default-remote-branch) HEAD)"
   hard-reset = "!f() { \
     git clean-default && \
     git fetch-default && \
@@ -65,9 +94,16 @@
       fi; } \
   }; f"
 
+  # restore
+  res = restore
+  un = restore --staged
+
   # rev-parse
   current-branch = "!git rev-parse --abbrev-ref HEAD"
   repo-root = "!git rev-parse --show-toplevel"
+
+  # rm
+  rmc = rm --cached -rf
 
   # show-ref
   is-valid-ref = "!f() { \
@@ -78,18 +114,25 @@
   }; f"
   is-valid-ref1 = "!f() { git show-ref --verify --quiet refs/$1; }; f"
 
-  # submodule
-  submodule-update = "! \
-    git submodule update --init --recursive && \
-    git submodule foreach --recursive \
-      'git checkout --force $(git default-local-branch) && git pull-default' \
-  "
+  # stash
+  st = stash
+  std = stash drop
+  stp = stash pop
+
+  # status
+  s = status
+
+  # switch
+  sw = switch
+  swc = switch --create
 
   # symbolic-ref
   default-remote-branch = "!git symbolic-ref refs/remotes/origin/HEAD --short"
   default-local-branch = "!git default-remote-branch | sed \"s#origin/##\""
 
   # tag
+  ta = "!f() { git tag-add \"$1\" HEAD; }; f"
+  td = tag-delete
   tag-add = "!f() { \
     git tag -a $1 $2 -m $1 && \
     git push --tags --force --set-upstream origin && \
@@ -154,10 +197,7 @@
 
 [merge]
   conflictstyle = diff3
-  tool = nvimdiff
-
-[mergetool "nvimdiff"]
-  cmd = nvim -d \"$LOCAL\" \"$REMOTE\" \"$MERGED\" -c \"wincmd w\"
+  tool = vimdiff
 
 [pull]
   default = upstream

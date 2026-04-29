@@ -104,6 +104,6 @@ chmod +x "${bootstrap_dir}/run-test.sh"
 
 PATH="${bootstrap_bin}:${PATH}" HOME="${bootstrap_home}" sh "${bootstrap_dir}/run-test.sh"
 
-assert_file_contains "git clone --recurse-submodules https://github.com/dycw/dotfiles.git ${bootstrap_home}/dotfiles" "${bootstrap_log}"
+assert_file_contains "git clone https://github.com/dycw/dotfiles.git ${bootstrap_home}/dotfiles" "${bootstrap_log}"
 assert_file_contains 'install_all' "${bootstrap_log}"
 assert_file_contains 'setup_all' "${bootstrap_log}"
