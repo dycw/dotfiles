@@ -180,7 +180,6 @@ fi
 run_local_self() {
 	log "Setting up '$(hostname)'..."
 
-	ensure_sudo
 	resolve_dotfiles
 	ensure_git
 

@@ -23,10 +23,27 @@ fail() {
 	exit 1
 }
 
+_sudo_acquired=0
+
+acquire_sudo() {
+	[ "${_sudo_acquired}" -eq 1 ] && return
+	if ! sudo -n true 2>/dev/null; then
+		log "Requesting sudo access..."
+		sudo -v
+	fi
+	_sudo_acquired=1
+	while true; do
+		sudo -n true 2>/dev/null || true
+		sleep 60
+		kill -0 "$$" 2>/dev/null || exit 0
+	done &
+}
+
 run_root() {
 	if [ "$(id -u)" -eq 0 ]; then
 		"$@"
 	else
+		acquire_sudo
 		sudo "$@"
 	fi
 }
@@ -141,19 +158,42 @@ parallel_install_apt_packages() {
 	run_root apt-get install -y ${missing}
 }
 
-uninstall_brew_formula() {
-	formula=$1
-	if ! brew_formula_installed "${formula}"; then
-		return
-	fi
-	log "Uninstalling '${formula}'..."
-	brew uninstall "${formula}"
+# Checks all given formulae in parallel, then uninstalls any present ones.
+parallel_uninstall_brew_formulas() {
+	tmp=$(mktemp -d)
+	i=0
+	for formula in "$@"; do
+		(brew_formula_installed "${formula}" && printf '%s\n' "${formula}" >"${tmp}/${i}" || true) &
+		i=$((i + 1))
+	done
+	wait
+	present=$(cat "${tmp}"/* 2>/dev/null | sort -u || true)
+	rm -rf -- "${tmp}"
+	[ -n "${present}" ] || return 0
+	log "Uninstalling formulae: ${present}"
+	# shellcheck disable=SC2086
+	brew uninstall ${present}
+}
+
+# Checks all given casks in parallel, then uninstalls any present ones.
+parallel_uninstall_brew_casks() {
+	tmp=$(mktemp -d)
+	i=0
+	for cask in "$@"; do
+		(brew_cask_installed "${cask}" && printf '%s\n' "${cask}" >"${tmp}/${i}" || true) &
+		i=$((i + 1))
+	done
+	wait
+	present=$(cat "${tmp}"/* 2>/dev/null | sort -u || true)
+	rm -rf -- "${tmp}"
+	[ -n "${present}" ] || return 0
+	log "Uninstalling casks: ${present}"
+	# shellcheck disable=SC2086
+	brew uninstall --cask ${present}
 }
 
 remove_unwanted_brew_formulas() {
-	for formula in age sops rlwrap yoannfleurydev/gitweb/gitweb; do
-		uninstall_brew_formula "${formula}"
-	done
+	parallel_uninstall_brew_formulas age sops rlwrap yoannfleurydev/gitweb/gitweb
 }
 
 # Checks all given formulae in parallel, then installs any missing ones in a
@@ -209,9 +249,18 @@ install_linux_packages() {
 	parallel_install_apt_packages curl rsync sudo xclip xsel
 }
 
+remove_unwanted_brew_casks() {
+	parallel_uninstall_brew_casks db-browser-for-sqlite ghostty pgadmin4
+}
+
+ensure_brew_taps() {
+	brew tap redis-stack/redis-stack
+}
+
 install_mac_casks() {
+	ensure_brew_taps
 	parallel_install_brew_casks \
-		1password db-browser-for-sqlite dropbox ghostty pgadmin4 postico \
+		1password dropbox postico \
 		protonvpn redis-stack spotify transmission vlc wezterm whatsapp zoom
 }
 
@@ -258,6 +307,7 @@ install_all() {
 	if [ "${platform}" = linux ]; then
 		install_linux_packages
 	else
+		remove_unwanted_brew_casks
 		install_mac_casks
 	fi
 }
