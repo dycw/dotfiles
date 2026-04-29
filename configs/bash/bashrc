@@ -352,6 +352,24 @@ hypothesis_dev() { export HYPOTHESIS_PROFILE=dev; }
 
 edit_ipython_startup() { "${EDITOR}" "${PATH_DOTFILES}/configs/ipython/startup.py"; }
 
+if command -v uv >/dev/null 2>&1; then
+    ipy() {
+        local args=()
+        for _arg in "$@"; do args+=(--with "${_arg}"); done
+        uv run --with dycw-utilities --with ipython "${args[@]}" ipython
+    }
+fi
+
+#### jupyter ##################################################################
+
+if command -v uv >/dev/null 2>&1; then
+    jl() {
+        local args=()
+        for _arg in "$@"; do args+=(--with "${_arg}"); done
+        uv run --with dycw-utilities --with jupyterlab --with jupyterlab-vim "${args[@]}" jupyter lab
+    }
+fi
+
 #### lsof #####################################################################
 
 if command -v lsof >/dev/null 2>&1; then
@@ -691,6 +709,14 @@ ssh-auto() {
     fi
 }
 
+#### SSH ######################################################################
+
+ssh-dw-mac() { ssh-auto derekwan@dw-mac.tail.net; }
+ssh-dw-macbook() { ssh-auto derekwan@dw-macbook-neo.tail.net; }
+ssh-dw-swift() { ssh-auto derek@dw-swift.tail.net; }
+ssh-rh-mac() { ssh-auto derekwan@rh-mac.tail.net; }
+ssh-rh-macbook() { ssh-auto derekwan@rh-macbook.tail.net; }
+
 #### starship #################################################################
 
 if command -v starship >/dev/null 2>&1; then
@@ -811,3 +837,11 @@ fi
 if command -v zoxide >/dev/null 2>&1; then
     eval "$(zoxide init --cmd j bash)"
 fi
+
+#### bashrc.d #################################################################
+
+mkdir -p "${HOME}/.bashrc.d"
+for _f in "${HOME}"/.bashrc.d/*.sh "${HOME}"/.bashrc.d/*.bash; do
+    [ -r "${_f}" ] && [ -f "${_f}" ] && . "${_f}"
+done
+unset _f

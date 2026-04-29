@@ -159,7 +159,7 @@ parallel_uninstall_brew_formulas() {
 	tmp=$(mktemp -d)
 	i=0
 	for formula in "$@"; do
-		(brew_formula_installed "${formula}" && printf '%s\n' "${formula}" >"${tmp}/${i}" || true) &
+		(if brew_formula_installed "${formula}"; then printf '%s\n' "${formula}" >"${tmp}/${i}"; fi) &
 		i=$((i + 1))
 	done
 	wait
@@ -175,7 +175,7 @@ parallel_uninstall_brew_casks() {
 	tmp=$(mktemp -d)
 	i=0
 	for cask in "$@"; do
-		(brew_cask_installed "${cask}" && printf '%s\n' "${cask}" >"${tmp}/${i}" || true) &
+		(if brew_cask_installed "${cask}"; then printf '%s\n' "${cask}" >"${tmp}/${i}"; fi) &
 		i=$((i + 1))
 	done
 	wait
