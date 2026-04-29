@@ -125,26 +125,6 @@ brew_cask_installed() {
 	brew list --cask "$1" >/dev/null 2>&1
 }
 
-install_brew_formula() {
-	formula=$1
-	if brew_formula_installed "${formula}"; then
-		log "'${formula}' is already installed"
-		return
-	fi
-	log "Installing '${formula}'..."
-	brew install "${formula}"
-}
-
-install_brew_cask() {
-	cask=$1
-	if brew_cask_installed "${cask}"; then
-		log "'${cask}' is already installed"
-		return
-	fi
-	log "Installing '${cask}'..."
-	brew install --cask "${cask}"
-}
-
 install_apt_package() {
 	package=$1
 	if dpkg -s "${package}" >/dev/null 2>&1; then
@@ -170,21 +150,53 @@ remove_unwanted_brew_formulas() {
 	done
 }
 
+# Checks all given formulae in parallel, then installs any missing ones in a
+# single brew call.
+parallel_install_brew_formulas() {
+	tmp=$(mktemp -d)
+	i=0
+	for formula in "$@"; do
+		(brew_formula_installed "${formula}" || printf '%s\n' "${formula}" >"${tmp}/${i}") &
+		i=$((i + 1))
+	done
+	wait
+	missing=$(cat "${tmp}"/* 2>/dev/null | sort -u || true)
+	rm -rf -- "${tmp}"
+	[ -n "${missing}" ] || return 0
+	log "Installing formulae: ${missing}"
+	# shellcheck disable=SC2086
+	brew install ${missing}
+}
+
+# Checks all given casks in parallel, then installs any missing ones in a
+# single brew call. Uses --adopt to handle apps installed outside Homebrew.
+parallel_install_brew_casks() {
+	tmp=$(mktemp -d)
+	i=0
+	for cask in "$@"; do
+		(brew_cask_installed "${cask}" || printf '%s\n' "${cask}" >"${tmp}/${i}") &
+		i=$((i + 1))
+	done
+	wait
+	missing=$(cat "${tmp}"/* 2>/dev/null | sort -u || true)
+	rm -rf -- "${tmp}"
+	[ -n "${missing}" ] || return 0
+	log "Installing casks: ${missing}"
+	# shellcheck disable=SC2086
+	brew install --cask --adopt ${missing}
+}
+
 install_common_brew_formulas() {
-	for formula in \
+	parallel_install_brew_formulas \
 		asciinema autoconf automake bat bottom coreutils delta \
 		direnv dust eza fd fzf gh git-delta iperf3 jq just libpq \
 		luacheck luarocks maturin npm pgcli postgresql@18 prettier redis \
 		rename restic ripgrep ruff sd shellcheck shfmt starship \
-		tailscale tmux topgrade uv vim watch yq zoxide; do
-		install_brew_formula "${formula}"
-	done
+		tailscale tmux topgrade uv vim watch yq zoxide
 
-	for formula in dnsmasq flock; do
-		if [ "${platform}" = mac ]; then
-			install_brew_formula "${formula}"
-		fi
-	done
+	if [ "${platform}" = mac ]; then
+		parallel_install_brew_formulas dnsmasq flock
+	fi
 }
 
 install_linux_packages() {
@@ -194,11 +206,9 @@ install_linux_packages() {
 }
 
 install_mac_casks() {
-	for cask in \
+	parallel_install_brew_casks \
 		1password agg db-browser-for-sqlite dropbox ghostty pgadmin4 postico \
-		protonvpn redis-stack spotify transmission vlc wezterm whatsapp zoom; do
-		install_brew_cask "${cask}"
-	done
+		protonvpn redis-stack spotify transmission vlc wezterm whatsapp zoom
 }
 
 install_rust_tools() {
