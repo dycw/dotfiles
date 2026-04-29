@@ -1,7 +1,7 @@
 # System-wide .profile for sh(1)
 
 if [ -x /usr/libexec/path_helper ]; then
-	eval "$(path_helper -s)"
+	eval "$(/usr/libexec/path_helper -s)"
 fi
 
 if [ "${BASH-no}" != "no" ]; then
