@@ -5,27 +5,6 @@ if [[ $- != *i* ]]; then
     return
 fi
 
-#### history ##################################################################
-
-HISTCONTROL=ignoreboth
-HISTSIZE=1000
-HISTFILESIZE=2000
-shopt -s histappend
-
-#### check window size ########################################################
-
-shopt -s checkwinsize
-
-#### completion ###############################################################
-
-if ! shopt -oq posix; then
-    if [ -f /usr/share/bash-completion/bash_completion ]; then
-        . /usr/share/bash-completion/bash_completion
-    elif [ -f /etc/bash_completion ]; then
-        . /etc/bash_completion
-    fi
-fi
-
 #### shell ####################################################################
 
 if command -v vim >/dev/null 2>&1; then
@@ -56,10 +35,39 @@ for _f in "${HOME}"/.mode.sw*; do
 done
 unset _f
 
+#### completion ###############################################################
+
+if ! shopt -oq posix; then
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
+fi
+
+#### history ##################################################################
+
+HISTCONTROL=ignoreboth
+HISTSIZE=1000
+HISTFILESIZE=2000
+shopt -s histappend
+
+#### readline #################################################################
+
+set -o vi
+bind 'set editing-mode vi'
+bind 'set show-mode-in-prompt on'
+bind -m vi-command '"v": edit-and-execute-command'
+
+#### check window size ########################################################
+
+shopt -s checkwinsize
+
 #### asciinema ################################################################
 
 if command -v asciinema >/dev/null 2>&1; then
     asciinema_record() {
+        local dir now path_tmp
         if [ -d "${HOME}/Dropbox/Screenshots" ]; then
             dir="${HOME}/Dropbox/Screenshots"
         else
@@ -74,6 +82,10 @@ if command -v asciinema >/dev/null 2>&1; then
         fi
     }
 fi
+
+#### bashrc ###################################################################
+
+edit-bashrc() { "${EDITOR}" "${PATH_DOTFILES}/configs/bash/bashrc"; }
 
 #### bat ######################################################################
 
@@ -170,7 +182,7 @@ if command -v curl >/dev/null 2>&1; then
             echo "'curl_sh' expected [1..) arguments URL; got $#" >&2
             return 1
         fi
-        url=$1
+        local url=$1
         shift
         curl -fsSL "${url}" | sh -s -- "$@"
     }
@@ -181,6 +193,7 @@ fi
 
 if command -v direnv >/dev/null 2>&1; then
     eval "$(direnv hook bash)"
+    dea() { direnv allow .; }
 fi
 
 #### dns ######################################################################
@@ -239,13 +252,31 @@ if command -v fd >/dev/null 2>&1 || command -v fdfind >/dev/null 2>&1; then
             command fdfind "$@"
         fi
     }
-    fdd() { fd --hidden --type=directory "$@"; }
-    fdf() { fd --hidden --type=file "$@"; }
+    __fd_type() {
+        if [ "$#" -lt 1 ]; then
+            echo "'__fd_type' expected [1..) arguments TYPE; got $#" >&2
+            return 1
+        fi
+        local type=$1
+        shift
+        fd --hidden --type="${type}" "$@"
+    }
+    fdd() { __fd_type directory "$@"; }
+    fdf() { __fd_type file "$@"; }
 fi
 
 #### fzf ######################################################################
 
 if command -v fzf >/dev/null 2>&1; then
+    if command -v fd >/dev/null 2>&1; then
+        export FZF_DEFAULT_COMMAND='fd --hidden --type=file --follow --exclude .git'
+        export FZF_CTRL_T_COMMAND='fd --hidden --type=file --follow --exclude .git'
+        export FZF_ALT_C_COMMAND='fd --hidden --type=directory --follow --exclude .git'
+    elif command -v fdfind >/dev/null 2>&1; then
+        export FZF_DEFAULT_COMMAND='fdfind --hidden --type=file --follow --exclude .git'
+        export FZF_CTRL_T_COMMAND='fdfind --hidden --type=file --follow --exclude .git'
+        export FZF_ALT_C_COMMAND='fdfind --hidden --type=directory --follow --exclude .git'
+    fi
     eval "$(fzf --bash)"
 fi
 
@@ -419,26 +450,6 @@ if [ "$(uname)" = Linux ]; then
     }
     watch-resolv-conf() {
         watch --color --differences --interval=1 -- cat /etc/resolv.conf
-    }
-fi
-
-if command -v nmcli >/dev/null 2>&1; then
-    spoof-mac-address() {
-        local name
-        name=$(nmcli connection show --active | awk '$3=="wifi"{print $1}')
-        local first
-        first=$(( 2 + 2 * ($(od -An -N1 -tu1 /dev/urandom | tr -d ' ') % 127) ))
-        local mac
-        mac=$(printf '%02X:%02X:%02X:%02X:%02X:%02X' \
-            "${first}" \
-            "$(od -An -N1 -tu1 /dev/urandom | tr -d ' ')" \
-            "$(od -An -N1 -tu1 /dev/urandom | tr -d ' ')" \
-            "$(od -An -N1 -tu1 /dev/urandom | tr -d ' ')" \
-            "$(od -An -N1 -tu1 /dev/urandom | tr -d ' ')" \
-            "$(od -An -N1 -tu1 /dev/urandom | tr -d ' ')")
-        nmcli connection modify "${name}" 802-11-wireless.cloned-mac-address "${mac}"
-        nmcli connection down "${name}"
-        nmcli connection up "${name}"
     }
 fi
 
@@ -709,7 +720,7 @@ ssh-auto() {
     fi
 }
 
-#### SSH ######################################################################
+#### ssh shortcuts ############################################################
 
 ssh-dw-mac() { ssh-auto derekwan@dw-mac.tail.net; }
 ssh-dw-macbook() { ssh-auto derekwan@dw-macbook-neo.tail.net; }
