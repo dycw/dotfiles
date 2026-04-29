@@ -401,6 +401,21 @@ setup_static_configs() {
 	link_direct "${configs}/jupyter/notebook/tracker.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings"
 	link_direct "${configs}/jupyter/shortcuts/shortcuts.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings"
 	link_home "${configs}/psql.psqlrc" .psqlrc
+	link_home "${configs}/vimrc" .vimrc
+	link_config "${configs}/neovim" nvim
+}
+
+remove_legacy_files() {
+	rm -f -- \
+		"${HOME}/.pdbrc" \
+		"${HOME}/.viminfo" \
+		"${HOME}/.zshrc"
+	rm -rf -- \
+		"${xdg_config_home}/fish" \
+		"${xdg_config_home}/ghostty" \
+		"${xdg_config_home}/pudb" \
+		"${xdg_config_home}/stayfocusd" \
+		"${xdg_config_home}/zsh"
 }
 
 setup_all() {
@@ -409,10 +424,10 @@ setup_all() {
 	setup_ssh
 	setup_shell_hooks
 	setup_static_configs
+	remove_legacy_files
 	if [ "${platform}" = linux ]; then
 		setup_keymapp
 	fi
-	rm -rf -- "${xdg_config_home}/fish"
 }
 
 #### parse arguments ##########################################################
