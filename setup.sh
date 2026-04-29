@@ -358,14 +358,15 @@ setup_bash() {
 	fi
 }
 
-setup_shell_hooks() {
-	log "Setting up shell hooks..."
-	posix_dir="${xdg_config_home}/posix"
-	mkdir -p "${posix_dir}"
-	find "${configs}" -maxdepth 1 -type f -name '*.sh' | sort | while IFS= read -r script; do
-		name=$(basename -- "${script}")
-		ln -sfn "${script}" "${posix_dir}/${name}"
-	done
+setup_env_sh() {
+	log "Setting up /etc/profile.d/env.sh..."
+	run_root mkdir -p /etc/profile.d
+	run_root cp -- "${configs}/bash/env.sh" /etc/profile.d/env.sh
+	run_root chmod 644 /etc/profile.d/env.sh
+	if [ "${platform}" = mac ]; then
+		log "Overwriting /etc/profile to add /etc/profile.d support..."
+		run_root cp -- "${configs}/bash/profile" /etc/profile
+	fi
 }
 
 setup_keymapp() {
@@ -413,6 +414,7 @@ remove_legacy_files() {
 	rm -rf -- \
 		"${xdg_config_home}/fish" \
 		"${xdg_config_home}/ghostty" \
+		"${xdg_config_home}/posix" \
 		"${xdg_config_home}/pudb" \
 		"${xdg_config_home}/stayfocusd" \
 		"${xdg_config_home}/zsh"
@@ -422,7 +424,7 @@ setup_all() {
 	log "Setting up '$(hostname)'..."
 	setup_bash
 	setup_ssh
-	setup_shell_hooks
+	setup_env_sh
 	setup_static_configs
 	remove_legacy_files
 	if [ "${platform}" = linux ]; then

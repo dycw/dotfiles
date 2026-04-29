@@ -5,6 +5,12 @@ if [[ $- != *i* ]]; then
     return
 fi
 
+#### env ######################################################################
+
+if [ -f /etc/profile.d/env.sh ]; then
+    . /etc/profile.d/env.sh
+fi
+
 #### history ##################################################################
 
 HISTCONTROL=ignoreboth
@@ -26,12 +32,396 @@ if ! shopt -oq posix; then
     fi
 fi
 
-#### common POSIX #############################################################
+#### shell ####################################################################
 
-for file in "${HOME}"/.config/posix/*.sh; do
-    # restore original settings since 'set -u' (nounset) can brick /etc/profile.d/*
-    current="$(set +o)"
-    [ -f "${file}" ] && . "${file}"
-    eval "${current}"
-    unset current
+if command -v vim >/dev/null 2>&1; then
+    export EDITOR=vim
+    export VISUAL=vim
+elif command -v vi >/dev/null 2>&1; then
+    export EDITOR=vi
+    export VISUAL=vi
+elif command -v nano >/dev/null 2>&1; then
+    export EDITOR=nano
+    export VISUAL=nano
+fi
+
+# Resolve PATH_DOTFILES from the ~/.bashrc symlink target.
+if [ -L "${HOME}/.bashrc" ]; then
+    _t=$(readlink "${HOME}/.bashrc")
+    case "${_t}" in
+    /*) ;;
+    *) _t="$(dirname "${HOME}/.bashrc")/${_t}" ;;
+    esac
+    PATH_DOTFILES=$(CDPATH='' cd -- "$(dirname "${_t}")/../.." && pwd -P)
+    export PATH_DOTFILES
+    unset _t
+fi
+
+for _f in "${HOME}"/.mode.sw*; do
+    [ -e "${_f}" ] && rm -v -- "${_f}"
 done
+unset _f
+
+#### asciinema ################################################################
+
+if command -v asciinema >/dev/null 2>&1; then
+    asciinema_record() {
+        if [ -d "${HOME}/Dropbox/Screenshots" ]; then
+            dir="${HOME}/Dropbox/Screenshots"
+        else
+            dir=$(pwd)
+        fi
+        now=$(date -u +"%Y-%m-%dT%H-%M-%S-UTC")
+        path_tmp="${dir}/${now}.asciinema"
+        asciinema record "${path_tmp}"
+        if command -v agg >/dev/null 2>&1; then
+            agg "${path_tmp}" "${dir}/${now}.gif"
+            rm -f -- "${path_tmp}"
+        fi
+    }
+fi
+
+#### bat ######################################################################
+
+if command -v bat >/dev/null 2>&1 || command -v batcat >/dev/null 2>&1; then
+    bat() {
+        if command -v bat >/dev/null 2>&1; then
+            command bat "$@"
+        else
+            command batcat "$@"
+        fi
+    }
+    cat() { bat "$@"; }
+    catp() { bat --style=plain "$@"; }
+fi
+
+#### batwatch #################################################################
+
+if command -v batwatch >/dev/null 2>&1; then
+    bw() { batwatch -n0.5 "$@"; }
+fi
+
+#### bottom ###################################################################
+
+if command -v btm >/dev/null 2>&1; then
+    edit_bottom_toml() { "${EDITOR}" "${PATH_DOTFILES}/configs/bottom.toml"; }
+fi
+
+#### curl #####################################################################
+
+if command -v curl >/dev/null 2>&1; then
+    curl_sh() {
+        if [ "$#" -lt 1 ]; then
+            echo "'curl_sh' expected [1..) arguments URL; got $#" >&2
+            return 1
+        fi
+        url=$1
+        shift
+        curl -fsSL "${url}" | sh -s -- "$@"
+    }
+    curl_ip() { curl api.ipify.org; }
+fi
+
+#### direnv ###################################################################
+
+if command -v direnv >/dev/null 2>&1; then
+    eval "$(direnv hook bash)"
+fi
+
+#### eza ######################################################################
+
+l() {
+    if command -v eza >/dev/null 2>&1; then
+        la --git-ignore "$@"
+    else
+        la "$@"
+    fi
+}
+
+la() {
+    if command -v eza >/dev/null 2>&1; then
+        eza --all --classify=always --git --group --group-directories-first \
+            --header --long --time-style=long-iso "$@"
+    else
+        ls -ahl --color=always "$@"
+    fi
+}
+
+if command -v eza >/dev/null 2>&1; then
+    wl() {
+        watch --color --differences --interval=1 -- \
+            eza --all --classify=always --color=always --git --group \
+            --group-directories-first --header --long --reverse \
+            --sort=modified --time-style=long-iso "$@"
+    }
+fi
+
+#### fd #######################################################################
+
+if command -v fd >/dev/null 2>&1 || command -v fdfind >/dev/null 2>&1; then
+    fd() {
+        if command -v fd >/dev/null 2>&1; then
+            command fd "$@"
+        else
+            command fdfind "$@"
+        fi
+    }
+    fdd() { fd --hidden --type=directory "$@"; }
+    fdf() { fd --hidden --type=file "$@"; }
+fi
+
+#### fzf ######################################################################
+
+if command -v fzf >/dev/null 2>&1; then
+    eval "$(fzf --bash)"
+fi
+
+#### hypothesis ###############################################################
+
+hypothesis_ci() { export HYPOTHESIS_PROFILE=ci; }
+hypothesis_default() { export HYPOTHESIS_PROFILE=default; }
+hypothesis_dev() { export HYPOTHESIS_PROFILE=dev; }
+
+#### ipython ##################################################################
+
+edit_ipython_startup() { "${EDITOR}" "${PATH_DOTFILES}/configs/ipython/startup.py"; }
+
+#### prek #####################################################################
+
+if command -v prek >/dev/null 2>&1; then
+    __prek_auto_update() { prek auto-update --jobs=10 --verbose; }
+    __prek_run() { prek run --all-files --show-diff-on-failure --quiet; }
+
+    pg() {
+        __prek_auto_update
+        __prek_run
+        if command -v __git_all >/dev/null 2>&1; then __git_all; fi
+    }
+
+    pr() { __prek_run; }
+
+    prf() {
+        rm -rf "${HOME}/.cache/pre-commit-hooks/throttle"
+        __prek_run
+    }
+
+    pri() { prek install --overwrite --install-hooks; }
+    pru() { prek uninstall; }
+    pu() { __prek_auto_update; }
+
+    pur() {
+        __prek_auto_update
+        __prek_run
+        if command -v __git_all >/dev/null 2>&1; then __git_all; fi
+    }
+fi
+
+#### pyright ##################################################################
+
+__pyright() {
+    if command -v pyright >/dev/null 2>&1; then
+        pyright .
+        return
+    fi
+    if command -v uv >/dev/null 2>&1; then
+        if [ -f .venv/bin/python ]; then
+            uv tool run pyright --pythonpath .venv/bin/python .
+        else
+            uv tool run pyright .
+        fi
+        return
+    fi
+    echo "'__pyright' expected 'pyright' or 'uv' to be available; got neither" >&2
+    return 1
+}
+
+pyr() { __pyright "$@"; }
+
+if command -v watchexec >/dev/null 2>&1; then
+    wpyr() {
+        cmd="cd $(pwd); pyright"
+        watchexec --exts json --exts py --exts toml --exts yaml --shell bash -- "${cmd}"
+    }
+fi
+
+#### pytest ###################################################################
+
+export PY_COLORS=1
+
+__pytest() { pytest --color=yes "$@"; }
+
+pyt() { __pytest "$@"; }
+pytf() { __pytest --looponfail "$@"; }
+pytfn() { __pytest --looponfail --numprocesses auto "$@"; }
+pytfnr() { __pytest --force-regen --looponfail --numprocesses auto "$@"; }
+pytfnx() { __pytest -x --looponfail --numprocesses auto "$@"; }
+pytfr() { __pytest --force-regen --looponfail "$@"; }
+pytfx() { __pytest --exitfirst --looponfail "$@"; }
+pytn() { __pytest --numprocesses auto "$@"; }
+pytnr() { __pytest --force-regen --numprocesses auto "$@"; }
+pytnx() { __pytest --exitfirst --numprocesses auto "$@"; }
+pytp() { __pytest --pdb "$@"; }
+pytpx() { __pytest --exitfirst --pdb "$@"; }
+pytr() { __pytest --force-regen "$@"; }
+pytx() { __pytest --exitfirst "$@"; }
+
+pytfk() {
+    [ "$#" -ge 1 ] || { echo "'pytfk' expected [1..) arguments EXPRESSION; got $#" >&2; return 1; }
+    expr=$1; shift; __pytest --looponfail -k "${expr}" "$@"
+}
+pytfxk() {
+    [ "$#" -ge 1 ] || { echo "'pytfxk' expected [1..) arguments EXPRESSION; got $#" >&2; return 1; }
+    expr=$1; shift; __pytest --exitfirst --looponfail -k "${expr}" "$@"
+}
+pytk() {
+    [ "$#" -ge 1 ] || { echo "'pytk' expected [1..) arguments EXPRESSION; got $#" >&2; return 1; }
+    expr=$1; shift; __pytest -k "${expr}" "$@"
+}
+pytnk() {
+    [ "$#" -ge 1 ] || { echo "'pytnk' expected [1..) arguments EXPRESSION; got $#" >&2; return 1; }
+    expr=$1; shift; __pytest --numprocesses auto -k "${expr}" "$@"
+}
+pytpk() {
+    [ "$#" -ge 1 ] || { echo "'pytpk' expected [1..) arguments EXPRESSION; got $#" >&2; return 1; }
+    expr=$1; shift; __pytest --pdb -k "${expr}" "$@"
+}
+pytpxk() {
+    [ "$#" -ge 1 ] || { echo "'pytpxk' expected [1..) arguments EXPRESSION; got $#" >&2; return 1; }
+    expr=$1; shift; __pytest --exitfirst --pdb -k "${expr}" "$@"
+}
+pytxk() {
+    [ "$#" -ge 1 ] || { echo "'pytxk' expected [1..) arguments EXPRESSION; got $#" >&2; return 1; }
+    expr=$1; shift; __pytest --exitfirst -k "${expr}" "$@"
+}
+
+#### python ###################################################################
+
+coverage() { open .coverage/html/index.html; }
+p3() { python3 "$@"; }
+
+#### qrt-dotfiles #############################################################
+
+for _base in "${HOME}/work" "${HOME}/work/derek"; do
+    _dotfiles="${_base}/qrt-dotfiles"
+    if [ ! -d "${_dotfiles}" ]; then continue; fi
+    _yaml="${_dotfiles}/tea/config.yml"
+    if [ -f "${_yaml}" ]; then
+        mkdir -p "${HOME}/.config/tea"
+        ln -sfn "${_yaml}" "${HOME}/.config/tea/config.yml"
+    fi
+done
+unset _base _dotfiles _yaml
+
+#### ruff #####################################################################
+
+if command -v ruff >/dev/null 2>&1; then
+    rw() { ruff check -w "$@"; }
+fi
+
+#### starship #################################################################
+
+if command -v starship >/dev/null 2>&1; then
+    eval "$(starship init bash)"
+fi
+
+#### tailscale ################################################################
+
+export TAILSCALE_AUTH_KEY="${XDG_CONFIG_HOME:-${HOME}/.config}/tailscale/auth-key.txt"
+
+_tailscale_cmd() {
+    if command -v tailscale >/dev/null 2>&1; then
+        tailscale "$@"
+    elif command -v Tailscale >/dev/null 2>&1; then
+        Tailscale "$@"
+    elif command -v docker >/dev/null 2>&1; then
+        docker exec --interactive tailscale tailscale "$@"
+    else
+        echo "'tailscale' expected 'tailscale', 'Tailscale' or 'docker' to be available; got neither" >&2
+        return 1
+    fi
+}
+
+ts() { _tailscale_cmd status; }
+ts_exit_node() { _tailscale_cmd set --exit-node=qrt-nanode; }
+ts_no_exit_node() { _tailscale_cmd set --exit-node=; }
+wts() {
+    if command -v tailscale >/dev/null 2>&1; then
+        watch --color --differences --interval=1 -- tailscale status
+    elif command -v Tailscale >/dev/null 2>&1; then
+        watch --color --differences --interval=1 -- Tailscale status
+    elif command -v docker >/dev/null 2>&1; then
+        docker exec --interactive tailscale watch --color --differences --interval=1 -- tailscale status
+    else
+        echo "'wts' expected 'tailscale', 'Tailscale' or 'docker' to be available; got neither" >&2
+        return 1
+    fi
+}
+
+#### tmux #####################################################################
+
+if command -v tmux >/dev/null 2>&1; then
+    ta() {
+        if [ "$#" -gt 1 ]; then
+            echo "'ta' expected [0..1] arguments SESSION; got $#" >&2
+            return 1
+        fi
+        if [ "$#" -eq 1 ]; then
+            tmux attach -t "$1"
+            return
+        fi
+        if ! tmux ls >/dev/null 2>&1; then
+            tmux new
+            return
+        fi
+        count=$(tmux ls 2>/dev/null | wc -l | tr -d ' ')
+        case "${count}" in
+        0) tmux new ;;
+        1) tmux attach ;;
+        *)
+            echo "'ta' expected at most 1 existing session; got ${count}" >&2
+            return 1
+            ;;
+        esac
+    }
+    tmux_reload() { tmux source-file "${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.conf"; }
+fi
+
+#### uv #######################################################################
+
+if command -v uv >/dev/null 2>&1; then
+    pyc() { uvx pyclean --debris=all .; }
+
+    uvbp() {
+        if [ "$#" -lt 1 ]; then
+            echo "'uvbp' expected [1..) arguments TOKEN; got $#" >&2
+            return 1
+        fi
+        uv build --wheel --clear
+        uv publish --token "$1"
+    }
+
+    uvl() {
+        if [ "$#" -eq 0 ]; then uv pip list; else uv pip list | grep -i "$1"; fi
+    }
+    uvo() { uv pip list --outdated; }
+    uvrp() { uv run python -m "$@"; }
+    uvrpd() { uv run python -m pdb --command continue -m "$@"; }
+fi
+
+#### vim ######################################################################
+
+if command -v vim >/dev/null 2>&1; then
+    v() { vim "$@"; }
+fi
+
+#### wezterm ##################################################################
+
+if command -v wezterm >/dev/null 2>&1; then
+    edit_wezterm_lua() { "${EDITOR}" "${PATH_DOTFILES}/configs/wezterm.lua"; }
+fi
+
+#### zoxide ###################################################################
+
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init --cmd j bash)"
+fi
