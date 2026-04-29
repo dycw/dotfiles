@@ -69,6 +69,12 @@ Plug 'christoomey/vim-tmux-navigator'
 " language support (rustaceanvim)
 Plug 'rust-lang/rust.vim'
 
+" increment/decrement (dial.nvim)
+Plug 'tpope/vim-speeddating'
+
+" buffer delete (close-buffers.nvim)
+Plug 'moll/vim-bbye'
+
 call plug#end()
 
 " auto-install missing plugins on startup
@@ -216,7 +222,8 @@ let g:ale_fixers = {
   \ }
 let g:ale_fix_on_save        = 1
 let g:ale_lsp_suggestions    = 1
-let g:ale_completion_enabled = 0
+let g:ale_completion_enabled = 1
+let g:ale_completion_autoimport = 1
 let g:ale_sign_error         = 'E'
 let g:ale_sign_warning       = 'W'
 let g:ale_echo_msg_format    = '[%linter%] %s [%severity%]'
@@ -344,6 +351,14 @@ nnoremap <silent> zk        :ALEPreviousWrap<CR>
 " far.vim (grug-far.nvim: <Leader>sr)
 nnoremap <Leader>sr :Farr<CR>
 vnoremap <Leader>sr :Farr<CR>
+
+" vim-bbye (close-buffers.nvim)
+nnoremap <silent> <Leader>bd :Bdelete<CR>
+nnoremap <silent> <Leader>bo :bufdo Bdelete<CR>
+
+" sort (sort.nvim)
+vnoremap <silent> <Leader>so :sort<CR>
+vnoremap <silent> <Leader>sn :sort n<CR>
 
 " auto-save toggle (<Leader>as)
 let s:autosave_on = 0

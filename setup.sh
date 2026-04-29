@@ -242,7 +242,8 @@ install_linux_packages() {
 }
 
 remove_unwanted_brew_casks() {
-	parallel_uninstall_brew_casks db-browser-for-sqlite ghostty pgadmin4
+	parallel_uninstall_brew_casks \
+		db-browser-for-sqlite firefox ghostty google-chrome iterm2 pgadmin4 slack
 }
 
 ensure_brew_taps() {
@@ -252,8 +253,9 @@ ensure_brew_taps() {
 install_mac_casks() {
 	ensure_brew_taps
 	parallel_install_brew_casks \
-		1password dropbox postico \
-		protonvpn redis-stack spotify transmission vlc wezterm whatsapp zoom
+		1password a-better-finder-attributes a-better-finder-rename \
+		chatgpt dropbox postico protonvpn redis-stack spotify telegram \
+		transmission vlc wezterm whatsapp zoom
 }
 
 install_rust_tools() {
