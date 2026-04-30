@@ -56,7 +56,6 @@ shopt -s histappend
 
 set -o vi
 bind 'set editing-mode vi'
-bind 'set show-mode-in-prompt on'
 bind -m vi-command '"v": edit-and-execute-command'
 
 #### check window size ########################################################
