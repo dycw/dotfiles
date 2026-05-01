@@ -89,7 +89,7 @@ let maplocalleader = ' '
 " ── options ───────────────────────────────────────────────────────────────────
 set nobackup
 set breakindent
-set clipboard=unnamedplus
+if has('macunix') | set clipboard=unnamed | else | set clipboard=unnamedplus | endif
 set cmdheight=1
 set colorcolumn=80
 set completeopt=menuone,preview
