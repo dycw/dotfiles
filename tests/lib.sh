@@ -8,21 +8,13 @@ set -eu
 tmp=$(make_temp_dir)
 trap 'cleanup_temp_dir "${tmp}"' EXIT HUP INT TERM
 
-fakebin="${tmp}/bin"
 home_dir="${tmp}/home"
 xdg_dir="${tmp}/xdg"
-mkdir -p "${fakebin}" "${home_dir}" "${xdg_dir}"
+mkdir -p "${home_dir}" "${xdg_dir}"
 
-cat >"${fakebin}/curl" <<'EOF'
-#!/bin/sh
-printf 'ssh-ed25519 AAAATESTKEY test@example\n'
-EOF
-chmod +x "${fakebin}/curl"
-
-PATH="${fakebin}:${PATH}"
 HOME="${home_dir}"
 XDG_CONFIG_HOME="${xdg_dir}"
-export PATH HOME XDG_CONFIG_HOME
+export HOME XDG_CONFIG_HOME
 
 _SETUP_MAIN=0 . "${test_root}/setup.sh"
 
@@ -40,7 +32,7 @@ ensure_line_in_file 'alpha' "${line_file}"
 ensure_line_in_file 'alpha' "${line_file}"
 assert_eq "$(wc -l <"${line_file}" | tr -d ' ')" '1'
 
-setup_ssh
+configs="${test_root}/configs" setup_ssh
 assert_file_exists "${home_dir}/.ssh/authorized_keys"
 assert_file_exists "${home_dir}/.ssh/config"
 assert_file_exists "${home_dir}/.ssh/config.d"

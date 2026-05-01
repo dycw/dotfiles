@@ -127,9 +127,10 @@ ensure_brew() {
 	fi
 	log "Installing 'brew'..."
 	acquire_sudo
-	NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	NONINTERACTIVE=1 HOMEBREW_NO_ENV_HINTS=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	add_brew_to_path
 	command -v brew >/dev/null 2>&1 || fail "'brew' installation failed"
+	log "'brew' installed successfully"
 }
 
 brew_formula_installed() {
@@ -324,11 +325,8 @@ setup_ssh() {
 	mkdir -p "${HOME}/.ssh"
 	chmod 700 "${HOME}/.ssh"
 
-	if [ ! -f "${HOME}/.ssh/authorized_keys" ]; then
-		authorized_keys_url='https://raw.githubusercontent.com/dycw/authorized-keys/refs/heads/master/authorized_keys'
-		curl -fssL "${authorized_keys_url}" >"${HOME}/.ssh/authorized_keys"
-		chmod 600 "${HOME}/.ssh/authorized_keys"
-	fi
+	cp -- "${configs}/authorized_keys" "${HOME}/.ssh/authorized_keys"
+	chmod 600 "${HOME}/.ssh/authorized_keys"
 
 	mkdir -p "${HOME}/.ssh/config.d"
 	chmod 700 "${HOME}/.ssh/config.d"
@@ -599,7 +597,8 @@ ensure_git() {
 		if ! command -v brew >/dev/null 2>&1; then
 			log "Installing 'brew'..."
 			acquire_sudo
-			NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+			NONINTERACTIVE=1 HOMEBREW_NO_ENV_HINTS=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+			log "'brew' installed successfully"
 		fi
 		if [ -x /opt/homebrew/bin/brew ]; then
 			export PATH="/opt/homebrew/bin${PATH:+:${PATH}}"
