@@ -126,6 +126,7 @@ ensure_brew() {
 		run_root apt-get install -y build-essential curl file git procps sudo
 	fi
 	log "Installing 'brew'..."
+	acquire_sudo
 	NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	add_brew_to_path
 	command -v brew >/dev/null 2>&1 || fail "'brew' installation failed"
@@ -228,9 +229,9 @@ install_common_brew_formulas() {
 	parallel_install_brew_formulas \
 		asciinema autoconf automake bat bottom coreutils delta \
 		direnv dust eza fd fzf gh git-delta iperf3 jq just libpq \
-		luacheck luarocks maturin npm pgcli postgresql@18 prettier redis \
+		luacheck luarocks markdownlint-cli maturin npm pgcli postgresql@18 prettier redis \
 		rename restic ripgrep ruff sd shellcheck shfmt starship \
-		tailscale tmux topgrade uv vim watch yq zoxide
+		tailscale taplo tmux topgrade uv vim watch yq zoxide
 
 	if [ "${platform}" = mac ]; then
 		parallel_install_brew_formulas agg dnsmasq flock
@@ -435,6 +436,33 @@ remove_legacy_files() {
 		"${xdg_config_home}/zsh"
 }
 
+setup_hostname() {
+	[ "${platform}" = mac ] || return 0
+	model=$(sysctl -n hw.model 2>/dev/null || true)
+	case "${model}" in
+	Mac14,3)
+		new_hostname=RH-MacMini
+		;;
+	Mac14,12)
+		new_hostname=DW-MacMini
+		;;
+	MacBook*)
+		new_hostname=DW-MacBookNeo
+		;;
+	*)
+		return 0
+		;;
+	esac
+	current=$(scutil --get ComputerName 2>/dev/null || true)
+	[ "${current}" = "${new_hostname}" ] && return 0
+	log "Setting hostname to '${new_hostname}'..."
+	acquire_sudo
+	sudo scutil --set ComputerName "${new_hostname}"
+	sudo scutil --set HostName "${new_hostname}"
+	sudo scutil --set LocalHostName "${new_hostname}"
+	sudo dscacheutil -flushcache
+}
+
 setup_all() {
 	log "Setting up '$(hostname)'..."
 	setup_bash
@@ -570,6 +598,7 @@ ensure_git() {
 	Darwin)
 		if ! command -v brew >/dev/null 2>&1; then
 			log "Installing 'brew'..."
+			acquire_sudo
 			NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 		fi
 		if [ -x /opt/homebrew/bin/brew ]; then
@@ -611,6 +640,7 @@ run_local_self() {
 	fi
 
 	determine_platform
+	setup_hostname
 	install_all
 	setup_all
 }
