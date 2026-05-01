@@ -350,11 +350,7 @@ setup_bash() {
 			if ! grep -Fxq "${bash_path}" /etc/shells 2>/dev/null; then
 				run_root sh -c "printf '%s\n' '${bash_path}' >> /etc/shells"
 			fi
-			if [ -t 0 ]; then
-				chsh -s "${bash_path}" || true
-			else
-				log "'bash' is not the default shell; run \"chsh -s '${bash_path}'\""
-			fi
+			run_root chsh -s "${bash_path}" "${USER}"
 		fi
 	fi
 }
