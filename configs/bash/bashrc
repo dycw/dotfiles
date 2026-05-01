@@ -1121,36 +1121,21 @@ tf() { tail -F --verbose "$@"; }
 
 #### tailscale ################################################################
 
-export TAILSCALE_AUTH_KEY="${XDG_CONFIG_HOME:-${HOME}/.config}/tailscale/auth-key.txt"
-
-_tailscale_cmd() {
-    if command -v tailscale >/dev/null 2>&1; then
-        tailscale "$@"
-    elif command -v Tailscale >/dev/null 2>&1; then
-        Tailscale "$@"
-    elif command -v docker >/dev/null 2>&1; then
-        docker exec --interactive tailscale tailscale "$@"
-    else
-        echo "'tailscale' expected 'tailscale', 'Tailscale' or 'docker' to be available; got neither" >&2
-        return 1
-    fi
-}
-
-ts() { _tailscale_cmd status; }
-ts_exit_node() { _tailscale_cmd set --exit-node=qrt-nanode; }
-ts_no_exit_node() { _tailscale_cmd set --exit-node=; }
-wts() {
-    if command -v tailscale >/dev/null 2>&1; then
-        watch --color --differences --interval=1 -- tailscale status
-    elif command -v Tailscale >/dev/null 2>&1; then
-        watch --color --differences --interval=1 -- Tailscale status
-    elif command -v docker >/dev/null 2>&1; then
-        docker exec --interactive tailscale watch --color --differences --interval=1 -- tailscale status
-    else
-        echo "'wts' expected 'tailscale', 'Tailscale' or 'docker' to be available; got neither" >&2
-        return 1
-    fi
-}
+if command -v tailscale >/dev/null 2>&1; then
+    ts() { tailscale status; }
+    ts_up() {
+        tailscale up --accept-dns --accept-routes \
+            --auth-key "${TAILSCALE_AUTH_KEY:?}" \
+            --hostname "${TAILSCALE_HOSTNAME:-$(hostname -s)}" \
+            --login-server "${TAILSCALE_LOGIN_SERVER:?}" \
+            --reset "$@"
+    }
+    ts_down() { tailscale down; }
+    ts_restart() { ts_down && ts_up "$@"; }
+    ts_exit_node() { tailscale set --exit-node=qrt-nanode; }
+    ts_no_exit_node() { tailscale set --exit-node=; }
+    wts() { watch --color --differences --interval=1 -- tailscale status; }
+fi
 
 #### tmux #####################################################################
 

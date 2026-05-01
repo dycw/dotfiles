@@ -447,13 +447,20 @@ setup_bash() {
 setup_tailscale() {
 	command -v tailscale >/dev/null 2>&1 || return 0
 
-	if [ -z "${TAILSCALE_LOGIN_SERVER:-}" ]; then
-		fail "TAILSCALE_LOGIN_SERVER not set; refusing to run 'tailscale up'"
+	template="${HOME}/.bashrc.d/tailscale.sh"
+	if [ ! -e "${template}" ]; then
+		mkdir -p -- "$(dirname -- "${template}")"
+		cat >"${template}" <<'EOF'
+#!/usr/bin/env bash
+# Fill these in to enable headless 'tailscale up' from setup.sh.
+export TAILSCALE_LOGIN_SERVER=
+export TAILSCALE_AUTH_KEY=
+EOF
+		log "Created template ${template}; fill it in and re-run to bring tailscale up"
 	fi
 
-	auth_key_path=${TAILSCALE_AUTH_KEY_FILE:-/etc/tailscale/authkey}
-	if ! run_root test -r "${auth_key_path}"; then
-		log "Auth key file '${auth_key_path}' not readable; skipping 'tailscale up'"
+	if [ -z "${TAILSCALE_LOGIN_SERVER:-}" ] || [ -z "${TAILSCALE_AUTH_KEY:-}" ]; then
+		log "TAILSCALE_LOGIN_SERVER or TAILSCALE_AUTH_KEY not set; skipping 'tailscale up'"
 		return 0
 	fi
 
@@ -468,7 +475,7 @@ setup_tailscale() {
 	log "Bringing tailscale up as '${ts_hostname}'..."
 	run_root tailscale up \
 		--accept-dns --accept-routes \
-		--auth-key "file:${auth_key_path}" \
+		--auth-key "${TAILSCALE_AUTH_KEY}" \
 		--hostname "${ts_hostname}" \
 		--login-server "${TAILSCALE_LOGIN_SERVER}" \
 		--reset
