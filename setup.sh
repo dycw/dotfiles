@@ -507,13 +507,61 @@ EOF
 
 	ts_hostname=$(hostname -s)
 	log "Bringing tailscale up as '${ts_hostname}'..."
+	# DNS is handled by the local dnsmasq (see setup_dnsmasq_mac); the
+	# brew tailscale formula on macOS cannot register a working scutil
+	# resolver anyway.
 	run_root tailscale up \
-		--accept-dns --accept-routes \
+		--accept-dns=false --accept-routes \
 		--auth-key "${TAILSCALE_AUTH_KEY}" \
 		--hostname "${ts_hostname}" \
 		--login-server "${TAILSCALE_LOGIN_SERVER}" \
 		--reset \
 		--timeout=30s
+}
+
+setup_dnsmasq_mac() {
+	[ "${platform}" = mac ] || return 0
+	command -v dnsmasq >/dev/null 2>&1 || return 0
+
+	conf_dir=/opt/homebrew/etc/dnsmasq.d
+	conf_file="${conf_dir}/dnsmasq.conf"
+	main_conf=/opt/homebrew/etc/dnsmasq.conf
+
+	run_root mkdir -p -- "${conf_dir}"
+
+	# Only write + restart when the config has actually changed.
+	if ! cmp -s "${configs}/dnsmasq.conf" "${conf_file}" 2>/dev/null; then
+		log "Installing dnsmasq config '${conf_file}'..."
+		run_root cp -- "${configs}/dnsmasq.conf" "${conf_file}"
+		if ! grep -q '^conf-dir=' "${main_conf}" 2>/dev/null; then
+			printf 'conf-dir=%s/,*.conf\n' "${conf_dir}" |
+				run_root tee -a "${main_conf}" >/dev/null
+		fi
+		run_root brew services restart dnsmasq
+	fi
+
+	# Point every enabled network service at the local dnsmasq only if not
+	# already set — avoids sudo on re-runs. The first line of
+	# -listallnetworkservices is a header; disabled services start with '*'.
+	dns_changed=0
+	tmp=$(mktemp)
+	networksetup -listallnetworkservices | tail -n +2 >"${tmp}"
+	while IFS= read -r svc; do
+		case "${svc}" in
+		\**) continue ;;
+		esac
+		if ! networksetup -getdnsservers "${svc}" 2>/dev/null | grep -qx '127\.0\.0\.1'; then
+			log "Pointing '${svc}' DNS at 127.0.0.1..."
+			run_root networksetup -setdnsservers "${svc}" 127.0.0.1
+			dns_changed=1
+		fi
+	done <"${tmp}"
+	rm -f -- "${tmp}"
+
+	if [ "${dns_changed}" -eq 1 ]; then
+		run_root dscacheutil -flushcache
+		run_root killall -HUP mDNSResponder
+	fi
 }
 
 setup_env_sh() {
@@ -620,8 +668,11 @@ setup_hostname() {
 
 setup_brew_services() {
 	[ "${platform}" = mac ] || return 0
-	# dnsmasq binds port 53 (privileged); postgresql and redis use high ports.
-	run_root brew services start dnsmasq
+	# dnsmasq binds port 53 (privileged). Skip if already running so re-runs
+	# don't prompt for sudo unnecessarily.
+	if ! pgrep -x dnsmasq >/dev/null 2>&1; then
+		run_root brew services start dnsmasq
+	fi
 	brew services start postgresql@18
 	brew services start redis
 }
@@ -631,6 +682,7 @@ setup_all() {
 	setup_bash
 	setup_ssh
 	setup_brew_services
+	setup_dnsmasq_mac
 	setup_tailscale
 	setup_env_sh
 	setup_static_configs
