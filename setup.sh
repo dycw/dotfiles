@@ -481,18 +481,21 @@ EOF
 		run_root systemctl enable --now tailscaled
 	fi
 
-	log "Waiting for tailscaled to be ready..."
-	i=0
-	while ! run_root tailscale status >/dev/null 2>&1; do
-		i=$((i + 1))
-		[ "${i}" -lt 30 ] || fail "tailscaled did not become ready after 30 seconds"
-		sleep 1
-	done
-
 	if [ -z "${TAILSCALE_LOGIN_SERVER:-}" ] || [ -z "${TAILSCALE_AUTH_KEY:-}" ]; then
 		log "TAILSCALE_LOGIN_SERVER or TAILSCALE_AUTH_KEY not set; skipping 'tailscale up'"
 		return 0
 	fi
+
+	# `tailscale status` (no flag) errors with "Logged out." until BackendState
+	# is Running, so on a fresh daemon it never succeeds. `--json` returns the
+	# status object as long as the local API is reachable.
+	log "Waiting for tailscaled to be ready..."
+	i=0
+	while ! run_root tailscale status --json >/dev/null 2>&1; do
+		i=$((i + 1))
+		[ "${i}" -lt 30 ] || fail "tailscaled did not become ready after 30 seconds"
+		sleep 1
+	done
 
 	ts_hostname=$(hostname -s)
 	log "Bringing tailscale up as '${ts_hostname}'..."
