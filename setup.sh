@@ -484,6 +484,14 @@ EOF
 		run_root systemctl enable --now tailscaled
 	fi
 
+	log "Waiting for tailscaled to be ready..."
+	i=0
+	while ! run_root tailscale status >/dev/null 2>&1; do
+		i=$((i + 1))
+		[ "${i}" -lt 30 ] || fail "tailscaled did not become ready after 30 seconds"
+		sleep 1
+	done
+
 	ts_hostname=$(hostname -s)
 	log "Bringing tailscale up as '${ts_hostname}'..."
 	run_root tailscale up \
