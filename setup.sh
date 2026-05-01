@@ -114,6 +114,19 @@ ensure_line_in_file() {
 	fi
 }
 
+upgrade_timer="${XDG_CACHE_HOME:-${HOME}/.cache}/dotfiles/updated"
+
+# True if upgrades have not run successfully in the last hour.
+should_upgrade() {
+	[ -f "${upgrade_timer}" ] || return 0
+	[ -n "$(find "${upgrade_timer}" -mmin +60 -print 2>/dev/null)" ]
+}
+
+mark_upgraded() {
+	mkdir -p -- "$(dirname -- "${upgrade_timer}")"
+	: >"${upgrade_timer}"
+}
+
 #### install ##################################################################
 
 ensure_brew() {
@@ -226,6 +239,34 @@ parallel_install_brew_casks() {
 	brew install --cask --adopt ${missing}
 }
 
+maybe_upgrade_brew_formulas() {
+	[ "${should_upgrade:-0}" -eq 1 ] || return 0
+	log "Upgrading brew formulae..."
+	brew upgrade
+}
+
+maybe_upgrade_brew_casks() {
+	[ "${should_upgrade:-0}" -eq 1 ] || return 0
+	log "Upgrading brew casks..."
+	brew upgrade --cask
+}
+
+maybe_upgrade_apt_packages() {
+	[ "${should_upgrade:-0}" -eq 1 ] || return 0
+	log "Upgrading apt packages..."
+	run_root apt-get upgrade -y
+}
+
+maybe_upgrade_rust() {
+	[ "${should_upgrade:-0}" -eq 1 ] || return 0
+	log "Updating rust toolchain and cargo tools..."
+	rustup update
+	for tool in bacon cargo-audit cargo-deny cargo-edit cargo-nextest sccache; do
+		cargo binstall -y --force "${tool}" &
+	done
+	wait
+}
+
 install_common_brew_formulas() {
 	parallel_install_brew_formulas \
 		asciinema autoconf automake bat bottom coreutils delta \
@@ -305,17 +346,30 @@ install_keymapp() {
 
 install_all() {
 	log "Installing apps on '$(hostname)'..."
+
+	should_upgrade=0
+	if should_upgrade; then
+		should_upgrade=1
+		log "Upgrade timer expired; will refresh installed packages"
+	fi
+
 	ensure_brew
 	remove_unwanted_brew_formulas
 	install_common_brew_formulas
+	maybe_upgrade_brew_formulas
 	install_rust_tools
+	maybe_upgrade_rust
 	if [ "${platform}" = linux ]; then
 		install_linux_packages
+		maybe_upgrade_apt_packages
 		install_keymapp
 	else
 		remove_unwanted_brew_casks
 		install_mac_casks
+		maybe_upgrade_brew_casks
 	fi
+
+	[ "${should_upgrade}" -eq 1 ] && mark_upgraded
 }
 
 #### setup ####################################################################
@@ -353,6 +407,36 @@ setup_bash() {
 			run_root chsh -s "${bash_path}" "${USER}"
 		fi
 	fi
+}
+
+setup_tailscale() {
+	command -v tailscale >/dev/null 2>&1 || return 0
+
+	if [ -z "${TAILSCALE_LOGIN_SERVER:-}" ]; then
+		fail "TAILSCALE_LOGIN_SERVER not set; refusing to run 'tailscale up'"
+	fi
+
+	auth_key_path=${TAILSCALE_AUTH_KEY_FILE:-/etc/tailscale/authkey}
+	if ! run_root test -r "${auth_key_path}"; then
+		log "Auth key file '${auth_key_path}' not readable; skipping 'tailscale up'"
+		return 0
+	fi
+
+	log "Starting tailscale daemon..."
+	if [ "${platform}" = mac ]; then
+		run_root brew services start tailscale
+	else
+		run_root systemctl enable --now tailscaled
+	fi
+
+	ts_hostname=$(hostname -s)
+	log "Bringing tailscale up as '${ts_hostname}'..."
+	run_root tailscale up \
+		--accept-dns --accept-routes \
+		--auth-key "file:${auth_key_path}" \
+		--hostname "${ts_hostname}" \
+		--login-server "${TAILSCALE_LOGIN_SERVER}" \
+		--reset
 }
 
 setup_env_sh() {
@@ -461,6 +545,7 @@ setup_all() {
 	log "Setting up '$(hostname)'..."
 	setup_bash
 	setup_ssh
+	setup_tailscale
 	setup_env_sh
 	setup_static_configs
 	setup_tmux
