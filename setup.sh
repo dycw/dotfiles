@@ -593,10 +593,19 @@ setup_hostname() {
 	sudo dscacheutil -flushcache
 }
 
+setup_brew_services() {
+	[ "${platform}" = mac ] || return 0
+	for svc in dnsmasq postgresql@18 redis; do
+		log "Starting brew service '${svc}'..."
+		brew services start "${svc}"
+	done
+}
+
 setup_all() {
 	log "Setting up '$(hostname)'..."
 	setup_bash
 	setup_ssh
+	setup_brew_services
 	setup_tailscale
 	setup_env_sh
 	setup_static_configs
