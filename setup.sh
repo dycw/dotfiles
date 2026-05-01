@@ -11,6 +11,9 @@ self_dir=$(CDPATH='' cd -- "$(dirname -- "$self_path")" && pwd -P)
 
 #### utilities ################################################################
 
+# Prevent brew from consuming stdin when the script is run via 'curl | sh'.
+brew() { command brew "$@" </dev/null; }
+
 log() {
 	echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
 }
