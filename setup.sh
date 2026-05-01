@@ -535,10 +535,12 @@ setup_dnsmasq_mac() {
 
 	run_root mkdir -p -- "${conf_dir}"
 
-	# Only write + restart when the config has actually changed.
-	if ! cmp -s "${configs}/dnsmasq.conf" "${conf_file}" 2>/dev/null; then
-		log "Installing dnsmasq config '${conf_file}'..."
-		run_root cp -- "${configs}/dnsmasq.conf" "${conf_file}"
+	# Symlink so repo updates are reflected without re-running setup.sh.
+	# Only (re)create the symlink — and restart dnsmasq — when the target
+	# has changed; readlink needs no sudo.
+	if [ "$(readlink "${conf_file}" 2>/dev/null)" != "${configs}/dnsmasq.conf" ]; then
+		log "Symlinking dnsmasq config '${conf_file}'..."
+		run_root ln -sf "${configs}/dnsmasq.conf" "${conf_file}"
 		if ! grep -q '^conf-dir=' "${main_conf}" 2>/dev/null; then
 			printf 'conf-dir=%s/,*.conf\n' "${conf_dir}" |
 				run_root tee -a "${main_conf}" >/dev/null
