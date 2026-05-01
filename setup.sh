@@ -273,15 +273,24 @@ install_common_brew_formulas() {
 		direnv dust eza fd fzf gh git-delta iperf3 jq just libpq \
 		luacheck luarocks markdownlint-cli maturin npm pgcli postgresql@18 prettier redis \
 		rename restic ripgrep ruff sd shellcheck shfmt starship \
-		tailscale taplo tmux topgrade uv vim watch yq zoxide
+		taplo tmux topgrade uv vim watch yq zoxide
 
 	if [ "${platform}" = mac ]; then
-		parallel_install_brew_formulas agg dnsmasq flock mas
+		parallel_install_brew_formulas agg dnsmasq flock mas tailscale
 	fi
 }
 
 install_linux_packages() {
 	parallel_install_apt_packages curl rsync sudo xclip xsel
+}
+
+install_tailscale_linux() {
+	if command -v tailscale >/dev/null 2>&1; then
+		return 0
+	fi
+	log "Installing tailscale via upstream script..."
+	acquire_sudo
+	curl -fsSL https://tailscale.com/install.sh | sh
 }
 
 remove_unwanted_brew_casks() {
@@ -395,6 +404,7 @@ install_all() {
 	if [ "${platform}" = linux ]; then
 		install_linux_packages
 		maybe_upgrade_apt_packages
+		install_tailscale_linux
 		install_keymapp
 	else
 		remove_unwanted_brew_casks
