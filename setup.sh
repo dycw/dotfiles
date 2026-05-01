@@ -417,7 +417,9 @@ install_all() {
 		maybe_upgrade_mas_apps
 	fi
 
-	[ "${should_upgrade}" -eq 1 ] && mark_upgraded
+	if [ "${should_upgrade}" -eq 1 ]; then
+		mark_upgraded
+	fi
 }
 
 #### setup ####################################################################
