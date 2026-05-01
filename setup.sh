@@ -474,6 +474,12 @@ EOF
 		log "Created template ${template}; fill it in and re-run to bring tailscale up"
 	fi
 
+	# Already connected — skip the daemon restart and re-auth entirely.
+	# `tailscale status --json` works without sudo on macOS.
+	if tailscale status --json 2>/dev/null | grep -q '"BackendState":"Running"'; then
+		return 0
+	fi
+
 	log "Starting tailscale daemon..."
 	if [ "${platform}" = mac ]; then
 		run_root brew services restart tailscale
