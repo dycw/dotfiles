@@ -530,7 +530,7 @@ setup_dnsmasq_mac() {
 	command -v dnsmasq >/dev/null 2>&1 || return 0
 
 	conf_dir=/opt/homebrew/etc/dnsmasq.d
-	conf_file="${conf_dir}/dnsmasq.conf"
+	conf_file="${conf_dir}/qrt.conf"
 	main_conf=/opt/homebrew/etc/dnsmasq.conf
 
 	run_root mkdir -p -- "${conf_dir}"
@@ -645,6 +645,9 @@ remove_legacy_files() {
 		"${xdg_config_home}/pudb" \
 		"${xdg_config_home}/stayfocusd" \
 		"${xdg_config_home}/zsh"
+	run_root rm -f -- \
+		/opt/homebrew/etc/dnsmasq.d/mac-derek.conf \
+		/opt/homebrew/etc/dnsmasq.d/dnsmasq.conf
 }
 
 setup_hostname() {
