@@ -472,14 +472,9 @@ EOF
 		log "Created template ${template}; fill it in and re-run to bring tailscale up"
 	fi
 
-	if [ -z "${TAILSCALE_LOGIN_SERVER:-}" ] || [ -z "${TAILSCALE_AUTH_KEY:-}" ]; then
-		log "TAILSCALE_LOGIN_SERVER or TAILSCALE_AUTH_KEY not set; skipping 'tailscale up'"
-		return 0
-	fi
-
 	log "Starting tailscale daemon..."
 	if [ "${platform}" = mac ]; then
-		run_root brew services start tailscale
+		run_root brew services restart tailscale
 	else
 		run_root systemctl enable --now tailscaled
 	fi
@@ -491,6 +486,11 @@ EOF
 		[ "${i}" -lt 30 ] || fail "tailscaled did not become ready after 30 seconds"
 		sleep 1
 	done
+
+	if [ -z "${TAILSCALE_LOGIN_SERVER:-}" ] || [ -z "${TAILSCALE_AUTH_KEY:-}" ]; then
+		log "TAILSCALE_LOGIN_SERVER or TAILSCALE_AUTH_KEY not set; skipping 'tailscale up'"
+		return 0
+	fi
 
 	ts_hostname=$(hostname -s)
 	log "Bringing tailscale up as '${ts_hostname}'..."
