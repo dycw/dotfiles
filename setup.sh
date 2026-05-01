@@ -276,7 +276,7 @@ install_common_brew_formulas() {
 		tailscale taplo tmux topgrade uv vim watch yq zoxide
 
 	if [ "${platform}" = mac ]; then
-		parallel_install_brew_formulas agg dnsmasq flock
+		parallel_install_brew_formulas agg dnsmasq flock mas
 	fi
 }
 
@@ -297,8 +297,41 @@ install_mac_casks() {
 	ensure_brew_taps
 	parallel_install_brew_casks \
 		1password a-better-finder-attributes a-better-finder-rename \
-		chatgpt dropbox postico protonvpn redis-stack spotify telegram \
+		chatgpt dropbox handy postico protonvpn redis-stack spotify telegram \
 		transmission vlc wezterm whatsapp zoom
+}
+
+# 1Password for Safari (App Store id 1569813296)
+mac_app_store_apps='1569813296'
+
+parallel_install_mas_apps() {
+	tmp=$(mktemp -d)
+	i=0
+	for app_id in "$@"; do
+		(mas list 2>/dev/null | awk '{print $1}' | grep -Fxq "${app_id}" || printf '%s\n' "${app_id}" >"${tmp}/${i}") &
+		i=$((i + 1))
+	done
+	wait
+	missing=$(cat "${tmp}"/* 2>/dev/null | sort -u || true)
+	rm -rf -- "${tmp}"
+	[ -n "${missing}" ] || return 0
+	log "Installing Mac App Store apps: ${missing}"
+	for app_id in ${missing}; do
+		mas install "${app_id}"
+	done
+}
+
+install_mac_app_store_apps() {
+	command -v mas >/dev/null 2>&1 || return 0
+	# shellcheck disable=SC2086
+	parallel_install_mas_apps ${mac_app_store_apps}
+}
+
+maybe_upgrade_mas_apps() {
+	[ "${should_upgrade:-0}" -eq 1 ] || return 0
+	command -v mas >/dev/null 2>&1 || return 0
+	log "Upgrading Mac App Store apps..."
+	mas upgrade
 }
 
 install_rust_tools() {
@@ -367,6 +400,8 @@ install_all() {
 		remove_unwanted_brew_casks
 		install_mac_casks
 		maybe_upgrade_brew_casks
+		install_mac_app_store_apps
+		maybe_upgrade_mas_apps
 	fi
 
 	[ "${should_upgrade}" -eq 1 ] && mark_upgraded
