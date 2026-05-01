@@ -329,7 +329,7 @@ parallel_install_mas_apps() {
 	[ -n "${missing}" ] || return 0
 	log "Installing Mac App Store apps: ${missing}"
 	for app_id in ${missing}; do
-		mas install "${app_id}"
+		mas install "${app_id}" || log "Warning: failed to install App Store app ${app_id}; sign in to the App Store and re-run"
 	done
 }
 
@@ -343,7 +343,7 @@ maybe_upgrade_mas_apps() {
 	[ "${should_upgrade:-0}" -eq 1 ] || return 0
 	command -v mas >/dev/null 2>&1 || return 0
 	log "Upgrading Mac App Store apps..."
-	mas upgrade
+	mas upgrade || log "Warning: 'mas upgrade' failed; sign in to the App Store and re-run"
 }
 
 install_rust_tools() {
