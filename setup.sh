@@ -476,7 +476,7 @@ EOF
 
 	log "Starting tailscale daemon..."
 	if [ "${platform}" = mac ]; then
-		run_root brew services start tailscale
+		brew services start tailscale
 	else
 		run_root systemctl enable --now tailscaled
 	fi
