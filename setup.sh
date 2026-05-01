@@ -497,6 +497,14 @@ EOF
 		sleep 1
 	done
 
+	# tailscaled rejects login-server URLs without a scheme with
+	# `unsupported protocol scheme ""` and retries forever, hanging
+	# `tailscale up`. Default to https:// when no scheme was provided.
+	case "${TAILSCALE_LOGIN_SERVER}" in
+	https://* | http://*) ;;
+	*) TAILSCALE_LOGIN_SERVER="https://${TAILSCALE_LOGIN_SERVER}" ;;
+	esac
+
 	ts_hostname=$(hostname -s)
 	log "Bringing tailscale up as '${ts_hostname}'..."
 	run_root tailscale up \
@@ -504,7 +512,8 @@ EOF
 		--auth-key "${TAILSCALE_AUTH_KEY}" \
 		--hostname "${ts_hostname}" \
 		--login-server "${TAILSCALE_LOGIN_SERVER}" \
-		--reset
+		--reset \
+		--timeout=30s
 }
 
 setup_env_sh() {
