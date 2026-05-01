@@ -595,10 +595,10 @@ setup_hostname() {
 
 setup_brew_services() {
 	[ "${platform}" = mac ] || return 0
-	for svc in dnsmasq postgresql@18 redis; do
-		log "Starting brew service '${svc}'..."
-		brew services start "${svc}"
-	done
+	# dnsmasq binds port 53 (privileged); postgresql and redis use high ports.
+	run_root brew services start dnsmasq
+	brew services start postgresql@18
+	brew services start redis
 }
 
 setup_all() {
