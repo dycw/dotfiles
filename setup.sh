@@ -436,6 +436,12 @@ setup_ssh() {
 	chmod 700 "${HOME}/.ssh/config.d"
 	ensure_line_in_file 'Include ~/.ssh/config.d/*' "${HOME}/.ssh/config"
 	chmod 600 "${HOME}/.ssh/config"
+
+	if [ "${platform:-}" = mac ]; then
+		if ! pgrep -x sshd >/dev/null 2>&1; then
+			run_root systemsetup -setremotelogin on
+		fi
+	fi
 }
 
 setup_bash() {
