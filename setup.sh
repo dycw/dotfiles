@@ -646,7 +646,7 @@ remove_legacy_files() {
 		"${xdg_config_home}/pudb" \
 		"${xdg_config_home}/stayfocusd" \
 		"${xdg_config_home}/zsh"
-	run_root rm -f -- \
+	rm -f -- \
 		/opt/homebrew/etc/dnsmasq.d/mac-derek.conf \
 		/opt/homebrew/etc/dnsmasq.d/dnsmasq.conf
 }
