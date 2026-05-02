@@ -84,6 +84,8 @@ determine_platform() {
 	add_brew_to_path
 }
 
+#### files ####################################################################
+
 link_home() {
 	src=$1
 	dest=$2
@@ -117,6 +119,8 @@ ensure_line_in_file() {
 	fi
 }
 
+#### brew #####################################################################
+
 upgrade_timer="${XDG_CACHE_HOME:-${HOME}/.cache}/dotfiles/updated"
 
 # True if upgrades have not run successfully in the last hour.
@@ -129,8 +133,6 @@ mark_upgraded() {
 	mkdir -p -- "$(dirname -- "${upgrade_timer}")"
 	: >"${upgrade_timer}"
 }
-
-#### install ##################################################################
 
 ensure_brew() {
 	if command -v brew >/dev/null 2>&1; then
@@ -204,10 +206,6 @@ parallel_uninstall_brew_casks() {
 	brew uninstall --cask ${present}
 }
 
-remove_unwanted_brew_formulas() {
-	parallel_uninstall_brew_formulas age sops rlwrap yoannfleurydev/gitweb/gitweb
-}
-
 # Checks all given formulae in parallel, then installs any missing ones in a
 # single brew call.
 parallel_install_brew_formulas() {
@@ -268,6 +266,12 @@ maybe_upgrade_rust() {
 		cargo binstall -y --force "${tool}" &
 	done
 	wait
+}
+
+#### packages #################################################################
+
+remove_unwanted_brew_formulas() {
+	parallel_uninstall_brew_formulas age sops rlwrap yoannfleurydev/gitweb/gitweb
 }
 
 install_common_brew_formulas() {
