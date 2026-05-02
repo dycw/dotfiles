@@ -68,6 +68,7 @@ Plug 'romainl/vim-cool'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'farmergreg/vim-lastplace'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'wellle/context.vim'
 
 " language support (rustaceanvim)
 Plug 'rust-lang/rust.vim'
