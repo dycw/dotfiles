@@ -279,7 +279,7 @@ install_common_brew_formulas() {
 		taplo tmux topgrade uv vim watch yq zoxide
 
 	if [ "${platform}" = mac ]; then
-		parallel_install_brew_formulas agg dnsmasq flock mas tailscale
+		parallel_install_brew_formulas agg bash-completion@2 dnsmasq flock mas tailscale
 	fi
 }
 
@@ -309,7 +309,7 @@ install_mac_casks() {
 	ensure_brew_taps
 	parallel_install_brew_casks \
 		1password a-better-finder-attributes a-better-finder-rename \
-		chatgpt dropbox handy postico protonvpn redis-stack spotify telegram \
+		chatgpt docker dropbox handy postico protonvpn redis-stack spotify telegram \
 		transmission vlc wezterm whatsapp zoom
 }
 
