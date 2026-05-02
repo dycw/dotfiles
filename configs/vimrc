@@ -99,7 +99,7 @@ set colorcolumn=80
 set completeopt=menuone,preview
 set conceallevel=0
 set expandtab
-set fileencoding=utf-8
+set encoding=utf-8
 set foldmethod=manual
 set gdefault
 set hidden
