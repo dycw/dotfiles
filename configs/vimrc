@@ -1,6 +1,6 @@
 " vimrc — comprehensive config ported from neovim/lazy.nvim
 
-" ── vim-plug: auto-install ────────────────────────────────────────────────────
+" ── vim-plug bootstrap ───────────────────────────────────────────────────────
 let s:plug_file = expand('~/.vim/autoload/plug.vim')
 if empty(glob(s:plug_file))
   silent execute '!curl -fLo ' . s:plug_file . ' --create-dirs '
@@ -11,34 +11,29 @@ endif
 " ── plugins ───────────────────────────────────────────────────────────────────
 call plug#begin('~/.vim/plugged')
 
-" colorscheme (tokyonight.nvim)
+" UI
 Plug 'ghifarit53/tokyonight-vim'
-
-" statusline + bufferline (lualine.nvim + bufferline.nvim)
 Plug 'itchyny/lightline.vim'
 Plug 'ap/vim-buftabline'
+Plug 'Yggdroot/indentLine'
+Plug 'luochen1990/rainbow'
+Plug 'romainl/vim-cool'
+Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
-" file tree (nvim-tree.lua)
+" Navigation and reading
 Plug 'preservim/nerdtree'
-
-" fuzzy finding (telescope.nvim)
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-
-" git (gitsigns.nvim + git-conflict.nvim)
-Plug 'airblade/vim-gitgutter'
-Plug 'rhysd/conflict-marker.vim'
-
-" motions (leap.nvim)
 Plug 'justinmk/vim-sneak'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'farmergreg/vim-lastplace'
+Plug 'wellle/context.vim'
 
-" text objects (targets.vim + vim-matchup + wildfire.nvim)
+" Text objects and editing
 Plug 'wellle/targets.vim'
 Plug 'andymass/vim-matchup'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'gcmt/wildfire.vim'
-
-" editing (nvim-surround + comment.nvim + vim-caser/text-case)
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
@@ -46,42 +41,23 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-sleuth'
-
-" pairs (nvim-autopairs)
 Plug 'jiangmiao/auto-pairs'
-
-" search/replace (grug-far.nvim)
-Plug 'brooth/far.vim'
-
-" incremental search (Neovim-style search feedback)
-Plug 'haya14busa/incsearch.vim'
-
-" linting + formatting + LSP (nvim-lint + conform.nvim + nvim-lspconfig)
-Plug 'dense-analysis/ale'
-
-" indent guides + rainbow (indent-blankline.nvim + rainbow-delimiters.nvim)
-Plug 'Yggdroot/indentLine'
-Plug 'luochen1990/rainbow'
-
-" misc (vim-cool + vim-numbertoggle + vim-lastplace + vim-tmux-navigator)
-Plug 'romainl/vim-cool'
-Plug 'jeffkreeftmeijer/vim-numbertoggle'
-Plug 'farmergreg/vim-lastplace'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'wellle/context.vim'
-
-" language support (rustaceanvim)
-Plug 'rust-lang/rust.vim'
-
-" increment/decrement (dial.nvim)
 Plug 'tpope/vim-speeddating'
 
-" buffer delete (close-buffers.nvim)
+" Search and replace
+Plug 'brooth/far.vim'
+Plug 'haya14busa/incsearch.vim'
+
+" Git, buffers, linting, and language support
+Plug 'airblade/vim-gitgutter'
+Plug 'rhysd/conflict-marker.vim'
 Plug 'moll/vim-bbye'
+Plug 'dense-analysis/ale'
+Plug 'rust-lang/rust.vim'
 
 call plug#end()
 
-" auto-install missing plugins on startup
+" Auto-install missing plugins on startup.
 autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
   \| PlugInstall --sync | source $MYVIMRC
   \| endif
@@ -91,21 +67,37 @@ let mapleader = ' '
 let maplocalleader = ' '
 
 " ── options ───────────────────────────────────────────────────────────────────
+" Files and persistence
 set nobackup
+set nowritebackup
+set noswapfile
+set undofile
+let &undodir = expand('~/.vim/undodir')
+silent! call mkdir(&undodir, 'p')
+set fileencoding=utf-8
+
+" Editing
 set breakindent
+set expandtab
+set foldmethod=manual
+set gdefault
+set hidden
+set shiftwidth=2
+set tabstop=2
+set wrap
+
+" Search
+set hlsearch
+set ignorecase
+set incsearch
+set smartcase
+
+" UI
 if has('macunix') | set clipboard=unnamed | else | set clipboard=unnamedplus | endif
 set cmdheight=1
 set colorcolumn=80
 set completeopt=menuone,preview
 set conceallevel=0
-set expandtab
-set fileencoding=utf-8
-set foldmethod=manual
-set gdefault
-set hidden
-set hlsearch
-set ignorecase
-set incsearch
 set laststatus=2
 set list
 set listchars=tab:▏\ ,trail:·,nbsp:␣
@@ -115,55 +107,41 @@ set numberwidth=4
 set pumheight=10
 set relativenumber
 set noruler
-set scrolloff=10
-set noshowmode
-set sidescrolloff=10
-set signcolumn=yes
-set smartcase
-set shiftwidth=2
 set noshowcmd
-set splitright
-set splitbelow
-set noswapfile
-set tabstop=2
+set noshowmode
+set signcolumn=yes
 set termguicolors
-set timeout
-set timeoutlen=300
 set title
 set titlestring=%<%F%=%l/%L\ -\ vim
-set undofile
-let &undodir = expand('~/.vim/undodir')
-silent! call mkdir(&undodir, 'p')
+
+" Windows and timing
+set scrolloff=10
+set sidescrolloff=10
+set splitbelow
+set splitright
+set timeout
+set timeoutlen=300
 set updatetime=100
-set wrap
-set nowritebackup
 
-" ── plugin configuration ──────────────────────────────────────────────────────
+" ── state ─────────────────────────────────────────────────────────────────────
+let s:autosave_on = 0
 
-" tokyonight
-let g:tokyonight_style = 'night'
-let g:tokyonight_enable_italic = 0
+" ── functions ─────────────────────────────────────────────────────────────────
+function! s:GitFilesOrFiles()
+  let root = system('git rev-parse --show-toplevel 2>/dev/null')
+  if v:shell_error == 0
+    execute 'GFiles'
+  else
+    execute 'Files'
+  endif
+endfunction
 
-" lightline
-let g:lightline = {
-  \ 'colorscheme': 'tokyonight',
-  \ 'active': {
-  \   'left':  [['mode', 'paste'], ['readonly', 'filename', 'modified']],
-  \   'right': [['lineinfo'], ['percent'], ['fileformat', 'filetype']],
-  \ },
-  \ }
-
-" vim-buftabline: show always, no numbers
-let g:buftabline_show = 1
-let g:buftabline_numbers = 0
-
-" NERDTree (nvim-tree.lua)
-let g:NERDTreeIgnore     = ['__pycache__$', '\.pyc$', '\.git$']
-let g:NERDTreeShowHidden = 1
-let g:NERDTreeMinimalUI  = 1
-let g:NERDTreeWinSize    = 30
-" close vim when NERDTree is the only window left
-autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+function! s:MkdirOnSave()
+  let dir = expand('<afile>:p:h')
+  if !isdirectory(dir)
+    call mkdir(dir, 'p')
+  endif
+endfunction
 
 function! s:NERDTreeFindOrClose()
   if exists('g:NERDTree') && g:NERDTree.IsOpen()
@@ -177,30 +155,38 @@ function! s:NERDTreeFindOrClose()
   endif
 endfunction
 
-" vim-sneak (leap.nvim) — label mode, case-insensitive
-let g:sneak#label   = 1
-let g:sneak#use_ic_scs = 1
-map <Tab>   <Plug>Sneak_;
-map <S-Tab> <Plug>Sneak_,
-
-" fzf + fzf.vim (telescope.nvim)
-let g:fzf_layout         = { 'window': { 'width': 0.99, 'height': 0.6 } }
-let g:fzf_preview_window = ['right:40%', 'ctrl-/']
-
-function! s:GitFilesOrFiles()
-  let root = system('git rev-parse --show-toplevel 2>/dev/null')
-  if v:shell_error == 0
-    execute 'GFiles'
+function! s:ToggleAutoSave()
+  if s:autosave_on
+    autocmd! AutoSaveGroup
+    let s:autosave_on = 0
+    echo 'AutoSave disabled'
   else
-    execute 'Files'
+    augroup AutoSaveGroup
+      autocmd!
+      autocmd CursorHold,InsertLeave * silent! update
+    augroup END
+    let s:autosave_on = 1
+    echo 'AutoSave enabled'
   endif
 endfunction
 
-" vim-gitgutter (gitsigns.nvim)
-let g:gitgutter_sign_added    = '+'
-let g:gitgutter_sign_modified = '~'
-let g:gitgutter_sign_removed  = '-'
+function! s:ToggleCopyPasteMode()
+  if &number
+    set nonumber norelativenumber signcolumn=no paste
+    IndentLinesDisable
+  else
+    set number relativenumber signcolumn=yes nopaste
+    IndentLinesEnable
+  endif
+endfunction
 
+function! s:TrimTrailingWhitespace()
+  let save = winsaveview()
+  keeppatterns %s/\s\+$//e
+  call winrestview(save)
+endfunction
+
+" ── plugin configuration ──────────────────────────────────────────────────────
 " ALE — linting + formatting + LSP (nvim-lint + conform.nvim + nvim-lspconfig)
 let g:ale_linters = {
   \ 'python':     ['ruff', 'pyright'],
@@ -225,19 +211,42 @@ let g:ale_fixers = {
   \ 'markdown':   ['prettier'],
   \ 'yaml':       ['prettier'],
   \ }
-let g:ale_fix_on_save        = 1
-let g:ale_lsp_suggestions    = 1
+let g:ale_fix_on_save = 1
+let g:ale_lsp_suggestions = 1
 let g:ale_completion_enabled = 1
 let g:ale_completion_autoimport = 1
-let g:ale_sign_error         = 'E'
-let g:ale_sign_warning       = 'W'
-let g:ale_echo_msg_format    = '[%linter%] %s [%severity%]'
+let g:ale_sign_error = 'E'
+let g:ale_sign_warning = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_python_ruff_options = '--ignore=F401'
 let g:ale_rust_cargo_use_check = 1
 
+" far.vim (grug-far.nvim)
+let g:far#source = 'rg'
+let g:far#enable_undo = 1
+
+" fzf + fzf.vim (telescope.nvim)
+let g:fzf_layout = { 'window': { 'width': 0.99, 'height': 0.6 } }
+let g:fzf_preview_window = ['right:40%', 'ctrl-/']
+
 " indentLine (indent-blankline.nvim)
-let g:indentLine_char            = '▏'
+let g:indentLine_char = '▏'
 let g:indentLine_fileTypeExclude = ['help', 'nerdtree', 'fzf', 'far']
+
+" lightline
+let g:lightline = {
+  \ 'colorscheme': 'tokyonight',
+  \ 'active': {
+  \   'left':  [['mode', 'paste'], ['readonly', 'filename', 'modified']],
+  \   'right': [['lineinfo'], ['percent'], ['fileformat', 'filetype']],
+  \ },
+  \ }
+
+" NERDTree (nvim-tree.lua)
+let g:NERDTreeIgnore = ['__pycache__$', '\.pyc$', '\.git$']
+let g:NERDTreeShowHidden = 1
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeWinSize = 30
 
 " rainbow parentheses (rainbow-delimiters.nvim)
 let g:rainbow_active = 1
@@ -245,44 +254,37 @@ let g:rainbow_conf = {
   \ 'guifgs': ['#E06C75', '#E5C07B', '#61AFEF', '#D19A66', '#98C379', '#C678DD', '#56B6C2'],
   \ }
 
-" wildfire.vim (wildfire.nvim) — smart incremental selection with Enter
-let g:wildfire_objects = ["i'", 'i"', 'i)', 'i]', 'i}', 'ip', 'it']
-
 " rust.vim (rustaceanvim) — let ALE handle formatting
 let g:rustfmt_autosave = 0
 
-" far.vim (grug-far.nvim)
-let g:far#source      = 'rg'
-let g:far#enable_undo = 1
+" tokyonight
+let g:tokyonight_style = 'night'
+let g:tokyonight_enable_italic = 0
 
-" incsearch.vim
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
+" vim-buftabline: show always, no numbers
+let g:buftabline_show = 1
+let g:buftabline_numbers = 0
+
+" vim-gitgutter (gitsigns.nvim)
+let g:gitgutter_sign_added = '+'
+let g:gitgutter_sign_modified = '~'
+let g:gitgutter_sign_removed = '-'
+
+" vim-sneak (leap.nvim) — label mode, case-insensitive
+let g:sneak#label = 1
+let g:sneak#use_ic_scs = 1
+
+" wildfire.vim (wildfire.nvim) — smart incremental selection with Enter
+let g:wildfire_objects = ["i'", 'i"', 'i)', 'i]', 'i}', 'ip', 'it']
 
 " ── keymaps ───────────────────────────────────────────────────────────────────
-
-" command shortcut
+" Core
 nnoremap ; :
-
-" escape from insert/visual
 inoremap jk <Esc>
 inoremap kj <Esc>
+nnoremap <silent> <Esc> :nohlsearch<CR>
 
-" copy/paste mode toggle (F2)
-function! s:ToggleCopyPasteMode()
-  if &number
-    set nonumber norelativenumber signcolumn=no paste
-    IndentLinesDisable
-  else
-    set number relativenumber signcolumn=yes nopaste
-    IndentLinesEnable
-  endif
-endfunction
-nnoremap <silent> <F2> :call <SID>ToggleCopyPasteMode()<CR>
-vnoremap <silent> <F2> :<C-u>call <SID>ToggleCopyPasteMode()<CR>
-
-" global marks: remap lowercase → uppercase so marks persist across files
+" Global marks: remap lowercase to uppercase so marks persist across files.
 for s:c in split('abcdefghijklmnopqrstuvwxyz', '\zs')
   execute 'nnoremap m' . s:c . ' m' . toupper(s:c)
   execute "nnoremap '" . s:c . " '" . toupper(s:c)
@@ -290,31 +292,28 @@ for s:c in split('abcdefghijklmnopqrstuvwxyz', '\zs')
   execute "vnoremap '" . s:c . " '" . toupper(s:c)
 endfor
 
-" insert-mode navigation
+" Insert-mode navigation
 inoremap <C-h> <Left>
 inoremap <C-j> <Down>
 inoremap <C-k> <Up>
 inoremap <C-l> <Right>
 inoremap <C-v> <C-o>p
 
-" quickfix
-nnoremap <silent> ] :cnext<CR>
-nnoremap <silent> [ :cprev<CR>
+" Files and buffers
+nnoremap <silent> <C-s> :w<CR>
+vnoremap <silent> <C-s> <Esc>:w<CR>gv
+inoremap <silent> <C-s> <Esc>:w<CR>a
+nnoremap <silent> <Leader>bd :Bdelete<CR>
+nnoremap <silent> <Leader>bo :bufdo Bdelete<CR>
+nnoremap <silent> <S-l> :bnext<CR>
+nnoremap <silent> <S-h> :bprev<CR>
 
-" quit
+" Quit
 nnoremap <silent> <C-q> :confirm q<CR>
 vnoremap <silent> <C-q> :<C-u>confirm q<CR>
 inoremap <silent> <C-q> <Esc>:confirm q<CR>
 
-" save
-nnoremap <silent> <C-s> :w<CR>
-vnoremap <silent> <C-s> <Esc>:w<CR>gv
-inoremap <silent> <C-s> <Esc>:w<CR>a
-
-" clear search highlight
-nnoremap <silent> <Esc> :nohlsearch<CR>
-
-" split windows
+" Windows
 nnoremap <C-w>h :set nosplitright<CR>:vsplit<CR>:set splitright<CR>
 nnoremap <C-w>j :set splitbelow<CR>:split<CR>
 nnoremap <C-w>k :set nosplitbelow<CR>:split<CR>:set splitbelow<CR>
@@ -324,24 +323,38 @@ nnoremap <Leader>wj :set splitbelow<CR>:split<CR>
 nnoremap <Leader>wk :set nosplitbelow<CR>:split<CR>:set splitbelow<CR>
 nnoremap <Leader>wl :set splitright<CR>:vsplit<CR>
 
-" visual indents — keep selection
+" Editing helpers
 vnoremap < <gv
 vnoremap > >gv
+vnoremap <silent> <Leader>so :sort<CR>
+vnoremap <silent> <Leader>sn :sort n<CR>
 
-" buffer navigation (bufferline.nvim: <S-l>/<S-h>)
-nnoremap <silent> <S-l> :bnext<CR>
-nnoremap <silent> <S-h> :bprev<CR>
+" Toggles
+nnoremap <silent> <F2> :call <SID>ToggleCopyPasteMode()<CR>
+vnoremap <silent> <F2> :<C-u>call <SID>ToggleCopyPasteMode()<CR>
+nnoremap <silent> <Leader>as :call <SID>ToggleAutoSave()<CR>
 
-" file tree (nvim-tree: <Leader>e → NERDTreeFind toggle)
+" Quickfix
+nnoremap <silent> ] :cnext<CR>
+nnoremap <silent> [ :cprev<CR>
+
+" Search
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+nnoremap <Leader>lg :Rg<CR>
+nnoremap <Leader>gs :Rg <C-r><C-w><CR>
+nnoremap <Leader>sr :Farr<CR>
+vnoremap <Leader>sr :Farr<CR>
+
+" Navigation plugins
+map <Tab>   <Plug>Sneak_;
+map <S-Tab> <Plug>Sneak_,
 nnoremap <silent> <Leader>e :call <SID>NERDTreeFindOrClose()<CR>
 vnoremap <silent> <Leader>e :<C-u>call <SID>NERDTreeFindOrClose()<CR>
-
-" fzf (telescope.nvim equivalents)
 nnoremap <Leader><Leader> :Buffers<CR>
 nnoremap <Leader>f        :Files<CR>
 nnoremap <Leader>gf       :GFiles<CR>
-nnoremap <Leader>lg       :Rg<CR>
-nnoremap <Leader>gs       :Rg <C-r><C-w><CR>
 nnoremap <Leader>bf       :BLines<CR>
 nnoremap <Leader>of       :History<CR>
 nnoremap <Leader>ch       :History:<CR>
@@ -358,63 +371,22 @@ nnoremap <silent> <Leader>dl :ALEDetail<CR>
 nnoremap <silent> zj        :ALENextWrap<CR>
 nnoremap <silent> zk        :ALEPreviousWrap<CR>
 
-" far.vim (grug-far.nvim: <Leader>sr)
-nnoremap <Leader>sr :Farr<CR>
-vnoremap <Leader>sr :Farr<CR>
-
-" vim-bbye (close-buffers.nvim)
-nnoremap <silent> <Leader>bd :Bdelete<CR>
-nnoremap <silent> <Leader>bo :bufdo Bdelete<CR>
-
-" sort (sort.nvim)
-vnoremap <silent> <Leader>so :sort<CR>
-vnoremap <silent> <Leader>sn :sort n<CR>
-
-" auto-save toggle (<Leader>as)
-let s:autosave_on = 0
-function! s:ToggleAutoSave()
-  if s:autosave_on
-    autocmd! AutoSaveGroup
-    let s:autosave_on = 0
-    echo 'AutoSave disabled'
-  else
-    augroup AutoSaveGroup
-      autocmd!
-      autocmd CursorHold,InsertLeave * silent! update
-    augroup END
-    let s:autosave_on = 1
-    echo 'AutoSave enabled'
-  endif
-endfunction
-nnoremap <silent> <Leader>as :call <SID>ToggleAutoSave()<CR>
-
 " ── autocmds ──────────────────────────────────────────────────────────────────
 augroup vimrc
   autocmd!
 
-  " equalize windows on resize (VimResized autocmd)
+  " Close Vim when NERDTree is the only window left.
+  autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+  " Equalize windows on resize (VimResized autocmd).
   autocmd VimResized * wincmd =
 
-  " auto-create parent directories on save (mkdir.nvim)
+  " Auto-create parent directories on save (mkdir.nvim).
   autocmd BufWritePre * call s:MkdirOnSave()
 
-  " trim trailing whitespace on save
+  " Trim trailing whitespace on save.
   autocmd BufWritePre * call s:TrimTrailingWhitespace()
-
 augroup END
-
-function! s:MkdirOnSave()
-  let dir = expand('<afile>:p:h')
-  if !isdirectory(dir)
-    call mkdir(dir, 'p')
-  endif
-endfunction
-
-function! s:TrimTrailingWhitespace()
-  let save = winsaveview()
-  keeppatterns %s/\s\+$//e
-  call winrestview(save)
-endfunction
 
 " ── colorscheme ───────────────────────────────────────────────────────────────
 try
