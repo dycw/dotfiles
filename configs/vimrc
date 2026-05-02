@@ -53,6 +53,9 @@ Plug 'jiangmiao/auto-pairs'
 " search/replace (grug-far.nvim)
 Plug 'brooth/far.vim'
 
+" incremental search (Neovim-style search feedback)
+Plug 'haya14busa/incsearch.vim'
+
 " linting + formatting + LSP (nvim-lint + conform.nvim + nvim-lspconfig)
 Plug 'dense-analysis/ale'
 
@@ -101,6 +104,7 @@ set gdefault
 set hidden
 set hlsearch
 set ignorecase
+set incsearch
 set laststatus=2
 set list
 set listchars=tab:▏\ ,trail:·,nbsp:␣
@@ -249,6 +253,11 @@ let g:rustfmt_autosave = 0
 " far.vim (grug-far.nvim)
 let g:far#source      = 'rg'
 let g:far#enable_undo = 1
+
+" incsearch.vim
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
 
 " ── keymaps ───────────────────────────────────────────────────────────────────
 
