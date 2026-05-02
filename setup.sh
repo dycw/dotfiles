@@ -856,7 +856,7 @@ ensure_git() {
 }
 
 resolve_dotfiles() {
-	if [ -d "${self_dir}/.git" ]; then
+	if [ -f "${self_path}" ] && [ -d "${self_dir}/.git" ]; then
 		dotfiles=${self_dir}
 	else
 		dotfiles=${dotfiles_default}
