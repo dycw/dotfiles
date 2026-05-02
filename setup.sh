@@ -442,9 +442,7 @@ setup_ssh() {
 	chmod 600 "${HOME}/.ssh/config"
 
 	if [ "${platform:-}" = mac ]; then
-		if ! pgrep -x sshd >/dev/null 2>&1; then
-			run_root systemsetup -setremotelogin on
-		fi
+		run_root launchctl enable system/com.openssh.sshd
 	fi
 }
 
