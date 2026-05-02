@@ -40,6 +40,8 @@ unset _f
 if ! shopt -oq posix; then
     if [ -f /opt/homebrew/etc/profile.d/bash_completion.sh ]; then
         . /opt/homebrew/etc/profile.d/bash_completion.sh
+    elif [ -f /home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh ]; then
+        . /home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh
     elif [ -f /usr/local/etc/profile.d/bash_completion.sh ]; then
         . /usr/local/etc/profile.d/bash_completion.sh
     elif [ -f /usr/share/bash-completion/bash_completion ]; then
@@ -1014,6 +1016,13 @@ if command -v ruff >/dev/null 2>&1; then
     rw() { ruff check -w "$@"; }
 fi
 
+#### rust #####################################################################
+
+if command -v rustup >/dev/null 2>&1; then
+    eval "$(rustup completions bash)"
+    eval "$(rustup completions bash cargo)"
+fi
+
 #### ssh ######################################################################
 
 __ssh_keyscan() {
@@ -1191,6 +1200,8 @@ touch() {
 #### uv #######################################################################
 
 if command -v uv >/dev/null 2>&1; then
+    eval "$(uv generate-shell-completion bash)"
+
     pyc() { uvx pyclean --debris=all .; }
 
     uvbp() {

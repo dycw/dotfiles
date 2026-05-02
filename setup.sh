@@ -282,8 +282,10 @@ install_common_brew_formulas() {
 		rename restic ripgrep ruff sd shellcheck shfmt starship \
 		taplo tmux topgrade uv vim watch yq zoxide
 
+	parallel_install_brew_formulas bash-completion@2
+
 	if [ "${platform}" = mac ]; then
-		parallel_install_brew_formulas agg bash-completion@2 dnsmasq flock mas tailscale
+		parallel_install_brew_formulas agg dnsmasq flock mas tailscale
 	fi
 }
 
