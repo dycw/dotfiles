@@ -1122,7 +1122,12 @@ tf() { tail -F --verbose "$@"; }
 #### tailscale ################################################################
 
 if command -v tailscale >/dev/null 2>&1; then
-    ts() { tailscale status; }
+    ts() {
+        local out
+        out=$(tailscale status 2>&1) && printf '%s\n' "${out}" && return
+        sleep 3
+        tailscale status
+    }
     ts_up() {
         tailscale up --accept-dns --accept-routes \
             --auth-key "${TAILSCALE_AUTH_KEY:?}" \
