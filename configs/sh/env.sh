@@ -16,6 +16,12 @@ if [ -d "${HOME}/.local/bin" ]; then
 	export PATH="${HOME}/.local/bin${PATH:+:${PATH}}"
 fi
 
+#### docker ###################################################################
+
+if [ -d /Applications/Docker.app/Contents/Resources/bin ]; then
+	export PATH="/Applications/Docker.app/Contents/Resources/bin${PATH:+:${PATH}}"
+fi
+
 #### node #####################################################################
 
 if command -v brew >/dev/null 2>&1 && brew --prefix node >/dev/null 2>&1; then
