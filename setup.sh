@@ -603,6 +603,16 @@ setup_keymapp() {
 	link_direct "${configs}/keymapp.50-zsa.rules" /etc/udev/rules.d/50-zsa.rules
 }
 
+setup_vim_plugins() {
+	log "Setting up Vim plugins..."
+	plug_file="${HOME}/.vim/autoload/plug.vim"
+	if [ ! -f "${plug_file}" ]; then
+		curl -fLo "${plug_file}" --create-dirs \
+			https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	fi
+	vim -Nu "${HOME}/.vimrc" -n -es +'PlugInstall --sync' +qa
+}
+
 setup_static_configs() {
 	log "Setting up static configs..."
 	link_config "${configs}/bottom.toml" bottom/bottom.toml
@@ -630,6 +640,7 @@ setup_static_configs() {
 	link_direct "${configs}/jupyter/shortcuts/shortcuts.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings"
 	link_home "${configs}/psqlrc" .psqlrc
 	link_home "${configs}/vimrc" .vimrc
+	setup_vim_plugins
 }
 
 setup_tmux() {
