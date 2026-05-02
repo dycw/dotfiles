@@ -441,7 +441,7 @@ setup_ssh() {
 	ensure_line_in_file 'Include ~/.ssh/config.d/*' "${HOME}/.ssh/config"
 	chmod 600 "${HOME}/.ssh/config"
 
-	if [ "${platform:-}" = mac ]; then
+	if [ "${platform:-}" = mac ] && ! nc -z localhost 22 2>/dev/null; then
 		run_root launchctl enable system/com.openssh.sshd
 	fi
 }
