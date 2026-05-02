@@ -685,6 +685,7 @@ setup_brew_services() {
 	if ! pgrep -x dnsmasq >/dev/null 2>&1; then
 		run_root brew services start dnsmasq
 	fi
+	run_root brew services start tailscale
 	brew services start postgresql@18
 	brew services start redis
 }
