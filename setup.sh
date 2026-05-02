@@ -474,9 +474,10 @@ EOF
 		log "Created template ${template}; fill it in and re-run to bring tailscale up"
 	fi
 
-	# Already connected — skip the daemon restart and re-auth entirely.
-	# `tailscale status --json` works without sudo on macOS.
-	if tailscale status --json 2>/dev/null | grep -q '"BackendState":"Running"'; then
+	# Skip the daemon restart and re-auth if already connected. Tailscale
+	# assigns addresses in 100.64.0.0/10 (CGNAT); their presence on any
+	# interface means the daemon is up and authenticated — no sudo needed.
+	if ifconfig 2>/dev/null | grep -q 'inet 100\.64\.'; then
 		return 0
 	fi
 
@@ -533,14 +534,14 @@ setup_dnsmasq_mac() {
 	conf_file="${conf_dir}/qrt.conf"
 	main_conf=/opt/homebrew/etc/dnsmasq.conf
 
-	run_root mkdir -p -- "${conf_dir}"
+	mkdir -p -- "${conf_dir}"
 
 	# Symlink so repo updates are reflected without re-running setup.sh.
 	# Only (re)create the symlink — and restart dnsmasq — when the target
 	# has changed; readlink needs no sudo.
 	if [ "$(readlink "${conf_file}" 2>/dev/null)" != "${configs}/dnsmasq.conf" ]; then
 		log "Symlinking dnsmasq config '${conf_file}'..."
-		run_root ln -sf "${configs}/dnsmasq.conf" "${conf_file}"
+		ln -sf "${configs}/dnsmasq.conf" "${conf_file}"
 		if ! grep -q '^conf-dir=' "${main_conf}" 2>/dev/null; then
 			printf 'conf-dir=%s/,*.conf\n' "${conf_dir}" |
 				run_root tee -a "${main_conf}" >/dev/null
