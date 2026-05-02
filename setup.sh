@@ -50,11 +50,11 @@ run_root() {
 
 add_brew_to_path() {
 	if [ -x /opt/homebrew/bin/brew ]; then
-		export PATH="/opt/homebrew/bin${PATH:+:${PATH}}"
+		export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH:+:${PATH}}"
 	elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-		export PATH="/home/linuxbrew/.linuxbrew/bin${PATH:+:${PATH}}"
+		export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin${PATH:+:${PATH}}"
 	elif [ -x /usr/local/bin/brew ]; then
-		export PATH="/usr/local/bin${PATH:+:${PATH}}"
+		export PATH="/usr/local/bin:/usr/local/sbin${PATH:+:${PATH}}"
 	fi
 }
 
