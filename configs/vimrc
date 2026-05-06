@@ -124,7 +124,7 @@ set timeoutlen=300
 set updatetime=100
 
 " ── state ─────────────────────────────────────────────────────────────────────
-let s:autosave_on = 0
+let s:autosave_on = 1
 
 " ── functions ─────────────────────────────────────────────────────────────────
 function! s:GitFilesOrFiles()
@@ -169,6 +169,11 @@ function! s:ToggleAutoSave()
     echo 'AutoSave enabled'
   endif
 endfunction
+
+augroup AutoSaveGroup
+  autocmd!
+  autocmd CursorHold,InsertLeave * silent! update
+augroup END
 
 function! s:ToggleCopyPasteMode()
   if &number
