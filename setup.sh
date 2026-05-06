@@ -583,6 +583,24 @@ setup_dnsmasq_mac() {
 	fi
 }
 
+setup_macos_defaults() {
+	[ "${platform}" = mac ] || return 0
+	[ -d "${HOME}/Dropbox" ] || return 0
+
+	dropbox="${HOME}/Dropbox"
+	temporary="${dropbox}/Temporary"
+	mkdir -p -- "${temporary}"
+
+	log "Setting up macOS defaults..."
+	defaults write com.apple.finder NewWindowTarget -string PfLo
+	defaults write com.apple.finder NewWindowTargetPath -string "file://${dropbox}/"
+	defaults write com.apple.screencapture location -string "${temporary}"
+	defaults write com.apple.Safari HomePage -string https://gitea.ai
+	defaults write com.apple.Safari DownloadsPath -string "${temporary}"
+	killall Finder >/dev/null 2>&1 || true
+	killall SystemUIServer >/dev/null 2>&1 || true
+}
+
 setup_env_sh() {
 	log "Setting up /etc/profile.d/env.sh..."
 	if ! cmp -s "${configs}/sh/env.sh" /etc/profile.d/env.sh 2>/dev/null; then
@@ -719,6 +737,7 @@ setup_all() {
 	setup_ssh
 	setup_brew_services
 	setup_dnsmasq_mac
+	setup_macos_defaults
 	setup_tailscale
 	setup_env_sh
 	setup_static_configs

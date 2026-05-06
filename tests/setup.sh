@@ -71,7 +71,7 @@ cat >"${bootstrap_bin}/git" <<EOF
 #!/bin/sh
 printf 'git %s\n' "\$*" >>"${bootstrap_log}"
 if [ "\$1" = clone ]; then
-	target=\$4
+	target=\$3
 	mkdir -p "\${target}/configs" "\${target}/.git"
 fi
 exit 0
