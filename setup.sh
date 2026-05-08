@@ -597,6 +597,7 @@ setup_macos_defaults() {
 	defaults write com.apple.screencapture location -string "${temporary}"
 	defaults write com.apple.Safari HomePage -string https://gitea.ai
 	defaults write com.apple.Safari DownloadsPath -string "${temporary}"
+	defaults write com.apple.Safari ShowTabBar -bool true
 	killall Finder >/dev/null 2>&1 || true
 	killall SystemUIServer >/dev/null 2>&1 || true
 }
