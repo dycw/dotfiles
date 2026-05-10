@@ -640,7 +640,14 @@ setup_static_configs() {
 	link_config "${configs}/bottom.toml" bottom/bottom.toml
 	link_config "${configs}/direnv.toml" direnv/direnv.toml
 	link_config "${configs}/fdignore" fd/ignore
-	link_config "${configs}/git/config" git/config
+	# [include] instead of symlink: reset --hard never wipes the user's global config.
+	_git_cfg="${xdg_config_home}/git/config"
+	mkdir -p "${xdg_config_home}/git"
+	[ -L "${_git_cfg}" ] && rm -f -- "${_git_cfg}"
+	if ! grep -qF "path = ${configs}/git/config" "${_git_cfg}" 2>/dev/null; then
+		printf '[include]\n\tpath = %s\n' "${configs}/git/config" >>"${_git_cfg}"
+	fi
+	unset _git_cfg
 	link_config "${configs}/git/ignore" git/ignore
 	link_config "${configs}/pgcli.config" pgcli/config
 	link_config "${configs}/ripgreprc" ripgrep/ripgreprc

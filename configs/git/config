@@ -221,7 +221,3 @@
 
 [tag]
   sort = version:refname
-
-[user]
-	email = noreply@github.com
-	name = github-actions-bot
