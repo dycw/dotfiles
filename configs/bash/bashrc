@@ -49,6 +49,20 @@ if ! shopt -oq posix; then
     elif [ -f /etc/bash_completion ]; then
         . /etc/bash_completion
     fi
+    for _f in \
+        /opt/homebrew/etc/bash_completion.d/brew \
+        /opt/homebrew/Library/Homebrew/completions/bash/brew \
+        /usr/local/etc/bash_completion.d/brew \
+        /usr/local/Homebrew/Library/Homebrew/completions/bash/brew; do
+        [ -f "${_f}" ] && { . "${_f}"; break; }
+    done
+    for _f in \
+        /opt/homebrew/etc/bash_completion.d/git-completion.bash \
+        /usr/local/etc/bash_completion.d/git-completion.bash \
+        /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash; do
+        [ -f "${_f}" ] && { . "${_f}"; break; }
+    done
+    unset _f
 fi
 
 #### history ##################################################################
