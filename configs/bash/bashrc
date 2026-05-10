@@ -50,6 +50,9 @@ if ! shopt -oq posix; then
         . /etc/bash_completion
     fi
     if [ -n "${_brew_prefix}" ]; then
+        # Create the brew completion symlink if missing so completion works on first shell open.
+        [ -e "${_brew_prefix}/etc/bash_completion.d/brew" ] || \
+            brew completions link >/dev/null 2>&1 || true
         for _f in \
             "${_brew_prefix}/etc/bash_completion.d/brew" \
             "${_brew_prefix}/Library/Homebrew/completions/bash/brew"; do
