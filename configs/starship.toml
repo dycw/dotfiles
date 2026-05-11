@@ -1,10 +1,8 @@
 format = """\
-${directory} │ ${hostname}${container}${localip}\
-${git_branch}${git_commit}${git_state}${git_status}${git_metrics}\
+${time}${custom.tz} │ ${hostname}${localip} │ ${username} │ ${directory}\
+${git_branch}${git_state}${git_status}${git_metrics}\
 ${golang}${lua}${nodejs}${python}${rust}${package}\
-${fill}\
 ${battery}${jobs}${memory_usage}${shlvl}\
-${time}${custom.tz} │ ${username}${sudo}\
 \
 ${line_break}\
 \
@@ -16,7 +14,7 @@ ${character}
   charging_symbol = '󰂄'
   discharging_symbol = '󰂃'
   empty_symbol = '󰂎'
-  format = '([${symbol}${percentage}](${style}) │ )'
+  format = '( │ [${symbol}${percentage}](${style}))'
   full_symbol = '󰁹'
   unknown_symbol = '󰁽'
 
@@ -42,7 +40,7 @@ ${character}
   [custom.tz]
     command = 'date +%Z'
     format = '[${output}](${style})'
-    style = 'dimmed white'
+    style = 'blue'
     when = 'true'
 
 [directory]
@@ -97,11 +95,11 @@ ${character}
 
 [jobs]
   disabled = false
-  format = '([${symbol}${number}](${style}) │ )'
+  format = '( │ [${symbol}${number}](${style}))'
   style = 'bold red'
 
 [localip]
-  disabled = true
+  disabled = false
   format = '( [${localipv4}]($style))'
   ssh_only = true
   style = 'blue'
@@ -114,7 +112,7 @@ ${character}
 
 [memory_usage]
   disabled = false
-  format = '(${symbol}[${ram}(|${swap})](${style}) ‹ )'
+  format = '( │ ${symbol}[${ram}(|${swap})](${style}))'
   style = 'bold red'
   symbol = '🐏'
   threshold = 80
@@ -145,24 +143,24 @@ ${character}
 
 [shlvl]
   disabled = false
-  format = '([${symbol}${shlvl}]($style) ‹ )'
+  format = '( │ [${symbol}${shlvl}]($style))'
   style = 'bold red'
   symbol = '↕️'
   threshold = 3
 
 [sudo]
   disabled = false
-  format = '( [${symbol}]($style))'
+  format = '( │ [${symbol}]($style))'
   symbol = '🧙'
 
 [time]
   disabled = false
   format = '[${time}](${style})'
-  style = 'dimmed white'
+  style = 'blue'
   time_format = '%T'
 
 [username]
   format = '[${user}](${style})'
   show_always = true
-  style_root = 'dimmed white'
-  style_user = 'dimmed white'
+  style_root = 'blue'
+  style_user = 'blue'
