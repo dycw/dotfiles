@@ -35,36 +35,36 @@ for _f in "${HOME}"/.mode.sw*; do
 done
 unset _f
 
+__source_first() {
+    local _f
+    for _f in "$@"; do
+        [ -f "${_f}" ] && { . "${_f}"; return 0; }
+    done
+    return 1
+}
+
 #### completion ###############################################################
 
 if ! shopt -oq posix; then
     _brew_prefix=''
     command -v brew >/dev/null 2>&1 && _brew_prefix=$(brew --prefix 2>/dev/null)
-    if [ -n "${_brew_prefix}" ] && [ -f "${_brew_prefix}/etc/profile.d/bash_completion.sh" ]; then
-        . "${_brew_prefix}/etc/profile.d/bash_completion.sh"
-    elif [ -f /home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh ]; then
-        . /home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh
-    elif [ -f /usr/share/bash-completion/bash_completion ]; then
-        . /usr/share/bash-completion/bash_completion
-    elif [ -f /etc/bash_completion ]; then
-        . /etc/bash_completion
-    fi
+    __source_first \
+        "${_brew_prefix}/etc/profile.d/bash_completion.sh" \
+        /home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh \
+        /usr/share/bash-completion/bash_completion \
+        /etc/bash_completion || true
     if [ -n "${_brew_prefix}" ]; then
         # Create the brew completion symlink if missing so completion works on first shell open.
         [ -e "${_brew_prefix}/etc/bash_completion.d/brew" ] || \
             brew completions link >/dev/null 2>&1 || true
-        for _f in \
+        __source_first \
             "${_brew_prefix}/etc/bash_completion.d/brew" \
-            "${_brew_prefix}/Library/Homebrew/completions/bash/brew"; do
-            [ -f "${_f}" ] && { . "${_f}"; break; }
-        done
-        for _f in \
+            "${_brew_prefix}/Library/Homebrew/completions/bash/brew" || true
+        __source_first \
             "${_brew_prefix}/etc/bash_completion.d/git-completion.bash" \
-            /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash; do
-            [ -f "${_f}" ] && { . "${_f}"; break; }
-        done
+            /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash || true
     fi
-    unset _brew_prefix _f
+    unset _brew_prefix
 fi
 
 #### history ##################################################################

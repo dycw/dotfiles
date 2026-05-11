@@ -639,11 +639,7 @@ setup_vim_plugins() {
 	vim -Nu "${HOME}/.vimrc" -n -es +'PlugInstall --sync' +qa
 }
 
-setup_static_configs() {
-	log "Setting up static configs..."
-	link_config "${configs}/bottom.toml" bottom/bottom.toml
-	link_config "${configs}/direnv.toml" direnv/direnv.toml
-	link_config "${configs}/fdignore" fd/ignore
+setup_git_config() {
 	# [include] instead of symlink: reset --hard never wipes the user's global config.
 	_git_cfg="${xdg_config_home}/git/config"
 	mkdir -p "${xdg_config_home}/git"
@@ -652,25 +648,57 @@ setup_static_configs() {
 		printf '[include]\n\tpath = %s\n' "${configs}/git/config" >>"${_git_cfg}"
 	fi
 	unset _git_cfg
-	link_config "${configs}/git/ignore" git/ignore
-	link_config "${configs}/pgcli.config" pgcli/config
-	link_config "${configs}/ripgreprc" ripgrep/ripgreprc
-	link_config "${configs}/starship.toml" starship.toml
-	link_config "${configs}/wezterm.lua" wezterm/wezterm.lua
+}
+
+setup_ipython_configs() {
 	link_direct "${configs}/ipython/ipython_config.py" "${HOME}/.ipython/profile_default/ipython_config.py"
 	link_direct "${configs}/ipython/startup.py" "${HOME}/.ipython/profile_default/startup/startup.py"
+}
+
+link_jupyter_lab_setting() {
+	link_direct \
+		"${configs}/jupyter/$1" \
+		"${xdg_config_home}/jupyter/lab/user-settings/$2"
+}
+
+setup_jupyter_configs() {
 	link_direct "${configs}/jupyter/jupyter_lab_config.py" "${xdg_config_home}/jupyter/jupyter_lab_config.py"
-	link_direct "${configs}/jupyter/apputils/notification.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/apputils-extension/notification.jupyterlab-settings"
-	link_direct "${configs}/jupyter/apputils/themes.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/apputils-extension/themes.jupyterlab-settings"
-	link_direct "${configs}/jupyter/codemirror/plugin.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/codemirror-extension/plugin.jupyterlab-settings"
-	link_direct "${configs}/jupyter/completer/manager.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/completer-extension/manager.jupyterlab-settings"
-	link_direct "${configs}/jupyter/console/tracker.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/console-extension/tracker.jupyterlab-settings"
-	link_direct "${configs}/jupyter/docmanager/plugin.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/docmanager-extension/plugin.jupyterlab-settings"
-	link_direct "${configs}/jupyter/filebrowser/browser.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/filebrowser-extension/browser.jupyterlab-settings"
-	link_direct "${configs}/jupyter/fileeditor/plugin.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/fileeditor-extension/plugin.jupyterlab-settings"
-	link_direct "${configs}/jupyter/jupyterlab_code_formatter/settings.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/jupyterlab_code_formatter/settings.jupyterlab-settings"
-	link_direct "${configs}/jupyter/notebook/tracker.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings"
-	link_direct "${configs}/jupyter/shortcuts/shortcuts.jsonc" "${xdg_config_home}/jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings"
+	while IFS='|' read -r src dest; do
+		[ -n "${src}" ] || continue
+		link_jupyter_lab_setting "${src}" "${dest}"
+	done <<'EOF'
+apputils/notification.jsonc|@jupyterlab/apputils-extension/notification.jupyterlab-settings
+apputils/themes.jsonc|@jupyterlab/apputils-extension/themes.jupyterlab-settings
+codemirror/plugin.jsonc|@jupyterlab/codemirror-extension/plugin.jupyterlab-settings
+completer/manager.jsonc|@jupyterlab/completer-extension/manager.jupyterlab-settings
+console/tracker.jsonc|@jupyterlab/console-extension/tracker.jupyterlab-settings
+docmanager/plugin.jsonc|@jupyterlab/docmanager-extension/plugin.jupyterlab-settings
+filebrowser/browser.jsonc|@jupyterlab/filebrowser-extension/browser.jupyterlab-settings
+fileeditor/plugin.jsonc|@jupyterlab/fileeditor-extension/plugin.jupyterlab-settings
+jupyterlab_code_formatter/settings.jsonc|jupyterlab_code_formatter/settings.jupyterlab-settings
+notebook/tracker.jsonc|@jupyterlab/notebook-extension/tracker.jupyterlab-settings
+shortcuts/shortcuts.jsonc|@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings
+EOF
+}
+
+setup_static_configs() {
+	log "Setting up static configs..."
+	while IFS='|' read -r src dest; do
+		[ -n "${src}" ] || continue
+		link_config "${configs}/${src}" "${dest}"
+	done <<'EOF'
+bottom.toml|bottom/bottom.toml
+direnv.toml|direnv/direnv.toml
+fdignore|fd/ignore
+git/ignore|git/ignore
+pgcli.config|pgcli/config
+ripgreprc|ripgrep/ripgreprc
+starship.toml|starship.toml
+wezterm.lua|wezterm/wezterm.lua
+EOF
+	setup_git_config
+	setup_ipython_configs
+	setup_jupyter_configs
 	link_home "${configs}/psqlrc" .psqlrc
 	link_home "${configs}/vimrc" .vimrc
 	setup_vim_plugins
