@@ -51,6 +51,9 @@
       --pretty=\"format:%C(red)%h%C(reset) | %C(yellow)%d%C(reset) | %s | %Cgreen%cr%C(reset)\" \
   "
 
+  # mv
+  mv = mv
+
   # pull
   pl = pull-default
   pull-default = "! \
@@ -103,6 +106,7 @@
   repo-root = "!git rev-parse --show-toplevel"
 
   # rm
+  rm = rm -rf
   rmc = rm --cached -rf
 
   # show-ref
@@ -121,6 +125,10 @@
 
   # status
   s = status
+
+  # submodule
+  sa = submodule add
+  su = submodule update
 
   # switch
   sw = switch

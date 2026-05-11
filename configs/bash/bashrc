@@ -318,6 +318,37 @@ if command -v git >/dev/null 2>&1; then
     done < <(git config --file "${_git_cfg:-/dev/null}" --list 2>/dev/null | grep '^alias\.')
     unset _git_line _git_alias _git_cfg
 
+    # --- edit config ---
+
+    edit-git-shell() { "${EDITOR}" "${PATH_DOTFILES}/configs/bash/bashrc"; }
+
+    # --- add (override auto-generated: only --all when no args) ---
+
+    ga() {
+        if [ "$#" -eq 0 ]; then
+            git add --all
+        else
+            git add "$@"
+        fi
+    }
+    gaf() {
+        if [ "$#" -eq 0 ]; then
+            git add --all --force
+        else
+            git add --force "$@"
+        fi
+    }
+
+    # --- log (override auto-generated: support count arg) ---
+
+    gl() {
+        if [ "$#" -eq 0 ]; then
+            git log-default -n 20
+        elif [[ "$1" =~ ^[0-9]+$ ]] && [ "$1" -ge 1 ]; then
+            git log-default -n "$1"
+        fi
+    }
+
     # --- private helpers ---
 
     __auto_msg() { date '+%Y-%m-%d %H:%M:%S (%a)'; }
@@ -589,6 +620,18 @@ if command -v git >/dev/null 2>&1; then
             for _branch in "$@"; do git branch-delete "${_branch}"; done
         fi
     }
+    gbdr() {
+        git fetch-default || return $?
+        if [ "$#" -eq 0 ]; then
+            git branch --color=never --remotes \
+                | awk '!/->/' \
+                | fzf --multi \
+                | sed -E 's|^[[:space:]]*origin/||' \
+                | xargs -r -I{} git push --delete origin "{}"
+        else
+            git push --delete origin "$@"
+        fi
+    }
     gcbr() {
         local branch
         if [ "$#" -eq 0 ]; then
@@ -626,6 +669,27 @@ if command -v git >/dev/null 2>&1; then
             direnv allow . || true
         fi
         cd "$orig"
+    }
+
+    # checkout file(s); if first arg is a valid ref, fetch and checkout from that ref
+    gcof() {
+        if [ "$#" -eq 0 ]; then
+            git checkout -- .
+        else
+            if git is-valid-ref "$1" 2>/dev/null; then
+                git fetch-default || return $?
+                git checkout "$1" -- "${@:2}"
+            else
+                git checkout -- "$@"
+            fi
+        fi
+    }
+
+    # checkout file(s) from the default remote branch
+    gcfm() {
+        git fetch-default || return $?
+        local branch; branch=$(git default-remote-branch) || return $?
+        git checkout "$branch" -- "$@"
     }
 
     # create branch + empty commit + push + PR; args: [TITLE [NUM [PART]]]
@@ -761,8 +825,68 @@ if command -v git >/dev/null 2>&1; then
             echo "'ghc' expected [0..2] arguments TITLE BODY; got $#" >&2; return 1
         fi
     }
+    ghe() {
+        local title='' body=''
+        local remaining; remaining=()
+        while [ "$#" -gt 0 ]; do
+            case "$1" in
+                --title=*) title="${1#--title=}"; shift ;;
+                --title)   title="$2"; shift 2 ;;
+                --body=*)  body="${1#--body=}"; shift ;;
+                --body)    body="$2"; shift 2 ;;
+                *)         remaining+=("$1"); shift ;;
+            esac
+        done
+        if [ "${#remaining[@]}" -eq 1 ]; then
+            if [ -n "$title" ]; then
+                echo "'ghe' got 1 positional arg but also --title" >&2; return 1
+            fi
+            title="${remaining[0]}"
+        elif [ "${#remaining[@]}" -ge 2 ]; then
+            if [ -n "$title" ]; then
+                echo "'ghe' got 2 positional args but also --title" >&2; return 1
+            fi
+            if [ -n "$body" ]; then
+                echo "'ghe' got 2 positional args but also --body" >&2; return 1
+            fi
+            title="${remaining[0]}"
+            body="${remaining[1]}"
+        fi
+        local args; args=()
+        [ -n "$title" ] && args+=(--title "$title")
+        [ -n "$body" ]  && args+=(--body "$body")
+        if (__remote_is gitea || __remote_is ts.net) && command -v tea >/dev/null 2>&1; then
+            tea pulls edit "${args[@]}"; return $?
+        fi
+        if command -v gh >/dev/null 2>&1; then
+            gh pr edit "${args[@]}"; return $?
+        fi
+        echo "'ghe': no PR tool (tea/gh) available" >&2; return 1
+    }
     ghm() { __git_merge; }
     ghx() { __git_merge --exit; }
+
+    # --- remote management ---
+    add-remote() {
+        if [ "$#" -le 1 ]; then
+            echo "'add-remote' expected [2..) arguments NAME URL; got $#" >&2; return 1
+        fi
+        git remote add "$@"
+        git remote set-url --push "$@"
+    }
+    remove-remote() {
+        if [ "$#" -eq 0 ]; then
+            echo "'remove-remote' expected [1..) arguments NAME; got $#" >&2; return 1
+        fi
+        git remote remove "$@"
+    }
+    set-remote() {
+        if [ "$#" -le 1 ]; then
+            echo "'set-remote' expected [2..) arguments NAME URL; got $#" >&2; return 1
+        fi
+        git remote set-url "$@" || return $?
+        git remote set-url --push "$@"
+    }
 
     # --- rebase ---
     grb() {

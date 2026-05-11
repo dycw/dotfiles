@@ -12,9 +12,7 @@ export XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-${HOME}/.local/state}"
 
-if [ -d "${HOME}/.local/bin" ]; then
-	export PATH="${HOME}/.local/bin${PATH:+:${PATH}}"
-fi
+export PATH="${HOME}/.local/bin${PATH:+:${PATH}}"
 
 #### docker ###################################################################
 
