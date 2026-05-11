@@ -311,10 +311,11 @@ if command -v git >/dev/null 2>&1; then
     # Auto-generate g<alias> wrappers from the dotfiles git config directly so
     # they work even before update-dotfiles has wired up the global [include].
     _git_cfg=${PATH_DOTFILES:+${PATH_DOTFILES}/configs/git/config}
+    [ -f "${_git_cfg}" ] || _git_cfg=/dev/null
     while IFS= read -r _git_line; do
         _git_alias=${_git_line%%=*}
         _git_alias=${_git_alias#alias.}
-        eval "g${_git_alias}() { git ${_git_alias} \"\$@\"; }"
+        eval "g${_git_alias}() { git -c include.path=\"${_git_cfg}\" ${_git_alias} \"\$@\"; }"
     done < <(git config --file "${_git_cfg:-/dev/null}" --list 2>/dev/null | grep '^alias\.')
     unset _git_line _git_alias _git_cfg
 
