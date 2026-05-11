@@ -359,6 +359,10 @@ install_rust_tools() {
 		log "Installing 'rust'..."
 		curl -LsSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 		. "${HOME}/.cargo/env"
+	fi
+
+	if ! rustup show active-toolchain >/dev/null 2>&1; then
+		log "Installing default rust toolchain..."
 		rustup toolchain install stable
 		rustup default stable
 		rustup component add clippy rust-analyzer rust-docs rustfmt
