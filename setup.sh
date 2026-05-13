@@ -353,6 +353,8 @@ maybe_upgrade_mas_apps() {
 }
 
 install_rust_tools() {
+	export PATH="${HOME}/.cargo/bin${PATH:+:${PATH}}"
+
 	if command -v rustup >/dev/null 2>&1; then
 		log "'rust' is already installed"
 	else
@@ -368,6 +370,8 @@ install_rust_tools() {
 		rustup component add clippy rust-analyzer rust-docs rustfmt
 		rustup target add x86_64-unknown-linux-gnu x86_64-apple-darwin aarch64-apple-darwin
 	fi
+
+	command -v cargo >/dev/null 2>&1 || fail "'cargo' is still not available after rustup setup"
 
 	if command -v cargo-binstall >/dev/null 2>&1; then
 		log "'cargo-binstall' is already installed"

@@ -5,6 +5,8 @@ set -eu
 # shellcheck disable=SC1090,SC1091
 . "$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)/common.sh"
 
+command -v shellcheck >/dev/null 2>&1 || install_apt_package shellcheck || install_brew_package shellcheck
+
 run_shellcheck() {
 	shellcheck --external-sources "$@"
 }

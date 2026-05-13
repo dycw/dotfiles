@@ -42,3 +42,28 @@ write_tracked_files() {
 tracked_files_are_empty() {
 	[ ! -s "$1" ]
 }
+
+install_apt_package() {
+	if command -v apt-get >/dev/null 2>&1; then
+		apt-get update
+		apt-get install -y "$1"
+		return 0
+	fi
+	return 1
+}
+
+install_npm_package() {
+	if command -v npm >/dev/null 2>&1; then
+		npm install --global "$1"
+		return 0
+	fi
+	return 1
+}
+
+install_brew_package() {
+	if command -v brew >/dev/null 2>&1; then
+		brew install "$1"
+		return 0
+	fi
+	return 1
+}

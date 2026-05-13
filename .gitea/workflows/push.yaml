@@ -14,7 +14,9 @@ env:
 
 jobs:
   git-tag:
-    runs-on: mac
+    container:
+      image: catthehacker/ubuntu:act-latest
+    runs-on: linux
     timeout-minutes: 10
     steps:
       - uses: https://gitea.ai/actions/checkout@v6.0.2

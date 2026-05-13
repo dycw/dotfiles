@@ -5,6 +5,8 @@ set -eu
 # shellcheck disable=SC1090,SC1091
 . "$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)/common.sh"
 
+command -v shfmt >/dev/null 2>&1 || install_apt_package shfmt || install_brew_package shfmt
+
 run_shfmt() {
 	mode=--write
 	if [ -n "${CI:-}" ]; then

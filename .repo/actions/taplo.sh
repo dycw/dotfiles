@@ -5,7 +5,7 @@ set -eu
 # shellcheck disable=SC1090,SC1091
 . "$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)/common.sh"
 
-command -v taplo >/dev/null 2>&1 || brew install taplo
+command -v taplo >/dev/null 2>&1 || install_npm_package @taplo/cli || install_brew_package taplo
 
 run_taplo() {
 	check=
