@@ -577,7 +577,7 @@ EOF
 
 setup_dnsmasq() {
 	brew_prefix=$(brew --prefix)
-	[ -x "${brew_prefix}/bin/dnsmasq" ] || return 0
+	dnsmasq_prefix=$(brew --prefix dnsmasq 2>/dev/null) || return 0
 
 	conf_dir="${brew_prefix}/etc/dnsmasq.d"
 	conf_file="${conf_dir}/qrt.conf"
@@ -603,7 +603,7 @@ setup_dnsmasq() {
 	linux)
 		# brew services as root on Linux fails (brew refuses API downloads as
 		# root). Write a systemd unit pointing at the brew binary instead.
-		_dnsmasq="${brew_prefix}/bin/dnsmasq"
+		_dnsmasq="${dnsmasq_prefix}/sbin/dnsmasq"
 		_svc=/etc/systemd/system/dnsmasq.service
 		if ! grep -qF "ExecStart=${_dnsmasq}" "${_svc}" 2>/dev/null; then
 			run_root sh -c "sed -e 's|DNSMASQ_BIN|${_dnsmasq}|g' \
