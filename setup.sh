@@ -632,6 +632,11 @@ setup_dnsmasq() {
 			log "Removing systemd-resolved NSS module from /etc/nsswitch.conf..."
 			run_root sed -i 's/ resolve \[!UNAVAIL=return\]//g' /etc/nsswitch.conf
 		fi
+		# Disable systemd-resolved entirely — dnsmasq replaces it. Stopping it
+		# prevents external tooling (e.g. gitea-runner) from restarting it and
+		# creating confusion, while our resolv.conf and nsswitch.conf hardening
+		# already protect against it if something does restart it.
+		run_root systemctl disable --now systemd-resolved 2>/dev/null || true
 		;;
 	mac)
 		[ "${config_changed}" -eq 1 ] && run_root brew services restart dnsmasq
