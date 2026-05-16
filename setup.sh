@@ -142,8 +142,8 @@ ensure_brew() {
 	fi
 	if [ "${platform}" = linux ]; then
 		log "Installing Linux brew prerequisites..."
-		run_root apt-get update
-		run_root apt-get install -y build-essential curl file git procps sudo
+		run_root apt-get -o DPkg::Lock::Timeout=300 update
+		run_root apt-get -o DPkg::Lock::Timeout=300 install -y build-essential curl file git procps sudo
 	fi
 	log "Installing 'brew'..."
 	acquire_sudo
@@ -175,7 +175,7 @@ parallel_install_apt_packages() {
 	rm -rf -- "${tmp}"
 	[ -n "${missing}" ] || return 0
 	log "Installing packages: ${missing}"
-	run_root apt-get install -y ${missing}
+	run_root apt-get -o DPkg::Lock::Timeout=300 install -y ${missing}
 }
 
 # Checks all given formulae in parallel, then uninstalls any present ones.
@@ -261,7 +261,7 @@ maybe_upgrade_brew_casks() {
 maybe_upgrade_apt_packages() {
 	[ "${should_upgrade:-0}" -eq 1 ] || return 0
 	log "Upgrading apt packages..."
-	run_root apt-get upgrade -y
+	run_root apt-get -o DPkg::Lock::Timeout=300 upgrade -y
 }
 
 maybe_upgrade_rust() {
@@ -914,13 +914,8 @@ ensure_git() {
 		if [ "${ID:-}" != debian ]; then
 			fail "Unsupported Linux distribution '${ID:-unknown}'; exiting..."
 		fi
-		if [ "$(id -u)" -eq 0 ]; then
-			apt-get update
-			apt-get install -y git
-		else
-			sudo apt-get update
-			sudo apt-get install -y git
-		fi
+		run_root apt-get -o DPkg::Lock::Timeout=300 update
+		run_root apt-get -o DPkg::Lock::Timeout=300 install -y git
 		;;
 	Darwin)
 		if ! command -v brew >/dev/null 2>&1; then
