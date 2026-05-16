@@ -14,6 +14,14 @@ export XDG_STATE_HOME="${XDG_STATE_HOME:-${HOME}/.local/state}"
 
 export PATH="${HOME}/.local/bin${PATH:+:${PATH}}"
 
+#### homebrew #################################################################
+
+if [ -d /home/linuxbrew/.linuxbrew/bin ]; then
+	export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin${PATH:+:${PATH}}"
+elif [ -d /opt/homebrew/bin ]; then
+	export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH:+:${PATH}}"
+fi
+
 #### docker ###################################################################
 
 if [ -d /Applications/Docker.app/Contents/Resources/bin ]; then
