@@ -453,6 +453,7 @@ install_all() {
 setup_ssh() {
 	log "Setting up 'ssh'..."
 	mkdir -p "${HOME}/.ssh"
+	run_root chown -R "$(id -un)" "${HOME}/.ssh"
 	chmod 700 "${HOME}/.ssh"
 
 	cp -- "${configs}/authorized_keys" "${HOME}/.ssh/authorized_keys"
