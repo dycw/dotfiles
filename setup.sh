@@ -302,6 +302,16 @@ install_tailscale_linux() {
 	curl -fsSL https://tailscale.com/install.sh | sh
 }
 
+install_docker_linux() {
+	if command -v docker >/dev/null 2>&1; then
+		return 0
+	fi
+	log "Installing docker via upstream script..."
+	acquire_sudo
+	curl -fsSL https://get.docker.com | sh
+	run_root usermod -aG docker "${USER}"
+}
+
 remove_unwanted_brew_casks() {
 	parallel_uninstall_brew_casks \
 		db-browser-for-sqlite firefox ghostty google-chrome iterm2 pgadmin4 slack
@@ -313,10 +323,13 @@ ensure_brew_taps() {
 
 install_mac_casks() {
 	ensure_brew_taps
-	parallel_install_brew_casks \
-		1password a-better-finder-attributes a-better-finder-rename \
-		chatgpt docker dropbox handy postico protonvpn redis-stack spotify telegram \
-		transmission vlc wezterm whatsapp zoom
+	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt dropbox handy postico protonvpn redis-stack spotify telegram transmission vlc wezterm whatsapp zoom'
+	case "$(sysctl -n hw.model 2>/dev/null)" in
+	MacBook*) ;;
+	*) casks="${casks} docker" ;;
+	esac
+	# shellcheck disable=SC2086
+	parallel_install_brew_casks ${casks}
 }
 
 # 1Password for Safari (App Store id 1569813296)
@@ -422,6 +435,7 @@ install_all() {
 		install_linux_packages
 		maybe_upgrade_apt_packages
 		install_tailscale_linux
+		install_docker_linux
 		install_keymapp
 	else
 		remove_unwanted_brew_casks
