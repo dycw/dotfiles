@@ -302,7 +302,7 @@ install_common_brew_formulas() {
 }
 
 install_linux_packages() {
-	parallel_install_apt_packages curl rsync sudo xclip xsel
+	parallel_install_apt_packages curl rsync sudo systemd-resolved xclip xsel
 }
 
 install_docker_linux() {
@@ -679,7 +679,8 @@ setup_env_sh() {
 
 setup_keymapp() {
 	log "Setting up 'keymapp'..."
-	link_direct "${configs}/keymapp.50-zsa.rules" /etc/udev/rules.d/50-zsa.rules
+	run_root mkdir -p /etc/udev/rules.d
+	run_root ln -sfn "${configs}/keymapp.50-zsa.rules" /etc/udev/rules.d/50-zsa.rules
 }
 
 setup_vim_plugins() {
