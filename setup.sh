@@ -284,19 +284,15 @@ remove_unwanted_brew_formulas() {
 
 install_common_brew_formulas() {
 	parallel_install_brew_formulas \
-		asciinema autoconf automake bat bottom coreutils delta \
-		direnv dust eza fd fzf gh git-delta iperf3 jq just libpq \
+		asciinema autoconf automake bat bash bash-completion@2 bottom coreutils delta \
+		direnv dnsmasq dust eza fd fzf gh git-delta iperf3 jq just libpq \
 		luacheck luarocks markdownlint-cli maturin npm pgcli postgresql@18 prek prettier redis \
-		restic ripgrep ruff sccache sd shellcheck shfmt starship \
+		restic ripgrep ruff sccache sd shellcheck shfmt starship tailscale \
 		taplo tmux topgrade uv vim watch yq zoxide
-
-	parallel_install_brew_formulas bash bash-completion@2
-
-	parallel_install_brew_formulas tailscale
 
 	case "${platform}" in
 	mac)
-		parallel_install_brew_formulas agg dnsmasq flock mas rename
+		parallel_install_brew_formulas agg flock mas rename
 		;;
 	esac
 }
@@ -527,16 +523,6 @@ EOF
 	log "Starting tailscale daemon..."
 	case "${platform}" in
 	linux)
-		# systemd-resolved provides a stable stub at 127.0.0.53 from early boot.
-		# DHCP-provided DNS registers with it via NetworkManager, so public DNS
-		# works immediately; tailscale (--accept-dns=true) layers split DNS on top
-		# once it connects. This eliminates the post-boot race where tailscaled
-		# hadn't yet written 100.100.100.100 into resolv.conf.
-		run_root systemctl enable --now systemd-resolved
-		# Remove immutable flag if set, then replace resolv.conf with the stub
-		# symlink. The symlink is never overwritten by DHCP clients.
-		run_root chattr -i /etc/resolv.conf 2>/dev/null || true
-		run_root ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 		# Write a systemd unit pointing at the brew binary so we don't depend
 		# on a separately-installed system package.
 		_tailscaled=$(command -v tailscaled)
@@ -579,14 +565,9 @@ EOF
 
 	ts_hostname=$(hostname -s)
 	log "Bringing tailscale up as '${ts_hostname}'..."
-	# Linux: headscale serves split DNS so tailscale manages /etc/resolv.conf.
-	# Mac: dnsmasq handles DNS locally; tailscale must not overwrite resolv.conf.
-	case "${platform}" in
-	linux) _accept_dns=true ;;
-	mac) _accept_dns=false ;;
-	esac
+	# dnsmasq handles DNS on all platforms; tailscale must not overwrite resolv.conf.
 	run_root tailscale up \
-		"--accept-dns=${_accept_dns}" --accept-routes \
+		--accept-dns=false --accept-routes \
 		--auth-key "${TAILSCALE_AUTH_KEY}" \
 		--hostname "${ts_hostname}" \
 		--login-server "${TAILSCALE_LOGIN_SERVER}" \
@@ -594,19 +575,20 @@ EOF
 		--timeout=30s
 }
 
-setup_dnsmasq_mac() {
-	[ "${platform}" = mac ] || return 0
+setup_dnsmasq() {
 	command -v dnsmasq >/dev/null 2>&1 || return 0
 
-	conf_dir=/opt/homebrew/etc/dnsmasq.d
+	brew_prefix=$(brew --prefix)
+	conf_dir="${brew_prefix}/etc/dnsmasq.d"
 	conf_file="${conf_dir}/qrt.conf"
-	main_conf=/opt/homebrew/etc/dnsmasq.conf
+	main_conf="${brew_prefix}/etc/dnsmasq.conf"
 
 	mkdir -p -- "${conf_dir}"
 
 	# Symlink so repo updates are reflected without re-running setup.sh.
 	# Only (re)create the symlink — and restart dnsmasq — when the target
 	# has changed; readlink needs no sudo.
+	config_changed=0
 	if [ "$(readlink "${conf_file}" 2>/dev/null)" != "${configs}/dnsmasq.conf" ]; then
 		log "Symlinking dnsmasq config '${conf_file}'..."
 		ln -sf "${configs}/dnsmasq.conf" "${conf_file}"
@@ -614,31 +596,46 @@ setup_dnsmasq_mac() {
 			printf 'conf-dir=%s/,*.conf\n' "${conf_dir}" |
 				run_root tee -a "${main_conf}" >/dev/null
 		fi
-		run_root brew services restart dnsmasq
+		config_changed=1
 	fi
 
-	# Point every enabled network service at the local dnsmasq only if not
-	# already set — avoids sudo on re-runs. The first line of
-	# -listallnetworkservices is a header; disabled services start with '*'.
-	dns_changed=0
-	tmp=$(mktemp)
-	networksetup -listallnetworkservices | tail -n +2 >"${tmp}"
-	while IFS= read -r svc; do
-		case "${svc}" in
-		\**) continue ;;
-		esac
-		if ! networksetup -getdnsservers "${svc}" 2>/dev/null | grep -qx '127\.0\.0\.1'; then
-			log "Pointing '${svc}' DNS at 127.0.0.1..."
-			run_root networksetup -setdnsservers "${svc}" 127.0.0.1
-			dns_changed=1
+	[ "${config_changed}" -eq 1 ] && run_root brew services restart dnsmasq
+
+	case "${platform}" in
+	linux)
+		# Point resolv.conf at dnsmasq; make it immutable so DHCP clients
+		# don't overwrite it.
+		run_root chattr -i /etc/resolv.conf 2>/dev/null || true
+		if ! grep -qx 'nameserver 127\.0\.0\.1' /etc/resolv.conf 2>/dev/null; then
+			log "Setting /etc/resolv.conf to use dnsmasq..."
+			printf 'nameserver 127.0.0.1\n' | run_root tee /etc/resolv.conf >/dev/null
 		fi
-	done <"${tmp}"
-	rm -f -- "${tmp}"
-
-	if [ "${dns_changed}" -eq 1 ]; then
-		run_root dscacheutil -flushcache
-		run_root killall -HUP mDNSResponder
-	fi
+		run_root chattr +i /etc/resolv.conf 2>/dev/null || true
+		;;
+	mac)
+		# Point every enabled network service at the local dnsmasq only if not
+		# already set — avoids sudo on re-runs. The first line of
+		# -listallnetworkservices is a header; disabled services start with '*'.
+		dns_changed=0
+		tmp=$(mktemp)
+		networksetup -listallnetworkservices | tail -n +2 >"${tmp}"
+		while IFS= read -r svc; do
+			case "${svc}" in
+			\**) continue ;;
+			esac
+			if ! networksetup -getdnsservers "${svc}" 2>/dev/null | grep -qx '127\.0\.0\.1'; then
+				log "Pointing '${svc}' DNS at 127.0.0.1..."
+				run_root networksetup -setdnsservers "${svc}" 127.0.0.1
+				dns_changed=1
+			fi
+		done <"${tmp}"
+		rm -f -- "${tmp}"
+		if [ "${dns_changed}" -eq 1 ]; then
+			run_root dscacheutil -flushcache
+			run_root killall -HUP mDNSResponder
+		fi
+		;;
+	esac
 }
 
 setup_macos_defaults() {
@@ -679,7 +676,8 @@ setup_env_sh() {
 
 setup_keymapp() {
 	log "Setting up 'keymapp'..."
-	link_direct "${configs}/keymapp.50-zsa.rules" /etc/udev/rules.d/50-zsa.rules
+	run_root mkdir -p /etc/udev/rules.d
+	run_root ln -sfn "${configs}/keymapp.50-zsa.rules" /etc/udev/rules.d/50-zsa.rules
 }
 
 setup_vim_plugins() {
@@ -832,7 +830,7 @@ setup_all() {
 	setup_bash
 	setup_ssh
 	setup_brew_services
-	setup_dnsmasq_mac
+	setup_dnsmasq
 	setup_macos_defaults
 	setup_tailscale
 	setup_static_configs
