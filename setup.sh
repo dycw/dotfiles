@@ -290,22 +290,15 @@ install_common_brew_formulas() {
 
 	parallel_install_brew_formulas bash bash-completion@2
 
+	parallel_install_brew_formulas tailscale
+
 	if [ "${platform}" = mac ]; then
-		parallel_install_brew_formulas agg dnsmasq flock mas rename tailscale
+		parallel_install_brew_formulas agg dnsmasq flock mas rename
 	fi
 }
 
 install_linux_packages() {
 	parallel_install_apt_packages curl rsync sudo xclip xsel
-}
-
-install_tailscale_linux() {
-	if command -v tailscale >/dev/null 2>&1; then
-		return 0
-	fi
-	log "Installing tailscale via upstream script..."
-	acquire_sudo
-	curl -fsSL https://tailscale.com/install.sh | sh
 }
 
 install_docker_linux() {
@@ -440,7 +433,6 @@ install_all() {
 	if [ "${platform}" = linux ]; then
 		install_linux_packages
 		maybe_upgrade_apt_packages
-		install_tailscale_linux
 		install_docker_linux
 		install_keymapp
 	else
@@ -523,11 +515,7 @@ EOF
 	fi
 
 	log "Starting tailscale daemon..."
-	if [ "${platform}" = mac ]; then
-		run_root brew services restart tailscale
-	else
-		run_root systemctl enable --now tailscaled
-	fi
+	run_root brew services restart tailscale
 
 	if [ -z "${TAILSCALE_LOGIN_SERVER:-}" ] || [ -z "${TAILSCALE_AUTH_KEY:-}" ]; then
 		log "TAILSCALE_LOGIN_SERVER or TAILSCALE_AUTH_KEY not set; skipping 'tailscale up'"
