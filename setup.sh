@@ -624,6 +624,14 @@ setup_dnsmasq() {
 			printf 'nameserver 127.0.0.1\n' | run_root tee /etc/resolv.conf >/dev/null
 			run_root chattr +i /etc/resolv.conf 2>/dev/null || true
 		fi
+		# systemd-resolved's NSS module (resolve) intercepts getaddrinfo before
+		# /etc/resolv.conf is consulted, returning NOTFOUND for internal suffixes
+		# instead of falling through to our dnsmasq. Remove it so the dns module
+		# (which reads resolv.conf → 127.0.0.1) is used instead.
+		if grep -q 'resolve' /etc/nsswitch.conf 2>/dev/null; then
+			log "Removing systemd-resolved NSS module from /etc/nsswitch.conf..."
+			run_root sed -i 's/ resolve \[!UNAVAIL=return\]//g' /etc/nsswitch.conf
+		fi
 		;;
 	mac)
 		[ "${config_changed}" -eq 1 ] && run_root brew services restart dnsmasq
