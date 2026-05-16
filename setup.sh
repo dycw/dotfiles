@@ -285,13 +285,13 @@ install_common_brew_formulas() {
 		asciinema autoconf automake bat bottom coreutils delta \
 		direnv dust eza fd fzf gh git-delta iperf3 jq just libpq \
 		luacheck luarocks markdownlint-cli maturin npm pgcli postgresql@18 prek prettier redis \
-		rename restic ripgrep ruff sccache sd shellcheck shfmt starship \
+		restic ripgrep ruff sccache sd shellcheck shfmt starship \
 		taplo tmux topgrade uv vim watch yq zoxide
 
 	parallel_install_brew_formulas bash bash-completion@2
 
 	if [ "${platform}" = mac ]; then
-		parallel_install_brew_formulas agg dnsmasq flock mas tailscale
+		parallel_install_brew_formulas agg dnsmasq flock mas rename tailscale
 	fi
 }
 
