@@ -135,7 +135,7 @@ mark_upgraded() {
 }
 
 ensure_brew() {
-	if command -v brew >/dev/null 2>&1; then
+	if command brew --version >/dev/null 2>&1; then
 		return
 	fi
 	if [ "${platform}" = linux ]; then
@@ -147,7 +147,7 @@ ensure_brew() {
 	acquire_sudo
 	NONINTERACTIVE=1 HOMEBREW_NO_ENV_HINTS=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	add_brew_to_path
-	command -v brew >/dev/null 2>&1 || fail "'brew' installation failed"
+	command brew --version >/dev/null 2>&1 || fail "'brew' installation failed"
 	log "'brew' installed successfully"
 }
 
