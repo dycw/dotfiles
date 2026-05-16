@@ -46,7 +46,7 @@ run_root() {
 		"$@"
 	else
 		acquire_sudo
-		sudo "$@"
+		sudo env PATH="$PATH" "$@"
 	fi
 }
 
@@ -795,7 +795,6 @@ setup_all() {
 	setup_dnsmasq_mac
 	setup_macos_defaults
 	setup_tailscale
-	setup_env_sh
 	setup_static_configs
 	setup_tmux
 	remove_legacy_files
@@ -965,6 +964,7 @@ run_local_self() {
 
 	determine_platform
 	setup_hostname
+	setup_env_sh
 	install_all
 	setup_all
 }
