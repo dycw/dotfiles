@@ -140,11 +140,13 @@ ensure_brew() {
 	if command brew --version >/dev/null 2>&1; then
 		return
 	fi
-	if [ "${platform}" = linux ]; then
+	case "${platform}" in
+	linux)
 		log "Installing Linux brew prerequisites..."
 		run_root apt-get -o DPkg::Lock::Timeout=300 update
 		run_root apt-get -o DPkg::Lock::Timeout=300 install -y build-essential curl file git procps sudo
-	fi
+		;;
+	esac
 	log "Installing 'brew'..."
 	acquire_sudo
 	NONINTERACTIVE=1 HOMEBREW_NO_ENV_HINTS=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -292,9 +294,11 @@ install_common_brew_formulas() {
 
 	parallel_install_brew_formulas tailscale
 
-	if [ "${platform}" = mac ]; then
+	case "${platform}" in
+	mac)
 		parallel_install_brew_formulas agg dnsmasq flock mas rename
-	fi
+		;;
+	esac
 }
 
 install_linux_packages() {
@@ -431,18 +435,21 @@ install_all() {
 	maybe_upgrade_brew_formulas
 	install_rust_tools
 	maybe_upgrade_rust
-	if [ "${platform}" = linux ]; then
+	case "${platform}" in
+	linux)
 		install_linux_packages
 		maybe_upgrade_apt_packages
 		install_docker_linux
 		install_keymapp
-	else
+		;;
+	mac)
 		remove_unwanted_brew_casks
 		install_mac_casks
 		maybe_upgrade_brew_casks
 		install_mac_app_store_apps
 		maybe_upgrade_mas_apps
-	fi
+		;;
+	esac
 
 }
 
@@ -462,9 +469,13 @@ setup_ssh() {
 	ensure_line_in_file 'Include ~/.ssh/config.d/*' "${HOME}/.ssh/config"
 	chmod 600 "${HOME}/.ssh/config"
 
-	if [ "${platform:-}" = mac ] && ! nc -z 127.0.0.1 22 2>/dev/null; then
-		run_root launchctl enable system/com.openssh.sshd
-	fi
+	case "${platform:-}" in
+	mac)
+		if ! nc -z 127.0.0.1 22 2>/dev/null; then
+			run_root launchctl enable system/com.openssh.sshd
+		fi
+		;;
+	esac
 }
 
 setup_bash() {
@@ -514,7 +525,16 @@ EOF
 	fi
 
 	log "Starting tailscale daemon..."
-	run_root brew services restart tailscale
+	case "${platform}" in
+	linux)
+		# Remove immutable flag if set so tailscale can manage /etc/resolv.conf.
+		run_root chattr -i /etc/resolv.conf 2>/dev/null || true
+		run_root systemctl enable --now tailscaled
+		;;
+	mac)
+		run_root brew services restart tailscale
+		;;
+	esac
 
 	if [ -z "${TAILSCALE_LOGIN_SERVER:-}" ] || [ -z "${TAILSCALE_AUTH_KEY:-}" ]; then
 		log "TAILSCALE_LOGIN_SERVER or TAILSCALE_AUTH_KEY not set; skipping 'tailscale up'"
@@ -627,12 +647,14 @@ setup_env_sh() {
 		run_root cp -- "${configs}/sh/env.sh" /etc/profile.d/env.sh
 		run_root chmod 644 /etc/profile.d/env.sh
 	fi
-	if [ "${platform}" = mac ]; then
+	case "${platform}" in
+	mac)
 		if ! cmp -s "${configs}/sh/profile" /etc/profile 2>/dev/null; then
 			log "Overwriting /etc/profile to add /etc/profile.d support..."
 			run_root cp -- "${configs}/sh/profile" /etc/profile
 		fi
-	fi
+		;;
+	esac
 }
 
 setup_keymapp() {
@@ -796,9 +818,11 @@ setup_all() {
 	setup_static_configs
 	setup_tmux
 	remove_legacy_files
-	if [ "${platform}" = linux ]; then
+	case "${platform}" in
+	linux)
 		setup_keymapp
-	fi
+		;;
+	esac
 }
 
 #### parse arguments ##########################################################
