@@ -527,8 +527,16 @@ EOF
 	log "Starting tailscale daemon..."
 	case "${platform}" in
 	linux)
-		# Remove immutable flag if set so tailscale can manage /etc/resolv.conf.
+		# systemd-resolved provides a stable stub at 127.0.0.53 from early boot.
+		# DHCP-provided DNS registers with it via NetworkManager, so public DNS
+		# works immediately; tailscale (--accept-dns=true) layers split DNS on top
+		# once it connects. This eliminates the post-boot race where tailscaled
+		# hadn't yet written 100.100.100.100 into resolv.conf.
+		run_root systemctl enable --now systemd-resolved
+		# Remove immutable flag if set, then replace resolv.conf with the stub
+		# symlink. The symlink is never overwritten by DHCP clients.
 		run_root chattr -i /etc/resolv.conf 2>/dev/null || true
+		run_root ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 		# Write a systemd unit pointing at the brew binary so we don't depend
 		# on a separately-installed system package.
 		_tailscaled=$(command -v tailscaled)
