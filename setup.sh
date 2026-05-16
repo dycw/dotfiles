@@ -422,6 +422,7 @@ install_all() {
 	if should_upgrade; then
 		should_upgrade=1
 		log "Upgrade timer expired; will refresh installed packages"
+		mark_upgraded
 	fi
 
 	ensure_brew
@@ -443,9 +444,6 @@ install_all() {
 		maybe_upgrade_mas_apps
 	fi
 
-	if [ "${should_upgrade}" -eq 1 ]; then
-		mark_upgraded
-	fi
 }
 
 #### setup ####################################################################
