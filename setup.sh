@@ -576,9 +576,9 @@ EOF
 }
 
 setup_dnsmasq() {
-	command -v dnsmasq >/dev/null 2>&1 || return 0
-
 	brew_prefix=$(brew --prefix)
+	[ -x "${brew_prefix}/bin/dnsmasq" ] || return 0
+
 	conf_dir="${brew_prefix}/etc/dnsmasq.d"
 	conf_file="${conf_dir}/qrt.conf"
 	main_conf="${brew_prefix}/etc/dnsmasq.conf"
@@ -599,20 +599,34 @@ setup_dnsmasq() {
 		config_changed=1
 	fi
 
-	[ "${config_changed}" -eq 1 ] && run_root brew services restart dnsmasq
-
 	case "${platform}" in
 	linux)
-		# Point resolv.conf at dnsmasq; make it immutable so DHCP clients
-		# don't overwrite it.
-		run_root chattr -i /etc/resolv.conf 2>/dev/null || true
-		if ! grep -qx 'nameserver 127\.0\.0\.1' /etc/resolv.conf 2>/dev/null; then
-			log "Setting /etc/resolv.conf to use dnsmasq..."
-			printf 'nameserver 127.0.0.1\n' | run_root tee /etc/resolv.conf >/dev/null
+		# brew services as root on Linux fails (brew refuses API downloads as
+		# root). Write a systemd unit pointing at the brew binary instead.
+		_dnsmasq="${brew_prefix}/bin/dnsmasq"
+		_svc=/etc/systemd/system/dnsmasq.service
+		if ! grep -qF "ExecStart=${_dnsmasq}" "${_svc}" 2>/dev/null; then
+			run_root sh -c "sed -e 's|DNSMASQ_BIN|${_dnsmasq}|g' \
+				-e 's|DNSMASQ_MAIN_CONF|${main_conf}|g' \
+				'${configs}/dnsmasq/dnsmasq.service' > '${_svc}'"
+			run_root systemctl daemon-reload
+			config_changed=1
 		fi
-		run_root chattr +i /etc/resolv.conf 2>/dev/null || true
+		run_root systemctl enable --now dnsmasq
+		[ "${config_changed}" -eq 1 ] && run_root systemctl restart dnsmasq
+		# Break any symlink (e.g. systemd-resolved's stub) before writing so
+		# we create a real file that systemd-resolved cannot regenerate.
+		# chattr +i prevents DHCP clients from overwriting it.
+		if [ -L /etc/resolv.conf ] || ! grep -qx 'nameserver 127\.0\.0\.1' /etc/resolv.conf 2>/dev/null; then
+			log "Setting /etc/resolv.conf to use dnsmasq..."
+			run_root chattr -i /etc/resolv.conf 2>/dev/null || true
+			run_root rm -f /etc/resolv.conf
+			printf 'nameserver 127.0.0.1\n' | run_root tee /etc/resolv.conf >/dev/null
+			run_root chattr +i /etc/resolv.conf 2>/dev/null || true
+		fi
 		;;
 	mac)
+		[ "${config_changed}" -eq 1 ] && run_root brew services restart dnsmasq
 		# Point every enabled network service at the local dnsmasq only if not
 		# already set — avoids sudo on re-runs. The first line of
 		# -listallnetworkservices is a header; disabled services start with '*'.
