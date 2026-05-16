@@ -12,6 +12,8 @@ self_dir=$(CDPATH='' cd -- "$(dirname -- "$self_path")" && pwd -P)
 #### utilities ################################################################
 
 # Prevent brew from consuming stdin when the script is run via 'curl | sh'.
+# Disable silent auto-update; we call 'brew update' explicitly where needed.
+export HOMEBREW_NO_AUTO_UPDATE=1
 brew() { command brew "$@" </dev/null; }
 
 log() {
@@ -149,6 +151,8 @@ ensure_brew() {
 	add_brew_to_path
 	command brew --version >/dev/null 2>&1 || fail "'brew' installation failed"
 	log "'brew' installed successfully"
+	log "Updating brew formula database..."
+	brew update
 }
 
 brew_formula_installed() {
@@ -242,6 +246,8 @@ parallel_install_brew_casks() {
 
 maybe_upgrade_brew_formulas() {
 	[ "${should_upgrade:-0}" -eq 1 ] || return 0
+	log "Updating brew formula database..."
+	brew update
 	log "Upgrading brew formulae..."
 	brew upgrade
 }
