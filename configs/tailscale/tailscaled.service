@@ -1,0 +1,14 @@
+[Unit]
+Description=Tailscale node agent
+Documentation=https://tailscale.com/kb/
+Wants=network-pre.target
+After=network-pre.target
+
+[Service]
+ExecStartPre=/bin/sh -c 'mkdir -p /run/tailscale'
+ExecStart=TAILSCALED_BIN --state=/var/lib/tailscale/tailscaled.state --socket=/run/tailscale/tailscaled.sock --port=41641
+ExecStopPost=TAILSCALED_BIN --cleanup
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

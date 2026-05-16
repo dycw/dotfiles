@@ -529,6 +529,15 @@ EOF
 	linux)
 		# Remove immutable flag if set so tailscale can manage /etc/resolv.conf.
 		run_root chattr -i /etc/resolv.conf 2>/dev/null || true
+		# Write a systemd unit pointing at the brew binary so we don't depend
+		# on a separately-installed system package.
+		_tailscaled=$(command -v tailscaled)
+		_svc=/etc/systemd/system/tailscaled.service
+		if ! grep -qF "ExecStart=${_tailscaled}" "${_svc}" 2>/dev/null; then
+			run_root sh -c "sed 's|TAILSCALED_BIN|${_tailscaled}|g' \
+				'${configs}/tailscale/tailscaled.service' > '${_svc}'"
+			run_root systemctl daemon-reload
+		fi
 		run_root systemctl enable --now tailscaled
 		;;
 	mac)
@@ -562,11 +571,14 @@ EOF
 
 	ts_hostname=$(hostname -s)
 	log "Bringing tailscale up as '${ts_hostname}'..."
-	# DNS is handled by the local dnsmasq (see setup_dnsmasq_mac); the
-	# brew tailscale formula on macOS cannot register a working scutil
-	# resolver anyway.
+	# Linux: headscale serves split DNS so tailscale manages /etc/resolv.conf.
+	# Mac: dnsmasq handles DNS locally; tailscale must not overwrite resolv.conf.
+	case "${platform}" in
+	linux) _accept_dns=true ;;
+	mac) _accept_dns=false ;;
+	esac
 	run_root tailscale up \
-		--accept-dns=false --accept-routes \
+		"--accept-dns=${_accept_dns}" --accept-routes \
 		--auth-key "${TAILSCALE_AUTH_KEY}" \
 		--hostname "${ts_hostname}" \
 		--login-server "${TAILSCALE_LOGIN_SERVER}" \
