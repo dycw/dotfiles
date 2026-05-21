@@ -14,9 +14,11 @@ curl -fsSL \
 
 ### macOS
 
-This setup includes common development tools and applications for macOS. Notable packages include:
+This setup includes common development tools and applications for macOS.  
+Notable packages include:
 
-- **tea**: Package manager for Gitea packages (installed automatically on macOS)
+- **tea**: Package manager for Gitea packages (installed automatically on
+  macOS)
 
 ### Linux
 
