@@ -287,8 +287,8 @@ install_common_brew_formulas() {
 		asciinema autoconf automake bat bash bash-completion@2 bottom coreutils delta \
 		direnv dnsmasq dust eza fd fzf gh git-delta iperf3 jq just libpq \
 		luacheck luarocks markdownlint-cli maturin npm pgcli postgresql@18 prek prettier redis \
-		restic ripgrep ruff sccache sd shellcheck shfmt starship tailscale \
-		taplo tmux topgrade uv vim watch yq zoxide
+		restic ripgrep ruff sccache sd shellcheck shfmt starship tailscale taplo \
+		tea tmux topgrade uv vim watch yq zoxide
 
 	case "${platform}" in
 	mac)
