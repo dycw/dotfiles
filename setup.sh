@@ -478,6 +478,7 @@ setup_bash() {
 	log "Setting up 'bash'..."
 	link_home "${configs}/bash/bashrc" .bashrc
 	link_home "${configs}/bash/bash_profile" .bash_profile
+	setup_bashrc_d
 	if command -v bash >/dev/null 2>&1; then
 		bash_path=$(command -v bash)
 		current_shell=''
@@ -496,6 +497,18 @@ setup_bash() {
 	if command -v brew >/dev/null 2>&1; then
 		brew completions link 2>/dev/null || true
 	fi
+}
+
+setup_bashrc_d() {
+	mkdir -p "${HOME}/.bashrc.d"
+	_src_dir="${configs}/bash/bashrc.d"
+	[ -d "${_src_dir}" ] || return 0
+	for _src in "${_src_dir}"/*.sh; do
+		[ -f "${_src}" ] || continue
+		_name=$(basename -- "${_src}")
+		link_direct "${_src}" "${HOME}/.bashrc.d/${_name}"
+	done
+	unset _src_dir _src _name
 }
 
 setup_tailscale() {
@@ -685,20 +698,11 @@ setup_macos_defaults() {
 }
 
 setup_env_sh() {
-	log "Setting up /etc/profile.d/env.sh..."
-	if ! cmp -s "${configs}/sh/env.sh" /etc/profile.d/env.sh 2>/dev/null; then
-		run_root mkdir -p /etc/profile.d
-		run_root cp -- "${configs}/sh/env.sh" /etc/profile.d/env.sh
-		run_root chmod 644 /etc/profile.d/env.sh
+	log "Setting up ~/.bashrc.d/env.sh..."
+	mkdir -p "${HOME}/.bashrc.d"
+	if ! cmp -s "${configs}/sh/env.sh" "${HOME}/.bashrc.d/env.sh" 2>/dev/null; then
+		cp -- "${configs}/sh/env.sh" "${HOME}/.bashrc.d/env.sh"
 	fi
-	case "${platform}" in
-	mac)
-		if ! cmp -s "${configs}/sh/profile" /etc/profile 2>/dev/null; then
-			log "Overwriting /etc/profile to add /etc/profile.d support..."
-			run_root cp -- "${configs}/sh/profile" /etc/profile
-		fi
-		;;
-	esac
 }
 
 setup_keymapp() {
