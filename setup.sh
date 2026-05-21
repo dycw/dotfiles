@@ -685,20 +685,11 @@ setup_macos_defaults() {
 }
 
 setup_env_sh() {
-	log "Setting up /etc/profile.d/env.sh..."
-	if ! cmp -s "${configs}/sh/env.sh" /etc/profile.d/env.sh 2>/dev/null; then
-		run_root mkdir -p /etc/profile.d
-		run_root cp -- "${configs}/sh/env.sh" /etc/profile.d/env.sh
-		run_root chmod 644 /etc/profile.d/env.sh
+	log "Setting up ~/.bashrc.d/env.sh..."
+	mkdir -p "${HOME}/.bashrc.d"
+	if ! cmp -s "${configs}/sh/env.sh" "${HOME}/.bashrc.d/env.sh" 2>/dev/null; then
+		cp -- "${configs}/sh/env.sh" "${HOME}/.bashrc.d/env.sh"
 	fi
-	case "${platform}" in
-	mac)
-		if ! cmp -s "${configs}/sh/profile" /etc/profile 2>/dev/null; then
-			log "Overwriting /etc/profile to add /etc/profile.d support..."
-			run_root cp -- "${configs}/sh/profile" /etc/profile
-		fi
-		;;
-	esac
 }
 
 setup_keymapp() {

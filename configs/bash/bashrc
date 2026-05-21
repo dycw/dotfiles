@@ -1387,6 +1387,11 @@ fi
 
 #### bashrc.d #################################################################
 
+# Source environment variables from ~/.bashrc.d/env.sh
+if [ -f "${HOME}/.bashrc.d/env.sh" ]; then
+    . "${HOME}/.bashrc.d/env.sh"
+fi
+
 mkdir -p "${HOME}/.bashrc.d"
 for _f in "${HOME}"/.bashrc.d/*.sh "${HOME}"/.bashrc.d/*.bash; do
     [ -r "${_f}" ] && [ -f "${_f}" ] && . "${_f}"

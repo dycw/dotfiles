@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# Installed to /etc/profile.d/env.sh; sourced by non-interactive and login shells.
+# Installed to ~/.bashrc.d/env.sh; sourced by interactive bash shells.
 
 #### xdg base directories #####################################################
 
