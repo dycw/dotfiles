@@ -46,7 +46,6 @@ cat >"${local_repo}/run-test.sh" <<EOF
 _SETUP_MAIN=0 . '${local_repo}/setup.sh'
 install_all() { printf 'install_all\n' >>'${local_log}'; }
 setup_all() { printf 'setup_all\n' >>'${local_log}'; }
-setup_env_sh() { printf 'setup_env_sh\n' >>'${local_log}'; }
 determine_platform() { platform=linux; }
 run_local_self
 EOF
@@ -56,7 +55,6 @@ PATH="${local_bin}:${PATH}" HOME="${local_home}" sh "${local_repo}/run-test.sh"
 
 assert_file_contains "git -C ${local_repo} fetch origin" "${local_log}"
 assert_file_contains "git -C ${local_repo} reset --hard origin/master" "${local_log}"
-assert_file_contains 'setup_env_sh' "${local_log}"
 assert_file_contains 'install_all' "${local_log}"
 assert_file_contains 'setup_all' "${local_log}"
 
@@ -99,7 +97,6 @@ cat >"${bootstrap_dir}/run-test.sh" <<EOF
 _SETUP_MAIN=0 . '${bootstrap_dir}/setup.sh'
 install_all() { printf 'install_all\n' >>'${bootstrap_log}'; }
 setup_all() { printf 'setup_all\n' >>'${bootstrap_log}'; }
-setup_env_sh() { printf 'setup_env_sh\n' >>'${bootstrap_log}'; }
 determine_platform() { platform=linux; }
 run_local_self
 EOF
@@ -108,6 +105,5 @@ chmod +x "${bootstrap_dir}/run-test.sh"
 PATH="${bootstrap_bin}:${PATH}" HOME="${bootstrap_home}" sh "${bootstrap_dir}/run-test.sh"
 
 assert_file_contains "git clone https://github.com/dycw/dotfiles.git ${bootstrap_home}/dotfiles" "${bootstrap_log}"
-assert_file_contains 'setup_env_sh' "${bootstrap_log}"
 assert_file_contains 'install_all' "${bootstrap_log}"
 assert_file_contains 'setup_all' "${bootstrap_log}"

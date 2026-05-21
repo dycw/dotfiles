@@ -478,6 +478,7 @@ setup_bash() {
 	log "Setting up 'bash'..."
 	link_home "${configs}/bash/bashrc" .bashrc
 	link_home "${configs}/bash/bash_profile" .bash_profile
+	setup_bash_profile_d
 	setup_bashrc_d
 	if command -v bash >/dev/null 2>&1; then
 		bash_path=$(command -v bash)
@@ -507,6 +508,18 @@ setup_bashrc_d() {
 		[ -f "${_src}" ] || continue
 		_name=$(basename -- "${_src}")
 		link_direct "${_src}" "${HOME}/.bashrc.d/${_name}"
+	done
+	unset _src_dir _src _name
+}
+
+setup_bash_profile_d() {
+	mkdir -p "${HOME}/.bash_profile.d"
+	_src_dir="${configs}/bash/profile.d"
+	[ -d "${_src_dir}" ] || return 0
+	for _src in "${_src_dir}"/*.sh; do
+		[ -f "${_src}" ] || continue
+		_name=$(basename -- "${_src}")
+		link_direct "${_src}" "${HOME}/.bash_profile.d/${_name}"
 	done
 	unset _src_dir _src _name
 }
@@ -695,14 +708,6 @@ setup_macos_defaults() {
 	defaults write com.apple.Safari ShowTabBar -bool true
 	killall Finder >/dev/null 2>&1 || true
 	killall SystemUIServer >/dev/null 2>&1 || true
-}
-
-setup_env_sh() {
-	log "Setting up ~/.bashrc.d/env.sh..."
-	mkdir -p "${HOME}/.bashrc.d"
-	if ! cmp -s "${configs}/sh/env.sh" "${HOME}/.bashrc.d/env.sh" 2>/dev/null; then
-		cp -- "${configs}/sh/env.sh" "${HOME}/.bashrc.d/env.sh"
-	fi
 }
 
 setup_keymapp() {
@@ -1035,7 +1040,6 @@ run_local_self() {
 
 	determine_platform
 	setup_hostname
-	setup_env_sh
 	install_all
 	setup_all
 }
