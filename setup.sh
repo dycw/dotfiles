@@ -78,6 +78,12 @@ determine_platform() {
 		;;
 	Darwin)
 		platform=mac
+		case "$(sysctl -n hw.model 2>/dev/null || true)" in
+		Mac14,3) machine=rh_mac_mini ;;
+		Mac14,12) machine=dw_mac_mini ;;
+		MacBook*) machine=dw_macbook_neo ;;
+		*) machine=unknown ;;
+		esac
 		;;
 	*)
 		fail "Unsupported platform '$(uname)'; exiting..."
@@ -323,9 +329,11 @@ ensure_brew_taps() {
 install_mac_casks() {
 	ensure_brew_taps
 	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt dropbox handy postico protonvpn redis-stack spotify telegram transmission vlc wezterm whatsapp zoom'
-	case "$(sysctl -n hw.model 2>/dev/null)" in
-	MacBook*) ;;
-	*) casks="${casks} docker" ;;
+	case "${machine:-}" in
+	dw_macbook_neo) ;;
+	*)
+		casks="${casks} docker"
+		;;
 	esac
 	# shellcheck disable=SC2086
 	parallel_install_brew_casks ${casks}
@@ -693,19 +701,25 @@ setup_dnsmasq() {
 
 setup_macos_defaults() {
 	[ "${platform}" = mac ] || return 0
-	[ -d "${HOME}/Dropbox" ] || return 0
-
-	dropbox="${HOME}/Dropbox"
-	temporary="${dropbox}/Temporary"
-	mkdir -p -- "${temporary}"
 
 	log "Setting up macOS defaults..."
-	defaults write com.apple.finder NewWindowTarget -string PfLo
-	defaults write com.apple.finder NewWindowTargetPath -string "file://${dropbox}/"
-	defaults write com.apple.screencapture location -string "${temporary}"
 	defaults write com.apple.Safari HomePage -string https://gitea.ai
-	defaults write com.apple.Safari DownloadsPath -string "${temporary}"
 	defaults write com.apple.Safari ShowTabBar -bool true
+	defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+	defaults write com.apple.menuextra.clock ShowSeconds -bool true
+	defaults write com.apple.controlcenter BatteryShowPercentage -bool true
+
+	if [ -d "${HOME}/Dropbox" ]; then
+		dropbox="${HOME}/Dropbox"
+		temporary="${dropbox}/Temporary"
+		mkdir -p -- "${temporary}"
+
+		defaults write com.apple.finder NewWindowTarget -string PfLo
+		defaults write com.apple.finder NewWindowTargetPath -string "file://${dropbox}/"
+		defaults write com.apple.screencapture location -string "${temporary}"
+		defaults write com.apple.Safari DownloadsPath -string "${temporary}"
+	fi
+
 	killall Finder >/dev/null 2>&1 || true
 	killall SystemUIServer >/dev/null 2>&1 || true
 }
@@ -822,15 +836,14 @@ remove_legacy_files() {
 
 setup_hostname() {
 	[ "${platform}" = mac ] || return 0
-	model=$(sysctl -n hw.model 2>/dev/null || true)
-	case "${model}" in
-	Mac14,3)
+	case "${machine:-}" in
+	rh_mac_mini)
 		new_hostname=RH-MacMini
 		;;
-	Mac14,12)
+	dw_mac_mini)
 		new_hostname=DW-MacMini
 		;;
-	MacBook*)
+	dw_macbook_neo)
 		new_hostname=DW-MacBookNeo
 		;;
 	*)
