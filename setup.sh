@@ -285,18 +285,26 @@ maybe_upgrade_rust() {
 #### packages #################################################################
 
 remove_unwanted_brew_formulas() {
-	parallel_uninstall_brew_formulas age sops rlwrap yoannfleurydev/gitweb/gitweb
+	parallel_uninstall_brew_formulas age dnsmasq sops rlwrap yoannfleurydev/gitweb/gitweb
+	case "${platform}" in
+	mac)
+		parallel_uninstall_brew_formulas tailscale
+		;;
+	esac
 }
 
 install_common_brew_formulas() {
 	parallel_install_brew_formulas \
 		asciinema autoconf automake bat bash bash-completion@2 bottom coreutils delta \
-		direnv dnsmasq dust eza fd fzf gh git-delta iperf3 jq just libpq \
+		direnv dust eza fd fzf gh git-delta iperf3 jq just libpq \
 		luacheck luarocks markdownlint-cli maturin npm pgcli postgresql@18 prek prettier redis \
-		restic ripgrep ruff sccache sd shellcheck shfmt starship tailscale taplo \
+		restic ripgrep ruff sccache sd shellcheck shfmt starship taplo \
 		tea tmux topgrade uv vim watch yq zoxide
 
 	case "${platform}" in
+	linux)
+		parallel_install_brew_formulas tailscale
+		;;
 	mac)
 		parallel_install_brew_formulas agg flock mas rename
 		;;
@@ -340,7 +348,8 @@ install_mac_casks() {
 }
 
 # 1Password for Safari (App Store id 1569813296)
-mac_app_store_apps='1569813296'
+# Tailscale (App Store id 1475387147)
+mac_app_store_apps='1569813296 1475387147'
 
 parallel_install_mas_apps() {
 	tmp=$(mktemp -d)
@@ -533,7 +542,13 @@ setup_bash_profile_d() {
 }
 
 setup_tailscale() {
-	command -v tailscale >/dev/null 2>&1 || return 0
+	_ts_bin=''
+	if command -v tailscale >/dev/null 2>&1; then
+		_ts_bin=tailscale
+	elif command -v Tailscale >/dev/null 2>&1; then
+		_ts_bin=Tailscale
+	fi
+	[ -n "${_ts_bin}" ] || return 0
 
 	template="${HOME}/.bashrc.d/tailscale.sh"
 	if [ ! -e "${template}" ]; then
@@ -569,7 +584,10 @@ EOF
 		run_root systemctl enable --now tailscaled
 		;;
 	mac)
-		run_root brew services restart tailscale
+		# Mac App Store version manages its own daemon via launchd.
+		if ! pgrep -f 'Tailscale' >/dev/null 2>&1; then
+			open -a Tailscale 2>/dev/null || true
+		fi
 		;;
 	esac
 
@@ -583,7 +601,7 @@ EOF
 	# status object as long as the local API is reachable.
 	log "Waiting for tailscaled to be ready..."
 	i=0
-	while ! run_root tailscale status --json >/dev/null 2>&1; do
+	while ! run_root "${_ts_bin}" status --json >/dev/null 2>&1; do
 		i=$((i + 1))
 		[ "${i}" -lt 30 ] || fail "tailscaled did not become ready after 30 seconds"
 		sleep 1
@@ -599,104 +617,13 @@ EOF
 
 	ts_hostname=$(hostname -s)
 	log "Bringing tailscale up as '${ts_hostname}'..."
-	# dnsmasq handles DNS on all platforms; tailscale must not overwrite resolv.conf.
-	run_root tailscale up \
-		--accept-dns=false --accept-routes \
+	run_root "${_ts_bin}" up \
+		--accept-dns --accept-routes \
 		--auth-key "${TAILSCALE_AUTH_KEY}" \
 		--hostname "${ts_hostname}" \
 		--login-server "${TAILSCALE_LOGIN_SERVER}" \
 		--reset \
 		--timeout=30s
-}
-
-setup_dnsmasq() {
-	brew_prefix=$(brew --prefix)
-	dnsmasq_prefix=$(brew --prefix dnsmasq 2>/dev/null) || return 0
-
-	conf_dir="${brew_prefix}/etc/dnsmasq.d"
-	conf_file="${conf_dir}/qrt.conf"
-	main_conf="${brew_prefix}/etc/dnsmasq.conf"
-
-	mkdir -p -- "${conf_dir}"
-
-	# Symlink so repo updates are reflected without re-running setup.sh.
-	# Only (re)create the symlink — and restart dnsmasq — when the target
-	# has changed; readlink needs no sudo.
-	config_changed=0
-	if [ "$(readlink "${conf_file}" 2>/dev/null)" != "${configs}/dnsmasq.conf" ]; then
-		log "Symlinking dnsmasq config '${conf_file}'..."
-		ln -sf "${configs}/dnsmasq.conf" "${conf_file}"
-		if ! grep -q '^conf-dir=' "${main_conf}" 2>/dev/null; then
-			printf 'conf-dir=%s/,*.conf\n' "${conf_dir}" |
-				run_root tee -a "${main_conf}" >/dev/null
-		fi
-		config_changed=1
-	fi
-
-	case "${platform}" in
-	linux)
-		# brew services as root on Linux fails (brew refuses API downloads as
-		# root). Write a systemd unit pointing at the brew binary instead.
-		_dnsmasq="${dnsmasq_prefix}/sbin/dnsmasq"
-		_svc=/etc/systemd/system/dnsmasq.service
-		if ! grep -qF "ExecStart=${_dnsmasq}" "${_svc}" 2>/dev/null; then
-			run_root sh -c "sed -e 's|DNSMASQ_BIN|${_dnsmasq}|g' \
-				-e 's|DNSMASQ_MAIN_CONF|${main_conf}|g' \
-				'${configs}/dnsmasq/dnsmasq.service' > '${_svc}'"
-			run_root systemctl daemon-reload
-			config_changed=1
-		fi
-		run_root systemctl enable --now dnsmasq
-		[ "${config_changed}" -eq 1 ] && run_root systemctl restart dnsmasq
-		# Break any symlink (e.g. systemd-resolved's stub) before writing so
-		# we create a real file that systemd-resolved cannot regenerate.
-		# chattr +i prevents DHCP clients from overwriting it.
-		if [ -L /etc/resolv.conf ] || ! grep -qx 'nameserver 127\.0\.0\.1' /etc/resolv.conf 2>/dev/null; then
-			log "Setting /etc/resolv.conf to use dnsmasq..."
-			run_root chattr -i /etc/resolv.conf 2>/dev/null || true
-			run_root rm -f /etc/resolv.conf
-			printf 'nameserver 127.0.0.1\n' | run_root tee /etc/resolv.conf >/dev/null
-			run_root chattr +i /etc/resolv.conf 2>/dev/null || true
-		fi
-		# systemd-resolved's NSS module (resolve) intercepts getaddrinfo before
-		# /etc/resolv.conf is consulted, returning NOTFOUND for internal suffixes
-		# instead of falling through to our dnsmasq. Remove it so the dns module
-		# (which reads resolv.conf → 127.0.0.1) is used instead.
-		if grep -q 'resolve' /etc/nsswitch.conf 2>/dev/null; then
-			log "Removing systemd-resolved NSS module from /etc/nsswitch.conf..."
-			run_root sed -i 's/ resolve \[!UNAVAIL=return\]//g' /etc/nsswitch.conf
-		fi
-		# Disable systemd-resolved entirely — dnsmasq replaces it. Stopping it
-		# prevents external tooling (e.g. gitea-runner) from restarting it and
-		# creating confusion, while our resolv.conf and nsswitch.conf hardening
-		# already protect against it if something does restart it.
-		run_root systemctl disable --now systemd-resolved 2>/dev/null || true
-		;;
-	mac)
-		[ "${config_changed}" -eq 1 ] && run_root brew services restart dnsmasq
-		# Point every enabled network service at the local dnsmasq only if not
-		# already set — avoids sudo on re-runs. The first line of
-		# -listallnetworkservices is a header; disabled services start with '*'.
-		dns_changed=0
-		tmp=$(mktemp)
-		networksetup -listallnetworkservices | tail -n +2 >"${tmp}"
-		while IFS= read -r svc; do
-			case "${svc}" in
-			\**) continue ;;
-			esac
-			if ! networksetup -getdnsservers "${svc}" 2>/dev/null | grep -qx '127\.0\.0\.1'; then
-				log "Pointing '${svc}' DNS at 127.0.0.1..."
-				run_root networksetup -setdnsservers "${svc}" 127.0.0.1
-				dns_changed=1
-			fi
-		done <"${tmp}"
-		rm -f -- "${tmp}"
-		if [ "${dns_changed}" -eq 1 ]; then
-			run_root dscacheutil -flushcache
-			run_root killall -HUP mDNSResponder
-		fi
-		;;
-	esac
 }
 
 setup_macos_defaults() {
@@ -829,9 +756,6 @@ remove_legacy_files() {
 		"${xdg_config_home}/pudb" \
 		"${xdg_config_home}/stayfocusd" \
 		"${xdg_config_home}/zsh"
-	rm -f -- \
-		/opt/homebrew/etc/dnsmasq.d/mac-derek.conf \
-		/opt/homebrew/etc/dnsmasq.d/dnsmasq.conf
 }
 
 setup_hostname() {
@@ -862,14 +786,6 @@ setup_hostname() {
 
 setup_brew_services() {
 	[ "${platform}" = mac ] || return 0
-	# dnsmasq binds port 53 (privileged). Skip if already running so re-runs
-	# don't prompt for sudo unnecessarily.
-	if ! pgrep -x dnsmasq >/dev/null 2>&1; then
-		run_root brew services start dnsmasq
-	fi
-	if ! pgrep -x tailscaled >/dev/null 2>&1; then
-		run_root brew services start tailscale
-	fi
 	brew services start postgresql@18
 	brew services start redis
 }
@@ -879,7 +795,6 @@ setup_all() {
 	setup_bash
 	setup_ssh
 	setup_brew_services
-	setup_dnsmasq
 	setup_macos_defaults
 	setup_tailscale
 	setup_static_configs

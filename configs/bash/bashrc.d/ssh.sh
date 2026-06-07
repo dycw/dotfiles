@@ -1,4 +1,7 @@
 # shellcheck shell=bash
+
+#### private helpers ###########################################################
+
 __ssh_keyscan() {
 	if [ "$#" -lt 1 ]; then
 		echo "'__ssh_keyscan' expected [1..] arguments HOST [PORT]; got $#" >&2
@@ -58,6 +61,8 @@ __ssh_strict() {
 	fi
 }
 
+#### public utilities ##########################################################
+
 add-known-host() {
 	if [ "$#" -eq 0 ]; then
 		echo "'add-known-host' expected [1..2] arguments HOST [PORT]; got $#" >&2
@@ -91,6 +96,8 @@ generate-ssh-key() {
 	ssh-keygen -C '' -f "${filename}" -P '' -t ed25519
 }
 
+#### ssh-auto ##################################################################
+
 ssh-auto() {
 	if [ "$#" -lt 1 ]; then
 		echo "'ssh-auto' expected [1..] arguments DESTINATION; got $#" >&2
@@ -117,9 +124,12 @@ ssh-auto() {
 	fi
 }
 
-ssh-dw-macmini() { ssh-auto derekwan@dw-macmini.tail.net; }
+#### shortcuts #################################################################
+
+ssh-agent-cluster() { ssh-auto nonroot@agent-cluster.qrt; }
 ssh-dw-macbookneo() { ssh-auto derekwan@dw-macbookneo.tail.net; }
+ssh-dw-macmini() { ssh-auto derekwan@dw-macmini.tail.net; }
 ssh-dw-swift() { ssh-auto derek@dw-swift.tail.net; }
 ssh-gitea() { ssh-auto nonroot@gitea-server.ai; }
-ssh-rh-macmini() { ssh-auto derekwan@rh-macmini.tail.net; }
 ssh-rh-macbook() { ssh-auto derekwan@rh-macbook.tail.net; }
+ssh-rh-macmini() { ssh-auto derekwan@rh-macmini.tail.net; }
