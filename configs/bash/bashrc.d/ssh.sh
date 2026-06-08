@@ -131,5 +131,6 @@ ssh-dw-macbookneo() { ssh-auto derekwan@dw-macbookneo.tail.net; }
 ssh-dw-macmini() { ssh-auto derekwan@dw-macmini.tail.net; }
 ssh-dw-swift() { ssh-auto derek@dw-swift.tail.net; }
 ssh-gitea() { ssh-auto nonroot@gitea-server.ai; }
+ssh-jupyter() { ssh-auto nonroot@jupyter.internal; }
 ssh-rh-macbook() { ssh-auto derekwan@rh-macbook.tail.net; }
 ssh-rh-macmini() { ssh-auto derekwan@rh-macmini.tail.net; }
