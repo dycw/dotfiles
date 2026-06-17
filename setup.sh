@@ -626,12 +626,12 @@ EOF
 		--timeout=30s
 }
 
-setup_macos_defaults() {
-	[ "${platform}" = mac ] || return 0
-
-	log "Setting up macOS defaults..."
+setup_macos_safari_defaults() {
 	defaults write com.apple.Safari HomePage -string https://gitea.ai
 	defaults write com.apple.Safari ShowTabBar -bool true
+}
+
+setup_macos_keyboard_defaults() {
 	defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 	defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 	defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
@@ -641,19 +641,34 @@ setup_macos_defaults() {
 	defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 	defaults write NSGlobalDomain NSAutomaticTextCompletionEnabled -bool false
 	defaults write NSGlobalDomain NSAutomaticTextReplacementEnabled -bool false
+}
+
+setup_macos_menu_bar_defaults() {
 	defaults write com.apple.menuextra.clock ShowSeconds -bool true
 	defaults write com.apple.controlcenter BatteryShowPercentage -bool true
+}
 
-	if [ -d "${HOME}/Dropbox" ]; then
-		dropbox="${HOME}/Dropbox"
-		temporary="${dropbox}/Temporary"
-		mkdir -p -- "${temporary}"
+setup_macos_dropbox_defaults() {
+	[ -d "${HOME}/Dropbox" ] || return 0
 
-		defaults write com.apple.finder NewWindowTarget -string PfLo
-		defaults write com.apple.finder NewWindowTargetPath -string "file://${dropbox}/"
-		defaults write com.apple.screencapture location -string "${temporary}"
-		defaults write com.apple.Safari DownloadsPath -string "${temporary}"
-	fi
+	dropbox="${HOME}/Dropbox"
+	temporary="${dropbox}/Temporary"
+	mkdir -p -- "${temporary}"
+
+	defaults write com.apple.finder NewWindowTarget -string PfLo
+	defaults write com.apple.finder NewWindowTargetPath -string "file://${dropbox}/"
+	defaults write com.apple.screencapture location -string "${temporary}"
+	defaults write com.apple.Safari DownloadsPath -string "${temporary}"
+}
+
+setup_macos_defaults() {
+	[ "${platform}" = mac ] || return 0
+
+	log "Setting up macOS defaults..."
+	setup_macos_safari_defaults
+	setup_macos_keyboard_defaults
+	setup_macos_menu_bar_defaults
+	setup_macos_dropbox_defaults
 
 	killall Finder >/dev/null 2>&1 || true
 	killall SystemUIServer >/dev/null 2>&1 || true
