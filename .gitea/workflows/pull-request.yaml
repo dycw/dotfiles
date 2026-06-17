@@ -16,7 +16,7 @@ jobs:
   bump-version:
     container:
       image: catthehacker/ubuntu:act-latest
-    runs-on: linux
+    runs-on: light
     timeout-minutes: 10
     steps:
       - uses: https://gitea.ai/actions/checkout@v6.0.2
@@ -27,7 +27,7 @@ jobs:
   markdownlint:
     container:
       image: catthehacker/ubuntu:act-latest
-    runs-on: linux
+    runs-on: light
     timeout-minutes: 10
     steps:
       - uses: https://gitea.ai/actions/checkout@v6.0.2
@@ -36,7 +36,7 @@ jobs:
   prettier:
     container:
       image: catthehacker/ubuntu:act-latest
-    runs-on: linux
+    runs-on: light
     timeout-minutes: 10
     steps:
       - uses: https://gitea.ai/actions/checkout@v6.0.2
@@ -45,7 +45,7 @@ jobs:
   shellcheck:
     container:
       image: catthehacker/ubuntu:act-latest
-    runs-on: linux
+    runs-on: light
     timeout-minutes: 10
     steps:
       - uses: https://gitea.ai/actions/checkout@v6.0.2
@@ -54,7 +54,7 @@ jobs:
   shfmt:
     container:
       image: catthehacker/ubuntu:act-latest
-    runs-on: linux
+    runs-on: light
     timeout-minutes: 10
     steps:
       - uses: https://gitea.ai/actions/checkout@v6.0.2
@@ -63,7 +63,7 @@ jobs:
   taplo:
     container:
       image: catthehacker/ubuntu:act-latest
-    runs-on: linux
+    runs-on: light
     timeout-minutes: 10
     steps:
       - uses: https://gitea.ai/actions/checkout@v6.0.2
@@ -72,7 +72,7 @@ jobs:
   tests:
     container:
       image: catthehacker/ubuntu:act-latest
-    runs-on: linux
+    runs-on: light
     timeout-minutes: 10
     steps:
       - uses: https://gitea.ai/actions/checkout@v6.0.2

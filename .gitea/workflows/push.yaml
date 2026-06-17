@@ -16,7 +16,7 @@ jobs:
   git-tag:
     container:
       image: catthehacker/ubuntu:act-latest
-    runs-on: linux
+    runs-on: light
     timeout-minutes: 10
     steps:
       - uses: https://gitea.ai/actions/checkout@v6.0.2
