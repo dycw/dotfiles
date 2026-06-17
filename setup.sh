@@ -633,6 +633,14 @@ setup_macos_defaults() {
 	defaults write com.apple.Safari HomePage -string https://gitea.ai
 	defaults write com.apple.Safari ShowTabBar -bool true
 	defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+	defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+	defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+	defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+	defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
+	defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+	defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+	defaults write NSGlobalDomain NSAutomaticTextCompletionEnabled -bool false
+	defaults write NSGlobalDomain NSAutomaticTextReplacementEnabled -bool false
 	defaults write com.apple.menuextra.clock ShowSeconds -bool true
 	defaults write com.apple.controlcenter BatteryShowPercentage -bool true
 
