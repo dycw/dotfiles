@@ -306,7 +306,7 @@ install_common_brew_formulas() {
 		parallel_install_brew_formulas tailscale
 		;;
 	mac)
-		parallel_install_brew_formulas agg flock mas rename
+		parallel_install_brew_formulas agg flock mas rename wakeonlan
 		;;
 	esac
 }
