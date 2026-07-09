@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=sh
 __pyright() {
 	if command -v pyright >/dev/null 2>&1; then
 		pyright .

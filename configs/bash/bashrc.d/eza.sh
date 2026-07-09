@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=sh
 l() {
 	if command -v eza >/dev/null 2>&1; then
 		la --git-ignore "$@"

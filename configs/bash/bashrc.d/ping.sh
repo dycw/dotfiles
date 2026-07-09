@@ -1,6 +1,6 @@
-# shellcheck shell=bash
-ping-ts() {
-	local count='' interval=2 deadline=2 destination=''
+# shellcheck shell=sh
+ping_ts() {
+	count='' interval=2 deadline=2 destination=''
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
 		-c | --count)
@@ -25,9 +25,11 @@ ping-ts() {
 		echo "'ping-ts' expected [1..) arguments ... DESTINATION; got 0" >&2
 		return 1
 	fi
-	local args=("-i" "${interval}" "-W" "${deadline}")
-	[ -n "${count}" ] && args=("-c" "${count}" "${args[@]}")
-	ping -O "${args[@]}" "${destination}" | while IFS= read -r pong; do
+	if [ -n "${count}" ]; then
+		ping -O -c "${count}" -i "${interval}" -W "${deadline}" "${destination}"
+	else
+		ping -O -i "${interval}" -W "${deadline}" "${destination}"
+	fi | while IFS= read -r pong; do
 		printf '[%s/%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "${destination}" "${pong}"
 	done
 }

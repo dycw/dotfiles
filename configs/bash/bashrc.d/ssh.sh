@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=sh
 
 #### private helpers ###########################################################
 
@@ -7,9 +7,9 @@ __ssh_keyscan() {
 		echo "'__ssh_keyscan' expected [1..] arguments HOST [PORT]; got $#" >&2
 		return 1
 	fi
-	local host="$1"
+	host="$1"
 	shift
-	local port='' args="-t ed25519"
+	port='' args="-t ed25519"
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
 		-p)
@@ -20,7 +20,6 @@ __ssh_keyscan() {
 		esac
 	done
 	[ -n "${port}" ] && args="${args} -p ${port}"
-	local tmp
 	tmp=$(mktemp)
 	# shellcheck disable=SC2086
 	if ssh-keyscan ${args} -q "${host}" >>~/.ssh/known_hosts 2>"${tmp}"; then
@@ -39,7 +38,7 @@ __ssh_keyscan() {
 }
 
 __ssh_strict() {
-	local root=0 destination=''
+	root=0 destination=''
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
 		-r | --root)
@@ -63,12 +62,12 @@ __ssh_strict() {
 
 #### public utilities ##########################################################
 
-add-known-host() {
+add_known_host() {
 	if [ "$#" -eq 0 ]; then
 		echo "'add-known-host' expected [1..2] arguments HOST [PORT]; got $#" >&2
 		return 1
 	fi
-	local host="$1"
+	host="$1"
 	if [ "$#" -ge 2 ]; then
 		ssh-keygen -R "[${host}]:$2"
 		__ssh_keyscan "${host}" -p "$2"
@@ -78,12 +77,12 @@ add-known-host() {
 	fi
 }
 
-edit-authorized-keys() { "${EDITOR}" "${HOME}/.ssh/authorized_keys"; }
-edit-known-hosts() { "${EDITOR}" "${HOME}/.ssh/known_hosts"; }
-edit-ssh-config() { "${EDITOR}" "${HOME}/.ssh/config"; }
+edit_authorized_keys() { "${EDITOR}" "${HOME}/.ssh/authorized_keys"; }
+edit_known_hosts() { "${EDITOR}" "${HOME}/.ssh/known_hosts"; }
+edit_ssh_config() { "${EDITOR}" "${HOME}/.ssh/config"; }
 
-generate-ssh-key() {
-	local filename="id_ed25519"
+generate_ssh_key() {
+	filename="id_ed25519"
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
 		-f | --filename)
@@ -96,14 +95,14 @@ generate-ssh-key() {
 	ssh-keygen -C '' -f "${filename}" -P '' -t ed25519
 }
 
-#### ssh-auto ##################################################################
+#### ssh_auto ##################################################################
 
-ssh-auto() {
+ssh_auto() {
 	if [ "$#" -lt 1 ]; then
 		echo "'ssh-auto' expected [1..] arguments DESTINATION; got $#" >&2
 		return 1
 	fi
-	local root='' destination=''
+	root='' destination=''
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
 		-r | --root)
@@ -117,7 +116,7 @@ ssh-auto() {
 		esac
 	done
 	if ! __ssh_strict ${root:+"${root}"} "${destination}"; then
-		local host="${destination##*@}"
+		host="${destination##*@}"
 		ssh-keygen -R "${host}"
 		__ssh_keyscan "${host}"
 		__ssh_strict ${root:+"${root}"} "${destination}"
@@ -126,11 +125,11 @@ ssh-auto() {
 
 #### shortcuts #################################################################
 
-ssh-agent-cluster() { ssh-auto nonroot@agent-cluster.qrt; }
-ssh-dw-macbookneo() { ssh-auto derekwan@dw-macbookneo.tail.net; }
-ssh-dw-macmini() { ssh-auto derekwan@dw-macmini.tail.net; }
-ssh-dw-swift() { ssh-auto derek@dw-swift.tail.net; }
-ssh-gitea() { ssh-auto nonroot@gitea-server.ai; }
-ssh-jupyter() { ssh-auto nonroot@jupyter.internal; }
-ssh-rh-macbook() { ssh-auto derekwan@rh-macbook.tail.net; }
-ssh-rh-macmini() { ssh-auto derekwan@rh-macmini.tail.net; }
+ssh_agent_cluster() { ssh_auto nonroot@agent-cluster.qrt; }
+ssh_dw_macbookneo() { ssh_auto derekwan@dw-macbookneo.tail.net; }
+ssh_dw_macmini() { ssh_auto derekwan@dw-macmini.tail.net; }
+ssh_dw_swift() { ssh_auto derek@dw-swift.tail.net; }
+ssh_gitea() { ssh_auto nonroot@gitea-server.ai; }
+ssh_jupyter() { ssh_auto nonroot@jupyter.internal; }
+ssh_rh_macbook() { ssh_auto derekwan@rh-macbook.tail.net; }
+ssh_rh_macmini() { ssh_auto derekwan@rh-macmini.tail.net; }

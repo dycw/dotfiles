@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=sh
 if command -v bat >/dev/null 2>&1 || command -v batcat >/dev/null 2>&1; then
 	bat() {
 		if command -v bat >/dev/null 2>&1; then

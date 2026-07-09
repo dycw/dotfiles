@@ -1,7 +1,7 @@
-# shellcheck shell=bash disable=SC2164
-..() { cd ..; }
-...() { cd ../..; }
-....() { cd ../../..; }
+# shellcheck shell=sh disable=SC2164
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
 cdconfig() { cd "${XDG_CONFIG_HOME:-${HOME}/.config}"; }
 cddb() { cd "${HOME}/Dropbox"; }
 cddbt() { cd "${HOME}/Dropbox/Temporary"; }

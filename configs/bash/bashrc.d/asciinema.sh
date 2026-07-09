@@ -1,7 +1,6 @@
-# shellcheck shell=bash
+# shellcheck shell=sh
 if command -v asciinema >/dev/null 2>&1; then
 	asciinema_record() {
-		local dir now path_tmp
 		if [ -d "${HOME}/Dropbox/Screenshots" ]; then
 			dir="${HOME}/Dropbox/Screenshots"
 		else

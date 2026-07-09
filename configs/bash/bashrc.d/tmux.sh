@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=sh
 if command -v tmux >/dev/null 2>&1; then
 	ta() {
 		if [ "$#" -gt 1 ]; then

@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=sh
 rm() {
 	for _arg in "$@"; do
 		if [ "${_arg}" = ".git" ]; then

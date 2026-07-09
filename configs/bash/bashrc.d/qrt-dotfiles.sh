@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=sh
 for _base in "${HOME}/work" "${HOME}/work/derek"; do
 	_dotfiles="${_base}/qrt-dotfiles"
 	if [ ! -d "${_dotfiles}" ]; then continue; fi

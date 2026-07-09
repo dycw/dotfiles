@@ -1,2 +1,2 @@
-# shellcheck shell=bash
+# shellcheck shell=sh
 tf() { tail -F --verbose "$@"; }

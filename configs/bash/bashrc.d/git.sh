@@ -1,19 +1,19 @@
-# shellcheck shell=bash disable=SC2015,SC2016,SC2164
+# shellcheck shell=sh disable=SC2015,SC2016,SC2164
 if command -v git >/dev/null 2>&1; then
 	# Auto-generate g<alias> wrappers from the dotfiles git config directly so
 	# they work even before update-dotfiles has wired up the global [include].
 	_git_cfg=${PATH_DOTFILES:+${PATH_DOTFILES}/configs/git/config}
 	[ -f "${_git_cfg}" ] || _git_cfg=/dev/null
-	while IFS= read -r _git_line; do
+	git config --file "${_git_cfg:-/dev/null}" --list 2>/dev/null | grep '^alias\.' | while IFS= read -r _git_line; do
 		_git_alias=${_git_line%%=*}
 		_git_alias=${_git_alias#alias.}
 		eval "g${_git_alias}() { git -c include.path=\"${_git_cfg}\" ${_git_alias} \"\$@\"; }"
-	done < <(git config --file "${_git_cfg:-/dev/null}" --list 2>/dev/null | grep '^alias\.')
+	done
 	unset _git_line _git_alias _git_cfg
 
 	# --- edit config ---
 
-	edit-git-shell() { "${EDITOR}" "${PATH_DOTFILES}/configs/bash/bashrc"; }
+	edit_git_shell() { "${EDITOR}" "${PATH_DOTFILES}/configs/bash/bashrc"; }
 
 	# --- add (override auto-generated: only --all when no args) ---
 
@@ -37,7 +37,7 @@ if command -v git >/dev/null 2>&1; then
 	gl() {
 		if [ "$#" -eq 0 ]; then
 			git log-default -n 20
-		elif [[ "$1" =~ ^[0-9]+$ ]] && [ "$1" -ge 1 ]; then
+		elif case "$1" in *[!0-9]* | "") false ;; *) [ "$1" -ge 1 ] ;; esac then
 			git log-default -n "$1"
 		fi
 	}
@@ -69,7 +69,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 
 	__git_push() {
-		local force='' nv='' web='' exit_after=''
+		force='' nv='' web='' exit_after=''
 		while [ "$#" -gt 0 ]; do
 			case "$1" in
 			--force)
@@ -91,21 +91,25 @@ if command -v git >/dev/null 2>&1; then
 			*) break ;;
 			esac
 		done
-		local branch
+		branch
 		branch=$(git current-branch) || return $?
-		local args
-		args=()
-		[ -n "$force" ] && args+=(--force)
-		args+=(--set-upstream origin "$branch")
-		[ -n "$nv" ] && args+=(--no-verify)
-		git push "${args[@]}" || return $?
+		args
+		if [ -n "$force" ] && [ -n "$nv" ]; then
+			git push --force --set-upstream origin "$branch" --no-verify || return $?
+		elif [ -n "$force" ]; then
+			git push --force --set-upstream origin "$branch" || return $?
+		elif [ -n "$nv" ]; then
+			git push --set-upstream origin "$branch" --no-verify || return $?
+		else
+			git push --set-upstream origin "$branch" || return $?
+		fi
 		[ -n "$web" ] && { __git_view || return $?; }
 		[ -n "$exit_after" ] && exit
 	}
 
 	__git_commit_push() {
 		git is-clean && return 0
-		local force='' nv='' web='' exit_after=''
+		force='' nv='' web='' exit_after=''
 		while [ "$#" -gt 0 ]; do
 			case "$1" in
 			--force)
@@ -127,22 +131,24 @@ if command -v git >/dev/null 2>&1; then
 			*) break ;;
 			esac
 		done
-		local ca
-		ca=()
-		[ -n "$nv" ] && ca+=(--no-verify)
-		git commit --message="$(__auto_msg)" "${ca[@]}" || return $?
-		local pa
-		pa=()
-		[ -n "$force" ] && pa+=(--force)
-		[ -n "$nv" ] && pa+=(--no-verify)
-		[ -n "$web" ] && pa+=(--web)
-		[ -n "$exit_after" ] && pa+=(--exit)
-		__git_push "${pa[@]}"
+		ca
+		if [ -n "$nv" ]; then
+			git commit --message="$(__auto_msg)" --no-verify || return $?
+		else
+			git commit --message="$(__auto_msg)" || return $?
+		fi
+		pa
+		set --
+		[ -n "$force" ] && set -- "$@" --force
+		[ -n "$nv" ] && set -- "$@" --no-verify
+		[ -n "$web" ] && set -- "$@" --web
+		[ -n "$exit_after" ] && set -- "$@" --exit
+		__git_push "$@"
 	}
 
 	# retries up to 3 times to handle hook-modified files
 	__git_commit_until_push() {
-		local force='' nv='' web='' exit_after=''
+		force='' nv='' web='' exit_after=''
 		while [ "$#" -gt 0 ]; do
 			case "$1" in
 			--force)
@@ -164,31 +170,31 @@ if command -v git >/dev/null 2>&1; then
 			*) break ;;
 			esac
 		done
-		local ca
-		ca=()
-		[ -n "$nv" ] && ca+=(--no-verify)
-		local proceed=0 i
+		ca
+		commit_args=
+		[ -n "$nv" ] && commit_args=--no-verify
+		proceed=0 i
 		for i in 1 2 3; do
 			if [ "$proceed" -eq 0 ]; then
 				git add --all
-				__git_commit_push "${ca[@]}" && git is-clean && proceed=1 || true
+				__git_commit_push ${commit_args:+"${commit_args}"} && git is-clean && proceed=1 || true
 			fi
 		done
 		if [ "$proceed" -eq 0 ]; then
 			echo "'__git_commit_until_push' failed after $i attempts" >&2
 			return 1
 		fi
-		local pa
-		pa=()
-		[ -n "$force" ] && pa+=(--force)
-		[ -n "$nv" ] && pa+=(--no-verify)
-		[ -n "$web" ] && pa+=(--web)
-		[ -n "$exit_after" ] && pa+=(--exit)
-		__git_push "${pa[@]}"
+		pa
+		set --
+		[ -n "$force" ] && set -- "$@" --force
+		[ -n "$nv" ] && set -- "$@" --no-verify
+		[ -n "$web" ] && set -- "$@" --web
+		[ -n "$exit_after" ] && set -- "$@" --exit
+		__git_push "$@"
 	}
 
 	__git_checkout_open() {
-		local title='' num='' part=''
+		title='' num='' part=''
 		while [ "$#" -gt 0 ]; do
 			case "$1" in
 			--title=*)
@@ -215,7 +221,7 @@ if command -v git >/dev/null 2>&1; then
 			esac
 		done
 		git fetch-default || return $?
-		local branch
+		branch
 		if [ -z "$title" ] && [ -z "$num" ]; then
 			branch=dev
 		elif [ -n "$title" ] && [ -z "$num" ]; then
@@ -228,9 +234,9 @@ if command -v git >/dev/null 2>&1; then
 		git checkout -b "$branch" "$(git default-remote-branch)" || return $?
 		git commit --allow-empty --message="$(__auto_msg)" --no-verify || return $?
 		__git_push --no-verify || return $?
-		local pr_title
+		pr_title
 		pr_title=${title:-"$(__auto_msg)"}
-		local pr_body='.'
+		pr_body='.'
 		if [ -n "$num" ]; then
 			pr_body="${part:+Part of}${part:-Closes} $num"
 		fi
@@ -242,7 +248,7 @@ if command -v git >/dev/null 2>&1; then
 			echo "'__git_checkout_close' expected [1..) arguments TARGET; got $#" >&2
 			return 1
 		fi
-		local target='' delete='' exit_after=''
+		target='' delete='' exit_after=''
 		while [ "$#" -gt 0 ]; do
 			case "$1" in
 			--delete)
@@ -259,7 +265,7 @@ if command -v git >/dev/null 2>&1; then
 				;;
 			esac
 		done
-		local original
+		original
 		original=$(git current-branch) || return $?
 		git checkout "$target" || return $?
 		git pull-default || return $?
@@ -268,7 +274,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 
 	__git_create() {
-		local title='' body='.'
+		title='' body='.'
 		while [ "$#" -gt 0 ]; do
 			case "$1" in
 			--title=*)
@@ -304,7 +310,7 @@ if command -v git >/dev/null 2>&1; then
 	}
 
 	__git_merge() {
-		local exit_after=''
+		exit_after=''
 		while [ "$#" -gt 0 ]; do
 			case "$1" in --exit)
 				exit_after=1
@@ -312,12 +318,12 @@ if command -v git >/dev/null 2>&1; then
 				;;
 			*) shift ;; esac
 		done
-		local branch
+		branch
 		branch=$(git current-branch) || return $?
 		if (__remote_is gitea || __remote_is ts.net) && command -v tea >/dev/null 2>&1; then
-			local repo
+			repo
 			repo=$(git repo-name) || return $?
-			local start i=0 elapsed
+			start i=0 elapsed
 			start=$(date +%s)
 			while tea pulls ls --fields head --output simple 2>/dev/null | grep -qF "${branch}"; do
 				tea pull merge --style squash >/dev/null 2>&1 || true
@@ -335,19 +341,21 @@ if command -v git >/dev/null 2>&1; then
 			echo "'__git_merge': no PR tool (tea/gh) available" >&2
 			return 1
 		fi
-		local def_branch
+		def_branch
 		def_branch=$(git default-local-branch) || return $?
-		local ca
-		ca=(--delete)
-		[ -n "$exit_after" ] && ca+=(--exit)
-		__git_checkout_close "$def_branch" "${ca[@]}"
+		ca
+		if [ -n "$exit_after" ]; then
+			__git_checkout_close "$def_branch" --delete --exit
+		else
+			__git_checkout_close "$def_branch" --delete
+		fi
 	}
 
 	# orchestrate: optionally branch+PR, add all, commit+push loop, optionally merge
 	__git_all() {
-		local title='' nv='' force='' web='' exit_after='' merge=''
-		local remaining
-		remaining=()
+		title='' nv='' force='' web='' exit_after='' merge=''
+		remaining
+		remaining=
 		while [ "$#" -gt 0 ]; do
 			case "$1" in
 			--title=*)
@@ -379,7 +387,7 @@ if command -v git >/dev/null 2>&1; then
 				shift
 				;;
 			*)
-				remaining+=("$1")
+				remaining=${remaining:+${remaining} }$1
 				shift
 				;;
 			esac
@@ -387,19 +395,22 @@ if command -v git >/dev/null 2>&1; then
 		if [ -n "$title" ]; then
 			__git_checkout_open --title="$title" || return $?
 		fi
-		git add --all "${remaining[@]}"
-		local cp
-		cp=()
-		[ -n "$nv" ] && cp+=(--no-verify)
-		[ -n "$force" ] && cp+=(--force)
-		[ -n "$web" ] && cp+=(--web)
-		[ -z "$merge" ] && [ -n "$exit_after" ] && cp+=(--exit)
-		__git_commit_until_push "${cp[@]}" || return $?
+		# shellcheck disable=SC2086
+		git add --all ${remaining}
+		cp
+		set --
+		[ -n "$nv" ] && set -- "$@" --no-verify
+		[ -n "$force" ] && set -- "$@" --force
+		[ -n "$web" ] && set -- "$@" --web
+		[ -z "$merge" ] && [ -n "$exit_after" ] && set -- "$@" --exit
+		__git_commit_until_push "$@" || return $?
 		if [ -n "$merge" ]; then
-			local ma
-			ma=()
-			[ -n "$exit_after" ] && ma+=(--exit)
-			__git_merge "${ma[@]}"
+			ma
+			if [ -n "$exit_after" ]; then
+				__git_merge --exit
+			else
+				__git_merge
+			fi
 		fi
 	}
 
@@ -407,7 +418,7 @@ if command -v git >/dev/null 2>&1; then
 
 	cdr() { cd "$(git repo-root)"; }
 
-	yield-git-repos() {
+	yield_git_repos() {
 		for _dir in */; do
 			[ -d "${_dir}/.git" ] && realpath -- "${_dir}"
 		done
@@ -456,7 +467,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	gcbr() {
-		local branch
+		branch
 		if [ "$#" -eq 0 ]; then
 			branch=$(git branch --color=never --remotes |
 				awk '!/->/{ print $1 }' |
@@ -468,7 +479,7 @@ if command -v git >/dev/null 2>&1; then
 		git checkout -b "${branch}" -t "origin/${branch}"
 	}
 	gco() {
-		local branch
+		branch
 		if [ "$#" -eq 0 ]; then
 			branch=$(git branch --format='%(refname:short)' | fzf)
 		else
@@ -483,10 +494,10 @@ if command -v git >/dev/null 2>&1; then
 			echo "'gcl' expected [1..2] arguments REPO [DIR]; got $#" >&2
 			return 1
 		fi
-		local repo="$1" dir
+		repo="$1" dir
 		dir=${2:-$(basename "${1%.git}")}
 		git clone --recurse-submodules "$repo" "$dir" || return $?
-		local orig
+		orig
 		orig=$(pwd)
 		cd "$dir" || return $?
 		command -v prek >/dev/null 2>&1 && prek install || true
@@ -503,7 +514,9 @@ if command -v git >/dev/null 2>&1; then
 		else
 			if git is-valid-ref "$1" 2>/dev/null; then
 				git fetch-default || return $?
-				git checkout "$1" -- "${@:2}"
+				ref=$1
+				shift
+				git checkout "${ref}" -- "$@"
 			else
 				git checkout -- "$@"
 			fi
@@ -513,26 +526,23 @@ if command -v git >/dev/null 2>&1; then
 	# checkout file(s) from the default remote branch
 	gcfm() {
 		git fetch-default || return $?
-		local branch
+		branch
 		branch=$(git default-remote-branch) || return $?
 		git checkout "$branch" -- "$@"
 	}
 
 	# create branch + empty commit + push + PR; args: [TITLE [NUM [PART]]]
 	gcb() {
-		local args
-		args=()
-		if [ "$#" -eq 1 ]; then
-			args+=(--title "$1")
-		elif [ "$#" -eq 2 ]; then
-			args+=(--title "$1" --num "$2")
-		elif [ "$#" -eq 3 ]; then
-			args+=(--title "$1" --num "$2" --part)
-		elif [ "$#" -gt 3 ]; then
+		case "$#" in
+		0) __git_checkout_open ;;
+		1) __git_checkout_open --title "$1" ;;
+		2) __git_checkout_open --title "$1" --num "$2" ;;
+		3) __git_checkout_open --title "$1" --num "$2" --part ;;
+		*)
 			echo "'gcb' expected [0..3] arguments TITLE NUM PART; got $#" >&2
 			return 1
-		fi
-		__git_checkout_open "${args[@]}"
+			;;
+		esac
 	}
 
 	# --- tagging ---
@@ -604,140 +614,180 @@ if command -v git >/dev/null 2>&1; then
 			echo "'ggc' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" "$@"
 	}
 	ggcn() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcn' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --no-verify "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --no-verify "$@"
 	}
 	ggcf() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcf' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --force "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --force "$@"
 	}
 	ggcnf() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnf' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --no-verify --force "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --no-verify --force "$@"
 	}
 	ggcw() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcw' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --web "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --web "$@"
 	}
 	ggcnw() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnw' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --no-verify --web "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --no-verify --web "$@"
 	}
 	ggcfw() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcfw' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --force --web "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --force --web "$@"
 	}
 	ggcnfw() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnfw' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --no-verify --force --web "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --no-verify --force --web "$@"
 	}
 	ggce() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggce' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --exit "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --exit "$@"
 	}
 	ggcne() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcne' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --no-verify --exit "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --no-verify --exit "$@"
 	}
 	ggcfe() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcfe' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --force --exit "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --force --exit "$@"
 	}
 	ggcnfe() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnfe' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --no-verify --force --exit "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --no-verify --force --exit "$@"
 	}
 	ggcm() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcm' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --merge "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --merge "$@"
 	}
 	ggcnm() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnm' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --no-verify --merge "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --no-verify --merge "$@"
 	}
 	ggcfm() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcfm' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --force --merge "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --force --merge "$@"
 	}
 	ggcnfm() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnfm' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --no-verify --force --merge "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --no-verify --force --merge "$@"
 	}
 	ggcx() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcx' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --merge --exit "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --merge --exit "$@"
 	}
 	ggcnx() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnx' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --no-verify --merge --exit "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --no-verify --merge --exit "$@"
 	}
 	ggcfx() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcfx' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --force --merge --exit "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --force --merge --exit "$@"
 	}
 	ggcnfx() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnfx' expected [1..) arguments TITLE" >&2
 			return 1
 		}
-		__git_all --title="$1" --no-verify --force --merge --exit "${@:2}"
+		title=$1
+		shift
+		__git_all --title="$title" --no-verify --force --merge --exit "$@"
 	}
 
 	# --- push variants (override auto-generated gp) ---
@@ -778,9 +828,7 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	ghe() {
-		local title='' body=''
-		local remaining
-		remaining=()
+		title='' body='' remaining_count=0 remaining_1='' remaining_2=''
 		while [ "$#" -gt 0 ]; do
 			case "$1" in
 			--title=*)
@@ -800,18 +848,22 @@ if command -v git >/dev/null 2>&1; then
 				shift 2
 				;;
 			*)
-				remaining+=("$1")
+				remaining_count=$((remaining_count + 1))
+				case "${remaining_count}" in
+				1) remaining_1=$1 ;;
+				2) remaining_2=$1 ;;
+				esac
 				shift
 				;;
 			esac
 		done
-		if [ "${#remaining[@]}" -eq 1 ]; then
+		if [ "${remaining_count}" -eq 1 ]; then
 			if [ -n "$title" ]; then
 				echo "'ghe' got 1 positional arg but also --title" >&2
 				return 1
 			fi
-			title="${remaining[0]}"
-		elif [ "${#remaining[@]}" -ge 2 ]; then
+			title=${remaining_1}
+		elif [ "${remaining_count}" -ge 2 ]; then
 			if [ -n "$title" ]; then
 				echo "'ghe' got 2 positional args but also --title" >&2
 				return 1
@@ -820,19 +872,18 @@ if command -v git >/dev/null 2>&1; then
 				echo "'ghe' got 2 positional args but also --body" >&2
 				return 1
 			fi
-			title="${remaining[0]}"
-			body="${remaining[1]}"
+			title=${remaining_1}
+			body=${remaining_2}
 		fi
-		local args
-		args=()
-		[ -n "$title" ] && args+=(--title "$title")
-		[ -n "$body" ] && args+=(--body "$body")
+		set --
+		[ -n "$title" ] && set -- "$@" --title "$title"
+		[ -n "$body" ] && set -- "$@" --body "$body"
 		if (__remote_is gitea || __remote_is ts.net) && command -v tea >/dev/null 2>&1; then
-			tea pulls edit "${args[@]}"
+			tea pulls edit "$@"
 			return $?
 		fi
 		if command -v gh >/dev/null 2>&1; then
-			gh pr edit "${args[@]}"
+			gh pr edit "$@"
 			return $?
 		fi
 		echo "'ghe': no PR tool (tea/gh) available" >&2
@@ -842,7 +893,7 @@ if command -v git >/dev/null 2>&1; then
 	ghx() { __git_merge --exit; }
 
 	# --- remote management ---
-	add-remote() {
+	add_remote() {
 		if [ "$#" -le 1 ]; then
 			echo "'add-remote' expected [2..) arguments NAME URL; got $#" >&2
 			return 1
@@ -850,14 +901,14 @@ if command -v git >/dev/null 2>&1; then
 		git remote add "$@"
 		git remote set-url --push "$@"
 	}
-	remove-remote() {
+	remove_remote() {
 		if [ "$#" -eq 0 ]; then
 			echo "'remove-remote' expected [1..) arguments NAME; got $#" >&2
 			return 1
 		fi
 		git remote remove "$@"
 	}
-	set-remote() {
+	set_remote() {
 		if [ "$#" -le 1 ]; then
 			echo "'set-remote' expected [2..) arguments NAME URL; got $#" >&2
 			return 1
@@ -869,7 +920,7 @@ if command -v git >/dev/null 2>&1; then
 	# --- rebase ---
 	grb() {
 		git fetch-default || return $?
-		local branch
+		branch
 		branch=$(git default-remote-branch) || return $?
 		git rebase --strategy=recursive --strategy-option=theirs "$branch"
 	}

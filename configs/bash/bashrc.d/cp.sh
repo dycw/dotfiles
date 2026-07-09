@@ -1,10 +1,10 @@
-# shellcheck shell=bash disable=SC2124
+# shellcheck shell=sh
 cp() {
 	if [ "$#" -lt 2 ]; then
 		echo "'cp' expected [2..) arguments SOURCE ... TARGET; got $#" >&2
 		return 1
 	fi
-	local target="${@:$#:1}"
+	for target; do :; done
 	if [ "$#" -eq 2 ]; then
 		case "${target}" in
 		*/) command mkdir -p "${target}" ;;

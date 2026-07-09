@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=sh
 _ts_bin=''
 if command -v tailscale >/dev/null 2>&1; then
 	_ts_bin=tailscale
@@ -7,7 +7,6 @@ elif command -v Tailscale >/dev/null 2>&1; then
 fi
 if [ -n "${_ts_bin}" ]; then
 	ts() {
-		local out
 		out=$("${_ts_bin}" status 2>&1) && printf '%s\n' "${out}" && return
 		sleep 3
 		"${_ts_bin}" status

@@ -1,12 +1,12 @@
-# shellcheck shell=bash
-chmod-files() {
+# shellcheck shell=sh
+chmod_files() {
 	if [ "$#" -lt 1 ]; then
 		echo "'chmod-files' expected [1..) arguments MODE; got $#" >&2
 		return 1
 	fi
 	find . -type f -print0 | xargs -0 chmod "$1"
 }
-chmod-dirs() {
+chmod_dirs() {
 	if [ "$#" -lt 1 ]; then
 		echo "'chmod-dirs' expected [1..) arguments MODE; got $#" >&2
 		return 1

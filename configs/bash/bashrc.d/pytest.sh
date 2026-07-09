@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=sh
 export PY_COLORS=1
 
 __pytest() { pytest --color=yes "$@"; }
