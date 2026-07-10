@@ -71,3 +71,15 @@ for _f in "${HOME}"/.bashrc.d/*.sh "${HOME}"/.bashrc.d/*.bash; do
 	[ -r "${_f}" ] && [ -f "${_f}" ] && . "${_f}"
 done
 unset _f
+
+#### kebab-case aliases #######################################################
+
+# POSIX sh function names cannot contain hyphens, so helper functions use
+# snake_case.  Keep the dashed command spelling available in interactive bash.
+for _f in $(compgen -A function); do
+	case ${_f} in
+	__* | *[!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_]*) continue ;;
+	*_*) alias "${_f//_/-}=${_f}" ;;
+	esac
+done
+unset _f
