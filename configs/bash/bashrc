@@ -14,7 +14,6 @@ done
 unset _f
 
 __source_first() {
-	_f
 	for _f in "$@"; do
 		[ -f "${_f}" ] && {
 			. "${_f}"
