@@ -78,7 +78,7 @@ unset _f
 # snake_case.  Keep the dashed command spelling available in interactive bash.
 for _f in $(compgen -A function); do
 	case ${_f} in
-	__* | *[!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_]*) continue ;;
+	_* | *[!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_]*) continue ;;
 	*_*) alias "${_f//_/-}=${_f}" ;;
 	esac
 done
