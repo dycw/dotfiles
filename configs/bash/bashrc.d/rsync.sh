@@ -1,6 +1,56 @@
 # shellcheck shell=sh
 if command -v rsync >/dev/null 2>&1; then
 	rrsync() {
+		loop_interval=
+		original_argc=$#
+		processed_argc=0
+
+		while [ "${processed_argc}" -lt "${original_argc}" ]; do
+			arg=$1
+			shift
+			processed_argc=$((processed_argc + 1))
+
+			case "${arg}" in
+			--loop)
+				loop_interval=2
+				if [ "${processed_argc}" -lt "${original_argc}" ]; then
+					case "$1" in
+					'' | *[!0-9]*) ;;
+					*)
+						loop_interval=$1
+						shift
+						processed_argc=$((processed_argc + 1))
+						;;
+					esac
+				fi
+				;;
+			--loop=*)
+				loop_interval=${arg#--loop=}
+				case "${loop_interval}" in
+				'' | *[!0-9]*)
+					echo "'rrsync' invalid --loop interval: ${loop_interval}" >&2
+					return 1
+					;;
+				esac
+				;;
+			*)
+				set -- "$@" "${arg}"
+				;;
+			esac
+		done
+
+		if [ -n "${loop_interval}" ]; then
+			while true; do
+				rrsync_once "$@"
+				printf 'Sleeping for %ss...\n' "${loop_interval}"
+				sleep "${loop_interval}"
+			done
+		fi
+
+		rrsync_once "$@"
+	}
+
+	rrsync_once() {
 		if [ "$#" -lt 2 ]; then
 			echo "'rrsync' expected [2..) arguments SOURCE ... TARGET; got $#" >&2
 			return 1
