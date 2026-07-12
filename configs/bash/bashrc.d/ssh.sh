@@ -125,12 +125,6 @@ ssh_auto() {
 
 #### shortcuts #################################################################
 
-ssh_agent_cluster() { ssh_auto nonroot@agent-cluster.qrt; }
 ssh_dw_macbookneo() { ssh_auto derekwan@dw-macbookneo.tail.net; }
 ssh_dw_macmini() { ssh_auto derekwan@dw-macmini.tail.net; }
 ssh_dw_swift() { ssh_auto derek@dw-swift.tail.net; }
-ssh_gitea() { ssh_auto nonroot@gitea-server.ai; }
-ssh_ib() { ssh_auto nonroot@ib-gateway-docker; }
-ssh_jupyter() { ssh_auto nonroot@jupyter.internal; }
-ssh_rh_macbook() { ssh_auto derekwan@rh-macbook.tail.net; }
-ssh_rh_macmini() { ssh_auto derekwan@rh-macmini.tail.net; }
