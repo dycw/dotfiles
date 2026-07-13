@@ -4,12 +4,16 @@ if command -v git >/dev/null 2>&1; then
 	# they work even before update-dotfiles has wired up the global [include].
 	_git_cfg=${PATH_DOTFILES:+${PATH_DOTFILES}/configs/git/config}
 	[ -f "${_git_cfg}" ] || _git_cfg=/dev/null
-	git config --file "${_git_cfg:-/dev/null}" --list 2>/dev/null | grep '^alias\.' | while IFS= read -r _git_line; do
+	_git_aliases=$(git config --file "${_git_cfg:-/dev/null}" --list 2>/dev/null | grep '^alias\.' || true)
+	while IFS= read -r _git_line; do
+		[ -n "${_git_line}" ] || continue
 		_git_alias=${_git_line%%=*}
 		_git_alias=${_git_alias#alias.}
 		eval "g${_git_alias}() { git -c include.path=\"${_git_cfg}\" ${_git_alias} \"\$@\"; }"
-	done
-	unset _git_line _git_alias _git_cfg
+	done <<EOF
+${_git_aliases}
+EOF
+	unset _git_line _git_alias _git_aliases _git_cfg
 
 	# --- edit config ---
 
@@ -91,9 +95,7 @@ if command -v git >/dev/null 2>&1; then
 			*) break ;;
 			esac
 		done
-		branch
 		branch=$(git current-branch) || return $?
-		args
 		if [ -n "$force" ] && [ -n "$nv" ]; then
 			git push --force --set-upstream origin "$branch" --no-verify || return $?
 		elif [ -n "$force" ]; then
@@ -131,13 +133,11 @@ if command -v git >/dev/null 2>&1; then
 			*) break ;;
 			esac
 		done
-		ca
 		if [ -n "$nv" ]; then
 			git commit --message="$(__auto_msg)" --no-verify || return $?
 		else
 			git commit --message="$(__auto_msg)" || return $?
 		fi
-		pa
 		set --
 		[ -n "$force" ] && set -- "$@" --force
 		[ -n "$nv" ] && set -- "$@" --no-verify
@@ -170,7 +170,6 @@ if command -v git >/dev/null 2>&1; then
 			*) break ;;
 			esac
 		done
-		ca
 		commit_args=
 		[ -n "$nv" ] && commit_args=--no-verify
 		proceed=0 i
@@ -184,7 +183,6 @@ if command -v git >/dev/null 2>&1; then
 			echo "'__git_commit_until_push' failed after $i attempts" >&2
 			return 1
 		fi
-		pa
 		set --
 		[ -n "$force" ] && set -- "$@" --force
 		[ -n "$nv" ] && set -- "$@" --no-verify
@@ -221,7 +219,6 @@ if command -v git >/dev/null 2>&1; then
 			esac
 		done
 		git fetch-default || return $?
-		branch
 		if [ -z "$title" ] && [ -z "$num" ]; then
 			branch=dev
 		elif [ -n "$title" ] && [ -z "$num" ]; then
@@ -234,7 +231,6 @@ if command -v git >/dev/null 2>&1; then
 		git checkout -b "$branch" "$(git default-remote-branch)" || return $?
 		git commit --allow-empty --message="$(__auto_msg)" --no-verify || return $?
 		__git_push --no-verify || return $?
-		pr_title
 		pr_title=${title:-"$(__auto_msg)"}
 		pr_body='.'
 		if [ -n "$num" ]; then
@@ -265,7 +261,6 @@ if command -v git >/dev/null 2>&1; then
 				;;
 			esac
 		done
-		original
 		original=$(git current-branch) || return $?
 		git checkout "$target" || return $?
 		git pull-default || return $?
@@ -318,10 +313,8 @@ if command -v git >/dev/null 2>&1; then
 				;;
 			*) shift ;; esac
 		done
-		branch
 		branch=$(git current-branch) || return $?
 		if (__remote_is gitea || __remote_is ts.net) && command -v tea >/dev/null 2>&1; then
-			repo
 			repo=$(git repo-name) || return $?
 			start i=0 elapsed
 			start=$(date +%s)
@@ -341,9 +334,7 @@ if command -v git >/dev/null 2>&1; then
 			echo "'__git_merge': no PR tool (tea/gh) available" >&2
 			return 1
 		fi
-		def_branch
 		def_branch=$(git default-local-branch) || return $?
-		ca
 		if [ -n "$exit_after" ]; then
 			__git_checkout_close "$def_branch" --delete --exit
 		else
@@ -354,7 +345,6 @@ if command -v git >/dev/null 2>&1; then
 	# orchestrate: optionally branch+PR, add all, commit+push loop, optionally merge
 	__git_all() {
 		title='' nv='' force='' web='' exit_after='' merge=''
-		remaining
 		remaining=
 		while [ "$#" -gt 0 ]; do
 			case "$1" in
@@ -397,7 +387,6 @@ if command -v git >/dev/null 2>&1; then
 		fi
 		# shellcheck disable=SC2086
 		git add --all ${remaining}
-		cp
 		set --
 		[ -n "$nv" ] && set -- "$@" --no-verify
 		[ -n "$force" ] && set -- "$@" --force
@@ -405,7 +394,6 @@ if command -v git >/dev/null 2>&1; then
 		[ -z "$merge" ] && [ -n "$exit_after" ] && set -- "$@" --exit
 		__git_commit_until_push "$@" || return $?
 		if [ -n "$merge" ]; then
-			ma
 			if [ -n "$exit_after" ]; then
 				__git_merge --exit
 			else
@@ -467,7 +455,6 @@ if command -v git >/dev/null 2>&1; then
 		fi
 	}
 	gcbr() {
-		branch
 		if [ "$#" -eq 0 ]; then
 			branch=$(git branch --color=never --remotes |
 				awk '!/->/{ print $1 }' |
@@ -479,7 +466,6 @@ if command -v git >/dev/null 2>&1; then
 		git checkout -b "${branch}" -t "origin/${branch}"
 	}
 	gco() {
-		branch
 		if [ "$#" -eq 0 ]; then
 			branch=$(git branch --format='%(refname:short)' | fzf)
 		else
@@ -497,7 +483,6 @@ if command -v git >/dev/null 2>&1; then
 		repo="$1" dir
 		dir=${2:-$(basename "${1%.git}")}
 		git clone --recurse-submodules "$repo" "$dir" || return $?
-		orig
 		orig=$(pwd)
 		cd "$dir" || return $?
 		command -v prek >/dev/null 2>&1 && prek install || true
@@ -526,7 +511,6 @@ if command -v git >/dev/null 2>&1; then
 	# checkout file(s) from the default remote branch
 	gcfm() {
 		git fetch-default || return $?
-		branch
 		branch=$(git default-remote-branch) || return $?
 		git checkout "$branch" -- "$@"
 	}
@@ -920,7 +904,6 @@ if command -v git >/dev/null 2>&1; then
 	# --- rebase ---
 	grb() {
 		git fetch-default || return $?
-		branch
 		branch=$(git default-remote-branch) || return $?
 		git rebase --strategy=recursive --strategy-option=theirs "$branch"
 	}
