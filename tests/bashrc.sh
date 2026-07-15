@@ -34,3 +34,15 @@ fi
 if HOME="${home_dir}" bash --noprofile --rcfile "${test_root}/configs/bash/bashrc" -ic 'alias __private-helper' >"${tmp}/private-alias.log" 2>&1; then
 	fail_test "bashrc should not create dashed aliases for private helpers"
 fi
+
+bin_dir="${tmp}/bin"
+mkdir -p "${bin_dir}"
+cat >"${bin_dir}/tailscale" <<'EOF'
+#!/bin/sh
+cat <<'JSON'
+{"Peer":[{"HostName":"DW-MacMini","TailscaleIPs":["100.64.0.6"]},{"HostName":"DW-Swift","TailscaleIPs":["100.64.0.13"]}]}
+JSON
+EOF
+chmod +x "${bin_dir}/tailscale"
+resolved_ip=$(PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; __tailscale_ip dw-macmini' sh "${test_root}")
+assert_eq "${resolved_ip}" '100.64.0.6'

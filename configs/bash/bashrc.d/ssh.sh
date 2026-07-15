@@ -97,6 +97,43 @@ generate_ssh_key() {
 
 #### ssh_auto ##################################################################
 
+__tailscale_ip() {
+	if [ "$#" -ne 1 ]; then
+		echo "'__tailscale_ip' expected HOST; got $#" >&2
+		return 1
+	fi
+	host=$1
+	ts_bin=${_ts_bin:-}
+	if [ -z "${ts_bin}" ]; then
+		command -v tailscale >/dev/null 2>&1 && ts_bin=tailscale
+		command -v Tailscale >/dev/null 2>&1 && ts_bin=Tailscale
+	fi
+	if [ -z "${ts_bin}" ]; then
+		echo "Tailscale CLI not found" >&2
+		return 1
+	fi
+	if ! command -v jq >/dev/null 2>&1; then
+		echo "jq is required to resolve Tailscale SSH aliases" >&2
+		return 1
+	fi
+	"${ts_bin}" status --json | jq -er --arg host "${host}" '
+		.Peer[]
+		| select((.HostName // "" | ascii_downcase) == ($host | ascii_downcase))
+		| .TailscaleIPs[0] // empty
+	'
+}
+
+ssh_tailscale() {
+	if [ "$#" -ne 2 ]; then
+		echo "'ssh_tailscale' expected USER HOST; got $#" >&2
+		return 1
+	fi
+	user=$1
+	host=$2
+	ip=$(__tailscale_ip "${host}") || return
+	ssh_auto "${user}@${ip}"
+}
+
 ssh_auto() {
 	if [ "$#" -lt 1 ]; then
 		echo "'ssh-auto' expected [1..] arguments DESTINATION; got $#" >&2
@@ -125,6 +162,6 @@ ssh_auto() {
 
 #### shortcuts #################################################################
 
-ssh_dw_macbookneo() { ssh_auto derekwan@dw-macbookneo.tail.net; }
-ssh_dw_macmini() { ssh_auto derekwan@dw-macmini.tail.net; }
-ssh_dw_swift() { ssh_auto derek@dw-swift.tail.net; }
+ssh_dw_macbookneo() { ssh_tailscale derekwan DW-MacBookNeo; }
+ssh_dw_macmini() { ssh_tailscale derekwan DW-MacMini; }
+ssh_dw_swift() { ssh_tailscale derek DW-Swift; }
