@@ -1,25 +1,30 @@
 # shellcheck shell=sh
 if command -v rsync >/dev/null 2>&1; then
-	rrsync() {
-		loop_interval=
-		original_argc=$#
-		processed_argc=0
+	__rsync_default() {
+		rsync -avzh --partial "$@"
+	}
 
-		while [ "${processed_argc}" -lt "${original_argc}" ]; do
+	__rsync_loop() {
+		command_name=$1
+		command_label=$2
+		shift 2
+		loop_interval=
+		remaining=$#
+
+		while [ "${remaining}" -gt 0 ]; do
 			arg=$1
 			shift
-			processed_argc=$((processed_argc + 1))
-
+			remaining=$((remaining - 1))
 			case "${arg}" in
 			--loop)
 				loop_interval=2
-				if [ "${processed_argc}" -lt "${original_argc}" ]; then
+				if [ "${remaining}" -gt 0 ]; then
 					case "$1" in
 					'' | *[!0-9]*) ;;
 					*)
 						loop_interval=$1
 						shift
-						processed_argc=$((processed_argc + 1))
+						remaining=$((remaining - 1))
 						;;
 					esac
 				fi
@@ -28,7 +33,7 @@ if command -v rsync >/dev/null 2>&1; then
 				loop_interval=${arg#--loop=}
 				case "${loop_interval}" in
 				'' | *[!0-9]*)
-					echo "'rrsync' invalid --loop interval: ${loop_interval}" >&2
+					echo "'${command_label}' invalid --loop interval: ${loop_interval}" >&2
 					return 1
 					;;
 				esac
@@ -40,14 +45,33 @@ if command -v rsync >/dev/null 2>&1; then
 		done
 
 		if [ -n "${loop_interval}" ]; then
-			while true; do
-				rrsync_once "$@"
+			while :; do
+				"${command_name}" "$@"
 				printf 'Sleeping for %ss...\n' "${loop_interval}"
 				sleep "${loop_interval}"
 			done
 		fi
 
-		rrsync_once "$@"
+		"${command_name}" "$@"
+	}
+
+	__rsync_normalize_remote() {
+		case "$1" in
+		*:*)
+			remote_prefix=${1%%:*}
+			case "${remote_prefix}" in
+			*/* | *@* | "") rsync_normalized_arg=$1 ;;
+			*)
+				if [ -n "${rsync_user}" ]; then
+					rsync_normalized_arg=${rsync_user}@$1
+				else
+					rsync_normalized_arg=$1
+				fi
+				;;
+			esac
+			;;
+		*) rsync_normalized_arg=$1 ;;
+		esac
 	}
 
 	rrsync_once() {
@@ -56,99 +80,97 @@ if command -v rsync >/dev/null 2>&1; then
 			return 1
 		fi
 
-		user=
-		for arg; do
-			case "${arg}" in
+		rsync_user=
+		for rsync_arg; do
+			case "${rsync_arg}" in
 			*@*:*)
-				prefix=${arg%%:*}
-				user=${prefix%%@*}
+				rsync_user=${rsync_arg%%:*}
+				rsync_user=${rsync_user%%@*}
 				break
 				;;
 			esac
 		done
 
-		rrsync_arg() {
-			case "$1" in
-			*:*)
-				prefix=${1%%:*}
-				case "${prefix}" in
-				*/* | *@* | "") rrsync_arg_result=$1 ;;
-				*)
-					if [ -n "${user}" ]; then
-						rrsync_arg_result=${user}@$1
-					else
-						rrsync_arg_result=$1
-					fi
-					;;
-				esac
-				;;
-			*) rrsync_arg_result=$1 ;;
-			esac
-		}
-
-		target=
-		for arg; do
-			rrsync_arg "${arg}"
-			target=${rrsync_arg_result}
+		rsync_target=
+		for rsync_arg; do
+			__rsync_normalize_remote "${rsync_arg}"
+			rsync_target=${rsync_normalized_arg}
 		done
 
-		tmp=$(mktemp -d) || return 1
+		rsync_tmp=$(mktemp -d) || return 1
+		rsync_status=0
+		rsync_single_source=0
+		[ "$#" -eq 2 ] && rsync_single_source=1
 
 		if [ "$#" -gt 2 ]; then
-			case "${target}" in
+			case "${rsync_target}" in
 			*/) ;;
 			*)
-				echo "'rrsync' with multiple sources requires directory target ending in '/': ${target}" >&2
-				rm -rf -- "${tmp}"
+				echo "'rrsync' with multiple sources requires directory target ending in '/': ${rsync_target}" >&2
+				rm -rf -- "${rsync_tmp}"
 				return 1
 				;;
 			esac
 		fi
 
-		single_source=0
-		[ "$#" -eq 2 ] && single_source=1
-		final_source=${tmp}/
-		status=0
+		rsync_final_source=${rsync_tmp}/
 		while [ "$#" -gt 1 ]; do
-			rrsync_arg "$1"
-			src=${rrsync_arg_result}
+			__rsync_normalize_remote "$1"
+			rsync_source=${rsync_normalized_arg}
 			shift
-			case "${src}" in
+			case "${rsync_source}" in
 			*/)
-				path=${src%/}
-				name=${path##*/}
-				name=${name##*:}
-				if [ -z "${name}" ]; then
-					echo "'rrsync' invalid directory source: ${src}" >&2
-					status=1
+				rsync_path=${rsync_source%/}
+				rsync_name=${rsync_path##*/}
+				rsync_name=${rsync_name##*:}
+				if [ -z "${rsync_name}" ]; then
+					echo "'rrsync' invalid directory source: ${rsync_source}" >&2
+					rsync_status=1
 					break
 				fi
-				if command mkdir -p -- "${tmp}/${name}" && rsync -av "${src}" "${tmp}/${name}/"; then
+				if command mkdir -p -- "${rsync_tmp}/${rsync_name}" &&
+					__rsync_default "${rsync_source}" "${rsync_tmp}/${rsync_name}/"; then
 					:
 				else
-					status=$?
+					rsync_status=$?
 					break
 				fi
 				;;
 			*)
-				name=${src##*/}
-				name=${name##*:}
-				rsync -av "${src}" "${tmp}/" || {
-					status=$?
+				rsync_name=${rsync_source##*/}
+				rsync_name=${rsync_name##*:}
+				__rsync_default "${rsync_source}" "${rsync_tmp}/" || {
+					rsync_status=$?
 					break
 				}
-				if [ "${single_source}" -eq 1 ]; then
-					final_source=${tmp}/${name}
+				if [ "${rsync_single_source}" -eq 1 ]; then
+					rsync_final_source=${rsync_tmp}/${rsync_name}
 				fi
 				;;
 			esac
 		done
 
-		if [ "${status}" -eq 0 ]; then
-			rsync -rDv "${final_source}" "${target}"
-			status=$?
+		if [ "${rsync_status}" -eq 0 ]; then
+			__rsync_default "${rsync_final_source}" "${rsync_target}"
+			rsync_status=$?
 		fi
-		rm -rf -- "${tmp}"
-		return "${status}"
+		rm -rf -- "${rsync_tmp}"
+		return "${rsync_status}"
+	}
+
+	wrsync_once() {
+		if [ "$#" -lt 2 ]; then
+			echo "'wrsync' expected SOURCE ... TARGET; got $#" >&2
+			return 1
+		fi
+		__rsync_default "$@"
+	}
+
+	rrsync() {
+		__rsync_loop rrsync_once rrsync "$@"
+	}
+
+	wrsync() {
+		__rsync_loop wrsync_once wrsync "$@"
 	}
 fi
