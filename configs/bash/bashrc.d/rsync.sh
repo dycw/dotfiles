@@ -8,7 +8,7 @@ if command -v rsync >/dev/null 2>&1; then
 		command_name=$1
 		command_label=$2
 		shift 2
-		loop_interval=
+		loop_interval=2
 		remaining=$#
 
 		while [ "${remaining}" -gt 0 ]; do
@@ -44,15 +44,11 @@ if command -v rsync >/dev/null 2>&1; then
 			esac
 		done
 
-		if [ -n "${loop_interval}" ]; then
-			while :; do
-				"${command_name}" "$@"
-				printf 'Sleeping for %ss...\n' "${loop_interval}"
-				sleep "${loop_interval}"
-			done
-		fi
-
-		"${command_name}" "$@"
+		while :; do
+			"${command_name}" "$@" || return $?
+			printf 'Sleeping for %ss...\n' "${loop_interval}"
+			sleep "${loop_interval}"
+		done
 	}
 
 	__rsync_normalize_remote() {
