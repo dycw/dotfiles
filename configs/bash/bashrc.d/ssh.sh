@@ -60,6 +60,29 @@ __ssh_strict() {
 	fi
 }
 
+__ssh_accept_new() {
+	root=0 destination=''
+	while [ "$#" -gt 0 ]; do
+		case "$1" in
+		-r | --root)
+			root=1
+			shift
+			;;
+		*)
+			destination="$1"
+			shift
+			;;
+		esac
+	done
+	if [ "${root}" -eq 1 ]; then
+		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new \
+			-t "${destination}" 'sudo -i'
+	else
+		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new \
+			"${destination}"
+	fi
+}
+
 #### public utilities ##########################################################
 
 add_known_host() {
@@ -152,11 +175,11 @@ ssh_auto() {
 			;;
 		esac
 	done
-	if ! __ssh_strict ${root:+"${root}"} "${destination}"; then
+	root_flag=${root}
+	if ! __ssh_strict ${root_flag:+"${root_flag}"} "${destination}"; then
 		host="${destination##*@}"
 		ssh-keygen -R "${host}"
-		__ssh_keyscan "${host}"
-		__ssh_strict ${root:+"${root}"} "${destination}"
+		__ssh_accept_new ${root_flag:+"${root_flag}"} "${destination}"
 	fi
 }
 
