@@ -38,48 +38,56 @@ __ssh_keyscan() {
 }
 
 __ssh_strict() {
-	root=0 destination=''
+	root=0 tty='' destination=''
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
 		-r | --root)
 			root=1
 			shift
 			;;
-		*)
-			destination="$1"
+		-t)
+			tty='-t'
 			shift
 			;;
+		*) break ;;
 		esac
 	done
+	[ "$#" -gt 0 ] || return 1
+	destination="$1"
+	shift
 	if [ "${root}" -eq 1 ]; then
 		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes \
 			-t "${destination}" 'sudo -i'
 	else
 		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes \
-			"${destination}"
+			${tty:+"${tty}"} "${destination}" "$@"
 	fi
 }
 
 __ssh_accept_new() {
-	root=0 destination=''
+	root=0 tty='' destination=''
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
 		-r | --root)
 			root=1
 			shift
 			;;
-		*)
-			destination="$1"
+		-t)
+			tty='-t'
 			shift
 			;;
+		*) break ;;
 		esac
 	done
+	[ "$#" -gt 0 ] || return 1
+	destination="$1"
+	shift
 	if [ "${root}" -eq 1 ]; then
 		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new \
 			-t "${destination}" 'sudo -i'
 	else
 		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new \
-			"${destination}"
+			${tty:+"${tty}"} "${destination}" "$@"
 	fi
 }
 
@@ -159,27 +167,37 @@ ssh_tailscale() {
 
 ssh_auto() {
 	if [ "$#" -lt 1 ]; then
-		echo "'ssh-auto' expected [1..] arguments DESTINATION; got $#" >&2
+		echo "'ssh-auto' expected [1..] arguments [OPTIONS] DESTINATION [COMMAND...]; got $#" >&2
 		return 1
 	fi
-	root='' destination=''
+	root='' tty='' destination=''
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
 		-r | --root)
 			root='--root'
 			shift
 			;;
+		-t)
+			tty='-t'
+			shift
+			;;
 		*)
 			destination="$1"
 			shift
+			break
 			;;
 		esac
 	done
+	if [ -z "${destination}" ]; then
+		echo "'ssh-auto' expected DESTINATION after options" >&2
+		return 1
+	fi
 	root_flag=${root}
-	if ! __ssh_strict ${root_flag:+"${root_flag}"} "${destination}"; then
+	tty_flag=${tty}
+	if ! __ssh_strict ${root_flag:+"${root_flag}"} ${tty_flag:+"${tty_flag}"} "${destination}" "$@"; then
 		host="${destination##*@}"
 		ssh-keygen -R "${host}"
-		__ssh_accept_new ${root_flag:+"${root_flag}"} "${destination}"
+		__ssh_accept_new ${root_flag:+"${root_flag}"} ${tty_flag:+"${tty_flag}"} "${destination}" "$@"
 	fi
 }
 
