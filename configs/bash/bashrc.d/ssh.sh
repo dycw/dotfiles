@@ -57,9 +57,11 @@ __ssh_strict() {
 	shift
 	if [ "${root}" -eq 1 ]; then
 		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes \
+			-o ServerAliveInterval=60 -o ServerAliveCountMax=0 \
 			-t "${destination}" 'sudo -i'
 	else
 		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes \
+			-o ServerAliveInterval=60 -o ServerAliveCountMax=0 \
 			${tty:+"${tty}"} "${destination}" "$@"
 	fi
 }
@@ -84,9 +86,11 @@ __ssh_accept_new() {
 	shift
 	if [ "${root}" -eq 1 ]; then
 		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new \
+			-o ServerAliveInterval=60 -o ServerAliveCountMax=0 \
 			-t "${destination}" 'sudo -i'
 	else
 		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new \
+			-o ServerAliveInterval=60 -o ServerAliveCountMax=0 \
 			${tty:+"${tty}"} "${destination}" "$@"
 	fi
 }

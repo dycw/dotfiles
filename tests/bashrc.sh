@@ -63,7 +63,7 @@ ssh_log="${tmp}/ssh.log"
 ssh_keygen_log="${tmp}/ssh-keygen.log"
 SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto root@pve7.internal' sh "${test_root}"
 retry_args=$(tr -d '\n' <"${ssh_log}")
-assert_eq "${retry_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes root@pve7.internal-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new root@pve7.internal'
+assert_eq "${retry_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=60 -o ServerAliveCountMax=0 root@pve7.internal-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=60 -o ServerAliveCountMax=0 root@pve7.internal'
 retry_keygen_args=$(tr -d '\n' <"${ssh_keygen_log}")
 assert_eq "${retry_keygen_args}" '-R pve7.internal'
 
@@ -71,12 +71,12 @@ assert_eq "${retry_keygen_args}" '-R pve7.internal'
 : >"${ssh_keygen_log}"
 SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto --root root@pve7.qrt' sh "${test_root}"
 root_retry_args=$(tr -d '\n' <"${ssh_log}")
-assert_eq "${root_retry_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -t root@pve7.qrt sudo -i-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new -t root@pve7.qrt sudo -i'
+assert_eq "${root_retry_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=60 -o ServerAliveCountMax=0 -t root@pve7.qrt sudo -i-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=60 -o ServerAliveCountMax=0 -t root@pve7.qrt sudo -i'
 
 : >"${ssh_log}"
 : >"${ssh_keygen_log}"
 SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto -t nonroot@workspace-abc.qrt "tmux attach-session -t agents"' sh "${test_root}"
 agents_retry_args=$(tr -d '\n' <"${ssh_log}")
-assert_eq "${agents_retry_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -t nonroot@workspace-abc.qrt tmux attach-session -t agents-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new -t nonroot@workspace-abc.qrt tmux attach-session -t agents'
+assert_eq "${agents_retry_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=60 -o ServerAliveCountMax=0 -t nonroot@workspace-abc.qrt tmux attach-session -t agents-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=60 -o ServerAliveCountMax=0 -t nonroot@workspace-abc.qrt tmux attach-session -t agents'
 agents_retry_keygen_args=$(tr -d '\n' <"${ssh_keygen_log}")
 assert_eq "${agents_retry_keygen_args}" '-R workspace-abc.qrt'
