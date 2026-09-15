@@ -57,11 +57,11 @@ __ssh_strict() {
 	shift
 	if [ "${root}" -eq 1 ]; then
 		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes \
-			-o ServerAliveInterval=60 -o ServerAliveCountMax=0 \
+			-o ServerAliveInterval=60 -o ServerAliveCountMax=3 \
 			-t "${destination}" 'sudo -i'
 	else
 		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes \
-			-o ServerAliveInterval=60 -o ServerAliveCountMax=0 \
+			-o ServerAliveInterval=60 -o ServerAliveCountMax=3 \
 			${tty:+"${tty}"} "${destination}" "$@"
 	fi
 }
@@ -86,11 +86,11 @@ __ssh_accept_new() {
 	shift
 	if [ "${root}" -eq 1 ]; then
 		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new \
-			-o ServerAliveInterval=60 -o ServerAliveCountMax=0 \
+			-o ServerAliveInterval=60 -o ServerAliveCountMax=3 \
 			-t "${destination}" 'sudo -i'
 	else
 		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new \
-			-o ServerAliveInterval=60 -o ServerAliveCountMax=0 \
+			-o ServerAliveInterval=60 -o ServerAliveCountMax=3 \
 			${tty:+"${tty}"} "${destination}" "$@"
 	fi
 }
@@ -198,11 +198,19 @@ ssh_auto() {
 	fi
 	root_flag=${root}
 	tty_flag=${tty}
-	if ! __ssh_strict ${root_flag:+"${root_flag}"} ${tty_flag:+"${tty_flag}"} "${destination}" "$@"; then
-		host="${destination##*@}"
-		ssh-keygen -R "${host}"
-		__ssh_accept_new ${root_flag:+"${root_flag}"} ${tty_flag:+"${tty_flag}"} "${destination}" "$@"
+	if __ssh_strict ${root_flag:+"${root_flag}"} ${tty_flag:+"${tty_flag}"} "${destination}" "$@"; then
+		return
 	fi
+
+	host="${destination##*@}"
+	case "${host}" in
+	*.internal | *.qrt) ;;
+	*) return 1 ;;
+	esac
+	if ssh-keygen -F "${host}" >/dev/null 2>&1; then
+		return 1
+	fi
+	__ssh_accept_new ${root_flag:+"${root_flag}"} ${tty_flag:+"${tty_flag}"} "${destination}" "$@"
 }
 
 #### shortcuts #################################################################
