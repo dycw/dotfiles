@@ -107,6 +107,7 @@ EOF
 		fi
 		[ -n "$web" ] && { __git_view || return $?; }
 		[ -n "$exit_after" ] && exit
+		return 0
 	}
 
 	__git_commit_push() {
@@ -172,7 +173,7 @@ EOF
 		done
 		commit_args=
 		[ -n "$nv" ] && commit_args=--no-verify
-		proceed=0 i
+		proceed=0
 		for i in 1 2 3; do
 			if [ "$proceed" -eq 0 ]; then
 				git add --all
@@ -234,7 +235,11 @@ EOF
 		pr_title=${title:-"$(__auto_msg)"}
 		pr_body='.'
 		if [ -n "$num" ]; then
-			pr_body="${part:+Part of}${part:-Closes} $num"
+			if [ -n "$part" ]; then
+				pr_body="Part of $num"
+			else
+				pr_body="Closes $num"
+			fi
 		fi
 		__git_create --title="$pr_title" --body="$pr_body"
 	}
@@ -266,6 +271,7 @@ EOF
 		git pull-default || return $?
 		[ -n "$delete" ] && git branch-delete "$original"
 		[ -n "$exit_after" ] && exit
+		return 0
 	}
 
 	__git_create() {
@@ -316,7 +322,7 @@ EOF
 		branch=$(git current-branch) || return $?
 		if (__remote_is gitea || __remote_is ts.net) && command -v tea >/dev/null 2>&1; then
 			repo=$(git repo-name) || return $?
-			start i=0 elapsed
+			i=0
 			start=$(date +%s)
 			while tea pulls ls --fields head --output simple 2>/dev/null | grep -qF "${branch}"; do
 				tea pull merge --style squash >/dev/null 2>&1 || true
@@ -480,7 +486,7 @@ EOF
 			echo "'gcl' expected [1..2] arguments REPO [DIR]; got $#" >&2
 			return 1
 		fi
-		repo="$1" dir
+		repo=$1
 		dir=${2:-$(basename "${1%.git}")}
 		git clone --recurse-submodules "$repo" "$dir" || return $?
 		orig=$(pwd)
