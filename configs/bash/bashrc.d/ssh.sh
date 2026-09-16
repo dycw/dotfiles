@@ -169,7 +169,7 @@ ssh_tailscale() {
 	ssh_auto "${user}@${ip}"
 }
 
-ssh_auto() {
+__ssh_auto_once() {
 	if [ "$#" -lt 1 ]; then
 		echo "'ssh-auto' expected [1..] arguments [OPTIONS] DESTINATION [COMMAND...]; got $#" >&2
 		return 1
@@ -200,6 +200,8 @@ ssh_auto() {
 	tty_flag=${tty}
 	if __ssh_strict ${root_flag:+"${root_flag}"} ${tty_flag:+"${tty_flag}"} "${destination}" "$@"; then
 		return
+	else
+		strict_status=$?
 	fi
 
 	host="${destination##*@}"
@@ -208,10 +210,89 @@ ssh_auto() {
 	*) return 1 ;;
 	esac
 	if ssh-keygen -F "${host}" >/dev/null 2>&1; then
-		return 1
+		return "${strict_status}"
 	fi
 	__ssh_accept_new ${root_flag:+"${root_flag}"} ${tty_flag:+"${tty_flag}"} "${destination}" "$@"
 }
+
+__ssh_auto_is_interactive() {
+	root=0 tty=0
+	while [ "$#" -gt 0 ]; do
+		case "$1" in
+		-r | --root)
+			root=1
+			shift
+			;;
+		-t)
+			tty=1
+			shift
+			;;
+		*) break ;;
+		esac
+	done
+	[ "$#" -gt 0 ] || return 1
+	shift
+	[ "${root}" -eq 1 ] || [ "${tty}" -eq 1 ] || [ "$#" -eq 0 ]
+}
+
+__ssh_auto_can_retry() {
+	status=$1
+	error_file=$2
+	[ "${status}" -eq 255 ] || return 1
+	if grep -Eqi \
+		'host key verification failed|remote host identification has changed|permission denied|too many authentication failures|no supported authentication methods available' \
+		"${error_file}"; then
+		return 1
+	fi
+	return 0
+}
+
+ssh_auto() (
+	if ! __ssh_auto_is_interactive "$@"; then
+		if __ssh_auto_once "$@"; then
+			exit 0
+		else
+			status=$?
+			exit "${status}"
+		fi
+	fi
+
+	reconnect_tmp=$(mktemp -d "${TMPDIR:-/tmp}/ssh-auto.XXXXXX") || exit 1
+	error_file="${reconnect_tmp}/stderr"
+	error_pipe="${reconnect_tmp}/stderr.pipe"
+	: >"${error_file}"
+	if ! mkfifo "${error_pipe}"; then
+		rm -rf -- "${reconnect_tmp}"
+		exit 1
+	fi
+	tee_pid=0
+	__ssh_auto_cleanup() {
+		if [ "${tee_pid}" -ne 0 ]; then
+			kill "${tee_pid}" 2>/dev/null || :
+			wait "${tee_pid}" 2>/dev/null || :
+		fi
+		rm -rf -- "${reconnect_tmp}"
+	}
+	trap '__ssh_auto_cleanup; exit 130' HUP INT TERM
+	while :; do
+		: >"${error_file}"
+		tee "${error_file}" <"${error_pipe}" >&2 &
+		tee_pid=$!
+		if __ssh_auto_once "$@" 2>"${error_pipe}"; then
+			status=0
+		else
+			status=$?
+		fi
+		wait "${tee_pid}" || :
+		tee_pid=0
+		if ! __ssh_auto_can_retry "${status}" "${error_file}"; then
+			__ssh_auto_cleanup
+			exit "${status}"
+		fi
+		printf 'SSH connection ended; reconnecting in one second. Press Ctrl-C to stop.\n' >&2
+		sleep 1
+	done
+)
 
 #### shortcuts #################################################################
 

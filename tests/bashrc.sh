@@ -50,6 +50,20 @@ assert_eq "${resolved_ip}" '100.64.0.6'
 cat >"${bin_dir}/ssh" <<'EOF'
 #!/bin/sh
 printf '%s\n' "$*" >>"${SSH_LOG}"
+if [ -n "${SSH_EXIT_SEQUENCE:-}" ]; then
+	count=0
+	[ -f "${SSH_RECONNECT_STATE}" ] && count=$(cat "${SSH_RECONNECT_STATE}")
+	count=$((count + 1))
+	printf '%s\n' "${count}" >"${SSH_RECONNECT_STATE}"
+	status=$(printf '%s' "${SSH_EXIT_SEQUENCE}" | cut -d, -f "${count}")
+	if [ -n "${SSH_ERROR:-}" ]; then
+		error=${SSH_ERROR}
+	else
+		error=$(printf '%s' "${SSH_ERROR_SEQUENCE:-}" | cut -d, -f "${count}")
+	fi
+	[ -n "${error}" ] && printf '%s\n' "${error}" >&2
+	exit "${status:-255}"
+fi
 case "$*" in
 *StrictHostKeyChecking=yes*)
 	[ "${SSH_STRICT_FAIL:-0}" -eq 1 ] && exit 1
@@ -110,3 +124,44 @@ SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}
 connected_args=$(tr -d '\n' <"${ssh_log}")
 assert_eq "${connected_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 nonroot@postgres-prod.qrt'
 assert_eq "$(tr -d '\n' <"${ssh_keygen_log}")" ''
+
+: >"${ssh_log}"
+: >"${ssh_keygen_log}"
+reconnect_state="${tmp}/ssh-reconnect-state"
+SSH_KNOWN_HOSTS=workspace-abc.qrt SSH_EXIT_SEQUENCE='255,255,0' SSH_ERROR='Timeout, server workspace-abc.qrt not responding.' SSH_RECONNECT_STATE="${reconnect_state}" SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto -t nonroot@workspace-abc.qrt "tmux attach-session -t agents"' sh "${test_root}"
+reconnect_args=$(tr -d '\n' <"${ssh_log}")
+assert_eq "${reconnect_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 -t nonroot@workspace-abc.qrt tmux attach-session -t agents-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 -t nonroot@workspace-abc.qrt tmux attach-session -t agents-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 -t nonroot@workspace-abc.qrt tmux attach-session -t agents'
+assert_eq "$(cat "${reconnect_state}")" '3'
+
+: >"${ssh_log}"
+: >"${ssh_keygen_log}"
+command_state="${tmp}/ssh-command-state"
+if SSH_KNOWN_HOSTS=workspace-abc.qrt SSH_EXIT_SEQUENCE='255,0' SSH_RECONNECT_STATE="${command_state}" SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto nonroot@workspace-abc.qrt "true"' sh "${test_root}"; then
+	fail_test 'ssh_auto should preserve the remote command exit status'
+fi
+assert_eq "$(cat "${command_state}")" '1'
+
+: >"${ssh_log}"
+: >"${ssh_keygen_log}"
+normal_exit_state="${tmp}/ssh-normal-exit-state"
+SSH_KNOWN_HOSTS=workspace-abc.qrt SSH_EXIT_SEQUENCE='0,0' SSH_RECONNECT_STATE="${normal_exit_state}" SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto -t nonroot@workspace-abc.qrt "tmux attach-session -t agents"' sh "${test_root}"
+assert_eq "$(cat "${normal_exit_state}")" '1'
+
+: >"${ssh_log}"
+: >"${ssh_keygen_log}"
+interrupted_state="${tmp}/ssh-interrupted-state"
+if SSH_KNOWN_HOSTS=workspace-abc.qrt SSH_EXIT_SEQUENCE='130,0' SSH_RECONNECT_STATE="${interrupted_state}" SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto -t nonroot@workspace-abc.qrt "tmux attach-session -t agents"' sh "${test_root}"; then
+	fail_test 'ssh_auto should stop after Ctrl-C'
+else
+	ssh_auto_status=$?
+fi
+assert_eq "${ssh_auto_status}" '130'
+assert_eq "$(cat "${interrupted_state}")" '1'
+
+: >"${ssh_log}"
+: >"${ssh_keygen_log}"
+permanent_state="${tmp}/ssh-permanent-state"
+if SSH_KNOWN_HOSTS=workspace-abc.qrt SSH_EXIT_SEQUENCE='255,0' SSH_ERROR_SEQUENCE='Permission denied (publickey).' SSH_RECONNECT_STATE="${permanent_state}" SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto -t nonroot@workspace-abc.qrt "tmux attach-session -t agents"' sh "${test_root}"; then
+	fail_test 'ssh_auto should not reconnect after an authentication failure'
+fi
+assert_eq "$(cat "${permanent_state}")" '1'
