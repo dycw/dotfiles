@@ -9,7 +9,7 @@ tmp=$(make_temp_dir)
 trap 'cleanup_temp_dir "${tmp}"' EXIT HUP INT TERM
 
 home_dir="${tmp}/home"
-mkdir -p "${home_dir}/.bashrc.d"
+mkdir -p "${home_dir}/.bashrc.d" "${home_dir}/.ssh"
 cat >"${home_dir}/.bashrc.d/test-aliases.sh" <<'EOF'
 edit_test_file() { printf 'snake:%s\n' "$1"; }
 _completion_helper() { printf 'completion\n'; }
@@ -34,6 +34,8 @@ fi
 if HOME="${home_dir}" bash --noprofile --rcfile "${test_root}/configs/bash/bashrc" -ic 'alias __private-helper' >"${tmp}/private-alias.log" 2>&1; then
 	fail_test "bashrc should not create dashed aliases for private helpers"
 fi
+
+export HOME="${home_dir}"
 
 bin_dir="${tmp}/bin"
 mkdir -p "${bin_dir}"
@@ -64,11 +66,6 @@ if [ -n "${SSH_EXIT_SEQUENCE:-}" ]; then
 	[ -n "${error}" ] && printf '%s\n' "${error}" >&2
 	exit "${status:-255}"
 fi
-case "$*" in
-*StrictHostKeyChecking=yes*)
-	[ "${SSH_STRICT_FAIL:-0}" -eq 1 ] && exit 1
-	;;
-esac
 exit 0
 EOF
 cat >"${bin_dir}/ssh-keygen" <<'EOF'
@@ -83,47 +80,54 @@ case "$1" in
 	;;
 esac
 EOF
-chmod +x "${bin_dir}/ssh" "${bin_dir}/ssh-keygen"
+cat >"${bin_dir}/ssh-keyscan" <<'EOF'
+#!/bin/sh
+printf '%s\n' 'gitea-server.ai ssh-ed25519 replacement-key'
+EOF
+chmod +x "${bin_dir}/ssh" "${bin_dir}/ssh-keygen" "${bin_dir}/ssh-keyscan"
 ssh_log="${tmp}/ssh.log"
 ssh_keygen_log="${tmp}/ssh-keygen.log"
 
-SSH_STRICT_FAIL=1 SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto root@pve7.internal' sh "${test_root}"
+SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto root@pve7.internal' sh "${test_root}"
 retry_args=$(tr -d '\n' <"${ssh_log}")
-assert_eq "${retry_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 root@pve7.internal-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 root@pve7.internal'
+assert_eq "${retry_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 root@pve7.internal'
 retry_keygen_args=$(tr -d '\n' <"${ssh_keygen_log}")
-assert_eq "${retry_keygen_args}" '-F pve7.internal'
+assert_eq "${retry_keygen_args}" '-R pve7.internal'
 
 : >"${ssh_log}"
 : >"${ssh_keygen_log}"
-SSH_STRICT_FAIL=1 SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto --root root@pve7.qrt' sh "${test_root}"
+SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto --root root@pve7.qrt' sh "${test_root}"
 root_retry_args=$(tr -d '\n' <"${ssh_log}")
-assert_eq "${root_retry_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 -t root@pve7.qrt sudo -i-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 -t root@pve7.qrt sudo -i'
+assert_eq "${root_retry_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 -t root@pve7.qrt sudo -i'
+assert_eq "$(tr -d '\n' <"${ssh_keygen_log}")" '-R pve7.qrt'
 
 : >"${ssh_log}"
 : >"${ssh_keygen_log}"
-if SSH_KNOWN_HOSTS=workspace-abc.qrt SSH_STRICT_FAIL=1 SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto -t nonroot@workspace-abc.qrt "tmux attach-session -t agents"' sh "${test_root}"; then
-	fail_test 'ssh_auto should not replace an existing host key after a failed connection'
-fi
+SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto nonroot@gitea-server.ai' sh "${test_root}"
+gitea_args=$(tr -d '\n' <"${ssh_log}")
+assert_eq "${gitea_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 nonroot@gitea-server.ai'
+assert_eq "$(tr -d '\n' <"${ssh_keygen_log}")" '-R gitea-server.ai'
+
+: >"${ssh_log}"
+: >"${ssh_keygen_log}"
+SSH_KNOWN_HOSTS=workspace-abc.qrt SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto -t nonroot@workspace-abc.qrt "tmux attach-session -t agents"' sh "${test_root}"
 known_host_args=$(tr -d '\n' <"${ssh_log}")
 assert_eq "${known_host_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 -t nonroot@workspace-abc.qrt tmux attach-session -t agents'
-known_host_keygen_args=$(tr -d '\n' <"${ssh_keygen_log}")
-assert_eq "${known_host_keygen_args}" '-F workspace-abc.qrt'
+assert_eq "$(tr -d '\n' <"${ssh_keygen_log}")" '-R workspace-abc.qrt'
 
 : >"${ssh_log}"
 : >"${ssh_keygen_log}"
-if SSH_STRICT_FAIL=1 SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto user@example.com' sh "${test_root}"; then
-	fail_test 'ssh_auto should not accept host keys for external destinations'
-fi
+SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto user@example.com' sh "${test_root}"
 external_host_args=$(tr -d '\n' <"${ssh_log}")
 assert_eq "${external_host_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 user@example.com'
-assert_eq "$(tr -d '\n' <"${ssh_keygen_log}")" ''
+assert_eq "$(tr -d '\n' <"${ssh_keygen_log}")" '-R example.com'
 
 : >"${ssh_log}"
 : >"${ssh_keygen_log}"
 SSH_LOG="${ssh_log}" SSH_KEYGEN_LOG="${ssh_keygen_log}" PATH="${bin_dir}:${PATH}" sh -c '. "${1}/configs/bash/bashrc.d/ssh.sh"; ssh_auto nonroot@postgres-prod.qrt' sh "${test_root}"
 connected_args=$(tr -d '\n' <"${ssh_log}")
 assert_eq "${connected_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 nonroot@postgres-prod.qrt'
-assert_eq "$(tr -d '\n' <"${ssh_keygen_log}")" ''
+assert_eq "$(tr -d '\n' <"${ssh_keygen_log}")" '-R postgres-prod.qrt'
 
 : >"${ssh_log}"
 : >"${ssh_keygen_log}"
@@ -132,6 +136,7 @@ SSH_KNOWN_HOSTS=workspace-abc.qrt SSH_EXIT_SEQUENCE='255,255,0' SSH_ERROR='Timeo
 reconnect_args=$(tr -d '\n' <"${ssh_log}")
 assert_eq "${reconnect_args}" '-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 -t nonroot@workspace-abc.qrt tmux attach-session -t agents-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 -t nonroot@workspace-abc.qrt tmux attach-session -t agents-o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 -t nonroot@workspace-abc.qrt tmux attach-session -t agents'
 assert_eq "$(cat "${reconnect_state}")" '3'
+assert_eq "$(tr -d '\n' <"${ssh_keygen_log}")" '-R workspace-abc.qrt-R workspace-abc.qrt-R workspace-abc.qrt'
 
 : >"${ssh_log}"
 : >"${ssh_keygen_log}"

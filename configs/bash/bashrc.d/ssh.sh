@@ -66,35 +66,6 @@ __ssh_strict() {
 	fi
 }
 
-__ssh_accept_new() {
-	root=0 tty='' destination=''
-	while [ "$#" -gt 0 ]; do
-		case "$1" in
-		-r | --root)
-			root=1
-			shift
-			;;
-		-t)
-			tty='-t'
-			shift
-			;;
-		*) break ;;
-		esac
-	done
-	[ "$#" -gt 0 ] || return 1
-	destination="$1"
-	shift
-	if [ "${root}" -eq 1 ]; then
-		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new \
-			-o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 \
-			-t "${destination}" 'sudo -i'
-	else
-		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=accept-new \
-			-o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 \
-			${tty:+"${tty}"} "${destination}" "$@"
-	fi
-}
-
 #### public utilities ##########################################################
 
 add_known_host() {
@@ -196,23 +167,9 @@ __ssh_auto_once() {
 		echo "'ssh-auto' expected DESTINATION after options" >&2
 		return 1
 	fi
-	root_flag=${root}
-	tty_flag=${tty}
-	if __ssh_strict ${root_flag:+"${root_flag}"} ${tty_flag:+"${tty_flag}"} "${destination}" "$@"; then
-		return
-	else
-		strict_status=$?
-	fi
-
 	host="${destination##*@}"
-	case "${host}" in
-	*.internal | *.qrt) ;;
-	*) return 1 ;;
-	esac
-	if ssh-keygen -F "${host}" >/dev/null 2>&1; then
-		return "${strict_status}"
-	fi
-	__ssh_accept_new ${root_flag:+"${root_flag}"} ${tty_flag:+"${tty_flag}"} "${destination}" "$@"
+	add_known_host "${host}" || return
+	__ssh_strict ${root:+"${root}"} ${tty:+"${tty}"} "${destination}" "$@"
 }
 
 __ssh_auto_is_interactive() {
