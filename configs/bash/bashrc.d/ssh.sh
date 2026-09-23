@@ -20,24 +20,41 @@ __ssh_keyscan() {
 		esac
 	done
 	[ -n "${port}" ] && args="${args} -p ${port}"
-	tmp=$(mktemp)
+	output=$(mktemp) || return 1
+	error=$(mktemp) || {
+		rm -f -- "${output}"
+		return 1
+	}
 	# shellcheck disable=SC2086
-	if ssh-keyscan ${args} -q "${host}" >>~/.ssh/known_hosts 2>"${tmp}"; then
-		rm -f -- "${tmp}"
-		return
-	fi
-	if grep -q "illegal option -- q" "${tmp}"; then
+	if ssh-keyscan ${args} -q "${host}" >"${output}" 2>"${error}"; then
+		:
+	elif grep -q "illegal option -- q" "${error}"; then
 		# shellcheck disable=SC2086
-		ssh-keyscan ${args} "${host}" >>~/.ssh/known_hosts
+		ssh-keyscan ${args} "${host}" >"${output}" 2>"${error}" || {
+			cat "${error}" >&2
+			rm -f -- "${output}" "${error}"
+			return 1
+		}
 	else
-		cat "${tmp}" >&2
-		rm -f -- "${tmp}"
+		cat "${error}" >&2
+		rm -f -- "${output}" "${error}"
 		return 1
 	fi
-	rm -f -- "${tmp}"
+	if ! grep -Eq '(^|[[:space:]])ssh-ed25519[[:space:]]' "${output}"; then
+		echo "ssh-keyscan returned no ED25519 host key for ${host}" >&2
+		rm -f -- "${output}" "${error}"
+		return 1
+	fi
+	if ! cat "${output}"; then
+		rm -f -- "${output}" "${error}"
+		return 1
+	fi
+	rm -f -- "${output}" "${error}"
 }
 
-__ssh_strict() {
+__ssh_connect() {
+	checking=$1
+	shift
 	root=0 tty='' destination=''
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
@@ -56,11 +73,11 @@ __ssh_strict() {
 	destination="$1"
 	shift
 	if [ "${root}" -eq 1 ]; then
-		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes \
+		ssh -o HostKeyAlgorithms=ssh-ed25519 -o "StrictHostKeyChecking=${checking}" \
 			-o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 \
 			-t "${destination}" 'sudo -i'
 	else
-		ssh -o HostKeyAlgorithms=ssh-ed25519 -o StrictHostKeyChecking=yes \
+		ssh -o HostKeyAlgorithms=ssh-ed25519 -o "StrictHostKeyChecking=${checking}" \
 			-o ServerAliveInterval=10 -o ServerAliveCountMax=1000000 \
 			${tty:+"${tty}"} "${destination}" "$@"
 	fi
@@ -74,13 +91,25 @@ add_known_host() {
 		return 1
 	fi
 	host="$1"
+	keys=$(mktemp) || return 1
 	if [ "$#" -ge 2 ]; then
-		ssh-keygen -R "[${host}]:$2"
-		__ssh_keyscan "${host}" -p "$2"
+		__ssh_keyscan "${host}" -p "$2" >"${keys}" || {
+			rm -f -- "${keys}"
+			return 1
+		}
+		ssh-keygen -R "[${host}]:$2" >/dev/null
 	else
-		ssh-keygen -R "${host}"
-		__ssh_keyscan "${host}"
+		__ssh_keyscan "${host}" >"${keys}" || {
+			rm -f -- "${keys}"
+			return 1
+		}
+		ssh-keygen -R "${host}" >/dev/null
 	fi
+	if ! cat "${keys}" >>"${HOME}/.ssh/known_hosts"; then
+		rm -f -- "${keys}"
+		return 1
+	fi
+	rm -f -- "${keys}"
 }
 
 edit_authorized_keys() { "${EDITOR}" "${HOME}/.ssh/authorized_keys"; }
@@ -140,36 +169,43 @@ ssh_tailscale() {
 	ssh_auto "${user}@${ip}"
 }
 
+__ssh_destination() {
+	while [ "$#" -gt 0 ]; do
+		case "$1" in
+		-r | --root | -t) shift ;;
+		*)
+			printf '%s\n' "$1"
+			return
+			;;
+		esac
+	done
+	echo "'ssh-auto' expected DESTINATION after options" >&2
+	return 1
+}
+
 __ssh_auto_once() {
 	if [ "$#" -lt 1 ]; then
 		echo "'ssh-auto' expected [1..] arguments [OPTIONS] DESTINATION [COMMAND...]; got $#" >&2
 		return 1
 	fi
-	root='' tty='' destination=''
-	while [ "$#" -gt 0 ]; do
-		case "$1" in
-		-r | --root)
-			root='--root'
-			shift
-			;;
-		-t)
-			tty='-t'
-			shift
-			;;
-		*)
-			destination="$1"
-			shift
-			break
-			;;
-		esac
-	done
-	if [ -z "${destination}" ]; then
-		echo "'ssh-auto' expected DESTINATION after options" >&2
-		return 1
-	fi
+	destination=$(__ssh_destination "$@") || return
 	host="${destination##*@}"
-	add_known_host "${host}" || return
-	__ssh_strict ${root:+"${root}"} ${tty:+"${tty}"} "${destination}" "$@"
+	error=$(mktemp) || return 1
+	if __ssh_connect yes "$@" 2>"${error}"; then
+		rm -f -- "${error}"
+		return
+	else
+		status=$?
+	fi
+	if grep -Eqi 'remote host identification has changed' "${error}"; then
+		ssh-keygen -R "${host}" >/dev/null
+	elif ! grep -Eqi 'no ed25519 host key is known' "${error}"; then
+		cat "${error}" >&2
+		rm -f -- "${error}"
+		return "${status}"
+	fi
+	rm -f -- "${error}"
+	__ssh_connect accept-new "$@"
 }
 
 __ssh_auto_is_interactive() {
