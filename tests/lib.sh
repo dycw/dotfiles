@@ -32,8 +32,18 @@ ensure_line_in_file 'alpha' "${line_file}"
 ensure_line_in_file 'alpha' "${line_file}"
 assert_eq "$(wc -l <"${line_file}" | tr -d ' ')" '1'
 
-configs="${test_root}/configs" setup_ssh
+mkdir -p "${home_dir}/.ssh"
+printf '# preserve existing test key\n' >"${home_dir}/.ssh/authorized_keys"
+configs="${test_root}/configs"
+setup_ssh
 assert_file_exists "${home_dir}/.ssh/authorized_keys"
 assert_file_exists "${home_dir}/.ssh/config"
 assert_file_exists "${home_dir}/.ssh/config.d"
+assert_file_contains '# preserve existing test key' "${home_dir}/.ssh/authorized_keys"
+managed_key=$(head -n 1 "${configs}/authorized_keys")
+assert_eq "$(grep -Fxc -- "${managed_key}" "${home_dir}/.ssh/authorized_keys")" '1'
 assert_file_contains 'Include ~/.ssh/config.d/*' "${home_dir}/.ssh/config"
+setup_ssh
+assert_eq "$(grep -Fxc '# preserve existing test key' "${home_dir}/.ssh/authorized_keys")" '1'
+assert_eq "$(grep -Fxc -- "${managed_key}" "${home_dir}/.ssh/authorized_keys")" '1'
+assert_eq "$(grep -Fxc 'Include ~/.ssh/config.d/*' "${home_dir}/.ssh/config")" '1'

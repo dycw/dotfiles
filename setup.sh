@@ -25,20 +25,12 @@ fail() {
 	exit 1
 }
 
-_sudo_acquired=0
-
 acquire_sudo() {
-	[ "${_sudo_acquired}" -eq 1 ] && return
-	if ! sudo -n true 2>/dev/null; then
-		log "Requesting sudo access..."
-		sudo -v
+	if [ "$(id -u)" -eq 0 ] || sudo -n true >/dev/null 2>&1; then
+		return 0
 	fi
-	_sudo_acquired=1
-	while true; do
-		sudo -n true 2>/dev/null || true
-		sleep 60
-		kill -0 "$$" 2>/dev/null || exit 0
-	done &
+	log "Requesting sudo access..."
+	sudo -v
 }
 
 run_root() {
@@ -46,19 +38,39 @@ run_root() {
 		"$@"
 	else
 		acquire_sudo
-		sudo env PATH="$PATH" "$@"
+		sudo env PATH="${PATH}:/usr/local/sbin:/usr/sbin:/sbin" "$@"
 	fi
 }
 
 add_brew_to_path() {
+	[ "${platform:-}" = mac ] || return 0
 	if [ -x /opt/homebrew/bin/brew ]; then
 		export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH:+:${PATH}}"
-	elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-		export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin${PATH:+:${PATH}}"
 	elif [ -x /usr/local/bin/brew ]; then
 		export PATH="/usr/local/bin:/usr/local/sbin${PATH:+:${PATH}}"
 	fi
 }
+
+run_script_from_url() (
+	_script_url=$1
+	shift
+	if ! _script_tmp=$(mktemp "${TMPDIR:-/tmp}/dotfiles-installer.XXXXXX"); then
+		log "Could not create a temporary installer file" >&2
+		exit 1
+	fi
+	trap '_script_status=$?; rm -f -- "${_script_tmp}"; exit "${_script_status}"' EXIT
+	trap 'exit 1' HUP INT TERM
+	if ! curl -fsSL "${_script_url}" -o "${_script_tmp}"; then
+		log "Failed to download installer from ${_script_url}" >&2
+		exit 1
+	fi
+	if "$@" <"${_script_tmp}"; then
+		exit 0
+	else
+		_script_status=$?
+		exit "${_script_status}"
+	fi
+)
 
 require_linux() {
 	if [ ! -r /etc/os-release ]; then
@@ -75,6 +87,7 @@ determine_platform() {
 	Linux)
 		require_linux
 		platform=linux
+		export PATH="${PATH}:/usr/local/sbin:/usr/sbin:/sbin"
 		;;
 	Darwin)
 		platform=mac
@@ -97,6 +110,7 @@ determine_platform() {
 link_home() {
 	src=$1
 	dest=$2
+	[ -e "${src}" ] || fail "Config source does not exist: ${src}"
 	mkdir -p "$(dirname -- "${HOME}/${dest}")"
 	ln -sfn "${src}" "${HOME}/${dest}"
 }
@@ -104,6 +118,7 @@ link_home() {
 link_config() {
 	src=$1
 	dest=$2
+	[ -e "${src}" ] || fail "Config source does not exist: ${src}"
 	mkdir -p "$(dirname -- "${xdg_config_home}/${dest}")"
 	ln -sfn "${src}" "${xdg_config_home}/${dest}"
 }
@@ -111,6 +126,7 @@ link_config() {
 link_direct() {
 	src=$1
 	dest=$2
+	[ -e "${src}" ] || fail "Config source does not exist: ${src}"
 	mkdir -p "$(dirname -- "${dest}")"
 	ln -sfn "${src}" "${dest}"
 }
@@ -122,9 +138,27 @@ ensure_line_in_file() {
 		printf '%s\n' "${line}" >"${path}"
 		return
 	fi
-	if ! grep -Fqx "${line}" "${path}"; then
-		printf '\n%s\n' "${line}" >>"${path}"
+	if ! grep -Fqx -- "${line}" "${path}"; then
+		if [ -s "${path}" ] && [ -n "$(tail -c 1 "${path}")" ]; then
+			printf '\n' >>"${path}"
+		fi
+		printf '%s\n' "${line}" >>"${path}"
 	fi
+}
+
+merge_authorized_keys() {
+	source=$1
+	destination=$2
+	[ -f "${source}" ] || fail "Authorized keys source does not exist: ${source}"
+	[ ! -d "${destination}" ] || fail "Authorized keys destination is a directory: ${destination}"
+	if [ ! -f "${destination}" ]; then
+		cp -- "${source}" "${destination}"
+		return 0
+	fi
+	while IFS= read -r key || [ -n "${key}" ]; do
+		[ -n "${key}" ] || continue
+		ensure_line_in_file "${key}" "${destination}"
+	done <"${source}"
 }
 
 #### brew #####################################################################
@@ -146,109 +180,102 @@ ensure_brew() {
 	if command brew --version >/dev/null 2>&1; then
 		return
 	fi
-	case "${platform}" in
-	linux)
-		log "Installing Linux brew prerequisites..."
-		run_root apt-get -o DPkg::Lock::Timeout=300 update
-		run_root apt-get -o DPkg::Lock::Timeout=300 install -y build-essential curl file git procps sudo
-		;;
-	esac
 	log "Installing 'brew'..."
 	acquire_sudo
-	NONINTERACTIVE=1 HOMEBREW_NO_ENV_HINTS=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	if ! run_script_from_url https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh env NONINTERACTIVE=1 HOMEBREW_NO_ENV_HINTS=1 /bin/bash -s; then
+		fail "'brew' installation failed"
+	fi
 	add_brew_to_path
 	command brew --version >/dev/null 2>&1 || fail "'brew' installation failed"
 	log "'brew' installed successfully"
-	log "Updating brew formula database..."
-	brew update
 }
 
-brew_formula_installed() {
-	brew list --formula "$1" >/dev/null 2>&1
+list_has_line() {
+	printf '%s\n' "$1" | grep -Fqx -- "$2"
 }
 
-brew_cask_installed() {
-	brew list --cask "$1" >/dev/null 2>&1
-}
-
-parallel_install_apt_packages() {
-	tmp=$(mktemp -d)
-	i=0
+install_missing_apt_packages() {
+	missing=''
 	for package in "$@"; do
-		(dpkg -s "${package}" >/dev/null 2>&1 || printf '%s\n' "${package}" >"${tmp}/${i}") &
-		i=$((i + 1))
+		if ! dpkg -s "${package}" >/dev/null 2>&1; then
+			missing="${missing}${missing:+ }${package}"
+		fi
 	done
-	wait
-	missing=$(cat "${tmp}"/* 2>/dev/null | sort -u || true)
-	rm -rf -- "${tmp}"
 	[ -n "${missing}" ] || return 0
+	log "Updating apt package indexes..."
+	run_root apt-get -o DPkg::Lock::Timeout=300 update
 	log "Installing packages: ${missing}"
-	run_root apt-get -o DPkg::Lock::Timeout=300 install -y ${missing}
+	# Package names are fixed by the callers and contain no whitespace.
+	# shellcheck disable=SC2086
+	run_root apt-get -o DPkg::Lock::Timeout=300 install -y --no-install-recommends ${missing}
 }
 
-# Checks all given formulae in parallel, then uninstalls any present ones.
-parallel_uninstall_brew_formulas() {
-	tmp=$(mktemp -d)
-	i=0
+uninstall_brew_formulas() {
+	if ! installed=$(brew list --formula); then
+		fail "Could not list installed brew formulae"
+	fi
+	present=''
 	for formula in "$@"; do
-		(if brew_formula_installed "${formula}"; then printf '%s\n' "${formula}" >"${tmp}/${i}"; fi) &
-		i=$((i + 1))
+		if list_has_line "${installed}" "${formula}"; then
+			present="${present}${present:+ }${formula}"
+		fi
 	done
-	wait
-	present=$(cat "${tmp}"/* 2>/dev/null | sort -u || true)
-	rm -rf -- "${tmp}"
 	[ -n "${present}" ] || return 0
 	log "Uninstalling formulae: ${present}"
+	# Formula names are fixed by the callers and contain no whitespace.
+	# shellcheck disable=SC2086
 	brew uninstall ${present}
 }
 
-# Checks all given casks in parallel, then uninstalls any present ones.
-parallel_uninstall_brew_casks() {
-	tmp=$(mktemp -d)
-	i=0
+uninstall_brew_casks() {
+	if ! installed=$(brew list --cask); then
+		fail "Could not list installed brew casks"
+	fi
+	present=''
 	for cask in "$@"; do
-		(if brew_cask_installed "${cask}"; then printf '%s\n' "${cask}" >"${tmp}/${i}"; fi) &
-		i=$((i + 1))
+		if list_has_line "${installed}" "${cask}"; then
+			present="${present}${present:+ }${cask}"
+		fi
 	done
-	wait
-	present=$(cat "${tmp}"/* 2>/dev/null | sort -u || true)
-	rm -rf -- "${tmp}"
 	[ -n "${present}" ] || return 0
 	log "Uninstalling casks: ${present}"
+	# Cask names are fixed by the callers and contain no whitespace.
+	# shellcheck disable=SC2086
 	brew uninstall --cask ${present}
 }
 
-# Checks all given formulae in parallel, then installs any missing ones in a
-# single brew call.
-parallel_install_brew_formulas() {
-	tmp=$(mktemp -d)
-	i=0
+install_missing_brew_formulas() {
+	if ! installed=$(brew list --formula); then
+		fail "Could not list installed brew formulae"
+	fi
+	missing=''
 	for formula in "$@"; do
-		(brew_formula_installed "${formula}" || printf '%s\n' "${formula}" >"${tmp}/${i}") &
-		i=$((i + 1))
+		if ! list_has_line "${installed}" "${formula}"; then
+			missing="${missing}${missing:+ }${formula}"
+		fi
 	done
-	wait
-	missing=$(cat "${tmp}"/* 2>/dev/null | sort -u || true)
-	rm -rf -- "${tmp}"
 	[ -n "${missing}" ] || return 0
 	log "Installing formulae: ${missing}"
+	# Formula names are fixed by the callers and contain no whitespace.
+	# shellcheck disable=SC2086
 	brew install ${missing}
 }
 
-# Checks all given casks in parallel, then installs any missing ones in a
-# single brew call. Uses --adopt to handle apps installed outside Homebrew.
-parallel_install_brew_casks() {
-	tmp=$(mktemp -d)
-	i=0
+# Uses --adopt to handle apps installed outside Homebrew.
+install_missing_brew_casks() {
+	if ! installed=$(brew list --cask); then
+		fail "Could not list installed brew casks"
+	fi
+	missing=''
 	for cask in "$@"; do
-		(brew_cask_installed "${cask}" || printf '%s\n' "${cask}" >"${tmp}/${i}") &
-		i=$((i + 1))
+		if ! list_has_line "${installed}" "${cask}"; then
+			missing="${missing}${missing:+ }${cask}"
+		fi
 	done
-	wait
-	missing=$(cat "${tmp}"/* 2>/dev/null | sort -u || true)
-	rm -rf -- "${tmp}"
 	[ -n "${missing}" ] || return 0
 	log "Installing casks: ${missing}"
+	# Cask names are fixed by the callers and contain no whitespace.
+	# shellcheck disable=SC2086
 	brew install --cask --adopt ${missing}
 }
 
@@ -272,61 +299,165 @@ maybe_upgrade_apt_packages() {
 	run_root apt-get -o DPkg::Lock::Timeout=300 upgrade -y
 }
 
+set_rust_tool_list() {
+	rust_tool_list='bacon cargo-audit cargo-deny cargo-edit cargo-nextest sccache'
+	if [ "${platform:-}" = linux ]; then
+		rust_tool_list="${rust_tool_list} bottom du-dust prek taplo-cli topgrade"
+	fi
+}
+
+rust_tool_command() {
+	case "$1" in
+	bottom) printf 'btm' ;;
+	cargo-edit) printf 'cargo-add' ;;
+	du-dust) printf 'dust' ;;
+	taplo-cli) printf 'taplo' ;;
+	*) printf '%s' "$1" ;;
+	esac
+}
+
+install_rust_tool() {
+	tool=$1
+	if [ "${tool}" = taplo-cli ]; then
+		log "Installing '${tool}' using 'cargo install'..."
+		cargo install --locked "${tool}"
+		return
+	fi
+
+	log "Installing '${tool}' using 'cargo binstall'..."
+	if ! cargo binstall -y "${tool}"; then
+		log "Installing '${tool}' using 'cargo install'..."
+		cargo install --locked "${tool}"
+	fi
+}
+
 maybe_upgrade_rust() {
 	[ "${should_upgrade:-0}" -eq 1 ] || return 0
+	export PATH="${HOME}/.cargo/bin${PATH:+:${PATH}}"
+	command -v rustup >/dev/null 2>&1 || return 0
+	command -v cargo-binstall >/dev/null 2>&1 || return 0
 	log "Updating rust toolchain and cargo tools..."
-	rustup update
-	for tool in bacon cargo-audit cargo-deny cargo-edit cargo-nextest sccache; do
-		cargo binstall -y --force "${tool}" &
+	if ! rustup update; then
+		return 1
+	fi
+	set_rust_tool_list
+	# Tool package names are fixed by set_rust_tool_list.
+	for tool in ${rust_tool_list}; do
+		if ! cargo binstall -y --force "${tool}"; then
+			log "Failed to update Rust tool '${tool}'" >&2
+			return 1
+		fi
 	done
-	wait
 }
 
 #### packages #################################################################
 
 remove_unwanted_brew_formulas() {
-	parallel_uninstall_brew_formulas age dnsmasq sops rlwrap yoannfleurydev/gitweb/gitweb
+	uninstall_brew_formulas age dnsmasq sops rlwrap yoannfleurydev/gitweb/gitweb
 	case "${platform}" in
 	mac)
-		parallel_uninstall_brew_formulas tailscale
+		uninstall_brew_formulas tailscale
 		;;
 	esac
 }
 
 install_common_brew_formulas() {
-	parallel_install_brew_formulas \
+	install_missing_brew_formulas \
 		asciinema autoconf automake bat bash bash-completion@2 bottom coreutils delta \
 		direnv dust eza fd fzf gh git-delta iperf3 jq just libpq \
 		luacheck luarocks markdownlint-cli maturin npm pgcli postgresql@18 prek prettier redis \
 		restic ripgrep ruff sccache sd shellcheck shfmt starship taplo \
 		tea tmux topgrade uv vim watch yq zoxide
 
-	case "${platform}" in
-	linux)
-		parallel_install_brew_formulas tailscale
-		;;
-	mac)
-		parallel_install_brew_formulas agg flock mas rename wakeonlan
-		;;
-	esac
+	install_missing_brew_formulas agg flock mas rename wakeonlan
 }
 
 install_linux_packages() {
-	parallel_install_apt_packages curl rsync sudo xclip xsel
+	install_missing_apt_packages \
+		asciinema autoconf automake bat bash bash-completion build-essential ca-certificates coreutils direnv eza \
+		fd-find fzf gh git-delta golang-go iperf3 jq just libpq-dev lua-check luarocks pgcli \
+		postgresql passwd procps python3-maturin python3-pip python3-venv pipx redis-server restic \
+		ripgrep sccache sd shellcheck \
+		shfmt starship tmux vim yq zoxide curl rsync sudo xclip xsel
+}
+
+ensure_nodejs_22() {
+	if command -v node >/dev/null 2>&1; then
+		node_version=$(node --version | cut -c 2-)
+		node_major=${node_version%%.*}
+		node_rest=${node_version#*.}
+		node_minor=${node_rest%%.*}
+		node_patch=${node_rest#*.}
+		if {
+			[ "${node_major}" -gt 22 ] ||
+				{ [ "${node_major}" -eq 22 ] && [ "${node_minor}" -gt 22 ]; } ||
+				{ [ "${node_major}" -eq 22 ] && [ "${node_minor}" -eq 22 ] && [ "${node_patch}" -ge 2 ]; }
+		} && command -v npm >/dev/null 2>&1; then
+			return 0
+		fi
+	fi
+
+	log "Installing Node.js 22 or newer..."
+	acquire_sudo
+	if ! run_script_from_url https://deb.nodesource.com/setup_22.x sudo -E /bin/bash -s; then
+		fail "Node.js repository setup failed"
+	fi
+	run_root apt-get -o DPkg::Lock::Timeout=300 install -y --no-install-recommends nodejs
+	command -v npm >/dev/null 2>&1 || fail "Node.js installation did not provide npm"
+}
+
+install_linux_user_tools() {
+	export PATH="${HOME}/.local/bin:${HOME}/.npm-global/bin${PATH:+:${PATH}}"
+
+	if [ "${should_upgrade:-0}" -eq 1 ] || ! command -v ruff >/dev/null 2>&1; then
+		pipx install --force ruff
+	fi
+	if [ "${should_upgrade:-0}" -eq 1 ] || ! command -v uv >/dev/null 2>&1; then
+		pipx install --force uv
+	fi
+
+	npm_packages=''
+	if [ "${should_upgrade:-0}" -eq 1 ] || [ ! -x "${HOME}/.npm-global/bin/markdownlint" ]; then
+		npm_packages=markdownlint-cli@0.48.0
+	fi
+	if [ "${should_upgrade:-0}" -eq 1 ] || [ ! -x "${HOME}/.npm-global/bin/prettier" ]; then
+		npm_packages="${npm_packages}${npm_packages:+ }prettier"
+	fi
+	[ -n "${npm_packages}" ] || return 0
+	log "Installing npm tools: ${npm_packages}"
+	# Package names are fixed above and contain no whitespace.
+	# shellcheck disable=SC2086
+	npm install --global --prefix "${HOME}/.npm-global" ${npm_packages}
+}
+
+install_tailscale_linux() {
+	if command -v tailscale >/dev/null 2>&1; then
+		return 0
+	fi
+	log "Installing tailscale from the upstream Debian repository..."
+	acquire_sudo
+	if ! run_script_from_url https://tailscale.com/install.sh /bin/sh; then
+		fail "Tailscale installation failed"
+	fi
+	command -v tailscale >/dev/null 2>&1 || fail "Tailscale installation failed"
 }
 
 install_docker_linux() {
-	if command -v docker >/dev/null 2>&1; then
-		return 0
+	if ! command -v docker >/dev/null 2>&1; then
+		log "Installing docker via upstream script..."
+		acquire_sudo
+		if ! run_script_from_url https://get.docker.com /bin/sh -s; then
+			fail "Docker installation failed"
+		fi
 	fi
-	log "Installing docker via upstream script..."
-	acquire_sudo
-	curl -fsSL https://get.docker.com | sh
-	run_root usermod -aG docker "${USER}"
+	command -v docker >/dev/null 2>&1 || fail "Docker installation failed"
+	if ! id -nG "${USER}" | tr ' ' '\n' | grep -Fqx -- docker; then
+		run_root usermod -aG docker "${USER}"
+	fi
 }
 
 remove_unwanted_brew_casks() {
-	parallel_uninstall_brew_casks \
+	uninstall_brew_casks \
 		db-browser-for-sqlite firefox ghostty google-chrome iterm2 pgadmin4 slack
 }
 
@@ -344,25 +475,24 @@ install_mac_casks() {
 		;;
 	esac
 	# shellcheck disable=SC2086
-	parallel_install_brew_casks ${casks}
+	install_missing_brew_casks ${casks}
 }
 
 # 1Password for Safari (App Store id 1569813296)
 # Tailscale (App Store id 1475387147)
 mac_app_store_apps='1569813296 1475387147'
 
-parallel_install_mas_apps() {
-	tmp=$(mktemp -d)
-	i=0
+install_missing_mas_apps() {
+	installed=$(mas list 2>/dev/null || true)
+	missing=''
 	for app_id in "$@"; do
-		(mas list 2>/dev/null | awk '{print $1}' | grep -Fxq "${app_id}" || printf '%s\n' "${app_id}" >"${tmp}/${i}") &
-		i=$((i + 1))
+		if ! printf '%s\n' "${installed}" | awk '{print $1}' | grep -Fqx -- "${app_id}"; then
+			missing="${missing}${missing:+ }${app_id}"
+		fi
 	done
-	wait
-	missing=$(cat "${tmp}"/* 2>/dev/null | sort -u || true)
-	rm -rf -- "${tmp}"
 	[ -n "${missing}" ] || return 0
 	log "Installing Mac App Store apps: ${missing}"
+	# App IDs are fixed by the caller and contain no whitespace.
 	for app_id in ${missing}; do
 		mas install "${app_id}" || log "Warning: failed to install App Store app ${app_id}; sign in to the App Store and re-run"
 	done
@@ -371,7 +501,7 @@ parallel_install_mas_apps() {
 install_mac_app_store_apps() {
 	command -v mas >/dev/null 2>&1 || return 0
 	# shellcheck disable=SC2086
-	parallel_install_mas_apps ${mac_app_store_apps}
+	install_missing_mas_apps ${mac_app_store_apps}
 }
 
 maybe_upgrade_mas_apps() {
@@ -388,7 +518,11 @@ install_rust_tools() {
 		log "'rust' is already installed"
 	else
 		log "Installing 'rust'..."
-		curl -LsSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+		if [ "${platform}" = linux ]; then
+			run_script_from_url https://sh.rustup.rs /bin/sh -s -- -y --no-modify-path --profile minimal
+		else
+			run_script_from_url https://sh.rustup.rs /bin/sh -s -- -y --no-modify-path
+		fi
 		. "${HOME}/.cargo/env"
 	fi
 
@@ -396,8 +530,11 @@ install_rust_tools() {
 		log "Installing default rust toolchain..."
 		rustup toolchain install stable
 		rustup default stable
-		rustup component add clippy rust-analyzer rust-docs rustfmt
-		rustup target add x86_64-unknown-linux-gnu x86_64-apple-darwin aarch64-apple-darwin
+		rustup component add clippy rust-analyzer rustfmt
+		if [ "${platform}" = mac ]; then
+			rustup component add rust-docs
+			rustup target add x86_64-unknown-linux-gnu x86_64-apple-darwin aarch64-apple-darwin
+		fi
 	fi
 
 	command -v cargo >/dev/null 2>&1 || fail "'cargo' is still not available after rustup setup"
@@ -406,31 +543,56 @@ install_rust_tools() {
 		log "'cargo-binstall' is already installed"
 	else
 		log "Installing 'cargo-binstall'..."
-		curl -L --proto '=https' --tlsv1.2 -sSf \
-			https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+		run_script_from_url \
+			https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh \
+			/bin/bash -s
 	fi
 
-	for tool in bacon cargo-audit cargo-deny cargo-edit cargo-nextest sccache; do
-		if command -v "${tool}" >/dev/null 2>&1; then
+	set_rust_tool_list
+	# Tool package names are fixed by set_rust_tool_list.
+	for tool in ${rust_tool_list}; do
+		tool_command=$(rust_tool_command "${tool}")
+		if command -v "${tool_command}" >/dev/null 2>&1; then
 			log "'${tool}' is already installed"
 		else
-			log "Installing '${tool}' using 'cargo binstall'..."
-			if ! cargo binstall -y "${tool}"; then
-				log "Installing '${tool}' using 'cargo install'..."
-				cargo install --locked "${tool}"
-			fi
+			install_rust_tool "${tool}"
 		fi
 	done
 }
 
-install_keymapp() {
+install_keymapp() (
+	keymapp_bin="${HOME}/.local/bin/keymapp"
+	if [ "${should_upgrade:-0}" -ne 1 ] && [ -x "${keymapp_bin}" ]; then
+		exit 0
+	fi
+
 	log "Installing 'keymapp'..."
-	tmp=$(mktemp -d)
-	trap 'rm -rf -- "${tmp}"' EXIT HUP INT TERM
+	if ! tmp=$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-keymapp.XXXXXX"); then
+		fail "Could not create a temporary keymapp directory"
+	fi
+	staged=''
+	trap '_keymapp_status=$?; rm -rf -- "${tmp}"; if [ -n "${staged}" ]; then rm -f -- "${staged}"; fi; exit "${_keymapp_status}"' EXIT
+	trap 'exit 1' HUP INT TERM
 	url='https://oryx.nyc3.cdn.digitaloceanspaces.com/keymapp/keymapp-latest.tar.gz'
-	curl -fsSL "${url}" | tar -xz -C "${tmp}"
-	install -Dm755 "${tmp}/keymapp" "${HOME}/.local/bin/keymapp"
-}
+	if ! curl -fsSL "${url}" -o "${tmp}/keymapp.tar.gz"; then
+		fail "Could not download keymapp"
+	fi
+	if ! tar -xz -f "${tmp}/keymapp.tar.gz" -C "${tmp}"; then
+		fail "Could not extract keymapp"
+	fi
+	keymapp_dir=$(dirname -- "${keymapp_bin}")
+	mkdir -p -- "${keymapp_dir}"
+	if ! staged=$(mktemp "${keymapp_bin}.XXXXXX"); then
+		fail "Could not create a staged keymapp binary"
+	fi
+	if ! install -m 755 "${tmp}/keymapp" "${staged}"; then
+		fail "Could not stage keymapp"
+	fi
+	if ! mv -f -- "${staged}" "${keymapp_bin}"; then
+		fail "Could not activate keymapp at ${keymapp_bin}"
+	fi
+	staged=''
+)
 
 install_all() {
 	log "Installing apps on '$(hostname)'..."
@@ -439,23 +601,27 @@ install_all() {
 	if should_upgrade; then
 		should_upgrade=1
 		log "Upgrade timer expired; will refresh installed packages"
-		mark_upgraded
 	fi
 
-	ensure_brew
-	remove_unwanted_brew_formulas
-	install_common_brew_formulas
-	maybe_upgrade_brew_formulas
-	install_rust_tools
-	maybe_upgrade_rust
 	case "${platform}" in
 	linux)
 		install_linux_packages
 		maybe_upgrade_apt_packages
+		ensure_nodejs_22
+		maybe_upgrade_rust
+		install_rust_tools
+		install_linux_user_tools
+		install_tailscale_linux
 		install_docker_linux
 		install_keymapp
 		;;
 	mac)
+		ensure_brew
+		remove_unwanted_brew_formulas
+		maybe_upgrade_brew_formulas
+		install_common_brew_formulas
+		maybe_upgrade_rust
+		install_rust_tools
 		remove_unwanted_brew_casks
 		install_mac_casks
 		maybe_upgrade_brew_casks
@@ -464,6 +630,9 @@ install_all() {
 		;;
 	esac
 
+	if [ "${should_upgrade}" -eq 1 ]; then
+		mark_upgraded
+	fi
 }
 
 #### setup ####################################################################
@@ -474,7 +643,7 @@ setup_ssh() {
 	run_root chown -R "$(id -un)" "${HOME}/.ssh"
 	chmod 700 "${HOME}/.ssh"
 
-	cp -- "${configs}/authorized_keys" "${HOME}/.ssh/authorized_keys"
+	merge_authorized_keys "${configs}/authorized_keys" "${HOME}/.ssh/authorized_keys"
 	chmod 600 "${HOME}/.ssh/authorized_keys"
 
 	mkdir -p "${HOME}/.ssh/config.d"
@@ -512,7 +681,7 @@ setup_bash() {
 			run_root chsh -s "${bash_path}" "${USER}"
 		fi
 	fi
-	if command -v brew >/dev/null 2>&1; then
+	if [ "${platform:-}" = mac ] && command brew --version >/dev/null 2>&1; then
 		brew completions link 2>/dev/null || true
 	fi
 }
@@ -683,9 +852,19 @@ setup_keymapp() {
 setup_vim_plugins() {
 	log "Setting up Vim plugins..."
 	plug_file="${HOME}/.vim/autoload/plug.vim"
-	if [ ! -f "${plug_file}" ]; then
-		curl -fLo "${plug_file}" --create-dirs \
-			https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	if [ ! -s "${plug_file}" ]; then
+		mkdir -p -- "$(dirname -- "${plug_file}")"
+		if ! plug_tmp=$(mktemp "${plug_file}.XXXXXX"); then
+			fail "Could not create a temporary vim-plug file"
+		fi
+		if ! curl -fsSL https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim -o "${plug_tmp}"; then
+			rm -f -- "${plug_tmp}"
+			fail "Could not download vim-plug"
+		fi
+		if [ ! -s "${plug_tmp}" ] || ! mv -f -- "${plug_tmp}" "${plug_file}"; then
+			rm -f -- "${plug_tmp}"
+			fail "Could not install vim-plug"
+		fi
 	fi
 	vim -Nu "${HOME}/.vimrc" -n -es +'PlugInstall --sync' +qa
 }
@@ -696,6 +875,9 @@ setup_git_config() {
 	mkdir -p "${xdg_config_home}/git"
 	[ -L "${_git_cfg}" ] && rm -f -- "${_git_cfg}"
 	if ! grep -qF "path = ${configs}/git/config" "${_git_cfg}" 2>/dev/null; then
+		if [ -s "${_git_cfg}" ] && [ -n "$(tail -c 1 "${_git_cfg}")" ]; then
+			printf '\n' >>"${_git_cfg}"
+		fi
 		printf '[include]\n\tpath = %s\n' "${configs}/git/config" >>"${_git_cfg}"
 	fi
 	unset _git_cfg
@@ -758,11 +940,36 @@ EOF
 setup_tmux() {
 	log "Setting up 'tmux'..."
 	tmux_dir="${xdg_config_home}/tmux"
+	tmux_repo="${tmux_dir}/.tmux"
 	mkdir -p "${tmux_dir}"
-	if [ ! -d "${tmux_dir}/.tmux" ]; then
-		git clone https://github.com/gpakosz/.tmux.git "${tmux_dir}/.tmux"
+	if [ ! -d "${tmux_repo}" ]; then
+		if [ -e "${tmux_repo}" ] || [ -L "${tmux_repo}" ]; then
+			fail "'${tmux_repo}' exists but is not a directory"
+		fi
+		if ! tmp_clone=$(mktemp -d "${tmux_dir}/.tmux.XXXXXX"); then
+			fail "Could not create a temporary tmux checkout"
+		fi
+		if git clone https://github.com/gpakosz/.tmux.git "${tmp_clone}"; then
+			if [ ! -f "${tmp_clone}/.tmux.conf" ]; then
+				rm -rf -- "${tmp_clone}"
+				fail "The tmux repository does not contain .tmux.conf"
+			fi
+			if ! mv -- "${tmp_clone}" "${tmux_repo}"; then
+				rm -rf -- "${tmp_clone}"
+				fail "Could not activate the tmux configuration"
+			fi
+		else
+			clone_status=$?
+			if ! rm -rf -- "${tmp_clone}"; then
+				log "Warning: could not remove incomplete tmux checkout ${tmp_clone}" >&2
+			fi
+			return "${clone_status}"
+		fi
 	fi
-	link_direct "${tmux_dir}/.tmux/.tmux.conf" "${tmux_dir}/tmux.conf"
+	if [ ! -f "${tmux_repo}/.tmux.conf" ]; then
+		fail "The existing tmux checkout is missing .tmux.conf"
+	fi
+	link_direct "${tmux_repo}/.tmux.conf" "${tmux_dir}/tmux.conf"
 	link_config "${configs}/tmux.conf" tmux/tmux.conf.local
 }
 
@@ -948,7 +1155,9 @@ ensure_git() {
 		if ! command -v brew >/dev/null 2>&1; then
 			log "Installing 'brew'..."
 			acquire_sudo
-			NONINTERACTIVE=1 HOMEBREW_NO_ENV_HINTS=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+			if ! run_script_from_url https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh env NONINTERACTIVE=1 HOMEBREW_NO_ENV_HINTS=1 /bin/bash -s; then
+				fail "'brew' installation failed"
+			fi
 			log "'brew' installed successfully"
 		fi
 		if [ -x /opt/homebrew/bin/brew ]; then
@@ -977,6 +1186,10 @@ run_local_self() {
 	log "Setting up '$(hostname)'..."
 
 	resolve_dotfiles
+	determine_platform
+	if [ "$(id -u)" -eq 0 ]; then
+		fail "Run setup.sh as the user to configure, or use --user USER as root"
+	fi
 	ensure_git
 
 	if [ -d "${dotfiles}/.git" ]; then
@@ -984,12 +1197,28 @@ run_local_self() {
 		git -C "${dotfiles}" fetch origin
 		git -C "${dotfiles}" reset --hard origin/master
 	else
+		if [ -e "${dotfiles}" ] || [ -L "${dotfiles}" ]; then
+			fail "'${dotfiles}' exists but is not a git repository; refusing to replace it"
+		fi
 		log "Cloning repo..."
-		git clone "${repo}" "${dotfiles}"
+		if ! clone_tmp=$(mktemp -d "${dotfiles}.clone.XXXXXX"); then
+			fail "Could not create a temporary clone directory"
+		fi
+		if git clone "${repo}" "${clone_tmp}"; then
+			if ! mv -- "${clone_tmp}" "${dotfiles}"; then
+				rm -rf -- "${clone_tmp}"
+				fail "Could not activate the cloned repository at ${dotfiles}"
+			fi
+		else
+			clone_status=$?
+			if ! rm -rf -- "${clone_tmp}"; then
+				log "Warning: could not remove incomplete clone ${clone_tmp}" >&2
+			fi
+			return "${clone_status}"
+		fi
 		configs="${dotfiles}/configs"
 	fi
 
-	determine_platform
 	setup_hostname
 	install_all
 	setup_all
@@ -1014,21 +1243,12 @@ run_remote() {
 	target=$1
 	port=${2:-22}
 	log "Setting up '${target}'..."
-
-	tmp=$(
-		ssh -p "${port}" "${target}" /bin/sh -s <<'EOF'
-set -eu
-mktemp "${TMPDIR:-/tmp}/setup.XXXXXX"
-EOF
-	)
-	tmp=$(printf '%s' "${tmp}") # trailing slash
-	ssh -p "${port}" "${target}" "cat > '${tmp}'" <"${self_path}"
-	ssh -p "${port}" "${target}" /bin/sh -s "${tmp}" <<'EOF'
-set -eu
-chmod 0755 "$1"
-sh "$1"
-rm -f -- "$1"
-EOF
+	ssh -p "${port}" "${target}" 'set -eu
+	tmp=$(mktemp "${TMPDIR:-/tmp}/setup.XXXXXX")
+	trap '\''rm -f -- "$tmp"'\'' EXIT HUP INT TERM
+	cat >"$tmp"
+	chmod 0755 "$tmp"
+	sh "$tmp"' <"${self_path}"
 }
 
 #### main #####################################################################

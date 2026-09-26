@@ -16,9 +16,7 @@ export PATH="${HOME}/.local/bin${PATH:+:${PATH}}"
 
 #### homebrew #################################################################
 
-if [ -d /home/linuxbrew/.linuxbrew/bin ]; then
-	export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin${PATH:+:${PATH}}"
-elif [ -d /opt/homebrew/bin ]; then
+if [ -d /opt/homebrew/bin ]; then
 	export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH:+:${PATH}}"
 fi
 
