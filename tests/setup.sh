@@ -139,13 +139,38 @@ run_setup_install_tests() (
 	trap 'cleanup_temp_dir "${tmp}"' EXIT HUP INT TERM
 
 	HOME="${tmp}/test home"
+	CARGO_HOME="${tmp}/cargo home"
 	XDG_CONFIG_HOME="${tmp}/test config"
 	XDG_CACHE_HOME="${tmp}/test cache"
 	TMPDIR="${tmp}/temp files"
-	mkdir -p "${HOME}" "${XDG_CONFIG_HOME}" "${TMPDIR}"
-	export HOME XDG_CONFIG_HOME XDG_CACHE_HOME TMPDIR
+	mkdir -p "${HOME}" "${CARGO_HOME}" "${XDG_CONFIG_HOME}" "${TMPDIR}"
+	export HOME CARGO_HOME XDG_CONFIG_HOME XDG_CACHE_HOME TMPDIR
 
 	_SETUP_MAIN=0 . "${test_root}/setup.sh"
+
+	#### Linux setup accepts only x86_64 ##########################################
+
+	(
+		require_linux() { :; }
+		TEST_UNAME_MACHINE=x86_64
+		uname() {
+			if [ "${1:-}" = -m ]; then
+				printf '%s\n' "${TEST_UNAME_MACHINE}"
+			else
+				printf 'Linux\n'
+			fi
+		}
+		determine_platform
+		assert_eq "${platform}" 'linux'
+		TEST_UNAME_MACHINE=aarch64
+		if (determine_platform) 2>"${tmp}/unsupported-arch.log"; then
+			fail_test 'Linux setup should reject non-x86_64 architectures'
+		else
+			arch_status=$?
+		fi
+		assert_eq "${arch_status}" '1'
+		assert_file_contains "Unsupported Linux architecture 'aarch64'; only x86_64 is supported" "${tmp}/unsupported-arch.log"
+	)
 
 	#### apt provisioning never opens debconf prompts #############################
 
@@ -292,14 +317,31 @@ EOF
 	assert_eq "$(rust_tool_command bottom)" 'btm'
 	assert_eq "$(rust_tool_command du-dust)" 'dust'
 	assert_eq "$(rust_tool_command taplo-cli)" 'taplo'
+	platform=linux
+	set_rust_tool_list
+	assert_eq "${rust_tool_list}" 'cargo-audit cargo-deny cargo-edit cargo-nextest sccache bottom du-dust prek taplo-cli topgrade'
+	platform=mac
+	set_rust_tool_list
+	assert_eq "${rust_tool_list}" 'cargo-audit cargo-deny cargo-edit cargo-nextest sccache'
+	platform=linux
+	set_rust_tool_list
 
 	RUST_LOG="${tmp}/rust.log"
-	export RUST_LOG
+	TAPLO_CURL_LOG="${tmp}/taplo-curl.log"
+	TAPLO_CURL_FAIL=0
+	TAPLO_ARCHIVE="${tmp}/taplo.gz"
+	TAPLO_URL='https://github.com/tamasfe/taplo/releases/latest/download/taplo-linux-x86_64.gz'
+	export RUST_LOG TAPLO_CURL_LOG TAPLO_CURL_FAIL TAPLO_ARCHIVE TAPLO_URL
 	mkdir -p "${tmp}/bin"
 	cat >"${tmp}/bin/cargo-binstall" <<'EOF'
 #!/bin/sh
 exit 0
 EOF
+	cat >"${tmp}/taplo-fixture" <<'EOF'
+#!/bin/sh
+printf 'prebuilt Taplo\n'
+EOF
+	gzip -c "${tmp}/taplo-fixture" >"${TAPLO_ARCHIVE}"
 	chmod +x "${tmp}/bin/cargo-binstall"
 	PATH="${tmp}/bin:${PATH}"
 	export PATH
@@ -308,7 +350,17 @@ EOF
 	}
 	cargo() {
 		printf 'cargo %s\n' "$*" >>"${RUST_LOG}"
-		[ "${4:-}" != "${FAIL_RUST_TOOL:-}" ] || return 25
+		if [ -n "${FAIL_RUST_TOOL:-}" ]; then
+			case " $* " in
+			*" ${FAIL_RUST_TOOL} "*) return 25 ;;
+			esac
+		fi
+	}
+	curl() {
+		printf '%s\n' "$*" >>"${TAPLO_CURL_LOG}"
+		[ "${TAPLO_CURL_FAIL}" -eq 0 ] || return 22
+		[ "${1:-}" = -fsSL ] && [ "${2:-}" = "${TAPLO_URL}" ] && [ "${3:-}" = -o ] || return 2
+		cp -- "${TAPLO_ARCHIVE}" "$4"
 	}
 	should_upgrade=1
 	FAIL_RUST_TOOL=cargo-edit
@@ -318,14 +370,54 @@ EOF
 		rust_status=$?
 	fi
 	assert_eq "${rust_status}" '1'
-	assert_file_contains 'cargo binstall -y --force cargo-edit' "${RUST_LOG}"
-	if grep -Fq 'cargo binstall -y --force cargo-nextest' "${RUST_LOG}"; then
+	assert_file_contains 'cargo binstall --disable-strategies compile --disable-telemetry -y --force cargo-edit' "${RUST_LOG}"
+	if grep -Fq 'cargo-nextest' "${RUST_LOG}"; then
 		fail_test 'Rust updates should stop after the first failed tool'
 	fi
+
+	FAIL_RUST_TOOL=''
+	install_rust_tool cargo-audit
+	assert_file_contains 'cargo binstall --disable-strategies compile --disable-telemetry -y cargo-audit' "${RUST_LOG}"
+	FAIL_RUST_TOOL='missing-binary'
+	if install_rust_tool missing-binary; then
+		fail_test 'missing prebuilt Rust tools should fail instead of compiling'
+	else
+		rust_status=$?
+	fi
+	assert_eq "${rust_status}" '1'
+	if grep -Fq 'cargo install ' "${RUST_LOG}"; then
+		fail_test 'Rust tools must never be compiled from source'
+	fi
+
+	FAIL_RUST_TOOL=''
 	install_rust_tool taplo-cli
-	assert_file_contains 'cargo install --locked taplo-cli' "${RUST_LOG}"
-	if grep -Fq 'cargo binstall -y taplo-cli' "${RUST_LOG}"; then
-		fail_test 'taplo-cli should use its working source-install path directly'
+	assert_file_contains "${TAPLO_URL}" "${TAPLO_CURL_LOG}"
+	assert_eq "$("${CARGO_HOME}/bin/taplo")" 'prebuilt Taplo'
+	if grep -Eq 'cargo binstall .*taplo-cli' "${RUST_LOG}"; then
+		fail_test 'Taplo should be installed from its upstream prebuilt release'
+	fi
+	TAPLO_CURL_FAIL=1
+	if install_rust_tool taplo-cli 2>"${tmp}/taplo-error.log"; then
+		fail_test 'a failed Taplo download should preserve the prior binary and fail'
+	else
+		taplo_status=$?
+	fi
+	assert_eq "${taplo_status}" '1'
+	assert_eq "$("${CARGO_HOME}/bin/taplo")" 'prebuilt Taplo'
+	assert_file_contains "Failed to download Taplo's prebuilt release binary" "${tmp}/taplo-error.log"
+	for leftover in "${CARGO_HOME}/bin"/.taplo-*; do
+		[ ! -e "${leftover}" ] || fail_test "Taplo installer temp file leaked: ${leftover}"
+	done
+
+	TAPLO_CURL_FAIL=0
+	: >"${RUST_LOG}"
+	: >"${TAPLO_CURL_LOG}"
+	maybe_upgrade_rust
+	assert_file_contains 'cargo binstall --disable-strategies compile --disable-telemetry -y --force cargo-audit' "${RUST_LOG}"
+	assert_eq "$(grep -Fc "${TAPLO_URL}" "${TAPLO_CURL_LOG}")" '1'
+	assert_eq "$("${CARGO_HOME}/bin/taplo")" 'prebuilt Taplo'
+	if grep -Fq 'cargo install ' "${RUST_LOG}"; then
+		fail_test 'Rust tool updates must never compile from source'
 	fi
 
 	#### downloaded installers report failures and clean temporary files ##########

@@ -22,9 +22,12 @@ Notable packages include:
 
 ### Linux
 
-The setup supports Debian only; other Linux distributions are rejected. Linux
+The setup supports Debian x86_64 only; other Linux distributions and
+architectures are rejected. Linux
 uses Debian packages and user-scoped Rust, Python, and Node.js tools rather than
-Homebrew. It is validated on Debian 13.
+Homebrew. It is validated on Debian 13. Rust CLI tools use prebuilt binaries
+only; cargo-binstall's source-compilation fallback is disabled. Taplo uses its
+upstream prebuilt release.
 
 - Development tools: Rust, Go, Node.js, Python tools
 - System utilities: Docker, PostgreSQL, Redis, Tailscale

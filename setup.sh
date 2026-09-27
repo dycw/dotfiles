@@ -89,10 +89,18 @@ require_linux() {
 	fi
 }
 
+require_linux_x86_64() {
+	_linux_architecture=$(uname -m)
+	if [ "${_linux_architecture}" != x86_64 ]; then
+		fail "Unsupported Linux architecture '${_linux_architecture}'; only x86_64 is supported"
+	fi
+}
+
 determine_platform() {
 	case "$(uname)" in
 	Linux)
 		require_linux
+		require_linux_x86_64
 		platform=linux
 		export PATH="${PATH}:/usr/local/sbin:/usr/sbin:/sbin"
 		;;
@@ -306,8 +314,16 @@ maybe_upgrade_apt_packages() {
 	run_root apt-get -o DPkg::Lock::Timeout=300 upgrade -y
 }
 
+cargo_home_dir() {
+	printf '%s' "${CARGO_HOME:-${HOME}/.cargo}"
+}
+
+cargo_bin_dir() {
+	printf '%s/bin' "$(cargo_home_dir)"
+}
+
 set_rust_tool_list() {
-	rust_tool_list='bacon cargo-audit cargo-deny cargo-edit cargo-nextest sccache'
+	rust_tool_list='cargo-audit cargo-deny cargo-edit cargo-nextest sccache'
 	if [ "${platform:-}" = linux ]; then
 		rust_tool_list="${rust_tool_list} bottom du-dust prek taplo-cli topgrade"
 	fi
@@ -323,24 +339,59 @@ rust_tool_command() {
 	esac
 }
 
+install_taplo() (
+	_taplo_system=$(uname -s)
+	if [ "${_taplo_system}" != Linux ]; then
+		fail "Taplo's prebuilt release is only supported on Linux x86_64"
+	fi
+	require_linux_x86_64
+	_taplo_asset='taplo-linux-x86_64.gz'
+
+	_taplo_bin_dir=$(cargo_bin_dir)
+	mkdir -p -- "${_taplo_bin_dir}"
+	_taplo_download=''
+	_taplo_binary=''
+	trap 'rm -f -- "${_taplo_download}" "${_taplo_binary}"' EXIT
+	trap 'exit 1' HUP INT TERM
+	_taplo_download=$(mktemp -- "${_taplo_bin_dir}/.taplo-download.XXXXXX")
+	_taplo_binary=$(mktemp -- "${_taplo_bin_dir}/.taplo-binary.XXXXXX")
+
+	log "Downloading Taplo's prebuilt release binary..."
+	if ! curl -fsSL "https://github.com/tamasfe/taplo/releases/latest/download/${_taplo_asset}" -o "${_taplo_download}"; then
+		fail "Failed to download Taplo's prebuilt release binary"
+	fi
+	if ! gzip -dc "${_taplo_download}" >"${_taplo_binary}"; then
+		fail "Failed to unpack Taplo's prebuilt release binary"
+	fi
+	chmod 0755 "${_taplo_binary}"
+	mv -f -- "${_taplo_binary}" "${_taplo_bin_dir}/taplo"
+)
+
+install_prebuilt_rust_tool() {
+	tool=$1
+	shift
+	if ! cargo binstall --disable-strategies compile --disable-telemetry -y "$@" "${tool}"; then
+		log "Could not install a prebuilt binary for '${tool}'; source compilation is disabled" >&2
+		return 1
+	fi
+}
+
 install_rust_tool() {
 	tool=$1
 	if [ "${tool}" = taplo-cli ]; then
-		log "Installing '${tool}' using 'cargo install'..."
-		cargo install --locked "${tool}"
+		log "Installing '${tool}' from its upstream prebuilt release..."
+		install_taplo
 		return
 	fi
 
-	log "Installing '${tool}' using 'cargo binstall'..."
-	if ! cargo binstall -y "${tool}"; then
-		log "Installing '${tool}' using 'cargo install'..."
-		cargo install --locked "${tool}"
-	fi
+	log "Installing '${tool}' with cargo-binstall's prebuilt-binary strategies..."
+	install_prebuilt_rust_tool "${tool}"
 }
 
 maybe_upgrade_rust() {
 	[ "${should_upgrade:-0}" -eq 1 ] || return 0
-	export PATH="${HOME}/.cargo/bin${PATH:+:${PATH}}"
+	_cargo_home=$(cargo_home_dir)
+	export PATH="${_cargo_home}/bin${PATH:+:${PATH}}"
 	command -v rustup >/dev/null 2>&1 || return 0
 	command -v cargo-binstall >/dev/null 2>&1 || return 0
 	log "Updating rust toolchain and cargo tools..."
@@ -350,8 +401,11 @@ maybe_upgrade_rust() {
 	set_rust_tool_list
 	# Tool package names are fixed by set_rust_tool_list.
 	for tool in ${rust_tool_list}; do
-		if ! cargo binstall -y --force "${tool}"; then
-			log "Failed to update Rust tool '${tool}'" >&2
+		if [ "${tool}" = taplo-cli ]; then
+			log "Updating '${tool}' from its upstream prebuilt release..."
+			install_taplo
+		elif ! install_prebuilt_rust_tool "${tool}" --force; then
+			log "Failed to update prebuilt Rust tool '${tool}'" >&2
 			return 1
 		fi
 	done
@@ -519,7 +573,8 @@ maybe_upgrade_mas_apps() {
 }
 
 install_rust_tools() {
-	export PATH="${HOME}/.cargo/bin${PATH:+:${PATH}}"
+	_cargo_home=$(cargo_home_dir)
+	export PATH="${_cargo_home}/bin${PATH:+:${PATH}}"
 
 	if command -v rustup >/dev/null 2>&1; then
 		log "'rust' is already installed"
@@ -530,7 +585,7 @@ install_rust_tools() {
 		else
 			run_script_from_url https://sh.rustup.rs /bin/sh -s -- -y --no-modify-path
 		fi
-		. "${HOME}/.cargo/env"
+		. "${_cargo_home}/env"
 	fi
 
 	if ! rustup show active-toolchain >/dev/null 2>&1; then
@@ -552,7 +607,7 @@ install_rust_tools() {
 		log "Installing 'cargo-binstall'..."
 		run_script_from_url \
 			https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh \
-			/bin/bash -s
+			env BINSTALL_DISABLE_TELEMETRY=true /bin/bash -s
 	fi
 
 	set_rust_tool_list
