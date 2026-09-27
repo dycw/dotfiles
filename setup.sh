@@ -34,7 +34,14 @@ acquire_sudo() {
 }
 
 run_root() {
-	if [ "$(id -u)" -eq 0 ]; then
+	if [ "$1" = apt-get ]; then
+		if [ "$(id -u)" -eq 0 ]; then
+			DEBIAN_FRONTEND=noninteractive "$@"
+		else
+			acquire_sudo
+			sudo env PATH="${PATH}:/usr/local/sbin:/usr/sbin:/sbin" DEBIAN_FRONTEND=noninteractive "$@"
+		fi
+	elif [ "$(id -u)" -eq 0 ]; then
 		"$@"
 	else
 		acquire_sudo

@@ -146,6 +146,47 @@ run_setup_install_tests() (
 	export HOME XDG_CONFIG_HOME XDG_CACHE_HOME TMPDIR
 
 	_SETUP_MAIN=0 . "${test_root}/setup.sh"
+
+	#### apt provisioning never opens debconf prompts #############################
+
+	RUN_ROOT_LOG="${tmp}/run-root.log"
+	RUN_ROOT_UID=0
+	mkdir -p "${tmp}/run-root-bin"
+	cat >"${tmp}/run-root-bin/apt-get" <<'EOF'
+#!/bin/sh
+printf '%s|%s\n' "${DEBIAN_FRONTEND:-unset}" "$*" >>"${RUN_ROOT_LOG}"
+EOF
+	chmod +x "${tmp}/run-root-bin/apt-get"
+	PATH="${tmp}/run-root-bin:${PATH}"
+	export PATH RUN_ROOT_LOG RUN_ROOT_UID
+	id() {
+		if [ "${1:-}" = -u ]; then
+			printf '%s\n' "${RUN_ROOT_UID}"
+		else
+			command id "$@"
+		fi
+	}
+	sudo() {
+		case "${1:-}" in
+		-n)
+			[ "${2:-}" = true ]
+			;;
+		env)
+			shift
+			command env "$@"
+			;;
+		-E)
+			shift
+			"$@"
+			;;
+		*) return 1 ;;
+		esac
+	}
+	run_root apt-get install -y iperf3
+	RUN_ROOT_UID=1000
+	run_root apt-get install -y iperf3
+	assert_eq "$(grep -Fc 'noninteractive|install -y iperf3' "${RUN_ROOT_LOG}")" '2'
+
 	configs="${test_root}/configs"
 	run_root() {
 		if [ "$1" = apt-get ]; then
