@@ -3,7 +3,6 @@
 
 set -eu
 
-#### env ######################################################################
 
 script_dir=$(dirname -- "$(realpath -- "$0")")
 env="${script_dir}/.env"
@@ -16,7 +15,6 @@ fi
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Sourcing '${env}'..."
 . "${env}"
 
-#### backup ###################################################################
 
 for p in \
 	"${HOME}/Dropbox" \
@@ -33,7 +31,6 @@ for p in \
 	fi
 done
 
-#### forget ###################################################################
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Forgetting & pruning..."
 restic forget --keep-within-hourly 7d --keep-within-daily 1m \

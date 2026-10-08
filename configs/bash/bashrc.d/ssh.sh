@@ -1,7 +1,5 @@
 # shellcheck shell=sh
 
-#### private helpers ###########################################################
-
 __ssh_keyscan() {
 	if [ "$#" -lt 1 ]; then
 		echo "'__ssh_keyscan' expected [1..] arguments HOST [PORT]; got $#" >&2
@@ -83,8 +81,6 @@ __ssh_connect() {
 	fi
 }
 
-#### public utilities ##########################################################
-
 add_known_host() {
 	if [ "$#" -eq 0 ]; then
 		echo "'add-known-host' expected [1..2] arguments HOST [PORT]; got $#" >&2
@@ -129,8 +125,6 @@ generate_ssh_key() {
 	done
 	ssh-keygen -C '' -f "${filename}" -P '' -t ed25519
 }
-
-#### ssh_auto ##################################################################
 
 __tailscale_ip() {
 	if [ "$#" -ne 1 ]; then
@@ -286,8 +280,6 @@ ssh_auto() (
 		sleep 1
 	done
 )
-
-#### shortcuts #################################################################
 
 ssh_dw_macbookneo() { ssh_tailscale derekwan DW-MacBookNeo; }
 ssh_dw_macmini() { ssh_tailscale derekwan DW-MacMini; }

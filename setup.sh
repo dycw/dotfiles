@@ -9,10 +9,6 @@ case "$0" in
 esac
 self_dir=$(CDPATH='' cd -- "$(dirname -- "$self_path")" && pwd -P)
 
-#### utilities ################################################################
-
-# Prevent brew from consuming stdin when the script is run via 'curl | sh'.
-# Disable silent auto-update; we call 'brew update' explicitly where needed.
 export HOMEBREW_NO_AUTO_UPDATE=1
 brew() { command brew "$@" </dev/null; }
 
@@ -120,8 +116,6 @@ determine_platform() {
 	add_brew_to_path
 }
 
-#### files ####################################################################
-
 link_home() {
 	src=$1
 	dest=$2
@@ -176,11 +170,8 @@ merge_authorized_keys() {
 	done <"${source}"
 }
 
-#### brew #####################################################################
-
 upgrade_timer="${XDG_CACHE_HOME:-${HOME}/.cache}/dotfiles/updated"
 
-# True if upgrades have not run successfully in the last hour.
 should_upgrade() {
 	[ -f "${upgrade_timer}" ] || return 0
 	[ -n "$(find "${upgrade_timer}" -mmin +60 -print 2>/dev/null)" ]
@@ -220,7 +211,6 @@ install_missing_apt_packages() {
 	log "Updating apt package indexes..."
 	run_root apt-get -o DPkg::Lock::Timeout=300 update
 	log "Installing packages: ${missing}"
-	# Package names are fixed by the callers and contain no whitespace.
 	# shellcheck disable=SC2086
 	run_root apt-get -o DPkg::Lock::Timeout=300 install -y --no-install-recommends ${missing}
 }
@@ -237,7 +227,6 @@ uninstall_brew_formulas() {
 	done
 	[ -n "${present}" ] || return 0
 	log "Uninstalling formulae: ${present}"
-	# Formula names are fixed by the callers and contain no whitespace.
 	# shellcheck disable=SC2086
 	brew uninstall ${present}
 }
@@ -254,7 +243,6 @@ uninstall_brew_casks() {
 	done
 	[ -n "${present}" ] || return 0
 	log "Uninstalling casks: ${present}"
-	# Cask names are fixed by the callers and contain no whitespace.
 	# shellcheck disable=SC2086
 	brew uninstall --cask ${present}
 }
@@ -271,12 +259,10 @@ install_missing_brew_formulas() {
 	done
 	[ -n "${missing}" ] || return 0
 	log "Installing formulae: ${missing}"
-	# Formula names are fixed by the callers and contain no whitespace.
 	# shellcheck disable=SC2086
 	brew install ${missing}
 }
 
-# Uses --adopt to handle apps installed outside Homebrew.
 install_missing_brew_casks() {
 	if ! installed=$(brew list --cask); then
 		fail "Could not list installed brew casks"
@@ -289,7 +275,6 @@ install_missing_brew_casks() {
 	done
 	[ -n "${missing}" ] || return 0
 	log "Installing casks: ${missing}"
-	# Cask names are fixed by the callers and contain no whitespace.
 	# shellcheck disable=SC2086
 	brew install --cask --adopt ${missing}
 }
@@ -399,7 +384,6 @@ maybe_upgrade_rust() {
 		return 1
 	fi
 	set_rust_tool_list
-	# Tool package names are fixed by set_rust_tool_list.
 	for tool in ${rust_tool_list}; do
 		if [ "${tool}" = taplo-cli ]; then
 			log "Updating '${tool}' from its upstream prebuilt release..."
@@ -410,8 +394,6 @@ maybe_upgrade_rust() {
 		fi
 	done
 }
-
-#### packages #################################################################
 
 remove_unwanted_brew_formulas() {
 	uninstall_brew_formulas age dnsmasq sops rlwrap yoannfleurydev/gitweb/gitweb
@@ -486,7 +468,6 @@ install_linux_user_tools() {
 	fi
 	[ -n "${npm_packages}" ] || return 0
 	log "Installing npm tools: ${npm_packages}"
-	# Package names are fixed above and contain no whitespace.
 	# shellcheck disable=SC2086
 	npm install --global --prefix "${HOME}/.npm-global" ${npm_packages}
 }
@@ -539,8 +520,6 @@ install_mac_casks() {
 	install_missing_brew_casks ${casks}
 }
 
-# 1Password for Safari (App Store id 1569813296)
-# Tailscale (App Store id 1475387147)
 mac_app_store_apps='1569813296 1475387147'
 
 install_missing_mas_apps() {
@@ -553,7 +532,6 @@ install_missing_mas_apps() {
 	done
 	[ -n "${missing}" ] || return 0
 	log "Installing Mac App Store apps: ${missing}"
-	# App IDs are fixed by the caller and contain no whitespace.
 	for app_id in ${missing}; do
 		mas install "${app_id}" || log "Warning: failed to install App Store app ${app_id}; sign in to the App Store and re-run"
 	done
@@ -611,7 +589,6 @@ install_rust_tools() {
 	fi
 
 	set_rust_tool_list
-	# Tool package names are fixed by set_rust_tool_list.
 	for tool in ${rust_tool_list}; do
 		tool_command=$(rust_tool_command "${tool}")
 		if command -v "${tool_command}" >/dev/null 2>&1; then
@@ -696,8 +673,6 @@ install_all() {
 		mark_upgraded
 	fi
 }
-
-#### setup ####################################################################
 
 setup_ssh() {
 	log "Setting up 'ssh'..."
@@ -786,16 +761,12 @@ setup_tailscale() {
 		mkdir -p -- "$(dirname -- "${template}")"
 		cat >"${template}" <<'EOF'
 #!/usr/bin/env bash
-# Fill these in to enable headless 'tailscale up' from setup.sh.
 export TAILSCALE_LOGIN_SERVER=
 export TAILSCALE_AUTH_KEY=
 EOF
 		log "Created template ${template}; fill it in and re-run to bring tailscale up"
 	fi
 
-	# Skip the daemon restart and re-auth if already connected. Tailscale
-	# assigns addresses in 100.64.0.0/10 (CGNAT); their presence on any
-	# interface means the daemon is up and authenticated — no sudo needed.
 	if ifconfig 2>/dev/null | grep -q 'inet 100\.64\.'; then
 		return 0
 	fi
@@ -803,8 +774,6 @@ EOF
 	log "Starting tailscale daemon..."
 	case "${platform}" in
 	linux)
-		# Write a systemd unit pointing at the brew binary so we don't depend
-		# on a separately-installed system package.
 		_tailscaled=$(command -v tailscaled)
 		_svc=/etc/systemd/system/tailscaled.service
 		if ! grep -qF "ExecStart=${_tailscaled}" "${_svc}" 2>/dev/null; then
@@ -815,7 +784,6 @@ EOF
 		run_root systemctl enable --now tailscaled
 		;;
 	mac)
-		# Mac App Store version manages its own daemon via launchd.
 		if ! pgrep -f 'Tailscale' >/dev/null 2>&1; then
 			open -a Tailscale 2>/dev/null || true
 		fi
@@ -827,9 +795,6 @@ EOF
 		return 0
 	fi
 
-	# `tailscale status` (no flag) errors with "Logged out." until BackendState
-	# is Running, so on a fresh daemon it never succeeds. `--json` returns the
-	# status object as long as the local API is reachable.
 	log "Waiting for tailscaled to be ready..."
 	i=0
 	while ! run_root "${_ts_bin}" status --json >/dev/null 2>&1; do
@@ -838,9 +803,6 @@ EOF
 		sleep 1
 	done
 
-	# tailscaled rejects login-server URLs without a scheme with
-	# `unsupported protocol scheme ""` and retries forever, hanging
-	# `tailscale up`. Default to https:// when no scheme was provided.
 	case "${TAILSCALE_LOGIN_SERVER}" in
 	https://* | http://*) ;;
 	*) TAILSCALE_LOGIN_SERVER="https://${TAILSCALE_LOGIN_SERVER}" ;;
@@ -932,7 +894,6 @@ setup_vim_plugins() {
 }
 
 setup_git_config() {
-	# [include] instead of symlink: reset --hard never wipes the user's global config.
 	_git_cfg="${xdg_config_home}/git/config"
 	mkdir -p "${xdg_config_home}/git"
 	[ -L "${_git_cfg}" ] && rm -f -- "${_git_cfg}"
@@ -1099,8 +1060,6 @@ setup_all() {
 	esac
 }
 
-#### parse arguments ##########################################################
-
 dotfiles_default="${HOME}/dotfiles"
 dotfiles=''
 configs=''
@@ -1193,8 +1152,6 @@ if [ "${_SETUP_MAIN:-1}" -ne 0 ]; then
 	fi
 fi
 
-#### run local self ###########################################################
-
 ensure_git() {
 	if git --version >/dev/null 2>&1; then
 		return
@@ -1286,8 +1243,6 @@ run_local_self() {
 	setup_all
 }
 
-#### run local other ##########################################################
-
 run_local_other() {
 	user="$1"
 	log "Setting up '${user}' on '$(hostname)'..."
@@ -1298,8 +1253,6 @@ run_local_other() {
 	chmod 0755 "${tmp}"
 	su - "${user}" -c "sh '${tmp}'"
 }
-
-#### run remote ###############################################################
 
 run_remote() {
 	target=$1
@@ -1312,8 +1265,6 @@ run_remote() {
 	chmod 0755 "$tmp"
 	sh "$tmp"' <"${self_path}"
 }
-
-#### main #####################################################################
 
 if [ "${_SETUP_MAIN:-1}" -ne 0 ]; then
 	if [ -n "${local_user}" ]; then

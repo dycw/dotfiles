@@ -1,10 +1,10 @@
 # shellcheck shell=sh
 if command -v fd >/dev/null 2>&1 || command -v fdfind >/dev/null 2>&1; then
 	fd() {
-		if command -v fd >/dev/null 2>&1; then
-			command fd "$@"
-		else
+		if command -v fdfind >/dev/null 2>&1; then
 			command fdfind "$@"
+		else
+			command fd "$@"
 		fi
 	}
 	__fd_type() {

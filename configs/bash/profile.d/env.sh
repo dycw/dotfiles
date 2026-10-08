@@ -1,7 +1,4 @@
 #!/usr/bin/env sh
-# Installed to ~/.bash_profile.d/env.sh; sourced by login shells.
-
-#### xdg base directories #####################################################
 
 export XDG_BIN_HOME="${XDG_BIN_HOME:-${HOME}/.local/bin}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}"
@@ -14,19 +11,13 @@ export XDG_STATE_HOME="${XDG_STATE_HOME:-${HOME}/.local/state}"
 
 export PATH="${HOME}/.local/bin${PATH:+:${PATH}}"
 
-#### homebrew #################################################################
-
 if [ -d /opt/homebrew/bin ]; then
 	export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH:+:${PATH}}"
 fi
 
-#### docker ###################################################################
-
 if [ -d /Applications/Docker.app/Contents/Resources/bin ]; then
 	export PATH="/Applications/Docker.app/Contents/Resources/bin${PATH:+:${PATH}}"
 fi
-
-#### node #####################################################################
 
 if command -v brew >/dev/null 2>&1 && brew --prefix node >/dev/null 2>&1; then
 	_node_prefix=$(brew --prefix node)
@@ -44,8 +35,6 @@ if [ -d "${HOME}/.npm-global/bin" ]; then
 	export PATH="${HOME}/.npm-global/bin${PATH:+:${PATH}}"
 fi
 
-#### postgres #################################################################
-
 if command -v brew >/dev/null 2>&1 && brew --prefix postgresql@18 >/dev/null 2>&1; then
 	_pg_prefix=$(brew --prefix postgresql@18)
 	if [ -d "${_pg_prefix}/bin" ]; then
@@ -54,13 +43,9 @@ if command -v brew >/dev/null 2>&1 && brew --prefix postgresql@18 >/dev/null 2>&
 	unset _pg_prefix
 fi
 
-#### ripgrep ##################################################################
-
 if command -v rg >/dev/null 2>&1; then
 	export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/ripgrep/ripgreprc"
 fi
-
-#### rust #####################################################################
 
 if [ -d "${HOME}/.cargo/bin" ]; then
 	export PATH="${HOME}/.cargo/bin${PATH:+:${PATH}}"
@@ -69,8 +54,6 @@ fi
 if command -v sccache >/dev/null 2>&1; then
 	export RUSTC_WRAPPER=sccache
 fi
-
-#### tailscale ################################################################
 
 if [ -d /Applications/Tailscale.app/Contents/MacOS ]; then
 	export PATH="/Applications/Tailscale.app/Contents/MacOS${PATH:+:${PATH}}"

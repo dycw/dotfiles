@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Installed to ~/.bash_profile.d/editor.sh; sourced by login shells.
 # shellcheck disable=SC2155
 
 if command -v vim >/dev/null 2>&1; then

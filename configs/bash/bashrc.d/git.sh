@@ -1,7 +1,5 @@
 # shellcheck shell=sh disable=SC2015,SC2016,SC2164
 if command -v git >/dev/null 2>&1; then
-	# Auto-generate g<alias> wrappers from the dotfiles git config directly so
-	# they work even before update-dotfiles has wired up the global [include].
 	_git_cfg=${PATH_DOTFILES:+${PATH_DOTFILES}/configs/git/config}
 	[ -f "${_git_cfg}" ] || _git_cfg=/dev/null
 	_git_aliases=$(git config --file "${_git_cfg:-/dev/null}" --list 2>/dev/null | grep '^alias\.' || true)
@@ -15,11 +13,7 @@ ${_git_aliases}
 EOF
 	unset _git_line _git_alias _git_aliases _git_cfg
 
-	# --- edit config ---
-
 	edit_git_shell() { "${EDITOR}" "${PATH_DOTFILES}/configs/bash/bashrc"; }
-
-	# --- add (override auto-generated: only --all when no args) ---
 
 	ga() {
 		if [ "$#" -eq 0 ]; then
@@ -36,8 +30,6 @@ EOF
 		fi
 	}
 
-	# --- log (override auto-generated: support count arg) ---
-
 	gl() {
 		if [ "$#" -eq 0 ]; then
 			git log-default -n 20
@@ -45,8 +37,6 @@ EOF
 			git log-default -n "$1"
 		fi
 	}
-
-	# --- private helpers ---
 
 	__auto_msg() { date '+%Y-%m-%d %H:%M:%S (%a)'; }
 
@@ -147,7 +137,6 @@ EOF
 		__git_push "$@"
 	}
 
-	# retries up to 3 times to handle hook-modified files
 	__git_commit_until_push() {
 		force='' nv='' web='' exit_after=''
 		while [ "$#" -gt 0 ]; do
@@ -348,7 +337,6 @@ EOF
 		fi
 	}
 
-	# orchestrate: optionally branch+PR, add all, commit+push loop, optionally merge
 	__git_all() {
 		title='' nv='' force='' web='' exit_after='' merge=''
 		remaining=
@@ -408,8 +396,6 @@ EOF
 		fi
 	}
 
-	# --- navigation / info ---
-
 	cdr() { cd "$(git repo-root)"; }
 
 	yield_git_repos() {
@@ -435,8 +421,6 @@ EOF
             '
 		}
 	fi
-
-	# --- branch management (fzf-assisted, override auto-generated stubs) ---
 
 	gbd() {
 		if [ "$#" -eq 0 ]; then
@@ -480,7 +464,6 @@ EOF
 		git checkout "${branch}"
 	}
 
-	# clone a repo, install pre-commit hooks, allow direnv
 	gcl() {
 		if [ "$#" -eq 0 ]; then
 			echo "'gcl' expected [1..2] arguments REPO [DIR]; got $#" >&2
@@ -498,7 +481,6 @@ EOF
 		cd "$orig"
 	}
 
-	# checkout file(s); if first arg is a valid ref, fetch and checkout from that ref
 	gcof() {
 		if [ "$#" -eq 0 ]; then
 			git checkout -- .
@@ -514,14 +496,12 @@ EOF
 		fi
 	}
 
-	# checkout file(s) from the default remote branch
 	gcfm() {
 		git fetch-default || return $?
 		branch=$(git default-remote-branch) || return $?
 		git checkout "$branch" -- "$@"
 	}
 
-	# create branch + empty commit + push + PR; args: [TITLE [NUM [PART]]]
 	gcb() {
 		case "$#" in
 		0) __git_checkout_open ;;
@@ -534,8 +514,6 @@ EOF
 			;;
 		esac
 	}
-
-	# --- tagging ---
 
 	gta() {
 		if [ "$#" -eq 0 ]; then
@@ -558,7 +536,6 @@ EOF
 		fi
 	}
 
-	# --- commit + push variants ---
 	gc() { __git_commit_push; }
 	gcn() { __git_commit_push --no-verify; }
 	gcf() { __git_commit_push --force; }
@@ -576,7 +553,6 @@ EOF
 	gcfx() { __git_commit_push --force --web --exit; }
 	gcnfx() { __git_commit_push --no-verify --force --web --exit; }
 
-	# --- add + commit + push variants ---
 	gg() { __git_all "$@"; }
 	ggn() { __git_all --no-verify "$@"; }
 	ggf() { __git_all --force "$@"; }
@@ -598,7 +574,6 @@ EOF
 	ggfx() { __git_all --force --merge --exit "$@"; }
 	ggnfx() { __git_all --no-verify --force --merge --exit "$@"; }
 
-	# --- branch + PR + add + commit + push variants (TITLE required) ---
 	ggc() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggc' expected [1..) arguments TITLE" >&2
@@ -780,7 +755,6 @@ EOF
 		__git_all --title="$title" --no-verify --force --merge --exit "$@"
 	}
 
-	# --- push variants (override auto-generated gp) ---
 	gp() { __git_push; }
 	gpn() { __git_push --no-verify; }
 	gpf() { __git_push --force; }
@@ -798,12 +772,10 @@ EOF
 	gpfx() { __git_push --force --web --exit; }
 	gpfnx() { __git_push --force --no-verify --web --exit; }
 
-	# --- checkout default branch ---
 	gm() { __git_checkout_close "$(git default-local-branch)"; }
 	gmd() { __git_checkout_close "$(git default-local-branch)" --delete; }
 	gmx() { __git_checkout_close "$(git default-local-branch)" --delete --exit; }
 
-	# --- PR operations ---
 	gw() { __git_view; }
 	ghc() {
 		if [ "$#" -eq 0 ]; then
@@ -882,7 +854,6 @@ EOF
 	ghm() { __git_merge; }
 	ghx() { __git_merge --exit; }
 
-	# --- remote management ---
 	add_remote() {
 		if [ "$#" -le 1 ]; then
 			echo "'add-remote' expected [2..) arguments NAME URL; got $#" >&2
@@ -907,7 +878,6 @@ EOF
 		git remote set-url --push "$@"
 	}
 
-	# --- rebase ---
 	grb() {
 		git fetch-default || return $?
 		branch=$(git default-remote-branch) || return $?

@@ -10,8 +10,6 @@ trap 'cleanup_temp_dir "${tmp}"' EXIT HUP INT TERM
 
 entrypoint="${test_root}/setup.sh"
 
-#### local-repo case: running setup.sh from inside the dotfiles dir ###########
-
 local_repo="${tmp}/local repo"
 local_home="${tmp}/local home"
 local_bin="${tmp}/local bin"
@@ -40,7 +38,6 @@ exit 0
 EOF
 chmod +x "${local_bin}/sudo"
 
-# Wrapper lives inside local_repo so that $0-based self_dir resolution finds .git
 cat >"${local_repo}/run-test.sh" <<EOF
 #!/bin/sh
 _SETUP_MAIN=0 . '${local_repo}/setup.sh'
@@ -59,8 +56,6 @@ assert_eq "$(grep -Fc "git -C ${local_repo} fetch origin" "${local_log}")" '2'
 assert_eq "$(grep -Fc "git -C ${local_repo} reset --hard origin/master" "${local_log}")" '2'
 assert_eq "$(grep -Fc 'install_all' "${local_log}")" '2'
 assert_eq "$(grep -Fc 'setup_all' "${local_log}")" '2'
-
-#### bootstrap case: running setup.sh from outside the dotfiles dir ###########
 
 bootstrap_dir="${tmp}/bootstrap"
 bootstrap_home="${tmp}/bootstrap home"
@@ -98,7 +93,6 @@ exit 0
 EOF
 chmod +x "${bootstrap_bin}/sudo"
 
-# Wrapper lives outside any .git dir so resolve_dotfiles falls back to clone
 cat >"${bootstrap_dir}/run-test.sh" <<EOF
 #!/bin/sh
 _SETUP_MAIN=0 . '${bootstrap_dir}/setup.sh'
@@ -131,8 +125,6 @@ assert_eq "$(grep -Fc 'install_all' "${bootstrap_log}")" '2'
 assert_eq "$(grep -Fc 'setup_all' "${bootstrap_log}")" '2'
 [ -d "${bootstrap_home}/dotfiles/.git" ]
 
-#### installer and package provisioning tests ###############################
-
 run_setup_install_tests() (
 	set -eu
 	tmp=$(make_temp_dir)
@@ -147,8 +139,6 @@ run_setup_install_tests() (
 	export HOME CARGO_HOME XDG_CONFIG_HOME XDG_CACHE_HOME TMPDIR
 
 	_SETUP_MAIN=0 . "${test_root}/setup.sh"
-
-	#### Linux setup accepts only x86_64 ##########################################
 
 	(
 		require_linux() { :; }
@@ -171,8 +161,6 @@ run_setup_install_tests() (
 		assert_eq "${arch_status}" '1'
 		assert_file_contains "Unsupported Linux architecture 'aarch64'; only x86_64 is supported" "${tmp}/unsupported-arch.log"
 	)
-
-	#### apt provisioning never opens debconf prompts #############################
 
 	RUN_ROOT_LOG="${tmp}/run-root.log"
 	RUN_ROOT_UID=0
@@ -221,8 +209,6 @@ EOF
 			"$@"
 		fi
 	}
-
-	#### apt and brew package checks converge on rerun ############################
 
 	APT_LOG="${tmp}/apt.log"
 	DPKG_INSTALLED='curl'
@@ -310,8 +296,6 @@ EOF
 	fi
 	assert_eq "${brew_status}" '24'
 	BREW_FAIL=0
-
-	#### Rust updates are sequential and propagate failures ########################
 
 	assert_eq "$(rust_tool_command cargo-edit)" 'cargo-add'
 	assert_eq "$(rust_tool_command bottom)" 'btm'
@@ -420,8 +404,6 @@ EOF
 		fail_test 'Rust tool updates must never compile from source'
 	fi
 
-	#### downloaded installers report failures and clean temporary files ##########
-
 	CURL_LOG="${tmp}/curl.log"
 	SCRIPT_LOG="${tmp}/installer.log"
 	CURL_SCRIPT_EXIT=0
@@ -474,8 +456,6 @@ INSTALLER
 		[ ! -e "${leftover}" ] || fail_test "installer temp file leaked: ${leftover}"
 	done
 
-	#### Node.js baseline is enforced without reinstalling a supported version ######
-
 	NODE_VERSION=20.19.2
 	export NODE_VERSION
 	cat >"${tmp}/bin/npm" <<'EOF'
@@ -495,8 +475,6 @@ EOF
 	ensure_nodejs_22
 	assert_eq "$(grep -Fc 'https://deb.nodesource.com/setup_22.x' "${CURL_LOG}")" '1'
 	assert_eq "$(grep -Fc 'install -y --no-install-recommends nodejs' "${APT_LOG}")" '1'
-
-	#### remote bootstrap uses one connection and cleans up ########################
 
 	REMOTE_TMPDIR="${tmp}/remote temp files"
 	REMOTE_LOG="${tmp}/remote.log"
@@ -528,8 +506,6 @@ EOF
 	self_path=${original_self_path}
 	TMPDIR=${original_tmpdir}
 	export TMPDIR
-
-	#### keymapp retries are safe and completed installs are reused ###############
 
 	KEYMAPP_HOME="${tmp}/keymapp home"
 	mkdir -p "${KEYMAPP_HOME}/.local/bin"
@@ -566,8 +542,6 @@ EOF
 		[ ! -e "${leftover}" ] || fail_test "keymapp temp directory leaked: ${leftover}"
 	done
 
-	#### Docker group membership is applied once even on rerun ###################
-
 	DOCKER_GROUP_ADDED=0
 	USER=setup-test
 	export USER
@@ -582,7 +556,6 @@ EOF
 			command id "$@"
 		fi
 	}
-	# Invoked indirectly by the sourced install_docker_linux operation.
 	# shellcheck disable=SC2317,SC2329
 	usermod() {
 		printf '%s\n' "$*" >>"${tmp}/usermod.log"
@@ -595,8 +568,6 @@ EOF
 	install_docker_linux
 	install_docker_linux
 	assert_eq "$(grep -Fc -- '-aG docker setup-test' "${tmp}/usermod.log")" '1'
-
-	#### Linux user tools are installed once and reused on rerun ##################
 
 	TOOL_HOME="${tmp}/Linux tool home"
 	TOOL_BIN="${tmp}/tool bin"
@@ -639,8 +610,6 @@ EOF
 	assert_eq "$(grep -Fc 'pipx install --force ruff' "${TOOL_LOG}")" '1'
 	assert_eq "$(grep -Fc 'pipx install --force uv' "${TOOL_LOG}")" '1'
 	assert_eq "$(grep -Fc 'npm install --global' "${TOOL_LOG}")" '1'
-
-	#### failed installation does not mark upgrades complete ######################
 
 	INSTALL_STUBS="${tmp}/install-stubs.sh"
 	cat >"${INSTALL_STUBS}" <<'EOF'

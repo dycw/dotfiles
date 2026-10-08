@@ -6,7 +6,6 @@ case $- in
 *) return ;;
 esac
 
-#### mode switch files ########################################################
 
 for _f in "${HOME}"/.mode.sw*; do
 	[ -e "${_f}" ] && rm -v -- "${_f}"
@@ -23,7 +22,6 @@ __source_first() {
 	return 1
 }
 
-#### completion ###############################################################
 
 if ! shopt -oq posix; then
 	_brew_prefix=''
@@ -34,7 +32,6 @@ if ! shopt -oq posix; then
 		/usr/share/bash-completion/bash_completion \
 		/etc/bash_completion || true
 	if [ -n "${_brew_prefix}" ]; then
-		# Create the brew completion symlink if missing so completion works on first shell open.
 		[ -e "${_brew_prefix}/etc/bash_completion.d/brew" ] ||
 			brew completions link >/dev/null 2>&1 || true
 		__source_first \
@@ -47,24 +44,20 @@ if ! shopt -oq posix; then
 	unset _brew_prefix
 fi
 
-#### history ##################################################################
 
 HISTCONTROL=ignoreboth
 HISTSIZE=1000
 HISTFILESIZE=2000
 shopt -s histappend
 
-#### readline #################################################################
 
 set -o vi
 bind 'set editing-mode vi'
 bind -m vi-command '"v": edit-and-execute-command'
 
-#### check window size ########################################################
 
 shopt -s checkwinsize
 
-#### bashrc.d #################################################################
 
 mkdir -p "${HOME}/.bashrc.d"
 for _f in "${HOME}"/.bashrc.d/*.sh "${HOME}"/.bashrc.d/*.bash; do
@@ -72,10 +65,7 @@ for _f in "${HOME}"/.bashrc.d/*.sh "${HOME}"/.bashrc.d/*.bash; do
 done
 unset _f
 
-#### kebab-case aliases #######################################################
 
-# POSIX sh function names cannot contain hyphens, so helper functions use
-# snake_case.  Keep the dashed command spelling available in interactive bash.
 for _f in $(compgen -A function); do
 	case ${_f} in
 	_* | *[!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_]*) continue ;;
