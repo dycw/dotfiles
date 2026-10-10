@@ -8,6 +8,85 @@ set -eu
 tmp=$(make_temp_dir)
 trap 'cleanup_temp_dir "${tmp}"' EXIT HUP INT TERM
 
+batcat_only_bin="${tmp}/batcat only"
+bat_bin="${tmp}/bat first"
+fdfind_bin="${tmp}/fdfind only"
+fd_bin="${tmp}/fd only"
+fd_both_bin="${tmp}/fd and fdfind"
+mkdir -p "${batcat_only_bin}" "${bat_bin}" "${fdfind_bin}" "${fd_bin}" "${fd_both_bin}"
+write_executable_stub() {
+	cat >"$1" <<'EOF'
+#!/bin/sh
+printf '%s:' "${0##*/}"
+printf '<%s>' "$@"
+printf '\n'
+EOF
+	chmod +x "$1"
+}
+write_executable_stub "${batcat_only_bin}/batcat"
+write_executable_stub "${bat_bin}/bat"
+write_executable_stub "${bat_bin}/batcat"
+
+batcat_output=$(PATH="${batcat_only_bin}" /bin/sh -c '
+	set -eu
+	. "$1"
+	. "$1"
+	bat "bat arg"
+	cat "cat arg"
+	catp "catp arg"
+' sh "${test_root}/configs/bash/bashrc.d/bat.sh")
+assert_eq "${batcat_output}" 'batcat:<bat arg>
+batcat:<cat arg>
+batcat:<--style=plain><catp arg>'
+
+bat_output=$(PATH="${bat_bin}" /bin/sh -c '
+	set -eu
+	. "$1"
+	. "$1"
+	bat "bat arg"
+	cat "cat arg"
+	catp "catp arg"
+' sh "${test_root}/configs/bash/bashrc.d/bat.sh")
+assert_eq "${bat_output}" 'bat:<bat arg>
+bat:<cat arg>
+bat:<--style=plain><catp arg>'
+
+write_executable_stub "${fdfind_bin}/fdfind"
+write_executable_stub "${fd_bin}/fd"
+write_executable_stub "${fd_both_bin}/fd"
+write_executable_stub "${fd_both_bin}/fdfind"
+fdfind_output=$(PATH="${fdfind_bin}" /bin/sh -c '
+	set -eu
+	. "$1"
+	. "$1"
+	fd "fd arg"
+	fdd "directory arg"
+	fdf "file arg"
+' sh "${test_root}/configs/bash/bashrc.d/fd.sh")
+assert_eq "${fdfind_output}" 'fdfind:<fd arg>
+fdfind:<--hidden><--type=directory><directory arg>
+fdfind:<--hidden><--type=file><file arg>'
+
+fd_preferred_output=$(PATH="${fd_both_bin}" /bin/sh -c '
+	set -eu
+	. "$1"
+	. "$1"
+	fd "fd arg"
+' sh "${test_root}/configs/bash/bashrc.d/fd.sh")
+assert_eq "${fd_preferred_output}" 'fdfind:<fd arg>'
+
+fd_output=$(PATH="${fd_bin}" /bin/sh -c '
+	set -eu
+	. "$1"
+	. "$1"
+	fd "fd arg"
+	fdd "directory arg"
+	fdf "file arg"
+' sh "${test_root}/configs/bash/bashrc.d/fd.sh")
+assert_eq "${fd_output}" 'fd:<fd arg>
+fd:<--hidden><--type=directory><directory arg>
+fd:<--hidden><--type=file><file arg>'
+
 home_dir="${tmp}/home"
 mkdir -p "${home_dir}/.bashrc.d" "${home_dir}/.ssh"
 cat >"${home_dir}/.bashrc.d/test-aliases.sh" <<'EOF'

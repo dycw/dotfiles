@@ -1,12 +1,14 @@
 # shellcheck shell=sh
-if command -v fd >/dev/null 2>&1 || command -v fdfind >/dev/null 2>&1; then
-	fd() {
-		if command -v fdfind >/dev/null 2>&1; then
-			command fdfind "$@"
-		else
-			command fd "$@"
-		fi
-	}
+if [ -z "${__dotfiles_fd_command:-}" ]; then
+	if command -v fdfind >/dev/null 2>&1; then
+		__dotfiles_fd_command=fdfind
+	elif command -v fd >/dev/null 2>&1; then
+		__dotfiles_fd_command=fd
+	fi
+fi
+
+if [ -n "${__dotfiles_fd_command:-}" ]; then
+	fd() { command "${__dotfiles_fd_command}" "$@"; }
 	__fd_type() {
 		if [ "$#" -lt 1 ]; then
 			echo "'__fd_type' expected [1..) arguments TYPE; got $#" >&2
