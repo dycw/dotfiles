@@ -116,28 +116,24 @@ determine_platform() {
 	add_brew_to_path
 }
 
+link_path() {
+	_link_src=$1
+	_link_dest=$2
+	[ -e "${_link_src}" ] || fail "Config source does not exist: ${_link_src}"
+	mkdir -p "$(dirname -- "${_link_dest}")"
+	ln -sfn "${_link_src}" "${_link_dest}"
+}
+
 link_home() {
-	src=$1
-	dest=$2
-	[ -e "${src}" ] || fail "Config source does not exist: ${src}"
-	mkdir -p "$(dirname -- "${HOME}/${dest}")"
-	ln -sfn "${src}" "${HOME}/${dest}"
+	link_path "$1" "${HOME}/$2"
 }
 
 link_config() {
-	src=$1
-	dest=$2
-	[ -e "${src}" ] || fail "Config source does not exist: ${src}"
-	mkdir -p "$(dirname -- "${xdg_config_home}/${dest}")"
-	ln -sfn "${src}" "${xdg_config_home}/${dest}"
+	link_path "$1" "${xdg_config_home}/$2"
 }
 
 link_direct() {
-	src=$1
-	dest=$2
-	[ -e "${src}" ] || fail "Config source does not exist: ${src}"
-	mkdir -p "$(dirname -- "${dest}")"
-	ln -sfn "${src}" "${dest}"
+	link_path "$1" "$2"
 }
 
 ensure_line_in_file() {
@@ -324,32 +320,68 @@ rust_tool_command() {
 	esac
 }
 
+install_downloaded_file() (
+	_file_path=$1
+	_description=$2
+	_file_mode=$3
+	shift 3
+	mkdir -p -- "$(dirname -- "${_file_path}")"
+	_download_dir=''
+	_staged_file=''
+	trap '_install_status=$?; if [ -n "${_download_dir}" ]; then rm -rf -- "${_download_dir}"; fi; if [ -n "${_staged_file}" ]; then rm -f -- "${_staged_file}"; fi; exit "${_install_status}"' EXIT
+	trap 'exit 1' HUP INT TERM
+	if ! _download_dir=$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-download.XXXXXX"); then
+		fail "Could not create a temporary download directory"
+	fi
+	if ! _staged_file=$(mktemp "${_file_path}.XXXXXX"); then
+		fail "Could not stage ${_description}"
+	fi
+
+	log "Installing ${_description}..."
+	if ! "$@" "${_download_dir}" "${_staged_file}"; then
+		fail "Could not download or prepare ${_description}"
+	fi
+	[ -s "${_staged_file}" ] || fail "Prepared ${_description} is empty"
+	if [ -n "${_file_mode}" ] && ! chmod "${_file_mode}" "${_staged_file}"; then
+		fail "Could not set permissions on ${_description}"
+	fi
+	if ! mv -f -- "${_staged_file}" "${_file_path}"; then
+		fail "Could not activate ${_description} at ${_file_path}"
+	fi
+	_staged_file=''
+)
+
+install_downloaded_binary() (
+	_binary_path=$1
+	_description=$2
+	shift 2
+	install_downloaded_file "${_binary_path}" "${_description}" 0755 "$@"
+)
+
+prepare_raw_file() {
+	_file_url=$1
+	_staged_file=$3
+	curl -fsSL "${_file_url}" -o "${_staged_file}"
+}
+
+prepare_taplo_binary() {
+	_taplo_url=$1
+	_taplo_download_dir=$2
+	_taplo_staged_binary=$3
+	if ! curl -fsSL "${_taplo_url}" -o "${_taplo_download_dir}/taplo.gz"; then
+		return 1
+	fi
+	gzip -dc "${_taplo_download_dir}/taplo.gz" >"${_taplo_staged_binary}"
+}
+
 install_taplo() (
 	_taplo_system=$(uname -s)
 	if [ "${_taplo_system}" != Linux ]; then
 		fail "Taplo's prebuilt release is only supported on Linux x86_64"
 	fi
 	require_linux_x86_64
-	_taplo_asset='taplo-linux-x86_64.gz'
-
-	_taplo_bin_dir=$(cargo_bin_dir)
-	mkdir -p -- "${_taplo_bin_dir}"
-	_taplo_download=''
-	_taplo_binary=''
-	trap 'rm -f -- "${_taplo_download}" "${_taplo_binary}"' EXIT
-	trap 'exit 1' HUP INT TERM
-	_taplo_download=$(mktemp -- "${_taplo_bin_dir}/.taplo-download.XXXXXX")
-	_taplo_binary=$(mktemp -- "${_taplo_bin_dir}/.taplo-binary.XXXXXX")
-
-	log "Downloading Taplo's prebuilt release binary..."
-	if ! curl -fsSL "https://github.com/tamasfe/taplo/releases/latest/download/${_taplo_asset}" -o "${_taplo_download}"; then
-		fail "Failed to download Taplo's prebuilt release binary"
-	fi
-	if ! gzip -dc "${_taplo_download}" >"${_taplo_binary}"; then
-		fail "Failed to unpack Taplo's prebuilt release binary"
-	fi
-	chmod 0755 "${_taplo_binary}"
-	mv -f -- "${_taplo_binary}" "${_taplo_bin_dir}/taplo"
+	_taplo_url='https://github.com/tamasfe/taplo/releases/latest/download/taplo-linux-x86_64.gz'
+	install_downloaded_binary "$(cargo_bin_dir)/taplo" "Taplo's prebuilt release binary" prepare_taplo_binary "${_taplo_url}"
 )
 
 install_prebuilt_rust_tool() {
@@ -599,38 +631,47 @@ install_rust_tools() {
 	done
 }
 
+prepare_keymapp_binary() {
+	_keymapp_url=$1
+	_keymapp_download_dir=$2
+	_keymapp_staged_binary=$3
+	if ! curl -fsSL "${_keymapp_url}" -o "${_keymapp_download_dir}/keymapp.tar.gz"; then
+		return 1
+	fi
+	if ! tar -xz -f "${_keymapp_download_dir}/keymapp.tar.gz" -C "${_keymapp_download_dir}"; then
+		return 1
+	fi
+	cp -- "${_keymapp_download_dir}/keymapp" "${_keymapp_staged_binary}"
+}
+
 install_keymapp() (
 	keymapp_bin="${HOME}/.local/bin/keymapp"
 	if [ "${should_upgrade:-0}" -ne 1 ] && [ -x "${keymapp_bin}" ]; then
 		exit 0
 	fi
 
-	log "Installing 'keymapp'..."
-	if ! tmp=$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-keymapp.XXXXXX"); then
-		fail "Could not create a temporary keymapp directory"
-	fi
-	staged=''
-	trap '_keymapp_status=$?; rm -rf -- "${tmp}"; if [ -n "${staged}" ]; then rm -f -- "${staged}"; fi; exit "${_keymapp_status}"' EXIT
-	trap 'exit 1' HUP INT TERM
 	url='https://oryx.nyc3.cdn.digitaloceanspaces.com/keymapp/keymapp-latest.tar.gz'
-	if ! curl -fsSL "${url}" -o "${tmp}/keymapp.tar.gz"; then
-		fail "Could not download keymapp"
+	install_downloaded_binary "${keymapp_bin}" 'keymapp' prepare_keymapp_binary "${url}"
+)
+
+install_tea_linux() (
+	tea_version=0.16.0
+	tea_bin="${HOME}/.local/bin/tea"
+	if [ "${should_upgrade:-0}" -ne 1 ] && [ -x "${tea_bin}" ]; then
+		exit 0
 	fi
-	if ! tar -xz -f "${tmp}/keymapp.tar.gz" -C "${tmp}"; then
-		fail "Could not extract keymapp"
+
+	require_linux_x86_64
+	if [ -x "${tea_bin}" ]; then
+		if installed_version=$("${tea_bin}" --version 2>/dev/null); then
+			case "${installed_version}" in
+			*"${tea_version}"*) exit 0 ;;
+			esac
+		fi
 	fi
-	keymapp_dir=$(dirname -- "${keymapp_bin}")
-	mkdir -p -- "${keymapp_dir}"
-	if ! staged=$(mktemp "${keymapp_bin}.XXXXXX"); then
-		fail "Could not create a staged keymapp binary"
-	fi
-	if ! install -m 755 "${tmp}/keymapp" "${staged}"; then
-		fail "Could not stage keymapp"
-	fi
-	if ! mv -f -- "${staged}" "${keymapp_bin}"; then
-		fail "Could not activate keymapp at ${keymapp_bin}"
-	fi
-	staged=''
+
+	url="https://dl.gitea.com/tea/${tea_version}/tea-${tea_version}-linux-amd64"
+	install_downloaded_binary "${tea_bin}" "Gitea tea ${tea_version}" prepare_raw_file "${url}"
 )
 
 install_all() {
@@ -650,6 +691,7 @@ install_all() {
 		maybe_upgrade_rust
 		install_rust_tools
 		install_linux_user_tools
+		install_tea_linux
 		install_tailscale_linux
 		install_docker_linux
 		install_keymapp
@@ -723,28 +765,25 @@ setup_bash() {
 	fi
 }
 
-setup_bashrc_d() {
-	mkdir -p "${HOME}/.bashrc.d"
-	_src_dir="${configs}/bash/bashrc.d"
+setup_bash_rc_dir() {
+	_src_dir=$1
+	_dest_dir=$2
+	mkdir -p "${_dest_dir}"
 	[ -d "${_src_dir}" ] || return 0
 	for _src in "${_src_dir}"/*.sh; do
 		[ -f "${_src}" ] || continue
 		_name=$(basename -- "${_src}")
-		link_direct "${_src}" "${HOME}/.bashrc.d/${_name}"
+		link_direct "${_src}" "${_dest_dir}/${_name}"
 	done
-	unset _src_dir _src _name
+	unset _src_dir _dest_dir _src _name
+}
+
+setup_bashrc_d() {
+	setup_bash_rc_dir "${configs}/bash/bashrc.d" "${HOME}/.bashrc.d"
 }
 
 setup_bash_profile_d() {
-	mkdir -p "${HOME}/.bash_profile.d"
-	_src_dir="${configs}/bash/profile.d"
-	[ -d "${_src_dir}" ] || return 0
-	for _src in "${_src_dir}"/*.sh; do
-		[ -f "${_src}" ] || continue
-		_name=$(basename -- "${_src}")
-		link_direct "${_src}" "${HOME}/.bash_profile.d/${_name}"
-	done
-	unset _src_dir _src _name
+	setup_bash_rc_dir "${configs}/bash/profile.d" "${HOME}/.bash_profile.d"
 }
 
 setup_tailscale() {
@@ -877,17 +916,10 @@ setup_vim_plugins() {
 	log "Setting up Vim plugins..."
 	plug_file="${HOME}/.vim/autoload/plug.vim"
 	if [ ! -s "${plug_file}" ]; then
-		mkdir -p -- "$(dirname -- "${plug_file}")"
-		if ! plug_tmp=$(mktemp "${plug_file}.XXXXXX"); then
-			fail "Could not create a temporary vim-plug file"
-		fi
-		if ! curl -fsSL https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim -o "${plug_tmp}"; then
-			rm -f -- "${plug_tmp}"
-			fail "Could not download vim-plug"
-		fi
-		if [ ! -s "${plug_tmp}" ] || ! mv -f -- "${plug_tmp}" "${plug_file}"; then
-			rm -f -- "${plug_tmp}"
-			fail "Could not install vim-plug"
+		if ! install_downloaded_file \
+			"${plug_file}" 'vim-plug' '' prepare_raw_file \
+			https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
+			return 1
 		fi
 	fi
 	vim -Nu "${HOME}/.vimrc" -n -es +'PlugInstall --sync' +qa
@@ -1158,36 +1190,17 @@ ensure_git() {
 	fi
 
 	log "Installing 'git'..."
-	case "$(uname)" in
-	Linux)
-		if [ ! -r /etc/os-release ]; then
-			fail "'/etc/os-release' is not readable; exiting..."
-		fi
-		. /etc/os-release
-		if [ "${ID:-}" != debian ]; then
-			fail "Unsupported Linux distribution '${ID:-unknown}'; exiting..."
-		fi
+	case "${platform}" in
+	linux)
 		run_root apt-get -o DPkg::Lock::Timeout=300 update
 		run_root apt-get -o DPkg::Lock::Timeout=300 install -y git
 		;;
-	Darwin)
-		if ! command -v brew >/dev/null 2>&1; then
-			log "Installing 'brew'..."
-			acquire_sudo
-			if ! run_script_from_url https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh env NONINTERACTIVE=1 HOMEBREW_NO_ENV_HINTS=1 /bin/bash -s; then
-				fail "'brew' installation failed"
-			fi
-			log "'brew' installed successfully"
-		fi
-		if [ -x /opt/homebrew/bin/brew ]; then
-			export PATH="/opt/homebrew/bin${PATH:+:${PATH}}"
-		elif [ -x /usr/local/bin/brew ]; then
-			export PATH="/usr/local/bin${PATH:+:${PATH}}"
-		fi
+	mac)
+		ensure_brew
 		brew install git
 		;;
 	*)
-		fail "Unsupported OS '$(uname)'; exiting..."
+		fail "Unsupported platform '${platform:-unknown}'; exiting..."
 		;;
 	esac
 }

@@ -200,6 +200,26 @@ EOF
 	run_root apt-get install -y iperf3
 	assert_eq "$(grep -Fc 'noninteractive|install -y iperf3' "${RUN_ROOT_LOG}")" '2'
 
+	GIT_BOOTSTRAP_LOG="${tmp}/git-bootstrap.log"
+	(
+		platform=linux
+		git() { return 1; }
+		run_root() { printf '%s\n' "$*" >>"${GIT_BOOTSTRAP_LOG}"; }
+		ensure_git
+	) >/dev/null
+	assert_file_contains 'apt-get -o DPkg::Lock::Timeout=300 update' "${GIT_BOOTSTRAP_LOG}"
+	assert_file_contains 'apt-get -o DPkg::Lock::Timeout=300 install -y git' "${GIT_BOOTSTRAP_LOG}"
+	: >"${GIT_BOOTSTRAP_LOG}"
+	(
+		platform=mac
+		git() { return 1; }
+		ensure_brew() { printf 'ensure_brew\n' >>"${GIT_BOOTSTRAP_LOG}"; }
+		brew() { printf 'brew %s\n' "$*" >>"${GIT_BOOTSTRAP_LOG}"; }
+		ensure_git
+	) >/dev/null
+	assert_file_contains 'ensure_brew' "${GIT_BOOTSTRAP_LOG}"
+	assert_file_contains 'brew install git' "${GIT_BOOTSTRAP_LOG}"
+
 	configs="${test_root}/configs"
 	run_root() {
 		if [ "$1" = apt-get ]; then
@@ -340,6 +360,7 @@ EOF
 			esac
 		fi
 	}
+	# shellcheck disable=SC2317,SC2329
 	curl() {
 		printf '%s\n' "$*" >>"${TAPLO_CURL_LOG}"
 		[ "${TAPLO_CURL_FAIL}" -eq 0 ] || return 22
@@ -388,8 +409,8 @@ EOF
 	fi
 	assert_eq "${taplo_status}" '1'
 	assert_eq "$("${CARGO_HOME}/bin/taplo")" 'prebuilt Taplo'
-	assert_file_contains "Failed to download Taplo's prebuilt release binary" "${tmp}/taplo-error.log"
-	for leftover in "${CARGO_HOME}/bin"/.taplo-*; do
+	assert_file_contains "Could not download or prepare Taplo's prebuilt release binary" "${tmp}/taplo-error.log"
+	for leftover in "${CARGO_HOME}/bin"/taplo.* "${TMPDIR}"/dotfiles-download.*; do
 		[ ! -e "${leftover}" ] || fail_test "Taplo installer temp file leaked: ${leftover}"
 	done
 
@@ -476,6 +497,28 @@ EOF
 	assert_eq "$(grep -Fc 'https://deb.nodesource.com/setup_22.x' "${CURL_LOG}")" '1'
 	assert_eq "$(grep -Fc 'install -y --no-install-recommends nodejs' "${APT_LOG}")" '1'
 
+	VIM_HOME="${tmp}/vim home"
+	VIM_LOG="${tmp}/vim.log"
+	HOME=${VIM_HOME}
+	export HOME VIM_LOG
+	vim() { printf '%s\n' "$*" >>"${VIM_LOG}"; }
+	: >"${CURL_LOG}"
+	setup_vim_plugins
+	plug_file="${VIM_HOME}/.vim/autoload/plug.vim"
+	assert_file_contains 'ran' "${plug_file}"
+	assert_file_contains 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' "${CURL_LOG}"
+	assert_file_contains 'PlugInstall --sync' "${VIM_LOG}"
+	CURL_FAIL=1
+	rm -f -- "${plug_file}"
+	if (setup_vim_plugins) >"${tmp}/vim-install.out" 2>&1; then
+		fail_test 'vim-plug download failure should be returned'
+	fi
+	[ ! -e "${plug_file}" ] || fail_test 'failed vim-plug download activated a file'
+	for leftover in "${plug_file}".* "${TMPDIR}"/dotfiles-download.*; do
+		[ ! -e "${leftover}" ] || fail_test "vim-plug temp file leaked: ${leftover}"
+	done
+	CURL_FAIL=0
+
 	REMOTE_TMPDIR="${tmp}/remote temp files"
 	REMOTE_LOG="${tmp}/remote.log"
 	remote_source="${tmp}/remote setup.sh"
@@ -538,8 +581,8 @@ EOF
 		fail_test 'a failed keymapp refresh should be reported'
 	fi
 	assert_file_contains 'new keymapp' "${keymapp_bin}"
-	for leftover in "${TMPDIR}"/dotfiles-keymapp.*; do
-		[ ! -e "${leftover}" ] || fail_test "keymapp temp directory leaked: ${leftover}"
+	for leftover in "${TMPDIR}"/dotfiles-download.*; do
+		[ ! -e "${leftover}" ] || fail_test "binary temp directory leaked: ${leftover}"
 	done
 
 	DOCKER_GROUP_ADDED=0
@@ -611,6 +654,68 @@ EOF
 	assert_eq "$(grep -Fc 'pipx install --force uv' "${TOOL_LOG}")" '1'
 	assert_eq "$(grep -Fc 'npm install --global' "${TOOL_LOG}")" '1'
 
+	TEA_HOME="${tmp}/Gitea tea home"
+	TEA_BIN="${TEA_HOME}/.local/bin/tea"
+	TEA_ARCHIVE="${tmp}/tea release"
+	TEA_CURL_LOG="${tmp}/tea curl.log"
+	TEA_CURL_FAIL=0
+	mkdir -p "${TEA_HOME}"
+	export TEA_ARCHIVE TEA_CURL_LOG TEA_CURL_FAIL
+	require_linux_x86_64() { :; }
+	write_tea_fixture() {
+		fixture_version=$1
+		cat >"${TEA_ARCHIVE}" <<EOF
+#!/bin/sh
+[ "\${1:-}" = --version ] || exit 2
+printf 'Version: %s\\n' '${fixture_version}'
+EOF
+		chmod +x "${TEA_ARCHIVE}"
+	}
+	curl() {
+		printf '%s\n' "$*" >>"${TEA_CURL_LOG}"
+		[ "${1:-}" = -fsSL ] || return 2
+		[ "${2:-}" = https://dl.gitea.com/tea/0.16.0/tea-0.16.0-linux-amd64 ] || return 2
+		[ "${3:-}" = -o ] && [ -n "${4:-}" ] || return 2
+		[ "${TEA_CURL_FAIL}" -eq 0 ] || return 22
+		cp -- "${TEA_ARCHIVE}" "$4"
+	}
+	HOME=${TEA_HOME}
+	export HOME
+	should_upgrade=0
+	write_tea_fixture 0.16.0
+	install_tea_linux
+	assert_eq "$("${TEA_BIN}" --version)" 'Version: 0.16.0'
+	assert_eq "$(grep -Fc 'tea-0.16.0-linux-amd64 -o' "${TEA_CURL_LOG}")" '1'
+	tea_curl_calls=$(wc -l <"${TEA_CURL_LOG}" | tr -d ' ')
+	install_tea_linux
+	assert_eq "$(wc -l <"${TEA_CURL_LOG}" | tr -d ' ')" "${tea_curl_calls}"
+	should_upgrade=1
+	install_tea_linux
+	assert_eq "$(wc -l <"${TEA_CURL_LOG}" | tr -d ' ')" "${tea_curl_calls}"
+
+	write_tea_fixture 0.15.0
+	cp -- "${TEA_ARCHIVE}" "${TEA_BIN}"
+	write_tea_fixture 0.16.0
+	install_tea_linux
+	assert_eq "$("${TEA_BIN}" --version)" 'Version: 0.16.0'
+	assert_eq "$(grep -Fc 'tea-0.16.0-linux-amd64 -o' "${TEA_CURL_LOG}")" '2'
+
+	write_tea_fixture 0.15.0
+	cp -- "${TEA_ARCHIVE}" "${TEA_BIN}"
+	TEA_CURL_FAIL=1
+	if install_tea_linux 2>"${tmp}/tea-download-error.log"; then
+		fail_test 'a failed tea download should fail'
+	else
+		tea_status=$?
+	fi
+	assert_eq "${tea_status}" '1'
+	assert_eq "$("${TEA_BIN}" --version)" 'Version: 0.15.0'
+	assert_file_contains 'Could not download or prepare Gitea tea 0.16.0' "${tmp}/tea-download-error.log"
+	assert_eq "$(grep -Fc 'tea-0.16.0-linux-amd64 -o' "${TEA_CURL_LOG}")" '3'
+	for leftover in "${TEA_BIN}".* "${TMPDIR}"/dotfiles-download.*; do
+		[ ! -e "${leftover}" ] || fail_test "binary installer temp file leaked: ${leftover}"
+	done
+
 	INSTALL_STUBS="${tmp}/install-stubs.sh"
 	cat >"${INSTALL_STUBS}" <<'EOF'
 record_install_call() { printf '%s\n' "$1" >>"${INSTALL_LOG}"; }
@@ -627,6 +732,7 @@ install_linux_packages() {
 maybe_upgrade_apt_packages() { if [ "${should_upgrade}" -eq 1 ]; then record_install_call maybe_upgrade_apt_packages; fi; }
 ensure_nodejs_22() { record_install_call ensure_nodejs_22; }
 install_linux_user_tools() { record_install_call install_linux_user_tools; }
+install_tea_linux() { record_install_call install_tea_linux; }
 install_tailscale_linux() { record_install_call install_tailscale_linux; }
 install_docker_linux() { record_install_call install_docker_linux; }
 install_keymapp() { record_install_call install_keymapp; }
@@ -674,6 +780,7 @@ EOF
 	assert_eq "$(grep -Fc 'ensure_nodejs_22' "${INSTALL_LOG}")" '2'
 	assert_eq "$(grep -Fc 'install_linux_packages' "${INSTALL_LOG}")" '2'
 	assert_eq "$(grep -Fc 'install_linux_user_tools' "${INSTALL_LOG}")" '2'
+	assert_eq "$(grep -Fc 'install_tea_linux' "${INSTALL_LOG}")" '2'
 	assert_eq "$(grep -Fc 'install_tailscale_linux' "${INSTALL_LOG}")" '2'
 	assert_eq "$(grep -Fc 'install_docker_linux' "${INSTALL_LOG}")" '2'
 	assert_eq "$(grep -Fc 'install_keymapp' "${INSTALL_LOG}")" '2'

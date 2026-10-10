@@ -8,8 +8,8 @@ set -eu
 tmp=$(make_temp_dir)
 trap 'cleanup_temp_dir "${tmp}"' EXIT HUP INT TERM
 
-home_dir="${tmp}/home"
-xdg_dir="${tmp}/xdg"
+home_dir="${tmp}/home dir"
+xdg_dir="${tmp}/xdg dir"
 mkdir -p "${home_dir}" "${xdg_dir}"
 
 HOME="${home_dir}"
@@ -26,6 +26,16 @@ link_direct "${sample}" "${home_dir}/direct/README.md"
 assert_symlink_target "${home_dir}/.bashrc" "${sample}"
 assert_symlink_target "${xdg_dir}/shell/readme.md" "${sample}"
 assert_symlink_target "${home_dir}/direct/README.md" "${sample}"
+
+rc_configs="${tmp}/rc configs"
+mkdir -p "${rc_configs}/bash/bashrc.d" "${rc_configs}/bash/profile.d"
+printf 'bashrc module\n' >"${rc_configs}/bash/bashrc.d/example.sh"
+printf 'profile module\n' >"${rc_configs}/bash/profile.d/example.sh"
+configs=${rc_configs}
+setup_bashrc_d
+setup_bash_profile_d
+assert_symlink_target "${home_dir}/.bashrc.d/example.sh" "${rc_configs}/bash/bashrc.d/example.sh"
+assert_symlink_target "${home_dir}/.bash_profile.d/example.sh" "${rc_configs}/bash/profile.d/example.sh"
 
 line_file="${tmp}/lines.txt"
 ensure_line_in_file 'alpha' "${line_file}"
