@@ -32,15 +32,30 @@
     { args = [
       '.repo/actions/prettier.sh',
     ], entry = "sh", exclude = '^(configs/fzf/fzf\.fish/|configs/nvm/nvm\.fish/|configs/tmux/\.tmux/)', files = '\.(json|md|yaml|yml)$', id = "prettier", language = "system", name = "prettier", priority = 10 },
+    { alias = "vim-prettier", args = [
+      '.repo/actions/prettier.sh',
+    ], entry = "sh", exclude = '^(configs/fzf/fzf\.fish/|configs/nvm/nvm\.fish/|configs/tmux/\.tmux/)', files = '\.(json|md|yaml|yml)$', id = "prettier", language = "system", name = "prettier", pass_filenames = true, priority = 10, stages = [
+      "manual",
+    ] },
     { args = [
       '.repo/actions/shellcheck.sh',
     ], entry = "sh", exclude = '^(configs/fzf/fzf\.fish/|configs/nvm/nvm\.fish/|configs/tmux/\.tmux/)', files = '\.sh$', id = "shellcheck", language = "system", name = "shellcheck", priority = 20 },
     { args = [
       '.repo/actions/shfmt.sh',
     ], entry = "sh", exclude = '^(configs/fzf/fzf\.fish/|configs/nvm/nvm\.fish/|configs/tmux/\.tmux/)', files = '\.sh$', id = "shfmt", language = "system", name = "shfmt", priority = 10 },
+    { alias = "vim-shfmt", args = [
+      '.repo/actions/shfmt.sh',
+    ], entry = "sh", exclude = '^(configs/fzf/fzf\.fish/|configs/nvm/nvm\.fish/|configs/tmux/\.tmux/)', files = '\.sh$', id = "shfmt", language = "system", name = "shfmt", pass_filenames = true, priority = 10, stages = [
+      "manual",
+    ] },
     { args = [
       '.repo/actions/taplo.sh',
     ], entry = "sh", exclude = '^(configs/fzf/fzf\.fish/|configs/nvm/nvm\.fish/|configs/tmux/\.tmux/)', files = '\.toml$', id = "taplo", language = "system", name = "taplo", priority = 10 },
+    { alias = "vim-taplo", args = [
+      '.repo/actions/taplo.sh',
+    ], entry = "sh", exclude = '^(configs/fzf/fzf\.fish/|configs/nvm/nvm\.fish/|configs/tmux/\.tmux/)', files = '\.toml$', id = "taplo", language = "system", name = "taplo", pass_filenames = true, priority = 10, stages = [
+      "manual",
+    ] },
     { args = [
       '.repo/actions/test.sh',
     ], entry = "sh", files = '.*', id = "tests", language = "system", name = "tests", pass_filenames = false, priority = 30 },

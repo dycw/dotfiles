@@ -199,6 +199,191 @@ function! s:TrimTrailingWhitespace()
   call winrestview(save)
 endfunction
 
+" Editor aliases must be file-scoped manual hooks, leaving CI checks unchanged.
+let s:prek_formatter_cache = {}
+
+function! s:FindPrekConfig(buffer) abort
+  let l:file = expand('#' . a:buffer . ':p')
+
+  if empty(l:file)
+    return ''
+  endif
+
+  let l:directory = fnamemodify(l:file, ':h')
+
+  while !empty(l:directory)
+    let l:config = l:directory . '/prek.toml'
+
+    if filereadable(l:config)
+      return l:config
+    endif
+
+    let l:parent = fnamemodify(l:directory, ':h')
+
+    if l:parent ==# l:directory
+      break
+    endif
+
+    let l:directory = l:parent
+  endwhile
+
+  return ''
+endfunction
+
+function! s:PrekFormatterAliases(config) abort
+  let l:mtime = getftime(a:config)
+  let l:cached = get(s:prek_formatter_cache, a:config, {})
+
+  if get(l:cached, 'mtime', -1) == l:mtime
+    return l:cached.aliases
+  endif
+
+  if !executable('prek')
+    return {}
+  endif
+
+  let l:root = fnamemodify(a:config, ':h')
+  let l:command = 'cd ' . shellescape(l:root)
+  \   . ' && prek --color never --no-progress list --output-format json'
+  let l:output = system(l:command)
+
+  if v:shell_error != 0
+    return {}
+  endif
+
+  try
+    let l:hooks = json_decode(l:output)
+  catch
+    return {}
+  endtry
+
+  if type(l:hooks) isnot v:t_list
+    return {}
+  endif
+
+  let l:aliases = {}
+
+  for l:hook in l:hooks
+    let l:alias = get(l:hook, 'alias', '')
+
+    if !empty(l:alias)
+      let l:aliases[l:alias] = 1
+    endif
+  endfor
+
+  let s:prek_formatter_cache[a:config] = {'mtime': l:mtime, 'aliases': l:aliases}
+
+  return l:aliases
+endfunction
+
+function! s:PrekRelativePath(path, root) abort
+  let l:path = substitute(fnamemodify(resolve(a:path), ':p'), '\\', '/', 'g')
+  let l:root = substitute(fnamemodify(resolve(a:root), ':p'), '\\', '/', 'g')
+  let l:root = substitute(l:root, '/\+$', '', '')
+  let l:prefix = l:root . '/'
+  let l:comparison_path = has('win32') ? tolower(l:path) : l:path
+  let l:comparison_prefix = has('win32') ? tolower(l:prefix) : l:prefix
+
+  if stridx(l:comparison_path, l:comparison_prefix) != 0
+    return ''
+  endif
+
+  return strpart(l:path, strlen(l:prefix))
+endfunction
+
+function! s:NativeAleFixer(buffer, name) abort
+  let l:Fixer = function('ale#fixers#' . a:name . '#Fix')
+
+  return l:Fixer(a:buffer)
+endfunction
+
+function! s:ReportPrekFailure(alias, output) abort
+  let l:output = substitute(a:output, '\n\+', ' ', 'g')
+
+  echohl WarningMsg
+  echomsg 'Prek formatter ' . a:alias . ' failed: ' . l:output
+  echohl None
+endfunction
+
+function! s:FormatWithPrek(buffer, lines, alias, extension, native_fixer) abort
+  let l:config = s:FindPrekConfig(a:buffer)
+
+  if empty(l:config) || !has_key(s:PrekFormatterAliases(l:config), a:alias)
+    return s:NativeAleFixer(a:buffer, a:native_fixer)
+  endif
+
+  let l:root = fnamemodify(l:config, ':h')
+  let l:source = expand('#' . a:buffer . ':p')
+  let l:directory = fnamemodify(l:source, ':h')
+  let l:temp_name = fnamemodify(tempname(), ':t')
+  let l:temp_file = l:directory . '/vim-prek-' . l:temp_name . '.' . a:extension
+
+  if writefile(a:lines, l:temp_file) != 0
+    return s:NativeAleFixer(a:buffer, a:native_fixer)
+  endif
+
+  try
+    let l:relative_path = s:PrekRelativePath(l:temp_file, l:root)
+
+    if empty(l:relative_path)
+      return s:NativeAleFixer(a:buffer, a:native_fixer)
+    endif
+
+    let l:command = 'cd ' . shellescape(l:root)
+    \   . ' && prek --color never --no-progress run --stage manual '
+    \   . shellescape(a:alias) . ' --files ' . shellescape(l:relative_path)
+    let l:output = system(l:command)
+
+    if v:shell_error != 0
+      call s:ReportPrekFailure(a:alias, l:output)
+
+      return a:lines
+    endif
+
+    if l:output =~# '\<Skipped\>' || l:output =~# 'no files to check'
+      return s:NativeAleFixer(a:buffer, a:native_fixer)
+    endif
+
+    return readfile(l:temp_file)
+  finally
+    call delete(l:temp_file)
+  endtry
+endfunction
+
+function! s:PrekRustfmt(buffer, lines) abort
+  return s:FormatWithPrek(a:buffer, a:lines, 'vim-rustfmt', 'rs', 'rustfmt')
+endfunction
+
+function! s:PrekShfmt(buffer, lines) abort
+  return s:FormatWithPrek(a:buffer, a:lines, 'vim-shfmt', 'sh', 'shfmt')
+endfunction
+
+function! s:PrekStylua(buffer, lines) abort
+  return s:FormatWithPrek(a:buffer, a:lines, 'vim-stylua', 'lua', 'stylua')
+endfunction
+
+function! s:PrekTaplo(buffer, lines) abort
+  return s:FormatWithPrek(a:buffer, a:lines, 'vim-taplo', 'toml', 'taplo')
+endfunction
+
+function! s:PrekPrettier(buffer, lines) abort
+  let l:file = expand('#' . a:buffer . ':p')
+  let l:extension = fnamemodify(l:file, ':e')
+
+  if empty(l:extension)
+    let l:extension = get({
+    \   'javascript': 'js',
+    \   'typescript': 'ts',
+    \   'css': 'css',
+    \   'json': 'json',
+    \   'markdown': 'md',
+    \   'yaml': 'yaml',
+    \}, getbufvar(a:buffer, '&filetype'), 'txt')
+  endif
+
+  return s:FormatWithPrek(a:buffer, a:lines, 'vim-prettier', l:extension, 'prettier')
+endfunction
+
 " ── plugin configuration ──────────────────────────────────────────────────────
 " ALE — linting + formatting + LSP (nvim-lint + conform.nvim + nvim-lspconfig)
 " Rust Analyzer diagnoses edited buffers; Cargo checks saved files for compiler errors.
@@ -214,17 +399,17 @@ let g:ale_linters = {
 let g:ale_fixers = {
   \ '*':          ['trim_whitespace', 'remove_trailing_lines'],
   \ 'python':     ['ruff', 'ruff_format'],
-  \ 'sh':         ['shfmt'],
-  \ 'bash':       ['shfmt'],
-  \ 'rust':       ['rustfmt'],
-  \ 'lua':        ['stylua'],
-  \ 'toml':       ['taplo'],
-  \ 'javascript': ['prettier'],
-  \ 'typescript': ['prettier'],
-  \ 'css':        ['prettier'],
-  \ 'json':       ['prettier'],
-  \ 'markdown':   ['prettier'],
-  \ 'yaml':       ['prettier'],
+  \ 'sh':         [function('s:PrekShfmt')],
+  \ 'bash':       [function('s:PrekShfmt')],
+  \ 'rust':       [function('s:PrekRustfmt')],
+  \ 'lua':        [function('s:PrekStylua')],
+  \ 'toml':       [function('s:PrekTaplo')],
+  \ 'javascript': [function('s:PrekPrettier')],
+  \ 'typescript': [function('s:PrekPrettier')],
+  \ 'css':        [function('s:PrekPrettier')],
+  \ 'json':       [function('s:PrekPrettier')],
+  \ 'markdown':   [function('s:PrekPrettier')],
+  \ 'yaml':       [function('s:PrekPrettier')],
   \ }
 let g:ale_fix_on_save = 1
 let g:ale_lsp_suggestions = 1

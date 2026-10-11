@@ -69,7 +69,54 @@ function! plug#end() abort
 endfunction
 EOF
 	printf '#!/bin/sh\nexit 0\n' >"${cargo_home}/bin/rust-analyzer"
-	chmod +x "${cargo_home}/bin/rust-analyzer"
+	cat >"${cargo_home}/bin/prek" <<'EOF'
+#!/bin/sh
+set -eu
+printf '%s\n' "$*" >>"${PREK_TEST_LOG}"
+case "$*" in
+	*'list --output-format json'*)
+		case "${PREK_TEST_MODE}" in
+		missing) printf '%s\n' '[{"alias":"vim-shfmt"}]' ;;
+		taplo) printf '%s\n' '[{"alias":"vim-taplo"}]' ;;
+		*) printf '%s\n' '[{"alias":"vim-rustfmt"}]' ;;
+		esac
+		;;
+	*'run --stage manual vim-rustfmt --files'*|*'run --stage manual vim-taplo --files'*)
+		file=
+		previous=
+		for arg in "$@"; do
+			if [ "${previous}" = '--files' ]; then
+				file=${arg}
+				break
+			fi
+			previous=${arg}
+		done
+		[ -n "${file}" ] || exit 2
+		case "${PREK_TEST_MODE}" in
+		skip) printf 'formatter...Skipped\n' ;;
+		failure)
+			printf 'partial-format\n' >"${file}"
+			printf 'formatter failed\n'
+			exit 1
+			;;
+		*) printf 'prek-formatted\n' >"${file}" ;;
+		esac
+		;;
+	*) exit 2 ;;
+esac
+EOF
+	chmod +x "${cargo_home}/bin/rust-analyzer" "${cargo_home}/bin/prek"
+	mkdir -p "${vim_home}/.vim/autoload/ale/fixers"
+	cat >"${vim_home}/.vim/autoload/ale/fixers/rustfmt.vim" <<'EOF'
+function! ale#fixers#rustfmt#Fix(buffer) abort
+	return ['native-formatted']
+endfunction
+EOF
+	cat >"${vim_home}/.vim/autoload/ale/fixers/taplo.vim" <<'EOF'
+function! ale#fixers#taplo#Fix(buffer) abort
+	return ['native-toml-formatted']
+endfunction
+EOF
 	HOME="${vim_home}" CARGO_HOME="${cargo_home}" PATH='/usr/bin:/bin' "${vim_bin}" \
 		-Nu "${test_root}/configs/vimrc" -n -es \
 		-c "call writefile([string(executable('rust-analyzer')), \$PATH, join(g:ale_linters.rust, ','), string(g:ale_rust_cargo_use_check), g:ale_lint_on_text_changed], '${vim_result}')" \
@@ -102,6 +149,72 @@ EOF
 		"${vim_bin}" -Nu "${test_root}/configs/vimrc" -n -es -S "${vim_autosave_script}"
 	assert_eq "$(cat "${vim_autosave_file}")" 'updated'
 	assert_eq "$(cat "${vim_autosave_marker}")" 'saved'
+
+	vim_prek_project="${tmp}/prek project"
+	vim_prek_source="${vim_prek_project}/src/source file.rs"
+	vim_prek_result="${tmp}/vim prek result"
+	vim_prek_log="${tmp}/vim prek log"
+	vim_prek_script="${tmp}/vim prek test.vim"
+	mkdir -p "${vim_prek_project}/src"
+	: >"${vim_prek_project}/prek.toml"
+	printf 'fn main() {}\n' >"${vim_prek_source}"
+	cat >"${vim_prek_script}" <<-'EOF'
+		let result = call(g:ale_fixers.rust[0], [bufnr('%'), ['unformatted']])
+		let temp_files = globpath($VIM_PREK_PROJECT . '/src', 'vim-prek-*', 0, 1)
+		call writefile(result + ['temp-count=' . string(len(temp_files))], $VIM_PREK_RESULT)
+		qa!
+	EOF
+	PREK_TEST_MODE=rustfmt PREK_TEST_LOG="${vim_prek_log}" \
+		VIM_PREK_PROJECT="${vim_prek_project}" VIM_PREK_RESULT="${vim_prek_result}" \
+		HOME="${vim_home}" CARGO_HOME="${cargo_home}" PATH="${cargo_home}/bin:/usr/bin:/bin" \
+		"${vim_bin}" -Nu "${test_root}/configs/vimrc" -n -es "${vim_prek_source}" -S "${vim_prek_script}"
+	assert_eq "$(sed -n '1p' "${vim_prek_result}")" 'prek-formatted'
+	assert_eq "$(sed -n '2p' "${vim_prek_result}")" 'temp-count=0'
+
+	PREK_TEST_MODE=missing PREK_TEST_LOG="${vim_prek_log}" \
+		VIM_PREK_PROJECT="${vim_prek_project}" VIM_PREK_RESULT="${vim_prek_result}" \
+		HOME="${vim_home}" CARGO_HOME="${cargo_home}" PATH="${cargo_home}/bin:/usr/bin:/bin" \
+		"${vim_bin}" -Nu "${test_root}/configs/vimrc" -n -es "${vim_prek_source}" -S "${vim_prek_script}"
+	assert_eq "$(sed -n '1p' "${vim_prek_result}")" 'native-formatted'
+	assert_eq "$(sed -n '2p' "${vim_prek_result}")" 'temp-count=0'
+
+	PREK_TEST_MODE=skip PREK_TEST_LOG="${vim_prek_log}" \
+		VIM_PREK_PROJECT="${vim_prek_project}" VIM_PREK_RESULT="${vim_prek_result}" \
+		HOME="${vim_home}" CARGO_HOME="${cargo_home}" PATH="${cargo_home}/bin:/usr/bin:/bin" \
+		"${vim_bin}" -Nu "${test_root}/configs/vimrc" -n -es "${vim_prek_source}" -S "${vim_prek_script}"
+	assert_eq "$(sed -n '1p' "${vim_prek_result}")" 'native-formatted'
+	assert_eq "$(sed -n '2p' "${vim_prek_result}")" 'temp-count=0'
+
+	PREK_TEST_MODE=failure PREK_TEST_LOG="${vim_prek_log}" \
+		VIM_PREK_PROJECT="${vim_prek_project}" VIM_PREK_RESULT="${vim_prek_result}" \
+		HOME="${vim_home}" CARGO_HOME="${cargo_home}" PATH="${cargo_home}/bin:/usr/bin:/bin" \
+		"${vim_bin}" -Nu "${test_root}/configs/vimrc" -n -es "${vim_prek_source}" -S "${vim_prek_script}"
+	assert_eq "$(sed -n '1p' "${vim_prek_result}")" 'unformatted'
+	assert_eq "$(sed -n '2p' "${vim_prek_result}")" 'temp-count=0'
+
+	vim_prek_toml_source="${vim_prek_project}/src/settings file.toml"
+	vim_prek_toml_result="${tmp}/vim prek toml result"
+	vim_prek_toml_script="${tmp}/vim prek toml test.vim"
+	printf 'key = "value"\n' >"${vim_prek_toml_source}"
+	cat >"${vim_prek_toml_script}" <<-'EOF'
+		let result = call(g:ale_fixers.toml[0], [bufnr('%'), ['unformatted']])
+		let temp_files = globpath($VIM_PREK_PROJECT . '/src', 'vim-prek-*', 0, 1)
+		call writefile(result + ['temp-count=' . string(len(temp_files))], $VIM_PREK_RESULT)
+		qa!
+	EOF
+	PREK_TEST_MODE=taplo PREK_TEST_LOG="${vim_prek_log}" \
+		VIM_PREK_PROJECT="${vim_prek_project}" VIM_PREK_RESULT="${vim_prek_toml_result}" \
+		HOME="${vim_home}" CARGO_HOME="${cargo_home}" PATH="${cargo_home}/bin:/usr/bin:/bin" \
+		"${vim_bin}" -Nu "${test_root}/configs/vimrc" -n -es "${vim_prek_toml_source}" -S "${vim_prek_toml_script}"
+	assert_eq "$(sed -n '1p' "${vim_prek_toml_result}")" 'prek-formatted'
+	assert_eq "$(sed -n '2p' "${vim_prek_toml_result}")" 'temp-count=0'
+
+	PREK_TEST_MODE=missing PREK_TEST_LOG="${vim_prek_log}" \
+		VIM_PREK_PROJECT="${vim_prek_project}" VIM_PREK_RESULT="${vim_prek_toml_result}" \
+		HOME="${vim_home}" CARGO_HOME="${cargo_home}" PATH="${cargo_home}/bin:/usr/bin:/bin" \
+		"${vim_bin}" -Nu "${test_root}/configs/vimrc" -n -es "${vim_prek_toml_source}" -S "${vim_prek_toml_script}"
+	assert_eq "$(sed -n '1p' "${vim_prek_toml_result}")" 'native-toml-formatted'
+	assert_eq "$(sed -n '2p' "${vim_prek_toml_result}")" 'temp-count=0'
 else
 	printf '%s\n' 'Skipping Vim PATH runtime test: Vim is unavailable' >&2
 fi
