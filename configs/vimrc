@@ -1,5 +1,13 @@
 " vimrc — comprehensive config ported from neovim/lazy.nvim
 
+" Let ALE find rustup tools even when Vim inherits tmux's older PATH.
+let s:cargo_home = empty($CARGO_HOME) ? expand('~/.cargo') : expand($CARGO_HOME)
+let s:cargo_bin = s:cargo_home . '/bin'
+if isdirectory(s:cargo_bin) && index(split($PATH, ':'), s:cargo_bin) < 0
+  let $PATH = s:cargo_bin . (empty($PATH) ? '' : ':' . $PATH)
+endif
+unlet s:cargo_home s:cargo_bin
+
 " ── vim-plug bootstrap ───────────────────────────────────────────────────────
 let s:plug_file = expand('~/.vim/autoload/plug.vim')
 if empty(glob(s:plug_file))
@@ -193,13 +201,14 @@ endfunction
 
 " ── plugin configuration ──────────────────────────────────────────────────────
 " ALE — linting + formatting + LSP (nvim-lint + conform.nvim + nvim-lspconfig)
+" Rust Analyzer provides live diagnostics; Cargo checks saved files for compiler errors.
 let g:ale_linters = {
   \ 'python':     ['ruff', 'pyright'],
   \ 'sh':         ['shellcheck'],
   \ 'bash':       ['shellcheck'],
   \ 'lua':        ['luacheck'],
   \ 'sql':        ['sqlfluff'],
-  \ 'rust':       ['analyzer'],
+  \ 'rust':       ['analyzer', 'cargo'],
   \ }
 let g:ale_fixers = {
   \ '*':          ['trim_whitespace', 'remove_trailing_lines'],

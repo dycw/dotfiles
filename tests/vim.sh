@@ -53,3 +53,35 @@ truncate:alias-file
 vim:alias-file'
 actual_log=$(cat "${command_log}")
 assert_eq "${actual_log}" "${expected_log}"
+
+if vim_bin=$(command -v vim); then
+	vim_home="${tmp}/vim home"
+	cargo_home="${tmp}/cargo home"
+	vim_result="${tmp}/vim result"
+	mkdir -p "${vim_home}/.vim/autoload" "${cargo_home}/bin"
+	cat >"${vim_home}/.vim/autoload/plug.vim" <<'EOF'
+function! plug#begin(...) abort
+	let g:plugs = {}
+	command! -nargs=* Plug echo
+endfunction
+
+function! plug#end() abort
+endfunction
+EOF
+	printf '#!/bin/sh\nexit 0\n' >"${cargo_home}/bin/rust-analyzer"
+	chmod +x "${cargo_home}/bin/rust-analyzer"
+	HOME="${vim_home}" CARGO_HOME="${cargo_home}" PATH='/usr/bin:/bin' "${vim_bin}" \
+		-Nu "${test_root}/configs/vimrc" -n -es \
+		-c "call writefile([string(executable('rust-analyzer')), \$PATH, join(g:ale_linters.rust, ','), string(g:ale_rust_cargo_use_check)], '${vim_result}')" \
+		-c 'qa!'
+	vim_path_status=$(sed -n '1p' "${vim_result}")
+	vim_path=$(sed -n '2p' "${vim_result}")
+	vim_rust_linters=$(sed -n '3p' "${vim_result}")
+	vim_rust_cargo_use_check=$(sed -n '4p' "${vim_result}")
+	assert_eq "${vim_path_status}" '1'
+	assert_eq "${vim_path%%:*}" "${cargo_home}/bin"
+	assert_eq "${vim_rust_linters}" 'analyzer,cargo'
+	assert_eq "${vim_rust_cargo_use_check}" '1'
+else
+	printf '%s\n' 'Skipping Vim PATH runtime test: Vim is unavailable' >&2
+fi
