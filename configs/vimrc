@@ -171,7 +171,7 @@ function! s:ToggleAutoSave()
   else
     augroup AutoSaveGroup
       autocmd!
-      autocmd CursorHold,InsertLeave * silent! update
+      autocmd CursorHold,InsertLeave * nested silent! update
     augroup END
     let s:autosave_on = 1
     echo 'AutoSave enabled'
@@ -180,7 +180,7 @@ endfunction
 
 augroup AutoSaveGroup
   autocmd!
-  autocmd CursorHold,InsertLeave * silent! update
+  autocmd CursorHold,InsertLeave * nested silent! update
 augroup END
 
 function! s:ToggleCopyPasteMode()
@@ -201,7 +201,8 @@ endfunction
 
 " ── plugin configuration ──────────────────────────────────────────────────────
 " ALE — linting + formatting + LSP (nvim-lint + conform.nvim + nvim-lspconfig)
-" Rust Analyzer provides live diagnostics; Cargo checks saved files for compiler errors.
+" Rust Analyzer diagnoses edited buffers; Cargo checks saved files for compiler errors.
+let g:ale_lint_on_text_changed = 'always'
 let g:ale_linters = {
   \ 'python':     ['ruff', 'pyright'],
   \ 'sh':         ['shellcheck'],
