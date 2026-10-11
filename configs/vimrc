@@ -236,6 +236,48 @@ let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_python_ruff_options = '--ignore=F401'
 let g:ale_rust_cargo_use_check = 1
 
+" Rust Analyzer reports ':' as a trigger, but ALE filters completions at '::'.
+let s:rust_scope_completion_timer = -1
+let s:rust_scope_completion_buffer = -1
+
+function! s:CompleteRustScope(timer) abort
+  if a:timer != s:rust_scope_completion_timer
+    return
+  endif
+
+  let s:rust_scope_completion_timer = -1
+
+  if bufnr('') != s:rust_scope_completion_buffer
+  \|| &filetype isnot# 'rust'
+  \|| mode() isnot# 'i'
+  \|| strpart(getline('.'), 0, col('.') - 1) !~# '::$'
+    return
+  endif
+
+  call ale#completion#GetCompletions('ale-manual', {'prefix': ''})
+endfunction
+
+function! s:QueueRustScopeCompletion() abort
+  if s:rust_scope_completion_timer != -1
+    call timer_stop(s:rust_scope_completion_timer)
+    let s:rust_scope_completion_timer = -1
+  endif
+
+  if &filetype isnot# 'rust'
+  \|| mode() isnot# 'i'
+  \|| !get(b:, 'ale_completion_enabled', get(g:, 'ale_completion_enabled', 0))
+  \|| exists(':ALEComplete') != 2
+  \|| strpart(getline('.'), 0, col('.') - 1) !~# '::$'
+    return
+  endif
+
+  let s:rust_scope_completion_buffer = bufnr('')
+  let s:rust_scope_completion_timer = timer_start(
+  \   get(g:, 'ale_completion_delay', 100) + 150,
+  \   function('s:CompleteRustScope')
+  \)
+endfunction
+
 " far.vim (grug-far.nvim)
 let g:far#source = 'rg'
 let g:far#enable_undo = 1
@@ -401,6 +443,9 @@ augroup vimrc
 
   " Trim trailing whitespace on save.
   autocmd BufWritePre * call s:TrimTrailingWhitespace()
+
+  " Show Rust Analyzer completions immediately after a scope separator.
+  autocmd TextChangedI * call s:QueueRustScopeCompletion()
 augroup END
 
 " ── colorscheme ───────────────────────────────────────────────────────────────

@@ -72,18 +72,22 @@ EOF
 	chmod +x "${cargo_home}/bin/rust-analyzer"
 	HOME="${vim_home}" CARGO_HOME="${cargo_home}" PATH='/usr/bin:/bin' "${vim_bin}" \
 		-Nu "${test_root}/configs/vimrc" -n -es \
-		-c "call writefile([string(executable('rust-analyzer')), \$PATH, join(g:ale_linters.rust, ','), string(g:ale_rust_cargo_use_check), g:ale_lint_on_text_changed], '${vim_result}')" \
+		-c "call writefile([string(executable('rust-analyzer')), \$PATH, join(g:ale_linters.rust, ','), string(g:ale_rust_cargo_use_check), g:ale_lint_on_text_changed, string(g:ale_completion_enabled), string(exists('#vimrc#TextChangedI'))], '${vim_result}')" \
 		-c 'qa!'
 	vim_path_status=$(sed -n '1p' "${vim_result}")
 	vim_path=$(sed -n '2p' "${vim_result}")
 	vim_rust_linters=$(sed -n '3p' "${vim_result}")
 	vim_rust_cargo_use_check=$(sed -n '4p' "${vim_result}")
 	vim_lint_on_text_changed=$(sed -n '5p' "${vim_result}")
+	vim_completion_enabled=$(sed -n '6p' "${vim_result}")
+	vim_completion_autocmd=$(sed -n '7p' "${vim_result}")
 	assert_eq "${vim_path_status}" '1'
 	assert_eq "${vim_path%%:*}" "${cargo_home}/bin"
 	assert_eq "${vim_rust_linters}" 'analyzer,cargo'
 	assert_eq "${vim_rust_cargo_use_check}" '1'
 	assert_eq "${vim_lint_on_text_changed}" 'always'
+	assert_eq "${vim_completion_enabled}" '1'
+	assert_eq "${vim_completion_autocmd}" '1'
 
 	vim_autosave_file="${tmp}/vim autosave file"
 	vim_autosave_marker="${tmp}/vim autosave marker"
