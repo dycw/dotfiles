@@ -83,6 +83,7 @@ set undofile
 let &undodir = expand('~/.vim/undodir')
 silent! call mkdir(&undodir, 'p')
 set encoding=utf-8
+filetype plugin indent on
 
 " Editing
 set breakindent

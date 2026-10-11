@@ -132,6 +132,14 @@ EOF
 	assert_eq "${vim_rust_cargo_use_check}" '1'
 	assert_eq "${vim_lint_on_text_changed}" 'always'
 
+	vim_filetype_source="${tmp}/vim filetype source.rs"
+	vim_filetype_result="${tmp}/vim filetype result"
+	printf 'fn main() {}\n' >"${vim_filetype_source}"
+	HOME="${vim_home}" CARGO_HOME="${cargo_home}" PATH='/usr/bin:/bin' "${vim_bin}" \
+		-Nu "${test_root}/configs/vimrc" -n -es "${vim_filetype_source}" \
+		-c "call writefile([&filetype], '${vim_filetype_result}')" -c 'qa!'
+	assert_eq "$(cat "${vim_filetype_result}")" 'rust'
+
 	vim_autosave_file="${tmp}/vim autosave file"
 	vim_autosave_marker="${tmp}/vim autosave marker"
 	vim_autosave_script="${tmp}/vim autosave test.vim"
