@@ -407,6 +407,11 @@ vnoremap <Leader>sr :Farr<CR>
 " Navigation plugins
 map <Tab>   <Plug>Sneak_;
 map <S-Tab> <Plug>Sneak_,
+
+" Accept the selected completion without changing normal-mode Tab navigation.
+inoremap <silent><expr> <Tab> pumvisible() ? "\<C-y>" : "\<Tab>"
+inoremap <silent><expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+
 nnoremap <silent> <Leader>e :call <SID>NERDTreeFindOrClose()<CR>
 vnoremap <silent> <Leader>e :<C-u>call <SID>NERDTreeFindOrClose()<CR>
 nnoremap <Leader><Leader> :Buffers<CR>
