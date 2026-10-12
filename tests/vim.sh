@@ -66,13 +66,14 @@ function! plug#begin(...) abort
 endfunction
 
 function! plug#end() abort
+	let g:vim_test_completion_enabled_at_plug_end = get(g:, 'ale_completion_enabled', 0)
 endfunction
 EOF
 	printf '#!/bin/sh\nexit 0\n' >"${cargo_home}/bin/rust-analyzer"
 	chmod +x "${cargo_home}/bin/rust-analyzer"
 	HOME="${vim_home}" CARGO_HOME="${cargo_home}" PATH='/usr/bin:/bin' "${vim_bin}" \
 		-Nu "${test_root}/configs/vimrc" -n -es \
-		-c "call writefile([string(executable('rust-analyzer')), \$PATH, join(g:ale_linters.rust, ','), string(g:ale_rust_cargo_use_check), g:ale_lint_on_text_changed, string(g:ale_completion_enabled), string(exists('#vimrc#TextChangedI')), string(get(maparg('<Tab>', 'i', 0, 1), 'expr', 0)), string(get(maparg('<CR>', 'i', 0, 1), 'expr', 0)), string(stridx(maparg('<Tab>', 'n'), 'Sneak') >= 0), string(stridx(get(maparg('<Tab>', 'i', 0, 1), 'rhs', ''), 'pumvisible()') >= 0 && stridx(get(maparg('<Tab>', 'i', 0, 1), 'rhs', ''), 'C-y') >= 0), string(stridx(get(maparg('<CR>', 'i', 0, 1), 'rhs', ''), 'pumvisible()') >= 0 && stridx(get(maparg('<CR>', 'i', 0, 1), 'rhs', ''), 'C-y') >= 0)], '${vim_result}')" \
+		-c "call writefile([string(executable('rust-analyzer')), \$PATH, join(g:ale_linters.rust, ','), string(g:ale_rust_cargo_use_check), g:ale_lint_on_text_changed, string(g:ale_completion_enabled), string(exists('#vimrc#TextChangedI')), string(get(maparg('<Tab>', 'i', 0, 1), 'expr', 0)), string(get(maparg('<CR>', 'i', 0, 1), 'expr', 0)), string(stridx(maparg('<Tab>', 'n'), 'Sneak') >= 0), string(stridx(get(maparg('<Tab>', 'i', 0, 1), 'rhs', ''), 'pumvisible()') >= 0 && stridx(get(maparg('<Tab>', 'i', 0, 1), 'rhs', ''), 'C-y') >= 0), string(stridx(get(maparg('<CR>', 'i', 0, 1), 'rhs', ''), 'pumvisible()') >= 0 && stridx(get(maparg('<CR>', 'i', 0, 1), 'rhs', ''), 'C-y') >= 0), string(g:vim_test_completion_enabled_at_plug_end)], '${vim_result}')" \
 		-c 'qa!'
 	vim_path_status=$(sed -n '1p' "${vim_result}")
 	vim_path=$(sed -n '2p' "${vim_result}")
@@ -86,6 +87,7 @@ EOF
 	vim_normal_tab_navigation=$(sed -n '10p' "${vim_result}")
 	vim_tab_completion_conditional=$(sed -n '11p' "${vim_result}")
 	vim_enter_completion_conditional=$(sed -n '12p' "${vim_result}")
+	vim_completion_enabled_at_plug_end=$(sed -n '13p' "${vim_result}")
 	assert_eq "${vim_path_status}" '1'
 	assert_eq "${vim_path%%:*}" "${cargo_home}/bin"
 	assert_eq "${vim_rust_linters}" 'analyzer,cargo'
@@ -98,6 +100,7 @@ EOF
 	assert_eq "${vim_normal_tab_navigation}" '1'
 	assert_eq "${vim_tab_completion_conditional}" '1'
 	assert_eq "${vim_enter_completion_conditional}" '1'
+	assert_eq "${vim_completion_enabled_at_plug_end}" '1'
 
 	vim_completion_keys_result="${tmp}/vim completion keys result"
 	vim_completion_keys_script="${tmp}/vim completion keys test.vim"

@@ -8,6 +8,9 @@ if isdirectory(s:cargo_bin) && index(split($PATH, ':'), s:cargo_bin) < 0
 endif
 unlet s:cargo_home s:cargo_bin
 
+" ALE reads this while its plugin loads at plug#end().
+let g:ale_completion_enabled = 1
+
 " ── vim-plug bootstrap ───────────────────────────────────────────────────────
 let s:plug_file = expand('~/.vim/autoload/plug.vim')
 if empty(glob(s:plug_file))
@@ -228,7 +231,6 @@ let g:ale_fixers = {
   \ }
 let g:ale_fix_on_save = 1
 let g:ale_lsp_suggestions = 1
-let g:ale_completion_enabled = 1
 let g:ale_completion_autoimport = 1
 let g:ale_sign_error = 'E'
 let g:ale_sign_warning = 'W'
