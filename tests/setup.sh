@@ -272,13 +272,19 @@ EOF
 	BREW_LOG="${tmp}/brew.log"
 	BREW_FORMULAE='present'
 	BREW_CASKS='present-cask'
+	BREW_FORMULAE_FILE="${tmp}/brew-formulae"
+	printf '%s\n' "${BREW_FORMULAE}" >"${BREW_FORMULAE_FILE}"
+	set_brew_formulae() {
+		BREW_FORMULAE=$1
+		printf '%s\n' "${BREW_FORMULAE}" | tr ' ' '\n' >"${BREW_FORMULAE_FILE}"
+	}
 	brew() {
 		operation=$1
 		shift
 		case "${operation}" in
 		list)
 			case "$1" in
-			--formula) printf '%s\n' "${BREW_FORMULAE}" ;;
+			--formula) cat "${BREW_FORMULAE_FILE}" ;;
 			--cask) printf '%s\n' "${BREW_CASKS}" ;;
 			*) return 2 ;;
 			esac
@@ -295,7 +301,31 @@ EOF
 				for item in "$@"; do
 					BREW_FORMULAE=$(printf '%s\n%s' "${BREW_FORMULAE}" "${item}")
 				done
+				printf '%s\n' "${BREW_FORMULAE}" >"${BREW_FORMULAE_FILE}"
 			fi
+			;;
+		uninstall)
+			printf 'uninstall %s\n' "$*" >>"${BREW_LOG}"
+			case "${BREW_UNINSTALL_MODE:-success}" in
+			missing-keg)
+				printf 'present\n' >"${BREW_FORMULAE_FILE}"
+				printf 'Error: No such keg: /opt/homebrew/Cellar/dnsmasq\n' >&2
+				return 1
+				;;
+			stale-keg)
+				printf 'Error: No such keg: /opt/homebrew/Cellar/dnsmasq\n' >&2
+				return 1
+				;;
+			failure)
+				printf 'Error: Permission denied while uninstalling formula\n' >&2
+				return 24
+				;;
+			success)
+				[ "${1:-}" = remove-me ] || return 2
+				printf 'present\n' >"${BREW_FORMULAE_FILE}"
+				;;
+			*) return 2 ;;
+			esac
 			;;
 		*) return 2 ;;
 		esac
@@ -304,6 +334,48 @@ EOF
 	install_missing_brew_formulas present new-formula
 	install_missing_brew_formulas present new-formula
 	assert_eq "$(grep -Fc 'install new-formula' "${BREW_LOG}")" '1'
+
+	set_brew_formulae 'present remove-me'
+	BREW_UNINSTALL_MODE=success
+	uninstall_brew_formulas remove-me
+	assert_eq "$(brew list --formula)" 'present'
+	assert_file_contains 'uninstall remove-me' "${BREW_LOG}"
+
+	set_brew_formulae 'present dnsmasq'
+	BREW_UNINSTALL_MODE='missing-keg'
+	if ! uninstall_brew_formulas dnsmasq >"${tmp}/brew-missing-keg.log" 2>&1; then
+		fail_test 'a formula that disappeared before uninstall should be tolerated'
+	fi
+	assert_file_contains "Formula 'dnsmasq' is already absent; continuing" "${tmp}/brew-missing-keg.log"
+	if grep -Fq 'Error: No such keg:' "${tmp}/brew-missing-keg.log"; then
+		fail_test 'the expected missing-formula error should not be reported'
+	fi
+
+	set_brew_formulae 'present dnsmasq'
+	BREW_UNINSTALL_MODE='stale-keg'
+	if uninstall_brew_formulas dnsmasq 2>"${tmp}/brew-stale-keg.log"; then
+		fail_test 'a formula still reported as installed after a missing-keg error should fail'
+	else
+		brew_status=$?
+	fi
+	assert_eq "${brew_status}" '1'
+	assert_file_contains 'Error: No such keg:' "${tmp}/brew-stale-keg.log"
+
+	set_brew_formulae 'present failing-formula'
+	BREW_UNINSTALL_MODE=failure
+	if uninstall_brew_formulas failing-formula 2>"${tmp}/brew-uninstall-error.log"; then
+		fail_test 'a genuine brew uninstall failure should be returned'
+	else
+		brew_status=$?
+	fi
+	assert_eq "${brew_status}" '24'
+	assert_file_contains 'Error: Permission denied while uninstalling formula' "${tmp}/brew-uninstall-error.log"
+	for leftover in "${TMPDIR}"/dotfiles-brew-uninstall.*; do
+		[ ! -e "${leftover}" ] || fail_test "brew uninstall temp file leaked: ${leftover}"
+	done
+
+	set_brew_formulae 'present'
+	BREW_UNINSTALL_MODE=success
 	install_missing_brew_casks present-cask new-cask
 	install_missing_brew_casks present-cask new-cask
 	assert_eq "$(grep -Fc 'install --cask --adopt new-cask' "${BREW_LOG}")" '1'

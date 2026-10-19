@@ -211,7 +211,23 @@ install_missing_apt_packages() {
 	run_root apt-get -o DPkg::Lock::Timeout=300 install -y --no-install-recommends ${missing}
 }
 
-uninstall_brew_formulas() {
+is_missing_brew_keg_error() {
+	case "$1" in
+	"Error: No such keg: "?*)
+		case "$1" in
+		*'
+'*) return 1 ;;
+		*) return 0 ;;
+		esac
+		;;
+	*) return 1 ;;
+	esac
+}
+
+uninstall_brew_formulas() (
+	uninstall_error=''
+	trap 'rm -f -- "${uninstall_error}"' EXIT
+	trap 'exit 1' HUP INT TERM
 	if ! installed=$(brew list --formula); then
 		fail "Could not list installed brew formulae"
 	fi
@@ -223,9 +239,36 @@ uninstall_brew_formulas() {
 	done
 	[ -n "${present}" ] || return 0
 	log "Uninstalling formulae: ${present}"
-	# shellcheck disable=SC2086
-	brew uninstall ${present}
-}
+	for formula in "$@"; do
+		list_has_line "${present}" "${formula}" || continue
+		uninstall_error=$(mktemp "${TMPDIR:-/tmp}/dotfiles-brew-uninstall.XXXXXX") ||
+			fail "Could not create a temporary file for brew uninstall diagnostics"
+		if brew uninstall "${formula}" 2>"${uninstall_error}"; then
+			cat "${uninstall_error}" >&2
+			rm -f -- "${uninstall_error}"
+			uninstall_error=''
+			continue
+		else
+			uninstall_status=$?
+		fi
+		output=$(cat "${uninstall_error}")
+		if is_missing_brew_keg_error "${output}"; then
+			if ! installed=$(brew list --formula); then
+				cat "${uninstall_error}" >&2
+				fail "Could not verify installed brew formulae after uninstalling '${formula}'"
+			fi
+			if ! list_has_line "${installed}" "${formula}"; then
+				rm -f -- "${uninstall_error}"
+				uninstall_error=''
+				log "Formula '${formula}' is already absent; continuing"
+				continue
+			fi
+		fi
+		cat "${uninstall_error}" >&2
+		return "${uninstall_status}"
+	done
+	return 0
+)
 
 uninstall_brew_casks() {
 	if ! installed=$(brew list --cask); then
