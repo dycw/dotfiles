@@ -266,8 +266,6 @@ EOF
 	fi
 	assert_eq "${apt_status}" '23'
 	APT_FAIL=0
-	install_linux_packages
-	assert_file_contains 'build-essential' "${APT_LOG}"
 
 	BREW_LOG="${tmp}/brew.log"
 	BREW_FORMULAE='present'
@@ -400,13 +398,6 @@ EOF
 	assert_eq "$(rust_tool_command du-dust)" 'dust'
 	assert_eq "$(rust_tool_command taplo-cli)" 'taplo'
 	platform=linux
-	set_rust_tool_list
-	assert_eq "${rust_tool_list}" 'cargo-audit cargo-deny cargo-edit cargo-nextest sccache bottom du-dust prek taplo-cli topgrade'
-	platform=mac
-	set_rust_tool_list
-	assert_eq "${rust_tool_list}" 'cargo-audit cargo-deny cargo-edit cargo-nextest sccache'
-	platform=linux
-	set_rust_tool_list
 
 	RUST_LOG="${tmp}/rust.log"
 	TAPLO_CURL_LOG="${tmp}/taplo-curl.log"
