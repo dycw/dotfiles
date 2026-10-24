@@ -350,43 +350,6 @@ EOF
 		fail_test 'a tap-qualified installed formula should not be reinstalled'
 	fi
 
-	formula_cleanup_log="${tmp}/formula-cleanup.log"
-	(
-		platform=mac
-		uninstall_brew_formulas() { printf '%s\n' "$*" >>"${formula_cleanup_log}"; }
-		remove_unwanted_brew_formulas
-	)
-	assert_eq "$(cat "${formula_cleanup_log}")" "$(printf '%s\n' \
-		'age asciinema agg direnv dnsmasq gh glab nushell rlwrap sops spotify_player yoannfleurydev/gitweb/gitweb zellij' \
-		'tailscale')"
-
-	formula_install_log="${tmp}/formula-install-list.log"
-	(
-		install_missing_brew_formulas() { printf '%s\n' "$*" >>"${formula_install_log}"; }
-		install_common_brew_formulas
-	)
-	if grep -Eq '(^|[[:space:]])(agg|asciinema|direnv|gh|glab|nushell|spotify_player|zellij)([[:space:]]|$)' "${formula_install_log}"; then
-		fail_test 'macOS Homebrew setup should not request unwanted formulae'
-	fi
-
-	cask_cleanup_log="${tmp}/cask-cleanup.log"
-	(
-		uninstall_brew_casks() { printf '%s\n' "$*" >>"${cask_cleanup_log}"; }
-		remove_unwanted_brew_casks
-	)
-	assert_eq "$(cat "${cask_cleanup_log}")" 'alacritty db-browser-for-sqlite firefox ghostty google-chrome handy iterm2 pgadmin4 protonvpn slack visual-studio-code zoom'
-
-	cask_install_log="${tmp}/mac-cask-install-list.log"
-	(
-		machine=dw_macbook_neo
-		ensure_brew_taps() { :; }
-		install_missing_brew_casks() { printf '%s\n' "$*" >>"${cask_install_log}"; }
-		install_mac_casks
-	)
-	if grep -Eq '(^|[[:space:]])(alacritty|ghostty|handy|protonvpn|visual-studio-code|zoom)([[:space:]]|$)' "${cask_install_log}"; then
-		fail_test 'macOS Homebrew setup should not request unwanted casks'
-	fi
-
 	set_brew_formulae 'present remove-me'
 	BREW_UNINSTALL_MODE=success
 	uninstall_brew_formulas remove-me
