@@ -548,11 +548,14 @@ remove_unwanted_brew_casks() {
 }
 
 ensure_brew_taps() {
-	brew tap redis-stack/redis-stack
+	for tap in "$@"; do
+		brew tap "${tap}" || return $?
+		brew trust "${tap}" || return $?
+	done
 }
 
 install_mac_casks() {
-	ensure_brew_taps
+	ensure_brew_taps redis-stack/redis-stack || return $?
 	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt dropbox postico redis-stack spotify telegram transmission vlc wezterm whatsapp'
 	case "${machine:-}" in
 	dw_macbook_neo) ;;

@@ -286,6 +286,13 @@ EOF
 		operation=$1
 		shift
 		case "${operation}" in
+		tap)
+			printf 'tap %s\n' "$*" >>"${BREW_LOG}"
+			;;
+		trust)
+			printf 'trust %s\n' "$*" >>"${BREW_LOG}"
+			[ "${BREW_TRUST_FAIL:-0}" -eq 0 ] || return 25
+			;;
 		list)
 			case "$1" in
 			--formula)
@@ -383,6 +390,41 @@ EOF
 	install_missing_brew_casks present-cask new-cask
 	install_missing_brew_casks present-cask new-cask
 	assert_eq "$(grep -Fc 'install --cask --adopt new-cask' "${BREW_LOG}")" '1'
+
+	: >"${BREW_LOG}"
+	BREW_CASKS='present-cask'
+	machine=dw_macbook_neo
+	install_mac_casks
+	install_mac_casks
+	assert_eq "$(grep -Fc 'trust redis-stack/redis-stack' "${BREW_LOG}")" '2'
+	assert_eq "$(grep -Fc 'install --cask --adopt' "${BREW_LOG}")" '1'
+	if ! awk '/^tap redis-stack\/redis-stack$/ && !tap { tap = NR }
+		/^trust redis-stack\/redis-stack$/ && !trust { trust = NR }
+		/^install --cask --adopt/ && !install { install = NR }
+		END { exit !(tap < trust && trust < install) }' "${BREW_LOG}"; then
+		fail_test 'the tap should be trusted before its cask is installed'
+	fi
+
+	: >"${BREW_LOG}"
+	ensure_brew_taps first/example second/example
+	assert_file_contains 'tap first/example' "${BREW_LOG}"
+	assert_file_contains 'trust first/example' "${BREW_LOG}"
+	assert_file_contains 'tap second/example' "${BREW_LOG}"
+	assert_file_contains 'trust second/example' "${BREW_LOG}"
+
+	: >"${BREW_LOG}"
+	BREW_CASKS='present-cask'
+	BREW_TRUST_FAIL=1
+	if install_mac_casks 2>"${tmp}/brew-trust-error.log"; then
+		fail_test 'a failed cask trust operation should stop installation'
+	else
+		brew_status=$?
+	fi
+	assert_eq "${brew_status}" '25'
+	if grep -Fq 'install --cask --adopt' "${BREW_LOG}"; then
+		fail_test 'casks should not be installed after trust fails'
+	fi
+	BREW_TRUST_FAIL=0
 
 	BREW_FAIL=1
 	if install_missing_brew_formulas failed-formula; then
