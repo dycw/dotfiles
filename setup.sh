@@ -440,7 +440,7 @@ maybe_upgrade_rust() {
 }
 
 remove_unwanted_brew_formulas() {
-	uninstall_brew_formulas age asciinema dnsmasq gh glab rlwrap sops yoannfleurydev/gitweb/gitweb zellij
+	uninstall_brew_formulas age asciinema agg direnv dnsmasq gh glab nushell rlwrap sops spotify_player yoannfleurydev/gitweb/gitweb zellij
 	case "${platform}" in
 	mac)
 		uninstall_brew_formulas tailscale
@@ -451,12 +451,12 @@ remove_unwanted_brew_formulas() {
 install_common_brew_formulas() {
 	install_missing_brew_formulas \
 		autoconf automake bat bash bash-completion@2 bottom coreutils delta \
-		direnv dust eza fd fzf git-delta iperf3 jq just libpq \
+		dust eza fd fzf git-delta iperf3 jq just libpq \
 		luacheck luarocks markdownlint-cli maturin npm pgcli postgresql@18 prek prettier redis \
 		restic ripgrep ruff sccache sd shellcheck shfmt starship taplo \
 		tea tmux topgrade uv vim watch yq zoxide
 
-	install_missing_brew_formulas agg flock mas rename wakeonlan
+	install_missing_brew_formulas flock mas rename wakeonlan
 }
 
 install_linux_packages() {
@@ -544,7 +544,7 @@ install_docker_linux() {
 
 remove_unwanted_brew_casks() {
 	uninstall_brew_casks \
-		db-browser-for-sqlite firefox ghostty google-chrome iterm2 pgadmin4 slack
+		alacritty db-browser-for-sqlite firefox ghostty google-chrome iterm2 pgadmin4 slack visual-studio-code zoom
 }
 
 ensure_brew_taps() {
@@ -553,7 +553,7 @@ ensure_brew_taps() {
 
 install_mac_casks() {
 	ensure_brew_taps
-	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt dropbox handy postico protonvpn redis-stack spotify telegram transmission vlc wezterm whatsapp zoom'
+	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt dropbox handy postico protonvpn redis-stack spotify telegram transmission vlc wezterm whatsapp'
 	case "${machine:-}" in
 	dw_macbook_neo) ;;
 	*)

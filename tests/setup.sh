@@ -357,7 +357,7 @@ EOF
 		remove_unwanted_brew_formulas
 	)
 	assert_eq "$(cat "${formula_cleanup_log}")" "$(printf '%s\n' \
-		'age asciinema dnsmasq gh glab rlwrap sops yoannfleurydev/gitweb/gitweb zellij' \
+		'age asciinema agg direnv dnsmasq gh glab nushell rlwrap sops spotify_player yoannfleurydev/gitweb/gitweb zellij' \
 		'tailscale')"
 
 	formula_install_log="${tmp}/formula-install-list.log"
@@ -365,8 +365,26 @@ EOF
 		install_missing_brew_formulas() { printf '%s\n' "$*" >>"${formula_install_log}"; }
 		install_common_brew_formulas
 	)
-	if grep -Eq '(^|[[:space:]])(asciinema|gh)([[:space:]]|$)' "${formula_install_log}"; then
-		fail_test 'macOS Homebrew setup should not request asciinema or gh'
+	if grep -Eq '(^|[[:space:]])(agg|asciinema|direnv|gh|glab|nushell|spotify_player|zellij)([[:space:]]|$)' "${formula_install_log}"; then
+		fail_test 'macOS Homebrew setup should not request unwanted formulae'
+	fi
+
+	cask_cleanup_log="${tmp}/cask-cleanup.log"
+	(
+		uninstall_brew_casks() { printf '%s\n' "$*" >>"${cask_cleanup_log}"; }
+		remove_unwanted_brew_casks
+	)
+	assert_eq "$(cat "${cask_cleanup_log}")" 'alacritty db-browser-for-sqlite firefox ghostty google-chrome iterm2 pgadmin4 slack visual-studio-code zoom'
+
+	cask_install_log="${tmp}/mac-cask-install-list.log"
+	(
+		machine=dw_macbook_neo
+		ensure_brew_taps() { :; }
+		install_missing_brew_casks() { printf '%s\n' "$*" >>"${cask_install_log}"; }
+		install_mac_casks
+	)
+	if grep -Eq '(^|[[:space:]])(alacritty|ghostty|visual-studio-code|zoom)([[:space:]]|$)' "${cask_install_log}"; then
+		fail_test 'macOS Homebrew setup should not request unwanted casks'
 	fi
 
 	set_brew_formulae 'present remove-me'
