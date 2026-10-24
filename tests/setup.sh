@@ -374,7 +374,7 @@ EOF
 		uninstall_brew_casks() { printf '%s\n' "$*" >>"${cask_cleanup_log}"; }
 		remove_unwanted_brew_casks
 	)
-	assert_eq "$(cat "${cask_cleanup_log}")" 'alacritty db-browser-for-sqlite firefox ghostty google-chrome iterm2 pgadmin4 slack visual-studio-code zoom'
+	assert_eq "$(cat "${cask_cleanup_log}")" 'alacritty db-browser-for-sqlite firefox ghostty google-chrome handy iterm2 pgadmin4 protonvpn slack visual-studio-code zoom'
 
 	cask_install_log="${tmp}/mac-cask-install-list.log"
 	(
@@ -383,7 +383,7 @@ EOF
 		install_missing_brew_casks() { printf '%s\n' "$*" >>"${cask_install_log}"; }
 		install_mac_casks
 	)
-	if grep -Eq '(^|[[:space:]])(alacritty|ghostty|visual-studio-code|zoom)([[:space:]]|$)' "${cask_install_log}"; then
+	if grep -Eq '(^|[[:space:]])(alacritty|ghostty|handy|protonvpn|visual-studio-code|zoom)([[:space:]]|$)' "${cask_install_log}"; then
 		fail_test 'macOS Homebrew setup should not request unwanted casks'
 	fi
 
