@@ -196,6 +196,10 @@ list_has_line() {
 	printf '%s\n' "$1" | grep -Fqx -- "$2"
 }
 
+list_installed_brew_formulas() {
+	brew list --formula --full-name
+}
+
 install_missing_apt_packages() {
 	missing=''
 	for package in "$@"; do
@@ -211,24 +215,8 @@ install_missing_apt_packages() {
 	run_root apt-get -o DPkg::Lock::Timeout=300 install -y --no-install-recommends ${missing}
 }
 
-is_missing_brew_keg_error() {
-	case "$1" in
-	"Error: No such keg: "?*)
-		case "$1" in
-		*'
-'*) return 1 ;;
-		*) return 0 ;;
-		esac
-		;;
-	*) return 1 ;;
-	esac
-}
-
 uninstall_brew_formulas() (
-	uninstall_error=''
-	trap 'rm -f -- "${uninstall_error}"' EXIT
-	trap 'exit 1' HUP INT TERM
-	if ! installed=$(brew list --formula); then
+	if ! installed=$(list_installed_brew_formulas); then
 		fail "Could not list installed brew formulae"
 	fi
 	present=''
@@ -241,31 +229,12 @@ uninstall_brew_formulas() (
 	log "Uninstalling formulae: ${present}"
 	for formula in "$@"; do
 		list_has_line "${present}" "${formula}" || continue
-		uninstall_error=$(mktemp "${TMPDIR:-/tmp}/dotfiles-brew-uninstall.XXXXXX") ||
-			fail "Could not create a temporary file for brew uninstall diagnostics"
-		if brew uninstall "${formula}" 2>"${uninstall_error}"; then
-			cat "${uninstall_error}" >&2
-			rm -f -- "${uninstall_error}"
-			uninstall_error=''
+		if brew uninstall "${formula}"; then
 			continue
 		else
 			uninstall_status=$?
+			return "${uninstall_status}"
 		fi
-		output=$(cat "${uninstall_error}")
-		if is_missing_brew_keg_error "${output}"; then
-			if ! installed=$(brew list --formula); then
-				cat "${uninstall_error}" >&2
-				fail "Could not verify installed brew formulae after uninstalling '${formula}'"
-			fi
-			if ! list_has_line "${installed}" "${formula}"; then
-				rm -f -- "${uninstall_error}"
-				uninstall_error=''
-				log "Formula '${formula}' is already absent; continuing"
-				continue
-			fi
-		fi
-		cat "${uninstall_error}" >&2
-		return "${uninstall_status}"
 	done
 	return 0
 )
@@ -287,7 +256,7 @@ uninstall_brew_casks() {
 }
 
 install_missing_brew_formulas() {
-	if ! installed=$(brew list --formula); then
+	if ! installed=$(list_installed_brew_formulas); then
 		fail "Could not list installed brew formulae"
 	fi
 	missing=''

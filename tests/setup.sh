@@ -273,10 +273,16 @@ EOF
 	BREW_FORMULAE='present'
 	BREW_CASKS='present-cask'
 	BREW_FORMULAE_FILE="${tmp}/brew-formulae"
+	BREW_INSTALLED_FORMULAE_FILE="${tmp}/brew-installed-formulae"
 	printf '%s\n' "${BREW_FORMULAE}" >"${BREW_FORMULAE_FILE}"
+	cp -- "${BREW_FORMULAE_FILE}" "${BREW_INSTALLED_FORMULAE_FILE}"
 	set_brew_formulae() {
 		BREW_FORMULAE=$1
 		printf '%s\n' "${BREW_FORMULAE}" | tr ' ' '\n' >"${BREW_FORMULAE_FILE}"
+		cp -- "${BREW_FORMULAE_FILE}" "${BREW_INSTALLED_FORMULAE_FILE}"
+	}
+	set_brew_installed_formulae() {
+		printf '%s\n' "$1" | tr ' ' '\n' >"${BREW_INSTALLED_FORMULAE_FILE}"
 	}
 	brew() {
 		operation=$1
@@ -284,7 +290,15 @@ EOF
 		case "${operation}" in
 		list)
 			case "$1" in
-			--formula) cat "${BREW_FORMULAE_FILE}" ;;
+			--formula)
+				if [ "${2:-}" = --full-name ]; then
+					cat "${BREW_INSTALLED_FORMULAE_FILE}"
+				elif [ "$#" -eq 1 ]; then
+					cat "${BREW_FORMULAE_FILE}"
+				else
+					return 2
+				fi
+				;;
 			--cask) printf '%s\n' "${BREW_CASKS}" ;;
 			*) return 2 ;;
 			esac
@@ -302,20 +316,12 @@ EOF
 					BREW_FORMULAE=$(printf '%s\n%s' "${BREW_FORMULAE}" "${item}")
 				done
 				printf '%s\n' "${BREW_FORMULAE}" >"${BREW_FORMULAE_FILE}"
+				cp -- "${BREW_FORMULAE_FILE}" "${BREW_INSTALLED_FORMULAE_FILE}"
 			fi
 			;;
 		uninstall)
 			printf 'uninstall %s\n' "$*" >>"${BREW_LOG}"
 			case "${BREW_UNINSTALL_MODE:-success}" in
-			missing-keg)
-				printf 'present\n' >"${BREW_FORMULAE_FILE}"
-				printf 'Error: No such keg: /opt/homebrew/Cellar/dnsmasq\n' >&2
-				return 1
-				;;
-			stale-keg)
-				printf 'Error: No such keg: /opt/homebrew/Cellar/dnsmasq\n' >&2
-				return 1
-				;;
 			failure)
 				printf 'Error: Permission denied while uninstalling formula\n' >&2
 				return 24
@@ -323,6 +329,7 @@ EOF
 			success)
 				[ "${1:-}" = remove-me ] || return 2
 				printf 'present\n' >"${BREW_FORMULAE_FILE}"
+				cp -- "${BREW_FORMULAE_FILE}" "${BREW_INSTALLED_FORMULAE_FILE}"
 				;;
 			*) return 2 ;;
 			esac
@@ -335,6 +342,14 @@ EOF
 	install_missing_brew_formulas present new-formula
 	assert_eq "$(grep -Fc 'install new-formula' "${BREW_LOG}")" '1'
 
+	: >"${BREW_LOG}"
+	set_brew_formulae 'present gitweb'
+	set_brew_installed_formulae 'present yoannfleurydev/gitweb/gitweb'
+	install_missing_brew_formulas yoannfleurydev/gitweb/gitweb
+	if grep -Fqx 'install yoannfleurydev/gitweb/gitweb' "${BREW_LOG}"; then
+		fail_test 'a tap-qualified installed formula should not be reinstalled'
+	fi
+
 	set_brew_formulae 'present remove-me'
 	BREW_UNINSTALL_MODE=success
 	uninstall_brew_formulas remove-me
@@ -342,24 +357,15 @@ EOF
 	assert_file_contains 'uninstall remove-me' "${BREW_LOG}"
 
 	set_brew_formulae 'present dnsmasq'
-	BREW_UNINSTALL_MODE='missing-keg'
-	if ! uninstall_brew_formulas dnsmasq >"${tmp}/brew-missing-keg.log" 2>&1; then
-		fail_test 'a formula that disappeared before uninstall should be tolerated'
+	set_brew_installed_formulae 'present'
+	if ! uninstall_brew_formulas dnsmasq >"${tmp}/brew-stale-rack.log" 2>&1; then
+		fail_test 'an empty Cellar rack should not be treated as an installed formula'
 	fi
-	assert_file_contains "Formula 'dnsmasq' is already absent; continuing" "${tmp}/brew-missing-keg.log"
-	if grep -Fq 'Error: No such keg:' "${tmp}/brew-missing-keg.log"; then
-		fail_test 'the expected missing-formula error should not be reported'
+	assert_eq "$(brew list --formula)" "$(printf 'present\ndnsmasq')"
+	assert_eq "$(brew list --formula --full-name)" 'present'
+	if grep -Fqx 'uninstall dnsmasq' "${BREW_LOG}"; then
+		fail_test 'setup should not ask Homebrew to uninstall a formula without a keg'
 	fi
-
-	set_brew_formulae 'present dnsmasq'
-	BREW_UNINSTALL_MODE='stale-keg'
-	if uninstall_brew_formulas dnsmasq 2>"${tmp}/brew-stale-keg.log"; then
-		fail_test 'a formula still reported as installed after a missing-keg error should fail'
-	else
-		brew_status=$?
-	fi
-	assert_eq "${brew_status}" '1'
-	assert_file_contains 'Error: No such keg:' "${tmp}/brew-stale-keg.log"
 
 	set_brew_formulae 'present failing-formula'
 	BREW_UNINSTALL_MODE=failure
