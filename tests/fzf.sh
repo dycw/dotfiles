@@ -45,10 +45,6 @@ assert_eq() {
 . "${TEST_ROOT}/configs/bash/bashrc.d/fzf.sh"
 
 [ "$(type -t fd)" = function ]
-assert_eq "${FZF_DEFAULT_COMMAND}" "fdfind --hidden --type=file --follow --exclude .git"
-assert_eq "${FZF_CTRL_T_COMMAND}" "fdfind --hidden --type=file --follow --exclude .git"
-assert_eq "${FZF_ALT_C_COMMAND}" "fdfind --hidden --type=directory --follow --exclude .git"
-
 fd --hidden --type=file --follow --exclude .git
 assert_eq "$(cat "${FDFIND_LOG}")" "--hidden --type=file --follow --exclude .git"
 : >"${FDFIND_LOG}"

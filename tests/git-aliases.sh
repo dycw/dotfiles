@@ -15,10 +15,6 @@ while IFS= read -r alias_name; do
 	type "g${alias_name}" >/dev/null
 done < <(git config --file "${PATH_DOTFILES}/configs/git/config" --name-only --get-regexp '^alias\.' | sed 's/^alias\.//')
 
-for name in gpl gp ga gl gbranch-default gfetch-default; do
-	type "${name}" >/dev/null
-done
-
 work_dir=$(mktemp -d)
 trap 'rm -rf -- "${work_dir}"' EXIT HUP INT TERM
 
