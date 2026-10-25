@@ -394,16 +394,45 @@ EOF
 	: >"${BREW_LOG}"
 	BREW_CASKS='present-cask'
 	machine=dw_macbook_neo
+	mkdir -p "${HOME}/Applications/Redis Insight.app"
 	install_mac_casks
 	install_mac_casks
 	assert_eq "$(grep -Fc 'trust redis-stack/redis-stack' "${BREW_LOG}")" '2'
 	assert_eq "$(grep -Fc 'install --cask --adopt' "${BREW_LOG}")" '1'
+	assert_file_contains 'install --cask --adopt' "${BREW_LOG}"
+	assert_file_contains 'redis-stack-server' "${BREW_LOG}"
+	if grep -Fq 'redis-stack-redisinsight' "${BREW_LOG}"; then
+		fail_test 'an existing Redis Insight app should not be replaced by the older cask'
+	fi
+	[ -d "${HOME}/Applications/Redis Insight.app" ] || fail_test 'setup should preserve the existing Redis Insight app'
 	if ! awk '/^tap redis-stack\/redis-stack$/ && !tap { tap = NR }
 		/^trust redis-stack\/redis-stack$/ && !trust { trust = NR }
 		/^install --cask --adopt/ && !install { install = NR }
 		END { exit !(tap < trust && trust < install) }' "${BREW_LOG}"; then
 		fail_test 'the tap should be trusted before its cask is installed'
 	fi
+
+	rm -rf -- "${HOME}/Applications/Redis Insight.app"
+	: >"${BREW_LOG}"
+	BREW_CASKS='present-cask'
+	install_mac_casks
+	install_mac_casks
+	assert_eq "$(grep -Fc 'install --cask --adopt' "${BREW_LOG}")" '2'
+	assert_file_contains 'install --cask --adopt redis-stack-redisinsight' "${BREW_LOG}"
+
+	: >"${BREW_LOG}"
+	BREW_CASKS='present-cask'
+	BREW_FAIL=1
+	if install_mac_casks; then
+		fail_test 'a failed Redis Stack server install should stop cask installation'
+	else
+		brew_status=$?
+	fi
+	assert_eq "${brew_status}" '24'
+	if grep -Fq 'redis-stack-redisinsight' "${BREW_LOG}"; then
+		fail_test 'Redis Insight should not be installed after the Redis Stack server fails'
+	fi
+	BREW_FAIL=0
 
 	: >"${BREW_LOG}"
 	ensure_brew_taps first/example second/example

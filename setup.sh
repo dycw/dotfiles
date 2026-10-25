@@ -554,9 +554,13 @@ ensure_brew_taps() {
 	done
 }
 
+redis_insight_app_installed() {
+	[ -d "/Applications/Redis Insight.app" ] || [ -d "${HOME}/Applications/Redis Insight.app" ]
+}
+
 install_mac_casks() {
 	ensure_brew_taps redis-stack/redis-stack || return $?
-	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt dropbox postico redis-stack spotify telegram transmission vlc wezterm whatsapp'
+	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt dropbox postico redis-stack-server spotify telegram transmission vlc wezterm whatsapp'
 	case "${machine:-}" in
 	dw_macbook_neo) ;;
 	*)
@@ -564,7 +568,10 @@ install_mac_casks() {
 		;;
 	esac
 	# shellcheck disable=SC2086
-	install_missing_brew_casks ${casks}
+	install_missing_brew_casks ${casks} || return $?
+	if ! redis_insight_app_installed; then
+		install_missing_brew_casks redis-stack-redisinsight
+	fi
 }
 
 mac_app_store_apps='1569813296 1475387147'
