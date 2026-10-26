@@ -544,7 +544,7 @@ install_docker_linux() {
 
 remove_unwanted_brew_casks() {
 	uninstall_brew_casks \
-		alacritty db-browser-for-sqlite firefox ghostty google-chrome handy iterm2 pgadmin4 protonvpn slack visual-studio-code zoom
+		alacritty db-browser-for-sqlite ghostty google-chrome handy iterm2 pgadmin4 protonvpn slack visual-studio-code zoom
 }
 
 ensure_brew_taps() {
@@ -560,7 +560,7 @@ redis_insight_app_installed() {
 
 install_mac_casks() {
 	ensure_brew_taps redis-stack/redis-stack || return $?
-	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt dropbox openwhispr postico redis-stack-server spotify telegram transmission vlc wezterm whatsapp'
+	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt dropbox firefox openwhispr postico redis-stack-server spotify telegram transmission vlc wezterm whatsapp'
 	case "${machine:-}" in
 	dw_macbook_neo) ;;
 	*)

@@ -326,6 +326,19 @@ EOF
 			;;
 		uninstall)
 			printf 'uninstall %s\n' "$*" >>"${BREW_LOG}"
+			if [ "${1:-}" = --cask ]; then
+				shift
+				for mock_cask_to_remove in "$@"; do
+					mock_remaining_casks=''
+					for mock_installed_cask in ${BREW_CASKS}; do
+						[ "${mock_installed_cask}" = "${mock_cask_to_remove}" ] && continue
+						mock_remaining_casks="${mock_remaining_casks}${mock_remaining_casks:+
+}${mock_installed_cask}"
+					done
+					BREW_CASKS=${mock_remaining_casks}
+				done
+				return 0
+			fi
 			case "${BREW_UNINSTALL_MODE:-success}" in
 			failure)
 				printf 'Error: Permission denied while uninstalling formula\n' >&2
@@ -390,6 +403,20 @@ EOF
 	install_missing_brew_casks present-cask new-cask
 	install_missing_brew_casks present-cask new-cask
 	assert_eq "$(grep -Fc 'install --cask --adopt new-cask' "${BREW_LOG}")" '1'
+
+	: >"${BREW_LOG}"
+	BREW_CASKS='firefox'
+	remove_unwanted_brew_casks
+	assert_eq "$(brew list --cask)" 'firefox'
+
+	: >"${BREW_LOG}"
+	BREW_CASKS='present-cask'
+	machine=dw_macbook_neo
+	remove_unwanted_brew_casks
+	install_mac_casks
+	if ! printf '%s\n' "$(brew list --cask)" | grep -Fqx firefox; then
+		fail_test 'macOS setup should install Firefox when it is missing'
+	fi
 
 	: >"${BREW_LOG}"
 	BREW_CASKS='present-cask'
