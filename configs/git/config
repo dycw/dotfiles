@@ -35,7 +35,7 @@
   dm = "!git diff $(git default-remote-branch)"
   diff-remote = "!git diff $(git default-remote-branch)"
   is-clean = "!git diff --quiet && git diff --cached --quiet"
-  vim-unmerged = "!git diff --name-only --diff-filter=U -z | xargs -0 vim"
+  nvim-unmerged = "!git diff --name-only --diff-filter=U -z | xargs -0 nvim"
 
   # fetch
   f = fetch-default
@@ -205,7 +205,7 @@
 
 [merge]
   conflictstyle = diff3
-  tool = vimdiff
+  tool = nvimdiff
 
 [pull]
   default = upstream

@@ -662,27 +662,64 @@ EOF
 	assert_eq "$(grep -Fc 'https://deb.nodesource.com/setup_22.x' "${CURL_LOG}")" '1'
 	assert_eq "$(grep -Fc 'install -y --no-install-recommends nodejs' "${APT_LOG}")" '1'
 
-	VIM_HOME="${tmp}/vim home"
-	VIM_LOG="${tmp}/vim.log"
-	HOME=${VIM_HOME}
-	export HOME VIM_LOG
-	vim() { printf '%s\n' "$*" >>"${VIM_LOG}"; }
-	: >"${CURL_LOG}"
-	setup_vim_plugins
-	plug_file="${VIM_HOME}/.vim/autoload/plug.vim"
-	assert_file_contains 'ran' "${plug_file}"
-	assert_file_contains 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' "${CURL_LOG}"
-	assert_file_contains 'PlugInstall --sync' "${VIM_LOG}"
-	CURL_FAIL=1
-	rm -f -- "${plug_file}"
-	if (setup_vim_plugins) >"${tmp}/vim-install.out" 2>&1; then
-		fail_test 'vim-plug download failure should be returned'
-	fi
-	[ ! -e "${plug_file}" ] || fail_test 'failed vim-plug download activated a file'
-	for leftover in "${plug_file}".* "${TMPDIR}"/dotfiles-download.*; do
-		[ ! -e "${leftover}" ] || fail_test "vim-plug temp file leaked: ${leftover}"
-	done
-	CURL_FAIL=0
+	(
+		APT_EDITOR_PACKAGES=''
+		install_missing_apt_packages() { APT_EDITOR_PACKAGES="$*"; }
+		install_linux_packages
+		case " ${APT_EDITOR_PACKAGES} " in
+		*' neovim '*) ;;
+		*) fail_test 'Linux setup should install Neovim' ;;
+		esac
+		case " ${APT_EDITOR_PACKAGES} " in
+		*' vim '*) fail_test 'Linux setup should not install Vim instead of Neovim' ;;
+		esac
+
+		BREW_EDITOR_PACKAGES=''
+		install_missing_brew_formulas() {
+			BREW_EDITOR_PACKAGES="${BREW_EDITOR_PACKAGES}${BREW_EDITOR_PACKAGES:+ }$*"
+		}
+		install_common_brew_formulas
+		case " ${BREW_EDITOR_PACKAGES} " in
+		*' neovim '*) ;;
+		*) fail_test 'macOS setup should install Neovim' ;;
+		esac
+		case " ${BREW_EDITOR_PACKAGES} " in
+		*' vim '*) fail_test 'macOS setup should not install Vim instead of Neovim' ;;
+		esac
+
+		NVIM_HOME="${tmp}/Neovim home"
+		XDG_CONFIG_HOME="${NVIM_HOME}/config"
+		NVIM_LOG="${tmp}/nvim.log"
+		HOME=${NVIM_HOME}
+		xdg_config_home=${XDG_CONFIG_HOME}
+		export HOME XDG_CONFIG_HOME NVIM_LOG
+		mkdir -p "${HOME}" "${XDG_CONFIG_HOME}"
+		nvim() { printf '%s\n' "$*" >>"${NVIM_LOG}"; }
+		setup_neovim
+		assert_symlink_target "${XDG_CONFIG_HOME}/nvim" "${configs}/neovim"
+		assert_eq "$(cat "${NVIM_LOG}")" '--headless +Lazy! install +qa'
+
+		custom_config="${tmp}/custom config"
+		mkdir -p "${custom_config}/nvim"
+		printf 'user Neovim config\n' >"${custom_config}/nvim/init.lua"
+		xdg_config_home=${custom_config}
+		if (setup_neovim) >"${tmp}/nvim-config-error.log" 2>&1; then
+			fail_test 'setup should not replace a user-owned Neovim config directory'
+		fi
+		assert_file_contains 'user Neovim config' "${custom_config}/nvim/init.lua"
+		xdg_config_home=${XDG_CONFIG_HOME}
+
+		ln -s "${configs}/vimrc" "${HOME}/.vimrc"
+		printf 'Vim undo data\n' >"${HOME}/.viminfo"
+		remove_legacy_files
+		[ ! -L "${HOME}/.vimrc" ] || fail_test 'managed Vim configuration symlink should be removed'
+		assert_file_exists "${HOME}/.viminfo"
+		assert_symlink_target "${XDG_CONFIG_HOME}/nvim" "${configs}/neovim"
+
+		printf 'user Vim config\n' >"${HOME}/.vimrc"
+		remove_legacy_files
+		assert_file_contains 'user Vim config' "${HOME}/.vimrc"
+	)
 
 	REMOTE_TMPDIR="${tmp}/remote temp files"
 	REMOTE_LOG="${tmp}/remote.log"

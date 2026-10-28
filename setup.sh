@@ -454,7 +454,7 @@ install_common_brew_formulas() {
 		dust eza fd fzf git-delta iperf3 jq just libpq \
 		luacheck luarocks markdownlint-cli maturin npm pgcli postgresql@18 prek prettier redis \
 		restic ripgrep ruff sccache sd shellcheck shfmt starship taplo \
-		tea tmux topgrade uv vim watch yq zoxide
+		tea tmux topgrade uv neovim watch yq zoxide
 
 	install_missing_brew_formulas flock mas rename wakeonlan
 }
@@ -465,7 +465,7 @@ install_linux_packages() {
 		fd-find fzf gh git-delta golang-go iperf3 jq just libpq-dev lua-check luarocks pgcli \
 		postgresql passwd procps python3-maturin python3-pip python3-venv pipx redis-server restic \
 		ripgrep sccache sd shellcheck \
-		shfmt starship tmux vim yq zoxide curl rsync sudo xclip xsel
+		shfmt starship tmux neovim yq zoxide curl rsync sudo xclip xsel
 }
 
 ensure_nodejs_22() {
@@ -802,6 +802,11 @@ setup_bash_rc_dir() {
 
 setup_bashrc_d() {
 	setup_bash_rc_dir "${configs}/bash/bashrc.d" "${HOME}/.bashrc.d"
+	old_vim_rc="${HOME}/.bashrc.d/vim.sh"
+	if [ -L "${old_vim_rc}" ] && [ "$(readlink "${old_vim_rc}")" = "${configs}/bash/bashrc.d/vim.sh" ]; then
+		rm -f -- "${old_vim_rc}"
+	fi
+	unset old_vim_rc
 }
 
 setup_bash_profile_d() {
@@ -934,17 +939,15 @@ setup_keymapp() {
 	run_root ln -sfn "${configs}/keymapp.50-zsa.rules" /etc/udev/rules.d/50-zsa.rules
 }
 
-setup_vim_plugins() {
-	log "Setting up Vim plugins..."
-	plug_file="${HOME}/.vim/autoload/plug.vim"
-	if [ ! -s "${plug_file}" ]; then
-		if ! install_downloaded_file \
-			"${plug_file}" 'vim-plug' '' prepare_raw_file \
-			https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-			return 1
-		fi
+setup_neovim() {
+	log "Setting up Neovim..."
+	nvim_config="${xdg_config_home}/nvim"
+	if [ -d "${nvim_config}" ] && [ ! -L "${nvim_config}" ]; then
+		fail "Neovim config directory already exists: ${nvim_config}"
 	fi
-	vim -Nu "${HOME}/.vimrc" -n -es +'PlugInstall --sync' +qa
+	link_config "${configs}/neovim" nvim
+	nvim --headless '+Lazy! install' +qa
+	unset nvim_config
 }
 
 setup_git_config() {
@@ -1010,8 +1013,7 @@ EOF
 	setup_ipython_configs
 	setup_jupyter_configs
 	link_home "${configs}/psqlrc" .psqlrc
-	link_home "${configs}/vimrc" .vimrc
-	setup_vim_plugins
+	setup_neovim
 }
 
 setup_tmux() {
@@ -1051,14 +1053,15 @@ setup_tmux() {
 }
 
 remove_legacy_files() {
+	if [ -L "${HOME}/.vimrc" ] && [ "$(readlink "${HOME}/.vimrc")" = "${configs}/vimrc" ]; then
+		rm -f -- "${HOME}/.vimrc"
+	fi
 	rm -f -- \
 		"${HOME}/.pdbrc" \
-		"${HOME}/.viminfo" \
 		"${HOME}/.zshrc"
 	rm -rf -- \
 		"${xdg_config_home}/fish" \
 		"${xdg_config_home}/ghostty" \
-		"${xdg_config_home}/nvim" \
 		"${xdg_config_home}/posix" \
 		"${xdg_config_home}/pudb" \
 		"${xdg_config_home}/stayfocusd" \

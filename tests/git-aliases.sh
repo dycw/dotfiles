@@ -4,6 +4,13 @@ set -eu
 
 repo_root=$(cd "$(dirname -- "$0")/.." && pwd)
 
+test "$(git config --file "${repo_root}/configs/git/config" --get alias.nvim-unmerged)" = '!git diff --name-only --diff-filter=U -z | xargs -0 nvim'
+test "$(git config --file "${repo_root}/configs/git/config" --get merge.tool)" = 'nvimdiff'
+if git config --file "${repo_root}/configs/git/config" --get alias.vim-unmerged >/dev/null; then
+	printf 'obsolete vim-unmerged alias remains\n' >&2
+	exit 1
+fi
+
 bash --noprofile --norc "${repo_root}/configs/bash/bashrc.d/git.sh" -n
 
 PATH_DOTFILES=${repo_root} bash --noprofile --norc <<'EOF'

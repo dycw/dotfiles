@@ -36,6 +36,9 @@ setup_bashrc_d
 setup_bash_profile_d
 assert_symlink_target "${home_dir}/.bashrc.d/example.sh" "${rc_configs}/bash/bashrc.d/example.sh"
 assert_symlink_target "${home_dir}/.bash_profile.d/example.sh" "${rc_configs}/bash/profile.d/example.sh"
+ln -s "${rc_configs}/bash/bashrc.d/vim.sh" "${home_dir}/.bashrc.d/vim.sh"
+setup_bashrc_d
+[ ! -L "${home_dir}/.bashrc.d/vim.sh" ] || fail_test 'managed Vim shell config symlink should be removed'
 
 line_file="${tmp}/lines.txt"
 ensure_line_in_file 'alpha' "${line_file}"

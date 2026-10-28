@@ -1,0 +1,26 @@
+return { -- Highlight, edit, and navigate code
+    "nvim-treesitter/nvim-treesitter",
+    branch = "master", -- The main branch requires Neovim 0.11+
+    lazy = false,
+    build = ":TSUpdate",
+    opts = {
+        ensure_installed = {
+            "bash",
+            "c",
+            "diff",
+            "html",
+            "lua",
+            "luadoc",
+            "markdown",
+            "markdown_inline",
+            "python",
+            "query",
+            "rust",
+            "vim",
+            "vimdoc",
+        },
+        auto_install = true,
+        highlight = { enable = true },
+        indent = { enable = true },
+    },
+}
