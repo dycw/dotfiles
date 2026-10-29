@@ -30,15 +30,16 @@ assert_symlink_target "${home_dir}/direct/README.md" "${sample}"
 rc_configs="${tmp}/rc configs"
 mkdir -p "${rc_configs}/bash/bashrc.d" "${rc_configs}/bash/profile.d"
 printf 'bashrc module\n' >"${rc_configs}/bash/bashrc.d/example.sh"
+printf 'Vim module\n' >"${rc_configs}/bash/bashrc.d/vim.sh"
+printf 'Neovim module\n' >"${rc_configs}/bash/bashrc.d/nvim.sh"
 printf 'profile module\n' >"${rc_configs}/bash/profile.d/example.sh"
 configs=${rc_configs}
 setup_bashrc_d
 setup_bash_profile_d
 assert_symlink_target "${home_dir}/.bashrc.d/example.sh" "${rc_configs}/bash/bashrc.d/example.sh"
+assert_symlink_target "${home_dir}/.bashrc.d/vim.sh" "${rc_configs}/bash/bashrc.d/vim.sh"
+assert_symlink_target "${home_dir}/.bashrc.d/nvim.sh" "${rc_configs}/bash/bashrc.d/nvim.sh"
 assert_symlink_target "${home_dir}/.bash_profile.d/example.sh" "${rc_configs}/bash/profile.d/example.sh"
-ln -s "${rc_configs}/bash/bashrc.d/vim.sh" "${home_dir}/.bashrc.d/vim.sh"
-setup_bashrc_d
-[ ! -L "${home_dir}/.bashrc.d/vim.sh" ] || fail_test 'managed Vim shell config symlink should be removed'
 
 line_file="${tmp}/lines.txt"
 ensure_line_in_file 'alpha' "${line_file}"

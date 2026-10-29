@@ -802,11 +802,6 @@ setup_bash_rc_dir() {
 
 setup_bashrc_d() {
 	setup_bash_rc_dir "${configs}/bash/bashrc.d" "${HOME}/.bashrc.d"
-	old_vim_rc="${HOME}/.bashrc.d/vim.sh"
-	if [ -L "${old_vim_rc}" ] && [ "$(readlink "${old_vim_rc}")" = "${configs}/bash/bashrc.d/vim.sh" ]; then
-		rm -f -- "${old_vim_rc}"
-	fi
-	unset old_vim_rc
 }
 
 setup_bash_profile_d() {
