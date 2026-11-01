@@ -1,5 +1,6 @@
 # shellcheck shell=sh
 if command -v curl >/dev/null 2>&1; then
+
 	curl_sh() {
 		if [ "$#" -lt 1 ]; then
 			echo "'curl_sh' expected [1..) arguments URL; got $#" >&2
@@ -9,5 +10,7 @@ if command -v curl >/dev/null 2>&1; then
 		shift
 		curl -fsSL "${url}" | sh -s -- "$@"
 	}
+
 	curl_ip() { curl api.ipify.org; }
+
 fi

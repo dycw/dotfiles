@@ -20,11 +20,14 @@ trap 'rm -rf -- "${work_dir}"' EXIT HUP INT TERM
 
 clone_args="${work_dir}/git-args"
 cd "${work_dir}"
+
 git() {
 	printf '%s\n' "$@" >"${clone_args}"
 	mkdir -p -- "$4"
 }
+
 prek() { :; }
+
 gcl ssh://git@gitea-server.ai:2222/qrt/monitoring.git
 expected_clone_args='clone
 --recurse-submodules
@@ -35,6 +38,7 @@ test "${PWD}" = "${work_dir}"
 
 (
 	clean_checks=0
+
 	git() {
 		case "$1" in
 		is-clean)
@@ -45,11 +49,13 @@ test "${PWD}" = "${work_dir}"
 		add | commit | push) return 0 ;;
 		esac
 	}
+
 	__git_commit_until_push
 )
 
 create_args="${work_dir}/create-args"
 (
+
 	git() {
 		case "$1" in
 		remote-name) printf 'gitea\n' ;;
@@ -58,7 +64,9 @@ create_args="${work_dir}/create-args"
 		fetch-default | checkout | commit | push) return 0 ;;
 		esac
 	}
+
 	tea() { printf '%s\n' "$@" >"${create_args}"; }
+
 	__git_checkout_open --title Test --num derek/dotfiles#260 --part
 )
 expected_create_args='pulls
@@ -72,6 +80,7 @@ test "$(cat "${create_args}")" = "${expected_create_args}"
 merge_args="${work_dir}/merge-args"
 merge_state="${work_dir}/merge-state"
 (
+
 	git() {
 		case "$1" in
 		remote-name) printf 'gitea\n' ;;
@@ -81,6 +90,7 @@ merge_state="${work_dir}/merge-state"
 		checkout | pull-default | branch-delete) return 0 ;;
 		esac
 	}
+
 	tea() {
 		if [ "$1" = pulls ] && [ "$2" = ls ]; then
 			if [ ! -e "${merge_state}" ]; then
@@ -91,6 +101,7 @@ merge_state="${work_dir}/merge-state"
 			printf '%s\n' "$@" >"${merge_args}"
 		fi
 	}
+
 	__git_merge
 )
 expected_merge_args='pull

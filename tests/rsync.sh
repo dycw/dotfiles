@@ -9,6 +9,7 @@ tmp=$(make_temp_dir)
 trap 'cleanup_temp_dir "${tmp}"' EXIT HUP INT TERM
 
 rsync_log=${tmp}/rsync.log
+
 rsync() {
 	printf '%s\n' "$*" >>"${rsync_log}"
 }
@@ -16,6 +17,7 @@ rsync() {
 . "${test_root}/configs/bash/bashrc.d/rsync.sh"
 (
 	sleep_calls=0
+
 	sleep() {
 		sleep_calls=$((sleep_calls + 1))
 		if [ "${sleep_calls}" -ge 2 ]; then
@@ -23,6 +25,7 @@ rsync() {
 		fi
 		return 0
 	}
+
 	wrsync source target
 )
 if [ "$(wc -l <"${rsync_log}")" -lt 2 ]; then
@@ -39,6 +42,7 @@ assert_file_contains "'wrsync' invalid --loop interval: invalid" "${tmp}/error.l
 
 (
 	sleep_calls=0
+
 	sleep() {
 		sleep_calls=$((sleep_calls + 1))
 		if [ "${sleep_calls}" -ge 2 ]; then
@@ -46,6 +50,7 @@ assert_file_contains "'wrsync' invalid --loop interval: invalid" "${tmp}/error.l
 		fi
 		return 0
 	}
+
 	rrsync source target
 )
 if [ "$(wc -l <"${rsync_log}")" -lt 6 ]; then

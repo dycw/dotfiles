@@ -1,7 +1,9 @@
 # shellcheck shell=sh
+
 edit_ipython_startup() { "${EDITOR}" "${PATH_DOTFILES}/configs/ipython/startup.py"; }
 
 if command -v uv >/dev/null 2>&1; then
+
 	ipy() {
 		_uv_with_args=''
 		set -- dycw-utilities ipython "$@"
@@ -13,4 +15,5 @@ if command -v uv >/dev/null 2>&1; then
 		eval "uv run ${_uv_with_args} ipython"
 		unset _uv_arg _uv_with_args
 	}
+
 fi

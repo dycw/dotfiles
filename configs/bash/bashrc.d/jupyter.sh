@@ -1,5 +1,6 @@
 # shellcheck shell=sh
 if command -v uv >/dev/null 2>&1; then
+
 	jl() {
 		_uv_with_args=''
 		set -- dycw-utilities jupyterlab jupyterlab-vim "$@"
@@ -11,4 +12,5 @@ if command -v uv >/dev/null 2>&1; then
 		eval "uv run ${_uv_with_args} jupyter lab"
 		unset _uv_arg _uv_with_args
 	}
+
 fi

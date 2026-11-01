@@ -8,7 +8,11 @@ if [ -z "${__dotfiles_bat_command:-}" ]; then
 fi
 
 if [ -n "${__dotfiles_bat_command:-}" ]; then
+
 	bat() { command "${__dotfiles_bat_command}" "$@"; }
+
 	cat() { bat "$@"; }
+
 	catp() { bat --style=plain "$@"; }
+
 fi

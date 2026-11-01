@@ -1,4 +1,5 @@
 # shellcheck shell=sh
+
 cp() {
 	if [ "$#" -lt 2 ]; then
 		echo "'cp' expected [2..) arguments SOURCE ... TARGET; got $#" >&2

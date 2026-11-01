@@ -41,10 +41,15 @@ chmod +x "${local_bin}/sudo"
 cat >"${local_repo}/run-test.sh" <<EOF
 #!/bin/sh
 _SETUP_MAIN=0 . '${local_repo}/setup.sh'
+
 id() { if [ "\$1" = -u ]; then printf '1000\\n'; else command id "\$@"; fi; }
+
 install_all() { printf 'install_all\n' >>'${local_log}'; }
+
 setup_all() { printf 'setup_all\n' >>'${local_log}'; }
+
 determine_platform() { platform=linux; }
+
 run_local_self
 run_local_self
 EOF
@@ -96,10 +101,15 @@ chmod +x "${bootstrap_bin}/sudo"
 cat >"${bootstrap_dir}/run-test.sh" <<EOF
 #!/bin/sh
 _SETUP_MAIN=0 . '${bootstrap_dir}/setup.sh'
+
 id() { if [ "\$1" = -u ]; then printf '1000\\n'; else command id "\$@"; fi; }
+
 install_all() { printf 'install_all\n' >>'${bootstrap_log}'; }
+
 setup_all() { printf 'setup_all\n' >>'${bootstrap_log}'; }
+
 determine_platform() { platform=linux; }
+
 if run_local_self; then
 	echo 'expected the first clone attempt to fail' >&2
 	exit 1
@@ -141,8 +151,11 @@ run_setup_install_tests() (
 	_SETUP_MAIN=0 . "${test_root}/setup.sh"
 
 	(
+
 		require_linux() { :; }
+
 		TEST_UNAME_MACHINE=x86_64
+
 		uname() {
 			if [ "${1:-}" = -m ]; then
 				printf '%s\n' "${TEST_UNAME_MACHINE}"
@@ -150,6 +163,7 @@ run_setup_install_tests() (
 				printf 'Linux\n'
 			fi
 		}
+
 		determine_platform
 		assert_eq "${platform}" 'linux'
 		TEST_UNAME_MACHINE=aarch64
@@ -172,6 +186,7 @@ EOF
 	chmod +x "${tmp}/run-root-bin/apt-get"
 	PATH="${tmp}/run-root-bin:${PATH}"
 	export PATH RUN_ROOT_LOG RUN_ROOT_UID
+
 	id() {
 		if [ "${1:-}" = -u ]; then
 			printf '%s\n' "${RUN_ROOT_UID}"
@@ -179,6 +194,7 @@ EOF
 			command id "$@"
 		fi
 	}
+
 	sudo() {
 		case "${1:-}" in
 		-n)
@@ -195,6 +211,7 @@ EOF
 		*) return 1 ;;
 		esac
 	}
+
 	run_root apt-get install -y iperf3
 	RUN_ROOT_UID=1000
 	run_root apt-get install -y iperf3
@@ -203,8 +220,11 @@ EOF
 	GIT_BOOTSTRAP_LOG="${tmp}/git-bootstrap.log"
 	(
 		platform=linux
+
 		git() { return 1; }
+
 		run_root() { printf '%s\n' "$*" >>"${GIT_BOOTSTRAP_LOG}"; }
+
 		ensure_git
 	) >/dev/null
 	assert_file_contains 'apt-get -o DPkg::Lock::Timeout=300 update' "${GIT_BOOTSTRAP_LOG}"
@@ -212,15 +232,20 @@ EOF
 	: >"${GIT_BOOTSTRAP_LOG}"
 	(
 		platform=mac
+
 		git() { return 1; }
+
 		ensure_brew() { printf 'ensure_brew\n' >>"${GIT_BOOTSTRAP_LOG}"; }
+
 		brew() { printf 'brew %s\n' "$*" >>"${GIT_BOOTSTRAP_LOG}"; }
+
 		ensure_git
 	) >/dev/null
 	assert_file_contains 'ensure_brew' "${GIT_BOOTSTRAP_LOG}"
 	assert_file_contains 'brew install git' "${GIT_BOOTSTRAP_LOG}"
 
 	configs="${test_root}/configs"
+
 	run_root() {
 		if [ "$1" = apt-get ]; then
 			shift
@@ -232,12 +257,14 @@ EOF
 
 	APT_LOG="${tmp}/apt.log"
 	DPKG_INSTALLED='curl'
+
 	dpkg() {
 		case " ${DPKG_INSTALLED} " in
 		*" $2 "*) return 0 ;;
 		*) return 1 ;;
 		esac
 	}
+
 	apt_get() {
 		printf '%s\n' "$*" >>"${APT_LOG}"
 		[ "${APT_FAIL:-0}" -eq 0 ] || return 23
@@ -274,14 +301,17 @@ EOF
 	BREW_INSTALLED_FORMULAE_FILE="${tmp}/brew-installed-formulae"
 	printf '%s\n' "${BREW_FORMULAE}" >"${BREW_FORMULAE_FILE}"
 	cp -- "${BREW_FORMULAE_FILE}" "${BREW_INSTALLED_FORMULAE_FILE}"
+
 	set_brew_formulae() {
 		BREW_FORMULAE=$1
 		printf '%s\n' "${BREW_FORMULAE}" | tr ' ' '\n' >"${BREW_FORMULAE_FILE}"
 		cp -- "${BREW_FORMULAE_FILE}" "${BREW_INSTALLED_FORMULAE_FILE}"
 	}
+
 	set_brew_installed_formulae() {
 		printf '%s\n' "$1" | tr ' ' '\n' >"${BREW_INSTALLED_FORMULAE_FILE}"
 	}
+
 	brew() {
 		operation=$1
 		shift
@@ -514,9 +544,11 @@ EOF
 	chmod +x "${tmp}/bin/cargo-binstall"
 	PATH="${tmp}/bin:${PATH}"
 	export PATH
+
 	rustup() {
 		printf 'rustup %s\n' "$*" >>"${RUST_LOG}"
 	}
+
 	cargo() {
 		printf 'cargo %s\n' "$*" >>"${RUST_LOG}"
 		if [ -n "${FAIL_RUST_TOOL:-}" ]; then
@@ -525,13 +557,16 @@ EOF
 			esac
 		fi
 	}
+
 	# shellcheck disable=SC2317,SC2329
+
 	curl() {
 		printf '%s\n' "$*" >>"${TAPLO_CURL_LOG}"
 		[ "${TAPLO_CURL_FAIL}" -eq 0 ] || return 22
 		[ "${1:-}" = -fsSL ] && [ "${2:-}" = "${TAPLO_URL}" ] && [ "${3:-}" = -o ] || return 2
 		cp -- "${TAPLO_ARCHIVE}" "$4"
 	}
+
 	should_upgrade=1
 	FAIL_RUST_TOOL=cargo-edit
 	if maybe_upgrade_rust; then
@@ -596,6 +631,7 @@ EOF
 	CURL_FAIL=0
 	CURL_ARCHIVE=0
 	export CURL_LOG SCRIPT_LOG CURL_SCRIPT_EXIT CURL_FAIL CURL_ARCHIVE
+
 	curl() {
 		printf '%s\n' "$*" >>"${CURL_LOG}"
 		[ "${CURL_FAIL}" -eq 0 ] || return 22
@@ -654,8 +690,11 @@ EOF
 exec "$@"
 EOF
 	chmod +x "${tmp}/bin/npm" "${tmp}/bin/sudo"
+
 	node() { printf 'v%s\n' "${NODE_VERSION}"; }
+
 	acquire_sudo() { :; }
+
 	ensure_nodejs_22
 	NODE_VERSION=22.22.2
 	ensure_nodejs_22
@@ -666,7 +705,9 @@ EOF
 	VIM_LOG="${tmp}/vim.log"
 	HOME=${VIM_HOME}
 	export HOME VIM_LOG
+
 	vim() { printf '%s\n' "$*" >>"${VIM_LOG}"; }
+
 	: >"${CURL_LOG}"
 	setup_vim_plugins
 	plug_file="${VIM_HOME}/.vim/autoload/plug.vim"
@@ -700,11 +741,13 @@ EOF
 	TMPDIR=${REMOTE_TMPDIR}
 	export TMPDIR
 	SSH_CALLS=0
+
 	ssh() {
 		SSH_CALLS=$((SSH_CALLS + 1))
 		[ "$#" -eq 4 ] && [ "$1" = -p ] && [ "$2" = 222 ] && [ "$3" = nonroot@localhost ] || return 2
 		/bin/sh -c "$4"
 	}
+
 	run_remote nonroot@localhost 222
 	assert_eq "${SSH_CALLS}" '1'
 	assert_file_contains 'remote-ran' "${REMOTE_LOG}"
@@ -753,6 +796,7 @@ EOF
 	DOCKER_GROUP_ADDED=0
 	USER=setup-test
 	export USER
+
 	id() {
 		if [ "${1:-}" = -nG ]; then
 			if [ "${DOCKER_GROUP_ADDED}" -eq 1 ]; then
@@ -764,11 +808,14 @@ EOF
 			command id "$@"
 		fi
 	}
+
 	# shellcheck disable=SC2317,SC2329
+
 	usermod() {
 		printf '%s\n' "$*" >>"${tmp}/usermod.log"
 		DOCKER_GROUP_ADDED=1
 	}
+
 	printf '#!/bin/sh\nexit 0\n' >"${tmp}/bin/docker"
 	chmod +x "${tmp}/bin/docker"
 	PATH="${tmp}/bin:${PATH}"
@@ -826,7 +873,9 @@ EOF
 	TEA_CURL_FAIL=0
 	mkdir -p "${TEA_HOME}"
 	export TEA_ARCHIVE TEA_CURL_LOG TEA_CURL_FAIL
+
 	require_linux_x86_64() { :; }
+
 	write_tea_fixture() {
 		fixture_version=$1
 		cat >"${TEA_ARCHIVE}" <<EOF
@@ -836,6 +885,7 @@ printf 'Version: %s\\n' '${fixture_version}'
 EOF
 		chmod +x "${TEA_ARCHIVE}"
 	}
+
 	curl() {
 		printf '%s\n' "$*" >>"${TEA_CURL_LOG}"
 		[ "${1:-}" = -fsSL ] || return 2
@@ -844,6 +894,7 @@ EOF
 		[ "${TEA_CURL_FAIL}" -eq 0 ] || return 22
 		cp -- "${TEA_ARCHIVE}" "$4"
 	}
+
 	HOME=${TEA_HOME}
 	export HOME
 	should_upgrade=0
@@ -883,24 +934,40 @@ EOF
 
 	INSTALL_STUBS="${tmp}/install-stubs.sh"
 	cat >"${INSTALL_STUBS}" <<'EOF'
+
 record_install_call() { printf '%s\n' "$1" >>"${INSTALL_LOG}"; }
+
 ensure_brew() { record_install_call ensure_brew; }
+
 remove_unwanted_brew_formulas() { record_install_call remove_unwanted_brew_formulas; }
+
 install_common_brew_formulas() { record_install_call install_common_brew_formulas; }
+
 maybe_upgrade_brew_formulas() { if [ "${should_upgrade}" -eq 1 ]; then record_install_call maybe_upgrade_brew_formulas; fi; }
+
 maybe_upgrade_rust() { if [ "${should_upgrade}" -eq 1 ]; then record_install_call maybe_upgrade_rust; fi; }
+
 install_rust_tools() { record_install_call install_rust_tools; }
+
 install_linux_packages() {
 	record_install_call install_linux_packages
 	[ "${INSTALL_FAIL:-}" != apt ] || return 23
 }
+
 maybe_upgrade_apt_packages() { if [ "${should_upgrade}" -eq 1 ]; then record_install_call maybe_upgrade_apt_packages; fi; }
+
 ensure_nodejs_22() { record_install_call ensure_nodejs_22; }
+
 install_linux_user_tools() { record_install_call install_linux_user_tools; }
+
 install_tea_linux() { record_install_call install_tea_linux; }
+
 install_tailscale_linux() { record_install_call install_tailscale_linux; }
+
 install_docker_linux() { record_install_call install_docker_linux; }
+
 install_keymapp() { record_install_call install_keymapp; }
+
 EOF
 
 	FAIL_CACHE="${tmp}/failure cache"

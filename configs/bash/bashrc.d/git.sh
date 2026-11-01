@@ -22,6 +22,7 @@ EOF
 			git add "$@"
 		fi
 	}
+
 	gaf() {
 		if [ "$#" -eq 0 ]; then
 			git add --all --force
@@ -405,6 +406,7 @@ EOF
 	}
 
 	if command -v watch >/dev/null 2>&1; then
+
 		wg() {
 			watch --color --interval 2 --no-title --no-wrap -- '
                 echo "==== status ==================================================================="
@@ -420,6 +422,7 @@ EOF
                 fi
             '
 		}
+
 	fi
 
 	gbd() {
@@ -432,6 +435,7 @@ EOF
 			for _branch in "$@"; do git branch-delete "${_branch}"; done
 		fi
 	}
+
 	gbdr() {
 		git fetch-default || return $?
 		if [ "$#" -eq 0 ]; then
@@ -444,6 +448,7 @@ EOF
 			git push --delete origin "$@"
 		fi
 	}
+
 	gcbr() {
 		if [ "$#" -eq 0 ]; then
 			branch=$(git branch --color=never --remotes |
@@ -455,6 +460,7 @@ EOF
 		fi
 		git checkout -b "${branch}" -t "origin/${branch}"
 	}
+
 	gco() {
 		if [ "$#" -eq 0 ]; then
 			branch=$(git branch --format='%(refname:short)' | fzf)
@@ -537,41 +543,75 @@ EOF
 	}
 
 	gc() { __git_commit_push; }
+
 	gcn() { __git_commit_push --no-verify; }
+
 	gcf() { __git_commit_push --force; }
+
 	gcnf() { __git_commit_push --no-verify --force; }
+
 	gcw() { __git_commit_push --web; }
+
 	gcnw() { __git_commit_push --no-verify --web; }
+
 	gcfw() { __git_commit_push --force --web; }
+
 	gcnfw() { __git_commit_push --no-verify --force --web; }
+
 	gce() { __git_commit_push --exit; }
+
 	gcne() { __git_commit_push --no-verify --exit; }
+
 	gcfe() { __git_commit_push --force --exit; }
+
 	gcnfe() { __git_commit_push --no-verify --force --exit; }
+
 	gcx() { __git_commit_push --web --exit; }
+
 	gcnx() { __git_commit_push --no-verify --web --exit; }
+
 	gcfx() { __git_commit_push --force --web --exit; }
+
 	gcnfx() { __git_commit_push --no-verify --force --web --exit; }
 
 	gg() { __git_all "$@"; }
+
 	ggn() { __git_all --no-verify "$@"; }
+
 	ggf() { __git_all --force "$@"; }
+
 	ggnf() { __git_all --no-verify --force "$@"; }
+
 	ggw() { __git_all --web "$@"; }
+
 	ggnw() { __git_all --no-verify --web "$@"; }
+
 	ggfw() { __git_all --force --web "$@"; }
+
 	ggnfw() { __git_all --no-verify --force --web "$@"; }
+
 	gge() { __git_all --exit "$@"; }
+
 	ggne() { __git_all --no-verify --exit "$@"; }
+
 	ggfe() { __git_all --force --exit "$@"; }
+
 	ggnfe() { __git_all --no-verify --force --exit "$@"; }
+
 	ggm() { __git_all --merge "$@"; }
+
 	ggnm() { __git_all --no-verify --merge "$@"; }
+
 	ggfm() { __git_all --force --merge "$@"; }
+
 	ggnfm() { __git_all --no-verify --force --merge "$@"; }
+
 	ggx() { __git_all --merge --exit "$@"; }
+
 	ggnx() { __git_all --no-verify --merge --exit "$@"; }
+
 	ggfx() { __git_all --force --merge --exit "$@"; }
+
 	ggnfx() { __git_all --no-verify --force --merge --exit "$@"; }
 
 	ggc() {
@@ -583,6 +623,7 @@ EOF
 		shift
 		__git_all --title="$title" "$@"
 	}
+
 	ggcn() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcn' expected [1..) arguments TITLE" >&2
@@ -592,6 +633,7 @@ EOF
 		shift
 		__git_all --title="$title" --no-verify "$@"
 	}
+
 	ggcf() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcf' expected [1..) arguments TITLE" >&2
@@ -601,6 +643,7 @@ EOF
 		shift
 		__git_all --title="$title" --force "$@"
 	}
+
 	ggcnf() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnf' expected [1..) arguments TITLE" >&2
@@ -610,6 +653,7 @@ EOF
 		shift
 		__git_all --title="$title" --no-verify --force "$@"
 	}
+
 	ggcw() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcw' expected [1..) arguments TITLE" >&2
@@ -619,6 +663,7 @@ EOF
 		shift
 		__git_all --title="$title" --web "$@"
 	}
+
 	ggcnw() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnw' expected [1..) arguments TITLE" >&2
@@ -628,6 +673,7 @@ EOF
 		shift
 		__git_all --title="$title" --no-verify --web "$@"
 	}
+
 	ggcfw() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcfw' expected [1..) arguments TITLE" >&2
@@ -637,6 +683,7 @@ EOF
 		shift
 		__git_all --title="$title" --force --web "$@"
 	}
+
 	ggcnfw() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnfw' expected [1..) arguments TITLE" >&2
@@ -646,6 +693,7 @@ EOF
 		shift
 		__git_all --title="$title" --no-verify --force --web "$@"
 	}
+
 	ggce() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggce' expected [1..) arguments TITLE" >&2
@@ -655,6 +703,7 @@ EOF
 		shift
 		__git_all --title="$title" --exit "$@"
 	}
+
 	ggcne() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcne' expected [1..) arguments TITLE" >&2
@@ -664,6 +713,7 @@ EOF
 		shift
 		__git_all --title="$title" --no-verify --exit "$@"
 	}
+
 	ggcfe() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcfe' expected [1..) arguments TITLE" >&2
@@ -673,6 +723,7 @@ EOF
 		shift
 		__git_all --title="$title" --force --exit "$@"
 	}
+
 	ggcnfe() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnfe' expected [1..) arguments TITLE" >&2
@@ -682,6 +733,7 @@ EOF
 		shift
 		__git_all --title="$title" --no-verify --force --exit "$@"
 	}
+
 	ggcm() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcm' expected [1..) arguments TITLE" >&2
@@ -691,6 +743,7 @@ EOF
 		shift
 		__git_all --title="$title" --merge "$@"
 	}
+
 	ggcnm() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnm' expected [1..) arguments TITLE" >&2
@@ -700,6 +753,7 @@ EOF
 		shift
 		__git_all --title="$title" --no-verify --merge "$@"
 	}
+
 	ggcfm() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcfm' expected [1..) arguments TITLE" >&2
@@ -709,6 +763,7 @@ EOF
 		shift
 		__git_all --title="$title" --force --merge "$@"
 	}
+
 	ggcnfm() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnfm' expected [1..) arguments TITLE" >&2
@@ -718,6 +773,7 @@ EOF
 		shift
 		__git_all --title="$title" --no-verify --force --merge "$@"
 	}
+
 	ggcx() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcx' expected [1..) arguments TITLE" >&2
@@ -727,6 +783,7 @@ EOF
 		shift
 		__git_all --title="$title" --merge --exit "$@"
 	}
+
 	ggcnx() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnx' expected [1..) arguments TITLE" >&2
@@ -736,6 +793,7 @@ EOF
 		shift
 		__git_all --title="$title" --no-verify --merge --exit "$@"
 	}
+
 	ggcfx() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcfx' expected [1..) arguments TITLE" >&2
@@ -745,6 +803,7 @@ EOF
 		shift
 		__git_all --title="$title" --force --merge --exit "$@"
 	}
+
 	ggcnfx() {
 		[ "$#" -ge 1 ] || {
 			echo "'ggcnfx' expected [1..) arguments TITLE" >&2
@@ -756,27 +815,45 @@ EOF
 	}
 
 	gp() { __git_push; }
+
 	gpn() { __git_push --no-verify; }
+
 	gpf() { __git_push --force; }
+
 	gpfn() { __git_push --force --no-verify; }
+
 	gpw() { __git_push --web; }
+
 	gpnw() { __git_push --no-verify --web; }
+
 	gpfw() { __git_push --force --web; }
+
 	gpfnw() { __git_push --force --no-verify --web; }
+
 	gpe() { __git_push --exit; }
+
 	gpne() { __git_push --no-verify --exit; }
+
 	gpfe() { __git_push --force --exit; }
+
 	gpfne() { __git_push --force --no-verify --exit; }
+
 	gpx() { __git_push --web --exit; }
+
 	gpnx() { __git_push --no-verify --web --exit; }
+
 	gpfx() { __git_push --force --web --exit; }
+
 	gpfnx() { __git_push --force --no-verify --web --exit; }
 
 	gm() { __git_checkout_close "$(git default-local-branch)"; }
+
 	gmd() { __git_checkout_close "$(git default-local-branch)" --delete; }
+
 	gmx() { __git_checkout_close "$(git default-local-branch)" --delete --exit; }
 
 	gw() { __git_view; }
+
 	ghc() {
 		if [ "$#" -eq 0 ]; then
 			__git_create
@@ -789,6 +866,7 @@ EOF
 			return 1
 		fi
 	}
+
 	ghe() {
 		title='' body='' remaining_count=0 remaining_1='' remaining_2=''
 		while [ "$#" -gt 0 ]; do
@@ -851,7 +929,9 @@ EOF
 		echo "'ghe': no PR tool (tea/gh) available" >&2
 		return 1
 	}
+
 	ghm() { __git_merge; }
+
 	ghx() { __git_merge --exit; }
 
 	add_remote() {
@@ -862,6 +942,7 @@ EOF
 		git remote add "$@"
 		git remote set-url --push "$@"
 	}
+
 	remove_remote() {
 		if [ "$#" -eq 0 ]; then
 			echo "'remove-remote' expected [1..) arguments NAME; got $#" >&2
@@ -869,6 +950,7 @@ EOF
 		fi
 		git remote remove "$@"
 	}
+
 	set_remote() {
 		if [ "$#" -le 1 ]; then
 			echo "'set-remote' expected [2..) arguments NAME URL; got $#" >&2
@@ -883,14 +965,17 @@ EOF
 		branch=$(git default-remote-branch) || return $?
 		git rebase --strategy=recursive --strategy-option=theirs "$branch"
 	}
+
 	grbp() {
 		grb || return $?
 		command -v prek >/dev/null 2>&1 && prek run --all-files || true
 		__git_all --no-verify --force
 	}
+
 	grbw() {
 		grb || return $?
 		command -v prek >/dev/null 2>&1 && prek run --all-files || true
 		__git_all --no-verify --force --web
 	}
+
 fi

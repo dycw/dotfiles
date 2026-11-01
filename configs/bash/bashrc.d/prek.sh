@@ -1,6 +1,8 @@
 # shellcheck shell=sh
 if command -v prek >/dev/null 2>&1; then
+
 	__prek_auto_update() { prek auto-update --jobs=10 --verbose; }
+
 	__prek_run() { prek run --all-files --show-diff-on-failure --quiet; }
 
 	pg() {
@@ -17,7 +19,9 @@ if command -v prek >/dev/null 2>&1; then
 	}
 
 	pri() { prek install --overwrite --install-hooks; }
+
 	pru() { prek uninstall; }
+
 	pu() { __prek_auto_update; }
 
 	pur() {
@@ -25,4 +29,5 @@ if command -v prek >/dev/null 2>&1; then
 		__prek_run
 		if command -v __git_all >/dev/null 2>&1; then __git_all; fi
 	}
+
 fi

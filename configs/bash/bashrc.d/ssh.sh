@@ -109,7 +109,9 @@ add_known_host() {
 }
 
 edit_authorized_keys() { "${EDITOR}" "${HOME}/.ssh/authorized_keys"; }
+
 edit_known_hosts() { "${EDITOR}" "${HOME}/.ssh/known_hosts"; }
+
 edit_ssh_config() { "${EDITOR}" "${HOME}/.ssh/config"; }
 
 generate_ssh_key() {
@@ -253,6 +255,7 @@ ssh_auto() (
 		exit 1
 	fi
 	tee_pid=0
+
 	__ssh_auto_cleanup() {
 		if [ "${tee_pid}" -ne 0 ]; then
 			kill "${tee_pid}" 2>/dev/null || :
@@ -260,6 +263,7 @@ ssh_auto() (
 		fi
 		rm -rf -- "${reconnect_tmp}"
 	}
+
 	trap '__ssh_auto_cleanup; exit 130' HUP INT TERM
 	while :; do
 		: >"${error_file}"
@@ -282,5 +286,7 @@ ssh_auto() (
 )
 
 ssh_dw_macbookneo() { ssh_tailscale derekwan DW-MacBookNeo; }
+
 ssh_dw_macmini() { ssh_tailscale derekwan DW-MacMini; }
+
 ssh_dw_swift() { ssh_tailscale derek DW-Swift; }

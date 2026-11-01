@@ -1,4 +1,5 @@
 # shellcheck shell=sh
+
 ping_ts() {
 	count='' interval=2 deadline=2 destination=''
 	while [ "$#" -gt 0 ]; do

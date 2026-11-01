@@ -1,4 +1,5 @@
 # shellcheck shell=sh
+
 __pyright() {
 	if command -v pyright >/dev/null 2>&1; then
 		pyright .
@@ -19,8 +20,10 @@ __pyright() {
 pyr() { __pyright "$@"; }
 
 if command -v watchexec >/dev/null 2>&1; then
+
 	wpyr() {
 		cmd="cd $(pwd); pyright"
 		watchexec --exts json --exts py --exts toml --exts yaml --shell bash -- "${cmd}"
 	}
+
 fi

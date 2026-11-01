@@ -8,7 +8,9 @@ if [ -z "${__dotfiles_fd_command:-}" ]; then
 fi
 
 if [ -n "${__dotfiles_fd_command:-}" ]; then
+
 	fd() { command "${__dotfiles_fd_command}" "$@"; }
+
 	__fd_type() {
 		if [ "$#" -lt 1 ]; then
 			echo "'__fd_type' expected [1..) arguments TYPE; got $#" >&2
@@ -18,6 +20,9 @@ if [ -n "${__dotfiles_fd_command:-}" ]; then
 		shift
 		fd --hidden --type="${type}" "$@"
 	}
+
 	fdd() { __fd_type directory "$@"; }
+
 	fdf() { __fd_type file "$@"; }
+
 fi

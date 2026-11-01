@@ -10,6 +10,7 @@ esac
 self_dir=$(CDPATH='' cd -- "$(dirname -- "$self_path")" && pwd -P)
 
 export HOMEBREW_NO_AUTO_UPDATE=1
+
 brew() { command brew "$@" </dev/null; }
 
 log() {

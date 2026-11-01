@@ -1,5 +1,6 @@
 # shellcheck shell=sh
 if command -v tmux >/dev/null 2>&1; then
+
 	ta() {
 		if [ "$#" -gt 1 ]; then
 			echo "'ta' expected [0..1] arguments SESSION; got $#" >&2
@@ -23,5 +24,7 @@ if command -v tmux >/dev/null 2>&1; then
 			;;
 		esac
 	}
+
 	tmux_reload() { tmux source-file "${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.conf"; }
+
 fi

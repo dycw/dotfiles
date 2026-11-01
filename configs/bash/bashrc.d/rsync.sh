@@ -1,5 +1,6 @@
 # shellcheck shell=sh
 if command -v rsync >/dev/null 2>&1; then
+
 	__rsync_default() {
 		rsync -avzh --partial "$@"
 	}
@@ -169,4 +170,5 @@ if command -v rsync >/dev/null 2>&1; then
 	wrsync() {
 		__rsync_loop wrsync_once wrsync "$@"
 	}
+
 fi

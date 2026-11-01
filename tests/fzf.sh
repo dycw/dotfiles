@@ -35,6 +35,7 @@ fail_test() {
 	printf 'test failure: %s\n' "$*" >&2
 	exit 1
 }
+
 assert_eq() {
 	actual=$1
 	expected=$2

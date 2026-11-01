@@ -1,4 +1,5 @@
 # shellcheck shell=sh
+
 mv() {
 	if [ "$#" -lt 2 ]; then
 		echo "'mv' expected [2..) arguments SOURCE ... TARGET; got $#" >&2

@@ -14,6 +14,7 @@ fdfind_bin="${tmp}/fdfind only"
 fd_bin="${tmp}/fd only"
 fd_both_bin="${tmp}/fd and fdfind"
 mkdir -p "${batcat_only_bin}" "${bat_bin}" "${fdfind_bin}" "${fd_bin}" "${fd_both_bin}"
+
 write_executable_stub() {
 	cat >"$1" <<'EOF'
 #!/bin/sh
@@ -23,6 +24,7 @@ printf '\n'
 EOF
 	chmod +x "$1"
 }
+
 write_executable_stub "${batcat_only_bin}/batcat"
 write_executable_stub "${bat_bin}/bat"
 write_executable_stub "${bat_bin}/batcat"
@@ -90,9 +92,13 @@ fd:<--hidden><--type=file><file arg>'
 home_dir="${tmp}/home"
 mkdir -p "${home_dir}/.bashrc.d" "${home_dir}/.ssh"
 cat >"${home_dir}/.bashrc.d/test-aliases.sh" <<'EOF'
+
 edit_test_file() { printf 'snake:%s\n' "$1"; }
+
 _completion_helper() { printf 'completion\n'; }
+
 __private_helper() { printf 'private\n'; }
+
 EOF
 
 stdout="${tmp}/stdout.log"
