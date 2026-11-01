@@ -1,6 +1,6 @@
 # shellcheck shell=sh disable=SC2015,SC2016,SC2164
 if command -v git >/dev/null 2>&1; then
-	_git_cfg=${PATH_DOTFILES:+${PATH_DOTFILES}/configs/git/config}
+	_git_cfg=${PATH_DOTFILES:-${HOME}/dotfiles}/configs/git/config
 	[ -f "${_git_cfg}" ] || _git_cfg=/dev/null
 	_git_aliases=$(git config --file "${_git_cfg:-/dev/null}" --list 2>/dev/null | grep '^alias\.' || true)
 	while IFS= read -r _git_line; do
@@ -13,7 +13,7 @@ ${_git_aliases}
 EOF
 	unset _git_line _git_alias _git_aliases _git_cfg
 
-	edit_git_shell() { "${EDITOR}" "${PATH_DOTFILES}/configs/bash/bashrc"; }
+	edit_git_shell() { "${EDITOR}" "${PATH_DOTFILES:-${HOME}/dotfiles}/configs/bash/bashrc"; }
 
 	ga() {
 		if [ "$#" -eq 0 ]; then

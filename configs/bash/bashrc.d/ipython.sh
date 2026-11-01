@@ -1,6 +1,6 @@
 # shellcheck shell=sh
 
-edit_ipython_startup() { "${EDITOR}" "${PATH_DOTFILES}/configs/ipython/startup.py"; }
+edit_ipython_startup() { "${EDITOR}" "${PATH_DOTFILES:-${HOME}/dotfiles}/configs/ipython/startup.py"; }
 
 if command -v uv >/dev/null 2>&1; then
 

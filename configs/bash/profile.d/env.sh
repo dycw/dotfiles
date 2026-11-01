@@ -9,6 +9,10 @@ export XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-${HOME}/.local/state}"
 
+if [ "$(uname)" = Darwin ]; then
+	export ICLOUD_HOME="${ICLOUD_HOME:-${HOME}/Library/Mobile Documents/com~apple~CloudDocs}"
+fi
+
 export PATH="${HOME}/.local/bin${PATH:+:${PATH}}"
 
 if [ -d /opt/homebrew/bin ]; then

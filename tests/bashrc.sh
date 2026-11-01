@@ -89,6 +89,53 @@ assert_eq "${fd_output}" 'fd:<fd arg>
 fd:<--hidden><--type=directory><directory arg>
 fd:<--hidden><--type=file><file arg>'
 
+icloud_home="${tmp}/iCloud home"
+icloud_drive="${icloud_home}/Library/Mobile Documents/com~apple~CloudDocs"
+mkdir -p "${icloud_drive}/Downloads" "${icloud_drive}/Documents"
+linux_cd_output=$(HOME="${icloud_home}" sh -c '
+	unset ICLOUD_HOME
+	. "$1"
+	. "$2"
+	if [ "${ICLOUD_HOME+x}" = x ] || command -v cdic >/dev/null 2>&1 || command -v cddl >/dev/null 2>&1 || command -v cddoc >/dev/null 2>&1; then
+		exit 1
+	fi
+	printf "%s\n" "iCloud environment and aliases absent"
+' sh "${test_root}/configs/bash/bashrc.d/cd.sh" "${test_root}/configs/bash/profile.d/env.sh")
+assert_eq "${linux_cd_output}" 'iCloud environment and aliases absent'
+
+mac_cd_output=$(HOME="${icloud_home}" sh -c '
+	uname() { printf "%s\n" Darwin; }
+	. "$1"
+	. "$2"
+	[ "${ICLOUD_HOME}" = "${HOME}/Library/Mobile Documents/com~apple~CloudDocs" ] || exit 1
+	cdic
+	printf "%s\n" "${PWD}"
+	cddl
+	printf "%s\n" "${PWD}"
+	cddoc
+	printf "%s\n" "${PWD}"
+' sh "${test_root}/configs/bash/profile.d/env.sh" "${test_root}/configs/bash/bashrc.d/cd.sh")
+assert_eq "${mac_cd_output}" "${icloud_drive}
+${icloud_drive}/Downloads
+${icloud_drive}/Documents"
+
+dotfiles_home="${tmp}/dotfiles home"
+dotfiles_override="${tmp}/custom dotfiles"
+mkdir -p "${dotfiles_home}/dotfiles" "${dotfiles_override}"
+fallback_dotfiles_output=$(HOME="${dotfiles_home}" PATH_DOTFILES='' sh -c '
+	. "$1"
+	cddf
+	printf "%s\n" "${PWD}"
+' sh "${test_root}/configs/bash/bashrc.d/cd.sh")
+assert_eq "${fallback_dotfiles_output}" "${dotfiles_home}/dotfiles"
+
+override_dotfiles_output=$(HOME="${dotfiles_home}" PATH_DOTFILES="${dotfiles_override}" sh -c '
+	. "$1"
+	cddf
+	printf "%s\n" "${PWD}"
+' sh "${test_root}/configs/bash/bashrc.d/cd.sh")
+assert_eq "${override_dotfiles_output}" "${dotfiles_override}"
+
 home_dir="${tmp}/home"
 mkdir -p "${home_dir}/.bashrc.d" "${home_dir}/.ssh"
 cat >"${home_dir}/.bashrc.d/test-aliases.sh" <<'EOF'

@@ -17,7 +17,7 @@ echo "[$(date '+%Y-%m-%d %H:%M:%S')] Sourcing '${env}'..."
 
 
 for p in \
-	"${HOME}/Dropbox" \
+	"${ICLOUD_HOME:-${HOME}/Library/Mobile Documents/com~apple~CloudDocs}" \
 	"${HOME}/personal" \
 	"${HOME}/work"; do
 	if [ -d "${p}" ]; then

@@ -294,6 +294,15 @@ EOF
 	assert_eq "${apt_status}" '23'
 	APT_FAIL=0
 
+	LINUX_PACKAGES_LOG="${tmp}/linux-packages.log"
+	(
+		install_missing_apt_packages() { printf '%s\n' "$@" >"${LINUX_PACKAGES_LOG}"; }
+		install_linux_packages
+	)
+	if grep -Fqx asciinema "${LINUX_PACKAGES_LOG}"; then
+		fail_test 'Linux setup should no longer install asciinema'
+	fi
+
 	BREW_LOG="${tmp}/brew.log"
 	BREW_FORMULAE='present'
 	BREW_CASKS='present-cask'
@@ -456,6 +465,9 @@ EOF
 	install_mac_casks
 	assert_eq "$(grep -Fc 'trust redis-stack/redis-stack' "${BREW_LOG}")" '2'
 	assert_eq "$(grep -Fc 'install --cask --adopt' "${BREW_LOG}")" '1'
+	if grep -Fq 'dropbox' "${BREW_LOG}"; then
+		fail_test 'macOS setup should no longer install Dropbox'
+	fi
 	if grep -Fq 'redis-stack-redisinsight' "${BREW_LOG}"; then
 		fail_test 'an existing Redis Insight app should not be replaced by the older cask'
 	fi
@@ -1016,6 +1028,36 @@ EOF
 	assert_eq "$(grep -Fc 'install_tailscale_linux' "${INSTALL_LOG}")" '2'
 	assert_eq "$(grep -Fc 'install_docker_linux' "${INSTALL_LOG}")" '2'
 	assert_eq "$(grep -Fc 'install_keymapp' "${INSTALL_LOG}")" '2'
+
+	MACOS_HOME="${tmp}/macOS home"
+	MACOS_DEFAULTS_LOG="${tmp}/macOS defaults.log"
+	ICLOUD_HOME="${MACOS_HOME}/Custom iCloud"
+	ICLOUD_DRIVE=${ICLOUD_HOME}
+	ICLOUD_DOWNLOADS="${ICLOUD_DRIVE}/Downloads"
+	mkdir -p "${ICLOUD_DRIVE}"
+	HOME=${MACOS_HOME}
+	export HOME ICLOUD_HOME MACOS_DEFAULTS_LOG
+	defaults() {
+		printf 'defaults' >>"${MACOS_DEFAULTS_LOG}"
+		for argument in "$@"; do
+			printf '|%s' "${argument}" >>"${MACOS_DEFAULTS_LOG}"
+		done
+		printf '\n' >>"${MACOS_DEFAULTS_LOG}"
+	}
+	killall() { :; }
+	platform=mac
+	setup_macos_defaults
+	assert_file_exists "${ICLOUD_DOWNLOADS}"
+	finder_path=$(printf 'file://%s/\n' "${ICLOUD_DRIVE}" | sed 's/ /%20/g')
+	assert_file_contains "defaults|write|com.apple.finder|NewWindowTargetPath|-string|${finder_path}" "${MACOS_DEFAULTS_LOG}"
+	assert_file_contains "defaults|write|com.apple.Safari|DownloadsPath|-string|${ICLOUD_DOWNLOADS}" "${MACOS_DEFAULTS_LOG}"
+	assert_file_contains "defaults|write|com.apple.screencapture|location|-string|${ICLOUD_DOWNLOADS}" "${MACOS_DEFAULTS_LOG}"
+
+	rm -rf -- "${ICLOUD_DRIVE}"
+	: >"${MACOS_DEFAULTS_LOG}"
+	setup_macos_icloud_defaults
+	[ ! -e "${ICLOUD_DRIVE}" ] || fail_test 'iCloud setup should not create an absent iCloud Drive folder'
+	[ ! -s "${MACOS_DEFAULTS_LOG}" ] || fail_test 'iCloud setup should skip defaults when iCloud Drive is unavailable'
 )
 
 run_setup_install_tests

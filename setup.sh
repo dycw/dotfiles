@@ -462,7 +462,7 @@ install_common_brew_formulas() {
 
 install_linux_packages() {
 	install_missing_apt_packages \
-		asciinema autoconf automake bat bash bash-completion build-essential ca-certificates coreutils direnv eza \
+		autoconf automake bat bash bash-completion build-essential ca-certificates coreutils direnv eza \
 		fd-find fzf gh git-delta golang-go iperf3 jq just libpq-dev lua-check luarocks pgcli \
 		postgresql passwd procps python3-maturin python3-pip python3-venv pipx redis-server restic \
 		ripgrep sccache sd shellcheck \
@@ -561,7 +561,7 @@ redis_insight_app_installed() {
 
 install_mac_casks() {
 	ensure_brew_taps redis-stack/redis-stack || return $?
-	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt dropbox firefox openwhispr postico redis-stack-server spotify telegram transmission vlc wezterm whatsapp'
+	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt firefox openwhispr postico redis-stack-server spotify telegram transmission vlc wezterm whatsapp'
 	case "${machine:-}" in
 	dw_macbook_neo) ;;
 	*)
@@ -903,17 +903,18 @@ setup_macos_menu_bar_defaults() {
 	defaults write com.apple.controlcenter BatteryShowPercentage -bool true
 }
 
-setup_macos_dropbox_defaults() {
-	[ -d "${HOME}/Dropbox" ] || return 0
+setup_macos_icloud_defaults() {
+	icloud_drive="${ICLOUD_HOME:-${HOME}/Library/Mobile Documents/com~apple~CloudDocs}"
+	[ -d "${icloud_drive}" ] || return 0
 
-	dropbox="${HOME}/Dropbox"
-	temporary="${dropbox}/Temporary"
-	mkdir -p -- "${temporary}"
+	icloud_downloads="${icloud_drive}/Downloads"
+	mkdir -p -- "${icloud_downloads}"
+	finder_path=$(printf 'file://%s/\n' "${icloud_drive}" | sed 's/ /%20/g')
 
 	defaults write com.apple.finder NewWindowTarget -string PfLo
-	defaults write com.apple.finder NewWindowTargetPath -string "file://${dropbox}/"
-	defaults write com.apple.screencapture location -string "${temporary}"
-	defaults write com.apple.Safari DownloadsPath -string "${temporary}"
+	defaults write com.apple.finder NewWindowTargetPath -string "${finder_path}"
+	defaults write com.apple.Safari DownloadsPath -string "${icloud_downloads}"
+	defaults write com.apple.screencapture location -string "${icloud_downloads}"
 }
 
 setup_macos_defaults() {
@@ -923,7 +924,7 @@ setup_macos_defaults() {
 	setup_macos_safari_defaults
 	setup_macos_keyboard_defaults
 	setup_macos_menu_bar_defaults
-	setup_macos_dropbox_defaults
+	setup_macos_icloud_defaults
 
 	killall Finder >/dev/null 2>&1 || true
 	killall SystemUIServer >/dev/null 2>&1 || true

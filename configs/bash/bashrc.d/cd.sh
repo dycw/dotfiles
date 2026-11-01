@@ -5,13 +5,15 @@ alias ....='cd ../../..'
 
 cdconfig() { cd "${XDG_CONFIG_HOME:-${HOME}/.config}"; }
 
-cddb() { cd "${HOME}/Dropbox"; }
+if [ "$(uname)" = Darwin ]; then
+	cdic() { cd "${ICLOUD_HOME:-${HOME}/Library/Mobile Documents/com~apple~CloudDocs}"; }
 
-cddbt() { cd "${HOME}/Dropbox/Temporary"; }
+	cddl() { cd "${ICLOUD_HOME:-${HOME}/Library/Mobile Documents/com~apple~CloudDocs}/Downloads"; }
 
-cddf() { cd "${PATH_DOTFILES}"; }
+	cddoc() { cd "${ICLOUD_HOME:-${HOME}/Library/Mobile Documents/com~apple~CloudDocs}/Documents"; }
+fi
 
-cddl() { cd "${HOME}/Downloads"; }
+cddf() { cd "${PATH_DOTFILES:-${HOME}/dotfiles}"; }
 
 cdp() { mkdir -p "${HOME}/personal" && cd "${HOME}/personal"; }
 
