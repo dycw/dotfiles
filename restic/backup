@@ -38,7 +38,7 @@ fi
 
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Forgetting & pruning..."
-restic forget --keep-within-hourly 7d --keep-within-daily 1m \
+restic forget --group-by '' --keep-last 100 \
+	--keep-within-hourly 7d --keep-within-daily 1m \
 	--keep-within-weekly 1y --keep-within-monthly 5y \
-	--keep-within-yearly 10y --prune --repack-small \
-	--repack-uncompressed
+	--keep-within-yearly 10y --prune --repack-uncompressed
