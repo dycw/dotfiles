@@ -561,7 +561,7 @@ redis_insight_app_installed() {
 
 install_mac_casks() {
 	ensure_brew_taps redis-stack/redis-stack || return $?
-	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt firefox openwhispr postico redis-stack-server spotify telegram transmission vlc wezterm whatsapp'
+	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt dropbox firefox openwhispr postico redis-stack-server spotify telegram transmission vlc wezterm whatsapp'
 	case "${machine:-}" in
 	dw_macbook_neo) ;;
 	*)

@@ -477,8 +477,8 @@ EOF
 	install_mac_casks
 	assert_eq "$(grep -Fc 'trust redis-stack/redis-stack' "${BREW_LOG}")" '2'
 	assert_eq "$(grep -Fc 'install --cask --adopt' "${BREW_LOG}")" '1'
-	if grep -Fq 'dropbox' "${BREW_LOG}"; then
-		fail_test 'macOS setup should no longer install Dropbox'
+	if ! printf '%s\n' "$(brew list --cask)" | grep -Fqx dropbox; then
+		fail_test 'macOS setup should install Dropbox for Camera Uploads'
 	fi
 	if grep -Fq 'redis-stack-redisinsight' "${BREW_LOG}"; then
 		fail_test 'an existing Redis Insight app should not be replaced by the older cask'

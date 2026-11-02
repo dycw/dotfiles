@@ -18,6 +18,7 @@ echo "[$(date '+%Y-%m-%d %H:%M:%S')] Sourcing '${env}'..."
 
 set --
 for p in \
+	"${HOME}/Library/CloudStorage/Dropbox/Camera Uploads" \
 	"${ICLOUD_HOME:-${HOME}/Library/Mobile Documents/com~apple~CloudDocs}" \
 	"${HOME}/Pictures" \
 	"${HOME}/work"; do
