@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+# shellcheck disable=SC1090
+
+set -eu
+
+script_dir=$(dirname -- "$(realpath -- "$0")")
+env="${script_dir}/.env"
+
+if ! [ -r "${env}" ]; then
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Unable to find environment file '${env}'; exiting..." >&2
+	exit 1
+fi
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Sourcing '${env}'..."
+. "${env}"
+
+restic snapshots "$@"
