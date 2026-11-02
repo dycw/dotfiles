@@ -453,7 +453,7 @@ install_common_brew_formulas() {
 	install_missing_brew_formulas \
 		autoconf automake bat bash bash-completion@2 bottom coreutils delta \
 		dust eza fd fzf git-delta iperf3 jq just libpq \
-		luacheck luarocks markdownlint-cli maturin npm pgcli postgresql@18 prek prettier redis \
+		logrotate luacheck luarocks markdownlint-cli maturin npm pgcli postgresql@18 prek prettier redis \
 		restic ripgrep ruff sccache sd shellcheck shfmt starship taplo \
 		tea tmux topgrade uv vim watch yq zoxide
 
@@ -1097,6 +1097,7 @@ setup_brew_services() {
 	[ "${platform}" = mac ] || return 0
 	brew services start postgresql@18
 	brew services start redis
+	brew services start logrotate
 }
 
 setup_all() {

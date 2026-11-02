@@ -303,6 +303,15 @@ EOF
 		fail_test 'Linux setup should no longer install asciinema'
 	fi
 
+	BREW_FORMULAE_LOG="${tmp}/common-brew-formulae.log"
+	(
+		install_missing_brew_formulas() { printf '%s\n' "$@" >>"${BREW_FORMULAE_LOG}"; }
+		install_common_brew_formulas
+	)
+	if ! grep -Fqx logrotate "${BREW_FORMULAE_LOG}"; then
+		fail_test 'macOS setup should install logrotate'
+	fi
+
 	BREW_LOG="${tmp}/brew.log"
 	BREW_FORMULAE='present'
 	BREW_CASKS='present-cask'
@@ -1028,6 +1037,25 @@ EOF
 	assert_eq "$(grep -Fc 'install_tailscale_linux' "${INSTALL_LOG}")" '2'
 	assert_eq "$(grep -Fc 'install_docker_linux' "${INSTALL_LOG}")" '2'
 	assert_eq "$(grep -Fc 'install_keymapp' "${INSTALL_LOG}")" '2'
+
+	BREW_SERVICES_LOG="${tmp}/brew-services.log"
+	brew() {
+		printf 'brew %s\n' "$*" >>"${BREW_SERVICES_LOG}"
+		[ "${BREW_SERVICES_FAIL:-}" != "$*" ] || return 27
+	}
+	platform=linux
+	setup_brew_services
+	[ ! -s "${BREW_SERVICES_LOG}" ] || fail_test 'Linux setup should not start Homebrew services'
+	platform=mac
+	setup_brew_services
+	assert_file_contains 'brew services start logrotate' "${BREW_SERVICES_LOG}"
+	BREW_SERVICES_FAIL='services start logrotate'
+	if setup_brew_services; then
+		fail_test 'setup should fail when starting the logrotate service fails'
+	else
+		brew_services_status=$?
+	fi
+	assert_eq "${brew_services_status}" '27'
 
 	MACOS_HOME="${tmp}/macOS home"
 	MACOS_DEFAULTS_LOG="${tmp}/macOS defaults.log"
