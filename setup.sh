@@ -575,7 +575,7 @@ install_mac_casks() {
 	fi
 }
 
-mac_app_store_apps='1569813296 1475387147'
+mac_app_store_apps='1569813296 1475387142'
 
 install_missing_mas_apps() {
 	installed=$(mas list 2>/dev/null || true)
