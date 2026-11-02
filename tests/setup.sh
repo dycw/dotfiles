@@ -311,6 +311,9 @@ EOF
 	if ! grep -Fqx logrotate "${BREW_FORMULAE_LOG}"; then
 		fail_test 'macOS setup should install logrotate'
 	fi
+	if ! grep -Fqx flock "${BREW_FORMULAE_LOG}"; then
+		fail_test 'macOS setup should install flock for the backup cron job'
+	fi
 
 	BREW_LOG="${tmp}/brew.log"
 	BREW_FORMULAE='present'
@@ -1039,16 +1042,90 @@ EOF
 	assert_eq "$(grep -Fc 'install_keymapp' "${INSTALL_LOG}")" '2'
 
 	BREW_SERVICES_LOG="${tmp}/brew-services.log"
+	BREW_PREFIX="${tmp}/homebrew prefix"
+	HOME="${tmp}/backup home"
+	CRONTAB_FILE="${tmp}/user crontab"
+	CRONTAB_WRITES="${tmp}/crontab-writes"
 	brew() {
+		if [ "${1:-}" = --prefix ]; then
+			printf '%s\n' "${BREW_PREFIX}"
+			return 0
+		fi
 		printf 'brew %s\n' "$*" >>"${BREW_SERVICES_LOG}"
 		[ "${BREW_SERVICES_FAIL:-}" != "$*" ] || return 27
+	}
+	crontab() {
+		case "${1:-}" in
+		-l)
+			[ "${CRONTAB_LIST_FAIL:-0}" -eq 0 ] || {
+				printf 'crontab: permission denied\n' >&2
+				return 26
+			}
+			[ -f "${CRONTAB_FILE}" ] || {
+				printf 'crontab: no crontab for test\n' >&2
+				return 1
+			}
+			command cat "${CRONTAB_FILE}"
+			;;
+		-)
+			[ "${CRONTAB_WRITE_FAIL:-0}" -eq 0 ] || return 27
+			command cat >"${CRONTAB_FILE}"
+			printf 'write\n' >>"${CRONTAB_WRITES}"
+			;;
+		*) return 2 ;;
+		esac
 	}
 	platform=linux
 	setup_brew_services
 	[ ! -s "${BREW_SERVICES_LOG}" ] || fail_test 'Linux setup should not start Homebrew services'
+	[ ! -e "${CRONTAB_FILE}" ] || fail_test 'Linux setup should not modify the user crontab'
+
 	platform=mac
 	setup_brew_services
 	assert_file_contains 'brew services start logrotate' "${BREW_SERVICES_LOG}"
+	assert_file_exists "${HOME}/Library/Logs"
+	assert_file_exists "${HOME}/Library/Caches/dotfiles"
+	logrotate_user_config="${BREW_PREFIX}/etc/logrotate.d/dotfiles-backup.conf"
+	assert_file_contains "\"${HOME}/Library/Logs/backup.log\" {" "${logrotate_user_config}"
+	assert_file_contains 'missingok' "${logrotate_user_config}"
+	assert_file_contains 'notifempty' "${logrotate_user_config}"
+	expected_cron=$(printf "*/10 * * * * PATH=\"%s/bin:%s/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"%s/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/restic-backup.lock\" \"\$HOME/dotfiles/restic/backup\" >> \"\$HOME/Library/Logs/backup.log\" 2>&1" "${BREW_PREFIX}" "${BREW_PREFIX}" "${BREW_PREFIX}")
+	assert_file_contains "${expected_cron}" "${CRONTAB_FILE}"
+	assert_eq "$(grep -Fc "${expected_cron}" "${CRONTAB_FILE}")" '1'
+	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '1'
+
+	printf '%s\n' '* * * * * /bin/echo unrelated' >>"${CRONTAB_FILE}"
+	setup_brew_services
+	assert_file_contains '* * * * * /bin/echo unrelated' "${CRONTAB_FILE}"
+	assert_eq "$(grep -Fc "${expected_cron}" "${CRONTAB_FILE}")" '1'
+	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '1'
+	setup_brew_services
+	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '1'
+
+	CRONTAB_LIST_FAIL=1
+	if setup_backup_cron 2>"${tmp}/crontab-list-error.log"; then
+		fail_test 'setup should fail rather than replace an unreadable user crontab'
+	else
+		crontab_list_status=$?
+	fi
+	assert_eq "${crontab_list_status}" '26'
+	assert_file_contains 'Could not read the current user' "${tmp}/crontab-list-error.log"
+	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '1'
+	CRONTAB_LIST_FAIL=0
+
+	printf '%s\n' '* * * * * /bin/echo preserve-on-failure' >>"${CRONTAB_FILE}"
+	grep -Fvx "${expected_cron}" "${CRONTAB_FILE}" >"${tmp}/crontab-without-backup" || fail_test 'expected cron line to be present'
+	cp -- "${tmp}/crontab-without-backup" "${CRONTAB_FILE}"
+	cp -- "${CRONTAB_FILE}" "${tmp}/crontab-before-write-failure"
+	CRONTAB_WRITE_FAIL=1
+	if setup_backup_cron 2>"${tmp}/crontab-write-error.log"; then
+		fail_test 'setup should report a failed crontab update'
+	fi
+	assert_file_contains 'Could not install the restic backup crontab' "${tmp}/crontab-write-error.log"
+	cmp -s "${CRONTAB_FILE}" "${tmp}/crontab-before-write-failure" || fail_test 'a failed crontab update changed the existing crontab'
+	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '1'
+	CRONTAB_WRITE_FAIL=0
+
 	BREW_SERVICES_FAIL='services start logrotate'
 	if setup_brew_services; then
 		fail_test 'setup should fail when starting the logrotate service fails'

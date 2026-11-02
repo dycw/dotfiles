@@ -1093,10 +1093,51 @@ setup_hostname() {
 	sudo dscacheutil -flushcache
 }
 
+setup_logrotate_config() {
+	[ "${platform}" = mac ] || return 0
+
+	logrotate_config_dir="$(brew --prefix)/etc/logrotate.d"
+	mkdir -p "${HOME}/Library/Logs" "${logrotate_config_dir}"
+	printf '"%s/Library/Logs/backup.log" {\n\tmissingok\n\tnotifempty\n}\n' "${HOME}" >"${logrotate_config_dir}/dotfiles-backup.conf"
+}
+
+setup_backup_cron() (
+	[ "${platform}" = mac ] || exit 0
+
+	if current_crontab=$(LC_ALL=C crontab -l 2>&1); then
+		:
+	else
+		crontab_status=$?
+		case "${current_crontab}" in
+		*'no crontab for '*) current_crontab='' ;;
+		*)
+			log "Could not read the current user's crontab" >&2
+			exit "${crontab_status}"
+			;;
+		esac
+	fi
+
+	brew_prefix=$(brew --prefix)
+	mkdir -p "${HOME}/Library/Caches/dotfiles" "${HOME}/Library/Logs"
+	cron_entry="*/10 * * * * PATH=\"${brew_prefix}/bin:${brew_prefix}/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"${brew_prefix}/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/restic-backup.lock\" \"\$HOME/dotfiles/restic/backup\" >> \"\$HOME/Library/Logs/backup.log\" 2>&1"
+	if printf '%s\n' "${current_crontab}" | grep -Fqx "${cron_entry}"; then
+		exit 0
+	fi
+
+	new_crontab="${current_crontab}${current_crontab:+
+}${cron_entry}"
+	if ! printf '%s\n' "${new_crontab}" | crontab -; then
+		log "Could not install the restic backup crontab" >&2
+		exit 1
+	fi
+)
+
 setup_brew_services() {
 	[ "${platform}" = mac ] || return 0
 	brew services start postgresql@18
 	brew services start redis
+	setup_logrotate_config
+	setup_backup_cron
 	brew services start logrotate
 }
 
