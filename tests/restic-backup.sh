@@ -23,9 +23,9 @@ operation=$1
 shift
 case "${operation}" in
 backup)
-	last_argument=''
-	for argument in "$@"; do last_argument=${argument}; done
-	printf 'backup|%s\n' "${last_argument}" >>"${RESTIC_LOG}"
+	printf 'backup' >>"${RESTIC_LOG}"
+	for argument in "$@"; do printf '|%s' "${argument}" >>"${RESTIC_LOG}"; done
+	printf '\n' >>"${RESTIC_LOG}"
 	;;
 forget)
 	printf 'forget\n' >>"${RESTIC_LOG}"
@@ -40,11 +40,19 @@ PATH="${bin}:${PATH}"
 export PATH
 sh "${script_dir}/backup"
 
-assert_file_contains "backup|${ICLOUD_HOME}" "${RESTIC_LOG}"
-assert_file_contains "backup|${HOME}/Pictures" "${RESTIC_LOG}"
-assert_file_contains "backup|${HOME}/work" "${RESTIC_LOG}"
-if grep -Fqx "backup|${HOME}/personal" "${RESTIC_LOG}"; then
+assert_file_contains "|${ICLOUD_HOME}|${HOME}/Pictures|${HOME}/work" "${RESTIC_LOG}"
+if grep -Fq "${HOME}/personal" "${RESTIC_LOG}"; then
 	fail_test 'backup should no longer include ~/personal'
 fi
-assert_eq "$(grep -Fc 'backup|' "${RESTIC_LOG}")" '3'
+assert_eq "$(grep -Fc 'backup|' "${RESTIC_LOG}")" '1'
+assert_eq "$(grep -Fc 'forget' "${RESTIC_LOG}")" '1'
+
+rm -rf -- "${HOME}/work"
+: >"${RESTIC_LOG}"
+sh "${script_dir}/backup"
+assert_file_contains "|${ICLOUD_HOME}|${HOME}/Pictures" "${RESTIC_LOG}"
+if grep -Fq "${HOME}/work" "${RESTIC_LOG}"; then
+	fail_test 'backup should skip missing directories'
+fi
+assert_eq "$(grep -Fc 'backup|' "${RESTIC_LOG}")" '1'
 assert_eq "$(grep -Fc 'forget' "${RESTIC_LOG}")" '1'
