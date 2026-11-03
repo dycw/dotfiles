@@ -3,7 +3,6 @@
 
 set -eu
 
-
 script_dir=$(dirname -- "$(realpath -- "$0")")
 env="${script_dir}/.env"
 
@@ -15,10 +14,9 @@ fi
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Sourcing '${env}'..."
 . "${env}"
 
-
 set --
 for p in \
-	"${HOME}/Library/CloudStorage/Dropbox/Camera Uploads" \
+	"${HOME}/Dropbox/Camera Uploads" \
 	"${ICLOUD_HOME:-${HOME}/Library/Mobile Documents/com~apple~CloudDocs}" \
 	"${HOME}/Pictures" \
 	"${HOME}/work"; do
@@ -34,9 +32,9 @@ if [ "$#" -gt 0 ]; then
 	restic backup --exclude .git \
 		--exclude .venv \
 		--exclude node_modules \
+		--exclude 'Photos Library.photoslibrary' \
 		--exclude target "$@"
 fi
-
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Forgetting & pruning..."
 restic forget --group-by '' --keep-last 100 \
