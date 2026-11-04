@@ -886,6 +886,14 @@ setup_macos_safari_defaults() {
 	defaults write com.apple.Safari ShowTabBar -bool true
 }
 
+remove_legacy_macos_safari_script() {
+	legacy_script="${HOME}/Library/Scripts/Safari/Close Other Tabs for Current Host.applescript"
+	if [ -L "${legacy_script}" ] &&
+		[ "$(readlink "${legacy_script}")" = "${configs}/safari/close-other-tabs.applescript" ]; then
+		rm -f -- "${legacy_script}"
+	fi
+}
+
 setup_macos_keyboard_defaults() {
 	defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 	defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
@@ -922,6 +930,7 @@ setup_macos_defaults() {
 
 	log "Setting up macOS defaults..."
 	setup_macos_safari_defaults
+	remove_legacy_macos_safari_script
 	setup_macos_keyboard_defaults
 	setup_macos_menu_bar_defaults
 	setup_macos_icloud_defaults

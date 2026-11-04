@@ -1148,7 +1148,12 @@ EOF
 	}
 	killall() { :; }
 	platform=mac
+	configs="${test_root}/configs"
+	legacy_safari_script="${HOME}/Library/Scripts/Safari/Close Other Tabs for Current Host.applescript"
+	mkdir -p "$(dirname -- "${legacy_safari_script}")"
+	ln -s "${configs}/safari/close-other-tabs.applescript" "${legacy_safari_script}"
 	setup_macos_defaults
+	[ ! -L "${legacy_safari_script}" ] || fail_test 'setup should remove the obsolete managed Safari script link'
 	assert_file_exists "${ICLOUD_DOWNLOADS}"
 	finder_path=$(printf 'file://%s/\n' "${ICLOUD_DRIVE}" | sed 's/ /%20/g')
 	assert_file_contains "defaults|write|com.apple.finder|NewWindowTargetPath|-string|${finder_path}" "${MACOS_DEFAULTS_LOG}"
