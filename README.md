@@ -10,24 +10,6 @@ curl -fsSL \
   | sh
 ```
 
-## Safari tab organizer
-
-On macOS with Xcode installed, run:
-
-```sh
-./scripts/build-safari-extension.sh
-```
-
-Open `~/Applications/Safari Tab Organizer/Safari Tab Organizer.xcodeproj`
-in Xcode, run the app, then enable **Safari Tab Organizer** in Safari's
-**Settings → Extensions**. Use the toolbar button or assign the
-**Organize tabs** command a shortcut there.
-
-The extension closes other tabs with the active tab's hostname. It moves
-remaining tabs from other windows in the same browsing mode into the active
-window and sorts them by URL. It closes source windows left empty by the move.
-Pinned tabs remain pinned and are sorted within the pinned group.
-
 ## Packages
 
 ### macOS
