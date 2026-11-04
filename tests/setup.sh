@@ -1150,6 +1150,8 @@ EOF
 	platform=mac
 	setup_macos_defaults
 	assert_file_exists "${ICLOUD_DOWNLOADS}"
+	safari_script_path="${HOME}/Library/Scripts/Safari/Close Other Tabs for Current Host.applescript"
+	assert_eq "$(readlink "${safari_script_path}")" "${test_root}/configs/safari/close-other-tabs.applescript"
 	finder_path=$(printf 'file://%s/\n' "${ICLOUD_DRIVE}" | sed 's/ /%20/g')
 	assert_file_contains "defaults|write|com.apple.finder|NewWindowTargetPath|-string|${finder_path}" "${MACOS_DEFAULTS_LOG}"
 	assert_file_contains "defaults|write|com.apple.Safari|DownloadsPath|-string|${ICLOUD_DOWNLOADS}" "${MACOS_DEFAULTS_LOG}"
