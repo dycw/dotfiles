@@ -925,10 +925,6 @@ setup_macos_safari_keyboard_shortcuts() {
 	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Open Location...' '@k'
 	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Show Next Tab' '@l'
 	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Show Previous Tab' '@j'
-	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Tile Bottom Half' '^~$@0'
-	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Tile Left Half' '^~$@0'
-	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Tile Right Half' '^~$@0'
-	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Tile Top Half' '^~$@0'
 }
 
 setup_macos_safari_scripts() {
@@ -937,11 +933,41 @@ setup_macos_safari_scripts() {
 		"${HOME}/Library/Scripts/Safari/Close Other Tabs for Current Host.applescript"
 }
 
-setup_macos_window_tiling_defaults() {
-	defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool false
-	defaults write com.apple.WindowManager EnableTilingOptionAccelerator -bool false
-	defaults write com.apple.WindowManager EnableTopTilingByEdgeDrag -bool false
-}
+setup_macos_window_tiling_shortcuts() (
+	[ "$(uname)" = Darwin ] || return 0
+
+	_hotkeys_plist=$(mktemp "${TMPDIR:-/tmp}/dotfiles-symbolichotkeys.XXXXXX") ||
+		fail "Could not create a temporary symbolic hotkeys plist"
+	trap 'rm -f -- "${_hotkeys_plist}"' EXIT
+	trap 'exit 1' HUP INT TERM
+
+	defaults export com.apple.symbolichotkeys - >"${_hotkeys_plist}" ||
+		fail "Could not export macOS symbolic hotkeys"
+	if ! /usr/libexec/PlistBuddy -c 'Print :AppleSymbolicHotKeys' "${_hotkeys_plist}" >/dev/null 2>&1; then
+		/usr/libexec/PlistBuddy -c 'Add :AppleSymbolicHotKeys dict' "${_hotkeys_plist}" ||
+			fail "Could not initialize macOS symbolic hotkeys"
+	fi
+
+	# These IDs are the native Tile Left/Right/Top/Bottom Half shortcuts.
+	for _hotkey_id in 240 241 242 243; do
+		_hotkey_path="AppleSymbolicHotKeys.${_hotkey_id}"
+		if plutil -extract "${_hotkey_path}.enabled" raw -o /dev/null "${_hotkeys_plist}" 2>/dev/null; then
+			plutil -replace "${_hotkey_path}.enabled" -bool false "${_hotkeys_plist}" ||
+				fail "Could not disable macOS symbolic hotkey ${_hotkey_id}"
+		elif /usr/libexec/PlistBuddy -c "Print :AppleSymbolicHotKeys:${_hotkey_id}" "${_hotkeys_plist}" >/dev/null 2>&1; then
+			plutil -insert "${_hotkey_path}.enabled" -bool false "${_hotkeys_plist}" ||
+				fail "Could not disable macOS symbolic hotkey ${_hotkey_id}"
+		else
+			/usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:${_hotkey_id} dict" "${_hotkeys_plist}" ||
+				fail "Could not create macOS symbolic hotkey ${_hotkey_id}"
+			plutil -insert "${_hotkey_path}.enabled" -bool false "${_hotkeys_plist}" ||
+				fail "Could not disable macOS symbolic hotkey ${_hotkey_id}"
+		fi
+	done
+
+	defaults import com.apple.symbolichotkeys "${_hotkeys_plist}" ||
+		fail "Could not import disabled macOS symbolic hotkeys"
+)
 
 setup_macos_defaults() {
 	[ "${platform}" = mac ] || return 0
@@ -952,7 +978,7 @@ setup_macos_defaults() {
 	setup_macos_menu_bar_defaults
 	setup_macos_safari_defaults
 	setup_macos_safari_scripts
-	setup_macos_window_tiling_defaults
+	setup_macos_window_tiling_shortcuts
 
 	killall Finder >/dev/null 2>&1 || true
 	killall SystemUIServer >/dev/null 2>&1 || true
