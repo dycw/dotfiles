@@ -881,15 +881,18 @@ EOF
 		--timeout=30s
 }
 
-setup_macos_safari_defaults() {
-	defaults write com.apple.Safari HomePage -string https://gitea.ai
-	defaults write com.apple.Safari ShowTabBar -bool true
-}
+setup_macos_icloud_defaults() {
+	icloud_drive="${ICLOUD_HOME:-${HOME}/Library/Mobile Documents/com~apple~CloudDocs}"
+	[ -d "${icloud_drive}" ] || return 0
 
-setup_macos_safari_scripts() {
-	link_direct \
-		"${configs}/safari/close-other-tabs.applescript" \
-		"${HOME}/Library/Scripts/Safari/Close Other Tabs for Current Host.applescript"
+	icloud_downloads="${icloud_drive}/Downloads"
+	mkdir -p -- "${icloud_downloads}"
+	finder_path=$(printf 'file://%s/\n' "${icloud_drive}" | sed 's/ /%20/g')
+
+	defaults write com.apple.finder NewWindowTarget -string PfLo
+	defaults write com.apple.finder NewWindowTargetPath -string "${finder_path}"
+	defaults write com.apple.Safari DownloadsPath -string "${icloud_downloads}"
+	defaults write com.apple.screencapture location -string "${icloud_downloads}"
 }
 
 setup_macos_keyboard_defaults() {
@@ -909,29 +912,47 @@ setup_macos_menu_bar_defaults() {
 	defaults write com.apple.controlcenter BatteryShowPercentage -bool true
 }
 
-setup_macos_icloud_defaults() {
-	icloud_drive="${ICLOUD_HOME:-${HOME}/Library/Mobile Documents/com~apple~CloudDocs}"
-	[ -d "${icloud_drive}" ] || return 0
+setup_macos_safari_defaults() {
+	defaults write com.apple.Safari HomePage -string https://gitea.ai
+	setup_macos_safari_keyboard_shortcuts
+	defaults write com.apple.Safari ShowTabBar -bool true
+}
 
-	icloud_downloads="${icloud_drive}/Downloads"
-	mkdir -p -- "${icloud_downloads}"
-	finder_path=$(printf 'file://%s/\n' "${icloud_drive}" | sed 's/ /%20/g')
+setup_macos_safari_keyboard_shortcuts() {
+	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Close All Windows' '^~$@0'
+	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Close Window' '^~$@0'
+	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Merge All Windows' '$@m'
+	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Open Location...' '@k'
+	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Show Next Tab' '@l'
+	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Show Previous Tab' '@j'
+	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Tile Bottom Half' '^~$@0'
+	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Tile Left Half' '^~$@0'
+	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Tile Right Half' '^~$@0'
+	defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Tile Top Half' '^~$@0'
+}
 
-	defaults write com.apple.finder NewWindowTarget -string PfLo
-	defaults write com.apple.finder NewWindowTargetPath -string "${finder_path}"
-	defaults write com.apple.Safari DownloadsPath -string "${icloud_downloads}"
-	defaults write com.apple.screencapture location -string "${icloud_downloads}"
+setup_macos_safari_scripts() {
+	link_direct \
+		"${configs}/safari/close-other-tabs.applescript" \
+		"${HOME}/Library/Scripts/Safari/Close Other Tabs for Current Host.applescript"
+}
+
+setup_macos_window_tiling_defaults() {
+	defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool false
+	defaults write com.apple.WindowManager EnableTilingOptionAccelerator -bool false
+	defaults write com.apple.WindowManager EnableTopTilingByEdgeDrag -bool false
 }
 
 setup_macos_defaults() {
 	[ "${platform}" = mac ] || return 0
 
 	log "Setting up macOS defaults..."
-	setup_macos_safari_defaults
-	setup_macos_safari_scripts
+	setup_macos_icloud_defaults
 	setup_macos_keyboard_defaults
 	setup_macos_menu_bar_defaults
-	setup_macos_icloud_defaults
+	setup_macos_safari_defaults
+	setup_macos_safari_scripts
+	setup_macos_window_tiling_defaults
 
 	killall Finder >/dev/null 2>&1 || true
 	killall SystemUIServer >/dev/null 2>&1 || true
