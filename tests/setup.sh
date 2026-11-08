@@ -1039,10 +1039,16 @@ EOF
 	assert_eq "$(grep -Fc 'install_keymapp' "${INSTALL_LOG}")" '2'
 
 	BREW_SERVICES_LOG="${tmp}/brew-services.log"
+	LAUNCHCTL_LOG="${tmp}/launchctl.log"
+	LAUNCHCTL_LOADED_DOMAIN=''
 	BREW_PREFIX="${tmp}/homebrew prefix"
 	HOME="${tmp}/backup home"
 	CRONTAB_FILE="${tmp}/user crontab"
 	CRONTAB_WRITES="${tmp}/crontab-writes"
+	launchctl() {
+		printf 'launchctl %s\n' "$*" >>"${LAUNCHCTL_LOG}"
+		[ "${1:-}" = print ] && [ "${2:-}" = "${LAUNCHCTL_LOADED_DOMAIN:-}" ]
+	}
 	brew() {
 		if [ "${1:-}" = --prefix ]; then
 			printf '%s\n' "${BREW_PREFIX}"
@@ -1092,11 +1098,16 @@ EOF
 	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '1'
 
 	printf '%s\n' '* * * * * /bin/echo unrelated' >>"${CRONTAB_FILE}"
+	LAUNCHCTL_LOADED_DOMAIN="user/$(id -u)/sh.brew.logrotate"
 	setup_brew_services
 	assert_file_contains '* * * * * /bin/echo unrelated' "${CRONTAB_FILE}"
 	assert_eq "$(grep -Fc "${expected_cron}" "${CRONTAB_FILE}")" '1'
 	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '1'
+	assert_file_contains "launchctl print gui/$(id -u)/sh.brew.logrotate" "${LAUNCHCTL_LOG}"
+	assert_file_contains "launchctl print user/$(id -u)/sh.brew.logrotate" "${LAUNCHCTL_LOG}"
+	assert_eq "$(grep -Fc 'brew services start logrotate' "${BREW_SERVICES_LOG}")" '1'
 	setup_brew_services
+	assert_eq "$(grep -Fc 'brew services start logrotate' "${BREW_SERVICES_LOG}")" '1'
 	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '1'
 
 	CRONTAB_LIST_FAIL=1
@@ -1124,12 +1135,16 @@ EOF
 	CRONTAB_WRITE_FAIL=0
 
 	BREW_SERVICES_FAIL='services start logrotate'
-	if setup_brew_services; then
-		fail_test 'setup should fail when starting the logrotate service fails'
+	LAUNCHCTL_LOADED_DOMAIN=''
+	if setup_brew_services 2>"${tmp}/logrotate-start-error.log"; then
+		fail_test 'setup should report a logrotate service startup failure'
 	else
-		brew_services_status=$?
+		logrotate_start_status=$?
 	fi
-	assert_eq "${brew_services_status}" '27'
+	assert_eq "${logrotate_start_status}" '27'
+	LAUNCHCTL_LOADED_DOMAIN="gui/$(id -u)/sh.brew.logrotate"
+	setup_brew_services
+	assert_eq "$(grep -Fc 'brew services start logrotate' "${BREW_SERVICES_LOG}")" '2'
 
 	MACOS_HOME="${tmp}/macOS home"
 	MACOS_DEFAULTS_LOG="${tmp}/macOS defaults.log"

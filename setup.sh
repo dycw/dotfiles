@@ -1160,13 +1160,24 @@ setup_backup_cron() (
 	fi
 )
 
+start_logrotate_service() {
+	uid=$(id -u)
+	for domain in "gui/${uid}" "user/${uid}"; do
+		if launchctl print "${domain}/sh.brew.logrotate" >/dev/null 2>&1; then
+			log "'logrotate' service is already loaded in '${domain}'; skipping start"
+			return 0
+		fi
+	done
+	brew services start logrotate
+}
+
 setup_brew_services() {
 	[ "${platform}" = mac ] || return 0
 	brew services start postgresql@18
 	brew services start redis
 	setup_logrotate_config
 	setup_backup_cron
-	brew services start logrotate
+	start_logrotate_service
 }
 
 setup_all() {
