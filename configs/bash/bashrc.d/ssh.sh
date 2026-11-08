@@ -286,7 +286,6 @@ ssh_auto() (
 )
 
 ssh_dw_macbookneo() { ssh_tailscale derekwan DW-MacBookNeo; }
-
 ssh_dw_macmini() { ssh_tailscale derekwan DW-MacMini; }
-
 ssh_dw_swift() { ssh_tailscale derek DW-Swift; }
+ssh_rh_macmini() { ssh_tailscale derekwan RH-MacMini; }
