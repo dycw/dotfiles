@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+# shellcheck disable=SC1090,SC1091
+
+set -eu
+
+script_dir=$(dirname -- "$(realpath -- "$0")")
+. "${script_dir}/lib.sh"
+backup_load_env "${script_dir}/.env" || exit 1
+
+restic snapshots "$@"

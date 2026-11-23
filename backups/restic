@@ -1,18 +1,12 @@
 #!/usr/bin/env sh
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC1091
 
 set -eu
 
 script_dir=$(dirname -- "$(realpath -- "$0")")
-env="${script_dir}/.env"
-
-if ! [ -r "${env}" ]; then
-	echo "[$(date '+%Y-%m-%d %H:%M:%S')] Unable to find environment file '${env}'; exiting..." >&2
-	exit 1
-fi
-
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Sourcing '${env}'..."
-. "${env}"
+. "${script_dir}/lib.sh"
+backup_reject_args "$@"
+backup_load_env "${script_dir}/.env" || exit 1
 
 set --
 for p in \
@@ -21,10 +15,10 @@ for p in \
 	"${HOME}/Pictures" \
 	"${HOME}/work"; do
 	if [ -d "${p}" ]; then
-		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Backing up '${p}'..."
+		backup_log "Backing up '${p}'..."
 		set -- "$@" "${p}"
 	else
-		echo "[$(date '+%Y-%m-%d %H:%M:%S')] Unable to find '${p}'; skipping..." >&2
+		backup_log_error "Unable to find '${p}'; skipping..."
 	fi
 done
 
@@ -36,7 +30,7 @@ if [ "$#" -gt 0 ]; then
 		--exclude target "$@"
 fi
 
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Forgetting & pruning..."
+backup_log 'Forgetting & pruning...'
 restic forget --group-by '' --keep-last 100 \
 	--keep-within-hourly 7d --keep-within-daily 1m \
 	--keep-within-weekly 1y --keep-within-monthly 5y \

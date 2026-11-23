@@ -1080,21 +1080,6 @@ setup_tmux() {
 	link_config "${configs}/tmux.conf" tmux/tmux.conf.local
 }
 
-remove_legacy_files() {
-	rm -f -- \
-		"${HOME}/.pdbrc" \
-		"${HOME}/.viminfo" \
-		"${HOME}/.zshrc"
-	rm -rf -- \
-		"${xdg_config_home}/fish" \
-		"${xdg_config_home}/ghostty" \
-		"${xdg_config_home}/nvim" \
-		"${xdg_config_home}/posix" \
-		"${xdg_config_home}/pudb" \
-		"${xdg_config_home}/stayfocusd" \
-		"${xdg_config_home}/zsh"
-}
-
 setup_hostname() {
 	[ "${platform}" = mac ] || return 0
 	case "${machine:-}" in
@@ -1126,12 +1111,12 @@ setup_logrotate_config() {
 
 	logrotate_config_dir="$(brew --prefix)/etc/logrotate.d"
 	mkdir -p "${HOME}/Library/Logs" "${logrotate_config_dir}"
-	printf '"%s/Library/Logs/backup.log" {\n\tmissingok\n\tnotifempty\n}\n' "${HOME}" >"${logrotate_config_dir}/dotfiles-backup.conf"
+	printf '"%s/Library/Logs/backup.log" {\n\tmissingok\n\tnotifempty\n}\n"%s/Library/Logs/rsync-cloud.log" {\n\tmissingok\n\tnotifempty\n}\n' "${HOME}" "${HOME}" >"${logrotate_config_dir}/dotfiles-backup.conf"
 }
 
-setup_backup_cron() (
-	[ "${platform}" = mac ] || exit 0
-
+install_cron_entry() (
+	cron_entry=$1
+	install_error=$2
 	if current_crontab=$(LC_ALL=C crontab -l 2>&1); then
 		:
 	else
@@ -1145,9 +1130,6 @@ setup_backup_cron() (
 		esac
 	fi
 
-	brew_prefix=$(brew --prefix)
-	mkdir -p "${HOME}/Library/Caches/dotfiles" "${HOME}/Library/Logs"
-	cron_entry="*/10 * * * * PATH=\"${brew_prefix}/bin:${brew_prefix}/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"${brew_prefix}/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/restic-backup.lock\" \"\$HOME/dotfiles/restic/backup\" >> \"\$HOME/Library/Logs/backup.log\" 2>&1"
 	if printf '%s\n' "${current_crontab}" | grep -Fqx "${cron_entry}"; then
 		exit 0
 	fi
@@ -1155,9 +1137,27 @@ setup_backup_cron() (
 	new_crontab="${current_crontab}${current_crontab:+
 }${cron_entry}"
 	if ! printf '%s\n' "${new_crontab}" | crontab -; then
-		log "Could not install the restic backup crontab" >&2
+		log "${install_error}" >&2
 		exit 1
 	fi
+)
+
+setup_backup_cron() (
+	[ "${platform}" = mac ] || exit 0
+
+	brew_prefix=$(brew --prefix)
+	mkdir -p "${HOME}/Library/Caches/dotfiles" "${HOME}/Library/Logs"
+	cron_entry="*/10 * * * * PATH=\"${brew_prefix}/bin:${brew_prefix}/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"${brew_prefix}/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/restic-backup.lock\" \"\$HOME/dotfiles/backups/restic\" >> \"\$HOME/Library/Logs/backup.log\" 2>&1"
+	install_cron_entry "${cron_entry}" "Could not install the restic backup crontab"
+)
+
+setup_rsync_cloud_cron() (
+	[ "${platform}" = mac ] || exit 0
+
+	brew_prefix=$(brew --prefix)
+	mkdir -p "${HOME}/Library/Caches/dotfiles" "${HOME}/Library/Logs"
+	cron_entry="0 */4 * * * PATH=\"${brew_prefix}/bin:${brew_prefix}/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"${brew_prefix}/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/rsync-cloud.lock\" \"\$HOME/dotfiles/backups/rsync-cloud\" >> \"\$HOME/Library/Logs/rsync-cloud.log\" 2>&1"
+	install_cron_entry "${cron_entry}" "Could not install the rsync-cloud crontab"
 )
 
 start_logrotate_service() {
@@ -1177,6 +1177,7 @@ setup_brew_services() {
 	brew services start redis
 	setup_logrotate_config
 	setup_backup_cron
+	setup_rsync_cloud_cron
 	start_logrotate_service
 }
 
@@ -1189,7 +1190,6 @@ setup_all() {
 	setup_tailscale
 	setup_static_configs
 	setup_tmux
-	remove_legacy_files
 	case "${platform}" in
 	linux)
 		setup_keymapp

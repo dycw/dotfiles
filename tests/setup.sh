@@ -1090,25 +1090,30 @@ EOF
 	assert_file_exists "${HOME}/Library/Caches/dotfiles"
 	logrotate_user_config="${BREW_PREFIX}/etc/logrotate.d/dotfiles-backup.conf"
 	assert_file_contains "\"${HOME}/Library/Logs/backup.log\" {" "${logrotate_user_config}"
+	assert_file_contains "\"${HOME}/Library/Logs/rsync-cloud.log\" {" "${logrotate_user_config}"
 	assert_file_contains 'missingok' "${logrotate_user_config}"
 	assert_file_contains 'notifempty' "${logrotate_user_config}"
-	expected_cron=$(printf "*/10 * * * * PATH=\"%s/bin:%s/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"%s/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/restic-backup.lock\" \"\$HOME/dotfiles/restic/backup\" >> \"\$HOME/Library/Logs/backup.log\" 2>&1" "${BREW_PREFIX}" "${BREW_PREFIX}" "${BREW_PREFIX}")
+	expected_cron=$(printf "*/10 * * * * PATH=\"%s/bin:%s/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"%s/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/restic-backup.lock\" \"\$HOME/dotfiles/backups/restic\" >> \"\$HOME/Library/Logs/backup.log\" 2>&1" "${BREW_PREFIX}" "${BREW_PREFIX}" "${BREW_PREFIX}")
+	expected_rsync_cloud_cron=$(printf "0 */4 * * * PATH=\"%s/bin:%s/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"%s/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/rsync-cloud.lock\" \"\$HOME/dotfiles/backups/rsync-cloud\" >> \"\$HOME/Library/Logs/rsync-cloud.log\" 2>&1" "${BREW_PREFIX}" "${BREW_PREFIX}" "${BREW_PREFIX}")
 	assert_file_contains "${expected_cron}" "${CRONTAB_FILE}"
+	assert_file_contains "${expected_rsync_cloud_cron}" "${CRONTAB_FILE}"
 	assert_eq "$(grep -Fc "${expected_cron}" "${CRONTAB_FILE}")" '1'
-	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '1'
+	assert_eq "$(grep -Fc "${expected_rsync_cloud_cron}" "${CRONTAB_FILE}")" '1'
+	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '2'
 
 	printf '%s\n' '* * * * * /bin/echo unrelated' >>"${CRONTAB_FILE}"
 	LAUNCHCTL_LOADED_DOMAIN="user/$(id -u)/sh.brew.logrotate"
 	setup_brew_services
 	assert_file_contains '* * * * * /bin/echo unrelated' "${CRONTAB_FILE}"
 	assert_eq "$(grep -Fc "${expected_cron}" "${CRONTAB_FILE}")" '1'
-	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '1'
+	assert_eq "$(grep -Fc "${expected_rsync_cloud_cron}" "${CRONTAB_FILE}")" '1'
+	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '2'
 	assert_file_contains "launchctl print gui/$(id -u)/sh.brew.logrotate" "${LAUNCHCTL_LOG}"
 	assert_file_contains "launchctl print user/$(id -u)/sh.brew.logrotate" "${LAUNCHCTL_LOG}"
 	assert_eq "$(grep -Fc 'brew services start logrotate' "${BREW_SERVICES_LOG}")" '1'
 	setup_brew_services
 	assert_eq "$(grep -Fc 'brew services start logrotate' "${BREW_SERVICES_LOG}")" '1'
-	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '1'
+	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '2'
 
 	CRONTAB_LIST_FAIL=1
 	if setup_backup_cron 2>"${tmp}/crontab-list-error.log"; then
@@ -1118,7 +1123,7 @@ EOF
 	fi
 	assert_eq "${crontab_list_status}" '26'
 	assert_file_contains 'Could not read the current user' "${tmp}/crontab-list-error.log"
-	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '1'
+	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '2'
 	CRONTAB_LIST_FAIL=0
 
 	printf '%s\n' '* * * * * /bin/echo preserve-on-failure' >>"${CRONTAB_FILE}"
@@ -1131,7 +1136,7 @@ EOF
 	fi
 	assert_file_contains 'Could not install the restic backup crontab' "${tmp}/crontab-write-error.log"
 	cmp -s "${CRONTAB_FILE}" "${tmp}/crontab-before-write-failure" || fail_test 'a failed crontab update changed the existing crontab'
-	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '1'
+	assert_eq "$(grep -Fc 'write' "${CRONTAB_WRITES}")" '2'
 	CRONTAB_WRITE_FAIL=0
 
 	BREW_SERVICES_FAIL='services start logrotate'

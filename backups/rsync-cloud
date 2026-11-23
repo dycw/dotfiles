@@ -1,0 +1,74 @@
+#!/usr/bin/env sh
+# shellcheck disable=SC1091
+
+set -eu
+
+script_dir=$(dirname -- "$(realpath -- "$0")")
+. "${script_dir}/lib.sh"
+backup_reject_args "$@"
+sources_file="${script_dir}/rsync-cloud-sources"
+if [ ! -r "${sources_file}" ]; then
+	backup_fail "Unable to read source list '${sources_file}'; copy rsync-cloud-sources.example and configure it"
+fi
+
+if [ -z "${HOME:-}" ] || [ ! -d "${HOME}" ]; then
+	backup_fail 'HOME is not a readable directory'
+fi
+home=$(CDPATH='' cd -- "${HOME}" && pwd -P) || backup_fail "Unable to resolve HOME '${HOME}'"
+cloud_storage_root="${home}/Library/CloudStorage"
+if [ ! -d "${cloud_storage_root}" ]; then
+	backup_fail "Cloud storage directory '${cloud_storage_root}' does not exist"
+fi
+
+cloud_storage_count=0
+for cloud_storage in "${cloud_storage_root}"/*; do
+	[ -d "${cloud_storage}" ] || continue
+	cloud_storage_count=$((cloud_storage_count + 1))
+done
+[ "${cloud_storage_count}" -gt 0 ] || backup_fail "No cloud storage directories found under '${cloud_storage_root}'"
+
+staging_root=$(mktemp -d /tmp/rsync-cloud.XXXXXX) || backup_fail 'Could not create a staging directory under /tmp'
+cleanup() {
+	rm -rf -- "${staging_root}"
+}
+trap cleanup EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+source_count=0
+source_path=''
+while IFS= read -r source_path || [ -n "${source_path}" ]; do
+	case "${source_path}" in
+	'' | \#*) continue ;;
+	\~/*) source_path="${home}/${source_path#\~/}" ;;
+	/*) ;;
+	*) backup_fail "Source must be an absolute path or begin with ~/: '${source_path}'" ;;
+	esac
+
+	if ! absolute_source=$(CDPATH='' cd -- "${source_path}" && pwd -P); then
+		backup_fail "Source directory does not exist or cannot be read: '${source_path}'"
+	fi
+	case "${absolute_source}" in
+	"${home}"/*) relative_source=${absolute_source#"${home}"/} ;;
+	"${home}") backup_fail "Source must be inside HOME, not HOME itself: '${source_path}'" ;;
+	*) backup_fail "Source must be inside HOME: '${source_path}'" ;;
+	esac
+
+	staged_source="${staging_root}/${relative_source}"
+	mkdir -p -- "${staged_source}"
+	backup_log "Staging '${absolute_source}' at '${staged_source}'..."
+	rsync -a -- "${absolute_source}/" "${staged_source}/"
+	source_count=$((source_count + 1))
+done <"${sources_file}"
+[ "${source_count}" -gt 0 ] || backup_fail "No source directories configured in '${sources_file}'"
+
+for cloud_storage in "${cloud_storage_root}"/*; do
+	[ -d "${cloud_storage}" ] || continue
+	destination="${cloud_storage}/Backup"
+	mkdir -p -- "${destination}"
+	backup_log "Synchronizing to '${destination}'..."
+	rsync -a --delete -- "${staging_root}/" "${destination}/"
+done
+
+backup_log "Cloud synchronization complete (${source_count} source directories, ${cloud_storage_count} cloud storage directories)"
