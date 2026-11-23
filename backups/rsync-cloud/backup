@@ -4,11 +4,11 @@
 set -eu
 
 script_dir=$(dirname -- "$(realpath -- "$0")")
-. "${script_dir}/lib.sh"
+. "${script_dir}/../lib.sh"
 backup_reject_args "$@"
-sources_file="${script_dir}/rsync-cloud-sources"
+sources_file="${script_dir}/sources"
 if [ ! -r "${sources_file}" ]; then
-	backup_fail "Unable to read source list '${sources_file}'; copy rsync-cloud-sources.example and configure it"
+	backup_fail "Unable to read source list '${sources_file}'; copy sources.example and configure it"
 fi
 
 if [ -z "${HOME:-}" ] || [ ! -d "${HOME}" ]; then
@@ -36,6 +36,20 @@ trap 'exit 129' HUP
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
+log_staging_capacity() {
+	if staging_df=$(df -hP "${staging_root}"); then
+		staging_capacity=$(printf '%s\n' "${staging_df}" | awk 'NR == 2 { printf "%s total, %s used, %s available", $2, $3, $4 }')
+	else
+		staging_capacity=''
+	fi
+	if [ -n "${staging_capacity}" ]; then
+		backup_log "Temporary filesystem capacity: ${staging_capacity}"
+	else
+		backup_log_error 'Unable to determine temporary filesystem capacity'
+	fi
+}
+
+log_staging_capacity
 source_count=0
 source_path=''
 while IFS= read -r source_path || [ -n "${source_path}" ]; do
@@ -62,6 +76,17 @@ while IFS= read -r source_path || [ -n "${source_path}" ]; do
 	source_count=$((source_count + 1))
 done <"${sources_file}"
 [ "${source_count}" -gt 0 ] || backup_fail "No source directories configured in '${sources_file}'"
+if du_output=$(du -sh "${staging_root}"); then
+	staging_size=$(printf '%s\n' "${du_output}" | awk 'NR == 1 { print $1 }')
+else
+	staging_size=''
+fi
+if [ -n "${staging_size}" ]; then
+	backup_log "Staged source data size: ${staging_size}"
+else
+	backup_log_error 'Unable to determine staged source data size'
+fi
+log_staging_capacity
 
 for cloud_storage in "${cloud_storage_root}"/*; do
 	[ -d "${cloud_storage}" ] || continue

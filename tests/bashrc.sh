@@ -91,12 +91,14 @@ fd:<--hidden><--type=file><file arg>'
 
 icloud_home="${tmp}/iCloud home"
 icloud_drive="${icloud_home}/Library/Mobile Documents/com~apple~CloudDocs"
-mkdir -p "${icloud_drive}/Downloads" "${icloud_drive}/Documents"
+cloud_storage="${icloud_home}/Library/CloudStorage"
+dropbox_dir="${cloud_storage}/Dropbox"
+mkdir -p "${icloud_drive}/Downloads" "${icloud_drive}/Documents" "${dropbox_dir}"
 linux_cd_output=$(HOME="${icloud_home}" sh -c '
 	unset ICLOUD_HOME
 	. "$1"
 	. "$2"
-	if [ "${ICLOUD_HOME+x}" = x ] || command -v cdic >/dev/null 2>&1 || command -v cddl >/dev/null 2>&1 || command -v cddoc >/dev/null 2>&1; then
+	if [ "${ICLOUD_HOME+x}" = x ] || command -v cdcs >/dev/null 2>&1 || command -v cddb >/dev/null 2>&1 || command -v cdic >/dev/null 2>&1 || command -v cddl >/dev/null 2>&1 || command -v cddoc >/dev/null 2>&1; then
 		exit 1
 	fi
 	printf "%s\n" "iCloud environment and aliases absent"
@@ -114,10 +116,16 @@ mac_cd_output=$(HOME="${icloud_home}" sh -c '
 	printf "%s\n" "${PWD}"
 	cddoc
 	printf "%s\n" "${PWD}"
+	cdcs
+	printf "%s\n" "${PWD}"
+	cddb
+	printf "%s\n" "${PWD}"
 ' sh "${test_root}/configs/bash/profile.d/env.sh" "${test_root}/configs/bash/bashrc.d/cd.sh")
 assert_eq "${mac_cd_output}" "${icloud_drive}
 ${icloud_drive}/Downloads
-${icloud_drive}/Documents"
+${icloud_drive}/Documents
+${cloud_storage}
+${dropbox_dir}"
 
 dotfiles_home="${tmp}/dotfiles home"
 dotfiles_override="${tmp}/custom dotfiles"

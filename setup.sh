@@ -561,7 +561,7 @@ redis_insight_app_installed() {
 
 install_mac_casks() {
 	ensure_brew_taps redis-stack/redis-stack || return $?
-	casks='1password a-better-finder-attributes a-better-finder-rename chatgpt dropbox firefox openwhispr postico redis-stack-server spotify telegram transmission vlc wezterm whatsapp'
+	casks='1password a-better-finder-attributes a-better-finder-rename box-drive chatgpt dropbox firefox openwhispr postico proton-drive redis-stack-server spotify telegram transmission vlc wezterm whatsapp'
 	case "${machine:-}" in
 	dw_macbook_neo) ;;
 	*)
@@ -1111,7 +1111,7 @@ setup_logrotate_config() {
 
 	logrotate_config_dir="$(brew --prefix)/etc/logrotate.d"
 	mkdir -p "${HOME}/Library/Logs" "${logrotate_config_dir}"
-	printf '"%s/Library/Logs/backup.log" {\n\tmissingok\n\tnotifempty\n}\n"%s/Library/Logs/rsync-cloud.log" {\n\tmissingok\n\tnotifempty\n}\n' "${HOME}" "${HOME}" >"${logrotate_config_dir}/dotfiles-backup.conf"
+	printf '"%s/Library/Logs/backups--restic.log" {\n\tmissingok\n\tnotifempty\n}\n"%s/Library/Logs/backups--rsync-cloud.log" {\n\tmissingok\n\tnotifempty\n}\n' "${HOME}" "${HOME}" >"${logrotate_config_dir}/dotfiles-backup.conf"
 }
 
 install_cron_entry() (
@@ -1147,7 +1147,7 @@ setup_backup_cron() (
 
 	brew_prefix=$(brew --prefix)
 	mkdir -p "${HOME}/Library/Caches/dotfiles" "${HOME}/Library/Logs"
-	cron_entry="*/10 * * * * PATH=\"${brew_prefix}/bin:${brew_prefix}/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"${brew_prefix}/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/restic-backup.lock\" \"\$HOME/dotfiles/backups/restic\" >> \"\$HOME/Library/Logs/backup.log\" 2>&1"
+	cron_entry="*/10 * * * * PATH=\"${brew_prefix}/bin:${brew_prefix}/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"${brew_prefix}/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/restic-backup.lock\" \"\$HOME/dotfiles/backups/restic/backup\" >> \"\$HOME/Library/Logs/backups--restic.log\" 2>&1"
 	install_cron_entry "${cron_entry}" "Could not install the restic backup crontab"
 )
 
@@ -1156,7 +1156,7 @@ setup_rsync_cloud_cron() (
 
 	brew_prefix=$(brew --prefix)
 	mkdir -p "${HOME}/Library/Caches/dotfiles" "${HOME}/Library/Logs"
-	cron_entry="0 */4 * * * PATH=\"${brew_prefix}/bin:${brew_prefix}/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"${brew_prefix}/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/rsync-cloud.lock\" \"\$HOME/dotfiles/backups/rsync-cloud\" >> \"\$HOME/Library/Logs/rsync-cloud.log\" 2>&1"
+	cron_entry="0 * * * * PATH=\"${brew_prefix}/bin:${brew_prefix}/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"${brew_prefix}/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/rsync-cloud.lock\" \"\$HOME/dotfiles/backups/rsync-cloud/backup\" >> \"\$HOME/Library/Logs/backups--rsync-cloud.log\" 2>&1"
 	install_cron_entry "${cron_entry}" "Could not install the rsync-cloud crontab"
 )
 

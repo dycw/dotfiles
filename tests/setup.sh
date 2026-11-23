@@ -468,6 +468,8 @@ EOF
 	if ! printf '%s\n' "$(brew list --cask)" | grep -Fqx firefox; then
 		fail_test 'macOS setup should install Firefox when it is missing'
 	fi
+	assert_file_contains 'box-drive' "${BREW_LOG}"
+	assert_file_contains 'proton-drive' "${BREW_LOG}"
 
 	: >"${BREW_LOG}"
 	BREW_CASKS='present-cask'
@@ -1089,12 +1091,12 @@ EOF
 	assert_file_exists "${HOME}/Library/Logs"
 	assert_file_exists "${HOME}/Library/Caches/dotfiles"
 	logrotate_user_config="${BREW_PREFIX}/etc/logrotate.d/dotfiles-backup.conf"
-	assert_file_contains "\"${HOME}/Library/Logs/backup.log\" {" "${logrotate_user_config}"
-	assert_file_contains "\"${HOME}/Library/Logs/rsync-cloud.log\" {" "${logrotate_user_config}"
+	assert_file_contains "\"${HOME}/Library/Logs/backups--restic.log\" {" "${logrotate_user_config}"
+	assert_file_contains "\"${HOME}/Library/Logs/backups--rsync-cloud.log\" {" "${logrotate_user_config}"
 	assert_file_contains 'missingok' "${logrotate_user_config}"
 	assert_file_contains 'notifempty' "${logrotate_user_config}"
-	expected_cron=$(printf "*/10 * * * * PATH=\"%s/bin:%s/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"%s/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/restic-backup.lock\" \"\$HOME/dotfiles/backups/restic\" >> \"\$HOME/Library/Logs/backup.log\" 2>&1" "${BREW_PREFIX}" "${BREW_PREFIX}" "${BREW_PREFIX}")
-	expected_rsync_cloud_cron=$(printf "0 */4 * * * PATH=\"%s/bin:%s/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"%s/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/rsync-cloud.lock\" \"\$HOME/dotfiles/backups/rsync-cloud\" >> \"\$HOME/Library/Logs/rsync-cloud.log\" 2>&1" "${BREW_PREFIX}" "${BREW_PREFIX}" "${BREW_PREFIX}")
+	expected_cron=$(printf "*/10 * * * * PATH=\"%s/bin:%s/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"%s/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/restic-backup.lock\" \"\$HOME/dotfiles/backups/restic/backup\" >> \"\$HOME/Library/Logs/backups--restic.log\" 2>&1" "${BREW_PREFIX}" "${BREW_PREFIX}" "${BREW_PREFIX}")
+	expected_rsync_cloud_cron=$(printf "0 * * * * PATH=\"%s/bin:%s/sbin:/usr/bin:/bin:/usr/sbin:/sbin\" \"%s/bin/flock\" -n \"\$HOME/Library/Caches/dotfiles/rsync-cloud.lock\" \"\$HOME/dotfiles/backups/rsync-cloud/backup\" >> \"\$HOME/Library/Logs/backups--rsync-cloud.log\" 2>&1" "${BREW_PREFIX}" "${BREW_PREFIX}" "${BREW_PREFIX}")
 	assert_file_contains "${expected_cron}" "${CRONTAB_FILE}"
 	assert_file_contains "${expected_rsync_cloud_cron}" "${CRONTAB_FILE}"
 	assert_eq "$(grep -Fc "${expected_cron}" "${CRONTAB_FILE}")" '1'

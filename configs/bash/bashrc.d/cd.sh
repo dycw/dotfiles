@@ -6,6 +6,10 @@ alias ....='cd ../../..'
 cdconfig() { cd "${XDG_CONFIG_HOME:-${HOME}/.config}"; }
 
 if [ "$(uname)" = Darwin ]; then
+	cdcs() { cd "${HOME}/Library/CloudStorage"; }
+
+	cddb() { cd "${HOME}/Library/CloudStorage/Dropbox"; }
+
 	cdic() { cd "${ICLOUD_HOME:-${HOME}/Library/Mobile Documents/com~apple~CloudDocs}"; }
 
 	cddl() { cd "${ICLOUD_HOME:-${HOME}/Library/Mobile Documents/com~apple~CloudDocs}/Downloads"; }

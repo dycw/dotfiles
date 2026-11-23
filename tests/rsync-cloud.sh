@@ -9,7 +9,8 @@ tmp=$(make_temp_dir)
 trap 'cleanup_temp_dir "${tmp}"' EXIT HUP INT TERM
 
 home="${tmp}/home with spaces"
-script_dir="${home}/dotfiles/backups"
+backups_dir="${home}/dotfiles/backups"
+script_dir="${backups_dir}/rsync-cloud"
 fake_bin="${tmp}/fake bin"
 cloud_root="${home}/Library/CloudStorage"
 source_one='Documents/source one – sample'
@@ -26,9 +27,9 @@ mkdir -p \
 	"${cloud_root}/provider two" \
 	"${cloud_root}/provider three" \
 	"${cloud_root}/provider four"
-cp -- "${test_root}/backups/rsync-cloud" "${script_dir}/rsync-cloud"
-cp -- "${test_root}/backups/lib.sh" "${script_dir}/lib.sh"
-chmod +x "${script_dir}/rsync-cloud"
+cp -- "${test_root}/backups/rsync-cloud/backup" "${script_dir}/backup"
+cp -- "${test_root}/backups/lib.sh" "${backups_dir}/lib.sh"
+chmod +x "${script_dir}/backup"
 printf 'first source\n' >"${home}/${source_one}/first sample.txt"
 printf 'second source\n' >"${home}/${source_two}/second sample.txt"
 printf 'not a provider directory\n' >"${cloud_root}/not-a-provider"
@@ -43,6 +44,22 @@ mkdir -p -- "${TEST_STAGING_ROOT}"
 printf '%s\n' "${TEST_STAGING_ROOT}"
 EOF
 chmod +x "${fake_bin}/mktemp"
+
+cat >"${fake_bin}/df" <<'EOF'
+#!/bin/sh
+set -eu
+[ "$#" -eq 2 ] && [ "$1" = -hP ] || exit 2
+printf '%s\n' 'Filesystem Size Used Avail Capacity Mounted on' '/dev/mock 100G 25G 75G 25% /tmp'
+EOF
+chmod +x "${fake_bin}/df"
+
+cat >"${fake_bin}/du" <<'EOF'
+#!/bin/sh
+set -eu
+[ "$#" -eq 2 ] && [ "$1" = -sh ] || exit 2
+printf '12M\t%s\n' "$2"
+EOF
+chmod +x "${fake_bin}/du"
 
 cat >"${fake_bin}/rsync" <<'EOF'
 #!/bin/sh
@@ -80,10 +97,10 @@ run_cloud() {
 		TEST_STAGING_ROOT="${test_stage_root}" \
 		TEST_MKTEMP_FAIL="${TEST_MKTEMP_FAIL:-0}" \
 		TEST_RSYNC_FAIL="${TEST_RSYNC_FAIL:-0}" \
-		"${script_dir}/rsync-cloud" "$@"
+		"${script_dir}/backup" "$@"
 }
 
-sources_file="${script_dir}/rsync-cloud-sources"
+sources_file="${script_dir}/sources"
 cat >"${sources_file}" <<'EOF'
 #!/bin/sh
 
@@ -102,6 +119,9 @@ assert_file_contains "${cloud_root}/provider one/Backup/" "${destinations_log}"
 assert_file_contains "${cloud_root}/provider two/Backup/" "${destinations_log}"
 assert_file_contains "${cloud_root}/provider three/Backup/" "${destinations_log}"
 assert_file_contains "${cloud_root}/provider four/Backup/" "${destinations_log}"
+assert_file_contains 'Temporary filesystem capacity: 100G total, 25G used, 75G available' "${tmp}/success.out"
+assert_eq "$(grep -Fc 'Temporary filesystem capacity:' "${tmp}/success.out")" '2'
+assert_file_contains 'Staged source data size: 12M' "${tmp}/success.out"
 assert_file_contains '2 source directories, 4 cloud storage directories' "${tmp}/success.out"
 assert_file_exists "${cloud_root}/provider one/Backup"
 [ ! -e "${test_stage_root}" ] || fail_test 'staging directory was not cleaned up'
