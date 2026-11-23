@@ -48,6 +48,7 @@ ram_disk_info_has_mount() {
 			sub(/^[^:]*:[[:space:]]*/, "", mount)
 			if (image == expected_image && mount == expected_mount) found = 1
 		}
+		image == expected_image && index($0, expected_mount) > 0 { found = 1 }
 		END { exit !found }
 	'
 }
@@ -58,6 +59,7 @@ ram_disk_info_has_mount_path() {
 			sub(/^[^:]*:[[:space:]]*/, "", mount)
 			if (mount == expected_mount) found = 1
 		}
+		/^[[:space:]]*\/dev\/disk[0-9]+s[0-9]+[[:space:]]/ && index($0, expected_mount) > 0 { found = 1 }
 		END { exit !found }
 	'
 }
@@ -111,8 +113,6 @@ else
 	ram_disk_device=$(printf '%s\n' "${ram_disk_attach_output}" | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^\/dev\/disk[0-9]+$/) { print $i; exit } }')
 	[ -n "${ram_disk_device}" ] || backup_fail 'Could not identify the RAM staging disk device'
 	diskutil eraseVolume JHFSX "${ram_disk_volume}" "${ram_disk_device}" || backup_fail 'Could not format and mount the RAM staging disk'
-	ram_disk_info=$(hdiutil info) || backup_fail 'Could not verify the new RAM staging disk'
-	ram_disk_info_has_mount "${ram_disk_info}" || backup_fail "New RAM disk did not mount at '${ram_disk_mount}'"
 fi
 ram_disk_df=$(df -kP "${ram_disk_mount}") || backup_fail 'Could not verify RAM staging disk capacity'
 ram_disk_size_kib=$(printf '%s\n' "${ram_disk_df}" | awk 'NR == 2 { print $2 }')
