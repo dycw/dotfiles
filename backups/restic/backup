@@ -8,13 +8,6 @@ script_dir=$(dirname -- "$(realpath -- "$0")")
 backup_reject_args "$@"
 backup_load_env "${script_dir}/.env" || exit 1
 
-run_restic_forget() {
-	restic forget --group-by '' --keep-last 100 \
-		--keep-within-hourly 7d --keep-within-daily 1m \
-		--keep-within-weekly 1y --keep-within-monthly 5y \
-		--keep-within-yearly 10y --prune --repack-uncompressed
-}
-
 restic_forget_with_stale_lock_recovery() {
 	if forget_output=$(LC_ALL=C run_restic_forget 2>&1); then
 		if [ -n "${forget_output}" ]; then
@@ -50,6 +43,13 @@ restic_forget_with_stale_lock_recovery() {
 	printf '%s\n' "${forget_output}" >&2
 	restic unlock
 	run_restic_forget
+}
+
+run_restic_forget() {
+	restic forget --group-by '' --keep-last 100 \
+		--keep-within-hourly 7d --keep-within-daily 1m \
+		--keep-within-weekly 1y --keep-within-monthly 5y \
+		--keep-within-yearly 10y --prune --repack-uncompressed
 }
 
 set --

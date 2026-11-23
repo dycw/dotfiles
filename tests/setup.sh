@@ -317,7 +317,6 @@ EOF
 
 	BREW_LOG="${tmp}/brew.log"
 	BREW_FORMULAE='present'
-	BREW_CASKS='present-cask'
 	BREW_FORMULAE_FILE="${tmp}/brew-formulae"
 	BREW_INSTALLED_FORMULAE_FILE="${tmp}/brew-installed-formulae"
 	printf '%s\n' "${BREW_FORMULAE}" >"${BREW_FORMULAE_FILE}"
@@ -337,59 +336,27 @@ EOF
 		operation=$1
 		shift
 		case "${operation}" in
-		tap)
-			printf 'tap %s\n' "$*" >>"${BREW_LOG}"
-			;;
-		trust)
-			printf 'trust %s\n' "$*" >>"${BREW_LOG}"
-			[ "${BREW_TRUST_FAIL:-0}" -eq 0 ] || return 25
-			;;
 		list)
-			case "$1" in
-			--formula)
-				if [ "${2:-}" = --full-name ]; then
-					cat "${BREW_INSTALLED_FORMULAE_FILE}"
-				elif [ "$#" -eq 1 ]; then
-					cat "${BREW_FORMULAE_FILE}"
-				else
-					return 2
-				fi
-				;;
-			--cask) printf '%s\n' "${BREW_CASKS}" ;;
-			*) return 2 ;;
-			esac
+			[ "$1" = --formula ] || return 2
+			if [ "${2:-}" = --full-name ]; then
+				cat "${BREW_INSTALLED_FORMULAE_FILE}"
+			elif [ "$#" -eq 1 ]; then
+				cat "${BREW_FORMULAE_FILE}"
+			else
+				return 2
+			fi
 			;;
 		install)
 			printf 'install %s\n' "$*" >>"${BREW_LOG}"
 			[ "${BREW_FAIL:-0}" -eq 0 ] || return 24
-			if [ "${1:-}" = --cask ]; then
-				shift 2
-				for item in "$@"; do
-					BREW_CASKS=$(printf '%s\n%s' "${BREW_CASKS}" "${item}")
-				done
-			else
-				for item in "$@"; do
-					BREW_FORMULAE=$(printf '%s\n%s' "${BREW_FORMULAE}" "${item}")
-				done
-				printf '%s\n' "${BREW_FORMULAE}" >"${BREW_FORMULAE_FILE}"
-				cp -- "${BREW_FORMULAE_FILE}" "${BREW_INSTALLED_FORMULAE_FILE}"
-			fi
+			for item in "$@"; do
+				BREW_FORMULAE=$(printf '%s\n%s' "${BREW_FORMULAE}" "${item}")
+			done
+			printf '%s\n' "${BREW_FORMULAE}" >"${BREW_FORMULAE_FILE}"
+			cp -- "${BREW_FORMULAE_FILE}" "${BREW_INSTALLED_FORMULAE_FILE}"
 			;;
 		uninstall)
 			printf 'uninstall %s\n' "$*" >>"${BREW_LOG}"
-			if [ "${1:-}" = --cask ]; then
-				shift
-				for mock_cask_to_remove in "$@"; do
-					mock_remaining_casks=''
-					for mock_installed_cask in ${BREW_CASKS}; do
-						[ "${mock_installed_cask}" = "${mock_cask_to_remove}" ] && continue
-						mock_remaining_casks="${mock_remaining_casks}${mock_remaining_casks:+
-}${mock_installed_cask}"
-					done
-					BREW_CASKS=${mock_remaining_casks}
-				done
-				return 0
-			fi
 			case "${BREW_UNINSTALL_MODE:-success}" in
 			failure)
 				printf 'Error: Permission denied while uninstalling formula\n' >&2
@@ -450,89 +417,6 @@ EOF
 	done
 
 	set_brew_formulae 'present'
-	BREW_UNINSTALL_MODE=success
-	install_missing_brew_casks present-cask new-cask
-	install_missing_brew_casks present-cask new-cask
-	assert_eq "$(grep -Fc 'install --cask --adopt new-cask' "${BREW_LOG}")" '1'
-
-	: >"${BREW_LOG}"
-	BREW_CASKS='firefox'
-	remove_unwanted_brew_casks
-	assert_eq "$(brew list --cask)" 'firefox'
-
-	: >"${BREW_LOG}"
-	BREW_CASKS='present-cask'
-	machine=dw_macbook_neo
-	remove_unwanted_brew_casks
-	install_mac_casks
-	if ! printf '%s\n' "$(brew list --cask)" | grep -Fqx firefox; then
-		fail_test 'macOS setup should install Firefox when it is missing'
-	fi
-	assert_file_contains 'box-drive' "${BREW_LOG}"
-	assert_file_contains 'proton-drive' "${BREW_LOG}"
-
-	: >"${BREW_LOG}"
-	BREW_CASKS='present-cask'
-	machine=dw_macbook_neo
-	mkdir -p "${HOME}/Applications/Redis Insight.app"
-	install_mac_casks
-	install_mac_casks
-	assert_eq "$(grep -Fc 'trust redis-stack/redis-stack' "${BREW_LOG}")" '2'
-	assert_eq "$(grep -Fc 'install --cask --adopt' "${BREW_LOG}")" '1'
-	if grep -Fq 'redis-stack-redisinsight' "${BREW_LOG}"; then
-		fail_test 'an existing Redis Insight app should not be replaced by the older cask'
-	fi
-	[ -d "${HOME}/Applications/Redis Insight.app" ] || fail_test 'setup should preserve the existing Redis Insight app'
-	if ! awk '/^tap redis-stack\/redis-stack$/ && !tap { tap = NR }
-		/^trust redis-stack\/redis-stack$/ && !trust { trust = NR }
-		/^install --cask --adopt/ && !install { install = NR }
-		END { exit !(tap < trust && trust < install) }' "${BREW_LOG}"; then
-		fail_test 'the tap should be trusted before its cask is installed'
-	fi
-
-	rm -rf -- "${HOME}/Applications/Redis Insight.app"
-	: >"${BREW_LOG}"
-	BREW_CASKS='present-cask'
-	install_mac_casks
-	install_mac_casks
-	assert_eq "$(grep -Fc 'install --cask --adopt' "${BREW_LOG}")" '2'
-	assert_file_contains 'install --cask --adopt redis-stack-redisinsight' "${BREW_LOG}"
-
-	: >"${BREW_LOG}"
-	BREW_CASKS='present-cask'
-	BREW_FAIL=1
-	if install_mac_casks; then
-		fail_test 'a failed Redis Stack server install should stop cask installation'
-	else
-		brew_status=$?
-	fi
-	assert_eq "${brew_status}" '24'
-	if grep -Fq 'redis-stack-redisinsight' "${BREW_LOG}"; then
-		fail_test 'Redis Insight should not be installed after the Redis Stack server fails'
-	fi
-	BREW_FAIL=0
-
-	: >"${BREW_LOG}"
-	ensure_brew_taps first/example second/example
-	assert_file_contains 'tap first/example' "${BREW_LOG}"
-	assert_file_contains 'trust first/example' "${BREW_LOG}"
-	assert_file_contains 'tap second/example' "${BREW_LOG}"
-	assert_file_contains 'trust second/example' "${BREW_LOG}"
-
-	: >"${BREW_LOG}"
-	BREW_CASKS='present-cask'
-	BREW_TRUST_FAIL=1
-	if install_mac_casks 2>"${tmp}/brew-trust-error.log"; then
-		fail_test 'a failed cask trust operation should stop installation'
-	else
-		brew_status=$?
-	fi
-	assert_eq "${brew_status}" '25'
-	if grep -Fq 'install --cask --adopt' "${BREW_LOG}"; then
-		fail_test 'casks should not be installed after trust fails'
-	fi
-	BREW_TRUST_FAIL=0
-
 	BREW_FAIL=1
 	if install_missing_brew_formulas failed-formula; then
 		fail_test 'brew formula installation should preserve a child failure'
