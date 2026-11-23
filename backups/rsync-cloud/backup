@@ -37,26 +37,20 @@ ram_disk_mount="/Volumes/${ram_disk_volume}"
 ram_disk_device=''
 ram_disk_ready=0
 staging_root=''
-ram_disk_info_has_mount() {
-	printf '%s\n' "$1" | awk -v expected_image="${ram_disk_image}" -v expected_mount="${ram_disk_mount}" '
+ram_disk_info_has_device() {
+	printf '%s\n' "$1" | awk -v expected_image="${ram_disk_image}" -v expected_device="$2" '
 		/^[[:space:]]*image-path[[:space:]]*:/ {
 			image = $0
 			sub(/^[^:]*:[[:space:]]*/, "", image)
 		}
-		/^[[:space:]]*mount-point[[:space:]]*:/ {
-			mount = $0
-			sub(/^[^:]*:[[:space:]]*/, "", mount)
-			if (image == expected_image && mount == expected_mount) found = 1
-		}
-		END { exit !found }
-	'
-}
-ram_disk_info_has_mount_path() {
-	printf '%s\n' "$1" | awk -v expected_mount="${ram_disk_mount}" '
-		/^[[:space:]]*mount-point[[:space:]]*:/ {
-			mount = $0
-			sub(/^[^:]*:[[:space:]]*/, "", mount)
-			if (mount == expected_mount) found = 1
+		image == expected_image {
+			device = $1
+			if (device == expected_device || device ~ ("^" expected_device "s[0-9]+$")) found = 1
+			if ($1 == "dev-entry" || $1 == "dev-entry:") {
+				entry = $0
+				sub(/^[^:]*:[[:space:]]*/, "", entry)
+				if (entry == expected_device || entry ~ ("^" expected_device "s[0-9]+$")) found = 1
+			}
 		}
 		END { exit !found }
 	'
@@ -98,9 +92,17 @@ trap 'exit 130' INT
 trap 'exit 143' TERM
 
 ram_disk_info=$(hdiutil info) || backup_fail 'Could not inspect the fixed RAM staging disk'
-if ram_disk_info_has_mount_path "${ram_disk_info}" && ! ram_disk_info_has_mount "${ram_disk_info}"; then
-	backup_fail "Refusing to clear a non-4-GiB RAM volume at '${ram_disk_mount}'"
-elif ram_disk_info_has_mount "${ram_disk_info}"; then
+ram_disk_existing=0
+if ram_disk_df=$(df -kP "${ram_disk_mount}" 2>/dev/null); then
+	ram_disk_mount_reported=$(printf '%s\n' "${ram_disk_df}" | awk 'NR == 2 { print $NF }')
+	if [ "${ram_disk_mount_reported}" = "${ram_disk_mount}" ]; then
+		ram_disk_fs_device=$(printf '%s\n' "${ram_disk_df}" | awk 'NR == 2 { print $1 }')
+		ram_disk_whole_device=$(printf '%s\n' "${ram_disk_fs_device}" | sed 's/s[0-9][0-9]*$//')
+		ram_disk_info_has_device "${ram_disk_info}" "${ram_disk_whole_device}" || backup_fail "Refusing to clear unrecognized volume at '${ram_disk_mount}'"
+		ram_disk_existing=1
+	fi
+fi
+if [ "${ram_disk_existing}" -eq 1 ]; then
 	backup_log "Using existing 4 GiB RAM staging disk at '${ram_disk_mount}'"
 else
 	if [ -e "${ram_disk_mount}" ] || [ -L "${ram_disk_mount}" ]; then
@@ -111,10 +113,13 @@ else
 	ram_disk_device=$(printf '%s\n' "${ram_disk_attach_output}" | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^\/dev\/disk[0-9]+$/) { print $i; exit } }')
 	[ -n "${ram_disk_device}" ] || backup_fail 'Could not identify the RAM staging disk device'
 	diskutil eraseVolume JHFSX "${ram_disk_volume}" "${ram_disk_device}" || backup_fail 'Could not format and mount the RAM staging disk'
-	ram_disk_info=$(hdiutil info) || backup_fail 'Could not verify the new RAM staging disk'
-	ram_disk_info_has_mount "${ram_disk_info}" || backup_fail "New RAM disk did not mount at '${ram_disk_mount}'"
+	ram_disk_df=$(df -kP "${ram_disk_mount}") || backup_fail 'Could not verify the mounted RAM staging disk'
+	ram_disk_mount_reported=$(printf '%s\n' "${ram_disk_df}" | awk 'NR == 2 { print $NF }')
+	[ "${ram_disk_mount_reported}" = "${ram_disk_mount}" ] || backup_fail "RAM disk did not mount at '${ram_disk_mount}'"
+	ram_disk_fs_device=$(printf '%s\n' "${ram_disk_df}" | awk 'NR == 2 { print $1 }')
+	ram_disk_whole_device=$(printf '%s\n' "${ram_disk_fs_device}" | sed 's/s[0-9][0-9]*$//')
+	[ "${ram_disk_whole_device}" = "${ram_disk_device}" ] || backup_fail 'RAM staging mount does not match the new RAM disk device'
 fi
-ram_disk_df=$(df -kP "${ram_disk_mount}") || backup_fail 'Could not verify RAM staging disk capacity'
 ram_disk_size_kib=$(printf '%s\n' "${ram_disk_df}" | awk 'NR == 2 { print $2 }')
 case "${ram_disk_size_kib}" in
 '' | *[!0-9]*) backup_fail 'Could not determine RAM staging disk size' ;;
