@@ -22,7 +22,9 @@ mktemp_log="${tmp}/mktemp.log"
 sleep_log="${tmp}/sleep.log"
 hdiutil_log="${tmp}/hdiutil.log"
 diskutil_log="${tmp}/diskutil.log"
-ramdisk_volume_file="${tmp}/ramdisk-volume"
+ramdisk_state_file="${tmp}/ramdisk-state"
+ramdisk_test_volume="rsync-cloud-test-${$}"
+ramdisk_mount="/Volumes/${ramdisk_test_volume}"
 provider_fail_marker="${tmp}/provider-rsync-failed"
 mkdir -p \
 	"${script_dir}" \
@@ -47,12 +49,19 @@ cat >"${fake_bin}/hdiutil" <<'EOF'
 set -eu
 printf '%s\n' "$*" >>"${TEST_HDIUTIL_LOG}"
 case "$1" in
+info)
+	[ "$#" -eq 1 ] || exit 2
+	if [ -f "${TEST_RAMDISK_STATE_FILE}" ]; then
+		cat "${TEST_RAMDISK_STATE_FILE}"
+	fi
+	;;
 attach)
 	[ "$#" -eq 3 ] && [ "$2" = -nomount ] && [ "$3" = ram://8388608 ] || exit 2
 	printf '%s\n' /dev/disk42
 	;;
 detach)
 	[ "$#" -eq 2 ] && [ "$2" = /dev/disk42 ] || exit 2
+	/bin/rm -f -- "${TEST_RAMDISK_STATE_FILE}"
 	;;
 *) exit 2 ;;
 esac
@@ -63,8 +72,8 @@ cat >"${fake_bin}/diskutil" <<'EOF'
 #!/bin/sh
 set -eu
 printf '%s\n' "$*" >>"${TEST_DISKUTIL_LOG}"
-[ "$#" -eq 4 ] && [ "$1" = eraseVolume ] && [ "$2" = JHFSX ] && [ "$4" = /dev/disk42 ] || exit 2
-printf '%s\n' "$3" >"${TEST_RAMDISK_VOLUME_FILE}"
+[ "$#" -eq 4 ] && [ "$1" = eraseVolume ] && [ "$2" = JHFSX ] && [ "$3" = "${TEST_RAMDISK_VOLUME}" ] && [ "$4" = /dev/disk42 ] || exit 2
+printf 'image-path : ram://8388608\ndev-entry : /dev/disk42\nmount-point : %s\n' "${TEST_RAMDISK_MOUNT}" >"${TEST_RAMDISK_STATE_FILE}"
 EOF
 chmod +x "${fake_bin}/diskutil"
 
@@ -73,25 +82,34 @@ cat >"${fake_bin}/mktemp" <<'EOF'
 set -eu
 printf 'mktemp %s\n' "$*" >>"${TEST_MKTEMP_LOG}"
 [ "$#" -eq 2 ] && [ "$1" = -d ] || exit 2
-volume_name=$(cat "${TEST_RAMDISK_VOLUME_FILE}")
-[ "$2" = "/Volumes/${volume_name}/rsync-cloud.XXXXXX" ] || exit 2
+[ "$2" = "${TEST_RAMDISK_MOUNT}/rsync-cloud.XXXXXX" ] || exit 2
 [ "${TEST_MKTEMP_FAIL:-0}" -eq 0 ] || exit 18
 mkdir -p -- "${TEST_STAGING_ROOT}"
 printf '%s\n' "${TEST_STAGING_ROOT}"
 EOF
 chmod +x "${fake_bin}/mktemp"
 
+cat >"${fake_bin}/rm" <<'EOF'
+#!/bin/sh
+set -eu
+case "$*" in
+*"${TEST_RAMDISK_MOUNT}/"*) exit 0 ;;
+esac
+exec /bin/rm "$@"
+EOF
+chmod +x "${fake_bin}/rm"
+
 cat >"${fake_bin}/df" <<'EOF'
 #!/bin/sh
 set -eu
 [ "$#" -eq 2 ] || exit 2
 case "$1" in
--h) printf '%s\n' 'Filesystem Size Used Avail Capacity Mounted on' '/dev/mock 4.0G 1.0M 3.9G 1% /Volumes/ramdisk' ;;
+-h) printf '%s\n' 'Filesystem Size Used Avail Capacity Mounted on' "/dev/mock 4.0G 1.0M 3.9G 1% ${TEST_RAMDISK_MOUNT}" ;;
 -kP)
 	if [ "${TEST_DF_FULL:-0}" -eq 1 ]; then
-		printf '%s\n' 'Filesystem 1024-blocks Used Available Capacity Mounted on' '/dev/mock 4194304 4194304 0 100% /Volumes/ramdisk'
+		printf '%s\n' 'Filesystem 1024-blocks Used Available Capacity Mounted on' "/dev/mock 4194304 4194304 0 100% ${TEST_RAMDISK_MOUNT}"
 	else
-		printf '%s\n' 'Filesystem 1024-blocks Used Available Capacity Mounted on' '/dev/mock 4194304 1024 4193280 1% /Volumes/ramdisk'
+		printf '%s\n' 'Filesystem 1024-blocks Used Available Capacity Mounted on' "/dev/mock 4194304 1024 4193280 1% ${TEST_RAMDISK_MOUNT}"
 	fi
 	;;
 *) exit 2 ;;
@@ -161,13 +179,16 @@ run_cloud() {
 		PATH="${fake_bin}:${PATH}" \
 		HOME="${home}" \
 		TEST_DESTINATIONS_LOG="${destinations_log}" \
+		RSYNC_CLOUD_RAMDISK_VOLUME="${ramdisk_test_volume}" \
 		TEST_DF_FULL="${TEST_DF_FULL:-0}" \
 		TEST_DISKUTIL_LOG="${diskutil_log}" \
 		TEST_HDIUTIL_LOG="${hdiutil_log}" \
 		TEST_MKTEMP_LOG="${mktemp_log}" \
+		TEST_RAMDISK_MOUNT="${ramdisk_mount}" \
+		TEST_RAMDISK_STATE_FILE="${ramdisk_state_file}" \
+		TEST_RAMDISK_VOLUME="${ramdisk_test_volume}" \
 		TEST_PROVIDER_FAIL_MARKER="${provider_fail_marker}" \
 		TEST_PROVIDER_FAIL_ONCE="${TEST_PROVIDER_FAIL_ONCE:-0}" \
-		TEST_RAMDISK_VOLUME_FILE="${ramdisk_volume_file}" \
 		TEST_RSYNC_FAIL_COUNT="${TEST_RSYNC_FAIL_COUNT:-0}" \
 		TEST_RSYNC_LOG="${rsync_log}" \
 		TEST_SLEEP_LOG="${sleep_log}" \
@@ -188,10 +209,10 @@ test_stage_root="${tmp}/stage success"
 : >"${destinations_log}"
 : >"${mktemp_log}"
 run_cloud >"${tmp}/success.out" 2>"${tmp}/success.err"
-assert_file_contains 'mktemp -d /Volumes/rsync-cloud-' "${mktemp_log}"
+assert_file_contains 'mktemp -d /Volumes/rsync-cloud-test-' "${mktemp_log}"
 assert_file_contains 'attach -nomount ram://8388608' "${hdiutil_log}"
-assert_file_contains 'detach /dev/disk42' "${hdiutil_log}"
-assert_file_contains 'eraseVolume JHFSX rsync-cloud-' "${diskutil_log}"
+assert_file_contains 'eraseVolume JHFSX rsync-cloud-test-' "${diskutil_log}"
+assert_eq "$(grep -Fc 'attach -nomount ram://8388608' "${hdiutil_log}")" '1'
 assert_eq "$(grep -Fc '<call>' "${rsync_log}")" '7'
 assert_eq "$(grep -Fc -- '--delete' "${rsync_log}")" '7'
 assert_file_contains "${cloud_root}/provider one/Backup/" "${destinations_log}"
@@ -298,6 +319,18 @@ assert_file_contains 'Could not create a staging directory' "${tmp}/mktemp-failu
 : >"${rsync_log}"
 : >"${destinations_log}"
 : >"${mktemp_log}"
+printf 'image-path : ram://4194304\ndev-entry : /dev/disk42\nmount-point : %s\n' "${ramdisk_mount}" >"${ramdisk_state_file}"
+if run_cloud >"${tmp}/wrong-ramdisk.out" 2>"${tmp}/wrong-ramdisk.err"; then
+	fail_test 'a wrong-sized mounted RAM disk should be rejected'
+fi
+assert_file_contains 'Refusing to clear a non-4-GiB RAM volume' "${tmp}/wrong-ramdisk.err"
+assert_file_contains 'image-path : ram://4194304' "${ramdisk_state_file}"
+[ ! -s "${rsync_log}" ] || fail_test 'rsync ran with an invalid RAM disk'
+[ ! -s "${destinations_log}" ] || fail_test 'cloud destinations were touched with an invalid RAM disk'
+
+: >"${rsync_log}"
+: >"${destinations_log}"
+: >"${mktemp_log}"
 if run_cloud unexpected-argument >"${tmp}/arguments.out" 2>"${tmp}/arguments.err"; then
 	fail_test 'rsync-cloud should reject arguments'
 else
@@ -308,4 +341,6 @@ assert_file_contains 'This command does not accept arguments' "${tmp}/arguments.
 [ ! -s "${rsync_log}" ] || fail_test 'rsync-cloud should reject arguments before running rsync'
 [ ! -s "${destinations_log}" ] || fail_test 'rsync-cloud should reject arguments before syncing destinations'
 [ ! -s "${mktemp_log}" ] || fail_test 'rsync-cloud should reject arguments before staging'
-assert_eq "$(grep -Fc 'attach -nomount ram://8388608' "${hdiutil_log}")" "$(grep -Fc 'detach /dev/disk42' "${hdiutil_log}")"
+assert_eq "$(grep -Fc 'attach -nomount ram://8388608' "${hdiutil_log}")" '1'
+assert_eq "$(grep -Fc 'detach /dev/disk42' "${hdiutil_log}")" '0'
+assert_eq "$(grep -Fc 'eraseVolume JHFSX' "${diskutil_log}")" '1'
