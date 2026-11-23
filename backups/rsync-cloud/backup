@@ -37,7 +37,7 @@ trap 'exit 130' INT
 trap 'exit 143' TERM
 
 log_staging_capacity() {
-	if staging_df=$(df -hP "${staging_root}"); then
+	if staging_df=$(df -h "${staging_root}"); then
 		staging_capacity=$(printf '%s\n' "${staging_df}" | awk 'NR == 2 { printf "%s total, %s used, %s available", $2, $3, $4 }')
 	else
 		staging_capacity=''
@@ -49,31 +49,79 @@ log_staging_capacity() {
 	fi
 }
 
+# Retry indefinitely; cap the delay so persistent failures do not cause a busy loop.
+rsync_with_retry() {
+	retry_delay=1
+	retry_attempt=1
+	while :; do
+		if rsync "$@"; then
+			return 0
+		else
+			rsync_status=$?
+		fi
+		backup_log_error "rsync attempt ${retry_attempt} failed with status ${rsync_status}; retrying in ${retry_delay}s"
+		sleep "${retry_delay}"
+		if [ "${retry_delay}" -lt 300 ]; then
+			retry_delay=$((retry_delay * 2))
+			[ "${retry_delay}" -le 300 ] || retry_delay=300
+		fi
+		retry_attempt=$((retry_attempt + 1))
+	done
+}
+
 log_staging_capacity
 source_count=0
 source_path=''
 while IFS= read -r source_path || [ -n "${source_path}" ]; do
-	case "${source_path}" in
+	source_pattern=${source_path}
+	case "${source_pattern}" in
 	'' | \#*) continue ;;
-	\~/*) source_path="${home}/${source_path#\~/}" ;;
+	\~/*) source_pattern="${home}/${source_pattern#\~/}" ;;
 	/*) ;;
-	*) backup_fail "Source must be an absolute path or begin with ~/: '${source_path}'" ;;
+	*) backup_fail "Source must be an absolute path or begin with ~/: '${source_pattern}'" ;;
+	esac
+	case "${source_pattern}" in
+	"${home}"/*) ;;
+	"${home}") backup_fail "Source must be inside HOME, not HOME itself: '${source_pattern}'" ;;
+	*) backup_fail "Source must be inside HOME: '${source_pattern}'" ;;
 	esac
 
-	if ! absolute_source=$(CDPATH='' cd -- "${source_path}" && pwd -P); then
-		backup_fail "Source directory does not exist or cannot be read: '${source_path}'"
-	fi
-	case "${absolute_source}" in
-	"${home}"/*) relative_source=${absolute_source#"${home}"/} ;;
-	"${home}") backup_fail "Source must be inside HOME, not HOME itself: '${source_path}'" ;;
-	*) backup_fail "Source must be inside HOME: '${source_path}'" ;;
+	pattern_ifs=${IFS}
+	IFS='
+'
+	# shellcheck disable=SC2086
+	set -- ${source_pattern}
+	IFS=${pattern_ifs}
+	case "${source_pattern}" in
+	*'*'* | *'?'* | *'['*)
+		if [ "$#" -eq 1 ] && [ "$1" = "${source_pattern}" ] && [ ! -e "$1" ]; then
+			backup_fail "Source pattern did not match any paths: '${source_pattern}'"
+		fi
+		;;
 	esac
 
-	staged_source="${staging_root}/${relative_source}"
-	mkdir -p -- "${staged_source}"
-	backup_log "Staging '${absolute_source}' at '${staged_source}'..."
-	rsync -a -- "${absolute_source}/" "${staged_source}/"
-	source_count=$((source_count + 1))
+	for source_match do
+		if [ ! -e "${source_match}" ]; then
+			backup_fail "Source directory does not exist: '${source_match}'"
+		fi
+		if [ ! -d "${source_match}" ]; then
+			backup_fail "Source match is not a directory: '${source_match}'"
+		fi
+		if ! absolute_source=$(CDPATH='' cd -- "${source_match}" && pwd -P); then
+			backup_fail "Source directory cannot be read: '${source_match}'"
+		fi
+		case "${absolute_source}" in
+		"${home}"/*) relative_source=${absolute_source#"${home}"/} ;;
+		"${home}") backup_fail "Source must be inside HOME, not HOME itself: '${source_match}'" ;;
+		*) backup_fail "Source must be inside HOME: '${source_match}'" ;;
+		esac
+
+		staged_source="${staging_root}/${relative_source}"
+		mkdir -p -- "${staged_source}"
+		backup_log "Staging '${absolute_source}' at '${staged_source}'..."
+		rsync_with_retry -a --delete -- "${absolute_source}/" "${staged_source}/"
+		source_count=$((source_count + 1))
+	done
 done <"${sources_file}"
 [ "${source_count}" -gt 0 ] || backup_fail "No source directories configured in '${sources_file}'"
 if du_output=$(du -sh "${staging_root}"); then
@@ -93,7 +141,7 @@ for cloud_storage in "${cloud_storage_root}"/*; do
 	destination="${cloud_storage}/Backup"
 	mkdir -p -- "${destination}"
 	backup_log "Synchronizing to '${destination}'..."
-	rsync -a --delete -- "${staging_root}/" "${destination}/"
+	rsync_with_retry -a --delete -- "${staging_root}/" "${destination}/"
 done
 
 backup_log "Cloud synchronization complete (${source_count} source directories, ${cloud_storage_count} cloud storage directories)"

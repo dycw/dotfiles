@@ -15,14 +15,18 @@ fake_bin="${tmp}/fake bin"
 cloud_root="${home}/Library/CloudStorage"
 source_one='Documents/source one – sample'
 source_two='Documents/source two – sample'
+source_three='Documents/absolute source – sample'
 rsync_log="${tmp}/rsync.log"
 destinations_log="${tmp}/destinations.log"
 mktemp_log="${tmp}/mktemp.log"
+sleep_log="${tmp}/sleep.log"
+provider_fail_marker="${tmp}/provider-rsync-failed"
 mkdir -p \
 	"${script_dir}" \
 	"${fake_bin}" \
 	"${home}/${source_one}" \
 	"${home}/${source_two}" \
+	"${home}/${source_three}" \
 	"${cloud_root}/provider one" \
 	"${cloud_root}/provider two" \
 	"${cloud_root}/provider three" \
@@ -32,6 +36,7 @@ cp -- "${test_root}/backups/lib.sh" "${backups_dir}/lib.sh"
 chmod +x "${script_dir}/backup"
 printf 'first source\n' >"${home}/${source_one}/first sample.txt"
 printf 'second source\n' >"${home}/${source_two}/second sample.txt"
+printf 'absolute source\n' >"${home}/${source_three}/absolute sample.txt"
 printf 'not a provider directory\n' >"${cloud_root}/not-a-provider"
 
 cat >"${fake_bin}/mktemp" <<'EOF'
@@ -48,7 +53,7 @@ chmod +x "${fake_bin}/mktemp"
 cat >"${fake_bin}/df" <<'EOF'
 #!/bin/sh
 set -eu
-[ "$#" -eq 2 ] && [ "$1" = -hP ] || exit 2
+[ "$#" -eq 2 ] && [ "$1" = -h ] || exit 2
 printf '%s\n' 'Filesystem Size Used Avail Capacity Mounted on' '/dev/mock 100G 25G 75G 25% /tmp'
 EOF
 chmod +x "${fake_bin}/df"
@@ -61,6 +66,14 @@ printf '12M\t%s\n' "$2"
 EOF
 chmod +x "${fake_bin}/du"
 
+cat >"${fake_bin}/sleep" <<'EOF'
+#!/bin/sh
+set -eu
+[ "$#" -eq 1 ] || exit 2
+printf '%s\n' "$1" >>"${TEST_SLEEP_LOG}"
+EOF
+chmod +x "${fake_bin}/sleep"
+
 cat >"${fake_bin}/rsync" <<'EOF'
 #!/bin/sh
 set -eu
@@ -69,20 +82,35 @@ for argument do
 	printf '%s\n' "${argument}" >>"${TEST_RSYNC_LOG}"
 done
 printf '%s\n' '</call>' >>"${TEST_RSYNC_LOG}"
-[ "${TEST_RSYNC_FAIL:-0}" -eq 0 ] || exit 17
-if [ "$#" -eq 4 ] && [ "$1" = -a ] && [ "$2" = -- ]; then
-	source=$3
-	destination=$4
+[ "$#" -eq 5 ] && [ "$1" = -a ] && [ "$2" = --delete ] && [ "$3" = -- ] || exit 13
+source=$4
+destination=$5
+case "${destination}" in
+"${TEST_STAGING_ROOT}"/*) staging=1 ;;
+*) staging=0 ;;
+esac
+call_count=$(grep -Fc '<call>' "${TEST_RSYNC_LOG}")
+if [ "${call_count}" -le "${TEST_RSYNC_FAIL_COUNT}" ]; then
+	if [ "${staging}" -eq 1 ]; then
+		mkdir -p -- "${destination}"
+		printf 'partial attempt\n' >"${destination}/partial attempt.txt"
+	fi
+	exit 17
+fi
+if [ "${staging}" -eq 1 ]; then
+	rm -f -- "${destination}/partial attempt.txt"
 	mkdir -p -- "${destination}"
 	cp -R "${source}." "${destination}"
-elif [ "$#" -eq 5 ] && [ "$1" = -a ] && [ "$2" = --delete ] && [ "$3" = -- ]; then
-	source=$4
-	destination=$5
+else
 	[ -f "${source}Documents/source one – sample/first sample.txt" ] || exit 11
 	[ -f "${source}Documents/source two – sample/second sample.txt" ] || exit 12
+	[ -f "${source}Documents/absolute source – sample/absolute sample.txt" ] || exit 14
+	[ ! -e "${source}Documents/source one – sample/partial attempt.txt" ] || exit 15
+	if [ "${TEST_PROVIDER_FAIL_ONCE}" -eq 1 ] && [ ! -e "${TEST_PROVIDER_FAIL_MARKER}" ]; then
+		: >"${TEST_PROVIDER_FAIL_MARKER}"
+		exit 19
+	fi
 	printf '%s\n' "${destination}" >>"${TEST_DESTINATIONS_LOG}"
-else
-	exit 13
 fi
 EOF
 chmod +x "${fake_bin}/rsync"
@@ -93,10 +121,13 @@ run_cloud() {
 		HOME="${home}" \
 		TEST_DESTINATIONS_LOG="${destinations_log}" \
 		TEST_MKTEMP_LOG="${mktemp_log}" \
+		TEST_PROVIDER_FAIL_MARKER="${provider_fail_marker}" \
+		TEST_PROVIDER_FAIL_ONCE="${TEST_PROVIDER_FAIL_ONCE:-0}" \
+		TEST_RSYNC_FAIL_COUNT="${TEST_RSYNC_FAIL_COUNT:-0}" \
 		TEST_RSYNC_LOG="${rsync_log}" \
+		TEST_SLEEP_LOG="${sleep_log}" \
 		TEST_STAGING_ROOT="${test_stage_root}" \
 		TEST_MKTEMP_FAIL="${TEST_MKTEMP_FAIL:-0}" \
-		TEST_RSYNC_FAIL="${TEST_RSYNC_FAIL:-0}" \
 		"${script_dir}/backup" "$@"
 }
 
@@ -104,17 +135,17 @@ sources_file="${script_dir}/sources"
 cat >"${sources_file}" <<'EOF'
 #!/bin/sh
 
-~/Documents/source one – sample
+~/Documents/source * – sample
 EOF
-printf '%s\n' "${home}/Documents/source two – sample" >>"${sources_file}"
+printf '%s\n' "${home}/${source_three}" >>"${sources_file}"
 test_stage_root="${tmp}/stage success"
 : >"${rsync_log}"
 : >"${destinations_log}"
 : >"${mktemp_log}"
 run_cloud >"${tmp}/success.out" 2>"${tmp}/success.err"
 assert_file_contains 'mktemp -d /tmp/rsync-cloud.XXXXXX' "${mktemp_log}"
-assert_eq "$(grep -Fc '<call>' "${rsync_log}")" '6'
-assert_eq "$(grep -Fc -- '--delete' "${rsync_log}")" '4'
+assert_eq "$(grep -Fc '<call>' "${rsync_log}")" '7'
+assert_eq "$(grep -Fc -- '--delete' "${rsync_log}")" '7'
 assert_file_contains "${cloud_root}/provider one/Backup/" "${destinations_log}"
 assert_file_contains "${cloud_root}/provider two/Backup/" "${destinations_log}"
 assert_file_contains "${cloud_root}/provider three/Backup/" "${destinations_log}"
@@ -122,7 +153,7 @@ assert_file_contains "${cloud_root}/provider four/Backup/" "${destinations_log}"
 assert_file_contains 'Temporary filesystem capacity: 100G total, 25G used, 75G available' "${tmp}/success.out"
 assert_eq "$(grep -Fc 'Temporary filesystem capacity:' "${tmp}/success.out")" '2'
 assert_file_contains 'Staged source data size: 12M' "${tmp}/success.out"
-assert_file_contains '2 source directories, 4 cloud storage directories' "${tmp}/success.out"
+assert_file_contains '3 source directories, 4 cloud storage directories' "${tmp}/success.out"
 assert_file_exists "${cloud_root}/provider one/Backup"
 [ ! -e "${test_stage_root}" ] || fail_test 'staging directory was not cleaned up'
 
@@ -138,28 +169,51 @@ if run_cloud >"${tmp}/missing.out" 2>"${tmp}/missing.err"; then
 fi
 assert_file_contains 'Source directory does not exist' "${tmp}/missing.err"
 [ ! -s "${destinations_log}" ] || fail_test 'cloud destinations were touched with a missing source'
-if grep -F -- '--delete' "${rsync_log}" >/dev/null; then
-	fail_test 'cloud synchronization ran with a missing source'
-fi
 [ ! -e "${test_stage_root}" ] || fail_test 'failed staging directory was not cleaned up'
 
 : >"${rsync_log}"
 : >"${destinations_log}"
-test_stage_root="${tmp}/stage child failure"
+test_stage_root="${tmp}/stage unmatched pattern"
 cat >"${sources_file}" <<'EOF'
-~/Documents/source one – sample
+~/Documents/missing-*
 EOF
-TEST_RSYNC_FAIL=1
-export TEST_RSYNC_FAIL
-if run_cloud >"${tmp}/child-failure.out" 2>"${tmp}/child-failure.err"; then
-	fail_test 'rsync failures should fail the cloud backup'
+if run_cloud >"${tmp}/unmatched-pattern.out" 2>"${tmp}/unmatched-pattern.err"; then
+	fail_test 'unmatched source patterns should stop synchronization'
 fi
-TEST_RSYNC_FAIL=0
-export TEST_RSYNC_FAIL
-[ ! -s "${destinations_log}" ] || fail_test 'cloud destinations were touched after a staging rsync failure'
-[ ! -e "${test_stage_root}" ] || fail_test 'failed rsync staging directory was not cleaned up'
+assert_file_contains 'Source pattern did not match any paths' "${tmp}/unmatched-pattern.err"
+[ ! -s "${destinations_log}" ] || fail_test 'cloud destinations were touched with an unmatched pattern'
+if grep -F -- '--delete' "${rsync_log}" >/dev/null; then
+	fail_test 'cloud synchronization ran with an unmatched source pattern'
+fi
+[ ! -e "${test_stage_root}" ] || fail_test 'unmatched-pattern staging directory was not cleaned up'
 
 : >"${rsync_log}"
+: >"${destinations_log}"
+: >"${sleep_log}"
+test_stage_root="${tmp}/stage retry"
+cat >"${sources_file}" <<'EOF'
+~/Documents/source * – sample
+EOF
+printf '%s\n' "${home}/${source_three}" >>"${sources_file}"
+TEST_RSYNC_FAIL_COUNT=11
+TEST_PROVIDER_FAIL_ONCE=1
+export TEST_RSYNC_FAIL_COUNT TEST_PROVIDER_FAIL_ONCE
+run_cloud >"${tmp}/retry.out" 2>"${tmp}/retry.err"
+TEST_RSYNC_FAIL_COUNT=0
+TEST_PROVIDER_FAIL_ONCE=0
+export TEST_RSYNC_FAIL_COUNT TEST_PROVIDER_FAIL_ONCE
+expected_retry_delays=$(printf '1\n2\n4\n8\n16\n32\n64\n128\n256\n300\n300\n1')
+assert_eq "$(cat "${sleep_log}")" "${expected_retry_delays}"
+assert_eq "$(grep -Fc '<call>' "${rsync_log}")" '19'
+assert_eq "$(grep -Fc -- '--delete' "${rsync_log}")" '19'
+assert_file_contains 'retrying in 1s' "${tmp}/retry.err"
+assert_file_contains 'retrying in 300s' "${tmp}/retry.err"
+assert_file_contains '3 source directories, 4 cloud storage directories' "${tmp}/retry.out"
+assert_file_contains "${cloud_root}/provider four/Backup/" "${destinations_log}"
+[ ! -e "${test_stage_root}" ] || fail_test 'retried staging directory was not cleaned up'
+
+: >"${rsync_log}"
+: >"${destinations_log}"
 test_stage_root="${tmp}/stage creation failure"
 TEST_MKTEMP_FAIL=1
 export TEST_MKTEMP_FAIL
