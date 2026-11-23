@@ -727,12 +727,11 @@ install_mac_casks() {
 	else
 		log 'Skipping Mac mini-only casks; they are only installed on DW-MacMini'
 	fi
-	case "${machine:-}" in
-	dw_macbook_neo) ;;
-	*)
+	if is_mac_mini; then
 		casks="${casks} docker"
-		;;
-	esac
+	else
+		log 'Skipping Docker Desktop; it is installed only on Mac minis'
+	fi
 	# shellcheck disable=SC2086
 	install_missing_brew_casks ${casks} || return $?
 	if ! redis_insight_app_installed; then
@@ -748,7 +747,14 @@ ensure_brew_taps() {
 }
 
 is_dw_mac_mini() {
-	[ "$(hostname)" = 'DW-MacMini' ]
+	[ "$(hostname -s)" = 'DW-MacMini' ]
+}
+
+is_mac_mini() {
+	case "$(hostname -s)" in
+	*-MacMini) return 0 ;;
+	esac
+	return 1
 }
 
 mac_app_store_apps='1569813296 1475387142'
@@ -795,8 +801,8 @@ maybe_upgrade_brew_casks() {
 			fi
 			;;
 		docker | docker-desktop)
-			if [ "${machine:-}" = dw_macbook_neo ]; then
-				log "Skipping Homebrew cask '${cask}' on MacBook Neo..."
+			if ! is_mac_mini; then
+				log "Skipping Homebrew cask '${cask}' outside Mac minis..."
 				continue
 			fi
 			;;
