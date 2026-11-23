@@ -55,8 +55,8 @@ ram_disk_info_has_device() {
 		END { exit !found }
 	'
 }
-clear_ram_staging() {
-	for ram_disk_entry in "${ram_disk_mount}"/rsync-cloud.*; do
+clear_ram_disk() {
+	for ram_disk_entry in "${ram_disk_mount}"/* "${ram_disk_mount}"/.[!.]* "${ram_disk_mount}"/..?*; do
 		[ -e "${ram_disk_entry}" ] || [ -L "${ram_disk_entry}" ] || continue
 		if ! rm -rf -- "${ram_disk_entry}"; then
 			return 1
@@ -66,15 +66,11 @@ clear_ram_staging() {
 cleanup() {
 	cleanup_status=$?
 	trap - EXIT
-	if [ -n "${staging_root}" ] && [ -d "${staging_root}" ]; then
-		if ! rm -rf -- "${staging_root}"; then
-			backup_log_error "Could not remove RAM staging directory '${staging_root}'"
-			[ "${cleanup_status}" -ne 0 ] || cleanup_status=1
-		fi
-	fi
 	if [ "${ram_disk_ready}" -eq 1 ]; then
-		if ! clear_ram_staging; then
-			backup_log_error "Could not clear RAM staging data from '${ram_disk_mount}'"
+		if clear_ram_disk; then
+			backup_log "Cleared RAM disk contents at '${ram_disk_mount}'"
+		else
+			backup_log_error "Could not clear RAM disk contents at '${ram_disk_mount}'"
 			[ "${cleanup_status}" -ne 0 ] || cleanup_status=1
 		fi
 	fi
@@ -128,8 +124,9 @@ if [ "${ram_disk_size_kib}" -lt 4000000 ] || [ "${ram_disk_size_kib}" -gt 419430
 	backup_fail "RAM staging disk is not 4 GiB (${ram_disk_size_kib} KiB)"
 fi
 ram_disk_ready=1
-clear_ram_staging || backup_fail "Could not clear RAM staging data from '${ram_disk_mount}' before backup"
-staging_root=$(mktemp -d "${ram_disk_mount}/rsync-cloud.XXXXXX") || backup_fail 'Could not create a staging directory on the RAM disk'
+clear_ram_disk || backup_fail "Could not clear RAM disk contents at '${ram_disk_mount}' before backup"
+backup_log "Cleared RAM disk contents at '${ram_disk_mount}'"
+staging_root="${ram_disk_mount}"
 
 log_staging_capacity() {
 	if staging_df=$(df -h "${staging_root}"); then
@@ -244,7 +241,13 @@ for cloud_storage in "${cloud_storage_root}"/*; do
 	destination="${cloud_storage}/Backup"
 	mkdir -p -- "${destination}"
 	backup_log "Synchronizing to '${destination}'..."
-	rsync_with_retry provider -a --delete -- "${staging_root}/" "${destination}/"
+	rsync_with_retry provider -a --delete \
+		--exclude=/.DS_Store \
+		--exclude=/.TemporaryItems/ \
+		--exclude=/.Trashes/ \
+		--exclude=/.Spotlight-V100/ \
+		--exclude=/.fseventsd/ \
+		-- "${staging_root}/" "${destination}/"
 done
 
 backup_log "Cloud synchronization complete (${source_count} source directories, ${cloud_storage_count} cloud storage directories)"
