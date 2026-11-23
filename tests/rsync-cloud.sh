@@ -20,6 +20,9 @@ rsync_log="${tmp}/rsync.log"
 destinations_log="${tmp}/destinations.log"
 mktemp_log="${tmp}/mktemp.log"
 sleep_log="${tmp}/sleep.log"
+hdiutil_log="${tmp}/hdiutil.log"
+diskutil_log="${tmp}/diskutil.log"
+ramdisk_volume_file="${tmp}/ramdisk-volume"
 provider_fail_marker="${tmp}/provider-rsync-failed"
 mkdir -p \
 	"${script_dir}" \
@@ -39,11 +42,39 @@ printf 'second source\n' >"${home}/${source_two}/second sample.txt"
 printf 'absolute source\n' >"${home}/${source_three}/absolute sample.txt"
 printf 'not a provider directory\n' >"${cloud_root}/not-a-provider"
 
+cat >"${fake_bin}/hdiutil" <<'EOF'
+#!/bin/sh
+set -eu
+printf '%s\n' "$*" >>"${TEST_HDIUTIL_LOG}"
+case "$1" in
+attach)
+	[ "$#" -eq 3 ] && [ "$2" = -nomount ] && [ "$3" = ram://8388608 ] || exit 2
+	printf '%s\n' /dev/disk42
+	;;
+detach)
+	[ "$#" -eq 2 ] && [ "$2" = /dev/disk42 ] || exit 2
+	;;
+*) exit 2 ;;
+esac
+EOF
+chmod +x "${fake_bin}/hdiutil"
+
+cat >"${fake_bin}/diskutil" <<'EOF'
+#!/bin/sh
+set -eu
+printf '%s\n' "$*" >>"${TEST_DISKUTIL_LOG}"
+[ "$#" -eq 4 ] && [ "$1" = eraseVolume ] && [ "$2" = JHFSX ] && [ "$4" = /dev/disk42 ] || exit 2
+printf '%s\n' "$3" >"${TEST_RAMDISK_VOLUME_FILE}"
+EOF
+chmod +x "${fake_bin}/diskutil"
+
 cat >"${fake_bin}/mktemp" <<'EOF'
 #!/bin/sh
 set -eu
 printf 'mktemp %s\n' "$*" >>"${TEST_MKTEMP_LOG}"
 [ "$#" -eq 2 ] && [ "$1" = -d ] || exit 2
+volume_name=$(cat "${TEST_RAMDISK_VOLUME_FILE}")
+[ "$2" = "/Volumes/${volume_name}/rsync-cloud.XXXXXX" ] || exit 2
 [ "${TEST_MKTEMP_FAIL:-0}" -eq 0 ] || exit 18
 mkdir -p -- "${TEST_STAGING_ROOT}"
 printf '%s\n' "${TEST_STAGING_ROOT}"
@@ -53,8 +84,18 @@ chmod +x "${fake_bin}/mktemp"
 cat >"${fake_bin}/df" <<'EOF'
 #!/bin/sh
 set -eu
-[ "$#" -eq 2 ] && [ "$1" = -h ] || exit 2
-printf '%s\n' 'Filesystem Size Used Avail Capacity Mounted on' '/dev/mock 100G 25G 75G 25% /tmp'
+[ "$#" -eq 2 ] || exit 2
+case "$1" in
+-h) printf '%s\n' 'Filesystem Size Used Avail Capacity Mounted on' '/dev/mock 4.0G 1.0M 3.9G 1% /Volumes/ramdisk' ;;
+-kP)
+	if [ "${TEST_DF_FULL:-0}" -eq 1 ]; then
+		printf '%s\n' 'Filesystem 1024-blocks Used Available Capacity Mounted on' '/dev/mock 4194304 4194304 0 100% /Volumes/ramdisk'
+	else
+		printf '%s\n' 'Filesystem 1024-blocks Used Available Capacity Mounted on' '/dev/mock 4194304 1024 4193280 1% /Volumes/ramdisk'
+	fi
+	;;
+*) exit 2 ;;
+esac
 EOF
 chmod +x "${fake_bin}/df"
 
@@ -120,9 +161,13 @@ run_cloud() {
 		PATH="${fake_bin}:${PATH}" \
 		HOME="${home}" \
 		TEST_DESTINATIONS_LOG="${destinations_log}" \
+		TEST_DF_FULL="${TEST_DF_FULL:-0}" \
+		TEST_DISKUTIL_LOG="${diskutil_log}" \
+		TEST_HDIUTIL_LOG="${hdiutil_log}" \
 		TEST_MKTEMP_LOG="${mktemp_log}" \
 		TEST_PROVIDER_FAIL_MARKER="${provider_fail_marker}" \
 		TEST_PROVIDER_FAIL_ONCE="${TEST_PROVIDER_FAIL_ONCE:-0}" \
+		TEST_RAMDISK_VOLUME_FILE="${ramdisk_volume_file}" \
 		TEST_RSYNC_FAIL_COUNT="${TEST_RSYNC_FAIL_COUNT:-0}" \
 		TEST_RSYNC_LOG="${rsync_log}" \
 		TEST_SLEEP_LOG="${sleep_log}" \
@@ -143,14 +188,17 @@ test_stage_root="${tmp}/stage success"
 : >"${destinations_log}"
 : >"${mktemp_log}"
 run_cloud >"${tmp}/success.out" 2>"${tmp}/success.err"
-assert_file_contains 'mktemp -d /tmp/rsync-cloud.XXXXXX' "${mktemp_log}"
+assert_file_contains 'mktemp -d /Volumes/rsync-cloud-' "${mktemp_log}"
+assert_file_contains 'attach -nomount ram://8388608' "${hdiutil_log}"
+assert_file_contains 'detach /dev/disk42' "${hdiutil_log}"
+assert_file_contains 'eraseVolume JHFSX rsync-cloud-' "${diskutil_log}"
 assert_eq "$(grep -Fc '<call>' "${rsync_log}")" '7'
 assert_eq "$(grep -Fc -- '--delete' "${rsync_log}")" '7'
 assert_file_contains "${cloud_root}/provider one/Backup/" "${destinations_log}"
 assert_file_contains "${cloud_root}/provider two/Backup/" "${destinations_log}"
 assert_file_contains "${cloud_root}/provider three/Backup/" "${destinations_log}"
 assert_file_contains "${cloud_root}/provider four/Backup/" "${destinations_log}"
-assert_file_contains 'Temporary filesystem capacity: 100G total, 25G used, 75G available' "${tmp}/success.out"
+assert_file_contains 'Temporary filesystem capacity: 4.0G total, 1.0M used, 3.9G available' "${tmp}/success.out"
 assert_eq "$(grep -Fc 'Temporary filesystem capacity:' "${tmp}/success.out")" '2'
 assert_file_contains 'Staged source data size: 12M' "${tmp}/success.out"
 assert_file_contains '3 source directories, 4 cloud storage directories' "${tmp}/success.out"
@@ -214,6 +262,27 @@ assert_file_contains "${cloud_root}/provider four/Backup/" "${destinations_log}"
 
 : >"${rsync_log}"
 : >"${destinations_log}"
+: >"${sleep_log}"
+test_stage_root="${tmp}/stage full"
+cat >"${sources_file}" <<'EOF'
+~/Documents/source one – sample
+EOF
+TEST_RSYNC_FAIL_COUNT=1
+TEST_DF_FULL=1
+export TEST_RSYNC_FAIL_COUNT TEST_DF_FULL
+if run_cloud >"${tmp}/ram-full.out" 2>"${tmp}/ram-full.err"; then
+	fail_test 'a full RAM staging disk should stop the backup'
+fi
+TEST_RSYNC_FAIL_COUNT=0
+TEST_DF_FULL=0
+export TEST_RSYNC_FAIL_COUNT TEST_DF_FULL
+assert_file_contains 'RAM staging disk is full' "${tmp}/ram-full.err"
+[ ! -s "${destinations_log}" ] || fail_test 'cloud destinations were touched with a full staging disk'
+[ ! -s "${sleep_log}" ] || fail_test 'a full RAM staging disk should not be retried'
+[ ! -e "${test_stage_root}" ] || fail_test 'full staging directory was not cleaned up'
+
+: >"${rsync_log}"
+: >"${destinations_log}"
 test_stage_root="${tmp}/stage creation failure"
 TEST_MKTEMP_FAIL=1
 export TEST_MKTEMP_FAIL
@@ -239,3 +308,4 @@ assert_file_contains 'This command does not accept arguments' "${tmp}/arguments.
 [ ! -s "${rsync_log}" ] || fail_test 'rsync-cloud should reject arguments before running rsync'
 [ ! -s "${destinations_log}" ] || fail_test 'rsync-cloud should reject arguments before syncing destinations'
 [ ! -s "${mktemp_log}" ] || fail_test 'rsync-cloud should reject arguments before staging'
+assert_eq "$(grep -Fc 'attach -nomount ram://8388608' "${hdiutil_log}")" "$(grep -Fc 'detach /dev/disk42' "${hdiutil_log}")"

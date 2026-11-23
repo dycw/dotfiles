@@ -27,14 +27,40 @@ for cloud_storage in "${cloud_storage_root}"/*; do
 done
 [ "${cloud_storage_count}" -gt 0 ] || backup_fail "No cloud storage directories found under '${cloud_storage_root}'"
 
-staging_root=$(mktemp -d /tmp/rsync-cloud.XXXXXX) || backup_fail 'Could not create a staging directory under /tmp'
+ram_disk_sectors=8388608
+ram_disk_volume="rsync-cloud-$$-$(date '+%s')"
+ram_disk_mount="/Volumes/${ram_disk_volume}"
+ram_disk_device=''
+staging_root=''
 cleanup() {
-	rm -rf -- "${staging_root}"
+	cleanup_status=$?
+	trap - EXIT
+	if [ -n "${staging_root}" ] && [ -d "${staging_root}" ]; then
+		if ! rm -rf -- "${staging_root}"; then
+			backup_log_error "Could not remove RAM staging directory '${staging_root}'"
+			[ "${cleanup_status}" -ne 0 ] || cleanup_status=1
+		fi
+	fi
+	if [ -n "${ram_disk_device}" ]; then
+		if ! hdiutil detach "${ram_disk_device}" >/dev/null; then
+			backup_log_error "Could not detach RAM staging disk '${ram_disk_device}'"
+			[ "${cleanup_status}" -ne 0 ] || cleanup_status=1
+		fi
+	fi
+	exit "${cleanup_status}"
 }
 trap cleanup EXIT
 trap 'exit 129' HUP
 trap 'exit 130' INT
 trap 'exit 143' TERM
+
+[ ! -e "${ram_disk_mount}" ] || backup_fail "RAM staging mount point already exists: '${ram_disk_mount}'"
+backup_log 'Creating a 4 GiB RAM staging disk...'
+ram_disk_attach_output=$(hdiutil attach -nomount "ram://${ram_disk_sectors}") || backup_fail 'Could not create a 4 GiB RAM staging disk'
+ram_disk_device=$(printf '%s\n' "${ram_disk_attach_output}" | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^\/dev\/disk[0-9]+$/) { print $i; exit } }')
+[ -n "${ram_disk_device}" ] || backup_fail 'Could not identify the RAM staging disk device'
+diskutil eraseVolume JHFSX "${ram_disk_volume}" "${ram_disk_device}" || backup_fail 'Could not format and mount the RAM staging disk'
+staging_root=$(mktemp -d "${ram_disk_mount}/rsync-cloud.XXXXXX") || backup_fail 'Could not create a staging directory on the RAM disk'
 
 log_staging_capacity() {
 	if staging_df=$(df -h "${staging_root}"); then
@@ -49,8 +75,10 @@ log_staging_capacity() {
 	fi
 }
 
-# Retry indefinitely; cap the delay so persistent failures do not cause a busy loop.
+# Retry with capped backoff; a full staging disk is fatal because it cannot recover.
 rsync_with_retry() {
+	retry_scope=$1
+	shift
 	retry_delay=1
 	retry_attempt=1
 	while :; do
@@ -58,6 +86,12 @@ rsync_with_retry() {
 			return 0
 		else
 			rsync_status=$?
+		fi
+		if [ "${retry_scope}" = staging ] && staging_df=$(df -kP "${staging_root}"); then
+			staging_available=$(printf '%s\n' "${staging_df}" | awk 'NR == 2 { print $4 }')
+			case "${staging_available:-}" in
+			0) backup_fail 'The 4 GiB RAM staging disk is full; increase its size or reduce the source data' ;;
+			esac
 		fi
 		backup_log_error "rsync attempt ${retry_attempt} failed with status ${rsync_status}; retrying in ${retry_delay}s"
 		sleep "${retry_delay}"
@@ -119,7 +153,7 @@ while IFS= read -r source_path || [ -n "${source_path}" ]; do
 		staged_source="${staging_root}/${relative_source}"
 		mkdir -p -- "${staged_source}"
 		backup_log "Staging '${absolute_source}' at '${staged_source}'..."
-		rsync_with_retry -a --delete -- "${absolute_source}/" "${staged_source}/"
+		rsync_with_retry staging -a --delete -- "${absolute_source}/" "${staged_source}/"
 		source_count=$((source_count + 1))
 	done
 done <"${sources_file}"
@@ -141,7 +175,7 @@ for cloud_storage in "${cloud_storage_root}"/*; do
 	destination="${cloud_storage}/Backup"
 	mkdir -p -- "${destination}"
 	backup_log "Synchronizing to '${destination}'..."
-	rsync_with_retry -a --delete -- "${staging_root}/" "${destination}/"
+	rsync_with_retry provider -a --delete -- "${staging_root}/" "${destination}/"
 done
 
 backup_log "Cloud synchronization complete (${source_count} source directories, ${cloud_storage_count} cloud storage directories)"
