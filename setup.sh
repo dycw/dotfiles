@@ -274,8 +274,12 @@ install_all() {
 		remove_unwanted_brew_formulas
 		maybe_upgrade_brew_formulas
 		install_common_brew_formulas
-		maybe_upgrade_rust
-		install_rust_tools
+		if is_mac_mini; then
+			maybe_upgrade_rust
+			install_rust_tools
+		else
+			uninstall_rust_tools
+		fi
 		remove_unwanted_brew_casks
 		install_mac_casks
 		maybe_upgrade_brew_casks
@@ -502,6 +506,19 @@ install_rust_tools() {
 	done
 }
 
+uninstall_rust_tools() {
+	_cargo_home=$(cargo_home_dir)
+	export PATH="${_cargo_home}/bin${PATH:+:${PATH}}"
+	if command -v rustup >/dev/null 2>&1; then
+		log 'Removing rustup and its toolchains; Rust is only installed on Mac minis'
+		rustup self uninstall -y
+	fi
+	for tool in cargo cargo-add cargo-audit cargo-binstall cargo-deny cargo-nextest cargo-rm cargo-set-version cargo-upgrade clippy-driver rust-analyzer rustc rustdoc rustfmt rust-gdb rust-lldb rustup sccache; do
+		rm -f -- "${_cargo_home}/bin/${tool}"
+	done
+	rm -f -- "${_cargo_home}/env"
+}
+
 rust_tool_command() {
 	case "$1" in
 	bottom) printf 'btm' ;;
@@ -627,6 +644,20 @@ remove_unwanted_brew_formulas() {
 	case "${platform}" in
 	mac)
 		uninstall_brew_formulas tailscale
+		if ! is_mac_mini; then
+			if ! installed=$(list_installed_brew_formulas); then
+				fail "Could not list installed brew formulae before removing Redis"
+			fi
+			if list_has_line "${installed}" redis; then
+				if ! services=$(brew services list); then
+					fail "Could not list brew services before removing Redis"
+				fi
+				if printf '%s\n' "${services}" | awk '$1 == "redis" && $2 != "none" && $2 != "stopped" { found=1 } END { exit !found }'; then
+					brew services stop redis
+				fi
+			fi
+			uninstall_brew_formulas redis sccache
+		fi
 		;;
 	esac
 }
@@ -675,10 +706,13 @@ install_common_brew_formulas() {
 	install_missing_brew_formulas \
 		autoconf automake bat bash bash-completion@2 bottom coreutils delta \
 		dust eza fd fzf git-delta iperf3 jq just libpq \
-		logrotate luacheck luarocks markdownlint-cli maturin npm pgcli postgresql@18 prek prettier redis \
-		restic ripgrep ruff sccache sd shellcheck shfmt starship taplo \
+		logrotate luacheck luarocks markdownlint-cli maturin npm pgcli postgresql@18 prek prettier \
+		restic ripgrep ruff sd shellcheck shfmt starship taplo \
 		tea tmux topgrade uv vim watch yq zoxide
 
+	if is_mac_mini; then
+		install_missing_brew_formulas redis sccache
+	fi
 	install_missing_brew_formulas flock mas rename wakeonlan
 }
 
@@ -699,8 +733,16 @@ install_missing_brew_formulas() {
 }
 
 remove_unwanted_brew_casks() {
-	uninstall_brew_casks \
-		alacritty db-browser-for-sqlite ghostty google-chrome handy iterm2 pgadmin4 protonvpn slack visual-studio-code zoom
+	set -- alacritty db-browser-for-sqlite ghostty google-chrome handy iterm2 pgadmin4 protonvpn slack visual-studio-code zoom
+	if ! is_dw_mac_mini; then
+		set -- "$@" box-drive proton-drive
+	fi
+	if ! is_mac_mini; then
+		set -- "$@" \
+			a-better-finder-attributes a-better-finder-rename docker docker-desktop \
+			postico redis-stack-redisinsight redis-stack-server transmission
+	fi
+	uninstall_brew_casks "$@"
 }
 
 uninstall_brew_casks() {
@@ -716,25 +758,25 @@ uninstall_brew_casks() {
 	[ -n "${present}" ] || return 0
 	log "Uninstalling casks: ${present}"
 	# shellcheck disable=SC2086
-	brew uninstall --cask ${present}
+	brew uninstall --cask --force ${present}
 }
 
 install_mac_casks() {
-	ensure_brew_taps redis-stack/redis-stack || return $?
 	casks='1password chatgpt dropbox firefox openwhispr spotify telegram vlc wezterm whatsapp'
-	if is_dw_mac_mini; then
-		casks="${casks} a-better-finder-attributes a-better-finder-rename box-drive postico proton-drive redis-stack-server transmission"
-	else
-		log 'Skipping Mac mini-only casks; they are only installed on DW-MacMini'
-	fi
 	if is_mac_mini; then
-		casks="${casks} docker"
+		ensure_brew_taps redis-stack/redis-stack || return $?
+		casks="${casks} a-better-finder-attributes a-better-finder-rename postico redis-stack-server transmission docker"
 	else
-		log 'Skipping Docker Desktop; it is installed only on Mac minis'
+		log 'Skipping Mac mini-only casks; the host is not a *-MacMini'
+	fi
+	if is_dw_mac_mini; then
+		casks="${casks} box-drive proton-drive"
+	else
+		log 'Skipping Box Drive and Proton Drive; they are only installed on DW-MacMini'
 	fi
 	# shellcheck disable=SC2086
 	install_missing_brew_casks ${casks} || return $?
-	if ! redis_insight_app_installed; then
+	if is_mac_mini && ! redis_insight_app_installed; then
 		install_missing_brew_casks redis-stack-redisinsight
 	fi
 }
@@ -794,13 +836,13 @@ maybe_upgrade_brew_casks() {
 	while IFS= read -r cask || [ -n "${cask}" ]; do
 		[ -n "${cask}" ] || continue
 		case "${cask}" in
-		a-better-finder-* | box-drive | postico | proton-drive | redis-stack-server | transmission)
+		box-drive | proton-drive)
 			if [ "${is_dw_mac_mini_host}" -ne 1 ]; then
 				log "Skipping Homebrew cask '${cask}' outside DW-MacMini..."
 				continue
 			fi
 			;;
-		docker | docker-desktop)
+		a-better-finder-* | postico | redis-stack-redisinsight | redis-stack-server | transmission | docker | docker-desktop)
 			if ! is_mac_mini; then
 				log "Skipping Homebrew cask '${cask}' outside Mac minis..."
 				continue
@@ -983,7 +1025,9 @@ ensure_line_in_file() {
 setup_brew_services() {
 	[ "${platform}" = mac ] || return 0
 	brew services start postgresql@18
-	brew services start redis
+	if is_mac_mini; then
+		brew services start redis
+	fi
 	setup_logrotate_config
 	setup_backup_cron
 	setup_rsync_cloud_cron
